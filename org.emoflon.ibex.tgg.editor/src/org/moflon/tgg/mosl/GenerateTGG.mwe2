@@ -4,7 +4,7 @@ import org.eclipse.emf.mwe.utils.*
 import org.eclipse.xtext.generator.*
 import org.eclipse.xtext.ui.generator.*
 
-var grammarURI = "classpath:/org/moflon/tgg/mosl/TGG.xtext"
+var grammarURI = "platform:/resource/org.emoflon.ibex.tgg.editor/src/org/moflon/tgg/mosl/TGG.xtext"
 var fileExtensions = "tgg"
 var projectName = "org.emoflon.ibex.tgg.editor"
 var runtimeProject = "../${projectName}"
