@@ -1,9 +1,11 @@
 package org.emoflon.ibex.tgg.ui.ide.transformation;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import org.moflon.tgg.mosl.tgg.*;
@@ -36,14 +38,42 @@ public class EditorTGGtoFlattenedTGG {
 		rules.stream()
 		  	 .forEach(r -> superRuleMap.put(this.findSuperRules(r), r));
 		
-		Set<Rule> newRules = superRuleMap.keySet().stream()
+		List<Rule> newRules = superRuleMap.keySet().stream()
 								  				  .map(this::merge)
-								  				  .collect(Collectors.toSet());
+								  				  .collect(Collectors.toList());
+		sort(newRules);
 		rules.clear();
 		rules.addAll(newRules);
 		
 		return flattened;
 	}
+	
+	public void sort(List<Rule> rules) {
+		rules.sort(Comparator.comparing(rule -> ((Rule)rule).getName()));
+		
+		for (Rule rule : rules) {			
+			List<ObjectVariablePattern> sourcePatterns = new ArrayList<ObjectVariablePattern>(rule.getSourcePatterns());
+			List<ObjectVariablePattern> targetPatterns = new ArrayList<ObjectVariablePattern>(rule.getTargetPatterns());
+			List<CorrVariablePattern> corrPatterns = new ArrayList<CorrVariablePattern>(rule.getCorrespondencePatterns());
+			List<AttrCond> attrConditions = new ArrayList<AttrCond>(rule.getAttrConditions());
+			
+			sourcePatterns.sort(Comparator.comparing(pattern -> ((ObjectVariablePattern)pattern).getName()));
+			targetPatterns.sort(Comparator.comparing(pattern -> ((ObjectVariablePattern)pattern).getName()));
+			corrPatterns.sort(Comparator.comparing(pattern -> ((CorrVariablePattern)pattern).getName()));
+			attrConditions.sort(Comparator.comparing(cond -> ((AttrCond)cond).getName().getName()));
+			
+			rule.getSourcePatterns().clear();
+			rule.getTargetPatterns().clear();
+			rule.getCorrespondencePatterns().clear();
+			rule.getAttrConditions().clear();
+			
+			rule.getSourcePatterns().addAll(sourcePatterns);
+			rule.getTargetPatterns().addAll(targetPatterns);
+			rule.getCorrespondencePatterns().addAll(corrPatterns);
+			rule.getAttrConditions().addAll(attrConditions);
+		}
+	}
+	
 	
 	/**
 	 * Produces a flattened version of a {@link Rule}.
