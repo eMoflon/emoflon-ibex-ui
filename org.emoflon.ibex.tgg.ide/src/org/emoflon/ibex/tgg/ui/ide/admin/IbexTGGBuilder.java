@@ -52,6 +52,7 @@ import org.moflon.util.LogUtils;
 
 public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResourceDeltaVisitor {
 	public static final String INTERNAL_TGG_MODEL_EXTENSION = ".tgg.xmi";
+	public static final String INTERNAL_TGG_FLATTENED_MODEL_EXTENSION = "_flattened.tgg.xmi";
 	public static final String ECORE_FILE_EXTENSION = ".ecore";
 	public static final String TGG_FILE_EXTENSION = ".tgg";
 	public static final String EDITOR_MODEL_EXTENSION = ".editor.xmi";
