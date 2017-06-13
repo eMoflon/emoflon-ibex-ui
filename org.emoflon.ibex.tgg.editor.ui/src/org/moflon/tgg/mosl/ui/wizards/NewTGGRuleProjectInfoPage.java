@@ -62,7 +62,7 @@ public class NewTGGRuleProjectInfoPage extends WizardPage
    private void setProjectAndRuleLocation()
    {
       IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-      ISelection selection = window.getSelectionService().getSelection("org.eclipse.sirius.ui.tools.views.model.explorer");
+      ISelection selection = window.getSelectionService().getSelection();
       if (selection instanceof ITreeSelection)
       {
          ITreeSelection structuredSelection = (ITreeSelection) selection;
