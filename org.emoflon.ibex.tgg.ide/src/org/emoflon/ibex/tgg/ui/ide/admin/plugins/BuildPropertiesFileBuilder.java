@@ -33,8 +33,8 @@ public class BuildPropertiesFileBuilder
          } else
          {
             Properties buildProperties = new Properties();
-            buildProperties.put("bin.includes", "META-INF/, bin/, model/, plugin.xml, moflon.properties.xmi");
-            buildProperties.put("source..", "src/,gen/");
+            buildProperties.put("bin.includes", "META-INF/, bin/, model/");
+            buildProperties.put("source..", "src/");
             buildProperties.put("output..", "bin/");
 
             subMon.worked(1);

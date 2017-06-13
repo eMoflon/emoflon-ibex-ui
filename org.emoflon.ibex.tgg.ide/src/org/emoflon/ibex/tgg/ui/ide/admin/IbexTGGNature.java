@@ -28,8 +28,8 @@ import org.moflon.util.WorkspaceHelper;
 import org.emoflon.ibex.tgg.ui.ide.admin.plugins.PluginManifestConstants;
 
 public class IbexTGGNature implements IProjectNature {
-	public static final String IBEX_TGG_NATURE_ID  = "org.emoflon.ibex.tgg.ui.ide.nature";
-	public static final String IBEX_TGG_BUILDER_ID = "org.emoflon.ibex.tgg.ui.ide.builder";
+	public static final String IBEX_TGG_NATURE_ID  = "org.emoflon.ibex.tgg.ide.nature";
+	public static final String IBEX_TGG_BUILDER_ID = "org.emoflon.ibex.tgg.ide.builder";
 	public static final String XTEXT_NATURE_ID     = "org.eclipse.xtext.ui.shared.xtextNature";
 	public static final String PLUGIN_NATURE_ID = "org.eclipse.pde.PluginNature";
 	public static final String SCHEMA_FILE = "src/org/emoflon/ibex/tgg/Schema.tgg";
@@ -81,17 +81,16 @@ public class IbexTGGNature implements IProjectNature {
 					"org.emoflon.ibex.tgg.core.runtime",
 					"org.emoflon.ibex.tgg.core.language",
 					
-					// Moflon deps
-					"org.moflon.core.utilities",
-					
 					// EMF deps
 					"org.eclipse.emf.ecore.xmi",
 					
+					// Misc deps
+					"org.apache.log4j",
+					
 					// Democles deps
-					" org.gervarro.democles.common",
+					"org.gervarro.democles.common",
 					"org.gervarro.democles.specification.emf",
 					"org.gervarro.democles.interpreter",
-					"org.gervarro.democles.codegen.emf",
 					"org.gervarro.democles.emf",
 					"org.gervarro.democles.interpreter.emf",
 					"org.gervarro.democles.interpreter.incremental",
