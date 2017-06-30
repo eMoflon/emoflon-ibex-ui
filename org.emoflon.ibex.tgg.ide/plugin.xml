@@ -20,7 +20,10 @@
   <extension
         point="net.sourceforge.plantuml.eclipse.diagramTextProvider">
      <diagramTextProvider
-           providerClass="org.emoflon.ibex.tgg.ui.ide.visualisation.IbexDiagramTextProvider">
+           providerClass="org.emoflon.ibex.tgg.ui.ide.visualisation.IbexTGGVisualiser">
+     </diagramTextProvider>
+     <diagramTextProvider
+           providerClass="org.emoflon.ibex.tgg.ui.ide.visualisation.IbexModelAndMetamodelVisualiser">
      </diagramTextProvider>
   </extension>
 </plugin>
