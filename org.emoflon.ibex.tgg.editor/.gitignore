@@ -3,3 +3,5 @@
 /xtend-gen/*
 !/**/.keep*
 /model/generated
+/src-gen/
+/xtend-gen/

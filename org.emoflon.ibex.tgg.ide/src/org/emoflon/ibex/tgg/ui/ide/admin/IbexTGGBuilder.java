@@ -63,9 +63,10 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	private static final String IBUILDER_EXTENSON_ID = "org.emoflon.ibex.tgg.ide.IbexTGGBuilderExtension";
 	public static final Logger logger = Logger.getLogger(IbexTGGBuilder.class);
 	private boolean buildIsNecessary = false;
-	private Optional<BuilderExtension> builderExtension = Optional.empty();
+	private Collection<BuilderExtension> builderExtensions;
 
 	public IbexTGGBuilder() {
+		builderExtensions = new ArrayList<>();
 		collectBuilderExtension(Platform.getExtensionRegistry());
 	}
 	
@@ -239,7 +240,7 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
                 logger.debug("Evaluating extension");
                 final Object o = e.createExecutableExtension("class");
                 if (o instanceof BuilderExtension) {
-                    builderExtension = Optional.of((BuilderExtension)o);
+                    builderExtensions.add((BuilderExtension)o);
                 }
             }
         } catch (CoreException ex) {
@@ -256,7 +257,7 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 
 			@Override
 			public void run() throws Exception {
-				builderExtension.ifPresent(builderExt -> builderExt.run(builder, editorModel, flattenedEditorModel));
+				builderExtensions.forEach(builderExt -> builderExt.run(builder, editorModel, flattenedEditorModel));
 			}
 		};
 		SafeRunner.run(runnable);

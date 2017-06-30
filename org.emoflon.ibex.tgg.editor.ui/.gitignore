@@ -2,3 +2,5 @@
 /xtend-gen/*
 /src-gen/*
 !/**/.keep*
+/src-gen/
+/xtend-gen/
