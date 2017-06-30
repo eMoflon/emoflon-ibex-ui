@@ -1,4 +1,4 @@
-package org.emoflon.ibex.tgg.ui.ide.admin;
+package org.emoflon.ibex.tgg.ide.admin;
 
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile;
 

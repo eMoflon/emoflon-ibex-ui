@@ -1,4 +1,4 @@
-package org.emoflon.ibex.tgg.ui.ide.admin;
+package org.emoflon.ibex.tgg.ide.admin;
 
 import static org.moflon.util.WorkspaceHelper.addAllFoldersAndFile;
 
@@ -21,14 +21,11 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
@@ -42,12 +39,13 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.URIHandlerImpl;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
-import org.emoflon.ibex.tgg.ui.ide.transformation.EditorTGGtoFlattenedTGG;
+import org.emoflon.ibex.tgg.ide.transformation.EditorTGGtoFlattenedTGG;
 import org.moflon.tgg.mosl.defaults.AttrCondDefLibraryProvider;
 import org.moflon.tgg.mosl.tgg.AttrCond;
 import org.moflon.tgg.mosl.tgg.AttrCondDef;
 import org.moflon.tgg.mosl.tgg.Rule;
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile;
+import org.moflon.util.IbexUtil;
 import org.moflon.util.LogUtils;
 
 public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResourceDeltaVisitor {
@@ -63,11 +61,11 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	private static final String IBUILDER_EXTENSON_ID = "org.emoflon.ibex.tgg.ide.IbexTGGBuilderExtension";
 	public static final Logger logger = Logger.getLogger(IbexTGGBuilder.class);
 	private boolean buildIsNecessary = false;
+	
 	private Collection<BuilderExtension> builderExtensions;
 
 	public IbexTGGBuilder() {
-		builderExtensions = new ArrayList<>();
-		collectBuilderExtension(Platform.getExtensionRegistry());
+		builderExtensions = IbexUtil.collectExtensions(IBUILDER_EXTENSON_ID, "class", BuilderExtension.class);
 	}
 	
 	@Override
@@ -137,9 +135,26 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	 *            contents
 	 * @throws CoreException
 	 */
-	public void createDefaultFile(String fileName, BiFunction<String, String, String> generator) throws CoreException {
-		String path = RUN_FILE_PATH + fileName + ".java";
-		IPath pathToFile = new Path(path);
+	public void createDefaultRunFile(String fileName, BiFunction<String, String, String> generator) throws CoreException {
+		createDefaultFile(RUN_FILE_PATH, fileName, ".java", generator);
+	}
+
+	/**
+	 * Creates a new file as path + fileName + ending
+	 * 
+	 * @param path
+	 * 			The project relative path to the file
+	 * @param ending
+	 * 			The file extension to use
+	 * @param fileName
+	 *            The name of the file to be generated
+	 * @param generator
+	 *            A bi-function used to generate the string content of the new file of the form: (project name, file name) -> file
+	 *            contents
+	 * @throws CoreException
+	 */
+	public void createDefaultFile(String path, String fileName, String ending, BiFunction<String, String, String> generator) throws CoreException {
+		IPath pathToFile = new Path(path + fileName + ending);
 		IFile file = getProject().getFile(pathToFile);
 		if (!file.exists()){ 
 			String defaultContent = generator.apply(getProject().getName(), fileName);
@@ -232,21 +247,6 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 		EcoreUtil.resolveAll(resourceSet);
 		return schemaResource;
 	}
-
-    private void collectBuilderExtension(IExtensionRegistry registry) {
-        IConfigurationElement[] config = registry.getConfigurationElementsFor(IBUILDER_EXTENSON_ID);
-        try {
-            for (IConfigurationElement e : config) {
-                logger.debug("Evaluating extension");
-                final Object o = e.createExecutableExtension("class");
-                if (o instanceof BuilderExtension) {
-                    builderExtensions.add((BuilderExtension)o);
-                }
-            }
-        } catch (CoreException ex) {
-            LogUtils.error(logger, ex);
-        }
-    }
 	
 	private void generateExtraModels(IbexTGGBuilder builder, TripleGraphGrammarFile editorModel, TripleGraphGrammarFile flattenedEditorModel) {
 		ISafeRunnable runnable = new ISafeRunnable() {

@@ -3,10 +3,10 @@
 <schema targetNamespace="org.emoflon.ibex.tgg.ide" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.emoflon.ibex.tgg.ide" id="IbexTGGBuilderExtension" name="IbexTGGBuilderExtension"/>
+         <meta.schema plugin="org.emoflon.ibex.tgg.ide" id="IbexTGGNatureExtension" name="IbexTGGNatureExtension"/>
       </appInfo>
       <documentation>
-         This is a hook into the building process.  Use this to register builder extensions that are invoked during the compilation process.
+         This is a hook into the project configuration process. Use this to register nature extensions that are used by the integration wizard to configure a newly created integration project.
       </documentation>
    </annotation>
 
@@ -18,7 +18,7 @@
       </annotation>
       <complexType>
          <choice minOccurs="1" maxOccurs="unbounded">
-            <element ref="builder_extension" minOccurs="1" maxOccurs="unbounded"/>
+            <element ref="nature_extension" minOccurs="1" maxOccurs="unbounded"/>
          </choice>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -47,7 +47,7 @@
       </complexType>
    </element>
 
-   <element name="builder_extension">
+   <element name="nature_extension">
       <complexType>
          <attribute name="class" type="string" use="required">
             <annotation>
@@ -55,7 +55,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn=":org.emoflon.ibex.tgg.ide.admin.BuilderExtension"/>
+                  <meta.attribute kind="java" basedOn=":org.emoflon.ibex.tgg.ide.admin.NatureExtension"/>
                </appInfo>
             </annotation>
          </attribute>

@@ -1,4 +1,4 @@
-package org.emoflon.ibex.tgg.ui.ide.visualisation;
+package org.emoflon.ibex.tgg.ide.visualisation;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.util.EContentsEList;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IEditorPart;
+import org.emoflon.ibex.tgg.ide.visualisation.IbexPlantUMLGenerator;
 
 public class IbexModelAndMetamodelVisualiser extends IbexVisualiser {
 

@@ -26,11 +26,11 @@ Require-Bundle: org.eclipse.emf.ecore,
 Bundle-ManifestVersion: 2
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Bundle-Activator: org.emoflon.ibex.tgg.ui.ide.admin.IbexTGGPlugin
+Bundle-Activator: org.emoflon.ibex.tgg.ide.admin.IbexTGGPlugin
 Bundle-Vendor: TU Darmstadt
 Bundle-ClassPath: .
-Export-Package: org.emoflon.ibex.tgg.ui.ide.admin,
- org.emoflon.ibex.tgg.ui.ide.admin.plugins,
- org.emoflon.ibex.tgg.ui.ide.transformation,
- org.emoflon.ibex.tgg.ui.ide.visualisation
+Export-Package: org.emoflon.ibex.tgg.ide.admin,
+ org.emoflon.ibex.tgg.ide.transformation,
+ org.emoflon.ibex.tgg.ide.visualisation,
+ org.emoflon.ibex.tgg.ui.ide.admin.plugins
 

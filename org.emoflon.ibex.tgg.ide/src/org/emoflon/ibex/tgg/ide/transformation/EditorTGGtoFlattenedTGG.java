@@ -1,4 +1,4 @@
-package org.emoflon.ibex.tgg.ui.ide.transformation;
+package org.emoflon.ibex.tgg.ide.transformation;
 
 import java.util.*;
 import java.util.function.Function;

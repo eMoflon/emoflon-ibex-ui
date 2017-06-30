@@ -1,15 +1,13 @@
-package org.emoflon.ibex.tgg.ui.ide.visualisation;
+package org.emoflon.ibex.tgg.ide.visualisation;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Function;
 
-import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorPart;
-import org.moflon.util.LogUtils;
+import org.emoflon.ibex.tgg.ide.visualisation.IbexPlantUMLGenerator;
+import org.moflon.util.IbexUtil;
 
 import net.sourceforge.plantuml.eclipse.utils.DiagramTextProvider;
 
@@ -17,7 +15,6 @@ public abstract class IbexVisualiser implements DiagramTextProvider {
 
 	private static final String PLANTUML_EXTENSON_ID = "net.sourceforge.plantuml.eclipse.diagramTextProvider";
 	private static final String PLANTUML_EXTENSION_PROPERTY = "providerClass";
-	private Logger logger = Logger.getLogger(IbexVisualiser.class);
 
 	@Override
 	public String getDiagramText(IEditorPart editor, ISelection selection){
@@ -42,23 +39,9 @@ public abstract class IbexVisualiser implements DiagramTextProvider {
 	}
 	
 	protected boolean noOtherVisualisationRegisteredForSelection(IEditorPart editor, ISelection selection, Class<?> vis){
-		IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(PLANTUML_EXTENSON_ID);
-		
-		try {
-            for (IConfigurationElement e : config) {
-                final Object o = e.createExecutableExtension(PLANTUML_EXTENSION_PROPERTY);
-                if (o instanceof DiagramTextProvider && !vis.isInstance(o)) {
-                    DiagramTextProvider dtp = (DiagramTextProvider)o;
-                    if(dtp.supportsEditor(editor) && dtp.supportsSelection(selection)){
-                    	return false;
-                    }
-                }
-            }
-        } catch (CoreException ex) {
-            LogUtils.error(logger, ex);
-        }
-        
-        // No registered vis can handle this case
-        return true;
+		Collection<DiagramTextProvider> extensions = IbexUtil.collectExtensions(PLANTUML_EXTENSON_ID, PLANTUML_EXTENSION_PROPERTY, DiagramTextProvider.class);
+		return extensions.stream()
+				.filter(e -> !vis.isInstance(e))
+				.noneMatch(e -> e.supportsEditor(editor) && e.supportsSelection(selection));
 	}
 }

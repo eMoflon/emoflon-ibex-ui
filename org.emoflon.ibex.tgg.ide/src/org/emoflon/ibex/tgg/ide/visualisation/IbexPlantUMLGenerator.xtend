@@ -1,4 +1,4 @@
-package org.emoflon.ibex.tgg.ui.ide.visualisation
+package org.emoflon.ibex.tgg.ide.visualisation
 
 import java.util.Collection
 import org.apache.commons.lang3.tuple.Pair

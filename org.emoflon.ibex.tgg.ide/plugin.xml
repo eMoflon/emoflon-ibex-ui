@@ -2,10 +2,11 @@
 <?eclipse version="3.0"?>
 <plugin>
   <extension-point id="IbexTGGBuilderExtension" name="IbexTGGBuilderExtension" schema="schema/IbexTGGBuilderExtension.exsd"/>
+  <extension-point id="IbexTGGNatureExtension" name="IbexTGGNatureExtension" schema="schema/IbexTGGNatureExtension.exsd"/>
   <extension id="nature" name="IBeX TGG Nature" point="org.eclipse.core.resources.natures">
     <runtime>
        <run
-             class="org.emoflon.ibex.tgg.ui.ide.admin.IbexTGGNature">
+             class="org.emoflon.ibex.tgg.ide.admin.IbexTGGNature">
        </run>
     </runtime>
     <builder
@@ -14,16 +15,16 @@
   </extension>
   <extension id="builder" name="IBeX TGG Builder" point="org.eclipse.core.resources.builders">
     <builder hasNature="true">
-      <run class="org.emoflon.ibex.tgg.ui.ide.admin.IbexTGGBuilder"/>
+      <run class="org.emoflon.ibex.tgg.ide.admin.IbexTGGBuilder"/>
     </builder>
   </extension>
   <extension
         point="net.sourceforge.plantuml.eclipse.diagramTextProvider">
      <diagramTextProvider
-           providerClass="org.emoflon.ibex.tgg.ui.ide.visualisation.IbexTGGVisualiser">
+           providerClass="org.emoflon.ibex.tgg.ide.visualisation.IbexTGGVisualiser">
      </diagramTextProvider>
      <diagramTextProvider
-           providerClass="org.emoflon.ibex.tgg.ui.ide.visualisation.IbexModelAndMetamodelVisualiser">
+           providerClass="org.emoflon.ibex.tgg.ide.visualisation.IbexModelAndMetamodelVisualiser">
      </diagramTextProvider>
   </extension>
 </plugin>

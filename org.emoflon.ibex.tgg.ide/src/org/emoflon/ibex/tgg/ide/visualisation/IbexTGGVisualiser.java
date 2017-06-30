@@ -1,11 +1,12 @@
-package org.emoflon.ibex.tgg.ui.ide.visualisation;
+package org.emoflon.ibex.tgg.ide.visualisation;
 
 import java.util.Optional;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.xtext.ui.editor.XtextEditor;
-import org.emoflon.ibex.tgg.ui.ide.transformation.EditorTGGtoFlattenedTGG;
+import org.emoflon.ibex.tgg.ide.transformation.EditorTGGtoFlattenedTGG;
+import org.emoflon.ibex.tgg.ide.visualisation.IbexPlantUMLGenerator;
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile;
 
 public class IbexTGGVisualiser extends IbexVisualiser {

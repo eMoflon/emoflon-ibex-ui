@@ -4,8 +4,8 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.emoflon.ibex.tgg.ui.ide.admin.AbstractCommandHandler;
-import org.emoflon.ibex.tgg.ui.ide.admin.IbexWorkspaceUtil;
+import org.emoflon.ibex.tgg.ide.admin.AbstractCommandHandler;
+import org.emoflon.ibex.tgg.ide.admin.IbexWorkspaceUtil;
 import org.moflon.util.LogUtils;
 
 public class NewTGGRuleHandler extends AbstractCommandHandler {

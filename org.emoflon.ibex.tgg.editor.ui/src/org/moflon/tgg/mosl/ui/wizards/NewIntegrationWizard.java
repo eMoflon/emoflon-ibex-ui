@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.ui.INewWizard;
-import org.emoflon.ibex.tgg.ui.ide.admin.IbexTGGNature;
+import org.emoflon.ibex.tgg.ide.admin.IbexTGGNature;
 import org.moflon.tgg.mosl.defaults.AttrCondDefLibraryProvider;
 import org.moflon.tgg.mosl.defaults.DefaultFilesHelper;
 import org.moflon.util.LogUtils;
@@ -61,7 +61,7 @@ public class NewIntegrationWizard extends AbstractMoflonWizard implements INewWi
 	@Override
 	protected void doFinish(final IProgressMonitor monitor) throws CoreException {
 		try {
-			final SubMonitor subMon = SubMonitor.convert(monitor, "Creating eMoflon project", 6);
+			final SubMonitor subMon = SubMonitor.convert(monitor, "Creating eMoflon::Ibex project", 6);
 
 			String projectName = projectInfo.getProjectName();
 			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);

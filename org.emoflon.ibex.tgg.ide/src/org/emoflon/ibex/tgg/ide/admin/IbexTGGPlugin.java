@@ -1,4 +1,4 @@
-package org.emoflon.ibex.tgg.ui.ide.admin;
+package org.emoflon.ibex.tgg.ide.admin;
 
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;

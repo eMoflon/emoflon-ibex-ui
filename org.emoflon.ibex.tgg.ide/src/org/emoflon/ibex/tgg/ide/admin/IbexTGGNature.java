@@ -1,4 +1,4 @@
-package org.emoflon.ibex.tgg.ui.ide.admin;
+package org.emoflon.ibex.tgg.ide.admin;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,6 +23,7 @@ import org.eclipse.ui.PlatformUI;
 import org.emoflon.ibex.tgg.ui.ide.admin.plugins.BuildPropertiesFileBuilder;
 import org.emoflon.ibex.tgg.ui.ide.admin.plugins.ManifestFileUpdater;
 import org.emoflon.ibex.tgg.ui.ide.admin.plugins.ManifestFileUpdater.AttributeUpdatePolicy;
+import org.moflon.util.IbexUtil;
 import org.moflon.util.LogUtils;
 import org.moflon.util.WorkspaceHelper;
 import org.emoflon.ibex.tgg.ui.ide.admin.plugins.PluginManifestConstants;
@@ -33,10 +34,18 @@ public class IbexTGGNature implements IProjectNature {
 	public static final String XTEXT_NATURE_ID     = "org.eclipse.xtext.ui.shared.xtextNature";
 	public static final String PLUGIN_NATURE_ID = "org.eclipse.pde.PluginNature";
 	public static final String SCHEMA_FILE = "src/org/emoflon/ibex/tgg/Schema.tgg";
+	private static final String INATURE_EXTENSON_ID = "org.emoflon.ibex.tgg.ide.IbexTGGNatureExtension";
 	
 	private IProject project;
 
 	private static Logger logger = Logger.getLogger(IbexTGGNature.class);
+	
+	private Collection<NatureExtension> natureExtensions;
+
+	public IbexTGGNature() {
+		natureExtensions = IbexUtil.collectExtensions(INATURE_EXTENSON_ID, "class", NatureExtension.class);
+	}
+
 	
 	@Override
 	public void configure() throws CoreException {
@@ -50,7 +59,6 @@ public class IbexTGGNature implements IProjectNature {
 					LogUtils.error(logger, e);
 				}
 			}
-
 		});
 	}
 
@@ -71,6 +79,7 @@ public class IbexTGGNature implements IProjectNature {
 		setUpAsPluginProject();
 		setUpAsXtextProject();
 		setUpAsIbexProject();
+		for (NatureExtension ne : natureExtensions) ne.setUpProject(project);
 	}
 	
 	private void setUpAsIbexProject() throws CoreException, IOException {
@@ -85,24 +94,7 @@ public class IbexTGGNature implements IProjectNature {
 					"org.eclipse.emf.ecore.xmi",
 					
 					// Misc deps
-					"org.apache.log4j",
-					
-					// Democles deps
-					"org.gervarro.democles.common",
-					"org.gervarro.democles.specification.emf",
-					"org.gervarro.democles.interpreter",
-					"org.gervarro.democles.emf",
-					"org.gervarro.democles.interpreter.emf",
-					"org.gervarro.democles.interpreter.incremental",
-					"org.gervarro.democles.interpreter.incremental.emf",
-					"org.gervarro.democles.interpreter.lightning",
-					"org.gervarro.democles.notification.emf",
-					"org.gervarro.democles.plan",
-					"org.gervarro.democles.plan.emf",
-					"org.gervarro.democles.plan.incremental.leaf",
-					"org.gervarro.util",
-					"org.gervarro.notification",
-					"org.gervarro.plan.dynprog"
+					"org.apache.log4j"
 					));
 			return changed;
 		});
