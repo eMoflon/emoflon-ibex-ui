@@ -7,10 +7,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -63,6 +65,9 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	private boolean buildIsNecessary = false;
 	
 	private Collection<BuilderExtension> builderExtensions;
+	
+	// Blackboard for computed results and sharing data between builder extensions
+	private Map<String, Object> blackboard;
 
 	public IbexTGGBuilder() {
 		builderExtensions = IbexUtil.collectExtensions(IBUILDER_EXTENSON_ID, "class", BuilderExtension.class);
@@ -70,6 +75,8 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	
 	@Override
 	protected IProject[] build(int kind, Map<String, String> args, IProgressMonitor monitor) throws CoreException {
+		blackboard = new HashMap<>();
+		
 		switch (kind) {
 		case CLEAN_BUILD:
 			performClean();
@@ -307,5 +314,13 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 				LogUtils.error(logger, e);
 			}
 		});
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> T computeOrGetFromBlackboard(String key, Supplier<T> computation){
+		if(!blackboard.containsKey(key))
+			blackboard.put(key, computation.get());
+		
+		return (T) blackboard.get(key);
 	}
 }
