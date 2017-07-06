@@ -20,9 +20,9 @@ public class EditorTGGtoFlattenedTGG {
 	private Map<String, ObjectVariablePattern> targetPatterns;
 	private Map<String, CorrVariablePattern> corrPatterns;
 
-	// TODO implement exceptions for invalid refinements
-	// TODO implement warnings for nonsensical refinements
-	// TODO implement merge of attribute conditions
+	// TODO[FStolte] implement exceptions for invalid refinements
+	// TODO[FStolte] implement warnings for nonsensical refinements
+	// TODO[FStolte] implement merge of attribute conditions
 	
 	/**
 	 * Produces a flattened {@linkplain TripleGraphGrammarFile} from a given non-flattened TripleGraphGrammarFile.
@@ -137,7 +137,7 @@ public class EditorTGGtoFlattenedTGG {
 		mergedRule.getCorrespondencePatterns().clear();
 		mergedRule.getCorrespondencePatterns().addAll(corrPatterns.values());
 		
-		// TODO AttributeConditions merge should be nicer, e.g. combine conditions on the same attribute
+		// TODO[FStolte] AttributeConditions merge should be nicer, e.g. combine conditions on the same attribute
 		
 		// update all references to point to the correct copy in the flattened TGG
 		cleanupReferences(mergedRule);
@@ -170,7 +170,7 @@ public class EditorTGGtoFlattenedTGG {
 	}
 	
 	private void mergeTwoObjectPatterns(ObjectVariablePattern from, ObjectVariablePattern to) {
-		// TODO check for invalid configurations
+		// TODO[FStolte] check for invalid configurations
 		
 		// Types
 		if (to.getType().isSuperTypeOf(from.getType())) {
@@ -196,7 +196,7 @@ public class EditorTGGtoFlattenedTGG {
 			}
 		}
 		
-		// Attributes     TODO AttributeAssignment/Constraint merge should be nicer, e.g. combine constraints on the same attribute
+		// Attributes     TODO[FStolte] AttributeAssignment/Constraint merge should be nicer, e.g. combine constraints on the same attribute
 		to.getAttributeAssignments().addAll(EcoreUtil.copyAll(from.getAttributeAssignments()));
 		to.getAttributeConstraints().addAll(EcoreUtil.copyAll(from.getAttributeConstraints()));
 		
@@ -216,7 +216,7 @@ public class EditorTGGtoFlattenedTGG {
 	
 
 	private void mergeTwoCorrPatterns(CorrVariablePattern from, CorrVariablePattern to) {
-		// TODO check for invalid configurations
+		// TODO[FStolte] check for invalid configurations
 		
 		// Types
 		CorrType superType = from.getType().getSuper();
