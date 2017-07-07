@@ -143,7 +143,7 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	 * @throws CoreException
 	 */
 	public void createDefaultRunFile(String fileName, BiFunction<String, String, String> generator) throws CoreException {
-		createDefaultFile(RUN_FILE_PATH, fileName, ".java", generator);
+		createIfNotExists(RUN_FILE_PATH, fileName, ".java", generator);
 	}
 
 	/**
@@ -160,7 +160,7 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	 *            contents
 	 * @throws CoreException
 	 */
-	public void createDefaultFile(String path, String fileName, String ending, BiFunction<String, String, String> generator) throws CoreException {
+	public void createIfNotExists(String path, String fileName, String ending, BiFunction<String, String, String> generator) throws CoreException {
 		IPath pathToFile = new Path(path + fileName + ending);
 		IFile file = getProject().getFile(pathToFile);
 		if (!file.exists()){ 
@@ -304,9 +304,9 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	}
 
 	private void performClean() {
-		List<String> toDelete = Arrays.asList(MODEL_FOLDER + getProject().getName() + ECORE_FILE_EXTENSION,
-				MODEL_FOLDER + getProject().getName() + EDITOR_MODEL_EXTENSION,
-				MODEL_FOLDER + getProject().getName() + INTERNAL_TGG_MODEL_EXTENSION);
+		List<String> toDelete = Arrays.asList(MODEL_FOLDER + "/" + getProject().getName() + ECORE_FILE_EXTENSION,
+				MODEL_FOLDER + "/" + getProject().getName() + EDITOR_MODEL_EXTENSION,
+				MODEL_FOLDER + "/" + getProject().getName() + INTERNAL_TGG_MODEL_EXTENSION);
 		toDelete.stream().map(f -> getProject().getFile(f)).filter(IFile::exists).forEach(f -> {
 			try {
 				f.delete(true, new NullProgressMonitor());
@@ -314,6 +314,8 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 				LogUtils.error(logger, e);
 			}
 		});
+		
+		builderExtensions.forEach(be -> be.performClean(this));
 	}
 	
 	@SuppressWarnings("unchecked")
