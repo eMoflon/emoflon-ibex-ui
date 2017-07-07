@@ -23,10 +23,7 @@ Require-Bundle: org.eclipse.xtext,
  org.eclipse.pde.core;bundle-version="3.11.1",
  org.apache.log4j;bundle-version="1.2.15"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Bundle-ClassPath: .antlr-generator-3.2.0-patch.jar,
- .,
- lib/commons-io-2.5.jar,
- lib/commons-lang3-3.5.jar
+Bundle-ClassPath: .antlr-generator-3.2.0-patch.jar,.,lib/commons-io-2.5.jar,lib/commons-lang3-3.5.jar
 Export-Package: antlr,
  antlr.ASdebug,
  antlr.actions.cpp,
@@ -85,3 +82,4 @@ Export-Package: antlr,
  org.moflon.tgg.mosl.tgg.util,
  org.moflon.tgg.mosl.validation,
  org.moflon.util
+Import-Package: org.apache.log4j
