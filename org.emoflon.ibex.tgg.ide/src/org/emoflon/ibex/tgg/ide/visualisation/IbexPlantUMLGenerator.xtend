@@ -10,8 +10,11 @@ import org.moflon.tgg.mosl.tgg.LinkVariablePattern
 import org.moflon.tgg.mosl.tgg.ObjectVariablePattern
 import org.moflon.tgg.mosl.tgg.Operator
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
+import java.util.HashMap
 
 class IbexPlantUMLGenerator {
+	
+	private static var idMap = new HashMap<EObject, String>();
 	
 	public static def String wrapInTags(String body){
 		'''
@@ -94,13 +97,13 @@ class IbexPlantUMLGenerator {
 	public def static String visualiseEcoreElements(Collection<EClass> eclasses, Collection<EReference> refs){
 		'''
 		«FOR c : eclasses»
-		class «identifierFor(c)»
+		class «identifierForClass(c)»
 			«FOR s : c.ESuperTypes»
-			«identifierFor(c)»--|>«identifierFor(s)»
+			«identifierForClass(c)»--|>«identifierForClass(s)»
 			«ENDFOR»
 		«ENDFOR»
 		«FOR r : refs»
-		«identifierFor(r.EContainingClass)»«IF r.isContainment» *«ENDIF»--> «multiplicityFor(r)» «identifierFor(r.EReferenceType)» : "«r.name»"
+		«identifierForClass(r.EContainingClass)»«IF r.isContainment» *«ENDIF»--> «multiplicityFor(r)» «identifierForClass(r.EReferenceType)» : "«r.name»"
 		«ENDFOR»
 		'''
 	}
@@ -109,21 +112,37 @@ class IbexPlantUMLGenerator {
 		'''"«IF r.lowerBound == -1»*«ELSE»«r.lowerBound»«ENDIF»..«IF r.upperBound == -1»*«ELSE»«r.upperBound»«ENDIF»"'''
 	}
 	
-	private def static String identifierFor(EClass c)
+	private def static String identifierForClass(EClass c)
 		'''"«c.EPackage.name».«c.name»"'''
 		
 	public def static String visualiseModelElements(Collection<EObject> objects, Collection<Pair<String, Pair<EObject, EObject>>> links){
+		idMap.clear
+		
 		'''
 		«FOR o : objects»
-		object «identifierFor(o)»
+		object «identifierForObject(o)»{
+			«visualiseAllAttributes(o)»
+		}
 		«ENDFOR»
 		«FOR l : links»
-		«identifierFor(l.right.left)» --> «identifierFor(l.right.right)» : "«l.left»"
+		«identifierForObject(l.right.left)» --> «identifierForObject(l.right.right)» : "«l.left»"
 		«ENDFOR»
 		'''
 	}
 	
-	private def static Object identifierFor(EObject o)
-		'''«o.hashCode».«o.eClass.name»'''
+	def static visualiseAllAttributes(EObject o) {
+		'''
+		«FOR a : o.eClass.EAllAttributes»
+			«a.name» = «o.eGet(a)»
+		«ENDFOR»
+		'''
+	}
+	
+	private def static Object identifierForObject(EObject o){
+		if(!idMap.containsKey(o))
+			idMap.put(o, '''o«idMap.keySet.size + 1»''')
+			
+		'''«idMap.get(o)».«o.eClass.name»'''	
+	}
 	
 }
