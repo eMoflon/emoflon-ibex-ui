@@ -4,11 +4,10 @@
  */
 package org.moflon.tgg.mosl.formatting2;
 
-import com.google.inject.Inject
+import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.formatting2.AbstractFormatter2
 import org.eclipse.xtext.formatting2.IFormattableDocument
-import org.moflon.tgg.mosl.services.TGGGrammarAccess
 import org.moflon.tgg.mosl.tgg.Adornment
 import org.moflon.tgg.mosl.tgg.AttrCond
 import org.moflon.tgg.mosl.tgg.AttrCondDef
@@ -31,7 +30,6 @@ import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
 import org.moflon.tgg.mosl.tgg.Using
 
 import static org.moflon.tgg.mosl.tgg.TggPackage.Literals.*
-import java.util.List
 
 class TGGFormatter extends AbstractFormatter2 {
 
@@ -48,9 +46,7 @@ class TGGFormatter extends AbstractFormatter2 {
     val genKW 		= "#gen:"
     val arrowKW		= "->"
 	
-	@Inject extension TGGGrammarAccess
-
-// predefined Styles
+    // predefined Styles
 	def private void lineSeparator(List<? extends EObject> items, extension IFormattableDocument document){
 		if(items != null && items.size() > 0){
 			items.get(0).prepend[newLine]
