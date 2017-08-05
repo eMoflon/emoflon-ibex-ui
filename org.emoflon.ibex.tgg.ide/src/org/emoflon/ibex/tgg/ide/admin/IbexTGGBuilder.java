@@ -81,7 +81,6 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 		case FULL_BUILD:
 		case AUTO_BUILD:
 		case INCREMENTAL_BUILD:
-			performClean();
 			generateFilesIfchangeIsRelevant();
 			break;
 		default:
@@ -104,6 +103,7 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	}
 
 	private void generateFiles() {
+		performClean();
 		generateAttrCondLib();
 		generateEditorModel()
 			.ifPresent(editorModel -> 
