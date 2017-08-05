@@ -3,10 +3,8 @@ package org.emoflon.ibex.tgg.ide.admin;
 import static org.moflon.util.WorkspaceHelper.addAllFoldersAndFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +37,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.URIHandlerImpl;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.emoflon.ibex.tgg.ide.transformation.EditorTGGtoFlattenedTGG;
@@ -79,14 +78,10 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 		
 		switch (kind) {
 		case CLEAN_BUILD:
-			performClean();
-			break;
 		case FULL_BUILD:
-			performClean();
-			generateFiles();
-			break;
 		case AUTO_BUILD:
 		case INCREMENTAL_BUILD:
+			performClean();
 			generateFilesIfchangeIsRelevant();
 			break;
 		default:
@@ -97,7 +92,10 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	}
 
 	private void generateFilesIfchangeIsRelevant() throws CoreException {
-		getDelta(getProject()).accept(this);
+		IResourceDelta delta = getDelta(getProject());
+		
+		if(delta != null)
+			delta.accept(this);
 		
 		if(buildIsNecessary)
 			generateFiles();
@@ -184,9 +182,18 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 			if (schemaFile.exists()) {
 				XtextResource schemaResource = loadSchema(resourceSet, schemaFile);
 				if (schemaIsOfExpectedType(schemaResource)) {
+					// Load
+					loadAllRules(resourceSet, getProject().getFolder(SRC_FOLDER));
+					EcoreUtil2.resolveLazyCrossReferences(schemaResource, () -> false); 
+					resourceSet.getResources().forEach(r -> EcoreUtil2.resolveLazyCrossReferences(r, () -> false));
+					EcoreUtil.resolveAll(resourceSet);
+					
+					// Combine to form single tgg model
 					TripleGraphGrammarFile xtextParsedTGG = (TripleGraphGrammarFile) schemaResource.getContents().get(0);
-					loadAllRulesToTGGFile(xtextParsedTGG, resourceSet, getProject().getFolder(SRC_FOLDER));
+					collectAllRules(xtextParsedTGG, resourceSet);
 					addAttrCondDefLibraryReferencesToSchema(xtextParsedTGG);
+					
+					// Persist and return
 					IFile editorFile = getProject().getFolder(IbexTGGBuilder.MODEL_FOLDER).getFile(getProject().getName() + EDITOR_MODEL_EXTENSION);
 					saveModelInProject(editorFile, resourceSet, xtextParsedTGG);
 					return Optional.of(xtextParsedTGG);
@@ -197,6 +204,15 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 		}
 
 		return Optional.empty();
+	}
+
+	private void collectAllRules(TripleGraphGrammarFile xtextParsedTGG, XtextResourceSet resourceSet) {
+		resourceSet.getAllContents().forEachRemaining(root -> {
+			if(root instanceof TripleGraphGrammarFile){
+				TripleGraphGrammarFile f = (TripleGraphGrammarFile)root;
+				xtextParsedTGG.getRules().addAll(f.getRules());
+			}
+		});
 	}
 
 	private void addAttrCondDefLibraryReferencesToSchema(TripleGraphGrammarFile xtextParsedTGG) {
@@ -211,35 +227,21 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 		xtextParsedTGG.getSchema().getAttributeCondDefs().addAll(usedAttrCondDefs);
 	}
 
-	private void loadAllRulesToTGGFile(TripleGraphGrammarFile xtextParsedTGG, XtextResourceSet resourceSet,
-			IFolder root) throws CoreException, IOException {
-		Collection<Rule> rules = new ArrayList<Rule>();
+	private void loadAllRules(XtextResourceSet resourceSet, IFolder root) throws CoreException, IOException {
 		for (IResource iResource : root.members()) {
 			if (iResource instanceof IFile) {
-				Collection<Rule> rulesFromFile = loadRules(iResource, resourceSet);
-				rules.addAll(rulesFromFile);
+				loadRules(iResource, resourceSet);
 			} else if (iResource instanceof IFolder) {
-				loadAllRulesToTGGFile(xtextParsedTGG, resourceSet, IFolder.class.cast(iResource));
+				loadAllRules(resourceSet, IFolder.class.cast(iResource));
 			}
 		}
-		xtextParsedTGG.getRules().addAll(rules);
 	}
 
-	private Collection<Rule> loadRules(IResource iResource, XtextResourceSet resourceSet) throws IOException {
+	private void loadRules(IResource iResource, XtextResourceSet resourceSet) throws IOException {
 		IFile ruleFile = (IFile) iResource;
 		if (ruleFile.getName().endsWith(TGG_FILE_EXTENSION)) {
-			XtextResource ruleRes = (XtextResource) resourceSet
-					.getResource(URI.createPlatformResourceURI(ruleFile.getFullPath().toString(), true), true);
-			EcoreUtil.resolveAll(resourceSet);
-
-			EObject tggFile = ruleRes.getContents().get(0);
-			if (tggFile instanceof TripleGraphGrammarFile) {
-				TripleGraphGrammarFile tggFileWithRules = (TripleGraphGrammarFile) tggFile;
-				return new ArrayList<Rule>(tggFileWithRules.getRules());
-			}
+			resourceSet.getResource(URI.createPlatformResourceURI(ruleFile.getFullPath().toString(), true), true);	
 		}
-
-		return Collections.<Rule>emptyList();
 	}
 
 	private boolean schemaIsOfExpectedType(XtextResource schemaResource) {
@@ -304,9 +306,13 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	}
 
 	private void performClean() {
-		List<String> toDelete = Arrays.asList(MODEL_FOLDER + "/" + getProject().getName() + ECORE_FILE_EXTENSION,
+		List<String> toDelete = Arrays.asList(
+				MODEL_FOLDER + "/" + getProject().getName() + ECORE_FILE_EXTENSION,
 				MODEL_FOLDER + "/" + getProject().getName() + EDITOR_MODEL_EXTENSION,
-				MODEL_FOLDER + "/" + getProject().getName() + INTERNAL_TGG_MODEL_EXTENSION);
+				MODEL_FOLDER + "/" + getProject().getName() + INTERNAL_TGG_MODEL_EXTENSION,
+				MODEL_FOLDER + "/" + getProject().getName() + EDITOR_FLATTENED_MODEL_EXTENSION,
+				MODEL_FOLDER + "/" + getProject().getName() + INTERNAL_TGG_FLATTENED_MODEL_EXTENSION
+			);
 		toDelete.stream().map(f -> getProject().getFile(f)).filter(IFile::exists).forEach(f -> {
 			try {
 				f.delete(true, new NullProgressMonitor());
