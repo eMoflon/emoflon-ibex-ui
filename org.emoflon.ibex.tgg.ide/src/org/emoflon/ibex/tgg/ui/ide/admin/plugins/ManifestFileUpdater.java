@@ -129,33 +129,30 @@ public class ManifestFileUpdater
       }
    }
 
-   /**
-    * Updates the manifest (if necessary) to contain the given dependencies.
-    * 
-    * @param newDependencies
-    *           the dependencies to be added (if not present yet)
-    * @return whether the manifest was changed
-    */
-   public static boolean updateDependencies(final Manifest manifest, final List<String> newDependencies)
-   {
-      final List<String> currentDependencies = extractDependencies(manifest);
+	/**
+	 * Updates the manifest (if necessary) to contain the given dependencies.
+	 * 
+	 * @return whether the manifest was changed
+	 */
+	public static boolean updateDependencies(final Manifest manifest, final List<String> newDependenciesPre, final List<String> newDependenciesPost) {
+		final List<String> currentDependencies = extractDependencies(manifest);
 
-      final List<String> missingNewDependencies = calculateMissingDependencies(currentDependencies, newDependencies);
+		final List<String> missingNewDependenciesPre = calculateMissingDependencies(currentDependencies, newDependenciesPre);
+		final List<String> missingNewDependenciesPost = calculateMissingDependencies(currentDependencies, newDependenciesPost);
 
-      if (!missingNewDependencies.isEmpty())
-      {
-         for (final String newDependency : missingNewDependencies)
-         {
-            currentDependencies.add(newDependency);
-         }
+		if(missingNewDependenciesPre.isEmpty() && missingNewDependenciesPost.isEmpty())
+			return false;
+		
+		final List<String> allDependencies = new ArrayList<>();
+		
+		allDependencies.addAll(missingNewDependenciesPre);
+		allDependencies.addAll(currentDependencies);
+		allDependencies.addAll(missingNewDependenciesPost);
+		
+		setDependencies(manifest, allDependencies);
 
-         setDependencies(manifest, currentDependencies);
-         return true;
-      } else
-      {
-         return false;
-      }
-   }
+		return true;
+	}
 
    /**
     * Removes the given plugin ID from the dependencies of the given manifest
