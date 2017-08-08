@@ -59,7 +59,7 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	public static final String EDITOR_FLATTENED_MODEL_EXTENSION = "_flattened.editor.xmi";
 	public static final String SRC_FOLDER = "src";
 	public static final String MODEL_FOLDER = "model";
-	public static final String RUN_FILE_PATH = "src/org/emoflon/ibex/tgg/run/";
+	public static final String RUN_FILE_PATH_PREFIX = "src/org/emoflon/ibex/tgg/run/";
 	private static final String IBUILDER_EXTENSON_ID = "org.emoflon.ibex.tgg.ide.IbexTGGBuilderExtension";
 	public static final Logger logger = Logger.getLogger(IbexTGGBuilder.class);
 	private boolean buildIsNecessary = false;
@@ -143,7 +143,7 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	 * @throws CoreException
 	 */
 	public void createDefaultRunFile(String fileName, BiFunction<String, String, String> generator) throws CoreException {
-		createIfNotExists(RUN_FILE_PATH, fileName, ".java", generator);
+		createIfNotExists(RUN_FILE_PATH_PREFIX+getProject().getName().toLowerCase()+"/", fileName, ".java", generator);
 	}
 
 	/**
