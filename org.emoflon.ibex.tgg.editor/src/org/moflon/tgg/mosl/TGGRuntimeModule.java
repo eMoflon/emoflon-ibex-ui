@@ -3,12 +3,6 @@
  */
 package org.moflon.tgg.mosl;
 
-import java.util.Map;
-
-import org.eclipse.emf.common.util.DiagnosticChain;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.util.EObjectValidator;
 import org.eclipse.xtext.scoping.IScopeProvider;
 import org.moflon.tgg.mosl.scoping.TGGScopeProvider;
 
@@ -38,16 +32,5 @@ public class TGGRuntimeModule extends org.moflon.tgg.mosl.AbstractTGGRuntimeModu
    {
       org.eclipse.emf.ecore.EValidator.Registry registry = super.bindEValidatorRegistry();
       return registry;
-   }
-   
-
-   private final class NonRequiredFeatureValidatingValidator extends EObjectValidator
-   {
-      @Override
-      protected boolean validate_MultiplicityConforms(EObject eObject, EStructuralFeature eStructuralFeature, DiagnosticChain diagnostics,
-            Map<Object, Object> context)
-      {
-         return true;
-      }
    }
 }
