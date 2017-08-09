@@ -107,7 +107,7 @@ class TGGValidator extends AbstractTGGValidator {
 		  var operator = objectVariablePattern.op;
 		  var ruleIsAbstract = rule.abstractRule;
 		  var typeIsAbstract = type.abstract;
-		  var isGeneration = operator != null && operator.value != null && operator.value.equalsIgnoreCase("++ ");
+		  var isGeneration = operator != null && operator.value != null && operator.value.equalsIgnoreCase("++");
 		  var isAnError = !ruleIsAbstract && typeIsAbstract && isGeneration;
 		  if(isAnError){
 		  	error("The type of the object variable '" + objectVariablePattern.name + "' is abstract and the rule '" + Rule.name + "' is not abstract", TggPackage.Literals.OBJECT_VARIABLE_PATTERN__TYPE, TGGValidator.TYPE_IS_ABSTRACT);
