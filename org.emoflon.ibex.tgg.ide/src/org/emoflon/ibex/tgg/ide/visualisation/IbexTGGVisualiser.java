@@ -2,21 +2,42 @@ package org.emoflon.ibex.tgg.ide.visualisation;
 
 import java.util.Optional;
 
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.xtext.ui.editor.XtextEditor;
+import org.emoflon.ibex.tgg.ide.admin.IbexTGGBuilder;
 import org.emoflon.ibex.tgg.ide.transformation.EditorTGGtoFlattenedTGG;
-import org.emoflon.ibex.tgg.ide.visualisation.IbexPlantUMLGenerator;
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile;
 
 public class IbexTGGVisualiser extends IbexVisualiser {
 	
 	@Override
 	protected String getDiagramBody(IEditorPart editor, ISelection selection) {
-		return maybeVisualiseTGGRule(editor, selection).orElse(
-			   IbexPlantUMLGenerator.emptyDiagram());
+		return maybeVisualiseTGGRule(editor, selection)   .orElse(
+			   maybeVisualiseTGGSchema(editor, selection) .orElse(
+			   IbexPlantUMLGenerator.emptyDiagram()))     ;
 	}
 	
+	private Optional<String> maybeVisualiseTGGSchema(IEditorPart editor, ISelection selection) {
+		return extractTGGFileFromEditor(editor)
+				.filter(file -> file.getSchema() != null)
+				.map(file -> file.eResource().getURI().segment(1))
+				.map(projectName -> loadTGG(projectName))
+				.map(IbexPlantUMLGenerator::visualiseTGGRuleOverview);
+	}
+
+	private TripleGraphGrammarFile loadTGG(String projectName) {
+		ResourceSet rs = new ResourceSetImpl();
+		Resource tgg = rs.getResource(URI.createPlatformResourceURI(projectName + "/" + 
+				IbexTGGBuilder.MODEL_FOLDER + "/" + projectName + 
+				IbexTGGBuilder.EDITOR_MODEL_EXTENSION, true), true);
+		return (TripleGraphGrammarFile) tgg.getContents().get(0);
+	}
+
 	private Optional<String> maybeVisualiseTGGRule(IEditorPart editor, ISelection selection) {
 		return extractTGGFileFromEditor(editor)
 				.map(file -> file.getSchema() == null? file : null)
