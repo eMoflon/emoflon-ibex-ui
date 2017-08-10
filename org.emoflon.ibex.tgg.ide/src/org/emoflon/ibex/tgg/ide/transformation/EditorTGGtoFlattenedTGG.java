@@ -1,14 +1,27 @@
 package org.emoflon.ibex.tgg.ide.transformation;
 
-import java.util.*;
-import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-
-import org.moflon.tgg.mosl.tgg.*;
+import org.moflon.tgg.mosl.tgg.AttrCond;
+import org.moflon.tgg.mosl.tgg.AttributeExpression;
+import org.moflon.tgg.mosl.tgg.CorrType;
+import org.moflon.tgg.mosl.tgg.CorrVariablePattern;
+import org.moflon.tgg.mosl.tgg.LinkVariablePattern;
+import org.moflon.tgg.mosl.tgg.ObjectVariablePattern;
+import org.moflon.tgg.mosl.tgg.OperatorPattern;
+import org.moflon.tgg.mosl.tgg.Rule;
+import org.moflon.tgg.mosl.tgg.TggFactory;
+import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile;
 
 /**
  *	Provides flattening of rule refinements for {@linkplain TripleGraphGrammarFile}s.

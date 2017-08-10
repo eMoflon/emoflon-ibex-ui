@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.ICommand;
@@ -85,16 +86,20 @@ public class IbexTGGNature implements IProjectNature {
 	private void setUpAsIbexProject() throws CoreException, IOException {
 		new ManifestFileUpdater().processManifest(project, manifest -> {
 			boolean changed = false;
-			changed |= ManifestFileUpdater.updateDependencies(manifest, Arrays.asList(
-					// Ibex deps
-					"org.emoflon.ibex.tgg.core.runtime",
-					"org.emoflon.ibex.tgg.core.language",
+			changed |= ManifestFileUpdater.updateDependencies(
+					manifest, 
+					Collections.emptyList(), 
+					Arrays.asList(
+							// Misc deps
+							"org.apache.log4j",
+							
+							// EMF deps
+							"org.eclipse.emf.ecore.xmi",
+							
+							// Ibex deps
+							"org.emoflon.ibex.tgg.core.language",
+							"org.emoflon.ibex.tgg.core.runtime"
 					
-					// EMF deps
-					"org.eclipse.emf.ecore.xmi",
-					
-					// Misc deps
-					"org.apache.log4j"
 					));
 			return changed;
 		});

@@ -69,8 +69,8 @@ class TGGValidator extends AbstractTGGValidator {
 				if(classes.containsKey(ne.class)){
 					var object = classes.get(ne.class);
 					if(!object.equals(ne)){
-						error("Names must be unique. The Name '" + ne.name + "' already used", ne,  TggPackage.Literals.NAMED_ELEMENTS__NAME, TGGValidator.NOT_UNIQUE_NAME);
-						error("Names must be unique. The Name '" + ne.name + "' already used", object,  TggPackage.Literals.NAMED_ELEMENTS__NAME, TGGValidator.NOT_UNIQUE_NAME);
+						error("Names must be unique. The name '" + ne.name + "' is already in use.", ne,  TggPackage.Literals.NAMED_ELEMENTS__NAME, TGGValidator.NOT_UNIQUE_NAME);
+						error("Names must be unique. The name '" + ne.name + "' is already in use.", object,  TggPackage.Literals.NAMED_ELEMENTS__NAME, TGGValidator.NOT_UNIQUE_NAME);
 						classes.remove(ne.class);
 						containers.put(ne.eContainer, classes);
 						names.put(ne.name, containers)
@@ -107,7 +107,7 @@ class TGGValidator extends AbstractTGGValidator {
 		  var operator = objectVariablePattern.op;
 		  var ruleIsAbstract = rule.abstractRule;
 		  var typeIsAbstract = type.abstract;
-		  var isGeneration = operator != null && operator.value != null && operator.value.equalsIgnoreCase("++ ");
+		  var isGeneration = operator != null && operator.value != null && operator.value.equalsIgnoreCase("++");
 		  var isAnError = !ruleIsAbstract && typeIsAbstract && isGeneration;
 		  if(isAnError){
 		  	error("The type of the object variable '" + objectVariablePattern.name + "' is abstract and the rule '" + Rule.name + "' is not abstract", TggPackage.Literals.OBJECT_VARIABLE_PATTERN__TYPE, TGGValidator.TYPE_IS_ABSTRACT);
@@ -152,7 +152,7 @@ class TGGValidator extends AbstractTGGValidator {
 			var ovOpValue = ov.op.value;
 			for(LinkVariablePattern linkVar : ov.linkVariablePatterns){
 				if(linkVar.op == null || !ovOpValue.equals(linkVar.op.value)){
-					error("Link Variable '" + linkVar.type.name + "' has a diffrent operator", linkVar, TggPackage.Literals.OPERATOR_PATTERN__OP, TGGValidator.LINK_VARIABLE_DOES_NOT_HAVE_SAME_OPERATOR_LIKE_OBJECT_VARIABLE_PATTERN)
+					error("Link Variable '" + linkVar.type.name + "' has a different operator", linkVar, TggPackage.Literals.OPERATOR_PATTERN__OP, TGGValidator.LINK_VARIABLE_DOES_NOT_HAVE_SAME_OPERATOR_LIKE_OBJECT_VARIABLE_PATTERN)
 				}
 			}
 		}
@@ -167,7 +167,7 @@ class TGGValidator extends AbstractTGGValidator {
 
 				if (trgOVOp != null && trgOVOp.value.equals("++") &&
 					((linkVar.op != null && !("++".equals(linkVar.op.value))) || linkVar.op == null)) {
-					error("Link Variable '" + linkVar.type.name + "' has a diffrent operator", linkVar,
+					error("Link Variable '" + linkVar.type.name + "' has a different operator", linkVar,
 						TggPackage.Literals.OPERATOR_PATTERN__OP,
 						TGGValidator.LINK_VARIABLE_DOES_NOT_HAVE_SAME_OPERATOR_LIKE_TARGET_OBJECT_VARIABLE_PATTERN);
 					}

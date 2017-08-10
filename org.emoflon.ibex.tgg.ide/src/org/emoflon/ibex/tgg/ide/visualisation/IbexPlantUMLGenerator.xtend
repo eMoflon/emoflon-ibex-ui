@@ -145,4 +145,26 @@ class IbexPlantUMLGenerator {
 		'''«idMap.get(o)».«o.eClass.name»'''	
 	}
 	
+	public def static String visualiseTGGRuleOverview(TripleGraphGrammarFile tgg){
+		'''
+		digraph root {
+			fontname=Monospace
+			fontsize=9
+			label="";
+		«FOR r:tgg.rules»
+			"«r.name»" [fontsize=9, fontname=Monospace, shape=box, color=«IF r.abstractRule»GREY«ELSE»BLACK«ENDIF», style=rounded, href=""];
+		«ENDFOR»
+		«FOR r:tgg.rules»
+			«FOR sup:r.supertypes»
+				"«r.name»" -> "«sup.name»" [penwidth=1, arrowtail="none", arrowhead="onormal", color=BLACK, constraint=true];
+			«ENDFOR»
+		«ENDFOR»
+		«FOR r:tgg.rules»
+			«IF r.kernel != null»
+				"«r.kernel.name»" -> «r.name» [penwidth=1, dir="both", arrowtail="odiamond", arrowhead="vee", label=" 0..*", fontsize=8, color=BLACK, constraint=true];
+			«ENDIF»
+		«ENDFOR»
+		}
+		'''
+	}
 }
