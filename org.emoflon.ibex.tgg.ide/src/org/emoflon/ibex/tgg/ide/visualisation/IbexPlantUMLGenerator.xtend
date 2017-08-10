@@ -11,7 +11,7 @@ import org.moflon.tgg.mosl.tgg.ObjectVariablePattern
 import org.moflon.tgg.mosl.tgg.Operator
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
 import java.util.HashMap
-
+ 
 class IbexPlantUMLGenerator {
 	
 	private static var idMap = new HashMap<EObject, String>();
