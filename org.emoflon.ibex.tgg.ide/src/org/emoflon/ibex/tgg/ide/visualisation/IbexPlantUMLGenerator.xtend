@@ -88,7 +88,7 @@ class IbexPlantUMLGenerator {
 	}
 	
 	private def static operatorToColour(Operator op) {
-		if(op != null)
+		if(op !== null)
 			return "GREEN"
 		else
 			return "BLACK"
@@ -160,7 +160,7 @@ class IbexPlantUMLGenerator {
 			«ENDFOR»
 		«ENDFOR»
 		«FOR r:tgg.rules»
-			«IF r.kernel != null»
+			«IF r.kernel !== null»
 				"«r.kernel.name»" -> «r.name» [penwidth=1, dir="both", arrowtail="odiamond", arrowhead="vee", label=" 0..*", fontsize=8, color=BLACK, constraint=true];
 			«ENDIF»
 		«ENDFOR»
