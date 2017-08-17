@@ -1,8 +1,13 @@
 package org.emoflon.ibex.tgg.ide.visualisation
 
+import java.util.ArrayList
 import java.util.Collection
 import java.util.HashMap
+import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.tuple.Pair
+import org.eclipse.core.resources.IFile
+import org.eclipse.core.resources.IFolder
+import org.eclipse.core.resources.IProject
 import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
@@ -11,7 +16,7 @@ import org.moflon.tgg.mosl.tgg.LinkVariablePattern
 import org.moflon.tgg.mosl.tgg.ObjectVariablePattern
 import org.moflon.tgg.mosl.tgg.Operator
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
-import org.apache.commons.lang3.StringUtils
+import org.moflon.util.WorkspaceHelper
 
 class IbexPlantUMLGenerator {
 	
@@ -154,26 +159,48 @@ class IbexPlantUMLGenerator {
 		'''«idMap.get(o)».«o.eClass.name»'''	
 	}
 	
-	public def static String visualiseTGGRuleOverview(TripleGraphGrammarFile tgg){
+	public def static String visualiseTGGRuleOverview(String projectName, TripleGraphGrammarFile tgg){
 		'''
-		digraph root {
-			fontname=Monospace
-			fontsize=9
-			label="";
+		hide empty members
+		hide circle
+		hide stereotype
+				
+		skinparam shadowing false
+		
+		skinparam class {
+			BackgroundColor AliceBlue
+			BorderColor Black
+			ArrowColor Black
+		}
+		
 		«FOR r:tgg.rules»
-			"«r.name»" [fontsize=9, fontname=Monospace, shape=box, color=«IF r.abstractRule»GREY«ELSE»BLACK«ENDIF», style=rounded, href=""];
+			 «IF r.abstractRule»abstract«ENDIF» class "«r.name»" [[«platformURIToRule(projectName, r.name)»]]
 		«ENDFOR»
 		«FOR r:tgg.rules»
 			«FOR sup:r.supertypes»
-				"«r.name»" -> "«sup.name»" [penwidth=1, arrowtail="none", arrowhead="onormal", color=BLACK, constraint=true];
+				"«r.name»" -up-|> "«sup.name»"
 			«ENDFOR»
 		«ENDFOR»
 		«FOR r:tgg.rules»
 			«IF r.kernel !== null»
-				"«r.kernel.name»" -> «r.name» [penwidth=1, dir="both", arrowtail="odiamond", arrowhead="vee", label=" 0..*", fontsize=8, color=BLACK, constraint=true];
+				"«r.kernel.name»" *--> "0..*" "«r.name»"
 			«ENDIF»
 		«ENDFOR»
-		}
 		'''
+	}
+	
+	def static platformURIToRule(String projectName, String ruleName) {
+		'''platform:/resource/«projectName»/«WorkspaceHelper.getProjectByName(projectName).allFiles.filter[f | f.name.endsWith(ruleName + ".tgg")].get(0).projectRelativePath»'''
+	}
+	
+	def static IFile[] allFiles(IProject project){
+		allFileMembers(project.getFolder("src"))
+	}
+	
+	def static ArrayList<IFile> allFileMembers(IFolder folder){
+		val ArrayList<IFile> files = new ArrayList()
+		files.addAll(folder.members.filter[f | f instanceof IFile].map[f | f as IFile])
+		folder.members.filter[f | f instanceof IFolder].forEach[f | files.addAll(allFileMembers(f as IFolder))]
+		return files
 	}
 }

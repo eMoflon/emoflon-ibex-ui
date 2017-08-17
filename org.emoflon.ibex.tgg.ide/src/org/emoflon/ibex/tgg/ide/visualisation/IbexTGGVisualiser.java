@@ -26,8 +26,7 @@ public class IbexTGGVisualiser extends IbexVisualiser {
 		return extractTGGFileFromEditor(editor)
 				.filter(file -> file.getSchema() != null)
 				.map(file -> file.eResource().getURI().segment(1))
-				.map(projectName -> loadTGG(projectName))
-				.map(IbexPlantUMLGenerator::visualiseTGGRuleOverview);
+				.map(projectName -> IbexPlantUMLGenerator.visualiseTGGRuleOverview(projectName, loadTGG(projectName)));
 	}
 
 	private TripleGraphGrammarFile loadTGG(String projectName) {
