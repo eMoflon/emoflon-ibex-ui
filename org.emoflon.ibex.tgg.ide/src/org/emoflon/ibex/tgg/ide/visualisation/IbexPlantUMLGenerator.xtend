@@ -1,6 +1,7 @@
 package org.emoflon.ibex.tgg.ide.visualisation
 
 import java.util.Collection
+import java.util.HashMap
 import org.apache.commons.lang3.tuple.Pair
 import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EObject
@@ -10,7 +11,7 @@ import org.moflon.tgg.mosl.tgg.LinkVariablePattern
 import org.moflon.tgg.mosl.tgg.ObjectVariablePattern
 import org.moflon.tgg.mosl.tgg.Operator
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
-import java.util.HashMap
+import org.apache.commons.lang3.StringUtils
 
 class IbexPlantUMLGenerator {
 	
@@ -35,59 +36,67 @@ class IbexPlantUMLGenerator {
 		«IF file.rules.length != 1»title "I can only visualise exactly one TGG rule in one file"
 		«ELSE»
 		«var r = file.rules.get(0)»
-		digraph root {
-			fontname=Monospace
-			fontsize=9
-			subgraph "cluster_source" {
-				 label="";
-				 pencolor="invis";
-			     «FOR sp : r.sourcePatterns»
-			    	«visualisePattern(sp, "LIGHTYELLOW")»
-			     «ENDFOR»
-			}
-			subgraph "cluster_target" {
-				 label="";
-				 pencolor="invis";
-				 «FOR sp : r.targetPatterns»
-				 	«visualisePattern(sp, "MISTYROSE")»
-				 «ENDFOR»
-			}
-			subgraph "correspondence" {
-				 label="";
-				 pencolor="invis";
-				 «FOR cp : r.correspondencePatterns»
-				 	«visualiseCorrs(cp)»
-				 «ENDFOR»
-			}
+		
+		hide empty members
+		hide circle
+		hide stereotype
+		
+		skinparam shadowing false
+		
+		skinparam class {
+			BorderColor<<GREEN>> SpringGreen
+			BorderColor<<BLACK>> Black
+			BackgroundColor<<SRC>> MistyRose
+			BackgroundColor<<TRG>> LightYellow
+			BackgroundColor<<CORR>> LightCyan 
+			ArrowColor Black
 		}
+		
+		together {
+		«FOR sp : r.sourcePatterns»
+			«visualisePattern(sp, "SRC")»
+		«ENDFOR»
+		}
+		
+		together {
+ 		«FOR tp : r.targetPatterns»
+			«visualisePattern(tp, "TRG")»
+		«ENDFOR»
+		}
+		
+		together {
+		«FOR cp : r.correspondencePatterns»
+			«visualiseCorrs(cp)»
+		«ENDFOR»			
+		}	
 		«ENDIF»
 		'''
 	}
 	
 	private def static visualiseCorrs(CorrVariablePattern corr) {
 		'''
-		«idForPattern(corr.source)» -> «idForPattern(corr.target)» [penwidth=7, dir="both", style="tapered", arrowtail="none", arrowhead="none", color=«operatorToColour(corr.op)», constraint=false];
+		«idForPattern(corr.source.name, corr.source.type.name)» ...«IF (corr.op !== null)»[#SpringGreen]«ENDIF» «idForPattern(corr.target.name, corr.target.type.name)» : «StringUtils.abbreviate(corr.name + ":" + corr.type.name, 15)»
 		'''
 	}
 	
-	private def static visualisePattern(ObjectVariablePattern p, String domainColour) {
+	private def static visualisePattern(ObjectVariablePattern p, String domain) {
 		'''
-		 «idForPattern(p)» [fontsize=9, fontname=Monospace, penwidth=1, shape=record, color=«operatorToColour(p.op)», fillcolor=«domainColour», label="{«p.name» : «p.type.name» | }",style=filled];
+		 class «idForPattern(p.name, p.type.name)» <<«opToColour(p.op)»>> <<«domain»>>
 		 «FOR lv : p.linkVariablePatterns»
-		 «visaliseLinkVariable(p, lv)»
+		 	«visaliseLinkVariable(p, lv)»
 		 «ENDFOR»
 		'''
 	}
 	
-	private def static idForPattern(ObjectVariablePattern p) {
-		'''"«p.name» : «p.type.name»"'''
+	private def static String idForPattern(String name, String typeName) {
+		'''"«name» : «typeName»"'''
 	}
 	
 	private def static visaliseLinkVariable(ObjectVariablePattern src, LinkVariablePattern p) {
-		'''«idForPattern(src)» -> «idForPattern(p.target)» [fontname=Monospace, penwidth=1, color=«operatorToColour(p.op)», label="«p.type.name»", fontsize=8, constraint=true];'''
+		'''«idForPattern(src.name, src.type.name)» -«IF (p.op !== null)»[#SpringGreen]«ENDIF»-> «idForPattern(p.target.name, p.target.type.name)» : " «p.type.name»"'''
 	}
 	
-	private def static operatorToColour(Operator op) {
+	private def static opToColour(Operator op) {
 		if(op !== null)
 			return "GREEN"
 		else
