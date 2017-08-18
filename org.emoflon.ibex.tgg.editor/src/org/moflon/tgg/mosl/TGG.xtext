@@ -10,6 +10,8 @@ import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 generate tgg "http://www.moflon.org/ide/tgg/mosl/TGG"
 
 TripleGraphGrammarFile:
+	imports += Import*	
+	using += Using*	
 	(schema = Schema)?
   	(rules += Rule)*
   	(library = AttrCondDefLibrary)?
@@ -20,8 +22,6 @@ TripleGraphGrammarFile:
 /* ---------- */
 
 Schema:
-	imports += Import*	
-	using += Using*	
 	'#schema' name = QualifiedName
 		
 	('#source' '{'
@@ -66,8 +66,6 @@ Param:
 /* ------------- */
 
 Rule:
-	imports += Import*	
-	using += Using*
 	(abstractRule ?= '#abstract')? '#rule' name = ID ('#extends' supertypes += [Rule] (',' supertypes += [Rule])*)? ('#complements' kernel = [Rule])? '#with' schema = [Schema | QualifiedName]
 		
 	('#source' '{'

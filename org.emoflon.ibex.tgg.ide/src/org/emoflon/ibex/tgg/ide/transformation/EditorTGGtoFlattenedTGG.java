@@ -119,15 +119,17 @@ public class EditorTGGtoFlattenedTGG {
 	}
 	
 	private Rule merge(Set<Rule> rules) {
-		Rule mergedRule = TggFactory.eINSTANCE.createRule();
 		Rule ruleToMerge = superRuleMap.get(rules);
+		Rule mergedRule = TggFactory.eINSTANCE.createRule();
+		
+		getFile(ruleToMerge).getRules().add(mergedRule);
 		
 		mergedRule.setAbstractRule(ruleToMerge.isAbstractRule());
 		mergedRule.setKernel(ruleToMerge.getKernel());
 		mergedRule.setName(ruleToMerge.getName());
 		mergedRule.setSchema(ruleToMerge.getSchema());
-		mergedRule.getImports().addAll(ruleToMerge.getImports());
-		mergedRule.getUsing().addAll(ruleToMerge.getUsing());
+		getFile(mergedRule).getImports().addAll(getFile(ruleToMerge).getImports());
+		getFile(mergedRule).getUsing().addAll(getFile(ruleToMerge).getUsing());
 		
 		// create "co-product" of the rules in mergedRule
 		for (Rule r : rules) {
@@ -156,6 +158,10 @@ public class EditorTGGtoFlattenedTGG {
 		cleanupReferences(mergedRule);
 		
 		return mergedRule;
+	}
+
+	private TripleGraphGrammarFile getFile(Rule rule) {
+		return (TripleGraphGrammarFile) rule.eContainer();
 	}
 
 	private void mergeSourcePatterns(Collection<ObjectVariablePattern> patterns) {

@@ -180,7 +180,7 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 	def potential_packages(EObject context) {
 		val set = new ResourceSetImpl()
 		var schema = context as Schema
-		var resources = schema.imports.map[u | set.getResource(URI.createURI(u.name), true)]
+		var resources = schema.file.imports.map[u | set.getResource(URI.createURI(u.name), true)]
 		return new MoflonScope(resources.map[r | r.contents.get(0)])
 	}
 	
@@ -347,7 +347,7 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 	
 	def getAllTypes(Schema schema, Class<? extends EObject> etype){
 		val ResourceSet set = new ResourceSetImpl
-		val List<EPackage> packages = schema.imports.map[u | set.getResource(URI.createURI(u.name), true).contents.get(0) as EPackage]
+		val List<EPackage> packages = schema.file.imports.map[u | set.getResource(URI.createURI(u.name), true).contents.get(0) as EPackage]
 		val allPackages = new HashSet<EPackage>();
 		allPackages.addAll(packages)
 		allPackages.add(EcorePackage.eINSTANCE)
@@ -377,5 +377,13 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 		var lvPattern = context as LinkVariablePattern
 		var ovPattern = lvPattern.eContainer as ObjectVariablePattern
 		return Scopes.scopeFor(ovPattern.type.EAllReferences)
+	}
+	
+	def TripleGraphGrammarFile file(Rule rule){
+		rule.eContainer as TripleGraphGrammarFile
+	}
+	
+	def TripleGraphGrammarFile file(Schema schema){
+		schema.eContainer as TripleGraphGrammarFile
 	}
 }

@@ -6,6 +6,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.xtext.ui.editor.XtextEditor;
@@ -41,7 +42,23 @@ public class IbexTGGVisualiser extends IbexVisualiser {
 		return extractTGGFileFromEditor(editor)
 				.map(file -> file.getSchema() == null? file : null)
 				.map(this::flatten)
-				.map(IbexPlantUMLGenerator::visualiseTGGFile);
+				.map(flattened -> IbexPlantUMLGenerator.visualiseTGGFile(flattened, determineNameOfChosenRule(flattened, selection)));
+	}
+
+	private Optional<String> determineNameOfChosenRule(TripleGraphGrammarFile flattened, ISelection selection) {
+		// If there's only one TGG rule in the file then this is the only thing to visualise anyway
+		if(flattened.getRules().size() == 1)
+			return Optional.of(flattened.getRules().get(0).getName());
+		
+		// If not visualise what the user has selected in the TGG editor
+		if(selection instanceof TextSelection){
+			TextSelection selectedText = (TextSelection)selection;
+			String text = selectedText.getText();
+			if(text != null && !text.isEmpty())
+			return Optional.of(selectedText.getText());
+		}
+		
+		return Optional.empty();
 	}
 
 	private TripleGraphGrammarFile flatten(TripleGraphGrammarFile file) {

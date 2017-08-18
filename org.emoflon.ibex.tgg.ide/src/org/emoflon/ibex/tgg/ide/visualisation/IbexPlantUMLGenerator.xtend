@@ -3,6 +3,7 @@ package org.emoflon.ibex.tgg.ide.visualisation
 import java.util.ArrayList
 import java.util.Collection
 import java.util.HashMap
+import java.util.Optional
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.tuple.Pair
 import org.eclipse.core.resources.IFile
@@ -36,46 +37,52 @@ class IbexPlantUMLGenerator {
 		'''
 	}
 	
-	public static def String visualiseTGGFile(TripleGraphGrammarFile file) {
-		'''
-		«IF file.rules.length != 1»title "I can only visualise exactly one TGG rule in one file"
-		«ELSE»
-		«var r = file.rules.get(0)»
-		
-		hide empty members
-		hide circle
-		hide stereotype
-		
-		skinparam shadowing false
-		
-		skinparam class {
-			BorderColor<<GREEN>> SpringGreen
-			BorderColor<<BLACK>> Black
-			BackgroundColor<<SRC>> MistyRose
-			BackgroundColor<<TRG>> LightYellow
-			BackgroundColor<<CORR>> LightCyan 
-			ArrowColor Black
+	public static def String visualiseTGGFile(TripleGraphGrammarFile file, Optional<String> selectedRule) {
+		if (!selectedRule.present)
+			return '''title Choose the name of a single TGG rule to visualise it!'''
+		else {
+			val chosen = file.rules.filter[r|r.name.equals(selectedRule.get)]
+			return '''
+				«IF chosen.length != 1» 
+					title I don't think "«StringUtils.abbreviate(selectedRule.get.replaceAll("\\s+",""), 20)»" is a TGG rule in this file...
+				«ELSE»
+					«var r = chosen.get(0)»
+					
+					hide empty members
+					hide circle
+					hide stereotype
+					
+					skinparam shadowing false
+					
+					skinparam class {
+						BorderColor<<GREEN>> SpringGreen
+						BorderColor<<BLACK>> Black
+						BackgroundColor<<SRC>> MistyRose
+						BackgroundColor<<TRG>> LightYellow
+						BackgroundColor<<CORR>> LightCyan 
+						ArrowColor Black
+					}
+					
+					together {
+					«FOR sp : r.sourcePatterns»
+						«visualisePattern(sp, "SRC")»
+					«ENDFOR»
+					}
+					
+					together {
+						«FOR tp : r.targetPatterns»
+							«visualisePattern(tp, "TRG")»
+					«ENDFOR»
+					}
+					
+					together {
+					«FOR cp : r.correspondencePatterns»
+						«visualiseCorrs(cp)»
+					«ENDFOR»			
+					}	
+				«ENDIF»
+			'''
 		}
-		
-		together {
-		«FOR sp : r.sourcePatterns»
-			«visualisePattern(sp, "SRC")»
-		«ENDFOR»
-		}
-		
-		together {
- 		«FOR tp : r.targetPatterns»
-			«visualisePattern(tp, "TRG")»
-		«ENDFOR»
-		}
-		
-		together {
-		«FOR cp : r.correspondencePatterns»
-			«visualiseCorrs(cp)»
-		«ENDFOR»			
-		}	
-		«ENDIF»
-		'''
 	}
 	
 	private def static visualiseCorrs(CorrVariablePattern corr) {
@@ -174,7 +181,7 @@ class IbexPlantUMLGenerator {
 		}
 		
 		«FOR r:tgg.rules»
-			 «IF r.abstractRule»abstract«ENDIF» class "«r.name»" [[«platformURIToRule(projectName, r.name)»]]
+			 «IF r.abstractRule»abstract«ENDIF» class "«r.name»" «platformURIToRule(projectName, r.name)»
 		«ENDFOR»
 		«FOR r:tgg.rules»
 			«FOR sup:r.supertypes»
@@ -190,7 +197,11 @@ class IbexPlantUMLGenerator {
 	}
 	
 	def static platformURIToRule(String projectName, String ruleName) {
-		'''platform:/resource/«projectName»/«WorkspaceHelper.getProjectByName(projectName).allFiles.filter[f | f.name.endsWith(ruleName + ".tgg")].get(0).projectRelativePath»'''
+		val files = WorkspaceHelper.getProjectByName(projectName).allFiles.filter[f | f.name.endsWith(ruleName + ".tgg")]
+		if(files.size == 1)
+			'''[[platform:/resource/«projectName»/«files.get(0).projectRelativePath»]]'''
+		else
+			''' '''
 	}
 	
 	def static IFile[] allFiles(IProject project){

@@ -105,10 +105,10 @@ class TGGFormatter extends AbstractFormatter2 {
 		schema.regionFor.feature(SCHEMA__SOURCE_TYPES).surround[newLine]
 		schema.regionFor.feature(SCHEMA__TARGET_TYPES).surround[newLine]
 		
-		for (Import imports : schema.getImports()) {
+		for (Import imports : schema.file.getImports()) {
 			imports.append[newLine]
 		}
-		for (Using using : schema.getUsing()) {
+		for (Using using : schema.file.getUsing()) {
 			using.append[newLine]
 		}
 		
@@ -136,10 +136,10 @@ class TGGFormatter extends AbstractFormatter2 {
 		rule.regionFor.keyword(",").prepend[noSpace]
 		rule.regionFor.feature(RULE__KERNEL).append[noSpace]
 		
-		for (Import imports : rule.getImports()) {
+		for (Import imports : rule.file.getImports()) {
 			imports.append[newLine]
 		}
-		for (Using using : rule.getUsing()) {
+		for (Using using : rule.file.getUsing()) {
 			using.append[newLine]
 		}
 		
@@ -164,6 +164,15 @@ class TGGFormatter extends AbstractFormatter2 {
 		}
 		
 	}
+	
+	def TripleGraphGrammarFile file(Rule rule){
+		rule.eContainer as TripleGraphGrammarFile
+	}
+	
+	def TripleGraphGrammarFile file(Schema schema){
+		schema.eContainer as TripleGraphGrammarFile
+	}
+	
 	def dispatch void format(CorrType correspondenceType, extension IFormattableDocument document) {
 		singleItemFormatInterior(correspondenceType,document);
 		if(correspondenceType instanceof CorrType){
