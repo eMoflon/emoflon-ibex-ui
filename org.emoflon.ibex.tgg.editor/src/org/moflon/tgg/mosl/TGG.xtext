@@ -155,7 +155,7 @@ LinkVariablePattern:
 ;
 
 Operator:
-	value = ('++' | '!' | '--')
+	value = ('++' | '--')
 ;
 
 /* ---------------- */
