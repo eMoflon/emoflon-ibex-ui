@@ -24,10 +24,14 @@ public class IbexTGGVisualiser extends IbexVisualiser {
 	}
 	
 	private Optional<String> maybeVisualiseTGGSchema(IEditorPart editor, ISelection selection) {
-		return extractTGGFileFromEditor(editor)
+		try {
+			return extractTGGFileFromEditor(editor)
 				.filter(file -> file.getSchema() != null)
 				.map(file -> file.eResource().getURI().segment(1))
 				.map(projectName -> IbexPlantUMLGenerator.visualiseTGGRuleOverview(projectName, loadTGG(projectName)));
+		}catch (Exception e) {
+			return Optional.empty(); 
+		}
 	}
 
 	private TripleGraphGrammarFile loadTGG(String projectName) {
