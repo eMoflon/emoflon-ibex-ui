@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -17,6 +18,7 @@ import org.moflon.tgg.mosl.tgg.AttributeExpression;
 import org.moflon.tgg.mosl.tgg.CorrType;
 import org.moflon.tgg.mosl.tgg.CorrVariablePattern;
 import org.moflon.tgg.mosl.tgg.LinkVariablePattern;
+import org.moflon.tgg.mosl.tgg.Nac;
 import org.moflon.tgg.mosl.tgg.ObjectVariablePattern;
 import org.moflon.tgg.mosl.tgg.OperatorPattern;
 import org.moflon.tgg.mosl.tgg.Rule;
@@ -52,15 +54,28 @@ public class EditorTGGtoFlattenedTGG {
 		  	 .forEach(r -> superRuleMap.put(this.findSuperRules(r), r));
 		
 		List<Rule> newRules = superRuleMap.keySet().stream()
-								  				  .map(this::merge)
-								  				  .collect(Collectors.toList());
+								  				   .map(this::merge)
+								  				   .collect(Collectors.toList());
+		
+		rules.clear();		
 		sort(newRules);
-		rules.clear();
 		rules.addAll(newRules);
+		
+		cleanUpNACsIfPossible(flattened);
 		
 		return flattened;
 	}
 	
+	private void cleanUpNACsIfPossible(TripleGraphGrammarFile flattened) {
+		for (Nac nac : flattened.getNacs()) {
+			Rule oldRule = nac.getRule();
+			Optional<Rule> newRule = flattened.getRules().stream()
+											   .filter(r -> r.getName().equals(oldRule.getName()))
+											   .findAny();
+			newRule.ifPresent(r -> nac.setRule(r));
+		}
+	}
+
 	public void sort(List<Rule> rules) {
 		rules.sort(Comparator.comparing(rule -> ((Rule)rule).getName()));
 		

@@ -214,6 +214,7 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 			if(root instanceof TripleGraphGrammarFile){
 				TripleGraphGrammarFile f = (TripleGraphGrammarFile)root;
 				xtextParsedTGG.getRules().addAll(f.getRules());
+				xtextParsedTGG.getNacs().addAll(f.getNacs());
 			}
 		}
 	}

@@ -54,6 +54,10 @@ public class IbexTGGVisualiser extends IbexVisualiser {
 		if(flattened.getRules().size() == 1)
 			return Optional.of(flattened.getRules().get(0).getName());
 		
+		// If there's only one NAC then visualise this
+		if(flattened.getNacs().size() == 1)
+			return Optional.of(flattened.getNacs().get(0).getName());
+		
 		// If not visualise what the user has selected in the TGG editor
 		if(selection instanceof TextSelection){
 			TextSelection selectedText = (TextSelection)selection;
