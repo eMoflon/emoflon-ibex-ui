@@ -27,10 +27,13 @@ import org.moflon.ide.mosl.core.scoping.MoflonScope
 import org.moflon.tgg.mosl.tgg.AttributeAssignment
 import org.moflon.tgg.mosl.tgg.AttributeConstraint
 import org.moflon.tgg.mosl.tgg.AttributeExpression
+import org.moflon.tgg.mosl.tgg.ContextLinkVariablePattern
+import org.moflon.tgg.mosl.tgg.ContextObjectVariablePattern
 import org.moflon.tgg.mosl.tgg.CorrType
 import org.moflon.tgg.mosl.tgg.CorrVariablePattern
 import org.moflon.tgg.mosl.tgg.EnumExpression
 import org.moflon.tgg.mosl.tgg.LinkVariablePattern
+import org.moflon.tgg.mosl.tgg.Nac
 import org.moflon.tgg.mosl.tgg.ObjectVariablePattern
 import org.moflon.tgg.mosl.tgg.Param
 import org.moflon.tgg.mosl.tgg.Rule
@@ -49,7 +52,7 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 	
 
 	override getScope(EObject context, EReference reference) {
-		
+
 		/* Scopes in Rule */
 		try{
 			if (is_attr_of_ov(context, reference))
@@ -143,9 +146,13 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 	}
 	
 	def is_attr_of_ov(EObject context, EReference reference) {
-		context instanceof ObjectVariablePattern && (reference == TggPackage.Literals.ATTRIBUTE_ASSIGNMENT__ATTRIBUTE 
-			|| reference == TggPackage.Literals.ATTRIBUTE_CONSTRAINT__ATTRIBUTE
+		context instanceof ObjectVariablePattern && 
+		( 
+		  reference == TggPackage.Literals.ATTRIBUTE_ASSIGNMENT__ATTRIBUTE || 
+		  reference == TggPackage.Literals.ATTRIBUTE_CONSTRAINT__ATTRIBUTE
 		)
+		  ||
+		context instanceof ContextObjectVariablePattern && reference == TggPackage.Literals.ATTRIBUTE_CONSTRAINT__ATTRIBUTE
 	}
 	def is_attr_of_attr_assignment(EObject context, EReference reference) {
 		context instanceof AttributeAssignment && reference == TggPackage.Literals.ATTRIBUTE_ASSIGNMENT__ATTRIBUTE
@@ -158,23 +165,22 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 	}
 	
 	def attr_must_be_of_ov(EObject context) {
-		var ovPattern = context as ObjectVariablePattern
-		return Scopes.scopeFor(ovPattern.type.EAllAttributes)
+		return Scopes.scopeFor(getOVType(context).EAllAttributes)
 	}
 	def attr_must_be_of_assigned_ov(EObject context) {
 		var attr = context as AttributeAssignment
-		var ovPattern = attr.eContainer as ObjectVariablePattern
-		return Scopes.scopeFor(ovPattern.type.EAllAttributes)
+		var ovPattern = attr.eContainer
+		return Scopes.scopeFor(getOVType(ovPattern).EAllAttributes)
 	}
 	def attr_must_be_of_constrained_ov(EObject context) {
 		var attr = context as AttributeConstraint
-		var ovPattern = attr.eContainer as ObjectVariablePattern
-		return Scopes.scopeFor(ovPattern.type.EAllAttributes)
+		var ovPattern = attr.eContainer
+		return Scopes.scopeFor(getOVType(ovPattern).EAllAttributes)
 	}
 	def attr_must_be_from_attr_exp_ov(EObject context) {
 		var exp = context as AttributeExpression
-		var ovPattern = exp.objectVar as ObjectVariablePattern
-		return Scopes.scopeFor(ovPattern.type.EAllAttributes)
+		var ovPattern = exp.objectVar
+		return Scopes.scopeFor(getOVType(ovPattern).EAllAttributes)
 	}
 	
 	def potential_packages(EObject context) {
@@ -194,7 +200,6 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 		var schema = tgg.schema as Schema
 		return Scopes.scopeFor(schema.correspondenceTypes)
 	}
-	
 	
 	def type_of_param_must_be_edatatype(EObject context) {
 		try {
@@ -235,12 +240,17 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 	}
 	
 	def is_equal_or_super_type_of_ov(EClass sup, IEObjectDescription desc){
-		var sub = (desc.EObjectOrProxy as ObjectVariablePattern).type
-		return sub.equals(sup) || sub.EAllSuperTypes.contains(sup) || EcorePackage.eINSTANCE.EObject.equals(sup)
+		val sub = getOVType(desc.EObjectOrProxy)
+		sub != null && (sub.equals(sup) || sub.EAllSuperTypes.contains(sup) || EcorePackage.eINSTANCE.EObject.equals(sup))
 	}
 
 	def is_type_of_ov(EObject context, EReference reference) {
-		context instanceof ObjectVariablePattern && reference == TggPackage.Literals.OBJECT_VARIABLE_PATTERN__TYPE
+		if(context instanceof ObjectVariablePattern)
+			reference == TggPackage.Literals.OBJECT_VARIABLE_PATTERN__TYPE
+		else if(context instanceof ContextObjectVariablePattern)
+			reference == TggPackage.Literals.CONTEXT_OBJECT_VARIABLE_PATTERN__TYPE
+		else
+			false
 	}
 
 	def is_attr_cond(EObject context, EReference reference) {
@@ -248,13 +258,23 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 	}
 
 	def is_type_of_lv(EObject context, EReference reference) {
-		context instanceof LinkVariablePattern && reference == TggPackage.Literals.LINK_VARIABLE_PATTERN__TYPE
+		if(context instanceof LinkVariablePattern)
+			reference == TggPackage.Literals.LINK_VARIABLE_PATTERN__TYPE
+		else if(context instanceof ContextLinkVariablePattern) 
+			reference == TggPackage.Literals.CONTEXT_LINK_VARIABLE_PATTERN__TYPE
+		else
+			false
 	}
 	
 	def is_target_of_lv(EObject context, EReference reference) {
-		context instanceof LinkVariablePattern && reference == TggPackage.Literals.LINK_VARIABLE_PATTERN__TARGET
+		if(context instanceof LinkVariablePattern)
+			reference == TggPackage.Literals.LINK_VARIABLE_PATTERN__TARGET
+		else if(context instanceof ContextLinkVariablePattern) 
+			reference == TggPackage.Literals.CONTEXT_LINK_VARIABLE_PATTERN__TARGET
+		else
+			false
 	}
-	
+		
 	def is_trg_of_corr_type(EObject context, EReference reference) {
 		context instanceof CorrType && reference == TggPackage.Literals.CORR_TYPE__TARGET
 	}
@@ -298,37 +318,81 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 	}
 	
 	def target_of_lv_must_be_compatible_with_its_type(EObject context) {
-		val lvPattern = context as LinkVariablePattern
-		var ovPattern = lvPattern.eContainer as ObjectVariablePattern
-		var rule = ovPattern.eContainer as Rule
-		
 		// Must be in same domain as ov
 		var IScope allCandidates = null;
-		if(rule.sourcePatterns.contains(ovPattern))
-			allCandidates = Scopes.scopeFor(rule.sourcePatterns)
+		if(getSourcePatterns(context).contains(context.eContainer))
+			allCandidates = Scopes.scopeFor(getSourcePatterns(context))
 		else {
-			allCandidates = Scopes.scopeFor(rule.targetPatterns)		
+			allCandidates = Scopes.scopeFor(getTargetPatterns(context))		
 		}
 		
 		// Must be compatible to lv
-		return new FilteringScope(allCandidates, [c | is_equal_or_super_type_of_ov(lvPattern.type.EType as EClass, c)])
+		return new FilteringScope(allCandidates, [c | is_equal_or_super_type_of_ov(getType(context).EType as EClass, c)])
 	}
 	
+	def dispatch getType(LinkVariablePattern lv){
+		lv.type
+	}
+	
+	def dispatch getType(ContextLinkVariablePattern lv){
+		lv.type
+	}
+	
+	def dispatch getOVType(ObjectVariablePattern ov){
+		ov.type
+	}
+	
+	def dispatch getOVType(ContextObjectVariablePattern ov){
+		ov.type
+	}
+	
+	def dispatch getSourcePatterns(LinkVariablePattern lv) {
+		val rule = lv.eContainer.eContainer as Rule
+		return rule.sourcePatterns
+	}
+	
+	def dispatch getSourcePatterns(ContextLinkVariablePattern lv) {
+		val nac = lv.eContainer.eContainer as Nac
+		return nac.sourcePatterns
+	}
+	
+	def dispatch getSourcePatterns(ContextObjectVariablePattern ov) {
+		val nac = ov.eContainer as Nac
+		return nac.sourcePatterns
+	}
+	
+	def dispatch getSourcePatterns(ObjectVariablePattern ov) {
+		val rule = ov.eContainer as Rule
+		return rule.sourcePatterns
+	}
+	
+	def dispatch getTargetPatterns(LinkVariablePattern lv) {
+		val rule = lv.eContainer.eContainer as Rule
+		return rule.targetPatterns
+	}
+	
+	def dispatch getTargetPatterns(ContextLinkVariablePattern lv) {
+		val nac = lv.eContainer.eContainer as Nac
+		return nac.targetPatterns
+	}
 	
 	def type_of_ov_must_be_from_correct_domain(EObject context) {
-		var ov = context as ObjectVariablePattern
-		var rule = ov.eContainer as Rule
-		var schema = rule.schema
-		
-		if(rule.sourcePatterns.contains(ov)){
+		if(getSourcePatterns(context).contains(context)){
 			// typeOfOv must be in source domain
-			allTypes(schema.sourceTypes, EClassifier)
-		}else{
+			allTypes(getSchema(context).sourceTypes, EClassifier)
+		} else{
 			// typeOfOv must be in target domain
-			allTypes(schema.targetTypes, EClassifier)
+			allTypes(getSchema(context).targetTypes, EClassifier)
 		}
 	}
 	
+	def dispatch getSchema(ObjectVariablePattern ov) {
+		(ov.eContainer as Rule).schema
+	}
+	
+	def dispatch getSchema(ContextObjectVariablePattern ov) {
+		(ov.eContainer as Nac).schema
+	}
 
 	def src_of_corr_type_must_be_a_src_type(EObject context) {
 		handleCorrTypeDef(context, [Schema s | s.sourceTypes])
@@ -369,14 +433,12 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 
 	def attr_in_cond_must_be_an_attr_of_the_ref_ov(EObject context) {
 		var paramVal = context as AttributeExpression
-		var ovPattern = paramVal.objectVar as ObjectVariablePattern
-		return Scopes.scopeFor(ovPattern.type.EAllAttributes)
+		var ovPattern = paramVal.objectVar
+		return Scopes.scopeFor(getOVType(ovPattern).EAllAttributes)
 	}
 
 	def type_of_lv_must_be_a_reference_of_enclosing_ov(EObject context) {
-		var lvPattern = context as LinkVariablePattern
-		var ovPattern = lvPattern.eContainer as ObjectVariablePattern
-		return Scopes.scopeFor(ovPattern.type.EAllReferences)
+		return Scopes.scopeFor(getOVType(context.eContainer).EAllReferences)
 	}
 	
 	def TripleGraphGrammarFile file(Rule rule){

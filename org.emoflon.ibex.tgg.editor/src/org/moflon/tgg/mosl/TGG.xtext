@@ -14,6 +14,7 @@ TripleGraphGrammarFile:
 	using += Using*	
 	(schema = Schema)?
   	(rules += Rule)*
+  	(nacs += Nac)*
   	(library = AttrCondDefLibrary)?
 ;
 
@@ -110,17 +111,24 @@ LocalVariable:
 ;
 
 CorrVariablePattern:
-	(op = Operator)? name = ID ':' type = [CorrType | QualifiedName] '{'
+	(op=Operator)? name = ID ':' type = [CorrType | QualifiedName] '{'
 		'#src->' source = [ObjectVariablePattern]
 		'#trg->' target = [ObjectVariablePattern]
 	'}' 
 ;
 
 ObjectVariablePattern:
-	(op = Operator)? name = ID ':' type = [ecore::EClass | QualifiedName] ('{'
+	(op=Operator)? name = ID ':' type = [ecore::EClass | QualifiedName] ('{'
 		attributeAssignments += AttributeAssignment*
 		attributeConstraints += AttributeConstraint*
 		linkVariablePatterns += LinkVariablePattern*
+	'}')? 
+;
+
+ContextObjectVariablePattern:
+	name = ID ':' type = [ecore::EClass | QualifiedName] ('{'
+		attributeConstraints += AttributeConstraint*
+		linkVariablePatterns += ContextLinkVariablePattern*
 	'}')? 
 ;
 
@@ -152,9 +160,36 @@ LinkVariablePattern:
 	(op = Operator)? '-' type = [ecore::EReference] '->' target = [ObjectVariablePattern]
 ;
 
-Operator:
-	value = ('++' | '--')
+ContextLinkVariablePattern:
+	'-' type = [ecore::EReference] '->' target = [ContextObjectVariablePattern]
 ;
+
+Operator:
+	value='++'
+;
+
+/* ------------ */
+/*    NACs      */
+/* ------------ */
+
+Nac:
+	'#nac' name = ID '#for' rule = [Rule] '#with' schema = [Schema | QualifiedName]
+		
+	(
+	'#source' '{'
+		sourcePatterns += ContextObjectVariablePattern* 
+	'}'
+	|
+	'#target' '{'
+		targetPatterns += ContextObjectVariablePattern* 
+	'}'
+	) 
+
+	('#attributeConditions' '{'
+		attrConditions += AttrCond*
+	'}')? 
+;
+
 
 /* ---------------- */
 /*    Auxiliaries   */
@@ -189,16 +224,12 @@ QualifiedName returns ecore::EString:
 
 // some head classes for better OOP aspects
 
-MOSLIncluding:
-	Schema | Rule
-;
-
 OperatorPattern:
 	NamePattern | LinkVariablePattern
 ;
 
 NamedElements:
-	 Rule | Schema | CorrType | AttrCondDef | NamePattern | AttrCondDefLibrary
+	 Rule | Schema | CorrType | AttrCondDef | NamePattern | AttrCondDefLibrary | Nac
 ;
 
 NamePattern:
