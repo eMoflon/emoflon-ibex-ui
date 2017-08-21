@@ -15,6 +15,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.moflon.tgg.mosl.tgg.AttrCond;
 import org.moflon.tgg.mosl.tgg.AttributeExpression;
+import org.moflon.tgg.mosl.tgg.ComplementRule;
 import org.moflon.tgg.mosl.tgg.CorrType;
 import org.moflon.tgg.mosl.tgg.CorrVariablePattern;
 import org.moflon.tgg.mosl.tgg.LinkVariablePattern;
@@ -62,10 +63,22 @@ public class EditorTGGtoFlattenedTGG {
 		rules.addAll(newRules);
 		
 		cleanUpNACsIfPossible(flattened);
+		cleanUpKernelsIfPossible(flattened);
 		
 		return flattened;
 	}
 	
+	private void cleanUpKernelsIfPossible(TripleGraphGrammarFile flattened) {
+		for (ComplementRule cr : flattened.getComplementRules()) {
+			Rule oldKernel = cr.getKernel();
+			Optional<Rule> newKernel = flattened.getRules().stream()
+											   .filter(r -> r.getName().equals(oldKernel.getName()))
+											   .findAny();
+			newKernel.ifPresent(r -> cr.setKernel(r));
+		}
+		
+	}
+
 	private void cleanUpNACsIfPossible(TripleGraphGrammarFile flattened) {
 		for (Nac nac : flattened.getNacs()) {
 			Rule oldRule = nac.getRule();
@@ -140,7 +153,6 @@ public class EditorTGGtoFlattenedTGG {
 		getFile(ruleToMerge).getRules().add(mergedRule);
 		
 		mergedRule.setAbstractRule(ruleToMerge.isAbstractRule());
-		mergedRule.setKernel(ruleToMerge.getKernel());
 		mergedRule.setName(ruleToMerge.getName());
 		mergedRule.setSchema(ruleToMerge.getSchema());
 		getFile(mergedRule).getImports().addAll(getFile(ruleToMerge).getImports());

@@ -160,9 +160,8 @@ class TGGValidator extends AbstractTGGValidator {
 		if (ov.op == null || ov.op.equals("")) {
 			for (LinkVariablePattern linkVar : ov.linkVariablePatterns) {
 
-				val rule = ov.eContainer as Rule
 				val target = linkVar.target;
-				val trgOV = EcoreUtil2.resolve(target, rule) as ObjectVariablePattern;
+				val trgOV = EcoreUtil2.resolve(target, ov.eContainer) as ObjectVariablePattern;
 				var trgOVOp = trgOV.op;
 
 				if (trgOVOp != null && trgOVOp.value.equals("++") &&

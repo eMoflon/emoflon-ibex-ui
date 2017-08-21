@@ -14,6 +14,7 @@ TripleGraphGrammarFile:
 	using += Using*	
 	(schema = Schema)?
   	(rules += Rule)*
+  	(complementRules += ComplementRule)*
   	(nacs += Nac)*
   	(library = AttrCondDefLibrary)?
 ;
@@ -67,7 +68,7 @@ Param:
 /* ------------- */
 
 Rule:
-	(abstractRule ?= '#abstract')? '#rule' name = ID ('#extends' supertypes += [Rule] (',' supertypes += [Rule])*)? ('#complements' kernel = [Rule])? '#with' schema = [Schema | QualifiedName]
+	(abstractRule ?= '#abstract')? '#rule' name = ID ('#extends' supertypes += [Rule] (',' supertypes += [Rule])*)? '#with' schema = [Schema | QualifiedName]
 		
 	('#source' '{'
 		sourcePatterns += ObjectVariablePattern* 
@@ -168,12 +169,36 @@ Operator:
 	value='++'
 ;
 
+/* ------------- */
+/*   COMPLEMENT RULES   */
+/* ------------- */
+
+ComplementRule:
+	'#complement' name = ID '#for' kernel = [Rule]
+		
+	('#source' '{'
+		sourcePatterns += ObjectVariablePattern* 
+	'}')? 	
+	
+	('#target' '{'
+		targetPatterns += ObjectVariablePattern* 
+	'}')? 
+	
+	('#correspondence' '{'
+		correspondencePatterns += CorrVariablePattern*	
+	'}')? 
+
+	('#attributeConditions' '{'
+		attrConditions += AttrCond*
+	'}')? 
+;
+
 /* ------------ */
 /*    NACs      */
 /* ------------ */
 
 Nac:
-	'#nac' name = ID '#for' rule = [Rule] '#with' schema = [Schema | QualifiedName]
+	'#nac' name = ID '#for' rule = [Rule]
 		
 	(
 	'#source' '{'
@@ -229,7 +254,7 @@ OperatorPattern:
 ;
 
 NamedElements:
-	 Rule | Schema | CorrType | AttrCondDef | NamePattern | AttrCondDefLibrary | Nac
+	 Rule | ComplementRule | Schema | CorrType | AttrCondDef | NamePattern | AttrCondDefLibrary | Nac
 ;
 
 NamePattern:

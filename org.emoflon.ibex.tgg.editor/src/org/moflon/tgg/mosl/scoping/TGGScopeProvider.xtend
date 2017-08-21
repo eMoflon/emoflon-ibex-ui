@@ -27,6 +27,7 @@ import org.moflon.ide.mosl.core.scoping.MoflonScope
 import org.moflon.tgg.mosl.tgg.AttributeAssignment
 import org.moflon.tgg.mosl.tgg.AttributeConstraint
 import org.moflon.tgg.mosl.tgg.AttributeExpression
+import org.moflon.tgg.mosl.tgg.ComplementRule
 import org.moflon.tgg.mosl.tgg.ContextLinkVariablePattern
 import org.moflon.tgg.mosl.tgg.ContextObjectVariablePattern
 import org.moflon.tgg.mosl.tgg.CorrType
@@ -132,7 +133,7 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 			current = current.eContainer
 		
 		// Get imports from schema
-		val schema = (current as Rule).schema
+		val schema = getSchema(current)
 		getAllEnums(schema)
 	}
 	
@@ -195,8 +196,7 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 	}
 	
 	def type_of_corr_ov_must_be_a_corr_type(EObject context) {
-		var rule = context.eContainer as Rule
-		var tgg = rule.eContainer as TripleGraphGrammarFile
+		var tgg = context.eContainer.eContainer as TripleGraphGrammarFile
 		var schema = tgg.schema as Schema
 		return Scopes.scopeFor(schema.correspondenceTypes)
 	}
@@ -285,8 +285,7 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 
 	def trg_of_corr_ov_must_be_in_trg_domain(EObject context) {
 		val typeDef = determineTypeDef(context)
-		var rule = context.eContainer as Rule
-		var IScope allCandidates = Scopes.scopeFor(rule.targetPatterns)		
+		var IScope allCandidates = Scopes.scopeFor(getTargetPatterns(context.eContainer))		
 		return new FilteringScope(allCandidates, [c | is_equal_or_super_type_of_ov(typeDef.target, c)])
 	}
 	
@@ -312,8 +311,7 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 	
 	def src_of_corr_ov_must_be_in_src_domain(EObject context) {
 		val typeDef = determineTypeDef(context)
-		var rule = context.eContainer as Rule
-		var IScope allCandidates = Scopes.scopeFor(rule.sourcePatterns)		
+		var IScope allCandidates = Scopes.scopeFor(getSourcePatterns(context.eContainer))		
 		return new FilteringScope(allCandidates, [c | is_equal_or_super_type_of_ov(typeDef.source, c)])
 	}
 	
@@ -347,8 +345,11 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 	}
 	
 	def dispatch getSourcePatterns(LinkVariablePattern lv) {
-		val rule = lv.eContainer.eContainer as Rule
-		return rule.sourcePatterns
+		val o = lv.eContainer.eContainer
+		switch o {
+			Rule : o.sourcePatterns
+			ComplementRule : o.sourcePatterns
+		}
 	}
 	
 	def dispatch getSourcePatterns(ContextLinkVariablePattern lv) {
@@ -362,13 +363,27 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 	}
 	
 	def dispatch getSourcePatterns(ObjectVariablePattern ov) {
-		val rule = ov.eContainer as Rule
-		return rule.sourcePatterns
+		val o = ov.eContainer
+		switch o {
+			Rule : o.sourcePatterns
+			ComplementRule : o.sourcePatterns
+		}
+	}
+	
+	def dispatch getTargetPatterns(ObjectVariablePattern ov) {
+		val o = ov.eContainer
+		switch o {
+			Rule : o.targetPatterns
+			ComplementRule : o.targetPatterns
+		}
 	}
 	
 	def dispatch getTargetPatterns(LinkVariablePattern lv) {
-		val rule = lv.eContainer.eContainer as Rule
-		return rule.targetPatterns
+		val o = lv.eContainer.eContainer
+		switch o {
+			Rule : o.targetPatterns
+			ComplementRule : o.targetPatterns
+		}
 	}
 	
 	def dispatch getTargetPatterns(ContextLinkVariablePattern lv) {
@@ -387,11 +402,15 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 	}
 	
 	def dispatch getSchema(ObjectVariablePattern ov) {
-		(ov.eContainer as Rule).schema
+		val o = ov.eContainer
+		switch o {
+			Rule : o.schema
+			ComplementRule : o.kernel.schema
+		}
 	}
 	
 	def dispatch getSchema(ContextObjectVariablePattern ov) {
-		(ov.eContainer as Nac).schema
+		(ov.eContainer as Nac).rule.schema
 	}
 
 	def src_of_corr_type_must_be_a_src_type(EObject context) {

@@ -97,7 +97,7 @@ class IbexPlantUMLGenerator {
 	}
 	
 	def static connectSameObjectVariables(EList<ContextObjectVariablePattern> nac, EList<ObjectVariablePattern> rule, String ruleName) {
-		nac.filter[ov | refInRule(rule, ov) != null]
+		nac.filter[ov | refInRule(rule, ov) !== null]
 		   .map[ ov | '''«idForPattern(ov.name, ov.type.name)» .. «idForPattern(ruleName, refInRule(rule, ov).name, refInRule(rule, ov).type.name)»''']
 		   .join("\n")
 	}
@@ -265,6 +265,9 @@ class IbexPlantUMLGenerator {
 		«FOR r:tgg.rules»
 			 «IF r.abstractRule»abstract«ENDIF» class "«r.name»" «platformURIToRule(projectName, r.name)»
 		«ENDFOR»
+		«FOR r:tgg.complementRules»
+			 class "«r.name»" «platformURIToRule(projectName, r.name)»
+		«ENDFOR»
 		«FOR n:tgg.nacs»
 			class "«n.name»"<<NAC>> «platformURIToRule(projectName, n.name)»
 			"«n.rule.name»" --> "«n.name»"
@@ -274,7 +277,7 @@ class IbexPlantUMLGenerator {
 				"«r.name»" -up-|> "«sup.name»"
 			«ENDFOR»
 		«ENDFOR»
-		«FOR r:tgg.rules»
+		«FOR r:tgg.complementRules»
 			«IF r.kernel !== null»
 				"«r.kernel.name»" *--> "0..*" "«r.name»"
 			«ENDIF»
