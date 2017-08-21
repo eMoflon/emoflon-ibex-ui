@@ -44,7 +44,7 @@ class IbexPlantUMLGenerator {
 	
 	public static def String visualiseTGGFile(TripleGraphGrammarFile file, Optional<String> selected) {
 		if (!selected.present)
-			return '''title Choose the name of a single TGG rule or NAC to visualise it!'''
+			return '''title Choose the name of a single TGG rule, complement rule, or NAC to visualise it!'''
 		else {
 			val chosenRule = file.rules.filter[r | r.name.equals(selected.get)]
 			if(chosenRule.length == 1)
@@ -89,7 +89,6 @@ class IbexPlantUMLGenerator {
 						«visualisePattern(tp, "TRG")»
 					«ENDFOR»
 				}
-				
 				
 				«connectSameObjectVariables(n.targetPatterns, n.rule.targetPatterns, n.rule.name)»
 			«ENDIF»
