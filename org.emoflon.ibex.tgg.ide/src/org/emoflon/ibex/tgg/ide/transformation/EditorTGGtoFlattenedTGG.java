@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -14,9 +15,11 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.moflon.tgg.mosl.tgg.AttrCond;
 import org.moflon.tgg.mosl.tgg.AttributeExpression;
+import org.moflon.tgg.mosl.tgg.ComplementRule;
 import org.moflon.tgg.mosl.tgg.CorrType;
 import org.moflon.tgg.mosl.tgg.CorrVariablePattern;
 import org.moflon.tgg.mosl.tgg.LinkVariablePattern;
+import org.moflon.tgg.mosl.tgg.Nac;
 import org.moflon.tgg.mosl.tgg.ObjectVariablePattern;
 import org.moflon.tgg.mosl.tgg.OperatorPattern;
 import org.moflon.tgg.mosl.tgg.Rule;
@@ -52,15 +55,40 @@ public class EditorTGGtoFlattenedTGG {
 		  	 .forEach(r -> superRuleMap.put(this.findSuperRules(r), r));
 		
 		List<Rule> newRules = superRuleMap.keySet().stream()
-								  				  .map(this::merge)
-								  				  .collect(Collectors.toList());
+								  				   .map(this::merge)
+								  				   .collect(Collectors.toList());
+		
+		rules.clear();		
 		sort(newRules);
-		rules.clear();
 		rules.addAll(newRules);
+		
+		cleanUpNACsIfPossible(flattened);
+		cleanUpKernelsIfPossible(flattened);
 		
 		return flattened;
 	}
 	
+	private void cleanUpKernelsIfPossible(TripleGraphGrammarFile flattened) {
+		for (ComplementRule cr : flattened.getComplementRules()) {
+			Rule oldKernel = cr.getKernel();
+			Optional<Rule> newKernel = flattened.getRules().stream()
+											   .filter(r -> r.getName().equals(oldKernel.getName()))
+											   .findAny();
+			newKernel.ifPresent(r -> cr.setKernel(r));
+		}
+		
+	}
+
+	private void cleanUpNACsIfPossible(TripleGraphGrammarFile flattened) {
+		for (Nac nac : flattened.getNacs()) {
+			Rule oldRule = nac.getRule();
+			Optional<Rule> newRule = flattened.getRules().stream()
+											   .filter(r -> r.getName().equals(oldRule.getName()))
+											   .findAny();
+			newRule.ifPresent(r -> nac.setRule(r));
+		}
+	}
+
 	public void sort(List<Rule> rules) {
 		rules.sort(Comparator.comparing(rule -> ((Rule)rule).getName()));
 		
@@ -125,7 +153,6 @@ public class EditorTGGtoFlattenedTGG {
 		getFile(ruleToMerge).getRules().add(mergedRule);
 		
 		mergedRule.setAbstractRule(ruleToMerge.isAbstractRule());
-		mergedRule.setKernel(ruleToMerge.getKernel());
 		mergedRule.setName(ruleToMerge.getName());
 		mergedRule.setSchema(ruleToMerge.getSchema());
 		getFile(mergedRule).getImports().addAll(getFile(ruleToMerge).getImports());

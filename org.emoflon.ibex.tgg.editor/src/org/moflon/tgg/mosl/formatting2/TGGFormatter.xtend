@@ -134,7 +134,7 @@ class TGGFormatter extends AbstractFormatter2 {
 		rule.regionFor.keyword(corrKW).prepend[setNewLines(2)]
 		rule.regionFor.keyword(attrCondsKW).prepend[setNewLines(2)]
 		rule.regionFor.keyword(",").prepend[noSpace]
-		rule.regionFor.feature(RULE__KERNEL).append[noSpace]
+	
 		
 		for (Import imports : rule.file.getImports()) {
 			imports.append[newLine]

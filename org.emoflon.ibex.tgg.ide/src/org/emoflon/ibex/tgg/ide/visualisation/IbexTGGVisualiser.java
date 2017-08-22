@@ -24,10 +24,14 @@ public class IbexTGGVisualiser extends IbexVisualiser {
 	}
 	
 	private Optional<String> maybeVisualiseTGGSchema(IEditorPart editor, ISelection selection) {
-		return extractTGGFileFromEditor(editor)
+		try {
+			return extractTGGFileFromEditor(editor)
 				.filter(file -> file.getSchema() != null)
 				.map(file -> file.eResource().getURI().segment(1))
 				.map(projectName -> IbexPlantUMLGenerator.visualiseTGGRuleOverview(projectName, loadTGG(projectName)));
+		}catch (Exception e) {
+			return Optional.empty(); 
+		}
 	}
 
 	private TripleGraphGrammarFile loadTGG(String projectName) {
@@ -47,9 +51,17 @@ public class IbexTGGVisualiser extends IbexVisualiser {
 
 	private Optional<String> determineNameOfChosenRule(TripleGraphGrammarFile flattened, ISelection selection) {
 		// If there's only one TGG rule in the file then this is the only thing to visualise anyway
-		if(flattened.getRules().size() == 1)
+		if(flattened.getRules().size() == 1 && flattened.getNacs().size() == 0 && flattened.getComplementRules().size() == 0)
 			return Optional.of(flattened.getRules().get(0).getName());
 		
+		// If there's only one NAC then visualise this
+		if(flattened.getRules().size() == 0 && flattened.getNacs().size() == 1 && flattened.getComplementRules().size() == 0)
+			return Optional.of(flattened.getNacs().get(0).getName());
+		
+		// If there's only one complement rule then visualise this
+		if(flattened.getRules().size() == 0 && flattened.getNacs().size() == 0 && flattened.getComplementRules().size() == 1)
+			return Optional.of(flattened.getComplementRules().get(0).getName());
+				
 		// If not visualise what the user has selected in the TGG editor
 		if(selection instanceof TextSelection){
 			TextSelection selectedText = (TextSelection)selection;
