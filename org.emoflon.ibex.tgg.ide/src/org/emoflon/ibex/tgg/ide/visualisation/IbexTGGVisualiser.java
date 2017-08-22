@@ -58,7 +58,9 @@ public class IbexTGGVisualiser extends IbexVisualiser {
 		if(flattened.getNacs().size() == 1)
 			return Optional.of(flattened.getNacs().get(0).getName());
 		
-		// TODO: handle case of single complement rule
+		// If there's only one complement rule then visualise it
+		if(flattened.getComplementRules().size() == 1)
+			return Optional.of(flattened.getComplementRules().get(0).getName());
 		
 		// If not visualise what the user has selected in the TGG editor
 		if(selection instanceof TextSelection){
