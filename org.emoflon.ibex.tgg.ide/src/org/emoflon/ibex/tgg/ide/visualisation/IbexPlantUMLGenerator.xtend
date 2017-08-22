@@ -23,6 +23,7 @@ import org.moflon.tgg.mosl.tgg.Operator
 import org.moflon.tgg.mosl.tgg.Rule
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
 import org.moflon.util.WorkspaceHelper
+import org.moflon.tgg.mosl.tgg.ComplementRule
 
 class IbexPlantUMLGenerator {
 	
@@ -53,8 +54,14 @@ class IbexPlantUMLGenerator {
 				val chosenNac = file.nacs.filter[n | n.name.equals(selected.get)]
 				if(chosenNac.length == 1)
 				return visualiseNAC(chosenNac.get(0))
+				else {
+					val chosenComplementRule = file.complementRules.filter[cr | cr.name.equals(selected.get)]
+					if(chosenComplementRule.length == 1)
+						return visualiseComplementRule(chosenComplementRule.get(0))
 				else
-					return '''title I don't know how to visualise "«StringUtils.abbreviate(selected.get.replaceAll("\\s+",""), 20)»"...'''		
+					return '''title I don't know how to visualise "«StringUtils.abbreviate(selected.get.replaceAll("\\s+",""), 20)»"...'''
+					
+				}		
 			}
 		}	
 	}
@@ -95,14 +102,66 @@ class IbexPlantUMLGenerator {
 		'''
 	}
 	
+	def static String visualiseComplementRule(ComplementRule cr) {
+		'''
+			«plantUMLPreamble»
+			
+				together {
+					«FOR sp : cr.sourcePatterns»
+						«visualisePattern(sp, "SRC")»
+					«ENDFOR»
+				}
+				
+				together {
+					«FOR tp : cr.targetPatterns»
+						«visualisePattern(tp, "TRG")»
+					«ENDFOR»
+				}
+				together {
+					«FOR cp : cr.correspondencePatterns»
+						«visualiseCorrs(cp)»
+					«ENDFOR»			
+				}
+				
+				namespace «cr.kernel.name» <<frame>> {
+					«FOR sp : cr.kernel.sourcePatterns»
+						«visualiseKernelPattern(sp, "SRC")»
+					«ENDFOR»
+				}
+	
+				namespace «cr.kernel.name» <<frame>> {
+					«FOR tp : cr.kernel.targetPatterns»
+						«visualiseKernelPattern(tp, "TRG")»
+					«ENDFOR»
+				}
+				
+				namespace «cr.kernel.name» <<frame>> {
+					«FOR sp : cr.kernel.correspondencePatterns»
+						«visualiseKernelCorrs(sp)»
+					«ENDFOR»
+				}
+				
+				«connectSameObjectVariablesCR(cr.sourcePatterns, cr.kernel.sourcePatterns, cr.kernel.name)»
+				«connectSameObjectVariablesCR(cr.targetPatterns, cr.kernel.targetPatterns, cr.kernel.name)»
+				
+		'''
+	}
+	
 	def static connectSameObjectVariables(EList<ContextObjectVariablePattern> nac, EList<ObjectVariablePattern> rule, String ruleName) {
-		nac.filter[ov | refInRule(rule, ov) !== null]
-		   .map[ ov | '''«idForPattern(ov.name, ov.type.name)» .. «idForPattern(ruleName, refInRule(rule, ov).name, refInRule(rule, ov).type.name)»''']
+		nac.filter[ov | refInRule(rule, ov.name) !== null]
+		   .map[ ov | '''«idForPattern(ov.name, ov.type.name)» .. «idForPattern(ruleName, refInRule(rule, ov.name).name, refInRule(rule, ov.name).type.name)»''']
 		   .join("\n")
 	}
 	
-	protected def static ObjectVariablePattern refInRule(EList<ObjectVariablePattern> rule, ContextObjectVariablePattern ov) {
-		rule.findFirst[_ov | _ov.name.equals(ov.name)]
+	//connect kernel and complement rules vars
+	def static connectSameObjectVariablesCR(EList<ObjectVariablePattern> cr, EList<ObjectVariablePattern> rule, String ruleName) {
+		cr.filter[ov | refInRule(rule, ov.name) !== null]
+		   .map[ ov | '''«idForPattern(ov.name, ov.type.name)» .[#Blue]. «idForPattern(ruleName, refInRule(rule, ov.name).name, refInRule(rule, ov.name).type.name)»''']
+		   .join("\n")
+	}
+	
+	protected def static ObjectVariablePattern refInRule(EList<ObjectVariablePattern> rule, String ovName) {
+		rule.findFirst[_ov | _ov.name.equals(ovName)]
 	}
 	
 	def static visualiseContextPattern(ContextObjectVariablePattern p, String domain) {
@@ -153,6 +212,7 @@ class IbexPlantUMLGenerator {
 			skinparam class {
 				BorderColor<<GREEN>> SpringGreen
 				BorderColor<<BLACK>> Black
+				BorderColor<<KERN>> LightGray
 				BackgroundColor<<TRG>> MistyRose
 				BackgroundColor<<SRC>> LightYellow
 				BackgroundColor<<CORR>> LightCyan 
@@ -186,6 +246,26 @@ class IbexPlantUMLGenerator {
 	
 	private def static visualiseLinkVariable(ObjectVariablePattern src, LinkVariablePattern p) {
 		'''«idForPattern(src.name, src.type.name)» -«IF (p.op !== null)»[#SpringGreen]«ENDIF»-> «idForPattern(p.target.name, p.target.type.name)» : " «p.type.name»"'''
+	}
+	
+	// Visualization for Kernel rule
+	private def static visualiseKernelPattern(ObjectVariablePattern p, String domain) {
+		'''
+		class «idForPattern(p.name, p.type.name)» <<KERN>> <<«domain»>>
+		 «FOR lv : p.linkVariablePatterns»
+		 	«org.emoflon.ibex.tgg.ide.visualisation.IbexPlantUMLGenerator.visualiseKernelLinkVariable(p, lv)»
+		 «ENDFOR»
+		'''
+	}
+	
+	private def static visualiseKernelLinkVariable(ObjectVariablePattern src, LinkVariablePattern p) {
+		'''«idForPattern(src.name, src.type.name)» -[#LightGray]-> «idForPattern(p.target.name, p.target.type.name)» : " «p.type.name»"'''
+	}
+		
+	private def static visualiseKernelCorrs(CorrVariablePattern corr) {
+		'''
+		«idForPattern(corr.source.name, corr.source.type.name)» .[#LightGray]..«idForPattern(corr.target.name, corr.target.type.name)» : «StringUtils.abbreviate(corr.name + ":" + corr.type.name, 11)»
+		'''
 	}
 	
 	private def static opToColour(Operator op) {
