@@ -51,15 +51,17 @@ public class IbexTGGVisualiser extends IbexVisualiser {
 
 	private Optional<String> determineNameOfChosenRule(TripleGraphGrammarFile flattened, ISelection selection) {
 		// If there's only one TGG rule in the file then this is the only thing to visualise anyway
-		if(flattened.getRules().size() == 1)
+		if(flattened.getRules().size() == 1 && flattened.getNacs().size() == 0 && flattened.getComplementRules().size() == 0)
 			return Optional.of(flattened.getRules().get(0).getName());
 		
 		// If there's only one NAC then visualise this
-		if(flattened.getNacs().size() == 1)
+		if(flattened.getRules().size() == 0 && flattened.getNacs().size() == 1 && flattened.getComplementRules().size() == 0)
 			return Optional.of(flattened.getNacs().get(0).getName());
 		
-		// TODO: handle case of single complement rule
-		
+		// If there's only one complement rule then visualise this
+		if(flattened.getRules().size() == 0 && flattened.getNacs().size() == 0 && flattened.getComplementRules().size() == 1)
+			return Optional.of(flattened.getComplementRules().get(0).getName());
+				
 		// If not visualise what the user has selected in the TGG editor
 		if(selection instanceof TextSelection){
 			TextSelection selectedText = (TextSelection)selection;
