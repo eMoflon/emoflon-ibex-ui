@@ -43,10 +43,14 @@ public class IbexTGGVisualiser extends IbexVisualiser {
 	}
 
 	private Optional<String> maybeVisualiseTGGRule(IEditorPart editor, ISelection selection) {
-		return extractTGGFileFromEditor(editor)
+		try {
+			return extractTGGFileFromEditor(editor)
 				.map(file -> file.getSchema() == null? file : null)
 				.map(this::flatten)
 				.map(flattened -> IbexPlantUMLGenerator.visualiseTGGFile(flattened, determineNameOfChosenRule(flattened, selection)));
+		} catch(Exception e) {
+			return Optional.empty();
+		}
 	}
 
 	private Optional<String> determineNameOfChosenRule(TripleGraphGrammarFile flattened, ISelection selection) {
