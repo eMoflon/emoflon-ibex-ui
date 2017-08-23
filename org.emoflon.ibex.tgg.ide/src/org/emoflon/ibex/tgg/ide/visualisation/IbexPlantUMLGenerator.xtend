@@ -13,6 +13,8 @@ import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
+import org.emoflon.ibex.tgg.ide.transformation.EditorTGGtoFlattenedTGG
+import org.moflon.tgg.mosl.tgg.ComplementRule
 import org.moflon.tgg.mosl.tgg.ContextLinkVariablePattern
 import org.moflon.tgg.mosl.tgg.ContextObjectVariablePattern
 import org.moflon.tgg.mosl.tgg.CorrVariablePattern
@@ -23,7 +25,8 @@ import org.moflon.tgg.mosl.tgg.Operator
 import org.moflon.tgg.mosl.tgg.Rule
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
 import org.moflon.util.WorkspaceHelper
-import org.moflon.tgg.mosl.tgg.ComplementRule
+import org.moflon.tgg.mosl.tgg.TggFactory
+import org.eclipse.emf.ecore.util.EcoreUtil
 
 class IbexPlantUMLGenerator {
 	
@@ -53,7 +56,7 @@ class IbexPlantUMLGenerator {
 			else {
 				val chosenNac = file.nacs.filter[n | n.name.equals(selected.get)]
 				if(chosenNac.length == 1)
-				return visualiseNAC(chosenNac.get(0))
+					return visualiseNAC(chosenNac.get(0))
 				else {
 					val chosenComplementRule = file.complementRules.filter[cr | cr.name.equals(selected.get)]
 					if(chosenComplementRule.length == 1)
@@ -67,37 +70,50 @@ class IbexPlantUMLGenerator {
 	}
 	
 	def static String visualiseNAC(Nac n) {
+		val file = TggFactory.eINSTANCE.createTripleGraphGrammarFile;
+		file.rules.add(EcoreUtil.copy(n.rule));
+		val flattenedFule = new EditorTGGtoFlattenedTGG().flatten(file);
+		val rule = flattenedFule.rules.get(0);
 		'''
 			«plantUMLPreamble»
 			
-			«IF (n.targetPatterns.empty)»
+			«IF (!n.sourcePatterns.empty)»
 				together {
 					«FOR sp : n.sourcePatterns»
 						«visualiseContextPattern(sp, "SRC")»
 					«ENDFOR»
 				}
 				
-				namespace «n.rule.name» <<frame>> {
-					«FOR sp : n.rule.sourcePatterns»
+				namespace «rule.name» <<frame>> {
+					«FOR sp : rule.sourcePatterns»
 						«visualisePattern(sp, "SRC")»
 					«ENDFOR»
 				}
 				
-				«connectSameObjectVariables(n.sourcePatterns, n.rule.sourcePatterns, n.rule.name)»
-			«ELSE»
+				«connectSameObjectVariables(n.sourcePatterns, rule.sourcePatterns, rule.name)»
+			«ELSEIF(!n.targetPatterns.empty)»
 				together {
 					«FOR tp : n.targetPatterns»
 						«visualiseContextPattern(tp, "TRG")»
 					«ENDFOR»
 				}
 				
-				namespace «n.rule.name» <<frame>> {
-					«FOR tp : n.rule.targetPatterns»
+				namespace «rule.name» <<frame>> {
+					«FOR tp : rule.targetPatterns»
 						«visualisePattern(tp, "TRG")»
 					«ENDFOR»
 				}
 				
-				«connectSameObjectVariables(n.targetPatterns, n.rule.targetPatterns, n.rule.name)»
+				«connectSameObjectVariables(n.targetPatterns, rule.targetPatterns, rule.name)»
+			«ELSE»
+				namespace «rule.name» <<frame>> {
+				«FOR sp : rule.sourcePatterns»
+					«visualisePattern(sp, "SRC")»
+				«ENDFOR»
+				«FOR tp : rule.targetPatterns»
+					«visualisePattern(tp, "TRG")»
+				«ENDFOR»
+				}
 			«ENDIF»
 		'''
 	}
@@ -189,7 +205,7 @@ class IbexPlantUMLGenerator {
 			
 			together {
 				«FOR tp : r.targetPatterns»
-					«visualisePattern(tp, "TRG")»
+				«visualisePattern(tp, "TRG")»
 			«ENDFOR»
 			}
 			
@@ -231,7 +247,7 @@ class IbexPlantUMLGenerator {
 		'''
 		 class «idForPattern(p.name, p.type.name)» <<«opToColour(p.op)»>> <<«domain»>>
 		 «FOR lv : p.linkVariablePatterns»
-		 	«org.emoflon.ibex.tgg.ide.visualisation.IbexPlantUMLGenerator.visualiseLinkVariable(p, lv)»
+		 	«IbexPlantUMLGenerator.visualiseLinkVariable(p, lv)»
 		 «ENDFOR»
 		'''
 	}
@@ -253,7 +269,7 @@ class IbexPlantUMLGenerator {
 		'''
 		class «idForPattern(p.name, p.type.name)» <<KERN>> <<«domain»>>
 		 «FOR lv : p.linkVariablePatterns»
-		 	«org.emoflon.ibex.tgg.ide.visualisation.IbexPlantUMLGenerator.visualiseKernelLinkVariable(p, lv)»
+		 	«IbexPlantUMLGenerator.visualiseKernelLinkVariable(p, lv)»
 		 «ENDFOR»
 		'''
 	}

@@ -87,9 +87,13 @@ public class IbexTGGVisualiser extends IbexVisualiser {
 	}
 
 	private Optional<TripleGraphGrammarFile> extractTGGFileFromEditor(IEditorPart editor) {
-		return Optional.of(editor)
-				.flatMap(maybeCast(XtextEditor.class))
-				.map(e -> e.getDocument().readOnly(res -> res.getContents().get(0)))
-				.flatMap(maybeCast(TripleGraphGrammarFile.class));
+		try {
+			return Optional.of(editor)
+					.flatMap(maybeCast(XtextEditor.class))
+					.map(e -> e.getDocument().readOnly(res -> res.getContents().get(0)))
+					.flatMap(maybeCast(TripleGraphGrammarFile.class));
+		} catch (Exception e) {
+			return Optional.empty();
+		}
 	}
 }

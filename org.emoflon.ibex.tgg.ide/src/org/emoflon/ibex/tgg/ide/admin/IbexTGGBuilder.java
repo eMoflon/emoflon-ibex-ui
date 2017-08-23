@@ -210,12 +210,14 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 		Collection<Resource> resources = resourceSet.getResources();
 		for (Resource resource : resources) {
 			assert(resource.getContents().size() == 1);
-			EObject root = resource.getContents().get(0);
-			if(root instanceof TripleGraphGrammarFile){
-				TripleGraphGrammarFile f = (TripleGraphGrammarFile)root;
-				xtextParsedTGG.getRules().addAll(f.getRules());
-				xtextParsedTGG.getNacs().addAll(f.getNacs());
-				xtextParsedTGG.getComplementRules().addAll(f.getComplementRules());
+			if (!resource.getContents().isEmpty()) {
+				EObject root = resource.getContents().get(0);
+				if (root instanceof TripleGraphGrammarFile) {
+					TripleGraphGrammarFile f = (TripleGraphGrammarFile) root;
+					xtextParsedTGG.getRules().addAll(f.getRules());
+					xtextParsedTGG.getNacs().addAll(f.getNacs());
+					xtextParsedTGG.getComplementRules().addAll(f.getComplementRules());
+				}
 			}
 		}
 	}
