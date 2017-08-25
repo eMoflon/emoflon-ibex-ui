@@ -285,7 +285,7 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 
 	def trg_of_corr_ov_must_be_in_trg_domain(EObject context) {
 		val typeDef = determineTypeDef(context)
-		var IScope allCandidates = Scopes.scopeFor(getTargetPatterns(context.eContainer))		
+		var IScope allCandidates = Scopes.scopeFor(getTargetPatterns(context))		
 		return new FilteringScope(allCandidates, [c | is_equal_or_super_type_of_ov(typeDef.target, c)])
 	}
 	
@@ -311,7 +311,7 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 	
 	def src_of_corr_ov_must_be_in_src_domain(EObject context) {
 		val typeDef = determineTypeDef(context)
-		var IScope allCandidates = Scopes.scopeFor(getSourcePatterns(context.eContainer))		
+		var IScope allCandidates = Scopes.scopeFor(getSourcePatterns(context))		
 		return new FilteringScope(allCandidates, [c | is_equal_or_super_type_of_ov(typeDef.source, c)])
 	}
 	
@@ -344,12 +344,23 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 		ov.type
 	}
 	
-	def dispatch getSourcePatterns(LinkVariablePattern lv) {
-		val o = lv.eContainer.eContainer
+	def sourcePatterns(EObject o){
 		switch o {
 			Rule : o.sourcePatterns
 			ComplementRule : o.sourcePatterns
 		}
+	}
+	
+	def targetPatterns(EObject o){
+		switch o {
+			Rule : o.targetPatterns
+			ComplementRule : o.targetPatterns
+		}
+	}
+	
+	def dispatch getSourcePatterns(LinkVariablePattern lv) {
+		val o = lv.eContainer.eContainer
+		sourcePatterns(o)
 	}
 	
 	def dispatch getSourcePatterns(ContextLinkVariablePattern lv) {
@@ -364,26 +375,27 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 	
 	def dispatch getSourcePatterns(ObjectVariablePattern ov) {
 		val o = ov.eContainer
-		switch o {
-			Rule : o.sourcePatterns
-			ComplementRule : o.sourcePatterns
-		}
+		sourcePatterns(o)
+	}
+	
+	def dispatch getSourcePatterns(CorrVariablePattern ov) {
+		val o = ov.eContainer
+		sourcePatterns(o)
+	}
+	
+	def dispatch getTargetPatterns(CorrVariablePattern ov) {
+		val o = ov.eContainer
+		targetPatterns(o)
 	}
 	
 	def dispatch getTargetPatterns(ObjectVariablePattern ov) {
 		val o = ov.eContainer
-		switch o {
-			Rule : o.targetPatterns
-			ComplementRule : o.targetPatterns
-		}
+		targetPatterns(o)
 	}
 	
 	def dispatch getTargetPatterns(LinkVariablePattern lv) {
 		val o = lv.eContainer.eContainer
-		switch o {
-			Rule : o.targetPatterns
-			ComplementRule : o.targetPatterns
-		}
+		targetPatterns(o)
 	}
 	
 	def dispatch getTargetPatterns(ContextLinkVariablePattern lv) {
