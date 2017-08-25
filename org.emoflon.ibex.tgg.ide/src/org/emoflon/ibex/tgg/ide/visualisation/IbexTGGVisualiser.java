@@ -2,6 +2,7 @@ package org.emoflon.ibex.tgg.ide.visualisation;
 
 import java.util.Optional;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -15,6 +16,8 @@ import org.emoflon.ibex.tgg.ide.transformation.EditorTGGtoFlattenedTGG;
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile;
 
 public class IbexTGGVisualiser extends IbexVisualiser {
+	
+	private Logger logger = Logger.getLogger(IbexTGGVisualiser.class);
 	
 	@Override
 	protected String getDiagramBody(IEditorPart editor, ISelection selection) {
@@ -49,6 +52,7 @@ public class IbexTGGVisualiser extends IbexVisualiser {
 				.map(this::flatten)
 				.map(flattened -> IbexPlantUMLGenerator.visualiseTGGFile(flattened, determineNameOfChosenRule(flattened, selection)));
 		} catch(Exception e) {
+			logger.debug("Unable to visualise " + selection);
 			return Optional.empty();
 		}
 	}
