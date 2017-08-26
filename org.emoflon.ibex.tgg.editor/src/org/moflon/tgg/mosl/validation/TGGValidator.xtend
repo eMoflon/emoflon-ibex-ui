@@ -152,7 +152,7 @@ class TGGValidator extends AbstractTGGValidator {
 			var ovOpValue = ov.op.value;
 			for(LinkVariablePattern linkVar : ov.linkVariablePatterns){
 				if(linkVar.op == null || !ovOpValue.equals(linkVar.op.value)){
-					error("Link Variable '" + linkVar.type.name + "' has a different operator", linkVar, TggPackage.Literals.OPERATOR_PATTERN__OP, TGGValidator.LINK_VARIABLE_DOES_NOT_HAVE_SAME_OPERATOR_LIKE_OBJECT_VARIABLE_PATTERN)
+					error("The operator of '" + linkVar.type.name + "' is incorrect.", linkVar, TggPackage.Literals.OPERATOR_PATTERN__OP, TGGValidator.LINK_VARIABLE_DOES_NOT_HAVE_SAME_OPERATOR_LIKE_OBJECT_VARIABLE_PATTERN)
 				}
 			}
 		}
@@ -166,7 +166,7 @@ class TGGValidator extends AbstractTGGValidator {
 
 				if (trgOVOp != null && trgOVOp.value.equals("++") &&
 					((linkVar.op != null && !("++".equals(linkVar.op.value))) || linkVar.op == null)) {
-					error("Link Variable '" + linkVar.type.name + "' has a different operator", linkVar,
+					error("The operator of '" + linkVar.type.name + "' is incorrect.", linkVar,
 						TggPackage.Literals.OPERATOR_PATTERN__OP,
 						TGGValidator.LINK_VARIABLE_DOES_NOT_HAVE_SAME_OPERATOR_LIKE_TARGET_OBJECT_VARIABLE_PATTERN);
 					}
