@@ -56,7 +56,7 @@ class IbexPlantUMLGenerator {
 			else {
 				val chosenNac = file.nacs.filter[n | n.name.equals(selected.get)]
 				if(chosenNac.length == 1)
-					return visualiseNAC(chosenNac.get(0))
+					return visualiseNAC(chosenNac.get(0)).orElse("title Unable to visualise NAC")
 				else {
 					val chosenComplementRule = file.complementRules.filter[cr | cr.name.equals(selected.get)]
 					if(chosenComplementRule.length == 1)
@@ -69,11 +69,12 @@ class IbexPlantUMLGenerator {
 		}	
 	}
 	
-	def static String visualiseNAC(Nac n) {
+	def static Optional<String> visualiseNAC(Nac n) {
 		val file = TggFactory.eINSTANCE.createTripleGraphGrammarFile;
 		file.rules.add(EcoreUtil.copy(n.rule));
-		val flattenedFule = new EditorTGGtoFlattenedTGG().flatten(file);
-		val rule = flattenedFule.rules.get(0);
+		val flattenedTGG = new EditorTGGtoFlattenedTGG().flatten(file);
+		val ruleOp = flattenedTGG.map([tgg | tgg.rules.get(0)]);
+		return ruleOp.map([rule |
 		'''
 			«plantUMLPreamble»
 			
@@ -116,6 +117,7 @@ class IbexPlantUMLGenerator {
 				}
 			«ENDIF»
 		'''
+		])
 	}
 	
 	def static String visualiseComplementRule(ComplementRule cr) {

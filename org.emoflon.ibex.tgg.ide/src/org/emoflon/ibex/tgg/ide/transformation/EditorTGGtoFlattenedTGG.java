@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.moflon.tgg.mosl.tgg.AttrCond;
@@ -31,6 +32,8 @@ import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile;
  */
 public class EditorTGGtoFlattenedTGG {
 
+	private static final Logger logger = Logger.getLogger(EditorTGGtoFlattenedTGG.class);
+	
 	private Map<Set<Rule>, Rule> superRuleMap;
 	private Map<String, ObjectVariablePattern> sourcePatterns;
 	private Map<String, ObjectVariablePattern> targetPatterns;
@@ -46,26 +49,28 @@ public class EditorTGGtoFlattenedTGG {
 	 * @param tgg The TripleGraphGrammarFile that shall be flattened.
 	 * @return The flattened TripleGraphGrammarFile.
 	 */
-	public TripleGraphGrammarFile flatten(TripleGraphGrammarFile tgg) {
-		TripleGraphGrammarFile flattened = EcoreUtil.copy(tgg);
-		EList<Rule> rules = flattened.getRules();
-		
-		superRuleMap = new HashMap<Set<Rule>, Rule>();
-		rules.stream()
-		  	 .forEach(r -> superRuleMap.put(this.findSuperRules(r), r));
-		
-		List<Rule> newRules = superRuleMap.keySet().stream()
-								  				   .map(this::merge)
-								  				   .collect(Collectors.toList());
-		
-		rules.clear();		
-		sort(newRules);
-		rules.addAll(newRules);
-		
-		cleanUpNACsIfPossible(flattened);
-		cleanUpKernelsIfPossible(flattened);
-		
-		return flattened;
+	public Optional<TripleGraphGrammarFile> flatten(TripleGraphGrammarFile tgg) {
+		try {
+			TripleGraphGrammarFile flattened = EcoreUtil.copy(tgg);
+			EList<Rule> rules = flattened.getRules();
+
+			superRuleMap = new HashMap<Set<Rule>, Rule>();
+			rules.stream().forEach(r -> superRuleMap.put(this.findSuperRules(r), r));
+
+			List<Rule> newRules = superRuleMap.keySet().stream().map(this::merge).collect(Collectors.toList());
+
+			rules.clear();
+			sort(newRules);
+			rules.addAll(newRules);
+
+			cleanUpNACsIfPossible(flattened);
+			cleanUpKernelsIfPossible(flattened);
+
+			return Optional.of(flattened);
+		} catch (Exception e) {
+			logger.error("Unable to flatten " + tgg);
+			return Optional.empty();
+		}
 	}
 	
 	private void cleanUpKernelsIfPossible(TripleGraphGrammarFile flattened) {

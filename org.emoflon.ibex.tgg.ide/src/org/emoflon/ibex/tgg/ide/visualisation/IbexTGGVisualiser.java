@@ -49,7 +49,7 @@ public class IbexTGGVisualiser extends IbexVisualiser {
 		try {
 			return extractTGGFileFromEditor(editor)
 				.map(file -> file.getSchema() == null? file : null)
-				.map(this::flatten)
+				.flatMap(this::flatten)
 				.map(flattened -> IbexPlantUMLGenerator.visualiseTGGFile(flattened, determineNameOfChosenRule(flattened, selection)));
 		} catch(Exception e) {
 			logger.debug("Unable to visualise " + selection);
@@ -81,7 +81,7 @@ public class IbexTGGVisualiser extends IbexVisualiser {
 		return Optional.empty();
 	}
 
-	private TripleGraphGrammarFile flatten(TripleGraphGrammarFile file) {
+	private Optional<TripleGraphGrammarFile> flatten(TripleGraphGrammarFile file) {
 		return new EditorTGGtoFlattenedTGG().flatten(file);
 	}
 	

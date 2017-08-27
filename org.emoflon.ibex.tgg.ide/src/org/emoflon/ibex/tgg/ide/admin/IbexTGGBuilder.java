@@ -115,18 +115,19 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	}
 	
 	private Optional<TripleGraphGrammarFile> generateFlattenedEditorModel(TripleGraphGrammarFile editorModel) {
-		try {
-			EditorTGGtoFlattenedTGG flattener = new EditorTGGtoFlattenedTGG();
-			TripleGraphGrammarFile flattenedTGG = flattener.flatten(editorModel);
+		EditorTGGtoFlattenedTGG flattener = new EditorTGGtoFlattenedTGG();
+		Optional<TripleGraphGrammarFile> flattenedTGGOp = flattener.flatten(editorModel);
+		return flattenedTGGOp.map(flattenedTGG -> {
 			ResourceSet rs = editorModel.eResource().getResourceSet();
-			IFile tggFile = getProject().getFolder(IbexTGGBuilder.MODEL_FOLDER).getFile(getProject().getName() + EDITOR_FLATTENED_MODEL_EXTENSION);
-			saveModelInProject(tggFile, rs, flattenedTGG);
-			return Optional.of(flattenedTGG);
-		} catch (Exception e) {
-			LogUtils.error(logger, e);
-		}
-		
-		return Optional.empty();
+			IFile tggFile = getProject().getFolder(IbexTGGBuilder.MODEL_FOLDER)
+					.getFile(getProject().getName() + EDITOR_FLATTENED_MODEL_EXTENSION);
+			try {
+				saveModelInProject(tggFile, rs, flattenedTGG);
+			} catch (Exception e) {
+				LogUtils.error(logger, e);
+			}
+			return flattenedTGG;
+		});
 	}
 
 	/**
