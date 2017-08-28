@@ -61,7 +61,6 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	public static final String RUN_FILE_PATH_PREFIX = "src/org/emoflon/ibex/tgg/run/";
 	private static final String IBUILDER_EXTENSON_ID = "org.emoflon.ibex.tgg.ide.IbexTGGBuilderExtension";
 	public static final Logger logger = Logger.getLogger(IbexTGGBuilder.class);
-	public static final String INTERNAL_TGG_VIS_MODEL_EXTENSION = ".tgg.vis.xmi";
 	private boolean buildIsNecessary = false;
 	
 	private Collection<BuilderExtension> builderExtensions;
@@ -280,7 +279,7 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 		SafeRunner.run(runnable);
 	}
 
-	public static Resource saveModelInProject(IFile file, ResourceSet rs, EObject model) throws IOException {
+	public static void saveModelInProject(IFile file, ResourceSet rs, EObject model) throws IOException {
 		URI uri = URI.createPlatformResourceURI(file.getProject().getName() + "/" + file.getProjectRelativePath().toString(), true);
 		Resource resource = rs.createResource(uri);
 		resource.getContents().add(model);
@@ -293,14 +292,6 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 			}
 		});
 		resource.save(options);
-		return resource;
-	}
-	
-	public static Resource loadModelInProject(IFile file, ResourceSet rs) throws IOException {
-		URI uri = URI.createPlatformResourceURI(file.getProject().getName() + "/" + file.getProjectRelativePath().toString(), true);
-		Resource resource = rs.createResource(uri);
-		resource.load(null);
-		return resource;
 	}
 
 	@Override
