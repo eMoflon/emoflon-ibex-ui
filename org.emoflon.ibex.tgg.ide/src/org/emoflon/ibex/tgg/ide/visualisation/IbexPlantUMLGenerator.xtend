@@ -383,7 +383,7 @@ class IbexPlantUMLGenerator {
 	}
 	
 	def static platformURIToRule(String projectName, String ruleName) {
-		val files = WorkspaceHelper.getProjectByName(projectName).allFiles.filter[f | f.name.endsWith(ruleName + ".tgg")]
+		val files = WorkspaceHelper.getProjectByName(projectName).allFiles.filter[f | f.name.equals(ruleName + ".tgg")]
 		if(files.size == 1)
 			'''[[platform:/resource/«projectName»/«files.get(0).projectRelativePath»]]'''
 		else
