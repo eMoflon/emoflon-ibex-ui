@@ -116,6 +116,6 @@ public class IbexModelAndMetamodelVisualiser extends IbexVisualiser {
 	
 	@Override
 	public boolean supportsSelection(ISelection selection) {
-		return noOtherVisualisationRegisteredForSelection(editor, selection, IbexModelAndMetamodelVisualiser.class);
+		return true;
 	}
 }
