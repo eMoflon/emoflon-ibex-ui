@@ -44,6 +44,8 @@ import org.emoflon.ibex.tgg.ide.transformation.EditorTGGtoFlattenedTGG;
 import org.moflon.tgg.mosl.defaults.AttrCondDefLibraryProvider;
 import org.moflon.tgg.mosl.tgg.AttrCond;
 import org.moflon.tgg.mosl.tgg.AttrCondDef;
+import org.moflon.tgg.mosl.tgg.ComplementRule;
+import org.moflon.tgg.mosl.tgg.Nac;
 import org.moflon.tgg.mosl.tgg.Rule;
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile;
 import org.moflon.util.IbexUtil;
@@ -231,8 +233,23 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 				}
 			}
 		}
+		for (ComplementRule crule : xtextParsedTGG.getComplementRules()) {
+				for (AttrCond attrCond : crule.getAttrConditions()) {
+					if (!usedAttrCondDefs.contains(attrCond.getName()) && !attrCond.getName().isUserDefined()) {
+						usedAttrCondDefs.add(attrCond.getName());
+				}
+			}
+		}
+		for (Nac nac : xtextParsedTGG.getNacs()) {
+			for (AttrCond attrCond : nac.getAttrConditions()) {
+				if (!usedAttrCondDefs.contains(attrCond.getName()) && !attrCond.getName().isUserDefined()) {
+					usedAttrCondDefs.add(attrCond.getName());
+				}
+			}
+		}
 		xtextParsedTGG.getSchema().getAttributeCondDefs().addAll(usedAttrCondDefs);
 	}
+	
 
 	private void loadAllRules(XtextResourceSet resourceSet, IFolder root) throws CoreException, IOException {
 		for (IResource iResource : root.members()) {
