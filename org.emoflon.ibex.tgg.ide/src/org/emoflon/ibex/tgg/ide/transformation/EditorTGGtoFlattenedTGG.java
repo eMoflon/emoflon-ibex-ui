@@ -15,11 +15,16 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.moflon.tgg.mosl.tgg.AttrCond;
+import org.moflon.tgg.mosl.tgg.AttributeAssignment;
+import org.moflon.tgg.mosl.tgg.AttributeConstraint;
 import org.moflon.tgg.mosl.tgg.AttributeExpression;
 import org.moflon.tgg.mosl.tgg.ComplementRule;
 import org.moflon.tgg.mosl.tgg.CorrType;
 import org.moflon.tgg.mosl.tgg.CorrVariablePattern;
+import org.moflon.tgg.mosl.tgg.EnumExpression;
+import org.moflon.tgg.mosl.tgg.Expression;
 import org.moflon.tgg.mosl.tgg.LinkVariablePattern;
+import org.moflon.tgg.mosl.tgg.LiteralExpression;
 import org.moflon.tgg.mosl.tgg.Nac;
 import org.moflon.tgg.mosl.tgg.ObjectVariablePattern;
 import org.moflon.tgg.mosl.tgg.OperatorPattern;
@@ -41,7 +46,7 @@ public class EditorTGGtoFlattenedTGG {
 
 	// TODO[FStolte] implement exceptions for invalid refinements
 	// TODO[FStolte] implement warnings for nonsensical refinements
-	// TODO[FStolte] implement merge of attribute conditions
+	// TODO[FStolte] implement merge of attribute conditions (now only for CSPs!)
 	
 	/**
 	 * Produces a flattened {@linkplain TripleGraphGrammarFile} from a given non-flattened TripleGraphGrammarFile.
@@ -65,6 +70,7 @@ public class EditorTGGtoFlattenedTGG {
 
 			cleanUpNACsIfPossible(flattened);
 			cleanUpKernelsIfPossible(flattened);
+			cleanUpDuplicateAttributeConditions(flattened);
 
 			return Optional.of(flattened);
 		} catch (Exception e) {
@@ -73,6 +79,73 @@ public class EditorTGGtoFlattenedTGG {
 		}
 	}
 	
+	private void cleanUpDuplicateAttributeConditions(TripleGraphGrammarFile tgg) {
+		for (Rule rule : tgg.getRules()) {
+			cleanUpDuplicateConditions(rule.getSourcePatterns());
+			cleanUpDuplicateConditions(rule.getTargetPatterns());
+		}
+	}
+
+	private void cleanUpDuplicateConditions(EList<ObjectVariablePattern> patterns) {
+		for (ObjectVariablePattern pattern : patterns) {
+			ArrayList<AttributeAssignment> duplicateAssigns = new ArrayList<>();
+			ArrayList<AttributeConstraint> duplicateConstrs = new ArrayList<>();
+
+			for (AttributeAssignment assign : pattern.getAttributeAssignments()) {
+				if(!duplicateAssigns.contains(assign)) {
+				duplicateAssigns.addAll(
+						pattern.getAttributeAssignments()
+							.stream()
+							.filter(a -> !a.equals(assign) && identical(a, assign))
+							.collect(Collectors.toList())
+						);
+				}
+			}
+			
+			for (AttributeConstraint constr : pattern.getAttributeConstraints()) {
+				if(!duplicateConstrs.contains(constr)) {
+					duplicateConstrs.addAll(
+						pattern.getAttributeConstraints()
+							.stream()
+							.filter(a -> !a.equals(constr) && identical(a, constr))
+							.collect(Collectors.toList())
+						);
+				}
+			}
+			
+			pattern.getAttributeAssignments().removeAll(duplicateAssigns);
+			pattern.getAttributeConstraints().removeAll(duplicateConstrs);
+		}
+	}
+
+	private boolean identical(AttributeConstraint c, AttributeConstraint constr) {
+		if(!c.getOp().equals(constr.getOp())) return false;
+		if(!c.getAttribute().equals(constr.getAttribute())) return false;
+		return identical(c.getValueExp(), constr.getValueExp());
+	}
+
+	private boolean identical(Expression v1, Expression v2) {
+		if(v1 instanceof LiteralExpression && v2 instanceof LiteralExpression) {
+			LiteralExpression lv1 = (LiteralExpression) v1;
+			LiteralExpression lv2 = (LiteralExpression) v2;
+			return lv1.getValue().equals(lv2.getValue());
+		}
+		
+		if(v1 instanceof EnumExpression && v2 instanceof EnumExpression) {
+			EnumExpression ev1 = (EnumExpression) v1;
+			EnumExpression ev2 = (EnumExpression) v2;
+			return ev1.getLiteral().equals(ev2.getLiteral());
+		}
+		
+		return false;
+	}
+
+	private boolean identical(AttributeAssignment a, AttributeAssignment assign) {
+		if(!a.getOp().equals(assign.getOp())) return false;
+		if(!a.getAttribute().equals(assign.getAttribute())) return false;
+		return identical(a.getValueExp(), assign.getValueExp());
+	}
+
 	private void cleanUpKernelsIfPossible(TripleGraphGrammarFile flattened) {
 		for (ComplementRule cr : flattened.getComplementRules()) {
 			Rule oldKernel = cr.getKernel();
