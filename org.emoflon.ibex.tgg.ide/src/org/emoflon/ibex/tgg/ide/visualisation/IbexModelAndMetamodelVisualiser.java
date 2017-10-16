@@ -8,10 +8,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.presentation.EcoreEditor;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EContentsEList;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -65,6 +67,31 @@ public class IbexModelAndMetamodelVisualiser extends IbexVisualiser {
 	}
 
 	private Pair<Collection<EClass>, Collection<EReference>> determineClassesAndRefsToVisualise(Collection<Object> selection){
+		Collection<EClass> chosenClassesfromResource = new ArrayList<EClass>();
+		if(selection.size() == 1) {
+			List<Resource> resourceChosen = selection
+					.stream()
+					.filter(Resource.class::isInstance)
+					.map(Resource.class::cast)
+					.collect(Collectors.toList());
+			if(!resourceChosen.isEmpty()) {
+				TreeIterator<EObject> eAllContents = resourceChosen.get(0).getAllContents();	
+				while(eAllContents.hasNext()) {
+					EObject next = eAllContents.next();
+					if(next instanceof EClass) {
+						chosenClassesfromResource.add((EClass) next);
+					}
+				}
+			
+			}
+			Collection<EReference> refs = chosenClassesfromResource
+					.stream()
+					.flatMap(c -> c.getEReferences().stream())
+					.collect(Collectors.toSet());
+		
+		return Pair.of(chosenClassesfromResource,refs);
+		}
+		else {
 		Collection<EClass> chosenClasses = selection
 				.stream()
 				.filter(EClass.class::isInstance)
@@ -77,8 +104,8 @@ public class IbexModelAndMetamodelVisualiser extends IbexVisualiser {
 				.collect(Collectors.toSet());
 		
 		return Pair.of(chosenClasses, refs);
+		}
 	}
-	
 	@SuppressWarnings("rawtypes")
 	private Pair<Collection<EObject>, Collection<Pair<String, Pair<EObject, EObject>>>> 
 	determineObjectsAndLinksToVisualise(Collection<Object> selection){
