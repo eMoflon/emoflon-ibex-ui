@@ -310,6 +310,20 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 		});
 		resource.save(options);
 	}
+	
+	/**
+	 * This method returns a resource that has already been loaded into the resourceset
+	 * @param file
+	 * @param rs
+	 * @return
+	 * @throws IOException
+	 */
+	public static Resource getModelInProject(IFile file, ResourceSet rs) throws IOException {
+		URI uri = URI.createPlatformResourceURI(file.getProject().getName() + "/" + file.getProjectRelativePath().toString(), true);
+		Resource resource = rs.getResource(uri, true);
+		resource.load(null);
+		return resource;
+	}
 
 	@Override
 	public boolean visit(IResourceDelta delta) throws CoreException {
