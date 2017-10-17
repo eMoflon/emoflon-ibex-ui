@@ -8,10 +8,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.presentation.EcoreEditor;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EContentsEList;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -65,29 +67,64 @@ public class IbexModelAndMetamodelVisualiser extends IbexVisualiser {
 	}
 
 	private Pair<Collection<EClass>, Collection<EReference>> determineClassesAndRefsToVisualise(Collection<Object> selection){
+		Collection<EClass> chosenClassesfromResource = new ArrayList<EClass>();
+		if(selection.size() == 1 && !resourceChosen(selection).isEmpty() ) {
+				TreeIterator<EObject> eAllContents = resourceChosen(selection).get(0).getAllContents();	
+				while(eAllContents.hasNext()) {
+					EObject next = eAllContents.next();
+					if(next instanceof EClass) {
+						chosenClassesfromResource.add((EClass) next);
+					}
+				}	
+				return Pair.of(chosenClassesfromResource, determineReferencesToVisualize(chosenClassesfromResource));
+			}
+		
+		else {
 		Collection<EClass> chosenClasses = selection
 				.stream()
 				.filter(EClass.class::isInstance)
 				.map(EClass.class::cast)
 				.collect(Collectors.toSet());
 		
-		Collection<EReference> refs = chosenClasses
-				.stream()
-				.flatMap(c -> c.getEReferences().stream())
-				.collect(Collectors.toSet());
-		
-		return Pair.of(chosenClasses, refs);
+		return Pair.of(chosenClasses, determineReferencesToVisualize(chosenClasses));
+		}
 	}
 	
-	@SuppressWarnings("rawtypes")
 	private Pair<Collection<EObject>, Collection<Pair<String, Pair<EObject, EObject>>>> 
 	determineObjectsAndLinksToVisualise(Collection<Object> selection){
+		Collection<EObject> chosenObjectsfromResource = new ArrayList<EObject>();
+		if(selection.size() == 1 && !resourceChosen(selection).isEmpty() ) {
+				TreeIterator<EObject> eAllContents = resourceChosen(selection).get(0).getAllContents();	
+				while(eAllContents.hasNext()) {
+					EObject next = eAllContents.next();
+					if(next instanceof EObject) {
+						chosenObjectsfromResource.add((EObject) next);
+					}
+				}				
+			return Pair.of(chosenObjectsfromResource, determineLinksToVisualize(chosenObjectsfromResource));
+			}
+	
+		else {
 		Collection<EObject> chosenObjects = selection
 				.stream()
 				.filter(EObject.class::isInstance)
 				.map(EObject.class::cast)
 				.collect(Collectors.toSet());
 		
+		return Pair.of(chosenObjects, determineLinksToVisualize(chosenObjects));
+					}
+				}
+	
+	private Collection<EReference> determineReferencesToVisualize(Collection<EClass> chosenClasses){
+		Collection<EReference> refs = chosenClasses
+				.stream()
+				.flatMap(c -> c.getEReferences().stream())
+				.collect(Collectors.toSet());
+		return refs;	
+	}
+	
+	@SuppressWarnings("rawtypes")
+	private Collection<Pair<String, Pair<EObject, EObject>>> determineLinksToVisualize(Collection<EObject> chosenObjects) {
 		Collection<Pair<String, Pair<EObject, EObject>>> refs = new HashSet<>();
 		for (EObject o : new ArrayList<EObject>(chosenObjects)) {
 			for (EContentsEList.FeatureIterator featureIterator = (EContentsEList.FeatureIterator) o.eCrossReferences().iterator(); featureIterator.hasNext();) {
@@ -103,10 +140,17 @@ public class IbexModelAndMetamodelVisualiser extends IbexVisualiser {
 					refs.add(Pair.of(eReference.getName(), Pair.of(o, eObject)));
 			}
 		}
-		
-		return Pair.of(chosenObjects, refs);
+		return refs;
 	}
-	
+	private List<Resource> resourceChosen(Collection<Object> selection){
+		List<Resource> resourceChosen = selection
+				.stream()
+				.filter(Resource.class::isInstance)
+				.map(Resource.class::cast)
+				.collect(Collectors.toList());
+		return resourceChosen;
+		
+	}
 	@Override
 	public boolean supportsEditor(IEditorPart editor) {
 		this.editor = editor;
