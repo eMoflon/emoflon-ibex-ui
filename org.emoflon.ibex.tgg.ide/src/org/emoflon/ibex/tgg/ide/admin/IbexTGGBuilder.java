@@ -222,7 +222,10 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	}
 
 	private void validateEditorTGGModel(TripleGraphGrammarFile xtextParsedTGG, IFile editorFile) throws CoreException {
-		// No two rules should have the same name
+		noTwoRulesWithTheSameName(xtextParsedTGG);
+	}
+
+	private void noTwoRulesWithTheSameName(TripleGraphGrammarFile xtextParsedTGG) {
 		Stream<String> names = xtextParsedTGG.getRules().stream().map(r -> r.getName());
 		names = Stream.concat(names, xtextParsedTGG.getComplementRules().stream().map(r -> r.getName()));
 		names = Stream.concat(names, xtextParsedTGG.getNacs().stream().map(r -> r.getName()));
