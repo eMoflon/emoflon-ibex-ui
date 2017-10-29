@@ -3,18 +3,26 @@ package org.emoflon.ibex.tgg.ide.admin;
 import static org.moflon.util.WorkspaceHelper.addAllFoldersAndFile;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
@@ -185,7 +193,7 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 				XtextResource schemaResource = loadSchema(resourceSet, schemaFile);
 				if (schemaIsOfExpectedType(schemaResource)) {
 					// Load
-					loadAllRules(resourceSet, getProject().getFolder(SRC_FOLDER));
+					visitAllFiles(resourceSet, getProject().getFolder(SRC_FOLDER), this::loadRules);
 					EcoreUtil2.resolveLazyCrossReferences(schemaResource, () -> false); 
 					resourceSet.getResources().forEach(r -> EcoreUtil2.resolveLazyCrossReferences(r, () -> false));
 					EcoreUtil.resolveAll(resourceSet);
@@ -197,7 +205,12 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 					
 					// Persist and return
 					IFile editorFile = getProject().getFolder(IbexTGGBuilder.MODEL_FOLDER).getFile(getProject().getName() + EDITOR_MODEL_EXTENSION);
+					
 					saveModelInProject(editorFile, resourceSet, xtextParsedTGG);
+
+					// Validate
+					validateEditorTGGModel(xtextParsedTGG, editorFile);
+					
 					return Optional.of(xtextParsedTGG);
 				}
 			}
@@ -206,6 +219,55 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 		}
 
 		return Optional.empty();
+	}
+
+	private void validateEditorTGGModel(TripleGraphGrammarFile xtextParsedTGG, IFile editorFile) throws CoreException {
+		noTwoRulesWithTheSameName(xtextParsedTGG);
+	}
+
+	private void noTwoRulesWithTheSameName(TripleGraphGrammarFile xtextParsedTGG) {
+		Stream<String> names = xtextParsedTGG.getRules().stream().map(r -> r.getName());
+		names = Stream.concat(names, xtextParsedTGG.getComplementRules().stream().map(r -> r.getName()));
+		names = Stream.concat(names, xtextParsedTGG.getNacs().stream().map(r -> r.getName()));
+		names = names.sorted();
+		
+		List<String> namesIterator = names.collect(Collectors.toList());
+		for (int i = 0; i < namesIterator.size() - 1; i++) {
+			String next = namesIterator.get(i);
+			String nextNext = namesIterator.get(i + 1);
+			if (nextNext.equals(next)) {
+				getTGGFileContainingName(next).forEach(f -> {
+					try {
+						IMarker m = f.createMarker(IMarker.PROBLEM);
+						m.setAttribute(IMarker.MESSAGE, "At least one other rule or NAC in your TGG has this name already: " + next);
+						m.setAttribute(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
+						m.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				});
+			}
+		}
+	}
+
+	private Collection<IFile> getTGGFileContainingName(String name) {
+		try {
+			List<IFile> allTGGFiles = new ArrayList<>();
+			visitAllFiles(allTGGFiles, getProject().getFolder("src"), (file, acc) -> 
+			{
+				if(file.getFileExtension().equals("tgg")) {
+					try {
+						String contents = FileUtils.readFileToString(file.getLocation().toFile(), Charset.defaultCharset());
+						if(contents.split("#rule\\s+" + name).length > 1) acc.add(file);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			return allTGGFiles;
+		} catch (Exception e) {
+			return Collections.emptyList();
+		}
 	}
 
 	private void collectAllRules(TripleGraphGrammarFile xtextParsedTGG, XtextResourceSet resourceSet) {
@@ -251,20 +313,19 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	}
 	
 
-	private void loadAllRules(XtextResourceSet resourceSet, IFolder root) throws CoreException, IOException {
+	private <ACC> void visitAllFiles(ACC accumulator, IFolder root, BiConsumer<IFile, ACC> action) throws CoreException, IOException {
 		for (IResource iResource : root.members()) {
 			if (iResource instanceof IFile) {
-				loadRules(iResource, resourceSet);
+				action.accept((IFile)iResource, accumulator);
 			} else if (iResource instanceof IFolder) {
-				loadAllRules(resourceSet, IFolder.class.cast(iResource));
+				visitAllFiles(accumulator, IFolder.class.cast(iResource), action);
 			}
 		}
 	}
 
-	private void loadRules(IResource iResource, XtextResourceSet resourceSet) throws IOException {
-		IFile ruleFile = (IFile) iResource;
-		if (ruleFile.getName().endsWith(TGG_FILE_EXTENSION)) {
-			resourceSet.getResource(URI.createPlatformResourceURI(ruleFile.getFullPath().toString(), true), true);	
+	private void loadRules(IFile file, XtextResourceSet resourceSet) {
+		if (file.getName().endsWith(TGG_FILE_EXTENSION)) {
+			resourceSet.getResource(URI.createPlatformResourceURI(file.getFullPath().toString(), true), true);	
 		}
 	}
 
@@ -330,6 +391,18 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	}
 
 	private void performClean() {
+		try {
+			Arrays.asList(getProject().findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE)).forEach(m -> {
+				try {
+					m.delete();
+				} catch (CoreException e) {
+					LogUtils.error(logger, e);
+				}
+			});
+		} catch (CoreException e) {
+			LogUtils.error(logger, e);
+		}
+		
 		List<String> toDelete = Arrays.asList(
 				MODEL_FOLDER + "/" + getProject().getName() + ECORE_FILE_EXTENSION,
 				MODEL_FOLDER + "/" + getProject().getName() + EDITOR_MODEL_EXTENSION,

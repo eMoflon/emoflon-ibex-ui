@@ -33,6 +33,7 @@ class TGGValidator extends AbstractTGGValidator {
   public static val RULE_REFINEMENT_CREATES_A_CYCLE = 'RuleRefinementCreatesACycle'
   public static val LINK_VARIABLE_DOES_NOT_HAVE_SAME_OPERATOR_LIKE_OBJECT_VARIABLE_PATTERN = 'linkVariableDoesNotHaveSameOeratorLikeObjectVariablePattern'
   public static val LINK_VARIABLE_DOES_NOT_HAVE_SAME_OPERATOR_LIKE_TARGET_OBJECT_VARIABLE_PATTERN= 'linkVariableDoesNotHaveSameOeratorLikeTargetObjectVariablePattern'
+  public static val INVALID_NAME = 'invalidName'		
 	
 	@Check
 	def checkAttributeExpression(AttributeExpression attrVar){
@@ -47,18 +48,13 @@ class TGGValidator extends AbstractTGGValidator {
 	
 	Map<String, Map<EObject, Map<Class<? extends EObject>, EObject>>> names = new HashMap<String, Map<EObject, Map<Class<? extends EObject>, EObject>>>();
 	
-	
-	
-	
 	@Check
 	def checkForUniqueNames(TripleGraphGrammarFile tggFile){
 		names.clear();
 		for(NamedElements ne : EcoreUtil2.getAllContentsOfType(tggFile, NamedElements)){
 			checkForUniqueNames(ne);
 		}
-		
 	}
-	
 
 	def checkForUniqueNames(NamedElements ne){
 		if(names.containsKey(ne.name)){
@@ -172,5 +168,26 @@ class TGGValidator extends AbstractTGGValidator {
 					}
 				}
 			}
+	}
+	
+	@Check
+	def checkForNameOfFileWithSingleTGGRule(TripleGraphGrammarFile file){
+		if(file.rules.size + file.nacs.size + file.complementRules.size == 1){
+			if(file.rules.size == 1)
+				checkForNameOfFileWithSingleTGGRule(file.rules.get(0).name, file, file.rules.get(0))
+			else if 	(file.nacs.size == 1)
+				checkForNameOfFileWithSingleTGGRule(file.nacs.get(0).name, file, file.nacs.get(0))
+			else
+				checkForNameOfFileWithSingleTGGRule(file.complementRules.get(0).name, file, file.complementRules.get(0))
+		}
+	}
+	
+	def checkForNameOfFileWithSingleTGGRule(String name, TripleGraphGrammarFile file, EObject source){
+		if(!file.eResource.URI.toPlatformString(false).endsWith(name + ".tgg")){			
+			warning("As you have only one rule/NAC in your file, you might as well name the file accordingly.", source, 
+						TggPackage.Literals.NAMED_ELEMENTS__NAME, 
+						TGGValidator.INVALID_NAME
+					)	
+		}
 	}
 }
