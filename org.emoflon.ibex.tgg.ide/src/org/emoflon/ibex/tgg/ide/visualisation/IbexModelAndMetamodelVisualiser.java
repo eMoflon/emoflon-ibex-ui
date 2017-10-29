@@ -3,6 +3,7 @@ package org.emoflon.ibex.tgg.ide.visualisation;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,7 +24,7 @@ import org.emoflon.ibex.tgg.ide.visualisation.IbexPlantUMLGenerator;
 public class IbexModelAndMetamodelVisualiser extends IbexVisualiser {
 
 	private IEditorPart editor;
-
+	private boolean correspondenceFlag;
 	@Override
 	protected String getDiagramBody(IEditorPart editor, ISelection selection) {
 		return maybeVisualiseMetamodel(editor).orElse(
@@ -46,8 +47,14 @@ public class IbexModelAndMetamodelVisualiser extends IbexVisualiser {
 	}
 	
 	private Optional<String> maybeVisualiseModel(IEditorPart editor) {
+		if(correspondenceFlag) {
+			return  extractModelElementsFromEditor(editor)
+					.map(p -> IbexPlantUMLGenerator.visualiseCorrModel(p.getLeft(), p.getRight()));
+		}
+		else {
 		return  extractModelElementsFromEditor(editor)
 				.map(p -> IbexPlantUMLGenerator.visualiseModelElements(p.getLeft(), p.getRight()));
+	}
 	}
 	
 	private Optional<Pair<Collection<EObject>, Collection<Pair<String, Pair<EObject, EObject>>>>>
@@ -100,7 +107,8 @@ public class IbexModelAndMetamodelVisualiser extends IbexVisualiser {
 					if(next instanceof EObject) {
 						chosenObjectsfromResource.add((EObject) next);
 					}
-				}				
+				}	
+			correspondenceFlag = checkForCorrespondenceModel(chosenObjectsfromResource);
 			return Pair.of(chosenObjectsfromResource, determineLinksToVisualize(chosenObjectsfromResource));
 			}
 	
@@ -151,6 +159,22 @@ public class IbexModelAndMetamodelVisualiser extends IbexVisualiser {
 		return resourceChosen;
 		
 	}
+	//checking if the selected model is a correspondence model
+	private boolean checkForCorrespondenceModel(Collection<EObject> chosenObjectsfromResource) {
+				boolean flag = false;
+				Iterator<EObject> eAllContents = chosenObjectsfromResource.iterator();	
+				while(eAllContents.hasNext()) {
+					EObject next = eAllContents.next();
+					if(next.eClass().getEStructuralFeature("source")!=null && next.eClass().getEStructuralFeature("target")!=null && determineLinksToVisualize(chosenObjectsfromResource).isEmpty()) {
+						flag = true;
+					}
+					else {
+						flag = false;
+				}	
+				}
+		return flag;
+	}
+	
 	@Override
 	public boolean supportsEditor(IEditorPart editor) {
 		this.editor = editor;

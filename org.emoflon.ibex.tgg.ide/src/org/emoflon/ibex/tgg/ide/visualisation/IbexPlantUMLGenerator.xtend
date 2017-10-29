@@ -400,4 +400,13 @@ class IbexPlantUMLGenerator {
 		folder.members.filter[f | f instanceof IFolder].forEach[f | files.addAll(allFileMembers(f as IFolder))]
 		return files
 	}
+	
+	def static String visualiseCorrModel(Collection<EObject> objects, Collection<Pair<String, Pair<EObject, EObject>>> links)
+	{
+		'''
+		@startuml
+		title YAY!!! Correspondence Model
+		@enduml
+		'''
+	} 
 }
