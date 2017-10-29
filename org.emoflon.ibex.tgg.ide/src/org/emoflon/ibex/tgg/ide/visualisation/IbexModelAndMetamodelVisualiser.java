@@ -22,9 +22,8 @@ import org.eclipse.ui.IEditorPart;
 import org.emoflon.ibex.tgg.ide.visualisation.IbexPlantUMLGenerator;
 
 public class IbexModelAndMetamodelVisualiser extends IbexVisualiser {
-
 	private IEditorPart editor;
-	private boolean correspondenceFlag;
+
 	@Override
 	protected String getDiagramBody(IEditorPart editor, ISelection selection) {
 		return maybeVisualiseMetamodel(editor).orElse(
@@ -47,14 +46,13 @@ public class IbexModelAndMetamodelVisualiser extends IbexVisualiser {
 	}
 	
 	private Optional<String> maybeVisualiseModel(IEditorPart editor) {
-		if(correspondenceFlag) {
-			return  extractModelElementsFromEditor(editor)
-					.map(p -> IbexPlantUMLGenerator.visualiseCorrModel(p.getLeft(), p.getRight()));
-		}
-		else {
 		return  extractModelElementsFromEditor(editor)
-				.map(p -> IbexPlantUMLGenerator.visualiseModelElements(p.getLeft(), p.getRight()));
-	}
+					.map(p -> {
+						if(checkForCorrespondenceModel(p.getLeft()))
+							return IbexPlantUMLGenerator.visualiseCorrModel(p.getLeft(), p.getRight());
+						else
+							return IbexPlantUMLGenerator.visualiseModelElements(p.getLeft(), p.getRight());
+					});
 	}
 	
 	private Optional<Pair<Collection<EObject>, Collection<Pair<String, Pair<EObject, EObject>>>>>
@@ -73,55 +71,54 @@ public class IbexModelAndMetamodelVisualiser extends IbexVisualiser {
 				.map(p -> p.getLeft().isEmpty()? null : p);
 	}
 
-	private Pair<Collection<EClass>, Collection<EReference>> determineClassesAndRefsToVisualise(Collection<Object> selection){
+	private Pair<Collection<EClass>, Collection<EReference>> 
+	determineClassesAndRefsToVisualise(Collection<Object> selection){
 		Collection<EClass> chosenClassesfromResource = new ArrayList<EClass>();
-		if(selection.size() == 1 && !resourceChosen(selection).isEmpty() ) {
-				TreeIterator<EObject> eAllContents = resourceChosen(selection).get(0).getAllContents();	
-				while(eAllContents.hasNext()) {
-					EObject next = eAllContents.next();
-					if(next instanceof EClass) {
-						chosenClassesfromResource.add((EClass) next);
-					}
-				}	
-				return Pair.of(chosenClassesfromResource, determineReferencesToVisualize(chosenClassesfromResource));
+		if (selection.size() == 1 && !resourceChosen(selection).isEmpty()) {
+			TreeIterator<EObject> eAllContents = resourceChosen(selection).get(0).getAllContents();
+			while (eAllContents.hasNext()) {
+				EObject next = eAllContents.next();
+				if (next instanceof EClass) {
+					chosenClassesfromResource.add((EClass) next);
+				}
 			}
-		
+
+			return Pair.of(chosenClassesfromResource, determineReferencesToVisualize(chosenClassesfromResource));
+		}
+
 		else {
-		Collection<EClass> chosenClasses = selection
-				.stream()
-				.filter(EClass.class::isInstance)
-				.map(EClass.class::cast)
-				.collect(Collectors.toSet());
-		
-		return Pair.of(chosenClasses, determineReferencesToVisualize(chosenClasses));
+			Collection<EClass> chosenClasses = selection.stream()
+					.filter(EClass.class::isInstance)
+					.map(EClass.class::cast)
+					.collect(Collectors.toSet());
+
+			return Pair.of(chosenClasses, determineReferencesToVisualize(chosenClasses));
 		}
 	}
 	
 	private Pair<Collection<EObject>, Collection<Pair<String, Pair<EObject, EObject>>>> 
-	determineObjectsAndLinksToVisualise(Collection<Object> selection){
+	determineObjectsAndLinksToVisualise(Collection<Object> selection) {
 		Collection<EObject> chosenObjectsfromResource = new ArrayList<EObject>();
-		if(selection.size() == 1 && !resourceChosen(selection).isEmpty() ) {
-				TreeIterator<EObject> eAllContents = resourceChosen(selection).get(0).getAllContents();	
-				while(eAllContents.hasNext()) {
-					EObject next = eAllContents.next();
-					if(next instanceof EObject) {
-						chosenObjectsfromResource.add((EObject) next);
-					}
-				}	
-			correspondenceFlag = checkForCorrespondenceModel(chosenObjectsfromResource);
-			return Pair.of(chosenObjectsfromResource, determineLinksToVisualize(chosenObjectsfromResource));
+		if (selection.size() == 1 && !resourceChosen(selection).isEmpty()) {
+			TreeIterator<EObject> eAllContents = resourceChosen(selection).get(0).getAllContents();
+			while (eAllContents.hasNext()) {
+				EObject next = eAllContents.next();
+				if (next instanceof EObject)
+					chosenObjectsfromResource.add((EObject) next);
 			}
-	
+			
+			return Pair.of(chosenObjectsfromResource, determineLinksToVisualize(chosenObjectsfromResource));
+		}
+
 		else {
-		Collection<EObject> chosenObjects = selection
-				.stream()
-				.filter(EObject.class::isInstance)
-				.map(EObject.class::cast)
-				.collect(Collectors.toSet());
-		
-		return Pair.of(chosenObjects, determineLinksToVisualize(chosenObjects));
-					}
-				}
+			Collection<EObject> chosenObjects = selection.stream()
+					.filter(EObject.class::isInstance)
+					.map(EObject.class::cast)
+					.collect(Collectors.toSet());
+
+			return Pair.of(chosenObjects, determineLinksToVisualize(chosenObjects));
+		}
+	}
 	
 	private Collection<EReference> determineReferencesToVisualize(Collection<EClass> chosenClasses){
 		Collection<EReference> refs = chosenClasses
@@ -159,22 +156,28 @@ public class IbexModelAndMetamodelVisualiser extends IbexVisualiser {
 		return resourceChosen;
 		
 	}
-	//checking if the selected model is a correspondence model
+	
 	private boolean checkForCorrespondenceModel(Collection<EObject> chosenObjectsfromResource) {
-				boolean flag = false;
-				Iterator<EObject> eAllContents = chosenObjectsfromResource.iterator();	
-				while(eAllContents.hasNext()) {
-					EObject next = eAllContents.next();
-					if(next.eClass().getEStructuralFeature("source")!=null && next.eClass().getEStructuralFeature("target")!=null && determineLinksToVisualize(chosenObjectsfromResource).isEmpty()) {
-						flag = true;
-					}
-					else {
-						flag = false;
-				}	
-				}
-		return flag;
+		// We do not expect any links to be present
+		if(!determineLinksToVisualize(chosenObjectsfromResource).isEmpty())
+			return false;
+		
+		// We expect all objects to be of the form <--src--corr--trg-->
+		Iterator<EObject> eAllContents = chosenObjectsfromResource.iterator();
+		while (eAllContents.hasNext()) {
+			EObject next = eAllContents.next();
+			if(!objectIsACorrespondenceLink(next)) 
+				return false;
+		}
+		
+		return true;
 	}
 	
+	private boolean objectIsACorrespondenceLink(EObject next) {
+		return next.eClass().getEStructuralFeature("source") != null &&
+			   next.eClass().getEStructuralFeature("target") != null;
+	}
+
 	@Override
 	public boolean supportsEditor(IEditorPart editor) {
 		this.editor = editor;
