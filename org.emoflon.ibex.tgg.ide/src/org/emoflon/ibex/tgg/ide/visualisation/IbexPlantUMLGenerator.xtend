@@ -401,7 +401,7 @@ class IbexPlantUMLGenerator {
 		return files
 	}
 	
-	def static String visualiseCorrModel(Collection<EObject> objects, Collection<Pair<String, Pair<EObject, EObject>>> links)
+	def static String visualiseCorrModel(Collection<EObject> objects, Collection<EObject> sourceObjects, Collection<EObject> targetObjects, Collection<Pair<String, Pair<EObject, EObject>>> links)
 	{
 		'''
 		@startuml

@@ -48,10 +48,12 @@ public class IbexModelAndMetamodelVisualiser extends IbexVisualiser {
 	private Optional<String> maybeVisualiseModel(IEditorPart editor) {
 		return  extractModelElementsFromEditor(editor)
 					.map(p -> {
-						if(checkForCorrespondenceModel(p.getLeft()))
-							return IbexPlantUMLGenerator.visualiseCorrModel(p.getLeft(), p.getRight());
-						else
+						if(checkForCorrespondenceModel(p.getLeft())) {
+							return IbexPlantUMLGenerator.visualiseCorrModel(p.getLeft(),sourceObjectsForCorrespondenceModel(p.getLeft()), targetObjectsForCorrespondenceModel(p.getLeft()), determineLinksToVisualizeForCorrModel(p.getLeft()));
+						}
+						else {
 							return IbexPlantUMLGenerator.visualiseModelElements(p.getLeft(), p.getRight());
+						}
 					});
 	}
 	
@@ -177,7 +179,36 @@ public class IbexModelAndMetamodelVisualiser extends IbexVisualiser {
 		return next.eClass().getEStructuralFeature("source") != null &&
 			   next.eClass().getEStructuralFeature("target") != null;
 	}
+	
+	private Collection<EObject> sourceObjectsForCorrespondenceModel(Collection<EObject> chosenObjectsfromResource){
+		Collection<EObject> sourceCorrespondenceObjects = new ArrayList<EObject>();
+		Iterator<EObject> eAllContents = chosenObjectsfromResource.iterator();
+		while (eAllContents.hasNext()) {
+			EObject next = eAllContents.next();
+				sourceCorrespondenceObjects.add((EObject) next.eGet(next.eClass().getEStructuralFeature("source")));
+		}
+		return sourceCorrespondenceObjects;
+	}
+	
+	private Collection<EObject> targetObjectsForCorrespondenceModel(Collection<EObject> chosenObjectsfromResource){
+		Collection<EObject> targetCorrespondenceObjects = new ArrayList<EObject>();
+		Iterator<EObject> eAllContents = chosenObjectsfromResource.iterator();
+		while (eAllContents.hasNext()) {
+			EObject next = eAllContents.next();
+				targetCorrespondenceObjects.add((EObject) next.eGet(next.eClass().getEStructuralFeature("target")));
+		}
+		return targetCorrespondenceObjects;
+	}
 
+	private Collection<Pair<String, Pair<EObject, EObject>>> determineLinksToVisualizeForCorrModel(Collection<EObject> chosenObjectsfromResource){
+		Collection<EObject> correspondenceObjects = new ArrayList<EObject>();
+		correspondenceObjects.addAll(sourceObjectsForCorrespondenceModel(chosenObjectsfromResource));
+		correspondenceObjects.addAll(targetObjectsForCorrespondenceModel(chosenObjectsfromResource));
+		System.out.println("Correspondence Objects"+ correspondenceObjects);
+		System.out.println("Corrspondence links"+determineLinksToVisualize(correspondenceObjects));
+		return determineLinksToVisualize(correspondenceObjects);
+	}
+	
 	@Override
 	public boolean supportsEditor(IEditorPart editor) {
 		this.editor = editor;
