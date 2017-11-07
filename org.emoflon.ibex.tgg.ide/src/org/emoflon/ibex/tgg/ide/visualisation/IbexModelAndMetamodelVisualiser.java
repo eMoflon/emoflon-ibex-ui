@@ -49,7 +49,7 @@ public class IbexModelAndMetamodelVisualiser extends IbexVisualiser {
 		return  extractModelElementsFromEditor(editor)
 					.map(p -> {
 						if(checkForCorrespondenceModel(p.getLeft())) {
-							return IbexPlantUMLGenerator.visualiseCorrModel(p.getLeft(),sourceObjectsForCorrespondenceModel(p.getLeft()), targetObjectsForCorrespondenceModel(p.getLeft()), determineLinksToVisualizeForCorrModel(p.getLeft()));
+							return IbexPlantUMLGenerator.visualiseCorrModel(p.getLeft(),sourceTargetObjectsForCorrespondenceModel(p.getLeft(),"source"), sourceTargetObjectsForCorrespondenceModel(p.getLeft(),"target"), determineLinksToVisualizeForCorrModel(p.getLeft()));
 						}
 						else {
 							return IbexPlantUMLGenerator.visualiseModelElements(p.getLeft(), p.getRight());
@@ -180,32 +180,22 @@ public class IbexModelAndMetamodelVisualiser extends IbexVisualiser {
 			   next.eClass().getEStructuralFeature("target") != null;
 	}
 	
-	private Collection<EObject> sourceObjectsForCorrespondenceModel(Collection<EObject> chosenObjectsfromResource){
-		Collection<EObject> sourceCorrespondenceObjects = new ArrayList<EObject>();
+	private Collection<EObject> sourceTargetObjectsForCorrespondenceModel(Collection<EObject> chosenObjectsfromResource, String sourceOrTarget){
+		Collection<EObject> sourceOrTargetObjects = new ArrayList<EObject>();
 		Iterator<EObject> eAllContents = chosenObjectsfromResource.iterator();
 		while (eAllContents.hasNext()) {
 			EObject next = eAllContents.next();
-				sourceCorrespondenceObjects.add((EObject) next.eGet(next.eClass().getEStructuralFeature("source")));
+			sourceOrTargetObjects.add( (EObject) next.eGet(next.eClass().getEStructuralFeature(sourceOrTarget)));
 		}
-		return sourceCorrespondenceObjects;
+		
+		return sourceOrTargetObjects;
 	}
 	
-	private Collection<EObject> targetObjectsForCorrespondenceModel(Collection<EObject> chosenObjectsfromResource){
-		Collection<EObject> targetCorrespondenceObjects = new ArrayList<EObject>();
-		Iterator<EObject> eAllContents = chosenObjectsfromResource.iterator();
-		while (eAllContents.hasNext()) {
-			EObject next = eAllContents.next();
-				targetCorrespondenceObjects.add((EObject) next.eGet(next.eClass().getEStructuralFeature("target")));
-		}
-		return targetCorrespondenceObjects;
-	}
 
 	private Collection<Pair<String, Pair<EObject, EObject>>> determineLinksToVisualizeForCorrModel(Collection<EObject> chosenObjectsfromResource){
 		Collection<EObject> correspondenceObjects = new ArrayList<EObject>();
-		correspondenceObjects.addAll(sourceObjectsForCorrespondenceModel(chosenObjectsfromResource));
-		correspondenceObjects.addAll(targetObjectsForCorrespondenceModel(chosenObjectsfromResource));
-		System.out.println("Correspondence Objects"+ correspondenceObjects);
-		System.out.println("Corrspondence links"+determineLinksToVisualize(correspondenceObjects));
+		correspondenceObjects.addAll(sourceTargetObjectsForCorrespondenceModel(chosenObjectsfromResource,"source"));
+		correspondenceObjects.addAll(sourceTargetObjectsForCorrespondenceModel(chosenObjectsfromResource,"target"));
 		return determineLinksToVisualize(correspondenceObjects);
 	}
 	
