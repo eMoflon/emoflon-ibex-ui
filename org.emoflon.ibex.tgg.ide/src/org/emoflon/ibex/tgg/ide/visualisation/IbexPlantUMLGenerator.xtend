@@ -413,15 +413,14 @@ class IbexPlantUMLGenerator {
 		idMap.clear
 		'''
 		«plantUMLPreamble»
-		
 		together {
 		«FOR so : sourceObjects»
 		class «identifierForObject(so,'_')» <<BLACK>> <<SRC>>{
 			«visualiseAllAttributes(so)»
-			}	
-		«ENDFOR»
+			}
+		«ENDFOR»	
 		}
-				
+		
 		together {
 		«FOR o:corrObjects»
 		class «identifierForObject(o,'_')» <<BLACK>> <<CORR>>
@@ -435,11 +434,11 @@ class IbexPlantUMLGenerator {
 			}
 		«ENDFOR»
 		}
-		
+				
 		«var i = 0»
-		«FOR o : corrObjects»
-			«identifierForObject(o,'_')» ..> «identifierForObject(sourceObjects.get(i),'_')» : ""			
-			«identifierForObject(o,'_')» ..> «identifierForObject(targetObjects.get(i++),'_')» : ""
+		«FOR o : corrObjects»		
+			«identifierForObject(o,'_')» ..> «identifierForObject(sourceObjects.get(i),'_')» : ""
+			«identifierForObject(o,'_')» ..> «identifierForObject(targetObjects.get(i++),'_')» : ""	
 		«ENDFOR»
 		
 		«FOR l : links»
