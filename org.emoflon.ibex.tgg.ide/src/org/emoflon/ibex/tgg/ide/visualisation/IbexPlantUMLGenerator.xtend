@@ -344,6 +344,13 @@ class IbexPlantUMLGenerator {
 		'''«idMap.get(o)».«o.eClass.name»'''	
 	}
 	
+	private def static Object identifierForObject(EObject o, char separator){
+		if(!idMap.containsKey(o))
+			idMap.put(o, '''o«idMap.keySet.size + 1»''')
+			
+		'''«idMap.get(o)»«separator»«o.eClass.name»'''	
+	}
+	
 	public def static String visualiseTGGRuleOverview(String projectName, TripleGraphGrammarFile tgg){
 		'''
 		hide empty members
@@ -400,4 +407,43 @@ class IbexPlantUMLGenerator {
 		folder.members.filter[f | f instanceof IFolder].forEach[f | files.addAll(allFileMembers(f as IFolder))]
 		return files
 	}
+	
+	def static String visualiseCorrModel(Collection<EObject> corrObjects, Collection<EObject> sourceObjects, Collection<EObject> targetObjects, Collection<Pair<String, Pair<EObject, EObject>>> links)
+	{	
+		idMap.clear
+		'''
+		«plantUMLPreamble»
+		together {
+		«FOR so : sourceObjects»
+		class «identifierForObject(so,'_')» <<BLACK>> <<SRC>>{
+			«visualiseAllAttributes(so)»
+			}
+		«ENDFOR»	
+		}
+		
+		together {
+		«FOR o:corrObjects»
+		class «identifierForObject(o,'_')» <<BLACK>> <<CORR>>
+		«ENDFOR»
+		}
+		
+		together {
+		«FOR to : targetObjects»
+		class «identifierForObject(to,'_')» <<BLACK>> <<TRG>>{
+			«visualiseAllAttributes(to)»
+			}
+		«ENDFOR»
+		}
+				
+		«var i = 0»
+		«FOR o : corrObjects»		
+			«identifierForObject(o,'_')» ..> «identifierForObject(sourceObjects.get(i),'_')» : ""
+			«identifierForObject(o,'_')» ..> «identifierForObject(targetObjects.get(i++),'_')» : ""	
+		«ENDFOR»
+		
+		«FOR l : links»
+			«identifierForObject(l.right.left,'_')» --> «identifierForObject(l.right.right,'_')» : "«l.left»"
+		«ENDFOR»
+		'''
+	} 
 }
