@@ -4,20 +4,24 @@
 package org.moflon.tgg.mosl.validation
 
 import java.util.ArrayList
+import java.util.HashMap
 import java.util.List
+import java.util.Map
 import org.eclipse.emf.common.util.BasicEList
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.validation.Check
 import org.moflon.tgg.mosl.tgg.AttributeExpression
+import org.moflon.tgg.mosl.tgg.LinkVariablePattern
+import org.moflon.tgg.mosl.tgg.NamedElements
 import org.moflon.tgg.mosl.tgg.ObjectVariablePattern
 import org.moflon.tgg.mosl.tgg.Rule
 import org.moflon.tgg.mosl.tgg.TggPackage
-import org.moflon.tgg.mosl.tgg.NamedElements
-import java.util.Map
-import org.eclipse.emf.ecore.EObject
-import java.util.HashMap
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
-import org.eclipse.xtext.EcoreUtil2
-import org.moflon.tgg.mosl.tgg.LinkVariablePattern
+import org.eclipse.emf.ecore.util.EcoreUtil
+import org.moflon.tgg.mosl.tgg.AttributeConstraint
+import org.moflon.tgg.mosl.tgg.EnumExpression
+import org.moflon.tgg.mosl.tgg.LiteralExpression
 
 /**
  * This class contains custom validation rules. 
@@ -33,7 +37,9 @@ class TGGValidator extends AbstractTGGValidator {
   public static val RULE_REFINEMENT_CREATES_A_CYCLE = 'RuleRefinementCreatesACycle'
   public static val LINK_VARIABLE_DOES_NOT_HAVE_SAME_OPERATOR_LIKE_OBJECT_VARIABLE_PATTERN = 'linkVariableDoesNotHaveSameOeratorLikeObjectVariablePattern'
   public static val LINK_VARIABLE_DOES_NOT_HAVE_SAME_OPERATOR_LIKE_TARGET_OBJECT_VARIABLE_PATTERN= 'linkVariableDoesNotHaveSameOeratorLikeTargetObjectVariablePattern'
-  public static val INVALID_NAME = 'invalidName'		
+  public static val INVALID_NAME = 'invalidName'	
+  public static val INVALID_EXPRESSION_TYPE = 'invalidExpressionType'	
+
 	
 	@Check
 	def checkAttributeExpression(AttributeExpression attrVar){
@@ -190,4 +196,28 @@ class TGGValidator extends AbstractTGGValidator {
 					)	
 		}
 	}
+	
+	@Check
+	def checkForInlineAttributeConditionsWithConstantOnRHS(AttributeConstraint attrConst){
+		if(attrConst.valueExp.eClass == TggPackage.eINSTANCE.attributeExpression ){
+				error("A constant is required. The expression '" + attrConst.valueExp + "' is an attribute expression.",  TggPackage.Literals.ATTRIBUTE_CONSTRAINT__VALUE_EXP, TGGValidator.INVALID_EXPRESSION_TYPE)
+		}
+			
+		try {
+			if(attrConst.valueExp.eClass == TggPackage.eINSTANCE.literalExpression){
+				EcoreUtil.createFromString(attrConst.attribute.EAttributeType, (attrConst.valueExp as LiteralExpression).getValue)
+			}
+		}
+			
+		catch(Exception e){
+				error("Type mismatch, '" + (attrConst.valueExp as LiteralExpression).getValue + "' is not of type '" + attrConst.attribute.EAttributeType + "'" ,TggPackage.Literals.ATTRIBUTE_CONSTRAINT__VALUE_EXP, TGGValidator.INVALID_EXPRESSION_TYPE)
+		}
+			
+		if(attrConst.valueExp.eClass == TggPackage.eINSTANCE.enumExpression){
+			if(!(attrConst.valueExp as EnumExpression).eenum.equals((attrConst.valueExp as EnumExpression).getLiteral().getEEnum())){
+				error("Type mismatch, '" + (attrConst.valueExp as EnumExpression).getLiteral().getEEnum() + "' is not of type '" + attrConst.valueExp.eClass  + "'" ,TggPackage.Literals.ATTRIBUTE_CONSTRAINT__VALUE_EXP, TGGValidator.INVALID_EXPRESSION_TYPE)
+			}
+		}
+	}
 }
+
