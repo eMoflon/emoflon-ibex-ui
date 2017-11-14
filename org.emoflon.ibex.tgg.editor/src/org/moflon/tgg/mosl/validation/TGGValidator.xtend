@@ -262,6 +262,5 @@ class TGGValidator extends AbstractTGGValidator {
  		}
  		return attributeConditionValue;
  	}
- 	
  }
 
