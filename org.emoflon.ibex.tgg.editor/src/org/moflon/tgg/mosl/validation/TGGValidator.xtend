@@ -27,6 +27,7 @@ import org.moflon.tgg.mosl.tgg.impl.LocalVariableImpl
 import org.eclipse.emf.common.util.EList
 import org.moflon.tgg.mosl.tgg.AttrCond
 import org.moflon.tgg.mosl.tgg.ParamValue
+import org.eclipse.core.resources.IFile
 
 /**
  * This class contains custom validation rules. 
@@ -44,6 +45,7 @@ class TGGValidator extends AbstractTGGValidator {
   public static val LINK_VARIABLE_DOES_NOT_HAVE_SAME_OPERATOR_LIKE_TARGET_OBJECT_VARIABLE_PATTERN= 'linkVariableDoesNotHaveSameOeratorLikeTargetObjectVariablePattern'
   public static val INVALID_NAME = 'invalidName'		
   public static val INVALID_EXPRESSION_TYPE = 'invalidExpressionType'	
+  public static val FILE_DOES_NOT_EXIST = 'fileDoesNotExist'
 	@Check
 	def checkAttributeExpression(AttributeExpression attrVar){
 		var attrNames = new BasicEList()
@@ -225,17 +227,16 @@ class TGGValidator extends AbstractTGGValidator {
  	
  	@Check
  	def checkAttributeConditionsForAttributeName(Rule rule){
- 		for(ov: rule.patternNamesOfRule){
+ 				val names = rule.patternNamesOfRule
  				for(value: rule.attributeConditionValues){
  					if(value.eClass == TggPackage.eINSTANCE.localVariable){
- 						if((value as LocalVariableImpl).name.equals(ov)){
- 							error("Name of pattern, '" + (value as LocalVariableImpl).getName +"'",TggPackage.Literals.ATTR_COND__VALUES, TGGValidator.INVALID_EXPRESSION_TYPE)
- 						System.out.println("Match");
+ 						if(names.contains((value as LocalVariableImpl).getName)){
+ 							error("The name of the local variable '" + (value as LocalVariableImpl).getName +"' must not shadow the name of an object variable in the rule" ,TggPackage.Literals.RULE__ATTR_CONDITIONS, TGGValidator.INVALID_EXPRESSION_TYPE)
  						}
  					}
  				}
  			}
- 		}
+ 		
  	
  	def ArrayList<String> getPatternNamesOfRule(Rule rule){
 		var patternNames = new ArrayList<String>();
