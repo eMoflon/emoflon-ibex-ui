@@ -4,30 +4,26 @@
 package org.moflon.tgg.mosl.validation
 
 import java.util.ArrayList
+import java.util.HashMap
 import java.util.List
+import java.util.Map
 import org.eclipse.emf.common.util.BasicEList
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.util.EcoreUtil
+import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.validation.Check
+import org.moflon.tgg.mosl.tgg.AttributeConstraint
 import org.moflon.tgg.mosl.tgg.AttributeExpression
+import org.moflon.tgg.mosl.tgg.EnumExpression
+import org.moflon.tgg.mosl.tgg.LinkVariablePattern
+import org.moflon.tgg.mosl.tgg.LiteralExpression
+import org.moflon.tgg.mosl.tgg.NamedElements
 import org.moflon.tgg.mosl.tgg.ObjectVariablePattern
+import org.moflon.tgg.mosl.tgg.ParamValue
 import org.moflon.tgg.mosl.tgg.Rule
 import org.moflon.tgg.mosl.tgg.TggPackage
-import org.moflon.tgg.mosl.tgg.NamedElements
-import java.util.Map
-import org.eclipse.emf.ecore.EObject
-import java.util.HashMap
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
-import org.eclipse.xtext.EcoreUtil2
-import org.moflon.tgg.mosl.tgg.LinkVariablePattern
-import org.moflon.tgg.mosl.tgg.AttributeConstraint
-import org.moflon.tgg.mosl.tgg.LiteralExpression
-import org.moflon.tgg.mosl.tgg.EnumExpression
-import org.eclipse.emf.ecore.util.EcoreUtil
-import org.eclipse.jdt.internal.core.LocalVariable
 import org.moflon.tgg.mosl.tgg.impl.LocalVariableImpl
-import org.eclipse.emf.common.util.EList
-import org.moflon.tgg.mosl.tgg.AttrCond
-import org.moflon.tgg.mosl.tgg.ParamValue
-import org.eclipse.core.resources.IFile
 
 /**
  * This class contains custom validation rules. 
@@ -224,7 +220,6 @@ class TGGValidator extends AbstractTGGValidator {
  			}
  		}
  	}
- 	
  	@Check
  	def checkAttributeConditionsForAttributeName(Rule rule){
  				val names = rule.patternNamesOfRule
@@ -237,7 +232,6 @@ class TGGValidator extends AbstractTGGValidator {
  				}
  			}
  		
- 	
  	def ArrayList<String> getPatternNamesOfRule(Rule rule){
 		var patternNames = new ArrayList<String>();
 		for(sourceOV: rule.sourcePatterns){
