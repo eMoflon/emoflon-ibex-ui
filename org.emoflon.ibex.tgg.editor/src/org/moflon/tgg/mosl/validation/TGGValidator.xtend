@@ -24,6 +24,10 @@ import org.moflon.tgg.mosl.tgg.Rule
 import org.moflon.tgg.mosl.tgg.TggPackage
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
 import org.moflon.tgg.mosl.tgg.impl.LocalVariableImpl
+import org.eclipse.emf.ecore.util.EcoreUtil
+import org.moflon.tgg.mosl.tgg.AttributeConstraint
+import org.moflon.tgg.mosl.tgg.EnumExpression
+import org.moflon.tgg.mosl.tgg.LiteralExpression
 
 /**
  * This class contains custom validation rules. 
@@ -42,6 +46,7 @@ class TGGValidator extends AbstractTGGValidator {
   public static val INVALID_NAME = 'invalidName'		
   public static val INVALID_EXPRESSION_TYPE = 'invalidExpressionType'	
   public static val FILE_DOES_NOT_EXIST = 'fileDoesNotExist'
+  
 	@Check
 	def checkAttributeExpression(AttributeExpression attrVar){
 		var attrNames = new BasicEList()
