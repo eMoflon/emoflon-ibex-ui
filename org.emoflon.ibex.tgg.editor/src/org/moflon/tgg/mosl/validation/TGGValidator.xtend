@@ -9,15 +9,21 @@ import java.util.List
 import java.util.Map
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.validation.Check
+import org.moflon.tgg.mosl.tgg.AttributeConstraint
 import org.moflon.tgg.mosl.tgg.AttributeExpression
+import org.moflon.tgg.mosl.tgg.EnumExpression
 import org.moflon.tgg.mosl.tgg.LinkVariablePattern
+import org.moflon.tgg.mosl.tgg.LiteralExpression
 import org.moflon.tgg.mosl.tgg.NamedElements
 import org.moflon.tgg.mosl.tgg.ObjectVariablePattern
+import org.moflon.tgg.mosl.tgg.ParamValue
 import org.moflon.tgg.mosl.tgg.Rule
 import org.moflon.tgg.mosl.tgg.TggPackage
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
+import org.moflon.tgg.mosl.tgg.impl.LocalVariableImpl
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.moflon.tgg.mosl.tgg.AttributeConstraint
 import org.moflon.tgg.mosl.tgg.EnumExpression
@@ -37,10 +43,10 @@ class TGGValidator extends AbstractTGGValidator {
   public static val RULE_REFINEMENT_CREATES_A_CYCLE = 'RuleRefinementCreatesACycle'
   public static val LINK_VARIABLE_DOES_NOT_HAVE_SAME_OPERATOR_LIKE_OBJECT_VARIABLE_PATTERN = 'linkVariableDoesNotHaveSameOeratorLikeObjectVariablePattern'
   public static val LINK_VARIABLE_DOES_NOT_HAVE_SAME_OPERATOR_LIKE_TARGET_OBJECT_VARIABLE_PATTERN= 'linkVariableDoesNotHaveSameOeratorLikeTargetObjectVariablePattern'
-  public static val INVALID_NAME = 'invalidName'	
+  public static val INVALID_NAME = 'invalidName'		
   public static val INVALID_EXPRESSION_TYPE = 'invalidExpressionType'	
-
-	
+  public static val FILE_DOES_NOT_EXIST = 'fileDoesNotExist'
+  
 	@Check
 	def checkAttributeExpression(AttributeExpression attrVar){
 		var attrNames = new BasicEList()
@@ -198,26 +204,63 @@ class TGGValidator extends AbstractTGGValidator {
 	}
 	
 	@Check
-	def checkForInlineAttributeConditionsWithConstantOnRHS(AttributeConstraint attrConst){
-		if(attrConst.valueExp.eClass == TggPackage.eINSTANCE.attributeExpression ){
-				error("A constant is required. The expression '" + attrConst.valueExp + "' is an attribute expression.",  TggPackage.Literals.ATTRIBUTE_CONSTRAINT__VALUE_EXP, TGGValidator.INVALID_EXPRESSION_TYPE)
-		}
-			
-		try {
-			if(attrConst.valueExp.eClass == TggPackage.eINSTANCE.literalExpression){
-				EcoreUtil.createFromString(attrConst.attribute.EAttributeType, (attrConst.valueExp as LiteralExpression).getValue)
-			}
-		}
-			
-		catch(Exception e){
-				error("Type mismatch, '" + (attrConst.valueExp as LiteralExpression).getValue + "' is not of type '" + attrConst.attribute.EAttributeType + "'" ,TggPackage.Literals.ATTRIBUTE_CONSTRAINT__VALUE_EXP, TGGValidator.INVALID_EXPRESSION_TYPE)
-		}
-			
-		if(attrConst.valueExp.eClass == TggPackage.eINSTANCE.enumExpression){
-			if(!(attrConst.valueExp as EnumExpression).eenum.equals((attrConst.valueExp as EnumExpression).getLiteral().getEEnum())){
-				error("Type mismatch, '" + (attrConst.valueExp as EnumExpression).getLiteral().getEEnum() + "' is not of type '" + attrConst.valueExp.eClass  + "'" ,TggPackage.Literals.ATTRIBUTE_CONSTRAINT__VALUE_EXP, TGGValidator.INVALID_EXPRESSION_TYPE)
-			}
-		}
-	}
-}
+ 	def checkForInlineAttributeConditionsWithConstantOnRHS(AttributeConstraint attrConst){
+ 		if(attrConst.valueExp.eClass == TggPackage.eINSTANCE.attributeExpression ){
+ 				error("A constant is required. The expression '" + attrConst.valueExp + "' is an attribute expression.",  TggPackage.Literals.ATTRIBUTE_CONSTRAINT__VALUE_EXP, TGGValidator.INVALID_EXPRESSION_TYPE)
+ 		}
+ 			
+ 		try {
+ 			if(attrConst.valueExp.eClass == TggPackage.eINSTANCE.literalExpression){
+ 				EcoreUtil.createFromString(attrConst.attribute.EAttributeType, (attrConst.valueExp as LiteralExpression).getValue)
+ 			}
+ 		}
+ 			
+ 		catch(Exception e){
+ 				error("Type mismatch, '" + (attrConst.valueExp as LiteralExpression).getValue + "' is not of type '" + attrConst.attribute.EAttributeType + "'" ,TggPackage.Literals.ATTRIBUTE_CONSTRAINT__VALUE_EXP, TGGValidator.INVALID_EXPRESSION_TYPE)
+ 		}
+ 			
+ 		if(attrConst.valueExp.eClass == TggPackage.eINSTANCE.enumExpression){
+ 			if(!(attrConst.valueExp as EnumExpression).eenum.equals((attrConst.valueExp as EnumExpression).getLiteral().getEEnum())){
+ 				error("Type mismatch, '" + (attrConst.valueExp as EnumExpression).getLiteral().getEEnum() + "' is not of type '" + attrConst.valueExp.eClass  + "'" ,TggPackage.Literals.ATTRIBUTE_CONSTRAINT__VALUE_EXP, TGGValidator.INVALID_EXPRESSION_TYPE)
+ 			}
+ 		}
+ 	}
+ 	@Check
+ 	def checkAttributeConditionsForAttributeName(Rule rule){
+ 				val names = rule.patternNamesOfRule
+ 				for(value: rule.attributeConditionValues){
+ 					if(value.eClass == TggPackage.eINSTANCE.localVariable){
+ 						if(names.contains((value as LocalVariableImpl).getName)){
+ 							error("The name of the local variable '" + (value as LocalVariableImpl).getName +"' must not shadow the name of an object variable in the rule" ,TggPackage.Literals.RULE__ATTR_CONDITIONS, TGGValidator.INVALID_EXPRESSION_TYPE)
+ 						}
+ 					}
+ 				}
+ 			}
+ 		
+ 	def ArrayList<String> getPatternNamesOfRule(Rule rule){
+		var patternNames = new ArrayList<String>();
+		for(sourceOV: rule.sourcePatterns){
+ 			patternNames.add(sourceOV.name)
+ 		}
+ 		
+ 		for(targetOV: rule.targetPatterns){
+ 			patternNames.add(targetOV.name)
+ 		}
+ 		
+ 		for(corrOV:rule.correspondencePatterns){
+ 			patternNames.add(corrOV.name)
+ 		}
+ 		return patternNames;
+ 	}
+ 	
+ 	def ArrayList<ParamValue> getAttributeConditionValues(Rule rule){
+ 		var attributeConditionValue = new ArrayList<ParamValue>();
+ 		for(atrCond:rule.attrConditions){
+ 			for(value: atrCond.values){
+ 				attributeConditionValue.add(value)
+ 			}
+ 		}
+ 		return attributeConditionValue;
+ 	}
+ }
 
