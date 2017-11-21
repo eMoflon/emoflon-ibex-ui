@@ -3,6 +3,7 @@
  */
 package org.moflon.tgg.mosl.validation
 
+
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.List
@@ -15,6 +16,7 @@ import org.eclipse.xtext.validation.Check
 import org.moflon.tgg.mosl.tgg.AttributeConstraint
 import org.moflon.tgg.mosl.tgg.AttributeExpression
 import org.moflon.tgg.mosl.tgg.EnumExpression
+import org.moflon.tgg.mosl.tgg.Import
 import org.moflon.tgg.mosl.tgg.LinkVariablePattern
 import org.moflon.tgg.mosl.tgg.LiteralExpression
 import org.moflon.tgg.mosl.tgg.NamedElements
@@ -24,10 +26,10 @@ import org.moflon.tgg.mosl.tgg.Rule
 import org.moflon.tgg.mosl.tgg.TggPackage
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
 import org.moflon.tgg.mosl.tgg.impl.LocalVariableImpl
-import org.eclipse.emf.ecore.util.EcoreUtil
-import org.moflon.tgg.mosl.tgg.AttributeConstraint
-import org.moflon.tgg.mosl.tgg.EnumExpression
-import org.moflon.tgg.mosl.tgg.LiteralExpression
+
+import org.eclipse.emf.ecore.resource.impl.ResourceImpl
+import org.eclipse.emf.common.util.URI
+import java.util.Collections
 
 /**
  * This class contains custom validation rules. 
@@ -46,6 +48,8 @@ class TGGValidator extends AbstractTGGValidator {
   public static val INVALID_NAME = 'invalidName'		
   public static val INVALID_EXPRESSION_TYPE = 'invalidExpressionType'	
   public static val FILE_DOES_NOT_EXIST = 'fileDoesNotExist'
+  public static val INVALID_IMPORT = 'invalidImport'
+ 
   
 	@Check
 	def checkAttributeExpression(AttributeExpression attrVar){
@@ -261,6 +265,20 @@ class TGGValidator extends AbstractTGGValidator {
  			}
  		}
  		return attributeConditionValue;
+ 	}
+ 	 
+  @Check
+ 	def checkForInvalidImports(Import importEcore){
+		try{
+			var uri = URI.createURI(importEcore.name)
+			var r = new ResourceImpl(uri)
+			r.load(null)
+		}
+		catch(org.eclipse.emf.ecore.resource.Resource$IOWrappedException e){
+			error("The ecore file '" + importEcore.name +"' does not exist" ,TggPackage.Literals.IMPORT__NAME, TGGValidator.INVALID_IMPORT)
+		}
+		catch(UnsupportedOperationException e){
+		}
  	}
  }
 
