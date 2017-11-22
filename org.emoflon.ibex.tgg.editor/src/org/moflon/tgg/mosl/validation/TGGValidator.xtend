@@ -27,7 +27,7 @@ import org.moflon.tgg.mosl.tgg.Rule
 import org.moflon.tgg.mosl.tgg.TggPackage
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
 import org.moflon.tgg.mosl.tgg.impl.LocalVariableImpl
-import org.eclipse.emf.common.util.EList
+
 
 /**
  * This class contains custom validation rules. 
