@@ -272,10 +272,6 @@ class TGGValidator extends AbstractTGGValidator {
 			var resourceSet =  new ResourceSetImpl()
 			var resource = resourceSet.getResource(uri,true)
 			resource.load(null)	
-			var contents = resource.getContents();
-      		if (contents == null || contents.isEmpty()) {
-        	error("The ecore file '" + importEcore.name +"' is empty" ,TggPackage.Literals.IMPORT__NAME, TGGValidator.INVALID_IMPORT)
-     	 		}
 		}
 		
 		catch(Exception e){
