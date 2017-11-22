@@ -27,6 +27,7 @@ import org.moflon.tgg.mosl.tgg.Rule
 import org.moflon.tgg.mosl.tgg.TggPackage
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
 import org.moflon.tgg.mosl.tgg.impl.LocalVariableImpl
+import org.eclipse.emf.common.util.EList
 
 /**
  * This class contains custom validation rules. 
@@ -269,8 +270,12 @@ class TGGValidator extends AbstractTGGValidator {
 		try{
 			var uri = URI.createURI(importEcore.name)
 			var resourceSet =  new ResourceSetImpl()
-			var r = resourceSet.getResource(uri,true)
-			r.load(null)	
+			var resource = resourceSet.getResource(uri,true)
+			resource.load(null)	
+			var contents = resource.getContents();
+      		if (contents == null || contents.isEmpty()) {
+        	error("The ecore file '" + importEcore.name +"' is empty" ,TggPackage.Literals.IMPORT__NAME, TGGValidator.INVALID_IMPORT)
+     	 		}
 		}
 		
 		catch(Exception e){
