@@ -335,6 +335,7 @@
 		</menuContribution>
 	</extension>
     <!-- quickfix marker resolution generator for org.moflon.tgg.mosl.TGG -->
+	<!-- Disabled until emoflon-core is integrated as a dependency   
     <extension
             point="org.eclipse.ui.ide.markerResolution">
         <markerResolutionGenerator
@@ -362,6 +363,7 @@
             </attribute>
         </markerResolutionGenerator>
     </extension>
+    -->
    	<!-- Rename Refactoring -->
 	<extension point="org.eclipse.ui.handlers">
 		<handler 
