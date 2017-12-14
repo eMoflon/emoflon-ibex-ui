@@ -241,7 +241,7 @@ class IbexPlantUMLGenerator {
 	
 	private def static visualiseCorrs(CorrVariablePattern corr) {
 		'''
-		«idForPattern(corr.source.name, corr.source.type.name)» ...«IF (corr.op !== null)»[#SpringGreen]«ENDIF» «idForPattern(corr.target.name, corr.target.type.name)» : «StringUtils.abbreviate(corr.name + ":" + corr.type.name, 11)»
+		«idForPattern(corr.source.name, corr.source.type.name)» ...«IF (corr.op !== null)»[#SpringGreen]«ENDIF» «idForPattern(corr.target.name, corr.target.type.name)» : «StringUtils.abbreviate(":" + corr.type, 11)»
 		'''
 	}
 	
@@ -422,12 +422,6 @@ class IbexPlantUMLGenerator {
 		}
 		
 		together {
-		«FOR o:corrObjects»
-		class «identifierForObject(o,'_')» <<BLACK>> <<CORR>>
-		«ENDFOR»
-		}
-		
-		together {
 		«FOR to : targetObjects»
 		class «identifierForObject(to,'_')» <<BLACK>> <<TRG>>{
 			«visualiseAllAttributes(to)»
@@ -437,8 +431,7 @@ class IbexPlantUMLGenerator {
 				
 		«var i = 0»
 		«FOR o : corrObjects»		
-			«identifierForObject(o,'_')» ..> «identifierForObject(sourceObjects.get(i),'_')» : ""
-			«identifierForObject(o,'_')» ..> «identifierForObject(targetObjects.get(i++),'_')» : ""	
+			«identifierForObject(sourceObjects.get(i),'_')» <..> «identifierForObject(targetObjects.get(i++),'_')» : "«StringUtils.abbreviate(":" + o.eClass.name, 11)»"	
 		«ENDFOR»
 		
 		«FOR l : links»
