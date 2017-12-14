@@ -28,7 +28,6 @@ import org.moflon.tgg.mosl.tgg.TggPackage
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
 import org.moflon.tgg.mosl.tgg.impl.LocalVariableImpl
 
-
 /**
  * This class contains custom validation rules. 
  *
@@ -47,6 +46,8 @@ class TGGValidator extends AbstractTGGValidator {
   public static val INVALID_EXPRESSION_TYPE = 'invalidExpressionType'	
   public static val FILE_DOES_NOT_EXIST = 'fileDoesNotExist'
   public static val INVALID_IMPORT = 'invalidImport'
+  public static val INVALID_ASSIGNMENT_OPERATOR = 'invalidAssignmentOperator'
+ 
  
   
 	@Check
@@ -278,5 +279,26 @@ class TGGValidator extends AbstractTGGValidator {
 			error("The ecore file '" + importEcore.name +"' does not exist" ,TggPackage.Literals.IMPORT__NAME, TGGValidator.INVALID_IMPORT)
 		}
  	}
+ 	
+ 	@Check
+ 	def checkForAssignmentOperator(ObjectVariablePattern ov){
+ 		if(ov.op == null || ov.op.equals("")){
+ 			if(ov.attributeAssignments!=null){
+ 				for(value:ov.attributeAssignments){
+ 					if(value.op == ":=")
+ 					error("An assignment operation cannot be performed here." ,TggPackage.Literals.OBJECT_VARIABLE_PATTERN__ATTRIBUTE_ASSIGNMENTS, TGGValidator.INVALID_ASSIGNMENT_OPERATOR)
+ 				}
+ 			}
+ 		}
+ 		
+ 		if(ov.op != null && "++".equals(ov.op.value)){
+ 			if(ov.attributeConstraints!= null){
+ 				for(value:ov.attributeConstraints){
+ 					if(value.op == "==")
+ 					error("An equality check cannot be performed here." ,TggPackage.Literals.OBJECT_VARIABLE_PATTERN__ATTRIBUTE_CONSTRAINTS, TGGValidator.INVALID_ASSIGNMENT_OPERATOR)
+ 				} 				
+ 			}
+ 		}
+ 	}  	
  }
 
