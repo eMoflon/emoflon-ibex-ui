@@ -197,6 +197,13 @@ class DefaultFilesHelper {
 					#sync: [B B], [B F], [F B]
 					#gen: [B B], [B F], [F B], [F F]
 				}
+				
+				// Semantics: Variable a is set to random string.
+				//If it already has a value (B) then nothing is done and the condition is still satisfied.
+				setRandomString(a:EString) {
+					#sync: [F], [B]
+					#gen: [F]
+				}
 			
 			}
 		'''
