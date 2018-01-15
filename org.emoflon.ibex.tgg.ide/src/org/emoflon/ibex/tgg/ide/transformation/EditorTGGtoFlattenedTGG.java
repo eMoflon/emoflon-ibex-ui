@@ -44,10 +44,6 @@ public class EditorTGGtoFlattenedTGG {
 	private Map<String, ObjectVariablePattern> targetPatterns;
 	private Map<String, CorrVariablePattern> corrPatterns;
 
-	// TODO[FStolte] implement exceptions for invalid refinements
-	// TODO[FStolte] implement warnings for nonsensical refinements
-	// TODO[FStolte] implement merge of attribute conditions (now only for CSPs!)
-	
 	/**
 	 * Produces a flattened {@linkplain TripleGraphGrammarFile} from a given non-flattened TripleGraphGrammarFile.
 	 * 
@@ -257,8 +253,6 @@ public class EditorTGGtoFlattenedTGG {
 		mergedRule.getCorrespondencePatterns().clear();
 		mergedRule.getCorrespondencePatterns().addAll(corrPatterns.values());
 		
-		// TODO[FStolte] AttributeConditions merge should be nicer, e.g. combine conditions on the same attribute
-		
 		// update all references to point to the correct copy in the flattened TGG
 		cleanupReferences(mergedRule);
 		
@@ -294,8 +288,6 @@ public class EditorTGGtoFlattenedTGG {
 	}
 	
 	private void mergeTwoObjectPatterns(ObjectVariablePattern from, ObjectVariablePattern to) {
-		// TODO[FStolte] check for invalid configurations
-		
 		// Types
 		if (to.getType().isSuperTypeOf(from.getType())) {
 			to.setType(from.getType());
@@ -320,7 +312,6 @@ public class EditorTGGtoFlattenedTGG {
 			}
 		}
 		
-		// Attributes     TODO[FStolte] AttributeAssignment/Constraint merge should be nicer, e.g. combine constraints on the same attribute
 		to.getAttributeAssignments().addAll(EcoreUtil.copyAll(from.getAttributeAssignments()));
 		to.getAttributeConstraints().addAll(EcoreUtil.copyAll(from.getAttributeConstraints()));
 		
@@ -340,8 +331,6 @@ public class EditorTGGtoFlattenedTGG {
 	
 
 	private void mergeTwoCorrPatterns(CorrVariablePattern from, CorrVariablePattern to) {
-		// TODO[FStolte] check for invalid configurations
-		
 		// Types
 		CorrType superType = from.getType().getSuper();
 		while (superType != null) {
