@@ -1,18 +1,13 @@
 package org.emoflon.ibex.tgg.ide.visualisation
 
 import java.util.ArrayList
-import java.util.Collection
-import java.util.HashMap
 import java.util.Optional
 import org.apache.commons.lang3.StringUtils
-import org.apache.commons.lang3.tuple.Pair
 import org.eclipse.core.resources.IFile
 import org.eclipse.core.resources.IFolder
 import org.eclipse.core.resources.IProject
 import org.eclipse.emf.common.util.EList
-import org.eclipse.emf.ecore.EClass
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EReference
+import org.eclipse.emf.ecore.util.EcoreUtil
 import org.emoflon.ibex.tgg.ide.transformation.EditorTGGtoFlattenedTGG
 import org.moflon.tgg.mosl.tgg.ComplementRule
 import org.moflon.tgg.mosl.tgg.ContextLinkVariablePattern
@@ -23,28 +18,12 @@ import org.moflon.tgg.mosl.tgg.Nac
 import org.moflon.tgg.mosl.tgg.ObjectVariablePattern
 import org.moflon.tgg.mosl.tgg.Operator
 import org.moflon.tgg.mosl.tgg.Rule
+import org.moflon.tgg.mosl.tgg.TggFactory
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
 import org.moflon.util.WorkspaceHelper
-import org.moflon.tgg.mosl.tgg.TggFactory
-import org.eclipse.emf.ecore.util.EcoreUtil
+import org.moflon.core.ui.visualisation.EMoflonPlantUMLGenerator
 
 class IbexPlantUMLGenerator {
-	
-	private static var idMap = new HashMap<EObject, String>();
-	
-	public static def String wrapInTags(String body){
-		'''
-		@startuml
-		«body»
-		@enduml
-		'''
-	}
-	
-	public static def String emptyDiagram(){
-		'''
-		title Choose an element that can be visualised
-		'''
-	}
 	
 	public static def String visualiseTGGFile(TripleGraphGrammarFile file, Optional<String> selected) {
 		if (!selected.present)
@@ -76,7 +55,7 @@ class IbexPlantUMLGenerator {
 		val ruleOp = flattenedTGG.map([tgg | tgg.rules.get(0)]);
 		return ruleOp.map([rule |
 		'''
-			«plantUMLPreamble»
+			«EMoflonPlantUMLGenerator.plantUMLPreamble»
 			
 			«IF (!n.sourcePatterns.empty)»
 				together {
@@ -122,7 +101,7 @@ class IbexPlantUMLGenerator {
 	
 	def static String visualiseComplementRule(ComplementRule cr) {
 		'''
-			«plantUMLPreamble»
+			«EMoflonPlantUMLGenerator.plantUMLPreamble()»
 			
 				together {
 					«FOR sp : cr.sourcePatterns»
@@ -197,7 +176,7 @@ class IbexPlantUMLGenerator {
 	
 	def static String visualiseTGGRule(Rule r) {
 		'''
-			«plantUMLPreamble»
+			«EMoflonPlantUMLGenerator.plantUMLPreamble»
 			
 			together {
 			«FOR sp : r.sourcePatterns»
@@ -216,26 +195,6 @@ class IbexPlantUMLGenerator {
 				«visualiseCorrs(cp)»
 			«ENDFOR»			
 			}
-		'''
-	}
-	
-	protected def static CharSequence plantUMLPreamble(){
-		'''
-			hide empty members
-			hide circle
-			hide stereotype
-			
-			skinparam shadowing false
-			
-			skinparam class {
-				BorderColor<<GREEN>> SpringGreen
-				BorderColor<<BLACK>> Black
-				BorderColor<<KERN>> LightGray
-				BackgroundColor<<TRG>> MistyRose
-				BackgroundColor<<SRC>> LightYellow
-				BackgroundColor<<CORR>> LightCyan 
-				ArrowColor Black
-			}	
 		'''
 	}
 	
@@ -291,64 +250,6 @@ class IbexPlantUMLGenerator {
 			return "GREEN"
 		else
 			return "BLACK"
-	}
-	
-	public def static String visualiseEcoreElements(Collection<EClass> eclasses, Collection<EReference> refs){
-		'''
-		«FOR c : eclasses»
-		class «identifierForClass(c)»
-			«FOR s : c.ESuperTypes»
-			«identifierForClass(c)»--|>«identifierForClass(s)»
-			«ENDFOR»
-		«ENDFOR»
-		«FOR r : refs»
-		«identifierForClass(r.EContainingClass)»«IF r.isContainment» *«ENDIF»--> «multiplicityFor(r)» «identifierForClass(r.EReferenceType)» : "«r.name»"
-		«ENDFOR»
-		'''
-	}
-	
-	private def static multiplicityFor(EReference r) {
-		'''"«IF r.lowerBound == -1»*«ELSE»«r.lowerBound»«ENDIF»..«IF r.upperBound == -1»*«ELSE»«r.upperBound»«ENDIF»"'''
-	}
-	
-	private def static String identifierForClass(EClass c)
-		'''"«c.EPackage.name».«c.name»"'''
-		
-	public def static String visualiseModelElements(Collection<EObject> objects, Collection<Pair<String, Pair<EObject, EObject>>> links){
-		idMap.clear
-		
-		'''
-		«FOR o : objects»
-		object «identifierForObject(o)»{
-			«visualiseAllAttributes(o)»
-		}
-		«ENDFOR»
-		«FOR l : links»
-		«identifierForObject(l.right.left)» --> «identifierForObject(l.right.right)» : "«l.left»"
-		«ENDFOR»
-		'''
-	}
-	
-	def static visualiseAllAttributes(EObject o) {
-		'''
-		«FOR a : o.eClass.EAllAttributes»
-			«a.name» = «o.eGet(a)»
-		«ENDFOR»
-		'''
-	}
-	
-	private def static Object identifierForObject(EObject o){
-		if(!idMap.containsKey(o))
-			idMap.put(o, '''o«idMap.keySet.size + 1»''')
-			
-		'''«idMap.get(o)».«o.eClass.name»'''	
-	}
-	
-	private def static Object identifierForObject(EObject o, char separator){
-		if(!idMap.containsKey(o))
-			idMap.put(o, '''o«idMap.keySet.size + 1»''')
-			
-		'''«idMap.get(o)»«separator»«o.eClass.name»'''	
 	}
 	
 	public def static String visualiseTGGRuleOverview(String projectName, TripleGraphGrammarFile tgg){
@@ -407,36 +308,4 @@ class IbexPlantUMLGenerator {
 		folder.members.filter[f | f instanceof IFolder].forEach[f | files.addAll(allFileMembers(f as IFolder))]
 		return files
 	}
-	
-	def static String visualiseCorrModel(Collection<EObject> corrObjects, Collection<EObject> sourceObjects, Collection<EObject> targetObjects, Collection<Pair<String, Pair<EObject, EObject>>> links)
-	{	
-		idMap.clear
-		'''
-		«plantUMLPreamble»
-		together {
-		«FOR so : sourceObjects»
-		class «identifierForObject(so,'_')» <<BLACK>> <<SRC>>{
-			«visualiseAllAttributes(so)»
-			}
-		«ENDFOR»	
-		}
-		
-		together {
-		«FOR to : targetObjects»
-		class «identifierForObject(to,'_')» <<BLACK>> <<TRG>>{
-			«visualiseAllAttributes(to)»
-			}
-		«ENDFOR»
-		}
-				
-		«var i = 0»
-		«FOR o : corrObjects»		
-			«identifierForObject(sourceObjects.get(i),'_')» <..> «identifierForObject(targetObjects.get(i++),'_')» : "«StringUtils.abbreviate(":" + o.eClass.name, 11)»"	
-		«ENDFOR»
-		
-		«FOR l : links»
-			«identifierForObject(l.right.left,'_')» --> «identifierForObject(l.right.right,'_')» : "«l.left»"
-		«ENDFOR»
-		'''
-	} 
 }

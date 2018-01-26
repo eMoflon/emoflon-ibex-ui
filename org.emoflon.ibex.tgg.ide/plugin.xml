@@ -21,12 +21,8 @@
   <extension
         point="net.sourceforge.plantuml.eclipse.diagramTextProvider">
      <diagramTextProvider
-           priority="2"
+           priority="3"
            providerClass="org.emoflon.ibex.tgg.ide.visualisation.IbexTGGVisualiser">
-     </diagramTextProvider>
-     <diagramTextProvider
-           priority="1"
-           providerClass="org.emoflon.ibex.tgg.ide.visualisation.IbexModelAndMetamodelVisualiser">
      </diagramTextProvider>
   </extension>
 </plugin>

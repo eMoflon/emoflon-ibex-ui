@@ -13,9 +13,11 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.emoflon.ibex.tgg.ide.admin.IbexTGGBuilder;
 import org.emoflon.ibex.tgg.ide.transformation.EditorTGGtoFlattenedTGG;
+import org.moflon.core.ui.visualisation.EMoflonPlantUMLGenerator;
+import org.moflon.core.ui.visualisation.EMoflonVisualiser;
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile;
 
-public class IbexTGGVisualiser extends IbexVisualiser {
+public class IbexTGGVisualiser extends EMoflonVisualiser {
 	
 	private Logger logger = Logger.getLogger(IbexTGGVisualiser.class);
 	
@@ -23,7 +25,7 @@ public class IbexTGGVisualiser extends IbexVisualiser {
 	protected String getDiagramBody(IEditorPart editor, ISelection selection) {
 		return maybeVisualiseTGGRule(editor, selection)   .orElse(
 			   maybeVisualiseTGGSchema(editor, selection) .orElse(
-			   IbexPlantUMLGenerator.emptyDiagram()))     ;
+			   EMoflonPlantUMLGenerator.emptyDiagram()))     ;
 	}
 	
 	private Optional<String> maybeVisualiseTGGSchema(IEditorPart editor, ISelection selection) {
