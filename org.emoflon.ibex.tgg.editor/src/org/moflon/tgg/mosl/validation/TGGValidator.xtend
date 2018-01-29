@@ -27,6 +27,8 @@ import org.moflon.tgg.mosl.tgg.Rule
 import org.moflon.tgg.mosl.tgg.TggPackage
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
 import org.moflon.tgg.mosl.tgg.impl.LocalVariableImpl
+import org.moflon.tgg.mosl.tgg.CorrVariablePattern
+import org.eclipse.emf.ecore.EStructuralFeature
 
 /**
  * This class contains custom validation rules. 
@@ -34,21 +36,19 @@ import org.moflon.tgg.mosl.tgg.impl.LocalVariableImpl
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 class TGGValidator extends AbstractTGGValidator {
-
-  public static val INVALID_ADORNMENT = 'invalidAdornmentValue'
-  public static val INVALID_ATTRIBUTE_VARIABLE = 'invalidAttributeVariableAttribute'
-  public static val NOT_UNIQUE_NAME = 'notUniqueName'
-  public static val TYPE_IS_ABSTRACT = 'typeIsAbstract'
-  public static val RULE_REFINEMENT_CREATES_A_CYCLE = 'RuleRefinementCreatesACycle'
-  public static val LINK_VARIABLE_DOES_NOT_HAVE_SAME_OPERATOR_LIKE_OBJECT_VARIABLE_PATTERN = 'linkVariableDoesNotHaveSameOeratorLikeObjectVariablePattern'
-  public static val LINK_VARIABLE_DOES_NOT_HAVE_SAME_OPERATOR_LIKE_TARGET_OBJECT_VARIABLE_PATTERN= 'linkVariableDoesNotHaveSameOeratorLikeTargetObjectVariablePattern'
-  public static val INVALID_NAME = 'invalidName'		
-  public static val INVALID_EXPRESSION_TYPE = 'invalidExpressionType'	
-  public static val FILE_DOES_NOT_EXIST = 'fileDoesNotExist'
-  public static val INVALID_IMPORT = 'invalidImport'
-  public static val INVALID_ASSIGNMENT_OPERATOR = 'invalidAssignmentOperator'
- 
- 
+	public static val INVALID_ADORNMENT = 'invalidAdornmentValue'
+	public static val INVALID_ATTRIBUTE_VARIABLE = 'invalidAttributeVariableAttribute'
+	public static val NOT_UNIQUE_NAME = 'notUniqueName'
+	public static val TYPE_IS_ABSTRACT = 'typeIsAbstract'
+	public static val RULE_REFINEMENT_CREATES_A_CYCLE = 'RuleRefinementCreatesACycle'
+	public static val LINK_VARIABLE_DOES_NOT_HAVE_SAME_OPERATOR_LIKE_OBJECT_VARIABLE_PATTERN = 'linkVariableDoesNotHaveSameOeratorLikeObjectVariablePattern'
+	public static val LINK_VARIABLE_DOES_NOT_HAVE_SAME_OPERATOR_LIKE_TARGET_OBJECT_VARIABLE_PATTERN = 'linkVariableDoesNotHaveSameOeratorLikeTargetObjectVariablePattern'
+	public static val INVALID_NAME = 'invalidName'
+	public static val INVALID_EXPRESSION_TYPE = 'invalidExpressionType'
+	public static val FILE_DOES_NOT_EXIST = 'fileDoesNotExist'
+	public static val INVALID_IMPORT = 'invalidImport'
+	public static val INVALID_ASSIGNMENT_OPERATOR = 'invalidAssignmentOperator'
+	public static val INVALID_CORRESPONDENCE_VARIABLE = 'invalidCorrespondence'
   
 	@Check
 	def checkAttributeExpression(AttributeExpression attrVar){
@@ -299,6 +299,30 @@ class TGGValidator extends AbstractTGGValidator {
  				} 				
  			}
  		}
- 	}  	
- }
+ 	}
 
+	@Check
+	def validateContextCorrVariablePattern(CorrVariablePattern corr) {
+		// A context CorrVariablePattern must not reference create ObjectVariablePatterns.
+		if (corr.op == null) {
+			this.noCreateObjectVariableInContextCorrespondence(
+				corr.source,
+				TggPackage.Literals.CORR_VARIABLE_PATTERN__SOURCE
+			)
+			this.noCreateObjectVariableInContextCorrespondence(
+				corr.target,
+				TggPackage.Literals.CORR_VARIABLE_PATTERN__TARGET
+			)
+		}
+	}
+
+	def noCreateObjectVariableInContextCorrespondence(ObjectVariablePattern ov, EStructuralFeature structuralFeature) {
+		if (ov !== null && "++".equals(ov.op.value)) {
+			error(
+				"A context correspondence must not reference elements created by the rule!",
+				structuralFeature,
+				TGGValidator.INVALID_CORRESPONDENCE_VARIABLE
+			)
+		}
+	}
+}
