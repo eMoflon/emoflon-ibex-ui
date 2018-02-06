@@ -24,7 +24,8 @@ For manual testing you have to start a second Eclipse instance via *Run As* - *E
 
 ### How run JUnit tests
 1. Install [EclEmma](http://www.eclemma.org/installation.html).
-2. Run the tests on `org.emoflon.ibex.gt.ui.editor.tests` via *Coverage As* - *JUnit Test*
-	with the the coverage configuration to `org.emoflon.ibex.gt.editor - xtend-gen`.
+2. Run the tests on the project `org.emoflon.ibex.gt.ui.editor.tests`
+	via *Coverage As* - *JUnit Test*
+	with the coverage configuration set to `org.emoflon.ibex.gt.editor - xtend-gen`.
 
 If you are not interested in code coverage, you may run the tests via *Run As* - *JUnit Test*.
