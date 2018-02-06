@@ -407,7 +407,7 @@
 			type="text">
 		</fileTypes>
 	</extension>
-	<!-- project wizard listed in the eMoflon category -->
+	<!-- wizards listed in the eMoflon category -->
 	<extension
 		point="org.eclipse.ui.newWizards">
 		<wizard
@@ -417,5 +417,11 @@
 			name="eMoflon Graph Transformation Project"
 				project="true">
 		</wizard>
+		<wizard
+           category="org.moflon.ide.ui.category"
+           class="org.emoflon.ibex.gt.editor.ui.GTExecutableExtensionFactory:org.emoflon.ibex.gt.editor.ui.wizard.GTNewFileWizard"
+           id="org.emoflon.ibex.gt.editor.ui.wizard.GTNewFileWizard"
+           name="eMoflon Graph Transformation File">
+     	</wizard>
 	</extension>
 </plugin>

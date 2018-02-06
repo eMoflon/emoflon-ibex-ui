@@ -29,7 +29,7 @@ public class GTNewProjectWizard extends XtextNewProjectWizard {
 		mainPage = new WizardNewProjectCreationPage("basicNewProjectPage");
 		mainPage.setTitle(PROJECT_WIZARD_TITLE);
 		mainPage.setDescription(PROJECT_WIZARD_DESCRIPTION);
-		addPage(mainPage);
+		this.addPage(mainPage);
 	}
 
 	@Override

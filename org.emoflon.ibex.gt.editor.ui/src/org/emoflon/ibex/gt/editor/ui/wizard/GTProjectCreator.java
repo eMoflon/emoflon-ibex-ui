@@ -25,7 +25,7 @@ import org.eclipse.xtext.ui.wizard.DefaultProjectInfo;
  */
 public class GTProjectCreator extends AbstractPluginProjectCreator {
 	@Inject
-	private GTNewProjectWizardInitialContents initialContents;
+	private GTNewFileInitialContents initialContents;
 
 	@Inject
 	private Provider<EclipseResourceFileSystemAccess2> fileSystemAccessProvider;
