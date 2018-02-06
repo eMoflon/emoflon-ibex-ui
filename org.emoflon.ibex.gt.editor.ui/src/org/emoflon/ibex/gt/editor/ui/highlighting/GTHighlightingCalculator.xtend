@@ -20,7 +20,7 @@ import org.emoflon.ibex.gt.editor.gT.Reference
 class GTHighlightingCalculator extends DefaultSemanticHighlightingCalculator {
 	override void provideHighlightingFor(XtextResource resource,
 		IHighlightedPositionAcceptor acceptor, CancelIndicator cancelIndicator) {
-		if (resource === null || resource.parseResult === null) {
+		if (resource === null || resource.contents.length === 0) {
 			return
 		}
 		for (val contents = resource.allContents; contents.hasNext;) {
