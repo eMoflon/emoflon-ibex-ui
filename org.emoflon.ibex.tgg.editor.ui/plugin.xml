@@ -473,12 +473,18 @@
               icon="resources/icons/integrationProject.gif"
               label="Create new integration project"
               style="push">
+			<visibleWhen checkEnabled="false">
+				<reference definitionId="org.moflon.core.ui.definitions.isMoflonPerspective"/>
+        	</visibleWhen>
         </command>
         <command
               commandId="org.moflon.tgg.mosl.createNewTGGRule"
               icon="resources/icons/newTGGRule.gif"
               label="Create new TGG rule"
               style="push">
+			<visibleWhen checkEnabled="false">
+				<reference definitionId="org.moflon.core.ui.definitions.isMoflonPerspective"/>
+        	</visibleWhen>
         </command>
      </menuContribution>
   </extension>
