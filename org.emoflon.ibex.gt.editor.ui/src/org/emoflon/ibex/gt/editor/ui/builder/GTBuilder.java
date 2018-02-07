@@ -1,18 +1,19 @@
 package org.emoflon.ibex.gt.editor.ui.builder;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Builder for Graph Transformation Projects.
  */
-public class GTBuilder extends IncrementalProjectBuilder implements IResourceDeltaVisitor {
+public class GTBuilder extends IncrementalProjectBuilder {
 	public static final String BUILDER_ID = "org.emoflon.ibex.gt.editor.ui.builder";
 
 	@Override
@@ -22,7 +23,7 @@ public class GTBuilder extends IncrementalProjectBuilder implements IResourceDel
 		case CLEAN_BUILD:
 		case FULL_BUILD:
 		case INCREMENTAL_BUILD:
-			generate();
+			generateIfNecessary();
 			break;
 		default:
 			break;
@@ -30,13 +31,29 @@ public class GTBuilder extends IncrementalProjectBuilder implements IResourceDel
 		return null;
 	}
 
-	@Override
-	public boolean visit(IResourceDelta delta) throws CoreException {
-		// TODO Auto-generated method stub
-		return false;
+	private void generateIfNecessary() {
+		Arrays.stream(this.getDelta(this.getProject()).getAffectedChildren())
+				.filter(affectedChild -> "src".equals(affectedChild.getProjectRelativePath().toString())).findAny()
+				.ifPresent(srcDelta -> {
+					GTPackageBuilder.findSourcePackagesInProject(this.getProject()).forEach(packagePath -> {
+						this.generatePackage(packagePath);
+					});
+				});
 	}
 
-	private void generate() {
-		System.out.println("Code generation for " + this.getProject().getName());
+	/**
+	 * Starts generator for the given package.
+	 * 
+	 * @param packagePath
+	 *            the path of the package
+	 */
+	private void generatePackage(final IPath packagePath) {
+		IProject project = this.getProject();
+		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				new GTPackageBuilder(project, packagePath).generate();
+			}
+		});
 	}
 }
