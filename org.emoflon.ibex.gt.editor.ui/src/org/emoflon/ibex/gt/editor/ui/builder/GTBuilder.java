@@ -37,7 +37,7 @@ public class GTBuilder extends IncrementalProjectBuilder {
 	 * The name of the source folder. The builds are only triggered for changes in
 	 * this folder.
 	 */
-	private final static String SOURCE_FOLDER = "src";
+	public final static String SOURCE_FOLDER = "src";
 
 	@Override
 	protected IProject[] build(int kind, Map<String, String> args, IProgressMonitor monitor) throws CoreException {
