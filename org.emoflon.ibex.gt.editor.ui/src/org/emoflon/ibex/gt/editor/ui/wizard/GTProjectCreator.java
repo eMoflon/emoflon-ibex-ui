@@ -56,14 +56,15 @@ public class GTProjectCreator extends AbstractPluginProjectCreator {
 
 	@Override
 	protected String[] getProjectNatures() {
-		ArrayList<String> natures = Lists.newArrayList(super.getProjectNatures());
-		natures.add(GTNature.NATURE_ID);
+		ArrayList<String> natures = Lists.newArrayList(GTNature.NATURE_ID);
+		natures.addAll(Lists.newArrayList(super.getProjectNatures()));
 		return natures.toArray(new String[natures.size()]);
 	}
 	
+	@Override
 	protected String[] getBuilders() {
-		ArrayList<String> builders = Lists.newArrayList(super.getBuilders());
-		builders.addAll(GTNature.getRequiredBuilders());
+		ArrayList<String> builders = Lists.newArrayList(GTNature.getRequiredBuilders());
+		builders.addAll(Lists.newArrayList(super.getBuilders()));
 		return builders.toArray(new String[builders.size()]);
 	}
 	
