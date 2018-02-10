@@ -39,32 +39,36 @@ public class GTBuilder extends IncrementalProjectBuilder {
 	 */
 	public final static String SOURCE_FOLDER = "src";
 
+	/**
+	 * the project's source folder.
+	 */
+	private IFolder srcFolder;
+
 	@Override
 	protected IProject[] build(int kind, Map<String, String> args, IProgressMonitor monitor) throws CoreException {
+		this.srcFolder = this.getProject().getFolder(SOURCE_FOLDER);
+		if (!this.srcFolder.exists()) {
+			this.log("src folder is missing");
+			return null;
+		}
+
 		switch (kind) {
 		case AUTO_BUILD:
 		case INCREMENTAL_BUILD:
-			this.log("Start incremental build");
-			buildIncremental();
+			this.log("incremental build");
+			Arrays.stream(this.getDelta(this.getProject()).getAffectedChildren())
+					.filter(affectedChild -> "src".equals(affectedChild.getProjectRelativePath().toString())).findAny()
+					.ifPresent(srcDelta -> this.buildPackages(this.getPackagesFromDelta(srcDelta)));
 			break;
 		case CLEAN_BUILD:
 		case FULL_BUILD:
-			this.log("Start full build");
+			this.log("full build");
 			buildPackages(this.findSourcePackages());
 			break;
 		default:
 			break;
 		}
 		return null;
-	}
-
-	/**
-	 * Performs an incremental build.
-	 */
-	private void buildIncremental() {
-		Arrays.stream(this.getDelta(this.getProject()).getAffectedChildren())
-				.filter(affectedChild -> "src".equals(affectedChild.getProjectRelativePath().toString())).findAny()
-				.ifPresent(srcDelta -> this.buildPackagesForDelta(srcDelta));
 	}
 
 	/**
@@ -78,15 +82,27 @@ public class GTBuilder extends IncrementalProjectBuilder {
 	}
 
 	/**
-	 * Performs a build for the packages in the given delta.
+	 * Calculates the set of packages containing .gt files in the given delta.
 	 * 
 	 * @param delta
-	 *            the resource delta including the recent changes
+	 *            the delta
+	 * @return the list of package paths affected by the delta
 	 */
-	private void buildPackagesForDelta(final IResourceDelta delta) {
-		List<IPath> packages = this.findSourcePackages();
-		// TODO remove all packages with are not in the delta.
-		this.buildPackages(packages);
+	private List<IPath> getPackagesFromDelta(final IResourceDelta delta) {
+		ArrayList<IPath> paths = new ArrayList<IPath>();
+		IResource deltaResource = delta.getResource();
+		if (deltaResource.getType() == IResource.FOLDER) {
+			Arrays.stream(delta.getAffectedChildren()).forEach(c -> {
+				paths.addAll(this.getPackagesFromDelta(c));
+			});
+			boolean isRulePackage = Arrays.stream(delta.getAffectedChildren()) //
+					.filter(c -> c.getResource().getType() == IResource.FILE)
+					.anyMatch(c -> c.getResource().getName().endsWith(".gt"));
+			if (isRulePackage) {
+				paths.add(deltaResource.getLocation().makeRelativeTo(this.srcFolder.getLocation()));
+			}
+		}
+		return paths;
 	}
 
 	/**
@@ -135,14 +151,13 @@ public class GTBuilder extends IncrementalProjectBuilder {
 	 * @return the list of package paths
 	 */
 	private List<IPath> findSourcePackages() {
-		IFolder srcFolder = this.getProject().getFolder(SOURCE_FOLDER);
-		return this.findFolders(srcFolder).stream() //
-				.map(p -> p.getLocation().makeRelativeTo(srcFolder.getLocation())) // relative paths
+		return this.findFolders(this.srcFolder).stream() //
+				.map(p -> p.getLocation().makeRelativeTo(this.srcFolder.getLocation())) // relative paths
 				.collect(Collectors.toList());
 	}
 
 	/**
-	 * Returns a set of folders in the given container which contain .gt files.
+	 * Determines the set of folders in the given container which contain .gt files.
 	 * 
 	 * @param container
 	 *            the container to check for folders
@@ -169,7 +184,7 @@ public class GTBuilder extends IncrementalProjectBuilder {
 		return set;
 	}
 
-	// TODO Refactor code: duplicate of
+	// TODO collectExtensions is a duplicate of
 	// org.emoflon.ibex.tgg.editor/src/org/moflon/util/IbexUtil.java
 	private static <T> List<T> collectExtensions(final String extensionID, final String property,
 			final Class<T> extensionType) {
