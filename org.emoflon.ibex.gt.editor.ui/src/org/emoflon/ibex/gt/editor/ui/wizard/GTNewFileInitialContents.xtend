@@ -16,14 +16,31 @@ class GTNewFileInitialContents {
 	@Inject
 	FileExtensionProvider fileExtensionProvider
 
+	/**
+	 * Init project files.
+	 */
 	def generateInitialContents(IFileSystemAccess2 fsa, IProject project) {
 		val packagePath = project.name.replace(".", "/")
+
+		// Add a file with an example rule.
 		fsa.generateFile(
 			"src/" + packagePath + "/Rules." + fileExtensionProvider.primaryFileExtension,
 			this.getFileContent("firstRule")
 		)
+
+		// Add a .gitignore
+		fsa.generateFile(
+			".gitignore",
+			'''
+				/bin/
+				/src-gen/
+			'''
+		)
 	}
 
+	/**
+	 * Generate an example .gt file content based on the given parameters.
+	 */
 	def String getFileContent(String metaModel, String ruleName, String ruleBody) {
 		'''
 			import "«metaModel»"
@@ -33,11 +50,17 @@ class GTNewFileInitialContents {
 			}
 		'''
 	}
-	
+
+	/**
+	 * Generate an Ecore example .gt file content.
+	 */
 	def String getFileContent(String ruleName) {
 		this.getFileContent("http://www.eclipse.org/emf/2002/Ecore", ruleName, "object: EObject")
 	}
 
+	/**
+	 * Init the file with example content.
+	 */
 	def void initFileContent(IFile file) {
 		val fileName = file.getName()
 		val ruleName = fileName.substring(0, 1).toLowerCase() + fileName.substring(1, fileName.length() - 3)
