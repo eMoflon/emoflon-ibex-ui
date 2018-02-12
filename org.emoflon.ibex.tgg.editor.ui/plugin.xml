@@ -427,11 +427,11 @@
   <extension point="org.eclipse.ui.commands">
     <command
           id="org.moflon.tgg.mosl.createNewIntegrationProject"
-          name="Create new integration project">
+          name="New TGG Project">
     </command>
     <command
           id="org.moflon.tgg.mosl.createNewTGGRule"
-          name="Create new TGG rule">
+          name="New TGG Rule">
     </command>
   </extension>  
 	<extension
@@ -439,17 +439,17 @@
      <wizard
            category="org.moflon.ide.ui.category"
            class="org.moflon.tgg.mosl.ui.wizards.NewIntegrationWizard"
-           icon="resources/icons/integrationProject.gif"
+           icon="resources/icons/tgg-project.gif"
            id="org.moflon.tgg.mosl.newIntegrationProject"
-           name="New Integration Wizard"
+           name="eMoflon TGG Project"
            project="true">
      </wizard>
      <wizard
            category="org.moflon.ide.ui.category"
            class="org.moflon.tgg.mosl.ui.wizards.NewTGGRuleWizard"
-           icon="resources/icons/newTGGRule.gif"
+           icon="resources/icons/tgg-rule.gif"
            id="org.moflon.tgg.mosl.newTGGRule"
-           name="New TGG Rule">
+           name="eMoflon TGG Rule">
      </wizard>
   </extension>
   <extension
@@ -470,19 +470,31 @@
            locationURI="toolbar:org.moflon.ide.ui.toolbar?after=org.moflon.newEmfProject">
         <command
               commandId="org.moflon.tgg.mosl.createNewIntegrationProject"
-              icon="resources/icons/integrationProject.gif"
-              label="Create new integration project"
+              icon="resources/icons/tgg-project.gif"
+              label="New TGG Project"
               style="push">
+           <visibleWhen
+                 checkEnabled="false">
+              <reference
+                    definitionId="org.moflon.core.ui.definitions.isMoflonPerspective">
+              </reference>
+           </visibleWhen>
         </command>
         <command
               commandId="org.moflon.tgg.mosl.createNewTGGRule"
-              icon="resources/icons/newTGGRule.gif"
-              label="Create new TGG rule"
+              icon="resources/icons/tgg-rule.gif"
+              label="New TGG Rule"
               style="push">
+           <visibleWhen
+                 checkEnabled="false">
+              <reference
+                    definitionId="org.moflon.core.ui.definitions.isMoflonPerspective">
+              </reference>
+           </visibleWhen>
         </command>
      </menuContribution>
   </extension>
   <extension point="org.eclipse.ui.ide.projectNatureImages">
-        <image icon="resources/icons/integrationProject.gif" id="org.moflon.ibex.tgg.ui.IntegrationNatureImage" natureId="org.emoflon.ibex.tgg.ide.nature"/>
+        <image icon="resources/icons/tgg-project.gif" id="org.moflon.ibex.tgg.ui.IntegrationNatureImage" natureId="org.emoflon.ibex.tgg.ide.nature"/>
    </extension>
 </plugin>

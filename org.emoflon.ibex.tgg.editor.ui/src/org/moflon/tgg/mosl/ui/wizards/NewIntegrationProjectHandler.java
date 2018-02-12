@@ -16,7 +16,7 @@ public class NewIntegrationProjectHandler extends AbstractCommandHandler {
 		try {
 			IbexWorkspaceUtil.openWizard(NewIntegrationWizard.NEW_INTEGRATION_PROJECT_WIZARD_ID, window);
 		} catch (final Exception e) {
-         LogUtils.error(logger, e, "Unable to open 'new integration' wizard");
+         LogUtils.error(logger, e, "Unable to open the TGG Project wizard");
 		}
 
 		return null;
