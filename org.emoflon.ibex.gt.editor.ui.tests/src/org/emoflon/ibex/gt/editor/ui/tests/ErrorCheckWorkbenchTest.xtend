@@ -24,25 +24,25 @@ class ErrorCheckWorkbenchTest extends AbstractWorkbenchTest {
 		this.checkMarkerCountForFile('''
 			import "platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore"
 			
-			rule A {
+			rule a {
 				a: EObject
 			}
 			
-			rule B {
+			rule b {
 				b: EObject
 			}
 			
-			rule C
-			refines A, B
+			rule c
+			refines a, b
 		''', 0)
 		this.checkMarkerCountForFile('''
 			import "platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore"
 			
-			rule A {
+			rule a {
 			}
 			
-			rule C
-			refines A, A
+			rule c
+			refines a, a
 		''', 2)
 	}
 
