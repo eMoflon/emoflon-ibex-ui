@@ -92,11 +92,13 @@ public class IbexTGGNature implements IProjectNature {
 					Arrays.asList(
 							// Misc deps
 							"org.apache.log4j",
+							"com.google.guava",
 							
 							// EMF deps
 							"org.eclipse.emf.ecore.xmi",
 							
 							// Ibex deps
+							"org.emoflon.ibex.common",
 							"org.emoflon.ibex.tgg.core.language",
 							"org.emoflon.ibex.tgg.core.runtime"
 					
