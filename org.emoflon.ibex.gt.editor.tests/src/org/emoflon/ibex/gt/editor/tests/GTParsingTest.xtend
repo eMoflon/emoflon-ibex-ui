@@ -31,7 +31,26 @@ class GTParsingTest extends AbstractParsingTest {
 			GTValidator.ERROR_MESSAGE_NO_META_MODEL
 		)
 	}
-	
+
+	@Test
+	def void errorIfInvalidImport() {
+		val importName = 'test.ecore'
+		val file = parseHelper.parse('''
+			import "«importName»"
+			
+			rule a {
+				object: EObject
+			}
+		''')
+		this.assertValidResource(file)
+		this.assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.import,
+			GTValidator.INVALID_IMPORT,
+			String.format(GTValidator.ERROR_MESSAGE_FILE_DOES_NOT_EXIST, importName)
+		)
+	}
+
 	@Test
 	def void errorIfEmptyRuleBody() {
 		val file = parseHelper.parse('''
@@ -208,17 +227,57 @@ class GTParsingTest extends AbstractParsingTest {
 			file,
 			GTPackage.eINSTANCE.rule,
 			GTValidator.INVALID_NAME_EXPECT_UNIQUE,
-			"Rule a must not be declared twice.",
-			"Rule b must not be declared 3 times."
+			String.format(GTValidator.ERROR_MESSAGE_RULE_NAME_MULTIPLE_DECLARATIONS, "a", "twice"),
+			String.format(GTValidator.ERROR_MESSAGE_RULE_NAME_MULTIPLE_DECLARATIONS, "b", "3 times")
+		)
+	}
+
+	@Test
+	def void errorIfRuleNameContainsUnderscores() {
+		val ruleName = 'get_an_e_Object'
+		val file = parseHelper.parse('''
+			import "http://www.eclipse.org/emf/2002/Ecore"
+			
+			rule «ruleName» {
+				a: EObject
+			}
+		''')
+		this.assertBasics(file)
+		this.assertValidationIssues(
+			file,
+			GTPackage.eINSTANCE.rule,
+			GTValidator.INVALID_NAME_EXPECT_CAMEL_CASE,
+			Severity.WARNING,
+			String.format(GTValidator.ERROR_MESSAGE_RULE_NAME_CONTAINS_UNDERSCORES, ruleName)
+		)
+	}
+
+	@Test
+	def void errorIfRuleNameInBlacklist() {
+		val ruleName = "hashCode"
+		val file = parseHelper.parse('''
+			import "http://www.eclipse.org/emf/2002/Ecore"
+			
+			rule «ruleName» {
+				a: EObject
+			}
+		''')
+		this.assertBasics(file)
+		this.assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.rule,
+			GTValidator.INVALID_NAME_BLACKLISTED,
+			String.format(GTValidator.ERROR_MESSAGE_RULE_NAME_FORBIDDEN, ruleName)
 		)
 	}
 
 	@Test
 	def void errorIfRuleNameStartsWithCapital() {
+		val ruleName = "AnInvalidName"
 		val file = parseHelper.parse('''
 			import "http://www.eclipse.org/emf/2002/Ecore"
 			
-			rule A {
+			rule «ruleName» {
 				a: EObject
 			}
 		''')
@@ -228,7 +287,7 @@ class GTParsingTest extends AbstractParsingTest {
 			GTPackage.eINSTANCE.rule,
 			GTValidator.INVALID_NAME_EXPECT_LOWER_CASE,
 			Severity.WARNING,
-			GTValidator.ERROR_MESSAGE_RULE_NAME_STARTS_WITH_LOWER_CASE
+			String.format(GTValidator.ERROR_MESSAGE_RULE_NAME_STARTS_WITH_LOWER_CASE, ruleName)
 		)
 	}
 

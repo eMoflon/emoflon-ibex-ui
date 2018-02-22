@@ -16,8 +16,15 @@ import org.emoflon.ibex.gt.editor.scoping.GTScopeProvider
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 class GTValidator extends AbstractGTValidator {
-	public static val nodeNameBlacklist = #["class"]
-	public static val ruleNameBlacklist = #["clone", "equals", "finalize", "getClass", "hashCode", "notify",
+	/**
+	 * The list of invalid node names.
+	 */
+	private static val nodeNameBlacklist = #["class", "rule"]
+
+	/**
+	 * The list of invalid rule names.
+	 */
+	private static val ruleNameBlacklist = #["clone", "equals", "finalize", "getClass", "hashCode", "notify",
 		"notifyAll", "toString", "wait"]
 
 	// Error names.
@@ -37,13 +44,13 @@ class GTValidator extends AbstractGTValidator {
 	public static val ERROR_MESSAGE_NODE_NAME_CONTAINS_UNDERSCORES = 'Node name %s contains underscores. Use camelCase instead.'
 	public static val ERROR_MESSAGE_NODE_NAME_FORBIDDEN = 'Nodes cannot be named %s. Use a different name.'
 	public static val ERROR_MESSAGE_NODE_NAME_MULTIPLE_DECLARATIONS = 'Node %s must not be declared %s.'
-	public static val ERROR_MESSAGE_NODE_NAME_STARTS_WITH_LOWER_CASE = 'Node name should start with a lower case character.'
+	public static val ERROR_MESSAGE_NODE_NAME_STARTS_WITH_LOWER_CASE = 'Node %s should start with a lower case character.'
 
 	public static val ERROR_MESSAGE_RULE_DISTINCT_SUPER_RULES = 'Super rules must be distinct.'
 	public static val ERROR_MESSAGE_RULE_NAME_CONTAINS_UNDERSCORES = 'Rule name %s contains underscores. Use camelCase instead.'
 	public static val ERROR_MESSAGE_RULE_NAME_FORBIDDEN = 'Rules cannot be named %s. Use a different name.'
 	public static val ERROR_MESSAGE_RULE_NAME_MULTIPLE_DECLARATIONS = 'Rule %s must not be declared %s.'
-	public static val ERROR_MESSAGE_RULE_NAME_STARTS_WITH_LOWER_CASE = 'Rule name should start with a lower case character.'
+	public static val ERROR_MESSAGE_RULE_NAME_STARTS_WITH_LOWER_CASE = 'Rule %s should start with a lower case character.'
 	public static val ERROR_MESSAGE_RULE_NOT_EMPTY = 'Rule must not be empty.'
 
 	@Check
@@ -89,7 +96,7 @@ class GTValidator extends AbstractGTValidator {
 				// The node name should start with a lowercase character.
 				if (!Character.isLowerCase(node.name.charAt(0))) {
 					warning(
-						GTValidator.ERROR_MESSAGE_NODE_NAME_STARTS_WITH_LOWER_CASE,
+						String.format(GTValidator.ERROR_MESSAGE_NODE_NAME_STARTS_WITH_LOWER_CASE, node.name),
 						GTPackage.Literals.NODE__NAME,
 						GTValidator.INVALID_NAME_EXPECT_LOWER_CASE
 					)
@@ -134,7 +141,7 @@ class GTValidator extends AbstractGTValidator {
 				// The rule name should start with a lowercase character. 
 				if (!Character.isLowerCase(rule.name.charAt(0))) {
 					warning(
-						GTValidator.ERROR_MESSAGE_RULE_NAME_STARTS_WITH_LOWER_CASE,
+						String.format(GTValidator.ERROR_MESSAGE_RULE_NAME_STARTS_WITH_LOWER_CASE, rule.name),
 						GTPackage.Literals.RULE__NAME,
 						GTValidator.INVALID_NAME_EXPECT_LOWER_CASE
 					)
@@ -179,15 +186,12 @@ class GTValidator extends AbstractGTValidator {
 	 */
 	def static String getTimes(int count) {
 		switch (count) {
-			case 1: {
+			case 1:
 				return 'once'
-			}
-			case 2: {
+			case 2:
 				return 'twice'
-			}
-			default: {
+			default:
 				return count + ' times'
-			}
 		}
 	}
 }
