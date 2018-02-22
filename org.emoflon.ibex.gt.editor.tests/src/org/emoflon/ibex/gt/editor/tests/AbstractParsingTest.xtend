@@ -9,8 +9,12 @@ import org.eclipse.xtext.testing.util.ParseHelper
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
 import org.emoflon.ibex.gt.editor.gT.AttributeAssignment
 import org.emoflon.ibex.gt.editor.gT.AttributeCondition
-import org.emoflon.ibex.gt.editor.gT.BindingType
+import org.emoflon.ibex.gt.editor.gT.ContextNode
+import org.emoflon.ibex.gt.editor.gT.ContextReference
 import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
+import org.emoflon.ibex.gt.editor.gT.Operator
+import org.emoflon.ibex.gt.editor.gT.OperatorNode
+import org.emoflon.ibex.gt.editor.gT.OperatorReference
 import org.emoflon.ibex.gt.editor.gT.Reference
 import org.junit.Assert
 import org.junit.runner.RunWith
@@ -86,10 +90,15 @@ abstract class AbstractParsingTest {
 		Assert.assertEquals(value, attr.value.value)
 	}
 
-	def assertNode(GraphTransformationFile file, int nodeIndex, BindingType bindingType, String variableName,
+	def assertNode(GraphTransformationFile file, int nodeIndex, Operator operator, String variableName,
 		String variableType) {
 		val node = file.rules.get(0).nodes.get(nodeIndex)
-		Assert.assertEquals(bindingType, node.bindingType)
+		if (operator === null) {
+			Assert.assertTrue(node instanceof ContextNode)
+		} else {
+			Assert.assertTrue(node instanceof OperatorNode)
+			Assert.assertEquals(operator, (node as OperatorNode).operator)
+		}
 		Assert.assertEquals(variableName, node.name)
 		Assert.assertEquals(variableType, node.type.name)
 	}
@@ -110,10 +119,15 @@ abstract class AbstractParsingTest {
 		}
 	}
 
-	def assertReference(GraphTransformationFile file, int constraintIndex, BindingType bindingType, String name,
+	def assertReference(GraphTransformationFile file, int constraintIndex, Operator operator, String name,
 		int targetNodeIndex) {
 		val reference = file.rules.get(0).nodes.get(0).constraints.get(constraintIndex) as Reference
-		Assert.assertEquals(bindingType, reference.bindingType)
+		if (operator === null) {
+			Assert.assertTrue(reference instanceof ContextReference)
+		} else {
+			Assert.assertTrue(reference instanceof OperatorReference)
+			Assert.assertEquals(operator, (reference as OperatorReference).operator)
+		}
 		Assert.assertEquals(name, reference.type.name)
 		Assert.assertEquals(file.rules.get(0).nodes.get(targetNodeIndex), reference.target)
 	}

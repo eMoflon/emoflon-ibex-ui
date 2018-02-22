@@ -3,8 +3,8 @@ package org.emoflon.ibex.gt.editor.tests
 import org.eclipse.xtext.diagnostics.Diagnostic
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
-import org.emoflon.ibex.gt.editor.gT.BindingType
 import org.emoflon.ibex.gt.editor.gT.GTPackage
+import org.emoflon.ibex.gt.editor.gT.Operator
 import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -26,8 +26,8 @@ class NodeParsingTest extends AbstractParsingTest {
 			}
 		''')
 		this.assertValid(file)
-		this.assertNode(file, 0, BindingType.CONTEXT, "a", "EPackage")
-		this.assertNode(file, 1, BindingType.CONTEXT, "b", "EClass")
+		this.assertNode(file, 0, null, "a", "EPackage")
+		this.assertNode(file, 1, null, "b", "EClass")
 	}
 
 	@Test
@@ -41,8 +41,8 @@ class NodeParsingTest extends AbstractParsingTest {
 			}
 		''')
 		this.assertValid(file)
-		this.assertNode(file, 0, BindingType.CREATE, "a", "EClass")
-		this.assertNode(file, 1, BindingType.DELETE, "b", "EObject")
+		this.assertNode(file, 0, Operator.CREATE, "a", "EClass")
+		this.assertNode(file, 1, Operator.DELETE, "b", "EObject")
 	}
 
 	@Test
@@ -70,14 +70,14 @@ class NodeParsingTest extends AbstractParsingTest {
 			
 			rule findClass() {
 				package: EPackage {
-					eClassifiers -> clazz
+					-eClassifiers -> clazz
 				}
 			
 				clazz: EClass
 			}
 		''')
 		this.assertValid(file)
-		this.assertReference(file, 0, BindingType.CONTEXT, "eClassifiers", 1)
+		this.assertReference(file, 0, null, "eClassifiers", 1)
 	}
 
 	@Test
@@ -87,8 +87,8 @@ class NodeParsingTest extends AbstractParsingTest {
 			
 			rule createAndDeleteClass() {
 				package: EPackage {
-					++ eClassifiers -> createdClass
-					-- eClassifiers -> deletedClass
+					++ -eClassifiers -> createdClass
+					-- -eClassifiers -> deletedClass
 				}
 			
 				++ createdClass: EClass
@@ -96,8 +96,8 @@ class NodeParsingTest extends AbstractParsingTest {
 			}
 		''')
 		this.assertValid(file)
-		this.assertReference(file, 0, BindingType.CREATE, "eClassifiers", 1)
-		this.assertReference(file, 1, BindingType.DELETE, "eClassifiers", 2)
+		this.assertReference(file, 0, Operator.CREATE, "eClassifiers", 1)
+		this.assertReference(file, 1, Operator.DELETE, "eClassifiers", 2)
 	}
 
 	@Ignore("Needs Causes Exception, seems to be a scoping problem")
@@ -108,7 +108,7 @@ class NodeParsingTest extends AbstractParsingTest {
 			
 			rule deleteClass() {
 				package: EObject {
-					eClassifiers -> class
+					-eClassifiers -> class
 				}
 			
 				class: EClass
@@ -130,7 +130,7 @@ class NodeParsingTest extends AbstractParsingTest {
 			
 			rule deleteClass() {
 				package: EPackage {
-					eClassifiers -> class
+					-eClassifiers -> class
 				}
 			
 				class: EObject
