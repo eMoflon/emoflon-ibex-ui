@@ -16,7 +16,7 @@ import org.junit.runner.RunWith
  */
 @RunWith(XtextRunner)
 @InjectWith(GTInjectorProvider)
-class NodeParsingTest extends AbstractParsingTest {
+class GTParsingNodesTest extends GTParsingTest {
 	@Test
 	def void validContextNodes() {
 		val file = parseHelper.parse('''
@@ -105,7 +105,7 @@ class NodeParsingTest extends AbstractParsingTest {
 			String.format(GTValidator.ERROR_MESSAGE_NODE_NAME_CONTAINS_UNDERSCORES, nodeName)
 		)
 	}
-	
+
 	@Test
 	def void errorIfMultipleNodesWithTheSameName() {
 		val nodeName = 'a'
