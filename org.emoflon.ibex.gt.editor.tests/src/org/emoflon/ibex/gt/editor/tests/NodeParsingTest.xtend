@@ -70,10 +70,10 @@ class NodeParsingTest extends AbstractParsingTest {
 			
 			rule findClass() {
 				package: EPackage {
-					eClassifiers -> class
+					eClassifiers -> clazz
 				}
 			
-				class: EClass
+				clazz: EClass
 			}
 		''')
 		this.assertValid(file)
