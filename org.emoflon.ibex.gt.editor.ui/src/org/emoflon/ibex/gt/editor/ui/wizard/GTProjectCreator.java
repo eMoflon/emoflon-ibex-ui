@@ -60,17 +60,17 @@ public class GTProjectCreator extends AbstractPluginProjectCreator {
 		natures.addAll(Lists.newArrayList(super.getProjectNatures()));
 		return natures.toArray(new String[natures.size()]);
 	}
-	
+
 	@Override
 	protected String[] getBuilders() {
 		ArrayList<String> builders = Lists.newArrayList(GTNature.getRequiredBuilders());
 		builders.addAll(Lists.newArrayList(super.getBuilders()));
 		return builders.toArray(new String[builders.size()]);
 	}
-	
+
 	@Override
 	protected List<String> getRequiredBundles() {
-		return Lists.newArrayList("org.emoflon.ibex.gt");
+		return Lists.newArrayList("org.emoflon.ibex.common", "org.emoflon.ibex.gt");
 	}
 
 	@Override
