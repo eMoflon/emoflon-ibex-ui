@@ -61,17 +61,20 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	}
 
 	def convertNodeNameToLowerCamelCase(Node node) {
-		node.name = getLowerCamelCase(node.name)
+		// Keep leading _ if present before.
+		node.name = (if(node.name.startsWith('_')) '_' else '') + convertToLowerCamelCase(node.name)
 	}
 
 	def convertRuleNameToLowerCamelCase(Rule rule) {
-		rule.name = getLowerCamelCase(rule.name)
+		rule.name = convertToLowerCamelCase(rule.name)
 	}
 
-	def getLowerCamelCase(String s) {
+	def convertToLowerCamelCase(String s) {
 		var camelCase = ''
 		for (part : s.split('_')) {
-			camelCase = camelCase + part.substring(0, 1).toUpperCase + part.substring(1).toLowerCase
+			if (part.length > 0) {
+				camelCase = camelCase + part.substring(0, 1).toUpperCase + part.substring(1).toLowerCase
+			}
 		}
 		return camelCase.toFirstLower
 	}

@@ -85,16 +85,18 @@ class GTValidator extends AbstractGTValidator {
 				GTValidator.INVALID_NAME_BLACKLISTED
 			)
 		} else {
+			// Note: _ is only allowed as first character.
 			// The node name should be lowerCamelCase.
-			if (node.name.contains('_')) {
+			if (node.name.substring(1).contains('_')) {
 				warning(
 					String.format(ERROR_MESSAGE_NODE_NAME_CONTAINS_UNDERSCORES, node.name),
 					GTPackage.Literals.NODE__NAME,
 					GTValidator.INVALID_NAME_EXPECT_CAMEL_CASE
 				)
 			} else {
-				// The node name should start with a lowercase character.
-				if (!Character.isLowerCase(node.name.charAt(0))) {
+				// The node name should start with a lower case character.
+				val firstCharacter = node.name.charAt(0)
+				if (!Character.isLowerCase(firstCharacter) && firstCharacter.equals('_')) {
 					warning(
 						String.format(GTValidator.ERROR_MESSAGE_NODE_NAME_STARTS_WITH_LOWER_CASE, node.name),
 						GTPackage.Literals.NODE__NAME,
@@ -138,7 +140,7 @@ class GTValidator extends AbstractGTValidator {
 					GTValidator.INVALID_NAME_EXPECT_CAMEL_CASE
 				)
 			} else {
-				// The rule name should start with a lowercase character. 
+				// The rule name should start with a lower case character. 
 				if (!Character.isLowerCase(rule.name.charAt(0))) {
 					warning(
 						String.format(GTValidator.ERROR_MESSAGE_RULE_NAME_STARTS_WITH_LOWER_CASE, rule.name),
