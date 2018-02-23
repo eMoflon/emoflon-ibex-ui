@@ -500,4 +500,11 @@
         name="eMoflon Graph Transformation File">
      	</wizard>
 	</extension>
+ <extension
+       point="net.sourceforge.plantuml.eclipse.diagramTextProvider">
+    <diagramTextProvider
+          priority="5"
+          providerClass="org.emoflon.ibex.gt.editor.ui.visualization.GTVisualizer">
+    </diagramTextProvider>
+ </extension>
 </plugin>
