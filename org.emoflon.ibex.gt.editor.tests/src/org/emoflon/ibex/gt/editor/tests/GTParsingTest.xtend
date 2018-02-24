@@ -1,331 +1,134 @@
 package org.emoflon.ibex.gt.editor.tests
 
-import org.eclipse.xtext.diagnostics.Diagnostic
+import com.google.inject.Inject
+import org.eclipse.emf.ecore.EClass
 import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
-import org.emoflon.ibex.gt.editor.gT.GTPackage
-import org.emoflon.ibex.gt.editor.validation.GTValidator
+import org.eclipse.xtext.testing.util.ParseHelper
+import org.eclipse.xtext.testing.validation.ValidationTestHelper
+import org.emoflon.ibex.gt.editor.gT.AttributeAssignment
+import org.emoflon.ibex.gt.editor.gT.AttributeCondition
+import org.emoflon.ibex.gt.editor.gT.ContextNode
+import org.emoflon.ibex.gt.editor.gT.ContextReference
+import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
+import org.emoflon.ibex.gt.editor.gT.Operator
+import org.emoflon.ibex.gt.editor.gT.OperatorNode
+import org.emoflon.ibex.gt.editor.gT.OperatorReference
+import org.emoflon.ibex.gt.editor.gT.Reference
 import org.junit.Assert
-import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * JUnit tests for features on file/rule level.
+ * Abstract test class for JUnit parsing tests of the editor.
+ * Defines useful assertions uses within the JUnit tests.
  */
 @RunWith(XtextRunner)
 @InjectWith(GTInjectorProvider)
-class GTParsingTest extends AbstractParsingTest {
-	@Test
-	def void warningIfNoImport() {
-		val file = parseHelper.parse('''
-			rule a {
-				object: EObject
-			}
-		''')
+abstract class GTParsingTest {
+	@Inject
+	protected ParseHelper<GraphTransformationFile> parseHelper
+
+	@Inject extension private ValidationTestHelper validationHelper
+
+	def void assertValid(GraphTransformationFile file) {
+		Assert.assertNotNull(file)
+		this.validationHelper.assertNoIssues(file)
+		this.assertBasics(file, 1)
+	}
+
+	def void assertValid(GraphTransformationFile file, int ruleCount) {
+		Assert.assertNotNull(file)
+		this.validationHelper.assertNoIssues(file)
+		this.assertBasics(file, ruleCount)
+	}
+
+	def void assertValidationErrors(GraphTransformationFile file, EClass objectType, String code, String... messages) {
+		messages.forEach[this.validationHelper.assertError(file, objectType, code, it)]
+	}
+
+	def void assertValidationIssues(GraphTransformationFile file, EClass objectType, String code, Severity severity,
+		String... messages) {
+		messages.forEach[this.validationHelper.assertIssue(file, objectType, code, severity, it)]
+	}
+
+	def void assertValidResource(GraphTransformationFile file) {
+		Assert.assertNotNull(file)
+		Assert.assertTrue(file.eResource.errors.isEmpty)
+		Assert.assertTrue(file.eResource.warnings.isEmpty)
+	}
+
+	def void assertInvalidResource(GraphTransformationFile file, int issueCount) {
+		Assert.assertTrue(issueCount > 0)
+		Assert.assertNotNull(file)
+		Assert.assertEquals(issueCount, file.eResource.errors.size + file.eResource.warnings.size)
+	}
+
+	def void assertBasics(GraphTransformationFile file) {
+		this.assertBasics(file, 1)
+	}
+
+	def void assertBasics(GraphTransformationFile file, int ruleCount) {
+		Assert.assertTrue(ruleCount > 0)
 		this.assertValidResource(file)
-		this.assertValidationErrors(
-			file,
-			GTPackage.eINSTANCE.graphTransformationFile,
-			GTValidator.MISSING_META_MODEL,
-			GTValidator.ERROR_MESSAGE_NO_META_MODEL
-		)
-	}
-	
-	@Test
-	def void errorIfEmptyRuleBody() {
-		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
-			
-			rule a() {}
-		''')
-		this.assertBasics(file)
-		this.assertValidationErrors(
-			file,
-			GTPackage.eINSTANCE.rule,
-			GTValidator.EMPTY_RULE,
-			GTValidator.ERROR_MESSAGE_RULE_NOT_EMPTY
-		)
+
+		Assert.assertEquals(1, file.imports.size)
+		Assert.assertEquals("http://www.eclipse.org/emf/2002/Ecore", file.imports.get(0).name)
+
+		Assert.assertEquals(ruleCount, file.rules.size)
 	}
 
-	@Test
-	def void validIfEmptyRuleBodyAndMultipleRefinement() {
-		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
-			
-			rule a {
-				object1: EObject
-			}
-			
-			rule b {
-				object2: EObject
-			}
-			
-			rule c
-			refines a, b
-		''')
-		this.assertValid(file, 3)
+	def void assertAttributeAssignment(GraphTransformationFile file, int constraintIndex, String name, String value) {
+		val attr = file.rules.get(0).nodes.get(0).constraints.get(constraintIndex) as AttributeAssignment
+		Assert.assertEquals(name, attr.attribute.name)
+		Assert.assertEquals(value, attr.value.value)
 	}
 
-	@Test
-	def void validModifiers() {
-		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
-			
-			abstract rule a() {
-				object1: EObject
-			}
-			
-			rule b {
-				object2: EObject
-			}
-		''')
-		this.assertValid(file, 2)
-		Assert.assertTrue(file.rules.get(0).abstract)
-		Assert.assertFalse(file.rules.get(1).abstract)
+	def void assertAttributeCondition(GraphTransformationFile file, int constraintIndex, String name, String value) {
+		val attr = file.rules.get(0).nodes.get(0).constraints.get(constraintIndex) as AttributeCondition
+		Assert.assertEquals(name, attr.attribute.name)
+		Assert.assertEquals(value, attr.value.value)
 	}
 
-	@Test
-	def void errorForSelfRefinement() {
-		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
-			
-			rule a
-			refines a {
-				object: EObject
-			}
-		''')
-		this.assertBasics(file)
-		this.assertValidationErrors(
-			file,
-			GTPackage.eINSTANCE.rule,
-			Diagnostic::LINKING_DIAGNOSTIC,
-			"Couldn't resolve reference to Rule 'A'."
-		)
+	def assertNode(GraphTransformationFile file, int nodeIndex, Operator operator, String variableName,
+		String variableType) {
+		val node = file.rules.get(0).nodes.get(nodeIndex)
+		if (operator === null) {
+			Assert.assertTrue(node instanceof ContextNode)
+		} else {
+			Assert.assertTrue(node instanceof OperatorNode)
+			Assert.assertEquals(operator, (node as OperatorNode).operator)
+		}
+		Assert.assertEquals(variableName, node.name)
+		Assert.assertEquals(variableType, node.type.name)
 	}
 
-	@Test
-	def void errorIfLoopinRulesRefinementHierarchyLevel1() {
-		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
-			
-			rule a
-			refines b {
-				object1: EObject
-			}
-			
-			rule b
-			refines a {
-				object2: EObject
-			}
-		''')
-		this.assertBasics(file, 2)
-		this.assertValidationErrors(
-			file,
-			GTPackage.eINSTANCE.rule,
-			Diagnostic::LINKING_DIAGNOSTIC,
-			"Couldn't resolve reference to Rule 'A'."
-		)
+	def void assertParameterNames(GraphTransformationFile file, String... names) {
+		val parameters = file.rules.get(0).parameters
+		Assert.assertEquals(names.size, parameters.size)
+		for (i : 0 .. names.size - 1) {
+			Assert.assertEquals(names.get(i), parameters.get(i).name)
+		}
 	}
 
-	@Test
-	def void errorIfLoopinRulesRefinementHierarchyLevel2() {
-		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
-			
-			rule a
-			refines b {
-				object: EObject
-			}
-			
-			rule b
-			refines c {
-				object: EObject
-			}
-			
-			rule c
-			refines a {
-				object: EObject
-			}
-		''')
-		this.assertBasics(file, 3)
-		this.assertValidationErrors(
-			file,
-			GTPackage.eINSTANCE.rule,
-			Diagnostic::LINKING_DIAGNOSTIC,
-			"Couldn't resolve reference to Rule 'A'."
-		)
+	def void assertParameterTypes(GraphTransformationFile file, String... types) {
+		val parameters = file.rules.get(0).parameters
+		Assert.assertEquals(types.size, parameters.size)
+		for (i : 0 .. types.size - 1) {
+			Assert.assertEquals(types.get(i), parameters.get(i).type)
+		}
 	}
 
-	@Test
-	def void errorIfNoDistinctSuperRules() {
-		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
-			
-			rule a {
-				object: EObject
-			}
-			
-			rule b
-			refines a, a
-		''')
-		this.assertValidResource(file)
-		this.assertValidationErrors(
-			file,
-			GTPackage.eINSTANCE.rule,
-			GTValidator.INVALID_SUPER_RULES,
-			GTValidator.ERROR_MESSAGE_RULE_DISTINCT_SUPER_RULES
-		)
-	}
-
-	@Test
-	def void errorIfRuleNameDuplicates() {
-		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
-			
-			rule a() {
-				object: EObject
-			}
-			
-			rule a {
-				object: EObject
-			}
-			
-			rule b {
-				object: EObject
-			}
-			
-			rule b() {
-				object: EObject
-			}
-			
-			rule b {
-				object: EObject
-			}
-		''')
-		this.assertBasics(file, 5)
-		this.assertValidationErrors(
-			file,
-			GTPackage.eINSTANCE.rule,
-			GTValidator.INVALID_NAME_EXPECT_UNIQUE,
-			"Rule a must not be declared twice.",
-			"Rule b must not be declared 3 times."
-		)
-	}
-
-	@Test
-	def void errorIfRuleNameStartsWithCapital() {
-		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
-			
-			rule A {
-				a: EObject
-			}
-		''')
-		this.assertBasics(file)
-		this.assertValidationIssues(
-			file,
-			GTPackage.eINSTANCE.rule,
-			GTValidator.INVALID_NAME_EXPECT_LOWER_CASE,
-			Severity.WARNING,
-			GTValidator.ERROR_MESSAGE_RULE_NAME_STARTS_WITH_LOWER_CASE
-		)
-	}
-
-	@Test
-	def void validRuleWithNoParameters() {
-		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
-			
-			rule a() {
-				a: EObject
-			}
-		''')
-		this.assertValid(file)
-		Assert.assertTrue(file.rules.get(0).parameters.isEmpty)
-	}
-
-	@Test
-	def void validRuleWithOneParameter() {
-		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
-			
-			rule a(name: String) {
-				a: EObject
-			}
-		''')
-		this.assertValid(file)
-		this.assertParameterNames(file, "name")
-		this.assertParameterTypes(file, "String")
-	}
-
-	@Test
-	def void validRuleWithThreeParameters() {
-		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
-			
-			rule a(age: int, name: String, isMale: boolean) {
-				a: EObject
-			}
-		''')
-		this.assertValid(file)
-		this.assertParameterNames(file, "age", "name", "isMale")
-		this.assertParameterTypes(file, "int", "String", "boolean")
-	}
-
-	@Test
-	def void errorIfParameterListEndsWithComma() {
-		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
-			
-			rule a(age: int,) {
-				a: Ebject
-			}
-		''')
-		this.assertInvalidResource(file, 1)
-		this.assertValidationErrors(
-			file,
-			GTPackage.eINSTANCE.rule,
-			Diagnostic::SYNTAX_DIAGNOSTIC,
-			"mismatched input ')' expecting RULE_ID"
-		)
-	}
-
-	@Test
-	def void errorIfParameterListWithNoColons() {
-		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
-			
-			rule A(age int, name String, isMale boolean) {
-				a: Object
-			}
-		''')
-		this.assertInvalidResource(file, 3)
-		this.assertValidationErrors(
-			file,
-			GTPackage.eINSTANCE.parameter,
-			Diagnostic::SYNTAX_DIAGNOSTIC,
-			"missing ':' at 'int'",
-			"missing ':' at 'String'",
-			"missing ':' at 'boolean'"
-		)
-	}
-
-	@Test
-	def void errorIfParameterListContainsSemicolons() {
-		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
-			
-			rule a(age: int; name: String; isMale: boolean) {
-				a: EObject
-			}
-		''')
-		this.assertInvalidResource(file, 1)
-		this.assertValidationErrors(
-			file,
-			GTPackage.eINSTANCE.rule,
-			Diagnostic::SYNTAX_DIAGNOSTIC,
-			"mismatched input ';' expecting ')'"
-		)
+	def assertReference(GraphTransformationFile file, int constraintIndex, Operator operator, String name,
+		int targetNodeIndex) {
+		val reference = file.rules.get(0).nodes.get(0).constraints.get(constraintIndex) as Reference
+		if (operator === null) {
+			Assert.assertTrue(reference instanceof ContextReference)
+		} else {
+			Assert.assertTrue(reference instanceof OperatorReference)
+			Assert.assertEquals(operator, (reference as OperatorReference).operator)
+		}
+		Assert.assertEquals(name, reference.type.name)
+		Assert.assertEquals(file.rules.get(0).nodes.get(targetNodeIndex), reference.target)
 	}
 }

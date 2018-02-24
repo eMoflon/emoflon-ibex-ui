@@ -1,10 +1,12 @@
 package org.emoflon.ibex.gt.editor.tests
 
 import org.eclipse.xtext.diagnostics.Diagnostic
+import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
-import org.emoflon.ibex.gt.editor.gT.BindingType
 import org.emoflon.ibex.gt.editor.gT.GTPackage
+import org.emoflon.ibex.gt.editor.gT.Operator
+import org.emoflon.ibex.gt.editor.validation.GTValidator
 import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -14,7 +16,7 @@ import org.junit.runner.RunWith
  */
 @RunWith(XtextRunner)
 @InjectWith(GTInjectorProvider)
-class NodeParsingTest extends AbstractParsingTest {
+class GTParsingNodesTest extends GTParsingTest {
 	@Test
 	def void validContextNodes() {
 		val file = parseHelper.parse('''
@@ -26,8 +28,8 @@ class NodeParsingTest extends AbstractParsingTest {
 			}
 		''')
 		this.assertValid(file)
-		this.assertNode(file, 0, BindingType.CONTEXT, "a", "EPackage")
-		this.assertNode(file, 1, BindingType.CONTEXT, "b", "EClass")
+		this.assertNode(file, 0, null, "a", "EPackage")
+		this.assertNode(file, 1, null, "b", "EClass")
 	}
 
 	@Test
@@ -41,8 +43,88 @@ class NodeParsingTest extends AbstractParsingTest {
 			}
 		''')
 		this.assertValid(file)
-		this.assertNode(file, 0, BindingType.CREATE, "a", "EClass")
-		this.assertNode(file, 1, BindingType.DELETE, "b", "EObject")
+		this.assertNode(file, 0, Operator.CREATE, "a", "EClass")
+		this.assertNode(file, 1, Operator.DELETE, "b", "EObject")
+	}
+
+	@Test
+	def void errorIfNodeNameStartsWithCapital() {
+		val nodeName = "AnInvalidNodeName"
+		val file = parseHelper.parse('''
+			import "http://www.eclipse.org/emf/2002/Ecore"
+			
+			rule a {
+				«nodeName»: EObject
+			}
+		''')
+		this.assertBasics(file)
+		this.assertValidationIssues(
+			file,
+			GTPackage.eINSTANCE.node,
+			GTValidator.INVALID_NAME_EXPECT_LOWER_CASE,
+			Severity.WARNING,
+			String.format(GTValidator.ERROR_MESSAGE_NODE_NAME_STARTS_WITH_LOWER_CASE, nodeName)
+		)
+	}
+
+	@Test
+	def void errorIfNodeNameBlacklisted() {
+		val nodeName = 'class'
+		val file = parseHelper.parse('''
+			import "http://www.eclipse.org/emf/2002/Ecore"
+			
+			rule a {
+				«nodeName»: EObject
+			}
+		''')
+		this.assertBasics(file)
+		this.assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.node,
+			GTValidator.INVALID_NAME_BLACKLISTED,
+			String.format(GTValidator.ERROR_MESSAGE_NODE_NAME_FORBIDDEN, nodeName)
+		)
+	}
+
+	@Test
+	def void errorIfNodeNameContainsUndercores() {
+		val nodeName = 'the_e_Object'
+		val file = parseHelper.parse('''
+			import "http://www.eclipse.org/emf/2002/Ecore"
+			
+			rule a {
+				«nodeName»: EObject
+			}
+		''')
+		this.assertBasics(file)
+		this.assertValidationIssues(
+			file,
+			GTPackage.eINSTANCE.node,
+			GTValidator.INVALID_NAME_EXPECT_CAMEL_CASE,
+			Severity.WARNING,
+			String.format(GTValidator.ERROR_MESSAGE_NODE_NAME_CONTAINS_UNDERSCORES, nodeName)
+		)
+	}
+
+	@Test
+	def void errorIfMultipleNodesWithTheSameName() {
+		val nodeName = 'a'
+		val file = parseHelper.parse('''
+			import "http://www.eclipse.org/emf/2002/Ecore"
+			
+			rule a {
+				«nodeName»: EAnnotation
+			
+				«nodeName»: EObject
+			}
+		''')
+		this.assertBasics(file)
+		this.assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.node,
+			GTValidator.INVALID_NAME_EXPECT_UNIQUE,
+			String.format(GTValidator.ERROR_MESSAGE_NODE_NAME_MULTIPLE_DECLARATIONS, nodeName, "twice")
+		)
 	}
 
 	@Test
@@ -70,14 +152,14 @@ class NodeParsingTest extends AbstractParsingTest {
 			
 			rule findClass() {
 				package: EPackage {
-					eClassifiers -> class
+					-eClassifiers -> clazz
 				}
 			
-				class: EClass
+				clazz: EClass
 			}
 		''')
 		this.assertValid(file)
-		this.assertReference(file, 0, BindingType.CONTEXT, "eClassifiers", 1)
+		this.assertReference(file, 0, null, "eClassifiers", 1)
 	}
 
 	@Test
@@ -87,8 +169,8 @@ class NodeParsingTest extends AbstractParsingTest {
 			
 			rule createAndDeleteClass() {
 				package: EPackage {
-					++ eClassifiers -> createdClass
-					-- eClassifiers -> deletedClass
+					++ -eClassifiers -> createdClass
+					-- -eClassifiers -> deletedClass
 				}
 			
 				++ createdClass: EClass
@@ -96,8 +178,8 @@ class NodeParsingTest extends AbstractParsingTest {
 			}
 		''')
 		this.assertValid(file)
-		this.assertReference(file, 0, BindingType.CREATE, "eClassifiers", 1)
-		this.assertReference(file, 1, BindingType.DELETE, "eClassifiers", 2)
+		this.assertReference(file, 0, Operator.CREATE, "eClassifiers", 1)
+		this.assertReference(file, 1, Operator.DELETE, "eClassifiers", 2)
 	}
 
 	@Ignore("Needs Causes Exception, seems to be a scoping problem")
@@ -108,7 +190,7 @@ class NodeParsingTest extends AbstractParsingTest {
 			
 			rule deleteClass() {
 				package: EObject {
-					eClassifiers -> class
+					-eClassifiers -> class
 				}
 			
 				class: EClass
@@ -130,7 +212,7 @@ class NodeParsingTest extends AbstractParsingTest {
 			
 			rule deleteClass() {
 				package: EPackage {
-					eClassifiers -> class
+					-eClassifiers -> class
 				}
 			
 				class: EObject

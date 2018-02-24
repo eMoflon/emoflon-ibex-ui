@@ -16,9 +16,22 @@ import org.emoflon.ibex.gt.editor.scoping.GTScopeProvider
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 class GTValidator extends AbstractGTValidator {
+	/**
+	 * The list of invalid node names.
+	 */
+	private static val nodeNameBlacklist = #["class", "rule"]
+
+	/**
+	 * The list of invalid rule names.
+	 */
+	private static val ruleNameBlacklist = #["clone", "equals", "finalize", "getClass", "hashCode", "notify",
+		"notifyAll", "toString", "wait"]
+
 	// Error names.
 	public static val EMPTY_RULE = 'emptyRule'
 	public static val INVALID_IMPORT = 'invalidImport'
+	public static val INVALID_NAME_BLACKLISTED = 'invalidNameBlacklisted'
+	public static val INVALID_NAME_EXPECT_CAMEL_CASE = 'invalidNameExpectCamelCase'
 	public static val INVALID_NAME_EXPECT_LOWER_CASE = 'invalidNameExpectLowerCase'
 	public static val INVALID_NAME_EXPECT_UNIQUE = 'invalidNameExpectUnique'
 	public static val INVALID_SUPER_RULES = 'invalidSuperRules'
@@ -28,12 +41,16 @@ class GTValidator extends AbstractGTValidator {
 	public static val ERROR_MESSAGE_FILE_DOES_NOT_EXIST = 'The file %s does not exist.'
 	public static val ERROR_MESSAGE_NO_META_MODEL = 'You must import the Ecore file of the meta-model.'
 
+	public static val ERROR_MESSAGE_NODE_NAME_CONTAINS_UNDERSCORES = 'Node name %s contains underscores. Use camelCase instead.'
+	public static val ERROR_MESSAGE_NODE_NAME_FORBIDDEN = 'Nodes cannot be named %s. Use a different name.'
 	public static val ERROR_MESSAGE_NODE_NAME_MULTIPLE_DECLARATIONS = 'Node %s must not be declared %s.'
-	public static val ERROR_MESSAGE_NODE_NAME_STARTS_WITH_LOWER_CASE = 'Node name should start with a lower case character.'
+	public static val ERROR_MESSAGE_NODE_NAME_STARTS_WITH_LOWER_CASE = 'Node %s should start with a lower case character.'
 
 	public static val ERROR_MESSAGE_RULE_DISTINCT_SUPER_RULES = 'Super rules must be distinct.'
+	public static val ERROR_MESSAGE_RULE_NAME_CONTAINS_UNDERSCORES = 'Rule name %s contains underscores. Use camelCase instead.'
+	public static val ERROR_MESSAGE_RULE_NAME_FORBIDDEN = 'Rules cannot be named %s. Use a different name.'
 	public static val ERROR_MESSAGE_RULE_NAME_MULTIPLE_DECLARATIONS = 'Rule %s must not be declared %s.'
-	public static val ERROR_MESSAGE_RULE_NAME_STARTS_WITH_LOWER_CASE = 'Rule name should start with a lower case character.'
+	public static val ERROR_MESSAGE_RULE_NAME_STARTS_WITH_LOWER_CASE = 'Rule %s should start with a lower case character.'
 	public static val ERROR_MESSAGE_RULE_NOT_EMPTY = 'Rule must not be empty.'
 
 	@Check
@@ -60,12 +77,33 @@ class GTValidator extends AbstractGTValidator {
 
 	@Check
 	def checkNode(Node node) {
-		if (!Character.isLowerCase(node.name.charAt(0))) {
-			warning(
-				GTValidator.ERROR_MESSAGE_NODE_NAME_STARTS_WITH_LOWER_CASE,
+		// The node name must not be blacklisted.
+		if (nodeNameBlacklist.contains(node.name)) {
+			error(
+				String.format(GTValidator.ERROR_MESSAGE_NODE_NAME_FORBIDDEN, node.name),
 				GTPackage.Literals.NODE__NAME,
-				GTValidator.INVALID_NAME_EXPECT_LOWER_CASE
+				GTValidator.INVALID_NAME_BLACKLISTED
 			)
+		} else {
+			// Note: _ is only allowed as first character.
+			// The node name should be lowerCamelCase.
+			if (node.name.substring(1).contains('_')) {
+				warning(
+					String.format(ERROR_MESSAGE_NODE_NAME_CONTAINS_UNDERSCORES, node.name),
+					GTPackage.Literals.NODE__NAME,
+					GTValidator.INVALID_NAME_EXPECT_CAMEL_CASE
+				)
+			} else {
+				// The node name should start with a lower case character.
+				val firstCharacter = node.name.charAt(0)
+				if (!Character.isLowerCase(firstCharacter) && firstCharacter.equals('_')) {
+					warning(
+						String.format(GTValidator.ERROR_MESSAGE_NODE_NAME_STARTS_WITH_LOWER_CASE, node.name),
+						GTPackage.Literals.NODE__NAME,
+						GTValidator.INVALID_NAME_EXPECT_LOWER_CASE
+					)
+				}
+			}
 		}
 
 		// Node names within rule must be unique.
@@ -86,13 +124,31 @@ class GTValidator extends AbstractGTValidator {
 
 	@Check
 	def checkRule(Rule rule) {
-		// The rule name should start with a lower case character.
-		if (!Character.isLowerCase(rule.name.charAt(0))) {
-			warning(
-				GTValidator.ERROR_MESSAGE_RULE_NAME_STARTS_WITH_LOWER_CASE,
+		// The rule name must not be blacklisted.
+		if (ruleNameBlacklist.contains(rule.name)) {
+			error(
+				String.format(GTValidator.ERROR_MESSAGE_RULE_NAME_FORBIDDEN, rule.name),
 				GTPackage.Literals.RULE__NAME,
-				GTValidator.INVALID_NAME_EXPECT_LOWER_CASE
+				GTValidator.INVALID_NAME_BLACKLISTED
 			)
+		} else {
+			// The rule name should be lowerCamelCase.
+			if (rule.name.contains('_')) {
+				warning(
+					String.format(ERROR_MESSAGE_RULE_NAME_CONTAINS_UNDERSCORES, rule.name),
+					GTPackage.Literals.RULE__NAME,
+					GTValidator.INVALID_NAME_EXPECT_CAMEL_CASE
+				)
+			} else {
+				// The rule name should start with a lower case character. 
+				if (!Character.isLowerCase(rule.name.charAt(0))) {
+					warning(
+						String.format(GTValidator.ERROR_MESSAGE_RULE_NAME_STARTS_WITH_LOWER_CASE, rule.name),
+						GTPackage.Literals.RULE__NAME,
+						GTValidator.INVALID_NAME_EXPECT_LOWER_CASE
+					)
+				}
+			}
 		}
 
 		// The rule must contain at least one constraint or refine multiple rules.
@@ -132,15 +188,12 @@ class GTValidator extends AbstractGTValidator {
 	 */
 	def static String getTimes(int count) {
 		switch (count) {
-			case 1: {
+			case 1:
 				return 'once'
-			}
-			case 2: {
+			case 2:
 				return 'twice'
-			}
-			default: {
+			default:
 				return count + ' times'
-			}
 		}
 	}
 }

@@ -9,17 +9,18 @@ import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.util.CancelIndicator
 
 import org.emoflon.ibex.gt.editor.gT.GTPackage
-import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Reference
+import org.emoflon.ibex.gt.editor.gT.OperatorNode
+import org.emoflon.ibex.gt.editor.gT.Node
+import org.emoflon.ibex.gt.editor.gT.Operator
+import org.emoflon.ibex.gt.editor.gT.OperatorReference
 
 /** 
  * Applying syntax highlighting configuration.
- * 
- * @author Patrick Robrecht
  */
 class GTHighlightingCalculator extends DefaultSemanticHighlightingCalculator {
-	override void provideHighlightingFor(XtextResource resource,
-		IHighlightedPositionAcceptor acceptor, CancelIndicator cancelIndicator) {
+	override void provideHighlightingFor(XtextResource resource, IHighlightedPositionAcceptor acceptor,
+		CancelIndicator cancelIndicator) {
 		if (resource === null || resource.contents.length === 0) {
 			return
 		}
@@ -31,14 +32,33 @@ class GTHighlightingCalculator extends DefaultSemanticHighlightingCalculator {
 
 	def hightlightElement(EObject element, IHighlightedPositionAcceptor acceptor) {
 		if (element instanceof Node) {
-			val style = GTHighlightingConfiguration.getStyle(element.bindingType)
-			this.highlightFeature(acceptor, element, GTPackage.Literals.NODE__BINDING_TYPE, style)
+			var String style = getStyle(null)
+			if (element instanceof OperatorNode) {
+				style = getStyle(element.operator)
+				this.highlightFeature(acceptor, element, GTPackage.Literals.OPERATOR_NODE__OPERATOR, style)
+			}
 			this.highlightFeature(acceptor, element, GTPackage.Literals.NODE__NAME, style)
 			this.highlightFeature(acceptor, element, GTPackage.Literals.NODE__TYPE, style)
 		}
+
 		if (element instanceof Reference) {
-			val style = GTHighlightingConfiguration.getStyle(element.bindingType)
+			var style = getStyle(null)
+			if (element instanceof OperatorReference) {
+				style = getStyle(element.operator)
+			}
 			this.highlightNode(acceptor, element, style)
+		}
+	}
+
+	def getStyle(Operator operator) {
+		if (operator === null) {
+			return GTHighlightingConfiguration.CONTEXT
+		}
+		if (operator === Operator.CREATE) {
+			return GTHighlightingConfiguration.CREATE
+		}
+		if (operator === Operator.DELETE) {
+			return GTHighlightingConfiguration.DELETE
 		}
 	}
 
@@ -47,9 +67,10 @@ class GTHighlightingCalculator extends DefaultSemanticHighlightingCalculator {
 		acceptor.addPosition(node.getOffset(), node.getLength(), style)
 	}
 
-	def void highlightFeature(IHighlightedPositionAcceptor acceptor, EObject element, EStructuralFeature feature, String style) {
-		for (node: NodeModelUtils.findNodesForFeature(element, feature)) {
+	def void highlightFeature(IHighlightedPositionAcceptor acceptor, EObject element, EStructuralFeature feature,
+		String style) {
+		for (node : NodeModelUtils.findNodesForFeature(element, feature)) {
 			acceptor.addPosition(node.getOffset(), node.getLength(), style)
-        }
+		}
 	}
 }

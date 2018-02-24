@@ -12,7 +12,7 @@ import org.junit.runner.RunWith
  */
 @RunWith(XtextRunner)
 @InjectWith(GTInjectorProvider)
-class AttributeParsingTest extends AbstractParsingTest {
+class GTParsingAttributesTest extends GTParsingTest {
 	@Test
 	def void validAttributeAssignments() {
 		val file = parseHelper.parse('''
