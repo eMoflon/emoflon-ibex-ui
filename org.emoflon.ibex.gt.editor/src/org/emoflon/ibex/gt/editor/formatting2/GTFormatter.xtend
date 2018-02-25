@@ -13,6 +13,7 @@ import org.emoflon.ibex.gt.editor.gT.Rule
 import java.util.List
 import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.gT.ContextReference
+import org.emoflon.ibex.gt.editor.gT.Import
 
 /**
  * Formatting
@@ -30,6 +31,10 @@ class GTFormatter extends AbstractFormatter2 {
 
 		// Empty line between each rule.
 		this.formatList(file.rules, document, 2, 2, 1)
+	}
+
+	def dispatch void format(Import i, extension IFormattableDocument document) {
+		i.regionFor.keyword("import").append[oneSpace]
 	}
 
 	def dispatch void format(Rule rule, extension IFormattableDocument document) {
