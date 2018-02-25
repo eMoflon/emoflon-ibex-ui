@@ -20,7 +20,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.ui.PlatformUI;
-import org.moflon.core.plugins.BuildPropertiesFileBuilder;
+import org.emoflon.ibex.tgg.ui.ide.admin.plugins.BuildPropertiesFileBuilder;
 import org.moflon.core.plugins.manifest.ManifestFileUpdater;
 import org.moflon.core.plugins.manifest.ManifestFileUpdater.AttributeUpdatePolicy;
 import org.moflon.core.plugins.manifest.PluginManifestConstants;
