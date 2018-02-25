@@ -2,27 +2,28 @@ Manifest-Version: 1.0
 Bundle-SymbolicName: org.emoflon.ibex.tgg.ide;singleton:=true
 Bundle-Name: org.emoflon.ibex.tgg.ui.ide
 Bundle-Version: 1.0.0.qualifier
-Require-Bundle: org.eclipse.emf.ecore,
- org.eclipse.emf.ecore.xmi,
- org.apache.log4j,
- org.eclipse.core.runtime,
- org.eclipse.core.commands,
- org.eclipse.jface,
- org.eclipse.ui.workbench,
- org.eclipse.core.resources,
- org.eclipse.xtext,
- org.eclipse.xtext.ui,
- org.eclipse.jdt.core,
+Require-Bundle: com.google.guava,
  net.sourceforge.plantuml.eclipse,
+ org.apache.log4j,
+ org.eclipse.core.commands,
+ org.eclipse.core.resources,
+ org.eclipse.core.runtime,
+ org.eclipse.e4.core.di,
+ org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.editor,
- com.google.guava,
- org.eclipse.xtext.xbase.lib,
+ org.eclipse.emf.ecore.xmi,
+ org.eclipse.jdt.core,
+ org.eclipse.jdt.ui,
+ org.eclipse.jface,
+ org.eclipse.pde.core,
+ org.eclipse.ui.workbench,
  org.eclipse.xtend.lib,
  org.eclipse.xtend.lib.macro,
- org.eclipse.pde.core,
- org.eclipse.jdt.ui,
+ org.eclipse.xtext,
+ org.eclipse.xtext.ui,
+ org.eclipse.xtext.xbase.lib,
  org.emoflon.ibex.tgg.editor,
- org.eclipse.e4.core.di,
+ org.moflon.core.plugins,
  org.moflon.core.ui
 Bundle-ManifestVersion: 2
 Bundle-ActivationPolicy: lazy
@@ -32,6 +33,5 @@ Bundle-Vendor: TU Darmstadt
 Bundle-ClassPath: .
 Export-Package: org.emoflon.ibex.tgg.ide.admin,
  org.emoflon.ibex.tgg.ide.transformation,
- org.emoflon.ibex.tgg.ide.visualisation,
- org.emoflon.ibex.tgg.ui.ide.admin.plugins
+ org.emoflon.ibex.tgg.ide.visualisation
 

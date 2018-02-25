@@ -1,4 +1,4 @@
-# eMoflon::IBex UI
+# eMoflon::IBeX UI
 Editors for Graph Transformation (GT) Rules and Triple Graph Grammars (TGGs)
 	used in [eMoflon::IBeX](https://github.com/eMoflon/emoflon-ibex)
 
