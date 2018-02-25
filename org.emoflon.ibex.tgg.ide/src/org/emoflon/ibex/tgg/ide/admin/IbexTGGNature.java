@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.ICommand;
@@ -20,7 +21,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.ui.PlatformUI;
-import org.emoflon.ibex.tgg.ui.ide.admin.plugins.BuildPropertiesFileBuilder;
+import org.moflon.core.plugins.BuildPropertiesFileBuilder;
 import org.moflon.core.plugins.manifest.ManifestFileUpdater;
 import org.moflon.core.plugins.manifest.ManifestFileUpdater.AttributeUpdatePolicy;
 import org.moflon.core.plugins.manifest.PluginManifestConstants;
@@ -176,7 +177,11 @@ public class IbexTGGNature implements IProjectNature {
 
 	private void setUpBuildProperties() throws CoreException {
 		logger.debug("Adding build.properties");
-        new BuildPropertiesFileBuilder().createBuildProperties(project, new NullProgressMonitor());
+		Properties buildProperties = new Properties();
+        buildProperties.put("bin.includes", "META-INF/, bin/, model/");
+        buildProperties.put("source..", "src/");
+        buildProperties.put("output..", "bin/");
+        new BuildPropertiesFileBuilder().createBuildProperties(project, new NullProgressMonitor(), buildProperties);
 	}
 
 	private void setUpManifestFile() throws CoreException, IOException {
