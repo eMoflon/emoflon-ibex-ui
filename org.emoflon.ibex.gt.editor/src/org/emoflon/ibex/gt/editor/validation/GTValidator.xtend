@@ -1,6 +1,5 @@
 package org.emoflon.ibex.gt.editor.validation
 
-import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.validation.Check
 
 import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
@@ -80,9 +79,8 @@ class GTValidator extends AbstractGTValidator {
 		}
 
 		// Imports must be unique.
-		val rootElement = EcoreUtil2.getRootContainer(importEcore)
-		val candidates = EcoreUtil2.getAllContentsOfType(rootElement, Import)
-		val importDeclarationCount = candidates.filter[name.equals(importEcore.name)].size
+		val file = importEcore.eContainer as GraphTransformationFile
+		val importDeclarationCount = file.imports.filter[name.equals(importEcore.name)].size
 		if (importDeclarationCount !== 1) {
 			warning(
 				String.format(GTValidator.ERROR_MESSAGE_IMPORT_MULTIPLE_DECLARATIONS, importEcore.name,
@@ -188,9 +186,8 @@ class GTValidator extends AbstractGTValidator {
 		}
 
 		// Rule names must be unique.
-		val rootElement = EcoreUtil2.getRootContainer(rule)
-		val candidates = EcoreUtil2.getAllContentsOfType(rootElement, Rule)
-		val ruleDeclarationCount = candidates.filter[name.equals(rule.name)].size
+		val file = rule.eContainer as GraphTransformationFile
+		val ruleDeclarationCount = file.rules.filter[name.equals(rule.name)].size
 		if (ruleDeclarationCount !== 1) {
 			error(
 				String.format(GTValidator.ERROR_MESSAGE_RULE_NAME_MULTIPLE_DECLARATIONS, rule.name,
