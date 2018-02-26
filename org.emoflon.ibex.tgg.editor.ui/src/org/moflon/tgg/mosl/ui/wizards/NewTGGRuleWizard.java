@@ -9,7 +9,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.ui.INewWizard;
-import org.emoflon.ibex.tgg.ide.admin.IbexWorkspaceUtil;
+import org.moflon.core.ui.UiUtilities;
 import org.moflon.tgg.mosl.defaults.DefaultFilesHelper;
 
 public class NewTGGRuleWizard extends AbstractMoflonWizard implements INewWizard {
@@ -33,7 +33,7 @@ public class NewTGGRuleWizard extends AbstractMoflonWizard implements INewWizard
 
 		IFile file = project.getFile(pathToFile);
 
-		IbexWorkspaceUtil.openDefaultEditorForFile(file);
+		UiUtilities.openDefaultEditorForFile(file);
 	}
 
 }

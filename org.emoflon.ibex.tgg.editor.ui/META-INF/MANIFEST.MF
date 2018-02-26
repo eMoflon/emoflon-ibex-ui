@@ -20,7 +20,9 @@ Require-Bundle: org.emoflon.ibex.tgg.editor;visibility:=reexport,
  org.eclipse.jdt.core,
  org.eclipse.core.resources,
  org.apache.log4j,
- org.emoflon.ibex.tgg.ide
+ org.emoflon.ibex.tgg.ide,
+ org.moflon.core.ui,
+ org.moflon.core.utilities
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.moflon.tgg.mosl.ui.contentassist,
  org.moflon.tgg.mosl.ui.contentassist.antlr,
