@@ -20,7 +20,7 @@ class GTParsingNodesTest extends GTParsingTest {
 	@Test
 	def void validContextNodes() {
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule a {
 				a: EPackage
@@ -35,7 +35,7 @@ class GTParsingNodesTest extends GTParsingTest {
 	@Test
 	def void validCreateAndDeleteNodes() {
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule a() {
 				++ a: EClass
@@ -51,7 +51,7 @@ class GTParsingNodesTest extends GTParsingTest {
 	def void errorIfNodeNameStartsWithCapital() {
 		val nodeName = "AnInvalidNodeName"
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule a {
 				«nodeName»: EObject
@@ -71,7 +71,7 @@ class GTParsingNodesTest extends GTParsingTest {
 	def void errorIfNodeNameBlacklisted() {
 		val nodeName = 'class'
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule a {
 				«nodeName»: EObject
@@ -90,7 +90,7 @@ class GTParsingNodesTest extends GTParsingTest {
 	def void errorIfNodeNameContainsUndercores() {
 		val nodeName = 'the_e_Object'
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule a {
 				«nodeName»: EObject
@@ -110,7 +110,7 @@ class GTParsingNodesTest extends GTParsingTest {
 	def void errorIfMultipleNodesWithTheSameName() {
 		val nodeName = 'a'
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule a {
 				«nodeName»: EAnnotation
@@ -130,7 +130,7 @@ class GTParsingNodesTest extends GTParsingTest {
 	@Test
 	def void errorIfNoSuchNodeType() {
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule a() {
 				o: Object
@@ -148,7 +148,7 @@ class GTParsingNodesTest extends GTParsingTest {
 	@Test
 	def void validContextReference() {
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule findClass() {
 				package: EPackage {
@@ -165,7 +165,7 @@ class GTParsingNodesTest extends GTParsingTest {
 	@Test
 	def void validCreateAndDeleteReferences() {
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule createAndDeleteClass() {
 				package: EPackage {
@@ -186,7 +186,7 @@ class GTParsingNodesTest extends GTParsingTest {
 	@Test
 	def void errorIfNoSuchReferenceTypeInMetaModel() {
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule deleteClass() {
 				package: EObject {
@@ -208,7 +208,7 @@ class GTParsingNodesTest extends GTParsingTest {
 	@Test
 	def void errorIfWrongTargetType() {
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule deleteClass() {
 				package: EPackage {

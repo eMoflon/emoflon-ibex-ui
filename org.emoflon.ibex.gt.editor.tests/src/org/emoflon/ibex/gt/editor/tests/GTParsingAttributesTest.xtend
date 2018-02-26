@@ -16,7 +16,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 	@Test
 	def void validAttributeAssignments() {
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule a {
 				classifier: EClassifier {
@@ -33,7 +33,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 	@Test
 	def void validAttributeConditions() {
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule a {
 				classifier: EClassifier {
@@ -50,7 +50,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 	@Test
 	def void errorIfNoSuchAttributeInMetaModel() {
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule a {
 				classifier: EObject {

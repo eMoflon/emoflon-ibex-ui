@@ -29,6 +29,9 @@ class GTValidator extends AbstractGTValidator {
 
 	// Error names.
 	public static val EMPTY_RULE = 'emptyRule'
+
+	public static val DUPLICATE_IMPORT = 'duplicateImport'
+
 	public static val INVALID_IMPORT = 'invalidImport'
 	public static val INVALID_NAME_BLACKLISTED = 'invalidNameBlacklisted'
 	public static val INVALID_NAME_EXPECT_CAMEL_CASE = 'invalidNameExpectCamelCase'
@@ -40,6 +43,8 @@ class GTValidator extends AbstractGTValidator {
 	// Error messages.
 	public static val ERROR_MESSAGE_FILE_DOES_NOT_EXIST = 'The file %s does not exist.'
 	public static val ERROR_MESSAGE_NO_META_MODEL = 'You must import the Ecore file of the meta-model.'
+
+	public static val ERROR_MESSAGE_IMPORT_MULTIPLE_DECLARATIONS = 'Import %s must not be declared %s.'
 
 	public static val ERROR_MESSAGE_NODE_NAME_CONTAINS_UNDERSCORES = 'Node name %s contains underscores. Use camelCase instead.'
 	public static val ERROR_MESSAGE_NODE_NAME_FORBIDDEN = 'Nodes cannot be named %s. Use a different name.'
@@ -73,6 +78,19 @@ class GTValidator extends AbstractGTValidator {
 				GTValidator.INVALID_IMPORT
 			)
 		}
+
+		// Imports must be unique.
+		val rootElement = EcoreUtil2.getRootContainer(importEcore)
+		val candidates = EcoreUtil2.getAllContentsOfType(rootElement, Import)
+		val importDeclarationCount = candidates.filter[name.equals(importEcore.name)].size
+		if (importDeclarationCount !== 1) {
+			warning(
+				String.format(GTValidator.ERROR_MESSAGE_IMPORT_MULTIPLE_DECLARATIONS, importEcore.name,
+					getTimes(importDeclarationCount)),
+				GTPackage.Literals.IMPORT__NAME,
+				GTValidator.DUPLICATE_IMPORT
+			)
+		}
 	}
 
 	@Check
@@ -96,7 +114,7 @@ class GTValidator extends AbstractGTValidator {
 			} else {
 				// The node name should start with a lower case character.
 				val firstCharacter = node.name.charAt(0)
-				if (!Character.isLowerCase(firstCharacter) && firstCharacter.equals('_')) {
+				if (Character.isUpperCase(firstCharacter)) {
 					warning(
 						String.format(GTValidator.ERROR_MESSAGE_NODE_NAME_STARTS_WITH_LOWER_CASE, node.name),
 						GTPackage.Literals.NODE__NAME,

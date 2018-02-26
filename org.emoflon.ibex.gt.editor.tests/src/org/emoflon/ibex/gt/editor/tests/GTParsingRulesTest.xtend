@@ -17,7 +17,7 @@ import org.junit.runner.RunWith
 @InjectWith(GTInjectorProvider)
 class GTParsingRulesTest extends GTParsingTest {
 	@Test
-	def void warningIfNoImport() {
+	def void errorIfNoImport() {
 		val file = parseHelper.parse('''
 			rule a {
 				object: EObject
@@ -29,6 +29,26 @@ class GTParsingRulesTest extends GTParsingTest {
 			GTPackage.eINSTANCE.graphTransformationFile,
 			GTValidator.MISSING_META_MODEL,
 			GTValidator.ERROR_MESSAGE_NO_META_MODEL
+		)
+	}
+
+	@Test
+	def void warningIfDuplicateImport() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			import "«ecoreImport»"
+			
+			rule a {
+				object: EObject
+			}
+		''')
+		this.assertValidResource(file)
+		this.assertValidationIssues(
+			file,
+			GTPackage.eINSTANCE.import,
+			GTValidator.DUPLICATE_IMPORT,
+			Severity.WARNING,
+			String.format(GTValidator.ERROR_MESSAGE_IMPORT_MULTIPLE_DECLARATIONS, ecoreImport, 'twice')
 		)
 	}
 
@@ -54,7 +74,7 @@ class GTParsingRulesTest extends GTParsingTest {
 	@Test
 	def void errorIfEmptyRuleBody() {
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule a() {}
 		''')
@@ -70,7 +90,7 @@ class GTParsingRulesTest extends GTParsingTest {
 	@Test
 	def void validIfEmptyRuleBodyAndMultipleRefinement() {
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule a {
 				object1: EObject
@@ -89,7 +109,7 @@ class GTParsingRulesTest extends GTParsingTest {
 	@Test
 	def void validModifiers() {
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			abstract rule a() {
 				object1: EObject
@@ -107,7 +127,7 @@ class GTParsingRulesTest extends GTParsingTest {
 	@Test
 	def void errorForSelfRefinement() {
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule a
 			refines a {
@@ -126,7 +146,7 @@ class GTParsingRulesTest extends GTParsingTest {
 	@Test
 	def void errorIfLoopinRulesRefinementHierarchyLevel1() {
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule a
 			refines b {
@@ -150,7 +170,7 @@ class GTParsingRulesTest extends GTParsingTest {
 	@Test
 	def void errorIfLoopinRulesRefinementHierarchyLevel2() {
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule a
 			refines b {
@@ -179,7 +199,7 @@ class GTParsingRulesTest extends GTParsingTest {
 	@Test
 	def void errorIfNoDistinctSuperRules() {
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule a {
 				object: EObject
@@ -200,7 +220,7 @@ class GTParsingRulesTest extends GTParsingTest {
 	@Test
 	def void errorIfRuleNameDuplicates() {
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule a() {
 				object: EObject
@@ -236,7 +256,7 @@ class GTParsingRulesTest extends GTParsingTest {
 	def void errorIfRuleNameContainsUnderscores() {
 		val ruleName = 'get_an_e_Object'
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule «ruleName» {
 				a: EObject
@@ -256,7 +276,7 @@ class GTParsingRulesTest extends GTParsingTest {
 	def void errorIfRuleNameInBlacklist() {
 		val ruleName = "hashCode"
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule «ruleName» {
 				a: EObject
@@ -275,7 +295,7 @@ class GTParsingRulesTest extends GTParsingTest {
 	def void errorIfRuleNameStartsWithCapital() {
 		val ruleName = "AnInvalidName"
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule «ruleName» {
 				a: EObject
@@ -294,7 +314,7 @@ class GTParsingRulesTest extends GTParsingTest {
 	@Test
 	def void validRuleWithNoParameters() {
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule a() {
 				a: EObject
@@ -307,7 +327,7 @@ class GTParsingRulesTest extends GTParsingTest {
 	@Test
 	def void validRuleWithOneParameter() {
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule a(name: String) {
 				a: EObject
@@ -321,7 +341,7 @@ class GTParsingRulesTest extends GTParsingTest {
 	@Test
 	def void validRuleWithThreeParameters() {
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule a(age: int, name: String, isMale: boolean) {
 				a: EObject
@@ -335,7 +355,7 @@ class GTParsingRulesTest extends GTParsingTest {
 	@Test
 	def void errorIfParameterListEndsWithComma() {
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule a(age: int,) {
 				a: Ebject
@@ -353,7 +373,7 @@ class GTParsingRulesTest extends GTParsingTest {
 	@Test
 	def void errorIfParameterListWithNoColons() {
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule A(age int, name String, isMale boolean) {
 				a: Object
