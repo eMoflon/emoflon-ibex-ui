@@ -52,8 +52,10 @@ class GTFormatter extends AbstractFormatter2 {
 
 		rule.parameters.forEach[it.format]
 
-		rule.regionFor.keyword(',').prepend[noSpace]
-		rule.regionFor.keyword(',').append[oneSpace]
+		rule.regionFor.keywords(',').forEach [
+			it.prepend[noSpace]
+			it.append[oneSpace]
+		]
 
 		// No space between last parameter and ")", but one space between ")" and "{"
 		rule.regionFor.keyword(")").prepend[noSpace]
