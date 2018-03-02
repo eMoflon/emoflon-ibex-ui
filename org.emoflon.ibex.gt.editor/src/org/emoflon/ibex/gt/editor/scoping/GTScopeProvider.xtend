@@ -120,7 +120,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 			resource.load(null)
 			return Optional.of(resource)
 		} catch (Exception e) {
-			return Optional.ofNullable(null)
+			return Optional.empty
 		}
 	}
 

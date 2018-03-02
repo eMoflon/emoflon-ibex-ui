@@ -16,7 +16,7 @@ import org.emoflon.ibex.gt.editor.gT.Rule
 class GTPlantUMLGenerator {
 	static val ContextColor = 'Black'
 	static val CreateColor = 'DarkGreen'
-	static val DeleteColor = 'Red'
+	static val DeleteColor = 'Crimson'
 
 	/**
 	 * Returns the PlantUML code for the visualization of an empty file.
