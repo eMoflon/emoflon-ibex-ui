@@ -1,11 +1,8 @@
 package org.emoflon.ibex.gt.editor.scoping
 
-import java.util.Optional
-import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource.CyclicLinkingException
 import org.eclipse.xtext.scoping.Scopes
@@ -18,6 +15,7 @@ import org.emoflon.ibex.gt.editor.gT.NAC
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Rule
+import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 
 /**
  * This class contains custom scoping description.
@@ -103,25 +101,8 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		return Scopes.scopeFor([])
 	}
 
-	def static getClassesScope(GraphTransformationFile file) {
-		val classes = newArrayList()
-		file.imports.forEach [
-			loadEcoreModel(it.name).ifPresent([
-				classes.addAll(EcoreUtil2.getAllContentsOfType(it.contents.get(0), EClass))
-			])
-		]
-		return Scopes.scopeFor(classes)
-	}
-
-	def static loadEcoreModel(String uri) {
-		try {
-			var resourceSet = new ResourceSetImpl()
-			var resource = resourceSet.getResource(URI.createURI(uri), true)
-			resource.load(null)
-			return Optional.of(resource)
-		} catch (Exception e) {
-			return Optional.empty
-		}
+	private def static getClassesScope(GraphTransformationFile file) {
+		return Scopes.scopeFor(GTEditorModelUtils.getClasses(file))
 	}
 
 	/**

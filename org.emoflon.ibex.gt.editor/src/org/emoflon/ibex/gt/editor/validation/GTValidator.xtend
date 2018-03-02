@@ -12,8 +12,7 @@ import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.gT.OperatorNode
 import org.emoflon.ibex.gt.editor.gT.OperatorReference
 import org.emoflon.ibex.gt.editor.gT.Rule
-import org.emoflon.ibex.gt.editor.scoping.GTScopeProvider
-import org.emoflon.ibex.gt.editor.utils.GTEditorUtils
+import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 
 /**
  * This class contains custom validation rules. 
@@ -100,7 +99,7 @@ class GTValidator extends AbstractGTValidator {
 
 	@Check
 	def checkImports(Import importEcore) {
-		if (!GTScopeProvider.loadEcoreModel(importEcore.name).present) {
+		if (!GTEditorModelUtils.loadEcoreModel(importEcore.name).present) {
 			error(
 				String.format(IMPORT_FILE_DOES_NOT_EXIST_MESSAGE, importEcore.name),
 				GTPackage.Literals.IMPORT__NAME,
@@ -170,14 +169,14 @@ class GTValidator extends AbstractGTValidator {
 	def checkOperatorNode(OperatorNode node) {
 		if (node.operator == Operator.CREATE) {
 			// If the node is a create node, its references must be create references.
-			GTEditorUtils.getContextReferences(node).forEach [
+			GTEditorModelUtils.getContextReferences(node).forEach [
 				error(
 					String.format(REFERENCE_EXPECT_CREATE_MESSAGE, it.type.name, it.target.name),
 					GTPackage.Literals.NODE__CONSTRAINTS,
 					REFERENCE_EXPECT_CREATE
 				)
 			]
-			GTEditorUtils.getDeleteReferences(node).forEach [
+			GTEditorModelUtils.getDeleteReferences(node).forEach [
 				error(
 					String.format(REFERENCE_EXPECT_CREATE_MESSAGE, it.type.name, it.target.name),
 					GTPackage.Literals.NODE__CONSTRAINTS,
@@ -190,21 +189,22 @@ class GTValidator extends AbstractGTValidator {
 				error(
 					String.format(CREATE_NODE_TYPE_ABSTRACT_MESSAGE, node.name),
 					GTPackage.Literals.NODE__TYPE,
-					CREATE_NODE_TYPE_ABSTRACT
+					CREATE_NODE_TYPE_ABSTRACT,
+					node.type.name
 				)
 			}
 		}
 
 		// If the node is a delete node, its references must be delete references.
 		if (node.operator == Operator.DELETE) {
-			GTEditorUtils.getContextReferences(node).forEach [
+			GTEditorModelUtils.getContextReferences(node).forEach [
 				error(
 					String.format(REFERENCE_EXPECT_DELETE_MESSAGE, it.type.name, it.target.name),
 					GTPackage.Literals.NODE__CONSTRAINTS,
 					REFERENCE_EXPECT_DELETE
 				)
 			]
-			GTEditorUtils.getCreateReferences(node).forEach [
+			GTEditorModelUtils.getCreateReferences(node).forEach [
 				error(
 					String.format(REFERENCE_EXPECT_DELETE_MESSAGE, it.type.name, it.target.name),
 					GTPackage.Literals.NODE__CONSTRAINTS,

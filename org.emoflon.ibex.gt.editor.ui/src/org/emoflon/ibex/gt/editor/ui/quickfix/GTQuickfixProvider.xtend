@@ -1,8 +1,11 @@
 package org.emoflon.ibex.gt.editor.ui.quickfix
 
+import org.eclipse.emf.ecore.EClass
+
 import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
 import org.eclipse.xtext.ui.editor.quickfix.Fix
+import org.eclipse.xtext.ui.editor.utils.EditorUtils
 import org.eclipse.xtext.validation.Issue
 
 import org.emoflon.ibex.gt.editor.gT.ContextReference
@@ -15,8 +18,8 @@ import org.emoflon.ibex.gt.editor.gT.OperatorNode
 import org.emoflon.ibex.gt.editor.gT.OperatorReference
 import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Rule
-import org.emoflon.ibex.gt.editor.utils.GTEditorUtils
 import org.emoflon.ibex.gt.editor.validation.GTValidator
+import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 
 /**
  * Custom quickfixes.
@@ -163,6 +166,42 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 		)
 	}
 
+	@Fix(GTValidator.CREATE_NODE_TYPE_ABSTRACT)
+	def changeNodeType(Issue issue, IssueResolutionAcceptor acceptor) {
+		val allClasses = EditorUtils.getActiveXtextEditor().document.readOnly [ resource |
+			val file = resource.contents.get(0)
+			if (file instanceof GraphTransformationFile) {
+				GTEditorModelUtils.getClasses(file)
+			}
+		]
+		val abstractClass = allClasses.findFirst [
+			it.name == issue.data.get(0) // the name of the abstract class
+		]
+		allClasses.filter[!it.abstract].forEach [
+			var prefix = ''
+			if (it.EAllSuperTypes.contains(abstractClass)) {
+				// Workaround to display subclasses of the current abstract class as first elements
+				prefix = '[Subclass] '
+			}
+			this.acceptChangeNodeType(issue, acceptor, prefix, it)
+		]
+	}
+
+	private def acceptChangeNodeType(Issue issue, IssueResolutionAcceptor acceptor, String prefix, EClass newClass) {
+		val label = String.format(prefix + "Replace node type with '%s'.", newClass.name)
+		acceptor.accept(
+			issue,
+			label,
+			label,
+			null,
+			[ element, context |
+				if (element instanceof Node) {
+					element.type = newClass
+				}
+			]
+		)
+	}
+
 	@Fix(GTValidator.REFERENCE_EXPECT_CREATE)
 	def convertToCreateReference(Issue issue, IssueResolutionAcceptor acceptor) {
 		val label = 'Replace with create reference.'
@@ -188,7 +227,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 					val messageSplit = issue.message.split("'")
 					val referenceTypeName = messageSplit.get(1)
 					val referenceTargetNodeName = messageSplit.get(3)
-					GTEditorUtils.getReferences(node).filter [
+					GTEditorModelUtils.getReferences(node).filter [
 						it.type.name.equals(referenceTypeName) && it.target.name.equals(referenceTargetNodeName)
 					].forEach [
 						if (it instanceof ContextReference) {
