@@ -79,18 +79,18 @@ class GTEditorModelUtils {
 	}
 
 	/**
-	 * Returns the create operator references of a node.
+	 * Returns the created references of a node.
 	 */
-	static def getCreateReferences(Node node) {
+	static def getCreatedReferences(Node node) {
 		return getOperatorReferences(node).filter [
 			it.operator == Operator.CREATE
 		]
 	}
 
 	/**
-	 * Returns the delete operator references of a node.
+	 * Returns the deleted references of a node.
 	 */
-	static def getDeleteReferences(Node node) {
+	static def getDeletedReferences(Node node) {
 		return getOperatorReferences(node).filter [
 			it.operator == Operator.DELETE
 		]
