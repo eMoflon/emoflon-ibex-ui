@@ -67,8 +67,8 @@ class GTValidator extends AbstractGTValidator {
 	public static val NODE_NAME_MULTIPLE_DECLARATIONS_MESSAGE = "Node '%s' must not be declared %s."
 	public static val NODE_NAME_STARTS_WITH_LOWER_CASE_MESSAGE = "Node '%s' should start with a lower case character."
 
-	public static val CREATE_NODE_TYPE_ABSTRACT = CODE_PREFIX + "createNodeAbstractType"
-	public static val CREATE_NODE_TYPE_ABSTRACT_MESSAGE = "The type of create node '%s' must not be abstract."
+	public static val CREATE_NODE_TYPE_ABSTRACT = CODE_PREFIX + "createdNodeAbstractType"
+	public static val CREATE_NODE_TYPE_ABSTRACT_MESSAGE = "The type of created node '%s' must not be abstract."
 
 	public static val NODE_TARGET_EXPECT_CONTEXT = CODE_PREFIX + "invalidNodeTargetExpectContext"
 	public static val NODE_TARGET_EXPECT_CONTEXT_MESSAGE = "The target of the context reference '%s' must be a context node."
@@ -168,23 +168,27 @@ class GTValidator extends AbstractGTValidator {
 	@Check
 	def checkOperatorNode(OperatorNode node) {
 		if (node.operator == Operator.CREATE) {
-			// If the node is a create node, its references must be create references.
+			// If the node is a created node, its references must be create references.
 			GTEditorModelUtils.getContextReferences(node).forEach [
 				error(
 					String.format(REFERENCE_EXPECT_CREATE_MESSAGE, it.type.name, it.target.name),
 					GTPackage.Literals.NODE__CONSTRAINTS,
-					REFERENCE_EXPECT_CREATE
+					REFERENCE_EXPECT_CREATE,
+					it.type.name,
+					it.target.name
 				)
 			]
 			GTEditorModelUtils.getDeleteReferences(node).forEach [
 				error(
 					String.format(REFERENCE_EXPECT_CREATE_MESSAGE, it.type.name, it.target.name),
 					GTPackage.Literals.NODE__CONSTRAINTS,
-					REFERENCE_EXPECT_CREATE
+					REFERENCE_EXPECT_CREATE,
+					it.type.name,
+					it.target.name
 				)
 			]
 
-			// The type of a create node must not be abstract.
+			// The type of a created node must not be abstract.
 			val rule = node.eContainer as Rule
 			if (node.type.abstract && (!rule.abstract)) {
 				error(
@@ -197,20 +201,24 @@ class GTValidator extends AbstractGTValidator {
 			}
 		}
 
-		// If the node is a delete node, its references must be delete references.
+		// If the node is a deleted node, its references must be delete references.
 		if (node.operator == Operator.DELETE) {
 			GTEditorModelUtils.getContextReferences(node).forEach [
 				error(
 					String.format(REFERENCE_EXPECT_DELETE_MESSAGE, it.type.name, it.target.name),
 					GTPackage.Literals.NODE__CONSTRAINTS,
-					REFERENCE_EXPECT_DELETE
+					REFERENCE_EXPECT_DELETE,
+					it.type.name,
+					it.target.name
 				)
 			]
 			GTEditorModelUtils.getCreateReferences(node).forEach [
 				error(
 					String.format(REFERENCE_EXPECT_DELETE_MESSAGE, it.type.name, it.target.name),
 					GTPackage.Literals.NODE__CONSTRAINTS,
-					REFERENCE_EXPECT_DELETE
+					REFERENCE_EXPECT_DELETE,
+					it.type.name,
+					it.target.name
 				)
 			]
 		}
@@ -223,7 +231,8 @@ class GTValidator extends AbstractGTValidator {
 			error(
 				String.format(NODE_TARGET_EXPECT_CONTEXT_MESSAGE, reference.type.name),
 				GTPackage.Literals.REFERENCE__TARGET,
-				NODE_TARGET_EXPECT_CONTEXT
+				NODE_TARGET_EXPECT_CONTEXT,
+				reference.target.name
 			)
 		}
 	}
@@ -231,28 +240,30 @@ class GTValidator extends AbstractGTValidator {
 	@Check
 	def checkOperatorReference(OperatorReference reference) {
 		if (reference.operator == Operator.CREATE) {
-			// The target of a create reference must be a context or a create node.
+			// The target of a create reference must be a context or a created node.
 			if (reference.target instanceof OperatorNode) {
 				val target = reference.target as OperatorNode
 				if (target.operator == Operator.DELETE) {
 					error(
 						String.format(NODE_TARGET_EXPECT_CONTEXT_OR_CREATE_MESSAGE, reference.type.name),
 						GTPackage.Literals.REFERENCE__TARGET,
-						NODE_TARGET_EXPECT_CONTEXT_OR_CREATE
+						NODE_TARGET_EXPECT_CONTEXT_OR_CREATE,
+						reference.target.name
 					)
 				}
 			}
 		}
 
 		if (reference.operator == Operator.DELETE) {
-			// The target of a delete reference must be a context or a delete node.
+			// The target of a delete reference must be a context or a deleted node.
 			if (reference.target instanceof OperatorNode) {
 				val target = reference.target as OperatorNode
 				if (target.operator == Operator.CREATE) {
 					error(
 						String.format(NODE_TARGET_EXPECT_CONTEXT_OR_DELETE_MESSAGE, reference.type.name),
 						GTPackage.Literals.REFERENCE__TARGET,
-						NODE_TARGET_EXPECT_CONTEXT_OR_DELETE
+						NODE_TARGET_EXPECT_CONTEXT_OR_DELETE,
+						reference.target.name
 					)
 				}
 			}

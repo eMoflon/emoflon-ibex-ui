@@ -113,7 +113,8 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	@Fix(GTValidator.NODE_TARGET_EXPECT_CONTEXT_OR_CREATE)
 	@Fix(GTValidator.NODE_TARGET_EXPECT_CONTEXT_OR_DELETE)
 	def converTargetNodeToContextNode(Issue issue, IssueResolutionAcceptor acceptor) {
-		val label = 'Convert target node to a context node.'
+		val targetNodeName = issue.data.get(0)
+		val label = '''Convert node '«targetNodeName»' to to a context node.'''
 		acceptor.accept(
 			issue,
 			label,
@@ -138,19 +139,19 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	}
 
 	@Fix(GTValidator.NODE_TARGET_EXPECT_CONTEXT_OR_CREATE)
-	def converTargetNodeToCreateNode(Issue issue, IssueResolutionAcceptor acceptor) {
-		val label = 'Convert target node to a created node.'
-		this.acceptConvertOperatorNode(issue, acceptor, label, Operator.CREATE)
+	def converTargetNodeToCreatedNode(Issue issue, IssueResolutionAcceptor acceptor) {
+		this.acceptConvertOperatorNode(issue, acceptor, 'created', Operator.CREATE)
 	}
 
 	@Fix(GTValidator.NODE_TARGET_EXPECT_CONTEXT_OR_DELETE)
-	def converTargetNodeToDeleteNode(Issue issue, IssueResolutionAcceptor acceptor) {
-		val label = 'Convert target node to a deleted node.'
-		this.acceptConvertOperatorNode(issue, acceptor, label, Operator.DELETE)
+	def converTargetNodeToDeletedNode(Issue issue, IssueResolutionAcceptor acceptor) {
+		this.acceptConvertOperatorNode(issue, acceptor, 'deleted', Operator.DELETE)
 	}
 
-	private def acceptConvertOperatorNode(Issue issue, IssueResolutionAcceptor acceptor, String label,
+	private def acceptConvertOperatorNode(Issue issue, IssueResolutionAcceptor acceptor, String operatorName,
 		Operator newOperator) {
+		val targetNodeName = issue.data.get(0)
+		val label = '''Convert node '«targetNodeName»' to a «operatorName» node.'''
 		acceptor.accept(
 			issue,
 			label,
@@ -165,7 +166,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			]
 		)
 	}
-	
+
 	@Fix(GTValidator.CREATE_NODE_TYPE_ABSTRACT)
 	def addAbstractModifierToRuleWithAbstractNodeType(Issue issue, IssueResolutionAcceptor acceptor) {
 		val label = String.format("[Rule] Make rule '%s' abstract.", issue.data.get(1))
@@ -220,19 +221,20 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	}
 
 	@Fix(GTValidator.REFERENCE_EXPECT_CREATE)
-	def convertToCreateReference(Issue issue, IssueResolutionAcceptor acceptor) {
-		val label = 'Replace with create reference.'
-		this.acceptConvertOperatorReference(issue, acceptor, label, Operator.CREATE)
+	def convertToCreatedReference(Issue issue, IssueResolutionAcceptor acceptor) {
+		this.acceptConvertOperatorReference(issue, acceptor, 'created', Operator.CREATE)
 	}
 
 	@Fix(GTValidator.REFERENCE_EXPECT_DELETE)
-	def convertToDeleteReference(Issue issue, IssueResolutionAcceptor acceptor) {
-		val label = 'Replace with delete reference.'
-		this.acceptConvertOperatorReference(issue, acceptor, label, Operator.DELETE)
+	def convertToDeletedReference(Issue issue, IssueResolutionAcceptor acceptor) {
+		this.acceptConvertOperatorReference(issue, acceptor, 'deleted', Operator.DELETE)
 	}
 
-	private def acceptConvertOperatorReference(Issue issue, IssueResolutionAcceptor acceptor, String label,
+	private def acceptConvertOperatorReference(Issue issue, IssueResolutionAcceptor acceptor, String operatorName,
 		Operator newOperator) {
+		val referenceTypeName = issue.data.get(0)
+		val referenceTargetNodeName = issue.data.get(1)
+		val label = '''Convert reference '«referenceTypeName»' to a «operatorName» reference.'''
 		acceptor.accept(
 			issue,
 			label,
@@ -241,9 +243,6 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			[ element, context |
 				if (element instanceof Node) {
 					val node = element as Node
-					val messageSplit = issue.message.split("'")
-					val referenceTypeName = messageSplit.get(1)
-					val referenceTargetNodeName = messageSplit.get(3)
 					GTEditorModelUtils.getReferences(node).filter [
 						it.type.name.equals(referenceTypeName) && it.target.name.equals(referenceTargetNodeName)
 					].forEach [
