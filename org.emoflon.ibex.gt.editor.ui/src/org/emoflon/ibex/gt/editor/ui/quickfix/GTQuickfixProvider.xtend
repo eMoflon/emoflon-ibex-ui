@@ -5,9 +5,11 @@ import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
 import org.eclipse.xtext.ui.editor.quickfix.Fix
 import org.eclipse.xtext.validation.Issue
 
-import org.emoflon.ibex.gt.editor.validation.GTValidator
+import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
+import org.emoflon.ibex.gt.editor.gT.Import
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Rule
+import org.emoflon.ibex.gt.editor.validation.GTValidator
 
 /**
  * Custom quickfixes.
@@ -15,6 +17,24 @@ import org.emoflon.ibex.gt.editor.gT.Rule
  * See https://www.eclipse.org/Xtext/documentation/310_eclipse_support.html#quick-fixes
  */
 class GTQuickfixProvider extends DefaultQuickfixProvider {
+
+	@Fix(GTValidator.IMPORT_DUPLICATE)
+	@Fix(GTValidator.IMPORT_FILE_DOES_NOT_EXIST)
+	def removeDuplicateImport(Issue issue, IssueResolutionAcceptor acceptor) {
+		var label = 'Remove import.'
+		acceptor.accept(
+			issue,
+			label,
+			label,
+			null,
+			[ element, context |
+				if (element instanceof Import) {
+					val file = element.eContainer as GraphTransformationFile
+					file.imports.remove(element)
+				}
+			]
+		)
+	}
 
 	@Fix(GTValidator.NAME_EXPECT_LOWER_CASE)
 	def convertNameToLowerCase(Issue issue, IssueResolutionAcceptor acceptor) {
@@ -34,11 +54,11 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 		)
 	}
 
-	def convertNodeNameToLowerCase(Node node) {
+	private def convertNodeNameToLowerCase(Node node) {
 		node.name = node.name.toFirstLower
 	}
 
-	def convertRuleNameToLowerCase(Rule rule) {
+	private def convertRuleNameToLowerCase(Rule rule) {
 		rule.name = rule.name.toFirstLower
 	}
 
@@ -60,16 +80,16 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 		)
 	}
 
-	def convertNodeNameToLowerCamelCase(Node node) {
+	private def convertNodeNameToLowerCamelCase(Node node) {
 		// Keep leading _ if present before.
 		node.name = (if(node.name.startsWith('_')) '_' else '') + convertToLowerCamelCase(node.name)
 	}
 
-	def convertRuleNameToLowerCamelCase(Rule rule) {
+	private def convertRuleNameToLowerCamelCase(Rule rule) {
 		rule.name = convertToLowerCamelCase(rule.name)
 	}
 
-	def convertToLowerCamelCase(String s) {
+	private def convertToLowerCamelCase(String s) {
 		var camelCase = ''
 		for (part : s.split('_')) {
 			if (part.length > 0) {
