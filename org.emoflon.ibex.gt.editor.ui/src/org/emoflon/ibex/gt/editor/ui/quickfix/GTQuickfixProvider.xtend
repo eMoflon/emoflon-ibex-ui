@@ -165,9 +165,26 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			]
 		)
 	}
+	
+	@Fix(GTValidator.CREATE_NODE_TYPE_ABSTRACT)
+	def addAbstractModifierToRuleWithAbstractNodeType(Issue issue, IssueResolutionAcceptor acceptor) {
+		val label = String.format("[Rule] Make rule '%s' abstract.", issue.data.get(1))
+		acceptor.accept(
+			issue,
+			label,
+			label,
+			null,
+			[ element, context |
+				val rule = element.eContainer
+				if (rule instanceof Rule) {
+					rule.abstract = true
+				}
+			]
+		)
+	}
 
 	@Fix(GTValidator.CREATE_NODE_TYPE_ABSTRACT)
-	def changeNodeType(Issue issue, IssueResolutionAcceptor acceptor) {
+	def changeAbstractNodeTypeToConcreteType(Issue issue, IssueResolutionAcceptor acceptor) {
 		val allClasses = EditorUtils.getActiveXtextEditor().document.readOnly [ resource |
 			val file = resource.contents.get(0)
 			if (file instanceof GraphTransformationFile) {

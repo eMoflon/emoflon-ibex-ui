@@ -185,12 +185,14 @@ class GTValidator extends AbstractGTValidator {
 			]
 
 			// The type of a create node must not be abstract.
-			if (node.type.abstract) {
+			val rule = node.eContainer as Rule
+			if (node.type.abstract && (!rule.abstract)) {
 				error(
 					String.format(CREATE_NODE_TYPE_ABSTRACT_MESSAGE, node.name),
 					GTPackage.Literals.NODE__TYPE,
 					CREATE_NODE_TYPE_ABSTRACT,
-					node.type.name
+					node.type.name,
+					rule.name
 				)
 			}
 		}
