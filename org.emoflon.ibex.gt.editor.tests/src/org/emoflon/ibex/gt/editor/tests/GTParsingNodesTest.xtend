@@ -343,12 +343,7 @@ class GTParsingNodesTest extends GTParsingTest {
 
 	@Test
 	def void errorIfDeletedReferenceWithContextNodeTargetNode() {
-		this.assertValidationErrors(
-			this.parseNodesWithReference('', '--', ''),
-			GTPackage.eINSTANCE.operatorReference,
-			GTValidator.NODE_TARGET_EXPECT_DELETE,
-			String.format(GTValidator.NODE_TARGET_EXPECT_DELETE_MESSAGE, 'eClassifiers')
-		)
+		this.assertValid(this.parseNodesWithReference('', '--', ''))
 	}
 
 	@Test
@@ -356,8 +351,8 @@ class GTParsingNodesTest extends GTParsingTest {
 		this.assertValidationErrors(
 			this.parseNodesWithReference('', '--', '++'),
 			GTPackage.eINSTANCE.operatorReference,
-			GTValidator.NODE_TARGET_EXPECT_DELETE,
-			String.format(GTValidator.NODE_TARGET_EXPECT_DELETE_MESSAGE, 'eClassifiers')
+			GTValidator.NODE_TARGET_EXPECT_CONTEXT_OR_DELETE,
+			String.format(GTValidator.NODE_TARGET_EXPECT_CONTEXT_OR_DELETE_MESSAGE, 'eClassifiers')
 		)
 	}
 

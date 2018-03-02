@@ -75,10 +75,10 @@ class GTValidator extends AbstractGTValidator {
 	public static val NODE_TARGET_EXPECT_CONTEXT_MESSAGE = 'The target of the context reference %s must be a context node.'
 
 	public static val NODE_TARGET_EXPECT_CONTEXT_OR_CREATE = CODE_PREFIX + 'invalidNodeTargetExpectContextOrCreate'
-	public static val NODE_TARGET_EXPECT_CONTEXT_OR_CREATE_MESSAGE = 'The target of the created reference %s must be a context or created node.'
+	public static val NODE_TARGET_EXPECT_CONTEXT_OR_CREATE_MESSAGE = 'The target of the created reference %s must be a context or a created node.'
 
-	public static val NODE_TARGET_EXPECT_DELETE = CODE_PREFIX + 'invalidNodeTargetExpectDelete'
-	public static val NODE_TARGET_EXPECT_DELETE_MESSAGE = 'The target of the deleted reference %s must be a deleted node.'
+	public static val NODE_TARGET_EXPECT_CONTEXT_OR_DELETE = CODE_PREFIX + 'invalidNodeTargetExpectContextOrDelete'
+	public static val NODE_TARGET_EXPECT_CONTEXT_OR_DELETE_MESSAGE = 'The target of the deleted reference %s must be a context or a deleted node.'
 
 	// Errors for references.
 	public static val REFERENCE_EXPECT_CREATE = CODE_PREFIX + "referenceExpectCreateReference"
@@ -240,23 +240,19 @@ class GTValidator extends AbstractGTValidator {
 					)
 				}
 			}
-		} else {
-			// The target of a delete reference must be a delete node.
+		}
+
+		if (reference.operator == Operator.DELETE) {
+			// The target of a delete reference must be a context or a delete node.
 			if (reference.target instanceof OperatorNode) {
 				val target = reference.target as OperatorNode
 				if (target.operator == Operator.CREATE) {
 					error(
-						String.format(NODE_TARGET_EXPECT_DELETE_MESSAGE, reference.type.name),
+						String.format(NODE_TARGET_EXPECT_CONTEXT_OR_DELETE_MESSAGE, reference.type.name),
 						GTPackage.Literals.REFERENCE__TARGET,
-						NODE_TARGET_EXPECT_DELETE
+						NODE_TARGET_EXPECT_CONTEXT_OR_DELETE
 					)
 				}
-			} else {
-				error(
-					String.format(NODE_TARGET_EXPECT_DELETE_MESSAGE, reference.type.name),
-					GTPackage.Literals.REFERENCE__TARGET,
-					NODE_TARGET_EXPECT_DELETE
-				)
 			}
 		}
 	}
