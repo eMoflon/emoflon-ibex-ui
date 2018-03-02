@@ -1,19 +1,21 @@
 package org.emoflon.ibex.gt.editor.formatting2
 
+import java.util.List
+
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.formatting2.AbstractFormatter2
 import org.eclipse.xtext.formatting2.IFormattableDocument
+
+import org.emoflon.ibex.gt.editor.gT.ContextReference
 import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
+import org.emoflon.ibex.gt.editor.gT.GTPackage
+import org.emoflon.ibex.gt.editor.gT.Import
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.OperatorReference
 import org.emoflon.ibex.gt.editor.gT.Parameter
 import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Rule
-
-import java.util.List
-import org.emoflon.ibex.gt.editor.gT.GTPackage
-import org.emoflon.ibex.gt.editor.gT.ContextReference
-import org.emoflon.ibex.gt.editor.gT.Import
+import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 
 /**
  * Formatting
@@ -92,7 +94,7 @@ class GTFormatter extends AbstractFormatter2 {
 		}
 
 		// New line for each constraint.
-		node.constraints.forEach [
+		GTEditorModelUtils.getReferences(node).forEach [
 			it.format
 			it.surround[newLine]
 		]

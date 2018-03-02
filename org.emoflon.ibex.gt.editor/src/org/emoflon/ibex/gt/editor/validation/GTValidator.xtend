@@ -333,13 +333,6 @@ class GTValidator extends AbstractGTValidator {
 	 * Converts an integer into a "... times" String.
 	 */
 	def static String getTimes(int count) {
-		switch (count) {
-			case 1:
-				return 'once'
-			case 2:
-				return 'twice'
-			default:
-				return count + ' times'
-		}
+		return if(count == 2) 'twice' else count + ' times'
 	}
 }
