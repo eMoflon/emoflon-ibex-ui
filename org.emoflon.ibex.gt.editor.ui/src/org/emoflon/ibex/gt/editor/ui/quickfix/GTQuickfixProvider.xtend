@@ -16,7 +16,7 @@ import org.emoflon.ibex.gt.editor.gT.Rule
  */
 class GTQuickfixProvider extends DefaultQuickfixProvider {
 
-	@Fix(GTValidator.INVALID_NAME_EXPECT_LOWER_CASE)
+	@Fix(GTValidator.NAME_EXPECT_LOWER_CASE)
 	def convertNameToLowerCase(Issue issue, IssueResolutionAcceptor acceptor) {
 		val label = 'Convert name to lower case.'
 		acceptor.accept(
@@ -42,7 +42,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 		rule.name = rule.name.toFirstLower
 	}
 
-	@Fix(GTValidator.INVALID_NAME_EXPECT_CAMEL_CASE)
+	@Fix(GTValidator.NAME_EXPECT_CAMEL_CASE)
 	def convertNameToLowerCamelCase(Issue issue, IssueResolutionAcceptor acceptor) {
 		val label = 'Convert name to lowerCamelCase.'
 		acceptor.accept(

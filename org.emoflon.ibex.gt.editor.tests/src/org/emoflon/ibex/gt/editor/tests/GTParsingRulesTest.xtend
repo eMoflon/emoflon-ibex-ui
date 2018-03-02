@@ -27,8 +27,8 @@ class GTParsingRulesTest extends GTParsingTest {
 		this.assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.graphTransformationFile,
-			GTValidator.MISSING_META_MODEL,
-			GTValidator.ERROR_MESSAGE_NO_META_MODEL
+			GTValidator.IMPORT_MISSING_META_MODEL,
+			GTValidator.IMPORT_MISSING_META_MODEL_MESSAGE
 		)
 	}
 
@@ -46,9 +46,9 @@ class GTParsingRulesTest extends GTParsingTest {
 		this.assertValidationIssues(
 			file,
 			GTPackage.eINSTANCE.import,
-			GTValidator.DUPLICATE_IMPORT,
+			GTValidator.IMPORT_DUPLICATE,
 			Severity.WARNING,
-			String.format(GTValidator.ERROR_MESSAGE_IMPORT_MULTIPLE_DECLARATIONS, ecoreImport, 'twice')
+			String.format(GTValidator.IMPORT_DUPLICATE_MESSAGE, ecoreImport, 'twice')
 		)
 	}
 
@@ -66,8 +66,8 @@ class GTParsingRulesTest extends GTParsingTest {
 		this.assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.import,
-			GTValidator.INVALID_IMPORT,
-			String.format(GTValidator.ERROR_MESSAGE_FILE_DOES_NOT_EXIST, importName)
+			GTValidator.IMPORT_FILE_DOES_NOT_EXIST,
+			String.format(GTValidator.IMPORT_FILE_DOES_NOT_EXIST_MESSAGE, importName)
 		)
 	}
 
@@ -82,8 +82,8 @@ class GTParsingRulesTest extends GTParsingTest {
 		this.assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.rule,
-			GTValidator.EMPTY_RULE,
-			GTValidator.ERROR_MESSAGE_RULE_NOT_EMPTY
+			GTValidator.RULE_EMPTY,
+			String.format(GTValidator.RULE_EMPTY_MESSAGE, 'a')
 		)
 	}
 
@@ -212,8 +212,8 @@ class GTParsingRulesTest extends GTParsingTest {
 		this.assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.rule,
-			GTValidator.INVALID_SUPER_RULES,
-			GTValidator.ERROR_MESSAGE_RULE_DISTINCT_SUPER_RULES
+			GTValidator.RULE_SUPER_RULES_DUPLICATE,
+			String.format(GTValidator.RULE_SUPER_RULES_DUPLICATE_MESSAGE, 'b')
 		)
 	}
 
@@ -246,9 +246,9 @@ class GTParsingRulesTest extends GTParsingTest {
 		this.assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.rule,
-			GTValidator.INVALID_NAME_EXPECT_UNIQUE,
-			String.format(GTValidator.ERROR_MESSAGE_RULE_NAME_MULTIPLE_DECLARATIONS, "a", "twice"),
-			String.format(GTValidator.ERROR_MESSAGE_RULE_NAME_MULTIPLE_DECLARATIONS, "b", "3 times")
+			GTValidator.NAME_EXPECT_UNIQUE,
+			String.format(GTValidator.RULE_NAME_MULTIPLE_DECLARATIONS_MESSAGE, "a", "twice"),
+			String.format(GTValidator.RULE_NAME_MULTIPLE_DECLARATIONS_MESSAGE, "b", "3 times")
 		)
 	}
 
@@ -266,9 +266,9 @@ class GTParsingRulesTest extends GTParsingTest {
 		this.assertValidationIssues(
 			file,
 			GTPackage.eINSTANCE.rule,
-			GTValidator.INVALID_NAME_EXPECT_CAMEL_CASE,
+			GTValidator.NAME_EXPECT_CAMEL_CASE,
 			Severity.WARNING,
-			String.format(GTValidator.ERROR_MESSAGE_RULE_NAME_CONTAINS_UNDERSCORES, ruleName)
+			String.format(GTValidator.RULE_NAME_CONTAINS_UNDERSCORES_MESSAGE, ruleName)
 		)
 	}
 
@@ -286,8 +286,8 @@ class GTParsingRulesTest extends GTParsingTest {
 		this.assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.rule,
-			GTValidator.INVALID_NAME_BLACKLISTED,
-			String.format(GTValidator.ERROR_MESSAGE_RULE_NAME_FORBIDDEN, ruleName)
+			GTValidator.NAME_BLACKLISTED,
+			String.format(GTValidator.RULE_NAME_FORBIDDEN_MESSAGE, ruleName)
 		)
 	}
 
@@ -305,9 +305,9 @@ class GTParsingRulesTest extends GTParsingTest {
 		this.assertValidationIssues(
 			file,
 			GTPackage.eINSTANCE.rule,
-			GTValidator.INVALID_NAME_EXPECT_LOWER_CASE,
+			GTValidator.NAME_EXPECT_LOWER_CASE,
 			Severity.WARNING,
-			String.format(GTValidator.ERROR_MESSAGE_RULE_NAME_STARTS_WITH_LOWER_CASE, ruleName)
+			String.format(GTValidator.RULE_NAME_STARTS_WITH_LOWER_CASE_MESSAGE, ruleName)
 		)
 	}
 
