@@ -32,60 +32,60 @@ class GTValidator extends AbstractGTValidator {
 	private static val ruleNameBlacklist = #["clone", "equals", "finalize", "getClass", "hashCode", "notify",
 		"notifyAll", "toString", "wait"]
 
-	private static val CODE_PREFIX = 'org.emoflon.ibex.gt.editor.'
+	private static val CODE_PREFIX = "org.emoflon.ibex.gt.editor."
 
 	// General errors for named elements.
-	public static val NAME_BLACKLISTED = CODE_PREFIX + 'nameBlacklisted'
-	public static val NAME_EXPECT_CAMEL_CASE = CODE_PREFIX + 'nameExpectCamelCase'
-	public static val NAME_EXPECT_LOWER_CASE = CODE_PREFIX + 'nameExpectLowerCase'
-	public static val NAME_EXPECT_UNIQUE = CODE_PREFIX + 'nameExpectUnique'
+	public static val NAME_BLACKLISTED = CODE_PREFIX + "nameBlacklisted"
+	public static val NAME_EXPECT_CAMEL_CASE = CODE_PREFIX + "nameExpectCamelCase"
+	public static val NAME_EXPECT_LOWER_CASE = CODE_PREFIX + "nameExpectLowerCase"
+	public static val NAME_EXPECT_UNIQUE = CODE_PREFIX + "nameExpectUnique"
 
 	// Errors for imports.
-	public static val IMPORT_FILE_DOES_NOT_EXIST = CODE_PREFIX + 'importFileDoesNotExist'
-	public static val IMPORT_FILE_DOES_NOT_EXIST_MESSAGE = 'The file %s does not exist.'
+	public static val IMPORT_FILE_DOES_NOT_EXIST = CODE_PREFIX + "importFileDoesNotExist"
+	public static val IMPORT_FILE_DOES_NOT_EXIST_MESSAGE = "The file '%s' does not exist."
 
-	public static val IMPORT_DUPLICATE = CODE_PREFIX + 'importDuplicate'
-	public static val IMPORT_DUPLICATE_MESSAGE = 'Import %s must not be declared %s.'
+	public static val IMPORT_DUPLICATE = CODE_PREFIX + "importDuplicate"
+	public static val IMPORT_DUPLICATE_MESSAGE = "Import '%s' must not be declared %s."
 
-	public static val IMPORT_MISSING_META_MODEL = CODE_PREFIX + 'importMissingMetaModel'
-	public static val IMPORT_MISSING_META_MODEL_MESSAGE = 'You must import the Ecore file of the meta-model.'
+	public static val IMPORT_MISSING_META_MODEL = CODE_PREFIX + "importMissingMetaModel"
+	public static val IMPORT_MISSING_META_MODEL_MESSAGE = "You must import the Ecore file of the meta-model here."
 
 	// Errors for rules.
-	public static val RULE_EMPTY = CODE_PREFIX + 'ruleEmpty'
-	public static val RULE_EMPTY_MESSAGE = 'Rule %s must not be empty.'
+	public static val RULE_EMPTY = CODE_PREFIX + "ruleEmpty"
+	public static val RULE_EMPTY_MESSAGE = "Rule '%s' must not be empty."
 
-	public static val RULE_SUPER_RULES_DUPLICATE = CODE_PREFIX + 'ruleSuperRulesDuplicate'
-	public static val RULE_SUPER_RULES_DUPLICATE_MESSAGE = 'Super rules of rule %s must be distinct.'
+	public static val RULE_SUPER_RULES_DUPLICATE = CODE_PREFIX + "ruleSuperRulesDuplicate"
+	public static val RULE_SUPER_RULES_DUPLICATE_MESSAGE = "Super rules of rule '%s' must be distinct."
 
-	public static val RULE_NAME_CONTAINS_UNDERSCORES_MESSAGE = 'Rule name %s contains underscores. Use camelCase instead.'
-	public static val RULE_NAME_FORBIDDEN_MESSAGE = 'Rules cannot be named %s. Use a different name.'
-	public static val RULE_NAME_MULTIPLE_DECLARATIONS_MESSAGE = 'Rule %s must not be declared %s.'
-	public static val RULE_NAME_STARTS_WITH_LOWER_CASE_MESSAGE = 'Rule %s should start with a lower case character.'
+	public static val RULE_NAME_CONTAINS_UNDERSCORES_MESSAGE = "Rule name '%s' contains underscores. Use camelCase instead."
+	public static val RULE_NAME_FORBIDDEN_MESSAGE = "Rules cannot be named '%s'. Use a different name."
+	public static val RULE_NAME_MULTIPLE_DECLARATIONS_MESSAGE = "Rule '%s' must not be declared %s."
+	public static val RULE_NAME_STARTS_WITH_LOWER_CASE_MESSAGE = "Rule '%s' should start with a lower case character."
 
 	// Errors for nodes.
-	public static val NODE_NAME_CONTAINS_UNDERSCORES_MESSAGE = 'Node name %s contains underscores. Use camelCase instead.'
-	public static val NODE_NAME_FORBIDDEN_MESSAGE = 'Nodes cannot be named %s. Use a different name.'
-	public static val NODE_NAME_MULTIPLE_DECLARATIONS_MESSAGE = 'Node %s must not be declared %s.'
-	public static val NODE_NAME_STARTS_WITH_LOWER_CASE_MESSAGE = 'Node %s should start with a lower case character.'
+	public static val NODE_NAME_CONTAINS_UNDERSCORES_MESSAGE = "Node name '%s' contains underscores. Use camelCase instead."
+	public static val NODE_NAME_FORBIDDEN_MESSAGE = "Nodes cannot be named '%s'. Use a different name."
+	public static val NODE_NAME_MULTIPLE_DECLARATIONS_MESSAGE = "Node '%s' must not be declared %s."
+	public static val NODE_NAME_STARTS_WITH_LOWER_CASE_MESSAGE = "Node '%s' should start with a lower case character."
 
-	public static val CREATE_NODE_TYPE_ABSTRACT = CODE_PREFIX + 'createNodeAbstractType'
-	public static val CREATE_NODE_TYPE_ABSTRACT_MESSAGE = 'The type of create node %s must not be abstract.'
+	public static val CREATE_NODE_TYPE_ABSTRACT = CODE_PREFIX + "createNodeAbstractType"
+	public static val CREATE_NODE_TYPE_ABSTRACT_MESSAGE = "The type of create node '%s' must not be abstract."
 
-	public static val NODE_TARGET_EXPECT_CONTEXT = CODE_PREFIX + 'invalidNodeTargetExpectContext'
-	public static val NODE_TARGET_EXPECT_CONTEXT_MESSAGE = 'The target of the context reference %s must be a context node.'
+	public static val NODE_TARGET_EXPECT_CONTEXT = CODE_PREFIX + "invalidNodeTargetExpectContext"
+	public static val NODE_TARGET_EXPECT_CONTEXT_MESSAGE = "The target of the context reference '%s' must be a context node."
 
-	public static val NODE_TARGET_EXPECT_CONTEXT_OR_CREATE = CODE_PREFIX + 'invalidNodeTargetExpectContextOrCreate'
-	public static val NODE_TARGET_EXPECT_CONTEXT_OR_CREATE_MESSAGE = 'The target of the created reference %s must be a context or a created node.'
+	public static val NODE_TARGET_EXPECT_CONTEXT_OR_CREATE = CODE_PREFIX + "invalidNodeTargetExpectContextOrCreate"
+	public static val NODE_TARGET_EXPECT_CONTEXT_OR_CREATE_MESSAGE = "The target of the created reference '%s' must be a context or a created node."
 
-	public static val NODE_TARGET_EXPECT_CONTEXT_OR_DELETE = CODE_PREFIX + 'invalidNodeTargetExpectContextOrDelete'
-	public static val NODE_TARGET_EXPECT_CONTEXT_OR_DELETE_MESSAGE = 'The target of the deleted reference %s must be a context or a deleted node.'
+	public static val NODE_TARGET_EXPECT_CONTEXT_OR_DELETE = CODE_PREFIX + "invalidNodeTargetExpectContextOrDelete"
+	public static val NODE_TARGET_EXPECT_CONTEXT_OR_DELETE_MESSAGE = "The target of the deleted reference '%s must be a context or a deleted node."
 
 	// Errors for references.
 	public static val REFERENCE_EXPECT_CREATE = CODE_PREFIX + "referenceExpectCreateReference"
 	public static val REFERENCE_EXPECT_DELETE = CODE_PREFIX + "referenceExpectDeleteReference"
 
-	public static val REFERENCE_EXPECT_CREATE_MESSAGE = 'Reference %s must be a create reference.'
-	public static val REFERENCE_EXPECT_DELETE_MESSAGE = 'Reference %s must be a delete reference.'
+	public static val REFERENCE_EXPECT_CREATE_MESSAGE = "Reference '%s' to '%s' must be a create reference."
+	public static val REFERENCE_EXPECT_DELETE_MESSAGE = "Reference '%s' to '%s' must be a delete reference."
 
 	@Check
 	def checkFile(GraphTransformationFile file) {
@@ -172,14 +172,14 @@ class GTValidator extends AbstractGTValidator {
 			// If the node is a create node, its references must be create references.
 			GTEditorUtils.getContextReferences(node).forEach [
 				error(
-					String.format(REFERENCE_EXPECT_CREATE_MESSAGE, it.type.name),
+					String.format(REFERENCE_EXPECT_CREATE_MESSAGE, it.type.name, it.target.name),
 					GTPackage.Literals.NODE__CONSTRAINTS,
 					REFERENCE_EXPECT_CREATE
 				)
 			]
 			GTEditorUtils.getDeleteReferences(node).forEach [
 				error(
-					String.format(REFERENCE_EXPECT_CREATE_MESSAGE, it.type.name),
+					String.format(REFERENCE_EXPECT_CREATE_MESSAGE, it.type.name, it.target.name),
 					GTPackage.Literals.NODE__CONSTRAINTS,
 					REFERENCE_EXPECT_CREATE
 				)
@@ -199,14 +199,14 @@ class GTValidator extends AbstractGTValidator {
 		if (node.operator == Operator.DELETE) {
 			GTEditorUtils.getContextReferences(node).forEach [
 				error(
-					String.format(REFERENCE_EXPECT_DELETE_MESSAGE, it.type.name),
+					String.format(REFERENCE_EXPECT_DELETE_MESSAGE, it.type.name, it.target.name),
 					GTPackage.Literals.NODE__CONSTRAINTS,
 					REFERENCE_EXPECT_DELETE
 				)
 			]
 			GTEditorUtils.getCreateReferences(node).forEach [
 				error(
-					String.format(REFERENCE_EXPECT_DELETE_MESSAGE, it.type.name),
+					String.format(REFERENCE_EXPECT_DELETE_MESSAGE, it.type.name, it.target.name),
 					GTPackage.Literals.NODE__CONSTRAINTS,
 					REFERENCE_EXPECT_DELETE
 				)

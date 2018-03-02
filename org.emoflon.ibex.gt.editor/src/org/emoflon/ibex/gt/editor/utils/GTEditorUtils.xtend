@@ -1,15 +1,27 @@
 package org.emoflon.ibex.gt.editor.utils
 
 import org.emoflon.ibex.gt.editor.gT.ContextReference
-import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
+import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.OperatorReference
 import org.emoflon.ibex.gt.editor.gT.Operator
+import org.emoflon.ibex.gt.editor.gT.Reference
 
 /**
  * Utility methods for working with {@link GraphTransformationFile} models.
  */
 class GTEditorUtils {
+	/**
+	 * Returns all references of a node.
+	 */
+	static def getReferences(Node node) {
+		return node.constraints.filter [
+			it instanceof Reference
+		].map [
+			it as Reference
+		]
+	}
+
 	/**
 	 * Returns the context references of a node.
 	 */

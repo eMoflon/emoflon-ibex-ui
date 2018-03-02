@@ -209,10 +209,10 @@ class GTParsingNodesTest extends GTParsingTest {
 			
 			rule deleteClass() {
 				package: EObject {
-					-eClassifiers -> class
+					-eClassifiers -> clazz
 				}
 			
-				class: EClass
+				clazz: EClass
 			}
 		''')
 		this.assertBasics(file)
@@ -252,7 +252,7 @@ class GTParsingNodesTest extends GTParsingTest {
 			this.parseNodesWithReference('++', '', ''),
 			GTPackage.eINSTANCE.node,
 			GTValidator.REFERENCE_EXPECT_CREATE,
-			String.format(GTValidator.REFERENCE_EXPECT_CREATE_MESSAGE, 'eClassifiers')
+			String.format(GTValidator.REFERENCE_EXPECT_CREATE_MESSAGE, 'eClassifiers', 'clazz')
 		)
 	}
 
@@ -267,7 +267,7 @@ class GTParsingNodesTest extends GTParsingTest {
 			this.parseNodesWithReference('++', '--', ''),
 			GTPackage.eINSTANCE.node,
 			GTValidator.REFERENCE_EXPECT_CREATE,
-			String.format(GTValidator.REFERENCE_EXPECT_CREATE_MESSAGE, 'eClassifiers')
+			String.format(GTValidator.REFERENCE_EXPECT_CREATE_MESSAGE, 'eClassifiers', 'clazz')
 		)
 	}
 
@@ -277,7 +277,7 @@ class GTParsingNodesTest extends GTParsingTest {
 			this.parseNodesWithReference('--', '', ''),
 			GTPackage.eINSTANCE.node,
 			GTValidator.REFERENCE_EXPECT_DELETE,
-			String.format(GTValidator.REFERENCE_EXPECT_DELETE_MESSAGE, 'eClassifiers')
+			String.format(GTValidator.REFERENCE_EXPECT_DELETE_MESSAGE, 'eClassifiers', 'clazz')
 		)
 	}
 
@@ -287,7 +287,7 @@ class GTParsingNodesTest extends GTParsingTest {
 			this.parseNodesWithReference('--', '++', ''),
 			GTPackage.eINSTANCE.node,
 			GTValidator.REFERENCE_EXPECT_DELETE,
-			String.format(GTValidator.REFERENCE_EXPECT_DELETE_MESSAGE, 'eClassifiers')
+			String.format(GTValidator.REFERENCE_EXPECT_DELETE_MESSAGE, 'eClassifiers', 'clazz')
 		)
 	}
 

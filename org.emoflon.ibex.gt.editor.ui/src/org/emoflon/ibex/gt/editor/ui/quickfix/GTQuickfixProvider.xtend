@@ -5,10 +5,17 @@ import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
 import org.eclipse.xtext.ui.editor.quickfix.Fix
 import org.eclipse.xtext.validation.Issue
 
+import org.emoflon.ibex.gt.editor.gT.ContextReference
 import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
+import org.emoflon.ibex.gt.editor.gT.GTFactory
 import org.emoflon.ibex.gt.editor.gT.Import
 import org.emoflon.ibex.gt.editor.gT.Node
+import org.emoflon.ibex.gt.editor.gT.Operator
+import org.emoflon.ibex.gt.editor.gT.OperatorNode
+import org.emoflon.ibex.gt.editor.gT.OperatorReference
+import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Rule
+import org.emoflon.ibex.gt.editor.utils.GTEditorUtils
 import org.emoflon.ibex.gt.editor.validation.GTValidator
 
 /**
@@ -97,5 +104,106 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			}
 		}
 		return camelCase.toFirstLower
+	}
+
+	@Fix(GTValidator.NODE_TARGET_EXPECT_CONTEXT)
+	@Fix(GTValidator.NODE_TARGET_EXPECT_CONTEXT_OR_CREATE)
+	@Fix(GTValidator.NODE_TARGET_EXPECT_CONTEXT_OR_DELETE)
+	def converTargetNodeToContextNode(Issue issue, IssueResolutionAcceptor acceptor) {
+		val label = 'Convert target node to a context node.'
+		acceptor.accept(
+			issue,
+			label,
+			label,
+			null,
+			[ element, context |
+				if (element instanceof Reference) {
+					val targetNode = element.target
+					if (targetNode instanceof OperatorNode) {
+						val contextNode = GTFactory.eINSTANCE.createContextNode
+						contextNode.name = targetNode.name
+						contextNode.type = targetNode.type
+						contextNode.constraints.addAll(targetNode.constraints)
+						element.target = contextNode
+
+						val rule = element.eContainer.eContainer as Rule
+						rule.nodes.set(rule.nodes.indexOf(targetNode), contextNode)
+					}
+				}
+			]
+		)
+	}
+
+	@Fix(GTValidator.NODE_TARGET_EXPECT_CONTEXT_OR_CREATE)
+	def converTargetNodeToCreateNode(Issue issue, IssueResolutionAcceptor acceptor) {
+		val label = 'Convert target node to a created node.'
+		this.acceptConvertOperatorNode(issue, acceptor, label, Operator.CREATE)
+	}
+
+	@Fix(GTValidator.NODE_TARGET_EXPECT_CONTEXT_OR_DELETE)
+	def converTargetNodeToDeleteNode(Issue issue, IssueResolutionAcceptor acceptor) {
+		val label = 'Convert target node to a deleted node.'
+		this.acceptConvertOperatorNode(issue, acceptor, label, Operator.DELETE)
+	}
+
+	private def acceptConvertOperatorNode(Issue issue, IssueResolutionAcceptor acceptor, String label,
+		Operator newOperator) {
+		acceptor.accept(
+			issue,
+			label,
+			label,
+			null,
+			[ element, context |
+				if (element instanceof OperatorReference) {
+					if (element.target instanceof OperatorNode) {
+						(element.target as OperatorNode).operator = newOperator
+					}
+				}
+			]
+		)
+	}
+
+	@Fix(GTValidator.REFERENCE_EXPECT_CREATE)
+	def convertToCreateReference(Issue issue, IssueResolutionAcceptor acceptor) {
+		val label = 'Replace with create reference.'
+		this.acceptConvertOperatorReference(issue, acceptor, label, Operator.CREATE)
+	}
+
+	@Fix(GTValidator.REFERENCE_EXPECT_DELETE)
+	def convertToDeleteReference(Issue issue, IssueResolutionAcceptor acceptor) {
+		val label = 'Replace with delete reference.'
+		this.acceptConvertOperatorReference(issue, acceptor, label, Operator.DELETE)
+	}
+
+	private def acceptConvertOperatorReference(Issue issue, IssueResolutionAcceptor acceptor, String label,
+		Operator newOperator) {
+		acceptor.accept(
+			issue,
+			label,
+			label,
+			null,
+			[ element, context |
+				if (element instanceof Node) {
+					val node = element as Node
+					val messageSplit = issue.message.split("'")
+					val referenceTypeName = messageSplit.get(1)
+					val referenceTargetNodeName = messageSplit.get(3)
+					GTEditorUtils.getReferences(node).filter [
+						it.type.name.equals(referenceTypeName) && it.target.name.equals(referenceTargetNodeName)
+					].forEach [
+						if (it instanceof ContextReference) {
+							val newReference = GTFactory.eINSTANCE.createOperatorReference
+							newReference.operator = newOperator
+							newReference.type = it.type
+							newReference.target = it.target
+							it.eResource.contents.add(newReference)
+							node.constraints.set(node.constraints.indexOf(it), newReference)
+						} else if (it instanceof OperatorReference) {
+							it.operator = newOperator
+						}
+					]
+				}
+			]
+		)
 	}
 }
