@@ -22,6 +22,7 @@ Require-Bundle: org.antlr.runtime,
  org.eclipse.xtext.common.types,
  org.eclipse.xtext.util,
  org.eclipse.xtext.xbase.lib,
+ org.moflon.core.utilities,
  org.objectweb.asm;resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ClassPath: .antlr-generator-3.2.0-patch.jar,.,lib/commons-io-2.5.jar,lib/commons-lang3-3.5.jar

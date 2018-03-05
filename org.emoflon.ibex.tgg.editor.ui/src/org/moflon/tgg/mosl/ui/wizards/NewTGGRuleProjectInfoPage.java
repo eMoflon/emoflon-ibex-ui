@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.emoflon.ibex.tgg.ide.admin.IbexTGGPlugin;
-import org.moflon.util.LogUtils;
+import org.moflon.core.utilities.LogUtils;
 
 public class NewTGGRuleProjectInfoPage extends WizardPage
 {

@@ -20,34 +20,34 @@ import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.ui.wizards.JavaCapabilityConfigurationPage;
 import org.eclipse.ui.PlatformUI;
 import org.moflon.core.plugins.BuildPropertiesFileBuilder;
 import org.moflon.core.plugins.manifest.ManifestFileUpdater;
 import org.moflon.core.plugins.manifest.ManifestFileUpdater.AttributeUpdatePolicy;
 import org.moflon.core.plugins.manifest.PluginManifestConstants;
+import org.moflon.core.utilities.LogUtils;
+import org.moflon.core.utilities.WorkspaceHelper;
 import org.moflon.util.IbexUtil;
-import org.moflon.util.LogUtils;
-import org.moflon.util.WorkspaceHelper;
 
 public class IbexTGGNature implements IProjectNature {
-	public static final String IBEX_TGG_NATURE_ID  = "org.emoflon.ibex.tgg.ide.nature";
+	public static final String IBEX_TGG_NATURE_ID = "org.emoflon.ibex.tgg.ide.nature";
 	public static final String IBEX_TGG_BUILDER_ID = "org.emoflon.ibex.tgg.ide.builder";
-	public static final String XTEXT_NATURE_ID     = "org.eclipse.xtext.ui.shared.xtextNature";
+	public static final String XTEXT_NATURE_ID = "org.eclipse.xtext.ui.shared.xtextNature";
 	public static final String PLUGIN_NATURE_ID = "org.eclipse.pde.PluginNature";
 	public static final String SCHEMA_FILE = "src/org/emoflon/ibex/tgg/Schema.tgg";
 	private static final String INATURE_EXTENSON_ID = "org.emoflon.ibex.tgg.ide.IbexTGGNatureExtension";
-	
+
 	private IProject project;
 
 	private static Logger logger = Logger.getLogger(IbexTGGNature.class);
-	
+
 	private Collection<NatureExtension> natureExtensions;
 
 	public IbexTGGNature() {
 		natureExtensions = IbexUtil.collectExtensions(INATURE_EXTENSON_ID, "class", NatureExtension.class);
 	}
 
-	
 	@Override
 	public void configure() throws CoreException {
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
@@ -55,7 +55,7 @@ public class IbexTGGNature implements IProjectNature {
 			public void run() {
 				try {
 					performSetUpRoutines();
-					addIBexTGGBuilder(); 
+					addIBexTGGBuilder();
 				} catch (CoreException | IOException e) {
 					LogUtils.error(logger, e);
 				}
@@ -76,32 +76,46 @@ public class IbexTGGNature implements IProjectNature {
 	}
 
 	private void performSetUpRoutines() throws CoreException, IOException {
-		WorkspaceHelper.setUpAsJavaProject(project, new NullProgressMonitor());
+		setUpAsJavaProject(project, new NullProgressMonitor());
 		setUpAsPluginProject();
 		setUpAsXtextProject();
 		setUpAsIbexProject();
-		for (NatureExtension ne : natureExtensions) ne.setUpProject(project);
+		for (NatureExtension ne : natureExtensions)
+			ne.setUpProject(project);
 	}
-	
+
+	private void setUpAsJavaProject(final IProject project, final IProgressMonitor monitor) {
+		final SubMonitor subMon = SubMonitor.convert(monitor, "Set up Java project", 1);
+		final JavaCapabilityConfigurationPage jcpage = new JavaCapabilityConfigurationPage();
+		final IJavaProject javaProject = JavaCore.create(project);
+
+		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				jcpage.init(javaProject, null, null, true);
+				try {
+					jcpage.configureJavaProject(subMon.newChild(1));
+				} catch (final Exception e) {
+					logger.error("Exception during setup of Java project", e);
+				}
+			}
+		});
+	}
+
 	private void setUpAsIbexProject() throws CoreException, IOException {
 		new ManifestFileUpdater().processManifest(project, manifest -> {
 			boolean changed = false;
-			changed |= ManifestFileUpdater.updateDependencies(
-					manifest,
-					Arrays.asList(
-							// Misc deps
-							"org.apache.log4j",
-							"com.google.guava",
-							
-							// EMF deps
-							"org.eclipse.emf.ecore.xmi",
-							
-							// Ibex deps
-							"org.emoflon.ibex.common",
-							"org.emoflon.ibex.tgg.core.language",
-							"org.emoflon.ibex.tgg.core.runtime"
-					
-					));
+			changed |= ManifestFileUpdater.updateDependencies(manifest, Arrays.asList(
+					// Misc deps
+					"org.apache.log4j", "com.google.guava",
+
+					// EMF deps
+					"org.eclipse.emf.ecore.xmi",
+
+					// Ibex deps
+					"org.emoflon.ibex.common", "org.emoflon.ibex.tgg.core.language", "org.emoflon.ibex.tgg.core.runtime"
+
+			));
 			return changed;
 		});
 	}
@@ -113,10 +127,10 @@ public class IbexTGGNature implements IProjectNature {
 	private void setUpAsPluginProject() throws CoreException, IOException {
 		WorkspaceHelper.addNature(project, PLUGIN_NATURE_ID, new NullProgressMonitor());
 		setUpBuildProperties();
-        setUpManifestFile();
-        addContainerToBuildPath(project, "org.eclipse.pde.core.requiredPlugins");	
-    }
-	
+		setUpManifestFile();
+		addContainerToBuildPath(project, "org.eclipse.pde.core.requiredPlugins");
+	}
+
 	/**
 	 * Adds the given container to the build path of the given project if it
 	 * contains no entry with the same name, yet.
@@ -143,8 +157,8 @@ public class IbexTGGNature implements IProjectNature {
 	}
 
 	/**
-	 * Adds the given container to the list of build path entries (if not
-	 * included, yet)
+	 * Adds the given container to the list of build path entries (if not included,
+	 * yet)
 	 */
 	private static void addContainerToBuildPath(final Collection<IClasspathEntry> classpathEntries,
 			final String container) {
@@ -178,24 +192,32 @@ public class IbexTGGNature implements IProjectNature {
 	private void setUpBuildProperties() throws CoreException {
 		logger.debug("Adding build.properties");
 		Properties buildProperties = new Properties();
-        buildProperties.put("bin.includes", "META-INF/, bin/, model/");
-        buildProperties.put("source..", "src/");
-        buildProperties.put("output..", "bin/");
-        new BuildPropertiesFileBuilder().createBuildProperties(project, new NullProgressMonitor(), buildProperties);
+		buildProperties.put("bin.includes", "META-INF/, bin/, model/");
+		buildProperties.put("source..", "src/");
+		buildProperties.put("output..", "bin/");
+		new BuildPropertiesFileBuilder().createBuildProperties(project, new NullProgressMonitor(), buildProperties);
 	}
 
 	private void setUpManifestFile() throws CoreException, IOException {
 		logger.debug("Adding MANIFEST.MF");
 		new ManifestFileUpdater().processManifest(project, manifest -> {
 			boolean changed = false;
-			changed |= ManifestFileUpdater.updateAttribute(manifest, PluginManifestConstants.MANIFEST_VERSION, "1.0", AttributeUpdatePolicy.KEEP);
-			changed |= ManifestFileUpdater.updateAttribute(manifest, PluginManifestConstants.BUNDLE_MANIFEST_VERSION, "2", AttributeUpdatePolicy.KEEP);
-			changed |= ManifestFileUpdater.updateAttribute(manifest, PluginManifestConstants.BUNDLE_NAME, project.getName(), AttributeUpdatePolicy.KEEP);
-			changed |= ManifestFileUpdater.updateAttribute(manifest, PluginManifestConstants.BUNDLE_SYMBOLIC_NAME, project.getName() + ";singleton:=true", AttributeUpdatePolicy.KEEP);
-			changed |= ManifestFileUpdater.updateAttribute(manifest, PluginManifestConstants.BUNDLE_VERSION, "1.0", AttributeUpdatePolicy.KEEP);
-			changed |= ManifestFileUpdater.updateAttribute(manifest, PluginManifestConstants.BUNDLE_VENDOR, "eMoflon IBeX", AttributeUpdatePolicy.KEEP);
-			changed |= ManifestFileUpdater.updateAttribute(manifest, PluginManifestConstants.BUNDLE_ACTIVATION_POLICY, "lazy", AttributeUpdatePolicy.KEEP);
-			changed |= ManifestFileUpdater.updateAttribute(manifest, PluginManifestConstants.BUNDLE_EXECUTION_ENVIRONMENT, "JavaSE-1.8", AttributeUpdatePolicy.KEEP);
+			changed |= ManifestFileUpdater.updateAttribute(manifest, PluginManifestConstants.MANIFEST_VERSION, "1.0",
+					AttributeUpdatePolicy.KEEP);
+			changed |= ManifestFileUpdater.updateAttribute(manifest, PluginManifestConstants.BUNDLE_MANIFEST_VERSION,
+					"2", AttributeUpdatePolicy.KEEP);
+			changed |= ManifestFileUpdater.updateAttribute(manifest, PluginManifestConstants.BUNDLE_NAME,
+					project.getName(), AttributeUpdatePolicy.KEEP);
+			changed |= ManifestFileUpdater.updateAttribute(manifest, PluginManifestConstants.BUNDLE_SYMBOLIC_NAME,
+					project.getName() + ";singleton:=true", AttributeUpdatePolicy.KEEP);
+			changed |= ManifestFileUpdater.updateAttribute(manifest, PluginManifestConstants.BUNDLE_VERSION, "1.0",
+					AttributeUpdatePolicy.KEEP);
+			changed |= ManifestFileUpdater.updateAttribute(manifest, PluginManifestConstants.BUNDLE_VENDOR,
+					"eMoflon IBeX", AttributeUpdatePolicy.KEEP);
+			changed |= ManifestFileUpdater.updateAttribute(manifest, PluginManifestConstants.BUNDLE_ACTIVATION_POLICY,
+					"lazy", AttributeUpdatePolicy.KEEP);
+			changed |= ManifestFileUpdater.updateAttribute(manifest,
+					PluginManifestConstants.BUNDLE_EXECUTION_ENVIRONMENT, "JavaSE-1.8", AttributeUpdatePolicy.KEEP);
 			return changed;
 		});
 	}

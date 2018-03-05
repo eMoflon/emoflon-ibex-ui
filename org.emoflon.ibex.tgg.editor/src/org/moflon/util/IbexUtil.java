@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.moflon.core.utilities.LogUtils;
 
 public class IbexUtil {
 	
