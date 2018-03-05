@@ -1,7 +1,6 @@
 package org.emoflon.ibex.tgg.ide.admin;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -256,7 +255,7 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 			{
 				if(file.getFileExtension().equals("tgg")) {
 					try {
-						String contents = FileUtils.readFileToString(file.getLocation().toFile(), Charset.defaultCharset());
+						String contents = FileUtils.readFileToString(file.getLocation().toFile());
 						if(contents.split("#rule\\s+" + name).length > 1) acc.add(file);
 					} catch (IOException e) {
 						e.printStackTrace();
