@@ -4,10 +4,9 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.moflon.core.ui.UiUtilities;
 
 /**
  * Handler opening a GTNewFileWizard.
@@ -17,11 +16,7 @@ public class GTNewFileHandler extends AbstractHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
 		try {
-			IWorkbenchWizard wizard = window.getWorkbench().getNewWizardRegistry()
-					.findWizard(GTNewFileWizard.GT_FILE_WIZARD_ID).createWizard();
-			wizard.init(window.getWorkbench(), null);
-			WizardDialog dialog = new WizardDialog(window.getShell(), wizard);
-			dialog.open();
+			UiUtilities.openWizard(GTNewFileWizard.GT_FILE_WIZARD_ID, window);
 		} catch (final Exception e) {
 			Logger.getRootLogger().info("Cannot init New Graph Transformation File Wizard");
 		}
