@@ -1,7 +1,5 @@
 package org.emoflon.ibex.tgg.ide.admin;
 
-import static org.moflon.util.WorkspaceHelper.addAllFoldersAndFile;
-
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -48,7 +46,10 @@ import org.eclipse.emf.ecore.xmi.impl.URIHandlerImpl;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
+import org.emoflon.ibex.common.editor.utils.ExtensionsUtil;
 import org.emoflon.ibex.tgg.ide.transformation.EditorTGGtoFlattenedTGG;
+import org.moflon.core.utilities.LogUtils;
+import org.moflon.core.utilities.WorkspaceHelper;
 import org.moflon.tgg.mosl.defaults.AttrCondDefLibraryProvider;
 import org.moflon.tgg.mosl.tgg.AttrCond;
 import org.moflon.tgg.mosl.tgg.AttrCondDef;
@@ -56,8 +57,6 @@ import org.moflon.tgg.mosl.tgg.ComplementRule;
 import org.moflon.tgg.mosl.tgg.Nac;
 import org.moflon.tgg.mosl.tgg.Rule;
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile;
-import org.moflon.util.IbexUtil;
-import org.moflon.util.LogUtils;
 
 public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResourceDeltaVisitor {
 	public static final String INTERNAL_TGG_MODEL_EXTENSION = ".tgg.xmi";
@@ -79,7 +78,7 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	private Map<String, Object> blackboard;
 
 	public IbexTGGBuilder() {
-		builderExtensions = IbexUtil.collectExtensions(IBUILDER_EXTENSON_ID, "class", BuilderExtension.class);
+		builderExtensions = ExtensionsUtil.collectExtensions(IBUILDER_EXTENSON_ID, "class", BuilderExtension.class);
 	}
 	
 	@Override
@@ -173,7 +172,7 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 		IFile file = getProject().getFile(pathToFile);
 		if (!file.exists()){ 
 			String defaultContent = generator.apply(getProject().getName(), fileName);
-			addAllFoldersAndFile(getProject(), pathToFile, defaultContent, new NullProgressMonitor());
+			WorkspaceHelper.addAllFoldersAndFile(getProject(), pathToFile, defaultContent, new NullProgressMonitor());
 		}
 	}
 	

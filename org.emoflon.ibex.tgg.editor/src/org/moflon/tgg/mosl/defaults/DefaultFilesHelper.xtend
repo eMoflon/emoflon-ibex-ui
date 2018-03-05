@@ -1,9 +1,18 @@
-
 package org.moflon.tgg.mosl.defaults
 
-import org.moflon.util.MoflonUtil
+import org.apache.commons.lang3.StringUtils
+import org.eclipse.emf.common.util.URI
+import org.moflon.core.utilities.MoflonUtil
 
 class DefaultFilesHelper {
+
+	private static def getDefaultURIToEcoreFileInPlugin(String pluginID) {
+		return URI.createPlatformPluginURI("/" + pluginID + "/" + getDefaultPathToEcoreFileInProject(pluginID), true);
+	}
+
+	private static def getDefaultPathToEcoreFileInProject(String projectName) {
+		return "model/" + StringUtils.capitalize(MoflonUtil.lastSegmentOf(projectName)) + ".ecore";
+	}
 
 	static def generateDefaultEPackageForProject(String projectName) {
 		return '''
@@ -13,7 +22,7 @@ class DefaultFilesHelper {
 							xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 							xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" 
 							name="«MoflonUtil.lastSegmentOf(projectName)»" 
-							nsURI="«MoflonUtil.getDefaultURIToEcoreFileInPlugin(projectName)»" 
+							nsURI="«getDefaultURIToEcoreFileInPlugin(projectName)»" 
 							nsPrefix="«projectName»">
 			</ecore:EPackage>		
 		'''

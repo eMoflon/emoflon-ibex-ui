@@ -6,7 +6,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.moflon.core.ui.AbstractCommandHandler;
 import org.moflon.core.ui.UiUtilities;
-import org.moflon.util.LogUtils;
+import org.moflon.core.utilities.LogUtils;
 
 public class NewIntegrationProjectHandler extends AbstractCommandHandler {
 	@Override

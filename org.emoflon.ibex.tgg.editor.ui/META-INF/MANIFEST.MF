@@ -1,33 +1,33 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.moflon.tgg.mosl.ui
-Bundle-Vendor: Realtime Systems Lab
-Bundle-Version: 1.0.1.qualifier
+Bundle-Name: eMoflon::IBeX Editor for Triple Graph Grammars (UI)
 Bundle-SymbolicName: org.emoflon.ibex.tgg.editor.ui;singleton:=true
+Bundle-Version: 1.0.1.qualifier
+Bundle-Vendor: eMoflon::IBeX Developers
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.emoflon.ibex.tgg.editor;visibility:=reexport,
- org.eclipse.xtext.ui,
- org.eclipse.xtext.ui.shared,
- org.eclipse.xtext.builder,
- org.eclipse.xtext.xbase.lib,
- org.eclipse.xtext.common.types.ui,
- org.eclipse.xtext.ui.codetemplates.ui,
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.apache.log4j,
  org.eclipse.compare,
- org.eclipse.ui.editors,
- org.eclipse.ui,
- org.eclipse.emf.ecore.editor,
- org.eclipse.jface,
- org.eclipse.jdt.core,
  org.eclipse.core.resources,
- org.apache.log4j,
+ org.eclipse.emf.ecore.editor,
+ org.eclipse.ui,
+ org.eclipse.ui.editors,
+ org.eclipse.xtext.common.types.ui,
+ org.eclipse.xtext.builder,
+ org.eclipse.xtext.ui,
+ org.eclipse.xtext.ui.codetemplates.ui,
+ org.eclipse.xtext.ui.shared,
+ org.eclipse.xtext.xbase.lib,
+ org.eclipse.jdt.core,
+ org.eclipse.jface,
+ org.emoflon.ibex.common.editor.utils,
+ org.emoflon.ibex.tgg.editor;visibility:=reexport,
  org.emoflon.ibex.tgg.ide,
  org.moflon.core.ui,
  org.moflon.core.utilities
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.moflon.tgg.mosl.ui.contentassist,
  org.moflon.tgg.mosl.ui.contentassist.antlr,
  org.moflon.tgg.mosl.ui.contentassist.antlr.internal,
  org.moflon.tgg.mosl.ui.internal,
  org.moflon.tgg.mosl.ui.quickfix
 Bundle-Activator: org.moflon.tgg.mosl.ui.internal.TGGActivator
-Import-Package: org.apache.log4j

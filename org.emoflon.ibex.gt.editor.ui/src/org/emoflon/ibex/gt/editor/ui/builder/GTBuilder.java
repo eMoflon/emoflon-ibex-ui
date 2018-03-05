@@ -17,12 +17,11 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
+import org.emoflon.ibex.common.editor.utils.ExtensionsUtil;
 
 /**
  * Builder for Graph Transformation Projects.
@@ -121,10 +120,9 @@ public class GTBuilder extends IncrementalProjectBuilder {
 
 			@Override
 			public void run() throws Exception {
-				collectExtensions(GTBuilderExtension.BUILDER_EXTENSON_ID, "class", GTBuilderExtension.class)
-						.forEach(ext -> {
-							ext.run(project, packagePath);
-						});
+				ExtensionsUtil
+						.collectExtensions(GTBuilderExtension.BUILDER_EXTENSON_ID, "class", GTBuilderExtension.class)
+						.forEach(ext -> ext.run(project, packagePath));
 			}
 		};
 		SafeRunner.run(runnable);
@@ -182,24 +180,5 @@ public class GTBuilder extends IncrementalProjectBuilder {
 			this.logError(e.getMessage());
 		}
 		return set;
-	}
-
-	// TODO collectExtensions is a duplicate of
-	// org.emoflon.ibex.tgg.editor/src/org/moflon/util/IbexUtil.java
-	private static <T> List<T> collectExtensions(final String extensionID, final String property,
-			final Class<T> extensionType) {
-		List<T> extensions = new ArrayList<T>();
-		IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(extensionID);
-		try {
-			for (IConfigurationElement e : config) {
-				final Object o = e.createExecutableExtension(property);
-				if (extensionType.isInstance(o)) {
-					extensions.add(extensionType.cast(o));
-				}
-			}
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
-		return extensions;
 	}
 }

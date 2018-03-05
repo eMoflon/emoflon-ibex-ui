@@ -1,8 +1,5 @@
 package org.moflon.tgg.mosl.ui.wizards;
 
-import static org.moflon.util.WorkspaceHelper.addAllFolders;
-import static org.moflon.util.WorkspaceHelper.addAllFoldersAndFile;
-
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
@@ -15,10 +12,10 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.ui.INewWizard;
 import org.emoflon.ibex.tgg.ide.admin.IbexTGGNature;
+import org.moflon.core.utilities.LogUtils;
+import org.moflon.core.utilities.WorkspaceHelper;
 import org.moflon.tgg.mosl.defaults.AttrCondDefLibraryProvider;
 import org.moflon.tgg.mosl.defaults.DefaultFilesHelper;
-import org.moflon.util.LogUtils;
-import org.moflon.util.WorkspaceHelper;
 
 public class NewIntegrationWizard extends AbstractMoflonWizard implements INewWizard {
 	protected AbstractMoflonProjectInfoPage projectInfo;
@@ -49,9 +46,9 @@ public class NewIntegrationWizard extends AbstractMoflonWizard implements INewWi
 			final SubMonitor subMon = SubMonitor.convert(monitor, "Generating default files", 3);
 			String defaultSchema = DefaultFilesHelper.generateDefaultSchema(project.getName());
 			IPath pathToSchema = new Path(IbexTGGNature.SCHEMA_FILE);
-			addAllFoldersAndFile(project, pathToSchema, defaultSchema, subMon.split(1));
-			addAllFolders(project, "src/org/emoflon/ibex/tgg/rules", subMon.split(1));
-			addAllFolders(project, "model", subMon.split(1));
+			WorkspaceHelper.addAllFoldersAndFile(project, pathToSchema, defaultSchema, subMon.split(1));
+			WorkspaceHelper.addAllFolders(project, "src/org/emoflon/ibex/tgg/rules", subMon.split(1));
+			WorkspaceHelper.addAllFolders(project, "model", subMon.split(1));
 			AttrCondDefLibraryProvider.syncAttrCondDefLibrary(project);
 		} catch (IOException e) {
 			LogUtils.error(logger, e);

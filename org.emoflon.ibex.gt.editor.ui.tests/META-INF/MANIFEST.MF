@@ -1,19 +1,19 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.emoflon.ibex.gt.editor.ui.tests
-Bundle-Vendor: My Company
+Bundle-Name: eMoflon::IBeX Editor for Graph Transformation Rules (JUnit Tests for UI)
+Bundle-Vendor: eMoflon::IBeX Developers
 Bundle-Version: 1.0.0.qualifier
 Bundle-SymbolicName: org.emoflon.ibex.gt.editor.ui.tests; singleton:=true
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.emoflon.ibex.gt.editor.ui,
- org.junit;bundle-version="4.12.0",
- org.eclipse.xtext.testing,
- org.eclipse.xtext.xbase.testing,
- org.eclipse.xtext.junit4,
- org.eclipse.xtext.xbase.junit,
- org.eclipse.core.runtime,
+Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.workbench;resolution:=optional,
- org.eclipse.xtext.ui.testing
+ org.eclipse.xtext.junit4,
+ org.eclipse.xtext.testing,
+ org.eclipse.xtext.ui.testing,
+ org.eclipse.xtext.xbase.junit,
+ org.eclipse.xtext.xbase.testing,
+ org.emoflon.ibex.gt.editor.ui,
+ org.junit;bundle-version="4.12.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.emoflon.ibex.gt.editor.ui.tests;x-internal=true
 Import-Package: org.hamcrest.core,

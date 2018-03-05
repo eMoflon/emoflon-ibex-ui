@@ -1,10 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.emoflon.ibex.gt.editor.ui
-Bundle-Vendor: My Company
-Bundle-Version: 1.0.0.qualifier
+Bundle-Name: eMoflon::IBeX Editor for Graph Transformation Rules (UI)
 Bundle-SymbolicName: org.emoflon.ibex.gt.editor.ui; singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: eMoflon::IBeX Developers
 Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: net.sourceforge.plantuml.eclipse,
  org.eclipse.compare,
  org.eclipse.core.resources,
@@ -22,12 +23,12 @@ Require-Bundle: net.sourceforge.plantuml.eclipse,
  org.eclipse.xtext.ui.shared,
  org.eclipse.xtext.xbase.lib,
  org.eclipse.xtext.xbase.ui,
+ org.emoflon.ibex.common.editor.utils,
  org.emoflon.ibex.gt.editor,
  org.emoflon.ibex.gt.editor.ide,
  org.moflon.core.ui,
  org.moflon.core.utilities
 Import-Package: org.apache.log4j
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.emoflon.ibex.gt.editor.ui.builder,
  org.emoflon.ibex.gt.editor.ui.contentassist,
  org.emoflon.ibex.gt.editor.ui.internal,
