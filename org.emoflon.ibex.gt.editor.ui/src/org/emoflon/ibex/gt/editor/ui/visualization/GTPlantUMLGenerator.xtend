@@ -9,6 +9,7 @@ import org.emoflon.ibex.gt.editor.gT.OperatorNode
 import org.emoflon.ibex.gt.editor.gT.OperatorReference
 import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Rule
+import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 
 /**
  * Utility methods to generate PlantUML code.
@@ -16,7 +17,7 @@ import org.emoflon.ibex.gt.editor.gT.Rule
 class GTPlantUMLGenerator {
 	static val ContextColor = 'Black'
 	static val CreateColor = 'DarkGreen'
-	static val DeleteColor = 'Red'
+	static val DeleteColor = 'Crimson'
 
 	/**
 	 * Returns the PlantUML code for the visualization of an empty file.
@@ -49,7 +50,7 @@ class GTPlantUMLGenerator {
 			«ENDFOR»
 			
 			«FOR node : rule.nodes»
-				«FOR reference : node.constraints.filter[it instanceof Reference].map[it as Reference]»
+				«FOR reference : GTEditorModelUtils.getReferences(node)»
 					«nodeClassName(node)» -[#«referenceColor(reference)»]-> «nodeClassName(reference.target)»: <color:«referenceColor(reference)»>«reference.type.name»
 				«ENDFOR»
 			«ENDFOR»
