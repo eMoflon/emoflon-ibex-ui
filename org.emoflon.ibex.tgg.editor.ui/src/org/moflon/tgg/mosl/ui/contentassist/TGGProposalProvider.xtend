@@ -4,9 +4,9 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.Assignment
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor
-import org.moflon.core.utilities.WorkspaceHelper
 import org.moflon.tgg.mosl.tgg.AttributeExpression
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
+import org.emoflon.ibex.common.editor.utils.WorkspaceSearch
 
 /**
  * See https://www.eclipse.org/Xtext/documentation/310_eclipse_support.html#content-assist
@@ -22,7 +22,7 @@ class TGGProposalProvider extends AbstractTGGProposalProvider {
 		super.completeImport_Name(model, assignment, context, acceptor)
 
 		val tggFile = model.eContainer as TripleGraphGrammarFile
-		WorkspaceHelper.getEcoreURIsInWorkspace(tggFile.imports.map[it.name].toList).forEach [
+		WorkspaceSearch.getEcoreURIsInWorkspace(tggFile.imports.map[it.name].toList).forEach [
 			acceptor.accept(createCompletionProposal('''"«it»"''', context))
 		]
 	}
