@@ -22,13 +22,13 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.wizards.JavaCapabilityConfigurationPage;
 import org.eclipse.ui.PlatformUI;
+import org.emoflon.ibex.common.editor.utils.ExtensionsUtil;
 import org.moflon.core.plugins.BuildPropertiesFileBuilder;
 import org.moflon.core.plugins.manifest.ManifestFileUpdater;
 import org.moflon.core.plugins.manifest.ManifestFileUpdater.AttributeUpdatePolicy;
 import org.moflon.core.plugins.manifest.PluginManifestConstants;
 import org.moflon.core.utilities.LogUtils;
 import org.moflon.core.utilities.WorkspaceHelper;
-import org.moflon.util.IbexUtil;
 
 public class IbexTGGNature implements IProjectNature {
 	public static final String IBEX_TGG_NATURE_ID = "org.emoflon.ibex.tgg.ide.nature";
@@ -45,7 +45,7 @@ public class IbexTGGNature implements IProjectNature {
 	private Collection<NatureExtension> natureExtensions;
 
 	public IbexTGGNature() {
-		natureExtensions = IbexUtil.collectExtensions(INATURE_EXTENSON_ID, "class", NatureExtension.class);
+		natureExtensions = ExtensionsUtil.collectExtensions(INATURE_EXTENSON_ID, "class", NatureExtension.class);
 	}
 
 	@Override

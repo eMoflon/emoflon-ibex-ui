@@ -1,4 +1,4 @@
-package org.moflon.util;
+package org.emoflon.ibex.common.editor.utils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,11 +9,22 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.moflon.core.utilities.LogUtils;
 
-public class IbexUtil {
-	
-	private static final Logger logger = Logger.getLogger(IbexUtil.class);
-	
-	public static <T> Collection<T> collectExtensions(String extensionID, String property, Class<T> extensionType) {
+public class ExtensionsUtil {
+	private static final Logger logger = Logger.getLogger(ExtensionsUtil.class);
+
+	/**
+	 * Collects all registered extensions with the given ID.
+	 * 
+	 * @param extensionID
+	 *            the ID of the extension
+	 * @param property
+	 *            the name of the property
+	 * @param extensionType
+	 *            the extension type
+	 * @return all extensions with the given ID as extensions of the given type
+	 */
+	public static <T> Collection<T> collectExtensions(final String extensionID, final String property,
+			final Class<T> extensionType) {
 		Collection<T> extensions = new ArrayList<T>();
 		IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(extensionID);
 		try {
@@ -29,5 +40,5 @@ public class IbexUtil {
 		}
 
 		return extensions;
-	} 
+	}
 }
