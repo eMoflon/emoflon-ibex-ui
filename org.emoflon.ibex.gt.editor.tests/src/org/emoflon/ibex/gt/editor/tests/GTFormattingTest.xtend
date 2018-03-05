@@ -25,6 +25,30 @@ class GTFormattingTest {
 	@Inject extension ISerializer
 
 	@Test
+	def formatImports() {
+		val expected = '''
+			import "platform:/resource/A/model/A.ecore"
+			import "platform:/resource/B/model/B.ecore"
+			
+			rule test {
+				object: EObject
+			}
+		'''
+		this.testFormatting(
+			expected,
+			'''
+				
+				import"platform:/resource/A/model/A.ecore"
+				import"platform:/resource/B/model/B.ecore"
+				
+				rule test {
+					object: EObject
+				}
+			'''
+		)
+	}
+
+	@Test
 	def formatRules() {
 		val expected = '''
 			import "http://www.eclipse.org/emf/2002/Ecore"
@@ -68,7 +92,7 @@ class GTFormattingTest {
 		val expected = '''
 			import "http://www.eclipse.org/emf/2002/Ecore"
 			
-			rule test(a: EObject, b: EObject) {
+			rule test(a: EObject, b: EObject, c: EObject) {
 				c: EObject
 			}
 		'''
@@ -76,7 +100,7 @@ class GTFormattingTest {
 			expected,
 			'''
 				import "http://www.eclipse.org/emf/2002/Ecore"
-				rule test (	  a :  EObject ,  b :  EObject )
+				rule test (	  a :  EObject ,  b :  EObject , c : EObject )
 					{
 				c: EObject
 					}

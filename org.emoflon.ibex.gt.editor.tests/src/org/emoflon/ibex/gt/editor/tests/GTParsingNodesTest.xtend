@@ -7,7 +7,6 @@ import org.eclipse.xtext.testing.XtextRunner
 import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.validation.GTValidator
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -20,7 +19,7 @@ class GTParsingNodesTest extends GTParsingTest {
 	@Test
 	def void validContextNodes() {
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule a {
 				a: EPackage
@@ -35,7 +34,7 @@ class GTParsingNodesTest extends GTParsingTest {
 	@Test
 	def void validCreateAndDeleteNodes() {
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule a() {
 				++ a: EClass
@@ -51,7 +50,7 @@ class GTParsingNodesTest extends GTParsingTest {
 	def void errorIfNodeNameStartsWithCapital() {
 		val nodeName = "AnInvalidNodeName"
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule a {
 				«nodeName»: EObject
@@ -61,9 +60,9 @@ class GTParsingNodesTest extends GTParsingTest {
 		this.assertValidationIssues(
 			file,
 			GTPackage.eINSTANCE.node,
-			GTValidator.INVALID_NAME_EXPECT_LOWER_CASE,
+			GTValidator.NAME_EXPECT_LOWER_CASE,
 			Severity.WARNING,
-			String.format(GTValidator.ERROR_MESSAGE_NODE_NAME_STARTS_WITH_LOWER_CASE, nodeName)
+			String.format(GTValidator.NODE_NAME_STARTS_WITH_LOWER_CASE_MESSAGE, nodeName)
 		)
 	}
 
@@ -71,7 +70,7 @@ class GTParsingNodesTest extends GTParsingTest {
 	def void errorIfNodeNameBlacklisted() {
 		val nodeName = 'class'
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule a {
 				«nodeName»: EObject
@@ -81,8 +80,8 @@ class GTParsingNodesTest extends GTParsingTest {
 		this.assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.node,
-			GTValidator.INVALID_NAME_BLACKLISTED,
-			String.format(GTValidator.ERROR_MESSAGE_NODE_NAME_FORBIDDEN, nodeName)
+			GTValidator.NAME_BLACKLISTED,
+			String.format(GTValidator.NODE_NAME_FORBIDDEN_MESSAGE, nodeName)
 		)
 	}
 
@@ -90,7 +89,7 @@ class GTParsingNodesTest extends GTParsingTest {
 	def void errorIfNodeNameContainsUndercores() {
 		val nodeName = 'the_e_Object'
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule a {
 				«nodeName»: EObject
@@ -100,9 +99,9 @@ class GTParsingNodesTest extends GTParsingTest {
 		this.assertValidationIssues(
 			file,
 			GTPackage.eINSTANCE.node,
-			GTValidator.INVALID_NAME_EXPECT_CAMEL_CASE,
+			GTValidator.NAME_EXPECT_CAMEL_CASE,
 			Severity.WARNING,
-			String.format(GTValidator.ERROR_MESSAGE_NODE_NAME_CONTAINS_UNDERSCORES, nodeName)
+			String.format(GTValidator.NODE_NAME_CONTAINS_UNDERSCORES_MESSAGE, nodeName)
 		)
 	}
 
@@ -110,7 +109,7 @@ class GTParsingNodesTest extends GTParsingTest {
 	def void errorIfMultipleNodesWithTheSameName() {
 		val nodeName = 'a'
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule a {
 				«nodeName»: EAnnotation
@@ -122,15 +121,15 @@ class GTParsingNodesTest extends GTParsingTest {
 		this.assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.node,
-			GTValidator.INVALID_NAME_EXPECT_UNIQUE,
-			String.format(GTValidator.ERROR_MESSAGE_NODE_NAME_MULTIPLE_DECLARATIONS, nodeName, "twice")
+			GTValidator.NAME_EXPECT_UNIQUE,
+			String.format(GTValidator.NODE_NAME_MULTIPLE_DECLARATIONS_MESSAGE, nodeName, "twice")
 		)
 	}
 
 	@Test
 	def void errorIfNoSuchNodeType() {
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
 			rule a() {
 				o: Object
@@ -146,84 +145,20 @@ class GTParsingNodesTest extends GTParsingTest {
 	}
 
 	@Test
-	def void validContextReference() {
+	def void errorIfCreatedNodeHasAbstractType() {
 		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
+			import "«ecoreImport»"
 			
-			rule findClass() {
-				package: EPackage {
-					-eClassifiers -> clazz
-				}
-			
-				clazz: EClass
-			}
-		''')
-		this.assertValid(file)
-		this.assertReference(file, 0, null, "eClassifiers", 1)
-	}
-
-	@Test
-	def void validCreateAndDeleteReferences() {
-		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
-			
-			rule createAndDeleteClass() {
-				package: EPackage {
-					++ -eClassifiers -> createdClass
-					-- -eClassifiers -> deletedClass
-				}
-			
-				++ createdClass: EClass
-				-- deletedClass: EClass
-			}
-		''')
-		this.assertValid(file)
-		this.assertReference(file, 0, Operator.CREATE, "eClassifiers", 1)
-		this.assertReference(file, 1, Operator.DELETE, "eClassifiers", 2)
-	}
-
-	@Ignore("Needs Causes Exception, seems to be a scoping problem")
-	@Test
-	def void errorIfNoSuchReferenceTypeInMetaModel() {
-		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
-			
-			rule deleteClass() {
-				package: EObject {
-					-eClassifiers -> class
-				}
-			
-				class: EClass
+			rule a() {
+				++ classifier: EClassifier
 			}
 		''')
 		this.assertBasics(file)
 		this.assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.reference,
-			Diagnostic::LINKING_DIAGNOSTIC,
-			"Couldn't resolve reference to EReference 'name'."
-		)
-	}
-
-	@Test
-	def void errorIfWrongTargetType() {
-		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
-			
-			rule deleteClass() {
-				package: EPackage {
-					-eClassifiers -> class
-				}
-			
-				class: EObject
-			}
-		''')
-		this.assertBasics(file)
-		this.assertValidationErrors(
-			file,
-			GTPackage.eINSTANCE.reference,
-			Diagnostic::LINKING_DIAGNOSTIC,
-			"Couldn't resolve reference to Node 'class'."
+			GTPackage.eINSTANCE.node,
+			GTValidator.CREATE_NODE_TYPE_ABSTRACT,
+			String.format(GTValidator.CREATE_NODE_TYPE_ABSTRACT_MESSAGE, 'classifier')
 		)
 	}
 }

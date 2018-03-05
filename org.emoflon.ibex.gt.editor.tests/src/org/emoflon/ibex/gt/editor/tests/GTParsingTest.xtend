@@ -26,6 +26,8 @@ import org.junit.runner.RunWith
 @RunWith(XtextRunner)
 @InjectWith(GTInjectorProvider)
 abstract class GTParsingTest {
+	public static val ecoreImport = 'http://www.eclipse.org/emf/2002/Ecore'
+	
 	@Inject
 	protected ParseHelper<GraphTransformationFile> parseHelper
 

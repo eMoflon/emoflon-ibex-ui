@@ -28,5 +28,6 @@ Export-Package: org.emoflon.ibex.gt.editor,
  org.emoflon.ibex.gt.editor.scoping,
  org.emoflon.ibex.gt.editor.serializer,
  org.emoflon.ibex.gt.editor.services,
+ org.emoflon.ibex.gt.editor.utils,
  org.emoflon.ibex.gt.editor.validation
 Import-Package: org.apache.log4j
