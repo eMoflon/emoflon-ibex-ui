@@ -1,22 +1,22 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.emoflon.ibex.gt.editor
-Bundle-Vendor: My Company
-Bundle-Version: 1.0.0.qualifier
+Bundle-Name: eMoflon::IBeX Editor for Graph Transformation Rules
 Bundle-SymbolicName: org.emoflon.ibex.gt.editor; singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: eMoflon::IBeX Developers
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.eclipse.xtext,
- org.eclipse.xtext.xbase,
- org.eclipse.equinox.common,
- org.eclipse.emf.ecore,
- org.eclipse.xtext.xbase.lib,
- org.antlr.runtime,
- org.eclipse.xtext.util,
- org.eclipse.xtend.lib,
- org.eclipse.emf.common,
- org.eclipse.xtext.common.types,
- org.objectweb.asm;resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.antlr.runtime,
+ org.eclipse.equinox.common,
+ org.eclipse.emf.common,
+ org.eclipse.emf.ecore,
+ org.eclipse.xtext,
+ org.eclipse.xtext.common.types,
+ org.eclipse.xtend.lib,
+ org.eclipse.xtext.util,
+ org.eclipse.xtext.xbase,
+ org.eclipse.xtext.xbase.lib,
+ org.objectweb.asm;resolution:=optional
 Export-Package: org.emoflon.ibex.gt.editor,
  org.emoflon.ibex.gt.editor.formatting2,
  org.emoflon.ibex.gt.editor.generator,

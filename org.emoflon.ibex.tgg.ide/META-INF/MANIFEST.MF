@@ -1,7 +1,8 @@
 Manifest-Version: 1.0
 Bundle-SymbolicName: org.emoflon.ibex.tgg.ide;singleton:=true
-Bundle-Name: org.emoflon.ibex.tgg.ui.ide
+Bundle-Name: eMoflon::IBeX Editor for Triple Graph Grammars (IDE)
 Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: eMoflon::IBeX Developers
 Require-Bundle: com.google.guava,
  net.sourceforge.plantuml.eclipse,
  org.apache.log4j,
@@ -29,7 +30,6 @@ Bundle-ManifestVersion: 2
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Activator: org.emoflon.ibex.tgg.ide.admin.IbexTGGPlugin
-Bundle-Vendor: TU Darmstadt
 Bundle-ClassPath: .
 Export-Package: org.emoflon.ibex.tgg.ide.admin,
  org.emoflon.ibex.tgg.ide.transformation,

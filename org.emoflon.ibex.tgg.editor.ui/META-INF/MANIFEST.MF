@@ -1,10 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.moflon.tgg.mosl.ui
-Bundle-Vendor: Realtime Systems Lab
-Bundle-Version: 1.0.1.qualifier
+Bundle-Name: eMoflon::IBeX Editor for Triple Graph Grammars (UI)
 Bundle-SymbolicName: org.emoflon.ibex.tgg.editor.ui;singleton:=true
+Bundle-Version: 1.0.1.qualifier
+Bundle-Vendor: eMoflon::IBeX Developers
 Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.apache.log4j,
  org.eclipse.compare,
  org.eclipse.core.resources,
@@ -24,7 +25,6 @@ Require-Bundle: org.apache.log4j,
  org.emoflon.ibex.tgg.ide,
  org.moflon.core.ui,
  org.moflon.core.utilities
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.moflon.tgg.mosl.ui.contentassist,
  org.moflon.tgg.mosl.ui.contentassist.antlr,
  org.moflon.tgg.mosl.ui.contentassist.antlr.internal,
