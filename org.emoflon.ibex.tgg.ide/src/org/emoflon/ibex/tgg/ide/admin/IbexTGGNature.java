@@ -108,6 +108,7 @@ public class IbexTGGNature implements IProjectNature {
 			changed |= ManifestFileUpdater.updateDependencies(manifest, Arrays.asList(
 					// Misc deps
 					"org.apache.log4j", "com.google.guava",
+					"org.sat4j.core", "org.sat4j.pb",
 
 					// EMF deps
 					"org.eclipse.emf.ecore.xmi",
