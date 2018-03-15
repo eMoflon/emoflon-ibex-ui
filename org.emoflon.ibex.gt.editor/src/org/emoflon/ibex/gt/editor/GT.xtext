@@ -78,7 +78,7 @@ EnumValue:
 	'enum::' literal=[ecore::EEnumLiteral];
 
 ParameterValue:
-	'param::' parameter=Parameter;
+	'param::' parameter=[Parameter];
 
 	// References
 Reference:

@@ -226,11 +226,12 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	 * Return the parameters for the attribute value.
 	 */
 	def getScopeForParameters(EObject context, EReference reference) {
-		// TODO scope for parameters
 		val container = context.eContainer
-		if (container instanceof Rule) {
-			val rule = container as Rule
-			return Scopes.scopeFor(rule.parameters)
+		if (container instanceof AttributeConstraint) {
+			val rule = container.eContainer.eContainer as Rule
+			return Scopes.scopeFor(rule.parameters.filter [
+				it.type.name == container.attribute.EAttributeType.name
+			])
 		}
 		return Scopes.scopeFor([])
 	}
