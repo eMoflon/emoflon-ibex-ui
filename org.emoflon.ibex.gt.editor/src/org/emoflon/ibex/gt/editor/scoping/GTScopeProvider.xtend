@@ -1,6 +1,7 @@
 package org.emoflon.ibex.gt.editor.scoping
 
 import org.eclipse.emf.ecore.EClass
+import org.eclipse.emf.ecore.EEnum
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.xtext.EcoreUtil2
@@ -8,11 +9,13 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource.CyclicLinkingException
 import org.eclipse.xtext.scoping.Scopes
 
 import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
+import org.emoflon.ibex.gt.editor.gT.EnumValue
 import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
 import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.gT.NAC
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Parameter
+import org.emoflon.ibex.gt.editor.gT.ParameterValue
 import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
@@ -29,6 +32,12 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		// Attributes
 		if (isAttributeName(context, reference)) {
 			return getScopeForAttributes(context, reference)
+		}
+		if (isParameterValue(context, reference)) {
+			return getScopeForParameters(context, reference)
+		}
+		if (isEnumLiteral(context, reference)) {
+			return getScopeForEnumLiterals(context, reference)
 		}
 
 		// Nodes
@@ -62,8 +71,16 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 			reference == GTPackage.Literals.ATTRIBUTE_CONSTRAINT__ATTRIBUTE)
 	}
 
+	def isEnumLiteral(EObject context, EReference reference) {
+		return (context instanceof EnumValue && reference == GTPackage.Literals.ENUM_VALUE__LITERAL)
+	}
+
 	def isNodeType(EObject context, EReference reference) {
 		return (context instanceof Node && reference == GTPackage.Literals.NODE__TYPE)
+	}
+
+	def isParameterValue(EObject context, EReference reference) {
+		return (context instanceof ParameterValue && reference == GTPackage.Literals.PARAMETER_VALUE__PARAMETER);
 	}
 
 	def isParameterType(EObject context, EReference reference) {
@@ -201,6 +218,33 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		val container = context.eContainer
 		if (container instanceof Rule) {
 			return Scopes.scopeFor(GTEditorModelUtils.getDatatypes(container.eContainer as GraphTransformationFile))
+		}
+		return Scopes.scopeFor([])
+	}
+
+	/**
+	 * Return the parameters for the attribute value.
+	 */
+	def getScopeForParameters(EObject context, EReference reference) {
+		// TODO scope for parameters
+		val container = context.eContainer
+		if (container instanceof Rule) {
+			val rule = container as Rule
+			return Scopes.scopeFor(rule.parameters)
+		}
+		return Scopes.scopeFor([])
+	}
+
+	/**
+	 * Return the valid enum literals for the attribute value.
+	 */
+	def getScopeForEnumLiterals(EObject context, EReference reference) {
+		val container = context.eContainer
+		if (container instanceof AttributeConstraint) {
+			val type = container.attribute.EAttributeType
+			if (type instanceof EEnum) {
+				return Scopes.scopeFor(type.ELiterals)
+			}
 		}
 		return Scopes.scopeFor([])
 	}

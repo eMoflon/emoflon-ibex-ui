@@ -75,10 +75,10 @@ NumericExpression:
 	(('-')? INT | ('-')? DECIMAL);
 
 EnumValue:
-	'enum::' eenum=[ecore::EEnum] '.' literal=[ecore::EEnumLiteral];
+	'enum::' literal=[ecore::EEnumLiteral];
 
 ParameterValue:
-	'param::' value=Parameter;
+	'param::' parameter=Parameter;
 
 	// References
 Reference:
