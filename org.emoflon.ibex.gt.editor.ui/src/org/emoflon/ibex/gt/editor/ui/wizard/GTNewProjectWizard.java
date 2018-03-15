@@ -18,7 +18,7 @@ public class GTNewProjectWizard extends XtextNewProjectWizard {
 	private WizardNewProjectCreationPage mainPage;
 
 	@Inject
-	public GTNewProjectWizard(GTProjectCreator projectCreator) {
+	public GTNewProjectWizard(final GTProjectCreator projectCreator) {
 		super(projectCreator);
 		this.setWindowTitle(PROJECT_WIZARD_TITLE);
 	}
