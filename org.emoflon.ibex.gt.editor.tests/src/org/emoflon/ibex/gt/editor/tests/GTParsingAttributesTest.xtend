@@ -4,6 +4,7 @@ import org.eclipse.xtext.diagnostics.Diagnostic
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.emoflon.ibex.gt.editor.gT.GTPackage
+import org.emoflon.ibex.gt.editor.gT.Relation
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -20,14 +21,14 @@ class GTParsingAttributesTest extends GTParsingTest {
 			
 			rule a {
 				classifier: EClassifier {
-					name = "Test1"
-					instanceTypeName = "Test2"
+					.name := "Test1"
+					.instanceTypeName := "Test2"
 				}
 			}
 		''')
 		this.assertValid(file)
-		this.assertAttributeAssignment(file, 0, "name", "Test1")
-		this.assertAttributeAssignment(file, 1, "instanceTypeName", "Test2")
+		this.assertAttributeConstraintLiteral(file, 0, "name", Relation.ASSIGNMENT, "Test1")
+		this.assertAttributeConstraintLiteral(file, 1, "instanceTypeName", Relation.ASSIGNMENT, "Test2")
 	}
 
 	@Test
@@ -37,14 +38,14 @@ class GTParsingAttributesTest extends GTParsingTest {
 			
 			rule a {
 				classifier: EClassifier {
-					name == "Test1"
-					instanceTypeName == "Test2"
+					.name != "Test1"
+					.instanceTypeName == "Test2"
 				}
 			}
 		''')
 		this.assertValid(file)
-		this.assertAttributeCondition(file, 0, "name", "Test1")
-		this.assertAttributeCondition(file, 1, "instanceTypeName", "Test2")
+		this.assertAttributeConstraintLiteral(file, 0, "name", Relation.UNEQUAL, "Test1")
+		this.assertAttributeConstraintLiteral(file, 1, "instanceTypeName", Relation.EQUAL, "Test2")
 	}
 
 	@Test
@@ -54,14 +55,14 @@ class GTParsingAttributesTest extends GTParsingTest {
 			
 			rule a {
 				classifier: EObject {
-					name = "Test"
+					.name == "Test"
 				}
 			}
 		''')
 		this.assertBasics(file)
 		this.assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.attributeAssignment,
+			GTPackage.eINSTANCE.attributeConstraint,
 			Diagnostic::LINKING_DIAGNOSTIC,
 			"Couldn't resolve reference to EAttribute 'name'."
 		)

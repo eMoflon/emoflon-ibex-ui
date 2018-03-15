@@ -274,13 +274,13 @@ class GTParsingRulesTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a(name: String) {
+			rule a(name: EString) {
 				a: EObject
 			}
 		''')
 		this.assertValid(file)
 		this.assertParameterNames(file, "name")
-		this.assertParameterTypes(file, "String")
+		this.assertParameterTypes(file, "EString")
 	}
 
 	@Test
@@ -288,13 +288,13 @@ class GTParsingRulesTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a(age: int, name: String, isMale: boolean) {
+			rule a(age: EDouble, name: EString, isMale: EBoolean) {
 				a: EObject
 			}
 		''')
 		this.assertValid(file)
 		this.assertParameterNames(file, "age", "name", "isMale")
-		this.assertParameterTypes(file, "int", "String", "boolean")
+		this.assertParameterTypes(file, "EDouble", "EString", "EBoolean")
 	}
 
 	@Test

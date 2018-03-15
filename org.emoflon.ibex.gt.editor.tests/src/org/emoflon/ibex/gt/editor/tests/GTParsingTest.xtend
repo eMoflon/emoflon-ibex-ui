@@ -7,15 +7,16 @@ import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
-import org.emoflon.ibex.gt.editor.gT.AttributeAssignment
-import org.emoflon.ibex.gt.editor.gT.AttributeCondition
+import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
 import org.emoflon.ibex.gt.editor.gT.ContextNode
 import org.emoflon.ibex.gt.editor.gT.ContextReference
 import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
+import org.emoflon.ibex.gt.editor.gT.LiteralValue
 import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.gT.OperatorNode
 import org.emoflon.ibex.gt.editor.gT.OperatorReference
 import org.emoflon.ibex.gt.editor.gT.Reference
+import org.emoflon.ibex.gt.editor.gT.Relation
 import org.junit.Assert
 import org.junit.runner.RunWith
 
@@ -27,7 +28,7 @@ import org.junit.runner.RunWith
 @InjectWith(GTInjectorProvider)
 abstract class GTParsingTest {
 	public static val ecoreImport = 'http://www.eclipse.org/emf/2002/Ecore'
-	
+
 	@Inject
 	protected ParseHelper<GraphTransformationFile> parseHelper
 
@@ -80,16 +81,13 @@ abstract class GTParsingTest {
 		Assert.assertEquals(ruleCount, file.rules.size)
 	}
 
-	def void assertAttributeAssignment(GraphTransformationFile file, int constraintIndex, String name, String value) {
-		val attr = file.rules.get(0).nodes.get(0).constraints.get(constraintIndex) as AttributeAssignment
+	def void assertAttributeConstraintLiteral(GraphTransformationFile file, int constraintIndex, String name,
+		Relation relation, String value) {
+		val attr = file.rules.get(0).nodes.get(0).constraints.get(constraintIndex) as AttributeConstraint
 		Assert.assertEquals(name, attr.attribute.name)
-		Assert.assertEquals(value, attr.value.value)
-	}
-
-	def void assertAttributeCondition(GraphTransformationFile file, int constraintIndex, String name, String value) {
-		val attr = file.rules.get(0).nodes.get(0).constraints.get(constraintIndex) as AttributeCondition
-		Assert.assertEquals(name, attr.attribute.name)
-		Assert.assertEquals(value, attr.value.value)
+		Assert.assertEquals(relation, attr.relation)
+		Assert.assertTrue(attr.value instanceof LiteralValue)
+		Assert.assertEquals(value, (attr.value as LiteralValue).value)
 	}
 
 	def assertNode(GraphTransformationFile file, int nodeIndex, Operator operator, String variableName,
@@ -117,7 +115,7 @@ abstract class GTParsingTest {
 		val parameters = file.rules.get(0).parameters
 		Assert.assertEquals(types.size, parameters.size)
 		for (i : 0 .. types.size - 1) {
-			Assert.assertEquals(types.get(i), parameters.get(i).type)
+			Assert.assertEquals(types.get(i), parameters.get(i).type.name)
 		}
 	}
 

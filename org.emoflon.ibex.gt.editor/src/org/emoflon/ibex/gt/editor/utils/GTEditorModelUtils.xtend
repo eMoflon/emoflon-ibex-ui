@@ -13,6 +13,7 @@ import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.OperatorReference
 import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.gT.Reference
+import org.eclipse.emf.ecore.EDataType
 
 /**
  * Utility methods for working with {@link GraphTransformationFile} models.
@@ -24,11 +25,24 @@ class GTEditorModelUtils {
 	def static getClasses(GraphTransformationFile file) {
 		val classes = newArrayList()
 		file.imports.forEach [
-			loadEcoreModel(it.name).ifPresent([
+			loadEcoreModel(it.name).ifPresent [
 				classes.addAll(EcoreUtil2.getAllContentsOfType(it.contents.get(0), EClass))
-			])
+			]
 		]
 		return classes
+	}
+
+	/**
+	 * Returns all EDataTypes imported into the given file.
+	 */
+	def static getDatatypes(GraphTransformationFile file) {
+		val types = newArrayList()
+		file.imports.forEach [
+			loadEcoreModel(it.name).ifPresent [
+				types.addAll(EcoreUtil2.getAllContentsOfType(it.contents.get(0), EDataType))
+			]
+		]
+		return types
 	}
 
 	/**
@@ -48,7 +62,7 @@ class GTEditorModelUtils {
 	/**
 	 * Returns all references of a node.
 	 */
-	static def getReferences(Node node) {
+	def static getReferences(Node node) {
 		return node.constraints.filter [
 			it instanceof Reference
 		].map [
@@ -59,7 +73,7 @@ class GTEditorModelUtils {
 	/**
 	 * Returns the context references of a node.
 	 */
-	static def getContextReferences(Node node) {
+	def static getContextReferences(Node node) {
 		return node.constraints.filter [
 			it instanceof ContextReference
 		].map [
@@ -70,7 +84,7 @@ class GTEditorModelUtils {
 	/**
 	 * Returns the operator references of a node.
 	 */
-	static def getOperatorReferences(Node node) {
+	def static getOperatorReferences(Node node) {
 		return node.constraints.filter [
 			it instanceof OperatorReference
 		].map [
@@ -81,7 +95,7 @@ class GTEditorModelUtils {
 	/**
 	 * Returns the created references of a node.
 	 */
-	static def getCreatedReferences(Node node) {
+	def static getCreatedReferences(Node node) {
 		return getOperatorReferences(node).filter [
 			it.operator == Operator.CREATE
 		]
@@ -90,7 +104,7 @@ class GTEditorModelUtils {
 	/**
 	 * Returns the deleted references of a node.
 	 */
-	static def getDeletedReferences(Node node) {
+	def static getDeletedReferences(Node node) {
 		return getOperatorReferences(node).filter [
 			it.operator == Operator.DELETE
 		]
