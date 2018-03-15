@@ -109,6 +109,30 @@ class GTFormattingTest {
 	}
 
 	@Test
+	def formatAttributes() {
+		val expected = '''
+			import "http://www.eclipse.org/emf/2002/Ecore"
+			
+			rule createClass(name: EString, isAbstract: EBoolean) {
+				++ clazz: EClass {
+					.name := param::name
+					.^abstract := param::isAbstract
+				}
+			}
+		'''
+		this.testFormatting(
+			expected,
+			'''
+				import "http://www.eclipse.org/emf/2002/Ecore"
+							
+				rule createClass(name: EString, isAbstract: EBoolean) {
+				++ clazz: EClass {.name   :=   param::name .^abstract  :=  param::isAbstract}
+				}
+			'''
+		)
+	}
+
+	@Test
 	def formatReferences() {
 		val expected = '''
 			import "http://www.eclipse.org/emf/2002/Ecore"

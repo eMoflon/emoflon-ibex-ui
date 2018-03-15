@@ -47,6 +47,21 @@ class GTParsingAttributesTest extends GTParsingTest {
 		this.assertAttributeLiteral(file, 0, "name", Relation.UNEQUAL, "Test1")
 		this.assertAttributeLiteral(file, 1, "instanceTypeName", Relation.EQUAL, "Test2")
 	}
+	
+	@Test
+	def void validAttributeConditionReferencingParameter() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			rule createClass(name: EString) {
+				clazz: EClass {
+					.name := param::name
+				}
+			}
+		''')
+		this.assertValid(file)
+		this.assertAttributeParameter(file, 0, "name", Relation.ASSIGNMENT, 0)
+	}
 
 	@Test
 	def void errorIfNoSuchAttributeInMetaModel() {

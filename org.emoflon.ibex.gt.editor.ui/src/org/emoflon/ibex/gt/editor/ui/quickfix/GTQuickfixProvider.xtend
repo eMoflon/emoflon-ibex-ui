@@ -327,7 +327,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			[ element, context |
 				if (element instanceof Node) {
 					val node = element as Node
-					GTEditorModelUtils.getReferences(node).filter [
+					node.references.filter [
 						it.type.name.equals(referenceTypeName) && it.target.name.equals(referenceTargetNodeName)
 					].forEach [
 						if (it instanceof ContextReference) {

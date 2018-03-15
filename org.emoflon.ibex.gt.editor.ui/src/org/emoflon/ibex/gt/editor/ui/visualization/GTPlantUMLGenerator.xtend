@@ -9,7 +9,6 @@ import org.emoflon.ibex.gt.editor.gT.OperatorNode
 import org.emoflon.ibex.gt.editor.gT.OperatorReference
 import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Rule
-import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 
 /**
  * Utility methods to generate PlantUML code.
@@ -50,7 +49,7 @@ class GTPlantUMLGenerator {
 			«ENDFOR»
 			
 			«FOR node : rule.nodes»
-				«FOR reference : GTEditorModelUtils.getReferences(node)»
+				«FOR reference : node.references»
 					«nodeClassName(node)» -[#«referenceColor(reference)»]-> «nodeClassName(reference.target)»: <color:«referenceColor(reference)»>«reference.type.name»
 				«ENDFOR»
 			«ENDFOR»

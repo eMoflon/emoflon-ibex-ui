@@ -12,7 +12,6 @@ import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.OperatorReference
 import org.emoflon.ibex.gt.editor.gT.Operator
-import org.emoflon.ibex.gt.editor.gT.Reference
 import org.eclipse.emf.ecore.EDataType
 
 /**
@@ -57,17 +56,6 @@ class GTEditorModelUtils {
 		} catch (Exception e) {
 			return Optional.empty
 		}
-	}
-
-	/**
-	 * Returns all references of a node.
-	 */
-	def static getReferences(Node node) {
-		return node.references.filter [
-			it instanceof Reference
-		].map [
-			it as Reference
-		]
 	}
 
 	/**

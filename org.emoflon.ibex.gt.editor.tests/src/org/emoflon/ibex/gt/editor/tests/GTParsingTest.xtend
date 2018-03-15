@@ -15,6 +15,7 @@ import org.emoflon.ibex.gt.editor.gT.LiteralValue
 import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.gT.OperatorNode
 import org.emoflon.ibex.gt.editor.gT.OperatorReference
+import org.emoflon.ibex.gt.editor.gT.ParameterValue
 import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Relation
 import org.junit.Assert
@@ -81,13 +82,28 @@ abstract class GTParsingTest {
 		Assert.assertEquals(ruleCount, file.rules.size)
 	}
 
+	def void assertAttribute(AttributeConstraint attributeConstraint, String name, Relation relation) {
+		Assert.assertEquals(name, attributeConstraint.attribute.name)
+		Assert.assertEquals(relation, attributeConstraint.relation)
+	}
+
 	def void assertAttributeLiteral(GraphTransformationFile file, int index, String name, Relation relation,
 		String value) {
 		val attr = file.rules.get(0).nodes.get(0).attributes.get(index) as AttributeConstraint
-		Assert.assertEquals(name, attr.attribute.name)
-		Assert.assertEquals(relation, attr.relation)
+		this.assertAttribute(attr, name, relation)
+
 		Assert.assertTrue(attr.value instanceof LiteralValue)
 		Assert.assertEquals(value, (attr.value as LiteralValue).value)
+	}
+
+	def void assertAttributeParameter(GraphTransformationFile file, int attributeIndex, String name, Relation relation,
+		int parameterIndex) {
+		val attr = file.rules.get(0).nodes.get(0).attributes.get(attributeIndex) as AttributeConstraint
+		this.assertAttribute(attr, name, relation)
+
+		Assert.assertTrue(attr.value instanceof ParameterValue)
+		val parameter = file.rules.get(0).parameters.get(parameterIndex)
+		Assert.assertEquals(parameter, (attr.value as ParameterValue).parameter)
 	}
 
 	def assertNode(GraphTransformationFile file, int nodeIndex, Operator operator, String variableName,
