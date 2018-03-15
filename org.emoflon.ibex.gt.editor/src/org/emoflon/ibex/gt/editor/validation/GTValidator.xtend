@@ -174,7 +174,7 @@ class GTValidator extends AbstractGTValidator {
 			GTEditorModelUtils.getContextReferences(node).forEach [
 				error(
 					String.format(REFERENCE_EXPECT_CREATED_MESSAGE, it.type.name, it.target.name),
-					GTPackage.Literals.NODE__CONSTRAINTS,
+					GTPackage.Literals.NODE__REFERENCES,
 					REFERENCE_EXPECT_CREATED_BUT_IS_CONTEXT,
 					it.type.name,
 					it.target.name,
@@ -184,7 +184,7 @@ class GTValidator extends AbstractGTValidator {
 			GTEditorModelUtils.getDeletedReferences(node).forEach [
 				error(
 					String.format(REFERENCE_EXPECT_CREATED_MESSAGE, it.type.name, it.target.name),
-					GTPackage.Literals.NODE__CONSTRAINTS,
+					GTPackage.Literals.NODE__REFERENCES,
 					REFERENCE_EXPECT_CREATED_BUT_IS_DELETED,
 					it.type.name,
 					it.target.name,
@@ -210,7 +210,7 @@ class GTValidator extends AbstractGTValidator {
 			GTEditorModelUtils.getContextReferences(node).forEach [
 				error(
 					String.format(REFERENCE_EXPECT_DELETED_MESSAGE, it.type.name, it.target.name),
-					GTPackage.Literals.NODE__CONSTRAINTS,
+					GTPackage.Literals.NODE__REFERENCES,
 					REFERENCE_EXPECT_DELETED_BUT_IS_CONTEXT,
 					it.type.name,
 					it.target.name,
@@ -220,7 +220,7 @@ class GTValidator extends AbstractGTValidator {
 			GTEditorModelUtils.getCreatedReferences(node).forEach [
 				error(
 					String.format(REFERENCE_EXPECT_DELETED_MESSAGE, it.type.name, it.target.name),
-					GTPackage.Literals.NODE__CONSTRAINTS,
+					GTPackage.Literals.NODE__REFERENCES,
 					REFERENCE_EXPECT_DELETED_BUT_IS_CREATED,
 					it.type.name,
 					it.target.name,

@@ -81,9 +81,9 @@ abstract class GTParsingTest {
 		Assert.assertEquals(ruleCount, file.rules.size)
 	}
 
-	def void assertAttributeConstraintLiteral(GraphTransformationFile file, int constraintIndex, String name,
-		Relation relation, String value) {
-		val attr = file.rules.get(0).nodes.get(0).constraints.get(constraintIndex) as AttributeConstraint
+	def void assertAttributeLiteral(GraphTransformationFile file, int index, String name, Relation relation,
+		String value) {
+		val attr = file.rules.get(0).nodes.get(0).attributes.get(index) as AttributeConstraint
 		Assert.assertEquals(name, attr.attribute.name)
 		Assert.assertEquals(relation, attr.relation)
 		Assert.assertTrue(attr.value instanceof LiteralValue)
@@ -119,9 +119,9 @@ abstract class GTParsingTest {
 		}
 	}
 
-	def assertReference(GraphTransformationFile file, int constraintIndex, Operator operator, String name,
+	def assertReference(GraphTransformationFile file, int referenceIndex, Operator operator, String name,
 		int targetNodeIndex) {
-		val reference = file.rules.get(0).nodes.get(0).constraints.get(constraintIndex) as Reference
+		val reference = file.rules.get(0).nodes.get(0).references.get(referenceIndex) as Reference
 		if (operator === null) {
 			Assert.assertTrue(reference instanceof ContextReference)
 		} else {

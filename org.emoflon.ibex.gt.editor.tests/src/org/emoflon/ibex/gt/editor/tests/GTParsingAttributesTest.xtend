@@ -27,8 +27,8 @@ class GTParsingAttributesTest extends GTParsingTest {
 			}
 		''')
 		this.assertValid(file)
-		this.assertAttributeConstraintLiteral(file, 0, "name", Relation.ASSIGNMENT, "Test1")
-		this.assertAttributeConstraintLiteral(file, 1, "instanceTypeName", Relation.ASSIGNMENT, "Test2")
+		this.assertAttributeLiteral(file, 0, "name", Relation.ASSIGNMENT, "Test1")
+		this.assertAttributeLiteral(file, 1, "instanceTypeName", Relation.ASSIGNMENT, "Test2")
 	}
 
 	@Test
@@ -44,8 +44,8 @@ class GTParsingAttributesTest extends GTParsingTest {
 			}
 		''')
 		this.assertValid(file)
-		this.assertAttributeConstraintLiteral(file, 0, "name", Relation.UNEQUAL, "Test1")
-		this.assertAttributeConstraintLiteral(file, 1, "instanceTypeName", Relation.EQUAL, "Test2")
+		this.assertAttributeLiteral(file, 0, "name", Relation.UNEQUAL, "Test1")
+		this.assertAttributeLiteral(file, 1, "instanceTypeName", Relation.EQUAL, "Test2")
 	}
 
 	@Test

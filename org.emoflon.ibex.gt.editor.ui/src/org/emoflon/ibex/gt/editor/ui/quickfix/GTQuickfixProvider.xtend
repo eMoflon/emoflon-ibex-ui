@@ -126,7 +126,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 						val contextNode = GTFactory.eINSTANCE.createContextNode
 						contextNode.name = targetNode.name
 						contextNode.type = targetNode.type
-						contextNode.constraints.addAll(targetNode.constraints)
+						contextNode.references.addAll(targetNode.references)
 						element.target = contextNode
 
 						val rule = element.eContainer.eContainer as Rule
@@ -248,7 +248,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 					val contextNode = GTFactory.eINSTANCE.createContextNode
 					contextNode.name = element.name
 					contextNode.type = element.type
-					contextNode.constraints.addAll(element.constraints)
+					contextNode.references.addAll(element.references)
 
 					val rule = element.eContainer as Rule
 					rule.nodes.set(rule.nodes.indexOf(element), contextNode)
@@ -336,7 +336,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 							newReference.type = it.type
 							newReference.target = it.target
 							it.eResource.contents.add(newReference)
-							node.constraints.set(node.constraints.indexOf(it), newReference)
+							node.references.set(node.references.indexOf(it), newReference)
 						} else if (it instanceof OperatorReference) {
 							it.operator = newOperator
 						}

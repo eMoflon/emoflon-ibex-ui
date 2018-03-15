@@ -63,7 +63,7 @@ class GTEditorModelUtils {
 	 * Returns all references of a node.
 	 */
 	def static getReferences(Node node) {
-		return node.constraints.filter [
+		return node.references.filter [
 			it instanceof Reference
 		].map [
 			it as Reference
@@ -74,7 +74,7 @@ class GTEditorModelUtils {
 	 * Returns the context references of a node.
 	 */
 	def static getContextReferences(Node node) {
-		return node.constraints.filter [
+		return node.references.filter [
 			it instanceof ContextReference
 		].map [
 			it as ContextReference
@@ -85,7 +85,7 @@ class GTEditorModelUtils {
 	 * Returns the operator references of a node.
 	 */
 	def static getOperatorReferences(Node node) {
-		return node.constraints.filter [
+		return node.references.filter [
 			it instanceof OperatorReference
 		].map [
 			it as OperatorReference

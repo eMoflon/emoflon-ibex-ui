@@ -31,21 +31,20 @@ Node:
 ContextNode:
 	name=ID ':' type=[ecore::EClass]
 	('{'
-	constraints+=InnerNodeConstraint*
+	attributes+=AttributeConstraint*
+	references+=Reference*
 	'}')?;
 
 OperatorNode:
 	operator=Operator
 	name=ID ':' type=[ecore::EClass]
 	('{'
-	constraints+=InnerNodeConstraint*
+	attributes+=AttributeConstraint*
+	references+=Reference*
 	'}')?;
 
 enum Operator:
 	CREATE='++' | DELETE='--';
-
-InnerNodeConstraint:
-	AttributeConstraint | Reference;
 
 	// Attribute Assignments and Conditions
 AttributeConstraint:
