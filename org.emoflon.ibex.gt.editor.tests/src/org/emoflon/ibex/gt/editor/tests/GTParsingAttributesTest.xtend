@@ -5,6 +5,7 @@ import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.gT.Relation
+import org.emoflon.ibex.gt.editor.validation.GTValidator
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -47,7 +48,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		this.assertAttributeLiteral(file, 0, "name", Relation.UNEQUAL, "Test1")
 		this.assertAttributeLiteral(file, 1, "instanceTypeName", Relation.EQUAL, "Test2")
 	}
-	
+
 	@Test
 	def void validAttributeConditionReferencingParameter() {
 		val file = parseHelper.parse('''
@@ -61,6 +62,56 @@ class GTParsingAttributesTest extends GTParsingTest {
 		''')
 		this.assertValid(file)
 		this.assertAttributeParameter(file, 0, "name", Relation.ASSIGNMENT, 0)
+	}
+
+	@Test
+	def void errorIfAttributeConditionReferencesParameterOfInvalidType() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			rule createClass(name: EBoolean) {
+				clazz: EClass {
+					.name := param::name
+				}
+			}
+		''')
+		this.assertBasics(file)
+		this.assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.parameterValue,
+			Diagnostic::LINKING_DIAGNOSTIC,
+			"Couldn't resolve reference to Parameter 'name'."
+		)
+	}
+
+	@Test
+	def void errorIfAttributeConstraintWithConstantOfWrongType() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			rule createAbstractTestClass {
+				++ clazz: EClass {
+					.^abstract := "Test" // Expecting EBoolean here.
+					.name == true        // Expecting EString here.
+				}
+				
+				reference: EReference {
+					.ordered == true
+					.lowerBound == 2.5   // Expecting EInt here.
+					.upperBound == false // Expecting EInt here.
+				}
+			}
+		''')
+		this.assertBasics(file)
+		this.assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.attributeConstraint,
+			GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE,
+			String.format(GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE, "name", "EString"),
+			String.format(GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE, "abstract", "EBoolean"),
+			String.format(GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE, "lowerBound", "EInt"),
+			String.format(GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE, "upperBound", "EInt")
+		)
 	}
 
 	@Test

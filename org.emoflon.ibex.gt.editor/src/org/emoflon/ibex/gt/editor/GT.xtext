@@ -64,14 +64,15 @@ Expression:
 
 LiteralValue:
 	{BooleanConstant} value=('true' | 'false') |
-	{NumberConstant} value=NumericExpression |
+	{DecimalConstant} value=DecimalExpression |
+	{IntegerConstant} value=IntegerExpression |
 	{StringConstant} value=STRING;
 
-terminal DECIMAL:
-	INT '.' INT;
+DecimalExpression:
+	('-')? INT '.' INT;
 
-NumericExpression:
-	(('-')? INT | ('-')? DECIMAL);
+IntegerExpression:
+	('-')? INT;
 
 EnumValue:
 	'enum::' literal=[ecore::EEnumLiteral];

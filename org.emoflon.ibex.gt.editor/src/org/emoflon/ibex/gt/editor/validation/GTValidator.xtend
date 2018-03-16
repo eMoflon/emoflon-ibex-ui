@@ -1,17 +1,22 @@
 package org.emoflon.ibex.gt.editor.validation
 
 import org.eclipse.xtext.validation.Check
-
+import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
+import org.emoflon.ibex.gt.editor.gT.BooleanConstant
 import org.emoflon.ibex.gt.editor.gT.ContextNode
 import org.emoflon.ibex.gt.editor.gT.ContextReference
+import org.emoflon.ibex.gt.editor.gT.DecimalConstant
 import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
 import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.gT.Import
+import org.emoflon.ibex.gt.editor.gT.IntegerConstant
+import org.emoflon.ibex.gt.editor.gT.LiteralValue
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.gT.OperatorNode
 import org.emoflon.ibex.gt.editor.gT.OperatorReference
 import org.emoflon.ibex.gt.editor.gT.Rule
+import org.emoflon.ibex.gt.editor.gT.StringConstant
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 
 /**
@@ -23,13 +28,67 @@ class GTValidator extends AbstractGTValidator {
 	/**
 	 * The list of invalid node names.
 	 */
-	private static val nodeNameBlacklist = #["class", "rule"]
+	private static val nodeNameBlacklist = #[
+		"class",
+		"rule"
+	]
 
 	/**
 	 * The list of invalid rule names.
 	 */
-	private static val ruleNameBlacklist = #["clone", "equals", "finalize", "getClass", "hashCode", "notify",
-		"notifyAll", "toString", "wait"]
+	private static val ruleNameBlacklist = #[
+		"clone",
+		"equals",
+		"finalize",
+		"getClass",
+		"hashCode",
+		"notify",
+		"notifyAll",
+		"toString",
+		"wait"
+	]
+
+	/**
+	 * The list of valid EDataType names for boolean constants.
+	 */
+	private static val dataTypesBoolean = #[
+		"EBoolean",
+		"EBooleanObject"
+	]
+
+	/**
+	 * The list of valid EDataType names for character constants. 
+	 */
+	private static val dataTypesChar = #[
+		"EChar",
+		"ECharacterObject"
+	]
+
+	/**
+	 * The list of valid EDataType names for integer constants.
+	 */
+	private static val dataTypesInteger = #[
+		"EBigInteger",
+		"EByte",
+		"EByteObject",
+		"EInt",
+		"EIntegerObject",
+		"ELong",
+		"ELongObject",
+		"EShort",
+		"EShortObject"
+	]
+
+	/**
+	 * The list of valid EDataType names for decimal constants.  
+	 */
+	private static val dataTypesDecimal = #[
+		"EBigDecimal",
+		"EDouble",
+		"EDoubleObject",
+		"EFloat",
+		"EFloatObject"
+	]
 
 	private static val CODE_PREFIX = "org.emoflon.ibex.gt.editor."
 
@@ -78,6 +137,10 @@ class GTValidator extends AbstractGTValidator {
 
 	public static val NODE_TARGET_EXPECT_CONTEXT_OR_DELETE = CODE_PREFIX + "invalidNodeTargetExpectContextOrDelete"
 	public static val NODE_TARGET_EXPECT_CONTEXT_OR_DELETE_MESSAGE = "The target of the deleted reference '%s must be a context or a deleted node."
+
+	// Errors for attributes.
+	public static val ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE = CODE_PREFIX + "attributeLiteralValueWrongType"
+	public static val ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE = "The value of attribute '%s' must be of type '%s'"
 
 	// Errors for references.
 	public static val REFERENCE_EXPECT_CREATED_BUT_IS_CONTEXT = CODE_PREFIX + "referenceExpectCreatedButIsContext"
@@ -228,6 +291,45 @@ class GTValidator extends AbstractGTValidator {
 				)
 			]
 		}
+	}
+
+	@Check
+	def checkAttribute(AttributeConstraint attributeConstraint) {
+		val attribute = attributeConstraint.attribute
+		val value = attributeConstraint.value
+		if (value instanceof LiteralValue) {
+			val expectedType = attribute.EAttributeType.name
+			if (!isValidLiteralValue(value, expectedType)) {
+				error(
+					String.format(ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE, attribute.name, expectedType),
+					GTPackage.Literals.ATTRIBUTE_CONSTRAINT__VALUE,
+					ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE,
+					expectedType
+				)
+			}
+		}
+	}
+
+	/**
+	 * Checks whether the literal value fits to the expected type. 
+	 */
+	private def isValidLiteralValue(LiteralValue value, String expectedType) {
+		if (dataTypesBoolean.contains(expectedType)) {
+			return value instanceof BooleanConstant
+		}
+		if (dataTypesChar.contains(expectedType)) {
+			return value instanceof StringConstant && (value as StringConstant).value.length == 1
+		}
+		if (dataTypesDecimal.contains(expectedType)) {
+			return value instanceof DecimalConstant || value instanceof IntegerConstant
+		}
+		if (dataTypesInteger.contains(expectedType)) {
+			return value instanceof IntegerConstant
+		}
+		if ("EString".equals(expectedType)) {
+			return value instanceof StringConstant
+		}
+		return true
 	}
 
 	@Check
