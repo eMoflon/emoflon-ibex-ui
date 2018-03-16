@@ -146,7 +146,7 @@ class GTValidator extends AbstractGTValidator {
 	public static val ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE = CODE_PREFIX + "attributeAssignmentInDeletedNode"
 	public static val ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE_MESSAGE = "The assignment for attribute '%s' is forbidden in deleted node '%s'."
 
-	public static val ATTRIBUTE_CONDITION_IN_CREATED_NODE = CODE_PREFIX + "attributeAssignmentInDeletedNode"
+	public static val ATTRIBUTE_CONDITION_IN_CREATED_NODE = CODE_PREFIX + "attributeConditionInCreatedNode"
 	public static val ATTRIBUTE_CONDITION_IN_CREATED_NODE_MESSAGE = "The condition with attribute '%s' is forbidden in created node '%s'."
 
 	// Errors for references.
@@ -245,7 +245,8 @@ class GTValidator extends AbstractGTValidator {
 				error(
 					String.format(ATTRIBUTE_CONDITION_IN_CREATED_NODE_MESSAGE, it.attribute.name, node.name),
 					GTPackage.Literals.NODE__ATTRIBUTES,
-					ATTRIBUTE_CONDITION_IN_CREATED_NODE
+					ATTRIBUTE_CONDITION_IN_CREATED_NODE,
+					it.attribute.name
 				)
 			]
 
@@ -290,7 +291,8 @@ class GTValidator extends AbstractGTValidator {
 				error(
 					String.format(ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE_MESSAGE, it.attribute.name, node.name),
 					GTPackage.Literals.NODE__ATTRIBUTES,
-					ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE
+					ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE,
+					it.attribute.name
 				)
 			]
 

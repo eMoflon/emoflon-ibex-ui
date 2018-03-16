@@ -1,11 +1,14 @@
 package org.emoflon.ibex.gt.editor.ui.quickfix
 
+import java.util.function.Function
+
 import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
 import org.eclipse.xtext.ui.editor.quickfix.Fix
 import org.eclipse.xtext.ui.editor.utils.EditorUtils
 import org.eclipse.xtext.validation.Issue
 
+import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
 import org.emoflon.ibex.gt.editor.gT.ContextReference
 import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
 import org.emoflon.ibex.gt.editor.gT.GTFactory
@@ -15,6 +18,7 @@ import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.gT.OperatorNode
 import org.emoflon.ibex.gt.editor.gT.OperatorReference
 import org.emoflon.ibex.gt.editor.gT.Reference
+import org.emoflon.ibex.gt.editor.gT.Relation
 import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.validation.GTValidator
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
@@ -228,6 +232,48 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 				]
 			)
 		]
+	}
+
+	@Fix(GTValidator.ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE)
+	def changeAttributeAssignmentToCondition(Issue issue, IssueResolutionAcceptor acceptor) {
+		this.acceptAttributeConstraintRelationChange(
+			issue,
+			acceptor,
+			"Convert assignment for '%s' to == condition.",
+			[GTEditorModelUtils.getAttributeAssignments(it)],
+			Relation.EQUAL
+		)
+	}
+
+	@Fix(GTValidator.ATTRIBUTE_CONDITION_IN_CREATED_NODE)
+	def changeAttributeConditionToAssignment(Issue issue, IssueResolutionAcceptor acceptor) {
+		this.acceptAttributeConstraintRelationChange(
+			issue,
+			acceptor,
+			"Convert condition for '%s' to assignment.",
+			[GTEditorModelUtils.getAttributeConditions(it)],
+			Relation.ASSIGNMENT
+		)
+	}
+
+	private def acceptAttributeConstraintRelationChange(Issue issue, IssueResolutionAcceptor acceptor, String text,
+		Function<Node, Iterable<AttributeConstraint>> attributeConstraintSelector, Relation newRelation) {
+		val attributeName = issue.data.get(0)
+		val label = String.format(text, attributeName)
+		acceptor.accept(
+			issue,
+			label,
+			label,
+			null,
+			[ element, context |
+				if (element instanceof OperatorNode) {
+					val attributeConstraint = attributeConstraintSelector.apply(element).findFirst [
+						attributeName.equals(it.attribute.name)
+					]
+					attributeConstraint.relation = newRelation
+				}
+			]
+		)
 	}
 
 	/**
