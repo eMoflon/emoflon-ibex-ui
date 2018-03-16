@@ -166,15 +166,14 @@ public class GTBuilder extends IncrementalProjectBuilder {
 		try {
 			for (final IResource member : container.members()) {
 				if (member instanceof IContainer) {
-					final IContainer c = (IContainer) member;
-					set.addAll(findFolders(c));
-					boolean isRulePackage = Arrays.stream(c.members()) //
-							.filter(m -> m instanceof IFile).map(m -> (IFile) m) // find a file
-							.anyMatch(f -> "gt".equals(f.getFileExtension())); // with extension gt
-					if (isRulePackage) {
-						set.add(c);
-					}
+					set.addAll(this.findFolders((IContainer) member));
 				}
+			}
+			boolean isRulePackage = Arrays.stream(container.members()) //
+					.filter(m -> m instanceof IFile).map(m -> (IFile) m) // find a file
+					.anyMatch(f -> "gt".equals(f.getFileExtension())); // with extension gt
+			if (isRulePackage) {
+				set.add(container);
 			}
 		} catch (Throwable e) {
 			this.logError(e.getMessage());

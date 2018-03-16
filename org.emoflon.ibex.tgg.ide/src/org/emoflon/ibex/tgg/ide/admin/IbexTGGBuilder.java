@@ -87,6 +87,7 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 		switch (kind) {
 		case CLEAN_BUILD:
 		case FULL_BUILD:
+			generateFiles();
 		case AUTO_BUILD:
 		case INCREMENTAL_BUILD:
 			generateFilesIfchangeIsRelevant();
