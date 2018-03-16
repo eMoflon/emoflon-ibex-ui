@@ -128,7 +128,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		this.assertBasics(file)
 		this.assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.operatorNode,
+			GTPackage.eINSTANCE.attributeConstraint,
 			GTValidator.ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE,
 			String.format(GTValidator.ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE_MESSAGE, 'name', 'clazz')
 		)
@@ -148,7 +148,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		this.assertBasics(file)
 		this.assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.operatorNode,
+			GTPackage.eINSTANCE.attributeConstraint,
 			GTValidator.ATTRIBUTE_CONDITION_IN_CREATED_NODE,
 			String.format(GTValidator.ATTRIBUTE_CONDITION_IN_CREATED_NODE_MESSAGE, 'name', 'clazz')
 		)

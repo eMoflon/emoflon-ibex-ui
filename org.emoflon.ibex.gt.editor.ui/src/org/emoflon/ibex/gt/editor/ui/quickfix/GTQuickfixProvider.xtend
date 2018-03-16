@@ -256,6 +256,9 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 		)
 	}
 
+	/**
+	 * Changes the relation of the attribute constraint. 
+	 */
 	private def acceptAttributeConstraintRelationChange(Issue issue, IssueResolutionAcceptor acceptor, String text,
 		Function<Node, Iterable<AttributeConstraint>> attributeConstraintSelector, Relation newRelation) {
 		val attributeName = issue.data.get(0)
@@ -266,11 +269,8 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			label,
 			null,
 			[ element, context |
-				if (element instanceof OperatorNode) {
-					val attributeConstraint = attributeConstraintSelector.apply(element).findFirst [
-						attributeName.equals(it.attribute.name)
-					]
-					attributeConstraint.relation = newRelation
+				if (element instanceof AttributeConstraint) {
+					element.relation = newRelation
 				}
 			]
 		)

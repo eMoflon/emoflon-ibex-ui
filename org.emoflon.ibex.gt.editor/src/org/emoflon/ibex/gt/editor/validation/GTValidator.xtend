@@ -16,6 +16,7 @@ import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.gT.OperatorNode
 import org.emoflon.ibex.gt.editor.gT.OperatorReference
+import org.emoflon.ibex.gt.editor.gT.Relation
 import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.gT.StringConstant
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
@@ -240,16 +241,6 @@ class GTValidator extends AbstractGTValidator {
 	@Check
 	def checkOperatorNode(OperatorNode node) {
 		if (node.operator == Operator.CREATE) {
-			// If the node is a created node, it may not contain attribute conditions.
-			GTEditorModelUtils.getAttributeConditions(node).forEach [
-				error(
-					String.format(ATTRIBUTE_CONDITION_IN_CREATED_NODE_MESSAGE, it.attribute.name, node.name),
-					GTPackage.Literals.NODE__ATTRIBUTES,
-					ATTRIBUTE_CONDITION_IN_CREATED_NODE,
-					it.attribute.name
-				)
-			]
-
 			// If the node is a created node, its references must be created references.
 			GTEditorModelUtils.getContextReferences(node).forEach [
 				error(
@@ -286,16 +277,6 @@ class GTValidator extends AbstractGTValidator {
 		}
 
 		if (node.operator == Operator.DELETE) {
-			// If the node is a created node, it may not contain attribute conditions.
-			GTEditorModelUtils.getAttributeAssignments(node).forEach [
-				error(
-					String.format(ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE_MESSAGE, it.attribute.name, node.name),
-					GTPackage.Literals.NODE__ATTRIBUTES,
-					ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE,
-					it.attribute.name
-				)
-			]
-
 			// If the node is a deleted node, its references must be deleted references.
 			GTEditorModelUtils.getContextReferences(node).forEach [
 				error(
@@ -324,6 +305,8 @@ class GTValidator extends AbstractGTValidator {
 	def checkAttribute(AttributeConstraint attributeConstraint) {
 		val attribute = attributeConstraint.attribute
 		val value = attributeConstraint.value
+
+		// The attribute value must be of the correct type.
 		if (value instanceof LiteralValue) {
 			val expectedType = attribute.EAttributeType.name
 			if (!isValidLiteralValue(value, expectedType)) {
@@ -335,6 +318,32 @@ class GTValidator extends AbstractGTValidator {
 				)
 			}
 		}
+
+		val node = attributeConstraint.eContainer as Node
+		if (node instanceof OperatorNode) {
+			if (attributeConstraint.relation == Relation.ASSIGNMENT) {
+				if (node.operator == Operator.DELETE) {
+					// If the node is a deleted node, it may not contain attribute assignments.
+					error(
+						String.format(ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE_MESSAGE, attribute.name, node.name),
+						GTPackage.Literals.ATTRIBUTE_CONSTRAINT__RELATION,
+						ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE,
+						attribute.name
+					)
+				}
+			} else { // attribute constraint is a condition
+				if (node.operator == Operator.CREATE) {
+					// If the node is a created node, it may not contain attribute conditions.
+					error(
+						String.format(ATTRIBUTE_CONDITION_IN_CREATED_NODE_MESSAGE, attribute.name, node.name),
+						GTPackage.Literals.ATTRIBUTE_CONSTRAINT__RELATION,
+						ATTRIBUTE_CONDITION_IN_CREATED_NODE,
+						attribute.name
+					)
+				}
+			}
+		}
+
 	}
 
 	/**
