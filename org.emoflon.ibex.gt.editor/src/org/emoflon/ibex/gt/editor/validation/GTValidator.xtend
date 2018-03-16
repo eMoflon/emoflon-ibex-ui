@@ -1,6 +1,7 @@
 package org.emoflon.ibex.gt.editor.validation
 
 import org.eclipse.xtext.validation.Check
+
 import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
 import org.emoflon.ibex.gt.editor.gT.BooleanConstant
 import org.emoflon.ibex.gt.editor.gT.ContextNode
@@ -142,6 +143,12 @@ class GTValidator extends AbstractGTValidator {
 	public static val ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE = CODE_PREFIX + "attributeLiteralValueWrongType"
 	public static val ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE = "The value of attribute '%s' must be of type '%s'"
 
+	public static val ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE = CODE_PREFIX + "attributeAssignmentInDeletedNode"
+	public static val ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE_MESSAGE = "The assignment for attribute '%s' is forbidden in deleted node '%s'."
+
+	public static val ATTRIBUTE_CONDITION_IN_CREATED_NODE = CODE_PREFIX + "attributeAssignmentInDeletedNode"
+	public static val ATTRIBUTE_CONDITION_IN_CREATED_NODE_MESSAGE = "The condition with attribute '%s' is forbidden in created node '%s'."
+
 	// Errors for references.
 	public static val REFERENCE_EXPECT_CREATED_BUT_IS_CONTEXT = CODE_PREFIX + "referenceExpectCreatedButIsContext"
 	public static val REFERENCE_EXPECT_CREATED_BUT_IS_DELETED = CODE_PREFIX + "referenceExpectCreatedButIsDeleted"
@@ -233,6 +240,15 @@ class GTValidator extends AbstractGTValidator {
 	@Check
 	def checkOperatorNode(OperatorNode node) {
 		if (node.operator == Operator.CREATE) {
+			// If the node is a created node, it may not contain attribute conditions.
+			GTEditorModelUtils.getAttributeConditions(node).forEach [
+				error(
+					String.format(ATTRIBUTE_CONDITION_IN_CREATED_NODE_MESSAGE, it.attribute.name, node.name),
+					GTPackage.Literals.NODE__ATTRIBUTES,
+					ATTRIBUTE_CONDITION_IN_CREATED_NODE
+				)
+			]
+
 			// If the node is a created node, its references must be created references.
 			GTEditorModelUtils.getContextReferences(node).forEach [
 				error(
@@ -268,8 +284,17 @@ class GTValidator extends AbstractGTValidator {
 			}
 		}
 
-		// If the node is a deleted node, its references must be deleted references.
 		if (node.operator == Operator.DELETE) {
+			// If the node is a created node, it may not contain attribute conditions.
+			GTEditorModelUtils.getAttributeAssignments(node).forEach [
+				error(
+					String.format(ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE_MESSAGE, it.attribute.name, node.name),
+					GTPackage.Literals.NODE__ATTRIBUTES,
+					ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE
+				)
+			]
+
+			// If the node is a deleted node, its references must be deleted references.
 			GTEditorModelUtils.getContextReferences(node).forEach [
 				error(
 					String.format(REFERENCE_EXPECT_DELETED_MESSAGE, it.type.name, it.target.name),

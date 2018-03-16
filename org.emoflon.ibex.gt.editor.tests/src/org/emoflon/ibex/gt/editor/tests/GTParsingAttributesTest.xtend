@@ -115,6 +115,46 @@ class GTParsingAttributesTest extends GTParsingTest {
 	}
 
 	@Test
+	def void errorIfAttributeAssignmentInDeletedNode() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			rule a {
+				-- clazz: EClass {
+					.name := "Test"
+				}
+			}
+		''')
+		this.assertBasics(file)
+		this.assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.operatorNode,
+			GTValidator.ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE,
+			String.format(GTValidator.ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE_MESSAGE, 'name', 'clazz')
+		)
+	}
+
+	@Test
+	def void errorIfAttributeConditionInCreatedNode() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			rule a {
+				++ clazz: EClass {
+					.name == "Test"
+				}
+			}
+		''')
+		this.assertBasics(file)
+		this.assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.operatorNode,
+			GTValidator.ATTRIBUTE_CONDITION_IN_CREATED_NODE,
+			String.format(GTValidator.ATTRIBUTE_CONDITION_IN_CREATED_NODE_MESSAGE, 'name', 'clazz')
+		)
+	}
+
+	@Test
 	def void errorIfNoSuchAttributeInMetaModel() {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"

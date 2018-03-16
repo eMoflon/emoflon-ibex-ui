@@ -4,6 +4,7 @@ import java.util.Optional
 
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EClass
+import org.eclipse.emf.ecore.EDataType
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.xtext.EcoreUtil2
 
@@ -12,7 +13,7 @@ import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.OperatorReference
 import org.emoflon.ibex.gt.editor.gT.Operator
-import org.eclipse.emf.ecore.EDataType
+import org.emoflon.ibex.gt.editor.gT.Relation
 
 /**
  * Utility methods for working with {@link GraphTransformationFile} models.
@@ -56,6 +57,24 @@ class GTEditorModelUtils {
 		} catch (Exception e) {
 			return Optional.empty
 		}
+	}
+
+	/**
+	 * Returns the attribute assignments of a node.
+	 */
+	def static getAttributeAssignments(Node node) {
+		return node.attributes.filter [
+			it.relation.equals(Relation.ASSIGNMENT)
+		]
+	}
+
+	/**
+	 * Returns the attribute conditions of a node.
+	 */
+	def static getAttributeConditions(Node node) {
+		return node.attributes.filter [
+			!it.relation.equals(Relation.ASSIGNMENT)
+		]
 	}
 
 	/**
