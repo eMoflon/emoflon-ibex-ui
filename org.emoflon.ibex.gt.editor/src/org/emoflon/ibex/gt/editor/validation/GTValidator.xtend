@@ -5,7 +5,6 @@ import org.eclipse.xtext.validation.Check
 import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
 import org.emoflon.ibex.gt.editor.gT.BooleanConstant
 import org.emoflon.ibex.gt.editor.gT.ContextNode
-import org.emoflon.ibex.gt.editor.gT.ContextReference
 import org.emoflon.ibex.gt.editor.gT.DecimalConstant
 import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
 import org.emoflon.ibex.gt.editor.gT.GTPackage
@@ -15,11 +14,11 @@ import org.emoflon.ibex.gt.editor.gT.LiteralValue
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.gT.OperatorNode
-import org.emoflon.ibex.gt.editor.gT.OperatorReference
 import org.emoflon.ibex.gt.editor.gT.Relation
 import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.gT.StringConstant
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
+import org.emoflon.ibex.gt.editor.gT.Reference
 
 /**
  * This class contains custom validation rules. 
@@ -161,6 +160,7 @@ class GTValidator extends AbstractGTValidator {
 
 	@Check
 	def checkFile(GraphTransformationFile file) {
+		// There must be at least one import.
 		if (file.imports.size === 0) {
 			error(
 				IMPORT_MISSING_META_MODEL_MESSAGE,
@@ -172,6 +172,7 @@ class GTValidator extends AbstractGTValidator {
 
 	@Check
 	def checkImports(Import importEcore) {
+		// Import files must exist.
 		if (!GTEditorModelUtils.loadEcoreModel(importEcore.name).present) {
 			error(
 				String.format(IMPORT_FILE_DOES_NOT_EXIST_MESSAGE, importEcore.name),
@@ -212,8 +213,7 @@ class GTValidator extends AbstractGTValidator {
 				)
 			} else {
 				// The node name should start with a lower case character.
-				val firstCharacter = node.name.charAt(0)
-				if (Character.isUpperCase(firstCharacter)) {
+				if (Character.isUpperCase(node.name.charAt(0))) {
 					warning(
 						String.format(NODE_NAME_STARTS_WITH_LOWER_CASE_MESSAGE, node.name),
 						GTPackage.Literals.NODE__NAME,
@@ -241,28 +241,6 @@ class GTValidator extends AbstractGTValidator {
 	@Check
 	def checkOperatorNode(OperatorNode node) {
 		if (node.operator == Operator.CREATE) {
-			// If the node is a created node, its references must be created references.
-			GTEditorModelUtils.getContextReferences(node).forEach [
-				error(
-					String.format(REFERENCE_EXPECT_CREATED_MESSAGE, it.type.name, it.target.name),
-					GTPackage.Literals.NODE__REFERENCES,
-					REFERENCE_EXPECT_CREATED_BUT_IS_CONTEXT,
-					it.type.name,
-					it.target.name,
-					node.name
-				)
-			]
-			GTEditorModelUtils.getDeletedReferences(node).forEach [
-				error(
-					String.format(REFERENCE_EXPECT_CREATED_MESSAGE, it.type.name, it.target.name),
-					GTPackage.Literals.NODE__REFERENCES,
-					REFERENCE_EXPECT_CREATED_BUT_IS_DELETED,
-					it.type.name,
-					it.target.name,
-					node.name
-				)
-			]
-
 			// The type of a created node must not be abstract.
 			val rule = node.eContainer as Rule
 			if (node.type.abstract && (!rule.abstract)) {
@@ -274,30 +252,6 @@ class GTValidator extends AbstractGTValidator {
 					rule.name
 				)
 			}
-		}
-
-		if (node.operator == Operator.DELETE) {
-			// If the node is a deleted node, its references must be deleted references.
-			GTEditorModelUtils.getContextReferences(node).forEach [
-				error(
-					String.format(REFERENCE_EXPECT_DELETED_MESSAGE, it.type.name, it.target.name),
-					GTPackage.Literals.NODE__REFERENCES,
-					REFERENCE_EXPECT_DELETED_BUT_IS_CONTEXT,
-					it.type.name,
-					it.target.name,
-					node.name
-				)
-			]
-			GTEditorModelUtils.getCreatedReferences(node).forEach [
-				error(
-					String.format(REFERENCE_EXPECT_DELETED_MESSAGE, it.type.name, it.target.name),
-					GTPackage.Literals.NODE__REFERENCES,
-					REFERENCE_EXPECT_DELETED_BUT_IS_CREATED,
-					it.type.name,
-					it.target.name,
-					node.name
-				)
-			]
 		}
 	}
 
@@ -369,20 +323,45 @@ class GTValidator extends AbstractGTValidator {
 	}
 
 	@Check
-	def checkContextReference(ContextReference reference) {
-		// The target of a context reference must be a context node.
-		if (!(reference.target instanceof ContextNode)) {
-			error(
-				String.format(NODE_TARGET_EXPECT_CONTEXT_MESSAGE, reference.type.name),
-				GTPackage.Literals.REFERENCE__TARGET,
-				NODE_TARGET_EXPECT_CONTEXT,
-				reference.target.name
-			)
-		}
-	}
+	def checkReference(Reference reference) {
+		val node = reference.eContainer as Node
+		
+		if (reference.operator == Operator.CONTEXT) {
+			// The target of a context reference must be a context node.
+			if (!(reference.target instanceof ContextNode)) {
+				error(
+					String.format(NODE_TARGET_EXPECT_CONTEXT_MESSAGE, reference.type.name),
+					GTPackage.Literals.REFERENCE__TARGET,
+					NODE_TARGET_EXPECT_CONTEXT,
+					reference.target.name
+				)
+			}
 
-	@Check
-	def checkOperatorReference(OperatorReference reference) {
+			if (node instanceof OperatorNode) {
+				if (node.operator == Operator.CREATE) {
+					// Context references are not allowed in created nodes.
+					error(
+						String.format(REFERENCE_EXPECT_CREATED_MESSAGE, reference.type.name, reference.target.name),
+						GTPackage.Literals.REFERENCE__OPERATOR,
+						REFERENCE_EXPECT_CREATED_BUT_IS_CONTEXT,
+						reference.type.name,
+						reference.target.name,
+						node.name
+					)
+				} else if (node.operator == Operator.DELETE) {
+					// Context references are not allowed in deleted nodes.
+					error(
+						String.format(REFERENCE_EXPECT_DELETED_MESSAGE, reference.type.name, reference.target.name),
+						GTPackage.Literals.REFERENCE__OPERATOR,
+						REFERENCE_EXPECT_DELETED_BUT_IS_CONTEXT,
+						reference.type.name,
+						reference.target.name,
+						node.name
+					)
+				}
+			}
+		}
+
 		if (reference.operator == Operator.CREATE) {
 			// The target of a created reference must be a context or a created node.
 			if (reference.target instanceof OperatorNode) {
@@ -395,6 +374,18 @@ class GTValidator extends AbstractGTValidator {
 						reference.target.name
 					)
 				}
+			}
+
+			// Created references are not allowed in deleted nodes.
+			if (node instanceof OperatorNode && (node as OperatorNode).operator == Operator.DELETE) {
+				error(
+					String.format(REFERENCE_EXPECT_DELETED_MESSAGE, reference.type.name, reference.target.name),
+					GTPackage.Literals.REFERENCE__OPERATOR,
+					REFERENCE_EXPECT_DELETED_BUT_IS_CREATED,
+					reference.type.name,
+					reference.target.name,
+					node.name
+				)
 			}
 		}
 
@@ -410,6 +401,18 @@ class GTValidator extends AbstractGTValidator {
 						reference.target.name
 					)
 				}
+			}
+
+			// Deleted references are not allowed in created nodes.
+			if (node instanceof OperatorNode && (node as OperatorNode).operator == Operator.CREATE) {
+				error(
+					String.format(REFERENCE_EXPECT_CREATED_MESSAGE, reference.type.name, reference.target.name),
+					GTPackage.Literals.REFERENCE__OPERATOR,
+					REFERENCE_EXPECT_CREATED_BUT_IS_DELETED,
+					reference.type.name,
+					reference.target.name,
+					node.name
+				)
 			}
 		}
 	}

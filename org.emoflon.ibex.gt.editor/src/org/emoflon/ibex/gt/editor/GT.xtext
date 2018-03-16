@@ -36,7 +36,7 @@ ContextNode:
 	'}')?;
 
 OperatorNode:
-	operator=Operator
+	operator=OperatorForEditor
 	name=ID ':' type=[ecore::EClass]
 	('{'
 	attributes+=AttributeConstraint*
@@ -44,6 +44,11 @@ OperatorNode:
 	'}')?;
 
 enum Operator:
+	CONTEXT |
+	CREATE |
+	DELETE;
+
+enum OperatorForEditor returns Operator:
 	CREATE='++' | DELETE='--';
 
 	// Attribute Assignments and Conditions
@@ -82,13 +87,7 @@ ParameterValue:
 
 	// References
 Reference:
-	ContextReference | OperatorReference;
-
-ContextReference:
-	'-' type=[ecore::EReference] '->' target=[Node];
-
-OperatorReference:
-	operator=Operator '-' type=[ecore::EReference] '->' target=[Node];
+	(operator=OperatorForEditor)? '-' type=[ecore::EReference] '->' target=[Node];
 
 	// Negative Application Conditions
 NAC:

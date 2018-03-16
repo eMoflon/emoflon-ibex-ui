@@ -7,15 +7,14 @@ import org.eclipse.xtext.formatting2.AbstractFormatter2
 import org.eclipse.xtext.formatting2.IFormattableDocument
 
 import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
-import org.emoflon.ibex.gt.editor.gT.ContextReference
 import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
 import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.gT.Import
 import org.emoflon.ibex.gt.editor.gT.Node
-import org.emoflon.ibex.gt.editor.gT.OperatorReference
 import org.emoflon.ibex.gt.editor.gT.Parameter
 import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Rule
+import org.emoflon.ibex.gt.editor.gT.Operator
 
 /**
  * Formatting
@@ -115,18 +114,16 @@ class GTFormatter extends AbstractFormatter2 {
 	}
 
 	def dispatch void format(Reference reference, extension IFormattableDocument document) {
-		if (reference instanceof ContextReference) {
+		if (reference.operator == Operator.CONTEXT) {
 			// No space before "-" and between "-" and the reference name.
 			reference.regionFor.keyword("-").surround[noSpace]
-		} else if (reference instanceof OperatorReference) {
-			val operatorReference = reference as OperatorReference
-
+		} else {
 			// One space between operator and "-".
-			operatorReference.regionFor.feature(GTPackage.Literals.OPERATOR_REFERENCE__OPERATOR).append[oneSpace]
+			reference.regionFor.feature(GTPackage.Literals.REFERENCE__OPERATOR).append[oneSpace]
 
 			// One space before "-", but no space between "-" and the reference name.
-			operatorReference.regionFor.keyword("-").prepend[oneSpace]
-			operatorReference.regionFor.keyword("-").append[noSpace]
+			reference.regionFor.keyword("-").prepend[oneSpace]
+			reference.regionFor.keyword("-").append[noSpace]
 		}
 
 		// One space before and after ->.

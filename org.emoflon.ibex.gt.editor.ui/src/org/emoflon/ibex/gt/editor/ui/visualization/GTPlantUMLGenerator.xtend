@@ -2,11 +2,9 @@ package org.emoflon.ibex.gt.editor.ui.visualization
 
 import org.eclipse.emf.common.util.EList
 import org.emoflon.ibex.gt.editor.gT.ContextNode
-import org.emoflon.ibex.gt.editor.gT.ContextReference
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.gT.OperatorNode
-import org.emoflon.ibex.gt.editor.gT.OperatorReference
 import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Rule
 
@@ -82,14 +80,12 @@ class GTPlantUMLGenerator {
 	 * Returns the color for the reference.
 	 */
 	private static def String referenceColor(Reference reference) {
-		if (reference instanceof ContextReference) {
+		if (reference.operator == Operator.CONTEXT) {
 			'''«ContextColor»'''
-		} else if (reference instanceof OperatorReference) {
-			if (reference.operator === Operator.CREATE) {
-				'''«CreateColor»'''
-			} else {
-				'''«DeleteColor»'''
-			}
+		} else if (reference.operator === Operator.CREATE) {
+			'''«CreateColor»'''
+		} else if (reference.operator === Operator.DELETE) {
+			'''«DeleteColor»'''
 		} else {
 			''
 		}

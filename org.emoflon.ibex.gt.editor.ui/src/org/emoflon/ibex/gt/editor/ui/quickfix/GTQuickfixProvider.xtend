@@ -9,14 +9,12 @@ import org.eclipse.xtext.ui.editor.utils.EditorUtils
 import org.eclipse.xtext.validation.Issue
 
 import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
-import org.emoflon.ibex.gt.editor.gT.ContextReference
 import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
 import org.emoflon.ibex.gt.editor.gT.GTFactory
 import org.emoflon.ibex.gt.editor.gT.Import
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.gT.OperatorNode
-import org.emoflon.ibex.gt.editor.gT.OperatorReference
 import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Relation
 import org.emoflon.ibex.gt.editor.gT.Rule
@@ -170,7 +168,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			label,
 			null,
 			[ element, context |
-				if (element instanceof OperatorReference) {
+				if (element instanceof Reference) {
 					if (element.target instanceof OperatorNode) {
 						(element.target as OperatorNode).operator = newOperator
 					}
@@ -332,8 +330,9 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			label,
 			null,
 			[ element, context |
-				if (element instanceof OperatorNode) {
-					element.operator = newOperator
+				if (element instanceof Reference) {
+					val node = element.eContainer as OperatorNode
+					node.operator = newOperator
 				}
 			]
 		)
@@ -345,7 +344,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	@Fix(GTValidator.REFERENCE_EXPECT_CREATED_BUT_IS_CONTEXT)
 	@Fix(GTValidator.REFERENCE_EXPECT_CREATED_BUT_IS_DELETED)
 	def convertToCreatedReference(Issue issue, IssueResolutionAcceptor acceptor) {
-		this.acceptConvertOperatorReference(issue, acceptor, 'created', Operator.CREATE)
+		this.acceptChangeReferenceOperator(issue, acceptor, 'created', Operator.CREATE)
 	}
 
 	/**
@@ -354,39 +353,25 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	@Fix(GTValidator.REFERENCE_EXPECT_DELETED_BUT_IS_CONTEXT)
 	@Fix(GTValidator.REFERENCE_EXPECT_DELETED_BUT_IS_CREATED)
 	def convertToDeletedReference(Issue issue, IssueResolutionAcceptor acceptor) {
-		this.acceptConvertOperatorReference(issue, acceptor, 'deleted', Operator.DELETE)
+		this.acceptChangeReferenceOperator(issue, acceptor, 'deleted', Operator.DELETE)
 	}
 
 	/**
 	 * Converts the reference affected by the issue to an operator node with the given operator.
 	 */
-	private def acceptConvertOperatorReference(Issue issue, IssueResolutionAcceptor acceptor, String operatorName,
+	private def acceptChangeReferenceOperator(Issue issue, IssueResolutionAcceptor acceptor, String operatorName,
 		Operator newOperator) {
 		val referenceTypeName = issue.data.get(0)
 		val referenceTargetNodeName = issue.data.get(1)
-		val label = '''Convert reference '«referenceTypeName»' to a «operatorName» reference.'''
+		val label = '''Convert reference '«referenceTypeName» -> «referenceTargetNodeName»' to a «operatorName» reference.'''
 		acceptor.accept(
 			issue,
 			label,
 			label,
 			null,
 			[ element, context |
-				if (element instanceof Node) {
-					val node = element as Node
-					node.references.filter [
-						it.type.name.equals(referenceTypeName) && it.target.name.equals(referenceTargetNodeName)
-					].forEach [
-						if (it instanceof ContextReference) {
-							val newReference = GTFactory.eINSTANCE.createOperatorReference
-							newReference.operator = newOperator
-							newReference.type = it.type
-							newReference.target = it.target
-							it.eResource.contents.add(newReference)
-							node.references.set(node.references.indexOf(it), newReference)
-						} else if (it instanceof OperatorReference) {
-							it.operator = newOperator
-						}
-					]
+				if (element instanceof Reference) {
+					element.operator = newOperator
 				}
 			]
 		)

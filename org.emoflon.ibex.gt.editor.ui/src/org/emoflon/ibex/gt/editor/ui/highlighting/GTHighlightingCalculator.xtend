@@ -13,7 +13,6 @@ import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.OperatorNode
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Operator
-import org.emoflon.ibex.gt.editor.gT.OperatorReference
 
 /** 
  * Applying syntax highlighting configuration.
@@ -42,16 +41,13 @@ class GTHighlightingCalculator extends DefaultSemanticHighlightingCalculator {
 		}
 
 		if (element instanceof Reference) {
-			var style = getStyle(null)
-			if (element instanceof OperatorReference) {
-				style = getStyle(element.operator)
-			}
+			var style = getStyle(element.operator)
 			this.highlightNode(acceptor, element, style)
 		}
 	}
 
 	def getStyle(Operator operator) {
-		if (operator === null) {
+		if (operator === null || operator === Operator.CONTEXT) {
 			return GTHighlightingConfiguration.CONTEXT
 		}
 		if (operator === Operator.CREATE) {
