@@ -4,7 +4,6 @@ import org.eclipse.xtext.validation.Check
 
 import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
 import org.emoflon.ibex.gt.editor.gT.BooleanConstant
-import org.emoflon.ibex.gt.editor.gT.ContextNode
 import org.emoflon.ibex.gt.editor.gT.DecimalConstant
 import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
 import org.emoflon.ibex.gt.editor.gT.GTPackage
@@ -13,7 +12,6 @@ import org.emoflon.ibex.gt.editor.gT.IntegerConstant
 import org.emoflon.ibex.gt.editor.gT.LiteralValue
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Operator
-import org.emoflon.ibex.gt.editor.gT.OperatorNode
 import org.emoflon.ibex.gt.editor.gT.Relation
 import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.gT.StringConstant
@@ -236,12 +234,9 @@ class GTValidator extends AbstractGTValidator {
 				)
 			}
 		}
-	}
 
-	@Check
-	def checkOperatorNode(OperatorNode node) {
+		// The type of a created node must not be abstract.
 		if (node.operator == Operator.CREATE) {
-			// The type of a created node must not be abstract.
 			val rule = node.eContainer as Rule
 			if (node.type.abstract && (!rule.abstract)) {
 				error(
@@ -274,30 +269,27 @@ class GTValidator extends AbstractGTValidator {
 		}
 
 		val node = attributeConstraint.eContainer as Node
-		if (node instanceof OperatorNode) {
-			if (attributeConstraint.relation == Relation.ASSIGNMENT) {
-				if (node.operator == Operator.DELETE) {
-					// If the node is a deleted node, it may not contain attribute assignments.
-					error(
-						String.format(ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE_MESSAGE, attribute.name, node.name),
-						GTPackage.Literals.ATTRIBUTE_CONSTRAINT__RELATION,
-						ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE,
-						attribute.name
-					)
-				}
-			} else { // attribute constraint is a condition
-				if (node.operator == Operator.CREATE) {
-					// If the node is a created node, it may not contain attribute conditions.
-					error(
-						String.format(ATTRIBUTE_CONDITION_IN_CREATED_NODE_MESSAGE, attribute.name, node.name),
-						GTPackage.Literals.ATTRIBUTE_CONSTRAINT__RELATION,
-						ATTRIBUTE_CONDITION_IN_CREATED_NODE,
-						attribute.name
-					)
-				}
+		if (attributeConstraint.relation == Relation.ASSIGNMENT) {
+			if (node.operator == Operator.DELETE) {
+				// If the node is a deleted node, it may not contain attribute assignments.
+				error(
+					String.format(ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE_MESSAGE, attribute.name, node.name),
+					GTPackage.Literals.ATTRIBUTE_CONSTRAINT__RELATION,
+					ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE,
+					attribute.name
+				)
+			}
+		} else { // attribute constraint is a condition
+			if (node.operator == Operator.CREATE) {
+				// If the node is a created node, it may not contain attribute conditions.
+				error(
+					String.format(ATTRIBUTE_CONDITION_IN_CREATED_NODE_MESSAGE, attribute.name, node.name),
+					GTPackage.Literals.ATTRIBUTE_CONSTRAINT__RELATION,
+					ATTRIBUTE_CONDITION_IN_CREATED_NODE,
+					attribute.name
+				)
 			}
 		}
-
 	}
 
 	/**
@@ -325,10 +317,10 @@ class GTValidator extends AbstractGTValidator {
 	@Check
 	def checkReference(Reference reference) {
 		val node = reference.eContainer as Node
-		
+
 		if (reference.operator == Operator.CONTEXT) {
 			// The target of a context reference must be a context node.
-			if (!(reference.target instanceof ContextNode)) {
+			if (reference.target.operator !== Operator.CONTEXT) {
 				error(
 					String.format(NODE_TARGET_EXPECT_CONTEXT_MESSAGE, reference.type.name),
 					GTPackage.Literals.REFERENCE__TARGET,
@@ -337,47 +329,42 @@ class GTValidator extends AbstractGTValidator {
 				)
 			}
 
-			if (node instanceof OperatorNode) {
-				if (node.operator == Operator.CREATE) {
-					// Context references are not allowed in created nodes.
-					error(
-						String.format(REFERENCE_EXPECT_CREATED_MESSAGE, reference.type.name, reference.target.name),
-						GTPackage.Literals.REFERENCE__OPERATOR,
-						REFERENCE_EXPECT_CREATED_BUT_IS_CONTEXT,
-						reference.type.name,
-						reference.target.name,
-						node.name
-					)
-				} else if (node.operator == Operator.DELETE) {
-					// Context references are not allowed in deleted nodes.
-					error(
-						String.format(REFERENCE_EXPECT_DELETED_MESSAGE, reference.type.name, reference.target.name),
-						GTPackage.Literals.REFERENCE__OPERATOR,
-						REFERENCE_EXPECT_DELETED_BUT_IS_CONTEXT,
-						reference.type.name,
-						reference.target.name,
-						node.name
-					)
-				}
+			if (node.operator == Operator.CREATE) {
+				// Context references are not allowed in created nodes.
+				error(
+					String.format(REFERENCE_EXPECT_CREATED_MESSAGE, reference.type.name, reference.target.name),
+					GTPackage.Literals.REFERENCE__OPERATOR,
+					REFERENCE_EXPECT_CREATED_BUT_IS_CONTEXT,
+					reference.type.name,
+					reference.target.name,
+					node.name
+				)
+			} else if (node.operator == Operator.DELETE) {
+				// Context references are not allowed in deleted nodes.
+				error(
+					String.format(REFERENCE_EXPECT_DELETED_MESSAGE, reference.type.name, reference.target.name),
+					GTPackage.Literals.REFERENCE__OPERATOR,
+					REFERENCE_EXPECT_DELETED_BUT_IS_CONTEXT,
+					reference.type.name,
+					reference.target.name,
+					node.name
+				)
 			}
 		}
 
 		if (reference.operator == Operator.CREATE) {
 			// The target of a created reference must be a context or a created node.
-			if (reference.target instanceof OperatorNode) {
-				val target = reference.target as OperatorNode
-				if (target.operator == Operator.DELETE) {
-					error(
-						String.format(NODE_TARGET_EXPECT_CONTEXT_OR_CREATE_MESSAGE, reference.type.name),
-						GTPackage.Literals.REFERENCE__TARGET,
-						NODE_TARGET_EXPECT_CONTEXT_OR_CREATE,
-						reference.target.name
-					)
-				}
+			if (reference.target.operator == Operator.DELETE) {
+				error(
+					String.format(NODE_TARGET_EXPECT_CONTEXT_OR_CREATE_MESSAGE, reference.type.name),
+					GTPackage.Literals.REFERENCE__TARGET,
+					NODE_TARGET_EXPECT_CONTEXT_OR_CREATE,
+					reference.target.name
+				)
 			}
 
 			// Created references are not allowed in deleted nodes.
-			if (node instanceof OperatorNode && (node as OperatorNode).operator == Operator.DELETE) {
+			if (node.operator == Operator.DELETE) {
 				error(
 					String.format(REFERENCE_EXPECT_DELETED_MESSAGE, reference.type.name, reference.target.name),
 					GTPackage.Literals.REFERENCE__OPERATOR,
@@ -391,20 +378,17 @@ class GTValidator extends AbstractGTValidator {
 
 		if (reference.operator == Operator.DELETE) {
 			// The target of a deleted reference must be a context or a deleted node.
-			if (reference.target instanceof OperatorNode) {
-				val target = reference.target as OperatorNode
-				if (target.operator == Operator.CREATE) {
-					error(
-						String.format(NODE_TARGET_EXPECT_CONTEXT_OR_DELETE_MESSAGE, reference.type.name),
-						GTPackage.Literals.REFERENCE__TARGET,
-						NODE_TARGET_EXPECT_CONTEXT_OR_DELETE,
-						reference.target.name
-					)
-				}
+			if (reference.target.operator == Operator.CREATE) {
+				error(
+					String.format(NODE_TARGET_EXPECT_CONTEXT_OR_DELETE_MESSAGE, reference.type.name),
+					GTPackage.Literals.REFERENCE__TARGET,
+					NODE_TARGET_EXPECT_CONTEXT_OR_DELETE,
+					reference.target.name
+				)
 			}
 
 			// Deleted references are not allowed in created nodes.
-			if (node instanceof OperatorNode && (node as OperatorNode).operator == Operator.CREATE) {
+			if (node.operator == Operator.CREATE) {
 				error(
 					String.format(REFERENCE_EXPECT_CREATED_MESSAGE, reference.type.name, reference.target.name),
 					GTPackage.Literals.REFERENCE__OPERATOR,

@@ -1,10 +1,8 @@
 package org.emoflon.ibex.gt.editor.ui.visualization
 
 import org.eclipse.emf.common.util.EList
-import org.emoflon.ibex.gt.editor.gT.ContextNode
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Operator
-import org.emoflon.ibex.gt.editor.gT.OperatorNode
 import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Rule
 
@@ -67,13 +65,7 @@ class GTPlantUMLGenerator {
 	 * Returns the skin name for the node.
 	 */
 	private static def String nodeSkin(Node node) {
-		if (node instanceof ContextNode) {
-			'CONTEXT'
-		} else if (node instanceof OperatorNode) {
-			node.operator.getName
-		} else {
-			''
-		}
+		return node.operator.getName
 	}
 
 	/**

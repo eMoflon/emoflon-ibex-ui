@@ -27,8 +27,8 @@ class GTParsingNodesTest extends GTParsingTest {
 			}
 		''')
 		this.assertValid(file)
-		this.assertNode(file, 0, null, "a", "EPackage")
-		this.assertNode(file, 1, null, "b", "EClass")
+		this.assertNode(file, 0, Operator.CONTEXT, "a", "EPackage")
+		this.assertNode(file, 1, Operator.CONTEXT, "b", "EClass")
 	}
 
 	@Test

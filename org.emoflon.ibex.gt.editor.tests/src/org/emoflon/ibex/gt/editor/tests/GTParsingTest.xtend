@@ -8,11 +8,9 @@ import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
 import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
-import org.emoflon.ibex.gt.editor.gT.ContextNode
 import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
 import org.emoflon.ibex.gt.editor.gT.LiteralValue
 import org.emoflon.ibex.gt.editor.gT.Operator
-import org.emoflon.ibex.gt.editor.gT.OperatorNode
 import org.emoflon.ibex.gt.editor.gT.ParameterValue
 import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Relation
@@ -107,12 +105,7 @@ abstract class GTParsingTest {
 	def assertNode(GraphTransformationFile file, int nodeIndex, Operator operator, String variableName,
 		String variableType) {
 		val node = file.rules.get(0).nodes.get(nodeIndex)
-		if (operator === null) {
-			Assert.assertTrue(node instanceof ContextNode)
-		} else {
-			Assert.assertTrue(node instanceof OperatorNode)
-			Assert.assertEquals(operator, (node as OperatorNode).operator)
-		}
+		Assert.assertEquals(operator, node.operator)
 		Assert.assertEquals(variableName, node.name)
 		Assert.assertEquals(variableType, node.type.name)
 	}

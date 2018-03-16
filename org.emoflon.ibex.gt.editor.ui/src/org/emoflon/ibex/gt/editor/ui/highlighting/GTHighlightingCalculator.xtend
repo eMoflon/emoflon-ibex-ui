@@ -10,7 +10,6 @@ import org.eclipse.xtext.util.CancelIndicator
 
 import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.gT.Reference
-import org.emoflon.ibex.gt.editor.gT.OperatorNode
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Operator
 
@@ -31,10 +30,9 @@ class GTHighlightingCalculator extends DefaultSemanticHighlightingCalculator {
 
 	def hightlightElement(EObject element, IHighlightedPositionAcceptor acceptor) {
 		if (element instanceof Node) {
-			var String style = getStyle(null)
-			if (element instanceof OperatorNode) {
-				style = getStyle(element.operator)
-				this.highlightFeature(acceptor, element, GTPackage.Literals.OPERATOR_NODE__OPERATOR, style)
+			var String style = getStyle(element.operator)
+			if (element.operator == Operator.CREATE || element.operator == Operator.DELETE) {
+				this.highlightFeature(acceptor, element, GTPackage.Literals.NODE__OPERATOR, style)
 			}
 			this.highlightFeature(acceptor, element, GTPackage.Literals.NODE__NAME, style)
 			this.highlightFeature(acceptor, element, GTPackage.Literals.NODE__TYPE, style)
@@ -47,15 +45,13 @@ class GTHighlightingCalculator extends DefaultSemanticHighlightingCalculator {
 	}
 
 	def getStyle(Operator operator) {
-		if (operator === null || operator === Operator.CONTEXT) {
-			return GTHighlightingConfiguration.CONTEXT
-		}
 		if (operator === Operator.CREATE) {
 			return GTHighlightingConfiguration.CREATE
 		}
 		if (operator === Operator.DELETE) {
 			return GTHighlightingConfiguration.DELETE
 		}
+		return GTHighlightingConfiguration.CONTEXT
 	}
 
 	def highlightNode(IHighlightedPositionAcceptor acceptor, EObject element, String style) {
