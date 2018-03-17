@@ -10,8 +10,6 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.EcoreUtil2
 
 import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
-import org.emoflon.ibex.gt.editor.gT.Node
-import org.emoflon.ibex.gt.editor.gT.Relation
 
 /**
  * Utility methods for working with {@link GraphTransformationFile} models.
@@ -63,22 +61,4 @@ class GTEditorModelUtils {
 			return Optional.empty
 		}
 	}
-
-	/**
-	 * Returns the attribute assignments of a node.
-	 */
-	def static getAttributeAssignments(Node node) {
-		return node.attributes.filter [
-			it.relation.equals(Relation.ASSIGNMENT)
-		]
-	}
-
-	/**
-	 * Returns the attribute conditions of a node.
-	 */
-	def static getAttributeConditions(Node node) {
-		return node.attributes.filter [
-			!it.relation.equals(Relation.ASSIGNMENT)
-		]
-	}	
 }

@@ -416,19 +416,6 @@ class GTValidator extends AbstractGTValidator {
 
 		val node = attributeConstraint.eContainer as Node
 		if (attributeConstraint.relation == Relation.ASSIGNMENT) {
-			// There may be at most one assignments per attribute.
-			val attributeAssignmentCount = node.attributes.filter [
-				it.attribute == attribute && it.relation == Relation.ASSIGNMENT
-			].size
-			if (attributeAssignmentCount != 1) {
-				error(
-					String.format(ATTRIBUTE_MULTIPLE_ASSIGNMENTS_MESSAGE, attributeAssignmentCount, attribute.name),
-					GTPackage.Literals.ATTRIBUTE_CONSTRAINT__RELATION,
-					ATTRIBUTE_MULTIPLE_ASSIGNMENTS,
-					attribute.name
-				)
-			}
-
 			if (node.operator == Operator.DELETE) {
 				// If the node is a deleted node, it may not contain attribute assignments.
 				error(
@@ -437,6 +424,20 @@ class GTValidator extends AbstractGTValidator {
 					ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE,
 					attribute.name
 				)
+			} else {
+				// There may be at most one assignments per attribute in context and created nodes.
+				val attributeAssignmentCount = node.attributes.filter [
+					it.attribute == attribute && it.relation == Relation.ASSIGNMENT
+				].size
+				if (attributeAssignmentCount != 1) {
+					error(
+						String.format(ATTRIBUTE_MULTIPLE_ASSIGNMENTS_MESSAGE, attributeAssignmentCount, attribute.name),
+						GTPackage.Literals.ATTRIBUTE_CONSTRAINT__RELATION,
+						ATTRIBUTE_MULTIPLE_ASSIGNMENTS,
+						attribute.name,
+						node.operator.getName
+					)
+				}
 			}
 		} else { // attribute constraint is a condition
 			if (node.operator == Operator.CREATE) {

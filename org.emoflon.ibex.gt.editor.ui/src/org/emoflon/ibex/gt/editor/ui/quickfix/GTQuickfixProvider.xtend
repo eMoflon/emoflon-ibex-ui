@@ -1,6 +1,5 @@
 package org.emoflon.ibex.gt.editor.ui.quickfix
 
-import java.util.function.Function
 import java.util.regex.Pattern
 
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
@@ -236,15 +235,40 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 		]
 	}
 
-	@Fix(GTValidator.ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE)
-	def changeAttributeAssignmentToCondition(Issue issue, IssueResolutionAcceptor acceptor) {
-		this.changeAttributeConstraintRelation(
+	@Fix(GTValidator.ATTRIBUTE_MULTIPLE_ASSIGNMENTS)
+	def removeAssignment(Issue issue, IssueResolutionAcceptor acceptor) {
+		val attributeName = issue.data.get(0)
+		val label = '''Remove assignment for attribute '«attributeName»'.'''
+		acceptor.accept(
 			issue,
-			acceptor,
-			"Convert assignment for '%s' to == condition.",
-			[GTEditorModelUtils.getAttributeAssignments(it)],
-			Relation.EQUAL
+			label,
+			label,
+			null,
+			[ element, context |
+				if (element instanceof AttributeConstraint) {
+					val node = element.eContainer as Node
+					node.attributes.remove(element)
+				}
+			]
 		)
+	}
+
+	@Fix(GTValidator.ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE)
+	@Fix(GTValidator.ATTRIBUTE_MULTIPLE_ASSIGNMENTS)
+	def changeAttributeAssignmentToCondition(Issue issue, IssueResolutionAcceptor acceptor) {
+		if (issue.code.equals(GTValidator.ATTRIBUTE_MULTIPLE_ASSIGNMENTS) && issue.data.get(1).equals("CREATE")) {
+			// For created nodes this quickfix is not allowed.
+			return;
+		}
+
+		Relation.VALUES.filter[it != Relation.ASSIGNMENT].forEach [
+			this.changeAttributeConstraintRelation(
+				issue,
+				acceptor,
+				'''Convert assignment for '%s' to «it.literal» condition.''',
+				it
+			)
+		]
 	}
 
 	@Fix(GTValidator.ATTRIBUTE_CONDITION_IN_CREATED_NODE)
@@ -253,7 +277,6 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			issue,
 			acceptor,
 			"Convert condition for '%s' to assignment.",
-			[GTEditorModelUtils.getAttributeConditions(it)],
 			Relation.ASSIGNMENT
 		)
 	}
@@ -262,7 +285,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	 * Changes the relation of the attribute constraint.
 	 */
 	private def changeAttributeConstraintRelation(Issue issue, IssueResolutionAcceptor acceptor, String text,
-		Function<Node, Iterable<AttributeConstraint>> attributeConstraintSelector, Relation newRelation) {
+		Relation newRelation) {
 		val attributeName = issue.data.get(0)
 		val label = String.format(text, attributeName)
 		acceptor.accept(
