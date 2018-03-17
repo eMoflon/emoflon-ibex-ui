@@ -2,6 +2,8 @@ package org.emoflon.ibex.gt.editor.ui.quickfix
 
 import java.util.function.Function
 
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils
+import org.eclipse.xtext.ui.editor.model.IXtextDocument
 import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
 import org.eclipse.xtext.ui.editor.quickfix.Fix
@@ -16,9 +18,8 @@ import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Relation
 import org.emoflon.ibex.gt.editor.gT.Rule
-import org.emoflon.ibex.gt.editor.validation.GTValidator
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
-import org.emoflon.ibex.gt.editor.gT.GTFactory
+import org.emoflon.ibex.gt.editor.validation.GTValidator
 
 /**
  * Custom quickfixes.
@@ -113,7 +114,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	@Fix(GTValidator.NODE_TARGET_EXPECT_CONTEXT_OR_CREATE)
 	@Fix(GTValidator.NODE_TARGET_EXPECT_CONTEXT_OR_DELETE)
 	def convertTargetNodeToContextNode(Issue issue, IssueResolutionAcceptor acceptor) {
-		// this.changeTargetNodeOperator(issue, acceptor, 'context', Operator.CONTEXT)
+		this.changeTargetNodeOperator(issue, acceptor, 'context', Operator.CONTEXT)
 	}
 
 	/**
@@ -146,12 +147,29 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			null,
 			[ element, context |
 				if (element instanceof Reference) {
-					if (element.target instanceof Node) {
-						element.target.operator = newOperator
+					val targetNode = element.target
+					if (targetNode instanceof Node) {
+						if (newOperator == Operator.CONTEXT) {
+							this.removeNodeOperator(targetNode, context.xtextDocument)
+						} else {
+							targetNode.operator = newOperator
+						}
 					}
 				}
 			]
 		)
+	}
+
+	/**
+	 * Removes the operator of the given node by modifying the Xtext document. 
+	 */
+	private def removeNodeOperator(Node node, IXtextDocument document) {
+		if (node.operator != Operator.CONTEXT) {
+			val xtextNode = NodeModelUtils.getNode(node);
+			val regex = if(node.operator == Operator.CREATE) '++' else '--'
+			val newText = xtextNode.text.replaceFirst(regex, '').trim
+			document.replace(xtextNode.offset, xtextNode.length, newText)
+		}
 	}
 
 	/**
@@ -255,7 +273,9 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	 * Converts the operator node which contains a context reference to a context node.
 	 */
 	@Fix(GTValidator.REFERENCE_EXPECT_CREATED_BUT_IS_CONTEXT)
+	@Fix(GTValidator.REFERENCE_EXPECT_CREATED_BUT_IS_DELETED)
 	@Fix(GTValidator.REFERENCE_EXPECT_DELETED_BUT_IS_CONTEXT)
+	@Fix(GTValidator.REFERENCE_EXPECT_DELETED_BUT_IS_CREATED)
 	def convertToContextNode(Issue issue, IssueResolutionAcceptor acceptor) {
 		this.changeNodeOperator(issue, acceptor, 'context', Operator.CONTEXT)
 	}
@@ -292,14 +312,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 				if (element instanceof Reference) {
 					val node = element.eContainer as Node
 					if (newOperator == Operator.CONTEXT) {
-						val newNode = GTFactory.eINSTANCE.createNode
-						newNode.name = node.name
-						newNode.type = node.type
-						newNode.attributes.addAll(node.attributes)
-						newNode.references.addAll(node.references)
-
-						val rule = node.eContainer as Rule
-						rule.nodes.set(rule.nodes.indexOf(node), newNode)
+						this.removeNodeOperator(node, context.xtextDocument)
 					} else {
 						node.operator = newOperator
 					}
