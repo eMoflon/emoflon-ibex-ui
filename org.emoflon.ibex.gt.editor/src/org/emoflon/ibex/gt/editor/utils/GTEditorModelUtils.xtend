@@ -6,11 +6,11 @@ import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EDataType
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
+import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.EcoreUtil2
 
 import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
 import org.emoflon.ibex.gt.editor.gT.Node
-import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.gT.Relation
 
 /**
@@ -24,10 +24,17 @@ class GTEditorModelUtils {
 		val classes = newArrayList()
 		file.imports.forEach [
 			loadEcoreModel(it.name).ifPresent [
-				classes.addAll(EcoreUtil2.getAllContentsOfType(it.contents.get(0), EClass))
+				classes.addAll(getClasses(it))
 			]
 		]
 		return classes
+	}
+
+	/**
+	 * Returns all EClasses from the given resource. 
+	 */
+	def static getClasses(Resource resource) {
+		return EcoreUtil2.getAllContentsOfType(resource.contents.get(0), EClass)
 	}
 
 	/**
@@ -73,41 +80,5 @@ class GTEditorModelUtils {
 		return node.attributes.filter [
 			!it.relation.equals(Relation.ASSIGNMENT)
 		]
-	}
-
-	/**
-	 * Returns the context references of a node.
-	 */
-	def static getContextReferences(Node node) {
-		return node.references.filter [
-			it.operator == Operator.CONTEXT
-		]
-	}
-
-	/**
-	 * Returns the operator references of a node.
-	 */
-	def static getOperatorReferences(Node node) {
-		return node.references.filter [
-			it.operator == Operator.CREATE || it.operator == Operator.DELETE
-		]
-	}
-
-	/**
-	 * Returns the created references of a node.
-	 */
-	def static getCreatedReferences(Node node) {
-		return node.references.filter [
-			it.operator == Operator.CREATE
-		]
-	}
-
-	/**
-	 * Returns the deleted references of a node.
-	 */
-	def static getDeletedReferences(Node node) {
-		return node.references.filter [
-			it.operator == Operator.DELETE
-		]
-	}
+	}	
 }

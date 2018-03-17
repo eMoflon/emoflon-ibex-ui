@@ -1,6 +1,7 @@
 package org.emoflon.ibex.gt.editor.ui.quickfix
 
 import java.util.function.Function
+import java.util.regex.Pattern
 
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.ui.editor.model.IXtextDocument
@@ -34,8 +35,10 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	 */
 	@Fix(GTValidator.IMPORT_DUPLICATE)
 	@Fix(GTValidator.IMPORT_FILE_DOES_NOT_EXIST)
+	@Fix(GTValidator.IMPORT_NO_ECORE)
 	def removeImport(Issue issue, IssueResolutionAcceptor acceptor) {
-		var label = 'Remove import.'
+		val importName = issue.data.get(0)
+		var label = '''Remove import '«importName»'.'''
 		acceptor.accept(
 			issue,
 			label,
@@ -116,9 +119,9 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	/**
 	 * Converts the target node of a reference to a context node. 
 	 */
-	@Fix(GTValidator.NODE_TARGET_EXPECT_CONTEXT)
-	@Fix(GTValidator.NODE_TARGET_EXPECT_CONTEXT_OR_CREATE)
-	@Fix(GTValidator.NODE_TARGET_EXPECT_CONTEXT_OR_DELETE)
+	@Fix(GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT)
+	@Fix(GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT_OR_CREATE)
+	@Fix(GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT_OR_DELETE)
 	def convertTargetNodeToContextNode(Issue issue, IssueResolutionAcceptor acceptor) {
 		this.changeTargetNodeOperator(issue, acceptor, 'context', Operator.CONTEXT)
 	}
@@ -126,7 +129,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	/**
 	 * Converts the target node of a created reference to a created node. 
 	 */
-	@Fix(GTValidator.NODE_TARGET_EXPECT_CONTEXT_OR_CREATE)
+	@Fix(GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT_OR_CREATE)
 	def convertTargetNodeToCreatedNode(Issue issue, IssueResolutionAcceptor acceptor) {
 		this.changeTargetNodeOperator(issue, acceptor, 'created', Operator.CREATE)
 	}
@@ -134,7 +137,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	/**
 	 * Converts the target node of a deleted reference to a deleted node. 
 	 */
-	@Fix(GTValidator.NODE_TARGET_EXPECT_CONTEXT_OR_DELETE)
+	@Fix(GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT_OR_DELETE)
 	def convertTargetNodeToDeletedNode(Issue issue, IssueResolutionAcceptor acceptor) {
 		this.changeTargetNodeOperator(issue, acceptor, 'deleted', Operator.DELETE)
 	}
@@ -172,7 +175,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	private def removeNodeOperator(Node node, IXtextDocument document) {
 		if (node.operator != Operator.CONTEXT) {
 			val xtextNode = NodeModelUtils.getNode(node);
-			val regex = if(node.operator == Operator.CREATE) '++' else '--'
+			val regex = Pattern.quote(if(node.operator == Operator.CREATE) '++' else '--')
 			val newText = xtextNode.text.replaceFirst(regex, '').trim
 			document.replace(xtextNode.offset, xtextNode.length, newText)
 		}

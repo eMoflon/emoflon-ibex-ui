@@ -159,8 +159,8 @@ class GTParsingReferencesTest extends GTParsingTest {
 		this.assertValidationErrors(
 			this.parseNodesWithReference('', '', '++'),
 			GTPackage.eINSTANCE.reference,
-			GTValidator.NODE_TARGET_EXPECT_CONTEXT,
-			String.format(GTValidator.NODE_TARGET_EXPECT_CONTEXT_MESSAGE, 'eClassifiers')
+			GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT,
+			String.format(GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT_MESSAGE, 'eClassifiers')
 		)
 	}
 
@@ -169,8 +169,8 @@ class GTParsingReferencesTest extends GTParsingTest {
 		this.assertValidationErrors(
 			this.parseNodesWithReference('', '', '--'),
 			GTPackage.eINSTANCE.reference,
-			GTValidator.NODE_TARGET_EXPECT_CONTEXT,
-			String.format(GTValidator.NODE_TARGET_EXPECT_CONTEXT_MESSAGE, 'eClassifiers')
+			GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT,
+			String.format(GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT_MESSAGE, 'eClassifiers')
 		)
 	}
 
@@ -189,8 +189,8 @@ class GTParsingReferencesTest extends GTParsingTest {
 		this.assertValidationErrors(
 			this.parseNodesWithReference('', '++', '--'),
 			GTPackage.eINSTANCE.reference,
-			GTValidator.NODE_TARGET_EXPECT_CONTEXT_OR_CREATE,
-			String.format(GTValidator.NODE_TARGET_EXPECT_CONTEXT_OR_CREATE_MESSAGE, 'eClassifiers')
+			GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT_OR_CREATE,
+			String.format(GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT_OR_CREATE_MESSAGE, 'eClassifiers')
 		)
 	}
 
@@ -204,8 +204,8 @@ class GTParsingReferencesTest extends GTParsingTest {
 		this.assertValidationErrors(
 			this.parseNodesWithReference('', '--', '++'),
 			GTPackage.eINSTANCE.reference,
-			GTValidator.NODE_TARGET_EXPECT_CONTEXT_OR_DELETE,
-			String.format(GTValidator.NODE_TARGET_EXPECT_CONTEXT_OR_DELETE_MESSAGE, 'eClassifiers')
+			GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT_OR_DELETE,
+			String.format(GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT_OR_DELETE_MESSAGE, 'eClassifiers')
 		)
 	}
 
