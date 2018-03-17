@@ -115,6 +115,27 @@ class GTParsingAttributesTest extends GTParsingTest {
 	}
 
 	@Test
+	def void errorIfMultipleAttributeAssignmentsForSameAttribute() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			rule a {
+				clazz: EClass {
+					.name := "Test1"
+					.name := "Test2"
+				}
+			}
+		''')
+		this.assertBasics(file)
+		this.assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.attributeConstraint,
+			GTValidator.ATTRIBUTE_MULTIPLE_ASSIGNMENTS,
+			String.format(GTValidator.ATTRIBUTE_MULTIPLE_ASSIGNMENTS_MESSAGE, 2, 'name')
+		)
+	}
+
+	@Test
 	def void errorIfAttributeAssignmentInDeletedNode() {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
