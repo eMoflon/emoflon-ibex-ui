@@ -132,6 +132,9 @@ class GTValidator extends AbstractGTValidator {
 	public static val NODE_NAME_MULTIPLE_DECLARATIONS_MESSAGE = "Node '%s' must not be declared %s."
 	public static val NODE_NAME_STARTS_WITH_LOWER_CASE_MESSAGE = "Node '%s' should start with a lower case character."
 
+	public static val NODE_NAME_EQUALS_PARAMETER_NAME = CODE_PREFIX + "node.name.equalsParameterName"
+	public static val NODE_NAME_EQUALS_PARAMETER_NAME_MESSAGE = "Node '%s' and parameter '%s' must not be named equal."
+
 	public static val CREATE_NODE_TYPE_ABSTRACT = CODE_PREFIX + "createdNodeAbstractType"
 	public static val CREATE_NODE_TYPE_ABSTRACT_MESSAGE = "The type of created node '%s' must not be abstract."
 
@@ -332,10 +335,9 @@ class GTValidator extends AbstractGTValidator {
 			}
 		}
 
-		// Node names within rule must be unique.
-		val nodeContainer = node.eContainer
-		if (nodeContainer !== null && nodeContainer instanceof Rule) {
-			val rule = nodeContainer as Rule
+		val rule = node.eContainer
+		if (rule instanceof Rule) {
+			// Node names within rule must be unique.
 			val nodeDeclarationsCount = rule.nodes.filter[node.name.equals(it.name)].size
 			if (nodeDeclarationsCount !== 1) {
 				error(
@@ -344,19 +346,27 @@ class GTValidator extends AbstractGTValidator {
 					NAME_EXPECT_UNIQUE
 				)
 			}
-		}
 
-		// The type of a created node must not be abstract.
-		if (node.operator == Operator.CREATE) {
-			val rule = node.eContainer as Rule
-			if (node.type.abstract && (!rule.abstract)) {
+			// Node name must not be equal to a parameter name.
+			if (rule.parameters.exists[node.name.equals(it.name)]) {
 				error(
-					String.format(CREATE_NODE_TYPE_ABSTRACT_MESSAGE, node.name),
-					GTPackage.Literals.NODE__TYPE,
-					CREATE_NODE_TYPE_ABSTRACT,
-					node.type.name,
-					rule.name
+					String.format(NODE_NAME_EQUALS_PARAMETER_NAME_MESSAGE, node.name, node.name),
+					GTPackage.Literals.NODE__NAME,
+					NODE_NAME_EQUALS_PARAMETER_NAME
 				)
+			}
+
+			// The type of a created node must not be abstract.
+			if (node.operator == Operator.CREATE) {
+				if (node.type.abstract && (!rule.abstract)) {
+					error(
+						String.format(CREATE_NODE_TYPE_ABSTRACT_MESSAGE, node.name),
+						GTPackage.Literals.NODE__TYPE,
+						CREATE_NODE_TYPE_ABSTRACT,
+						node.type.name,
+						rule.name
+					)
+				}
 			}
 		}
 	}

@@ -198,7 +198,7 @@ class GTParsingRulesTest extends GTParsingTest {
 	}
 
 	@Test
-	def void errorIfRuleNameContainsUnderscores() {
+	def void warningIfRuleNameContainsUnderscores() {
 		val ruleName = 'get_an_e_Object'
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
@@ -237,7 +237,7 @@ class GTParsingRulesTest extends GTParsingTest {
 	}
 
 	@Test
-	def void errorIfRuleNameStartsWithCapital() {
+	def void warningIfRuleNameStartsWithCapital() {
 		val ruleName = "AnInvalidName"
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
