@@ -12,11 +12,12 @@ import org.emoflon.ibex.gt.editor.gT.IntegerConstant
 import org.emoflon.ibex.gt.editor.gT.LiteralValue
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Operator
+import org.emoflon.ibex.gt.editor.gT.Parameter
+import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Relation
 import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.gT.StringConstant
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
-import org.emoflon.ibex.gt.editor.gT.Reference
 
 /**
  * This class contains custom validation rules. 
@@ -119,6 +120,12 @@ class GTValidator extends AbstractGTValidator {
 	public static val RULE_NAME_MULTIPLE_DECLARATIONS_MESSAGE = "Rule '%s' must not be declared %s."
 	public static val RULE_NAME_STARTS_WITH_LOWER_CASE_MESSAGE = "Rule '%s' should start with a lower case character."
 
+	// Errors for parameters.
+	public static val PARAMETER_NAME_CONTAINS_UNDERSCORES_MESSAGE = "Parameter name '%s' contains underscores. Use camelCase instead."
+	public static val PARAMETER_NAME_FORBIDDEN_MESSAGE = "Parameters cannot be named '%s'. Use a different name."
+	public static val PARAMETER_NAME_MULTIPLE_DECLARATIONS_MESSAGE = "Parameter '%s' must not be declared %s."
+	public static val PARAMETER_NAME_STARTS_WITH_LOWER_CASE_MESSAGE = "Parameter '%s' should start with a lower case character."
+
 	// Errors for nodes.
 	public static val NODE_NAME_CONTAINS_UNDERSCORES_MESSAGE = "Node name '%s' contains underscores. Use camelCase instead."
 	public static val NODE_NAME_FORBIDDEN_MESSAGE = "Nodes cannot be named '%s'. Use a different name."
@@ -188,6 +195,110 @@ class GTValidator extends AbstractGTValidator {
 				GTPackage.Literals.IMPORT__NAME,
 				IMPORT_DUPLICATE
 			)
+		}
+	}
+
+	@Check
+	def checkRule(Rule rule) {
+		// The rule name must not be blacklisted.
+		if (ruleNameBlacklist.contains(rule.name)) {
+			error(
+				String.format(RULE_NAME_FORBIDDEN_MESSAGE, rule.name),
+				GTPackage.Literals.RULE__NAME,
+				NAME_BLACKLISTED
+			)
+		} else {
+			// The rule name should be lowerCamelCase.
+			if (rule.name.contains('_')) {
+				warning(
+					String.format(RULE_NAME_CONTAINS_UNDERSCORES_MESSAGE, rule.name),
+					GTPackage.Literals.RULE__NAME,
+					NAME_EXPECT_CAMEL_CASE
+				)
+			} else {
+				// The rule name should start with a lower case character. 
+				if (!Character.isLowerCase(rule.name.charAt(0))) {
+					warning(
+						String.format(RULE_NAME_STARTS_WITH_LOWER_CASE_MESSAGE, rule.name),
+						GTPackage.Literals.RULE__NAME,
+						NAME_EXPECT_LOWER_CASE
+					)
+				}
+			}
+		}
+
+		// The rule must contain at least one constraint or refine multiple rules.
+		if (rule.nodes.size == 0 && rule.superRules.size < 2) {
+			error(
+				String.format(RULE_EMPTY_MESSAGE, rule.name),
+				GTPackage.Literals.RULE__NODES,
+				RULE_EMPTY
+			)
+		}
+
+		// The super rules of the rule must be distinct.
+		if (rule.superRules.size !== rule.superRules.stream.distinct.count) {
+			error(
+				String.format(RULE_SUPER_RULES_DUPLICATE_MESSAGE, rule.name),
+				GTPackage.Literals.RULE__SUPER_RULES,
+				RULE_SUPER_RULES_DUPLICATE
+			)
+		}
+
+		// Rule names must be unique.
+		val file = rule.eContainer as GraphTransformationFile
+		val ruleDeclarationCount = file.rules.filter[name.equals(rule.name)].size
+		if (ruleDeclarationCount !== 1) {
+			error(
+				String.format(RULE_NAME_MULTIPLE_DECLARATIONS_MESSAGE, rule.name, getTimes(ruleDeclarationCount)),
+				GTPackage.Literals.RULE__NAME,
+				NAME_EXPECT_UNIQUE
+			)
+		}
+	}
+
+	@Check
+	def checkParameter(Parameter parameter) {
+		// The parameter name must not be blacklisted.
+		if (nodeNameBlacklist.contains(parameter.name)) {
+			error(
+				String.format(PARAMETER_NAME_FORBIDDEN_MESSAGE, parameter.name),
+				GTPackage.Literals.PARAMETER__NAME,
+				NAME_BLACKLISTED
+			)
+		} else {
+			// The parameter name should be lowerCamelCase.
+			if (parameter.name.contains('_')) {
+				warning(
+					String.format(PARAMETER_NAME_CONTAINS_UNDERSCORES_MESSAGE, parameter.name),
+					GTPackage.Literals.PARAMETER__NAME,
+					NAME_EXPECT_CAMEL_CASE
+				)
+			} else {
+				// The parameter name should start with a lower case character.
+				if (Character.isUpperCase(parameter.name.charAt(0))) {
+					warning(
+						String.format(PARAMETER_NAME_STARTS_WITH_LOWER_CASE_MESSAGE, parameter.name),
+						GTPackage.Literals.PARAMETER__NAME,
+						NAME_EXPECT_LOWER_CASE
+					)
+				}
+			}
+		}
+
+		// Parameter names within rule must be unique.
+		val parameterContainer = parameter.eContainer
+		if (parameterContainer instanceof Rule) {
+			val rule = parameterContainer as Rule
+			val parameterDeclarationsCount = rule.parameters.filter[parameter.name.equals(it.name)].size
+			if (parameterDeclarationsCount !== 1) {
+				error(
+					String.format(PARAMETER_NAME_MULTIPLE_DECLARATIONS_MESSAGE, parameter.name,
+						getTimes(parameterDeclarationsCount)),
+					GTPackage.Literals.PARAMETER__NAME,
+					NAME_EXPECT_UNIQUE
+				)
+			}
 		}
 	}
 
@@ -398,65 +509,6 @@ class GTValidator extends AbstractGTValidator {
 					node.name
 				)
 			}
-		}
-	}
-
-	@Check
-	def checkRule(Rule rule) {
-		// The rule name must not be blacklisted.
-		if (ruleNameBlacklist.contains(rule.name)) {
-			error(
-				String.format(RULE_NAME_FORBIDDEN_MESSAGE, rule.name),
-				GTPackage.Literals.RULE__NAME,
-				NAME_BLACKLISTED
-			)
-		} else {
-			// The rule name should be lowerCamelCase.
-			if (rule.name.contains('_')) {
-				warning(
-					String.format(RULE_NAME_CONTAINS_UNDERSCORES_MESSAGE, rule.name),
-					GTPackage.Literals.RULE__NAME,
-					NAME_EXPECT_CAMEL_CASE
-				)
-			} else {
-				// The rule name should start with a lower case character. 
-				if (!Character.isLowerCase(rule.name.charAt(0))) {
-					warning(
-						String.format(RULE_NAME_STARTS_WITH_LOWER_CASE_MESSAGE, rule.name),
-						GTPackage.Literals.RULE__NAME,
-						NAME_EXPECT_LOWER_CASE
-					)
-				}
-			}
-		}
-
-		// The rule must contain at least one constraint or refine multiple rules.
-		if (rule.nodes.size == 0 && rule.superRules.size < 2) {
-			error(
-				String.format(RULE_EMPTY_MESSAGE, rule.name),
-				GTPackage.Literals.RULE__NODES,
-				RULE_EMPTY
-			)
-		}
-
-		// The super rules of the rule must be distinct.
-		if (rule.superRules.size !== rule.superRules.stream.distinct.count) {
-			error(
-				String.format(RULE_SUPER_RULES_DUPLICATE_MESSAGE, rule.name),
-				GTPackage.Literals.RULE__SUPER_RULES,
-				RULE_SUPER_RULES_DUPLICATE
-			)
-		}
-
-		// Rule names must be unique.
-		val file = rule.eContainer as GraphTransformationFile
-		val ruleDeclarationCount = file.rules.filter[name.equals(rule.name)].size
-		if (ruleDeclarationCount !== 1) {
-			error(
-				String.format(RULE_NAME_MULTIPLE_DECLARATIONS_MESSAGE, rule.name, getTimes(ruleDeclarationCount)),
-				GTPackage.Literals.RULE__NAME,
-				NAME_EXPECT_UNIQUE
-			)
 		}
 	}
 

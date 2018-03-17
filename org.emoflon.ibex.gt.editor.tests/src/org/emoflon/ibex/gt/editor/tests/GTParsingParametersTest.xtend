@@ -1,9 +1,11 @@
 package org.emoflon.ibex.gt.editor.tests
 
 import org.eclipse.xtext.diagnostics.Diagnostic
+import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.emoflon.ibex.gt.editor.gT.GTPackage
+import org.emoflon.ibex.gt.editor.validation.GTValidator
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -126,6 +128,87 @@ class GTParsingParametersTest extends GTParsingTest {
 			GTPackage.eINSTANCE.rule,
 			Diagnostic::SYNTAX_DIAGNOSTIC,
 			"mismatched input ';' expecting ')'"
+		)
+	}
+
+	@Test
+	def void errorIfParameterNameBlacklisted() {
+		val file = parseHelper.parse('''
+			import "http://www.eclipse.org/emf/2002/Ecore"
+			
+			rule createClass(class: EString) {
+				++ clazz: EClass {
+					.name := param::class
+				}
+			}
+		''')
+		this.assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.parameter,
+			GTValidator.NAME_BLACKLISTED,
+			String.format(GTValidator.PARAMETER_NAME_FORBIDDEN_MESSAGE, 'class')
+		)
+	}
+
+	@Test
+	def void warningIfParameterNameStartsWithCapital() {
+		val file = parseHelper.parse('''
+			import "http://www.eclipse.org/emf/2002/Ecore"
+			
+			import "http://www.eclipse.org/emf/2002/Ecore"
+						
+			rule createClass(ClassName: EString) {
+				++ clazz: EClass {
+					.name := param::ClassName
+				}
+			}
+		''')
+		this.assertValidationIssues(
+			file,
+			GTPackage.eINSTANCE.parameter,
+			GTValidator.NAME_EXPECT_LOWER_CASE,
+			Severity.WARNING,
+			String.format(GTValidator.PARAMETER_NAME_STARTS_WITH_LOWER_CASE_MESSAGE, 'ClassName')
+		)
+	}
+
+	@Test
+	def void warningIfParameterNameContainsUnderscores() {
+		val file = parseHelper.parse('''
+			import "http://www.eclipse.org/emf/2002/Ecore"
+			
+			rule createClass(class_name: EString) {
+				++ clazz: EClass {
+					.name := param::class_name
+				}
+			}
+		''')
+		this.assertValidationIssues(
+			file,
+			GTPackage.eINSTANCE.parameter,
+			GTValidator.NAME_EXPECT_CAMEL_CASE,
+			Severity.WARNING,
+			String.format(GTValidator.PARAMETER_NAME_CONTAINS_UNDERSCORES_MESSAGE, 'class_name')
+		)
+	}
+
+	@Test
+	def void errorIfMultipleParametersWithTheSameName() {
+		val file = parseHelper.parse('''
+			import "http://www.eclipse.org/emf/2002/Ecore"
+			
+			rule createClass(name: EString, name: EChar) {
+				++ clazz: EClass {
+					.name := param::name
+				}
+			}
+		''')
+		this.assertBasics(file)
+		this.assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.parameter,
+			GTValidator.NAME_EXPECT_UNIQUE,
+			String.format(GTValidator.PARAMETER_NAME_MULTIPLE_DECLARATIONS_MESSAGE, 'name', 'twice')
 		)
 	}
 }

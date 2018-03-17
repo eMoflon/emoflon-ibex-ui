@@ -5,8 +5,8 @@ import java.util.function.Function
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.ui.editor.model.IXtextDocument
 import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider
-import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
 import org.eclipse.xtext.ui.editor.quickfix.Fix
+import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
 import org.eclipse.xtext.ui.editor.utils.EditorUtils
 import org.eclipse.xtext.validation.Issue
 
@@ -15,6 +15,7 @@ import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
 import org.emoflon.ibex.gt.editor.gT.Import
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Operator
+import org.emoflon.ibex.gt.editor.gT.Parameter
 import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Relation
 import org.emoflon.ibex.gt.editor.gT.Rule
@@ -50,7 +51,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	}
 
 	/**
-	 * Converts the name of a node or a rule to lower case. 
+	 * Converts the name of a node, a parameter or a rule to lower case. 
 	 */
 	@Fix(GTValidator.NAME_EXPECT_LOWER_CASE)
 	def convertNameToLowerCase(Issue issue, IssueResolutionAcceptor acceptor) {
@@ -62,6 +63,8 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			null,
 			[ element, context |
 				if (element instanceof Node) {
+					element.name = element.name.toFirstLower
+				} else if (element instanceof Parameter) {
 					element.name = element.name.toFirstLower
 				} else if (element instanceof Rule) {
 					element.name = element.name.toFirstLower
@@ -86,6 +89,9 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 					val node = element as Node
 					// Keep leading _ if present before.
 					node.name = (if(node.name.startsWith('_')) '_' else '') + convertToLowerCamelCase(node.name)
+				} else if (element instanceof Parameter) {
+					val parameter = element as Parameter
+					parameter.name = convertToLowerCamelCase(parameter.name)
 				} else if (element instanceof Rule) {
 					val rule = element as Rule
 					rule.name = convertToLowerCamelCase(rule.name)
