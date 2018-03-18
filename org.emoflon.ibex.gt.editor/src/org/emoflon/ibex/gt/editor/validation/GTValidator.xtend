@@ -3,12 +3,9 @@ package org.emoflon.ibex.gt.editor.validation
 import org.eclipse.xtext.validation.Check
 
 import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
-import org.emoflon.ibex.gt.editor.gT.BooleanConstant
-import org.emoflon.ibex.gt.editor.gT.DecimalConstant
 import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
 import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.gT.Import
-import org.emoflon.ibex.gt.editor.gT.IntegerConstant
 import org.emoflon.ibex.gt.editor.gT.LiteralValue
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Operator
@@ -16,8 +13,8 @@ import org.emoflon.ibex.gt.editor.gT.Parameter
 import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Relation
 import org.emoflon.ibex.gt.editor.gT.Rule
-import org.emoflon.ibex.gt.editor.gT.StringConstant
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
+import org.emoflon.ibex.gt.editor.utils.GTEditorAttributeUtils
 
 /**
  * This class contains custom validation rules. 
@@ -46,48 +43,6 @@ class GTValidator extends AbstractGTValidator {
 		"notifyAll",
 		"toString",
 		"wait"
-	]
-
-	/**
-	 * The list of valid EDataType names for boolean constants.
-	 */
-	private static val dataTypesBoolean = #[
-		"EBoolean",
-		"EBooleanObject"
-	]
-
-	/**
-	 * The list of valid EDataType names for character constants. 
-	 */
-	private static val dataTypesChar = #[
-		"EChar",
-		"ECharacterObject"
-	]
-
-	/**
-	 * The list of valid EDataType names for integer constants.
-	 */
-	private static val dataTypesInteger = #[
-		"EBigInteger",
-		"EByte",
-		"EByteObject",
-		"EInt",
-		"EIntegerObject",
-		"ELong",
-		"ELongObject",
-		"EShort",
-		"EShortObject"
-	]
-
-	/**
-	 * The list of valid EDataType names for decimal constants.  
-	 */
-	private static val dataTypesDecimal = #[
-		"EBigDecimal",
-		"EDouble",
-		"EDoubleObject",
-		"EFloat",
-		"EFloatObject"
 	]
 
 	private static val CODE_PREFIX = "org.emoflon.ibex.gt.editor."
@@ -403,13 +358,13 @@ class GTValidator extends AbstractGTValidator {
 
 		// The attribute value must be of the correct type.
 		if (value instanceof LiteralValue) {
-			val expectedType = attribute.EAttributeType.name
-			if (!isValidLiteralValue(value, expectedType)) {
+			val expectedType = attribute.EAttributeType
+			if (!GTEditorAttributeUtils.isValidLiteralValue(value, expectedType)) {
 				error(
-					String.format(ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE, attribute.name, expectedType),
+					String.format(ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE, attribute.name, expectedType.name),
 					GTPackage.Literals.ATTRIBUTE_CONSTRAINT__VALUE,
 					ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE,
-					expectedType
+					expectedType.name
 				)
 			}
 		}
@@ -450,28 +405,6 @@ class GTValidator extends AbstractGTValidator {
 				)
 			}
 		}
-	}
-
-	/**
-	 * Checks whether the literal value fits to the expected type. 
-	 */
-	private def isValidLiteralValue(LiteralValue value, String expectedType) {
-		if (dataTypesBoolean.contains(expectedType)) {
-			return value instanceof BooleanConstant
-		}
-		if (dataTypesChar.contains(expectedType)) {
-			return value instanceof StringConstant && (value as StringConstant).value.length == 1
-		}
-		if (dataTypesDecimal.contains(expectedType)) {
-			return value instanceof DecimalConstant || value instanceof IntegerConstant
-		}
-		if (dataTypesInteger.contains(expectedType)) {
-			return value instanceof IntegerConstant
-		}
-		if ("EString".equals(expectedType)) {
-			return value instanceof StringConstant
-		}
-		return true
 	}
 
 	@Check

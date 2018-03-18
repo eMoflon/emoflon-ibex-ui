@@ -92,7 +92,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 			rule createAbstractTestClass {
 				++ clazz: EClass {
 					.^abstract := "Test" // Expecting EBoolean here.
-					.name == true        // Expecting EString here.
+					.name := true        // Expecting EString here.
 				}
 				
 				reference: EReference {
