@@ -15,7 +15,16 @@ public interface GTBuilderExtension {
 	static final String BUILDER_EXTENSON_ID = "org.emoflon.ibex.gt.editor.ui.GTBuilderExtension";
 
 	/**
-	 * Builds the package of a project.
+	 * Builds the project.
+	 * 
+	 * @param project
+	 *            the project to build
+	 */
+	public void run(IProject project);
+
+	/**
+	 * Builds the package in the given project. This will be triggered for each
+	 * package containing .gt files.
 	 * 
 	 * @param project
 	 *            the project to build
