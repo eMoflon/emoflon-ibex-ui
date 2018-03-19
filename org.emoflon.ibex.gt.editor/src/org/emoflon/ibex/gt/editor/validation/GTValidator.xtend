@@ -6,8 +6,8 @@ import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
 import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
 import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.gT.Import
-import org.emoflon.ibex.gt.editor.gT.LiteralValue
 import org.emoflon.ibex.gt.editor.gT.Node
+import org.emoflon.ibex.gt.editor.gT.LiteralValue
 import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.gT.Parameter
 import org.emoflon.ibex.gt.editor.gT.Reference
@@ -98,7 +98,7 @@ class GTValidator extends AbstractGTValidator {
 
 	// Errors for attributes.
 	public static val ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE = CODE_PREFIX + "attributeConstraint.literalValueWrongType"
-	public static val ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE = "The value of attribute '%s' must be of type '%s'"
+	public static val ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE = "The value of attribute '%s' must be of type '%s'."
 
 	public static val ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE = CODE_PREFIX + "attributeConstraint.assignmentInDeletedNode"
 	public static val ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE_MESSAGE = "The assignment for attribute '%s' is forbidden in deleted node '%s'."
@@ -359,7 +359,7 @@ class GTValidator extends AbstractGTValidator {
 		// The attribute value must be of the correct type.
 		if (value instanceof LiteralValue) {
 			val expectedType = attribute.EAttributeType
-			if (!GTEditorAttributeUtils.isValidLiteralValue(value, expectedType)) {
+			if (!GTEditorAttributeUtils.convertLiteralValueToObject(expectedType, value).present) {
 				error(
 					String.format(ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE, attribute.name, expectedType.name),
 					GTPackage.Literals.ATTRIBUTE_CONSTRAINT__VALUE,

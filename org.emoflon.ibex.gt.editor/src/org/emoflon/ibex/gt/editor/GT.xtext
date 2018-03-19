@@ -58,16 +58,11 @@ Expression:
 	LiteralValue | EnumValue | ParameterValue;
 
 LiteralValue:
-	{BooleanConstant} value=('true' | 'false') |
-	{DecimalConstant} value=DecimalExpression |
-	{IntegerConstant} value=IntegerExpression |
+	value=('true' | 'false' | Number) |
 	{StringConstant} value=STRING;
 
-DecimalExpression:
-	('-')? INT '.' INT;
-
-IntegerExpression:
-	('-')? INT;
+Number:
+	('-')? INT ('.' INT)?;
 
 EnumValue:
 	'enum::' literal=[ecore::EEnumLiteral];

@@ -92,7 +92,6 @@ class GTParsingAttributesTest extends GTParsingTest {
 			rule createAbstractTestClass {
 				++ clazz: EClass {
 					.^abstract := "Test" // Expecting EBoolean here.
-					.name := true        // Expecting EString here.
 				}
 				
 				reference: EReference {
@@ -107,10 +106,29 @@ class GTParsingAttributesTest extends GTParsingTest {
 			file,
 			GTPackage.eINSTANCE.attributeConstraint,
 			GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE,
-			String.format(GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE, "name", "EString"),
 			String.format(GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE, "abstract", "EBoolean"),
 			String.format(GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE, "lowerBound", "EInt"),
 			String.format(GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE, "upperBound", "EInt")
+		)
+	}
+	
+	@Test
+	def void errorIfAttributeConstraintWithWrongStringConstant() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			rule createAbstractTestClass {
+				++ clazz: EClass {
+					.name := true        // Expecting EString here.
+				}
+			}
+		''')
+		this.assertBasics(file)
+		this.assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.attributeConstraint,
+			GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE,
+			String.format(GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE, "name", "EString")
 		)
 	}
 
