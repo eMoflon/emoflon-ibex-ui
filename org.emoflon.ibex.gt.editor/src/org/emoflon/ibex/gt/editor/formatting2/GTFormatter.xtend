@@ -6,16 +6,15 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.formatting2.AbstractFormatter2
 import org.eclipse.xtext.formatting2.IFormattableDocument
 
-import org.emoflon.ibex.gt.editor.gT.ContextReference
+import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
 import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
 import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.gT.Import
 import org.emoflon.ibex.gt.editor.gT.Node
-import org.emoflon.ibex.gt.editor.gT.OperatorReference
 import org.emoflon.ibex.gt.editor.gT.Parameter
 import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Rule
-import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
+import org.emoflon.ibex.gt.editor.gT.Operator
 
 /**
  * Formatting
@@ -54,7 +53,7 @@ class GTFormatter extends AbstractFormatter2 {
 
 		rule.parameters.forEach[it.format]
 
-		rule.regionFor.keywords(',').forEach [
+		rule.regionFor.keywords(",").forEach [
 			it.prepend[noSpace]
 			it.append[oneSpace]
 		]
@@ -66,7 +65,7 @@ class GTFormatter extends AbstractFormatter2 {
 		// One space before "{".
 		rule.regionFor.keyword("{").prepend[oneSpace]
 
-		// Indent everything between {}.
+		// Indent everything between "{" and "}".
 		rule.regionFor.keywordPairs("{", "}").get(0).interior[indent]
 
 		// Empty line between nodes.
@@ -75,8 +74,8 @@ class GTFormatter extends AbstractFormatter2 {
 
 	def dispatch void format(Parameter parameter, extension IFormattableDocument document) {
 		// No space before ":", one space after ":".
-		parameter.regionFor.keyword(':').prepend[noSpace]
-		parameter.regionFor.keyword(':').append[oneSpace]
+		parameter.regionFor.keyword(":").prepend[noSpace]
+		parameter.regionFor.keyword(":").append[oneSpace]
 	}
 
 	def dispatch void format(Node node, extension IFormattableDocument document) {
@@ -87,32 +86,44 @@ class GTFormatter extends AbstractFormatter2 {
 		node.regionFor.keyword(":").prepend[noSpace]
 		node.regionFor.keyword(":").append[oneSpace]
 
-		// Indent everything between {}.
+		// Indent everything between "{" and "}".
 		val nodeContent = node.regionFor.keywordPairs("{", "}")
 		if (nodeContent.size > 0) {
 			nodeContent.get(0).interior[indent]
 		}
 
-		// New line for each constraint.
-		GTEditorModelUtils.getReferences(node).forEach [
+		// New line for each attribute.
+		node.attributes.forEach [
+			it.format
+			it.surround[newLine]
+		]
+
+		// New line for each reference.
+		node.references.forEach [
 			it.format
 			it.surround[newLine]
 		]
 	}
 
+	def dispatch void format(AttributeConstraint attributeConstraint, extension IFormattableDocument document) {
+		// No space before and after ".".
+		attributeConstraint.regionFor.keyword(".").surround[noSpace]
+
+		// One space before and after the relation.
+		attributeConstraint.regionFor.feature(GTPackage.Literals.ATTRIBUTE_CONSTRAINT__RELATION).surround[oneSpace]
+	}
+
 	def dispatch void format(Reference reference, extension IFormattableDocument document) {
-		if (reference instanceof ContextReference) {
-			// No space before - and between - and the reference name.
+		if (reference.operator == Operator.CONTEXT) {
+			// No space before "-" and between "-" and the reference name.
 			reference.regionFor.keyword("-").surround[noSpace]
-		} else if (reference instanceof OperatorReference) {
-			val operatorReference = reference as OperatorReference
+		} else {
+			// One space between operator and "-".
+			reference.regionFor.feature(GTPackage.Literals.REFERENCE__OPERATOR).append[oneSpace]
 
-			// One space between operator and -.
-			operatorReference.regionFor.feature(GTPackage.Literals.OPERATOR_REFERENCE__OPERATOR).append[oneSpace]
-
-			// One space before -, but no space between - and the reference name.
-			operatorReference.regionFor.keyword('-').prepend[oneSpace]
-			operatorReference.regionFor.keyword('-').append[noSpace]
+			// One space before "-", but no space between "-" and the reference name.
+			reference.regionFor.keyword("-").prepend[oneSpace]
+			reference.regionFor.keyword("-").append[noSpace]
 		}
 
 		// One space before and after ->.

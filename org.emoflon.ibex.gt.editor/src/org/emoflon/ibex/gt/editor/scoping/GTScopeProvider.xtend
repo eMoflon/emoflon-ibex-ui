@@ -1,18 +1,21 @@
 package org.emoflon.ibex.gt.editor.scoping
 
 import org.eclipse.emf.ecore.EClass
+import org.eclipse.emf.ecore.EEnum
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource.CyclicLinkingException
 import org.eclipse.xtext.scoping.Scopes
 
-import org.emoflon.ibex.gt.editor.gT.AttributeAssignment
-import org.emoflon.ibex.gt.editor.gT.AttributeCondition
+import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
+import org.emoflon.ibex.gt.editor.gT.EnumValue
 import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
 import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.gT.NAC
 import org.emoflon.ibex.gt.editor.gT.Node
+import org.emoflon.ibex.gt.editor.gT.Parameter
+import org.emoflon.ibex.gt.editor.gT.ParameterValue
 import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
@@ -30,10 +33,21 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		if (isAttributeName(context, reference)) {
 			return getScopeForAttributes(context, reference)
 		}
+		if (isParameterValue(context, reference)) {
+			return getScopeForParameters(context, reference)
+		}
+		if (isEnumLiteral(context, reference)) {
+			return getScopeForEnumLiterals(context, reference)
+		}
 
 		// Nodes
 		if (isNodeType(context, reference)) {
 			return getScopeForNodeTypes(context, reference)
+		}
+
+		// Parameters
+		if (isParameterType(context, reference)) {
+			return getScopeForDatatypes(context, reference)
 		}
 
 		// References
@@ -53,13 +67,24 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	}
 
 	def isAttributeName(EObject context, EReference reference) {
-		return (context instanceof AttributeAssignment &&
-			reference == GTPackage.Literals.ATTRIBUTE_ASSIGNMENT__ATTRIBUTE) ||
-			(context instanceof AttributeCondition && reference == GTPackage.Literals.ATTRIBUTE_CONDITION__ATTRIBUTE)
+		return (context instanceof AttributeConstraint &&
+			reference == GTPackage.Literals.ATTRIBUTE_CONSTRAINT__ATTRIBUTE)
+	}
+
+	def isEnumLiteral(EObject context, EReference reference) {
+		return (context instanceof EnumValue && reference == GTPackage.Literals.ENUM_VALUE__LITERAL)
 	}
 
 	def isNodeType(EObject context, EReference reference) {
 		return (context instanceof Node && reference == GTPackage.Literals.NODE__TYPE)
+	}
+
+	def isParameterValue(EObject context, EReference reference) {
+		return (context instanceof ParameterValue && reference == GTPackage.Literals.PARAMETER_VALUE__PARAMETER);
+	}
+
+	def isParameterType(EObject context, EReference reference) {
+		return (context instanceof Parameter && reference == GTPackage.Literals.PARAMETER__TYPE)
 	}
 
 	def isReferenceType(EObject context, EReference reference) {
@@ -182,6 +207,45 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		if (container instanceof Node) {
 			val containingNode = container as Node
 			return Scopes.scopeFor(containingNode.type.EAllAttributes)
+		}
+		return Scopes.scopeFor([])
+	}
+
+	/**
+	 * The parameter type must be one of the EDatatypes from the meta-models.
+	 */
+	def getScopeForDatatypes(EObject context, EReference reference) {
+		val container = context.eContainer
+		if (container instanceof Rule) {
+			return Scopes.scopeFor(GTEditorModelUtils.getDatatypes(container.eContainer as GraphTransformationFile))
+		}
+		return Scopes.scopeFor([])
+	}
+
+	/**
+	 * Return the parameters for the attribute value.
+	 */
+	def getScopeForParameters(EObject context, EReference reference) {
+		val container = context.eContainer
+		if (container instanceof AttributeConstraint) {
+			val rule = container.eContainer.eContainer as Rule
+			return Scopes.scopeFor(rule.parameters.filter [
+				it.type.name == container.attribute.EAttributeType.name
+			])
+		}
+		return Scopes.scopeFor([])
+	}
+
+	/**
+	 * Return the valid enum literals for the attribute value.
+	 */
+	def getScopeForEnumLiterals(EObject context, EReference reference) {
+		val container = context.eContainer
+		if (container instanceof AttributeConstraint) {
+			val type = container.attribute.EAttributeType
+			if (type instanceof EEnum) {
+				return Scopes.scopeFor(type.ELiterals)
+			}
 		}
 		return Scopes.scopeFor([])
 	}

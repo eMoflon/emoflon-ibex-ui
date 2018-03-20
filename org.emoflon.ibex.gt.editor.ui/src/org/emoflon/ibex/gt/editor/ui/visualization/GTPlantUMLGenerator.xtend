@@ -1,15 +1,10 @@
 package org.emoflon.ibex.gt.editor.ui.visualization
 
 import org.eclipse.emf.common.util.EList
-import org.emoflon.ibex.gt.editor.gT.ContextNode
-import org.emoflon.ibex.gt.editor.gT.ContextReference
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Operator
-import org.emoflon.ibex.gt.editor.gT.OperatorNode
-import org.emoflon.ibex.gt.editor.gT.OperatorReference
 import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Rule
-import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 
 /**
  * Utility methods to generate PlantUML code.
@@ -50,7 +45,7 @@ class GTPlantUMLGenerator {
 			«ENDFOR»
 			
 			«FOR node : rule.nodes»
-				«FOR reference : GTEditorModelUtils.getReferences(node)»
+				«FOR reference : node.references»
 					«nodeClassName(node)» -[#«referenceColor(reference)»]-> «nodeClassName(reference.target)»: <color:«referenceColor(reference)»>«reference.type.name»
 				«ENDFOR»
 			«ENDFOR»
@@ -70,27 +65,19 @@ class GTPlantUMLGenerator {
 	 * Returns the skin name for the node.
 	 */
 	private static def String nodeSkin(Node node) {
-		if (node instanceof ContextNode) {
-			'CONTEXT'
-		} else if (node instanceof OperatorNode) {
-			node.operator.getName
-		} else {
-			''
-		}
+		return node.operator.getName
 	}
 
 	/**
 	 * Returns the color for the reference.
 	 */
 	private static def String referenceColor(Reference reference) {
-		if (reference instanceof ContextReference) {
+		if (reference.operator == Operator.CONTEXT) {
 			'''«ContextColor»'''
-		} else if (reference instanceof OperatorReference) {
-			if (reference.operator === Operator.CREATE) {
-				'''«CreateColor»'''
-			} else {
-				'''«DeleteColor»'''
-			}
+		} else if (reference.operator === Operator.CREATE) {
+			'''«CreateColor»'''
+		} else if (reference.operator === Operator.DELETE) {
+			'''«DeleteColor»'''
 		} else {
 			''
 		}

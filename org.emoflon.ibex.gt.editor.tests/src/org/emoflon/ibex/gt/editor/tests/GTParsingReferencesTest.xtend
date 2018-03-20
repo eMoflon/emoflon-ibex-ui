@@ -31,7 +31,7 @@ class GTParsingReferencesTest extends GTParsingTest {
 			}
 		''')
 		this.assertValid(file)
-		this.assertReference(file, 0, null, "eClassifiers", 1)
+		this.assertReference(file, 0, Operator.CONTEXT, "eClassifiers", 1)
 	}
 
 	@Test
@@ -103,7 +103,7 @@ class GTParsingReferencesTest extends GTParsingTest {
 	def void errorIfCreatedNodeHasContextReference() {
 		this.assertValidationErrors(
 			this.parseNodesWithReference('++', '', ''),
-			GTPackage.eINSTANCE.node,
+			GTPackage.eINSTANCE.reference,
 			GTValidator.REFERENCE_EXPECT_CREATED_BUT_IS_CONTEXT,
 			String.format(GTValidator.REFERENCE_EXPECT_CREATED_MESSAGE, 'eClassifiers', 'clazz')
 		)
@@ -118,7 +118,7 @@ class GTParsingReferencesTest extends GTParsingTest {
 	def void errorIfCreatedNodeHasDeletedReference() {
 		this.assertValidationErrors(
 			this.parseNodesWithReference('++', '--', ''),
-			GTPackage.eINSTANCE.node,
+			GTPackage.eINSTANCE.reference,
 			GTValidator.REFERENCE_EXPECT_CREATED_BUT_IS_DELETED,
 			String.format(GTValidator.REFERENCE_EXPECT_CREATED_MESSAGE, 'eClassifiers', 'clazz')
 		)
@@ -128,7 +128,7 @@ class GTParsingReferencesTest extends GTParsingTest {
 	def void errorIfDeletedNodeHasContextReference() {
 		this.assertValidationErrors(
 			this.parseNodesWithReference('--', '', ''),
-			GTPackage.eINSTANCE.node,
+			GTPackage.eINSTANCE.reference,
 			GTValidator.REFERENCE_EXPECT_DELETED_BUT_IS_CONTEXT,
 			String.format(GTValidator.REFERENCE_EXPECT_DELETED_MESSAGE, 'eClassifiers', 'clazz')
 		)
@@ -138,7 +138,7 @@ class GTParsingReferencesTest extends GTParsingTest {
 	def void errorIfDeletedNodeHasCreatedReference() {
 		this.assertValidationErrors(
 			this.parseNodesWithReference('--', '++', ''),
-			GTPackage.eINSTANCE.node,
+			GTPackage.eINSTANCE.reference,
 			GTValidator.REFERENCE_EXPECT_DELETED_BUT_IS_CREATED,
 			String.format(GTValidator.REFERENCE_EXPECT_DELETED_MESSAGE, 'eClassifiers', 'clazz')
 		)
@@ -158,9 +158,9 @@ class GTParsingReferencesTest extends GTParsingTest {
 	def void errorIfContextReferenceWithCreatedTargetNode() {
 		this.assertValidationErrors(
 			this.parseNodesWithReference('', '', '++'),
-			GTPackage.eINSTANCE.contextReference,
-			GTValidator.NODE_TARGET_EXPECT_CONTEXT,
-			String.format(GTValidator.NODE_TARGET_EXPECT_CONTEXT_MESSAGE, 'eClassifiers')
+			GTPackage.eINSTANCE.reference,
+			GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT,
+			String.format(GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT_MESSAGE, 'eClassifiers')
 		)
 	}
 
@@ -168,9 +168,9 @@ class GTParsingReferencesTest extends GTParsingTest {
 	def void errorIfContextReferenceWithDeletedTargetNode() {
 		this.assertValidationErrors(
 			this.parseNodesWithReference('', '', '--'),
-			GTPackage.eINSTANCE.contextReference,
-			GTValidator.NODE_TARGET_EXPECT_CONTEXT,
-			String.format(GTValidator.NODE_TARGET_EXPECT_CONTEXT_MESSAGE, 'eClassifiers')
+			GTPackage.eINSTANCE.reference,
+			GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT,
+			String.format(GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT_MESSAGE, 'eClassifiers')
 		)
 	}
 
@@ -188,9 +188,9 @@ class GTParsingReferencesTest extends GTParsingTest {
 	def void errorIfCreatedReferenceWithDeletedTargetNode() {
 		this.assertValidationErrors(
 			this.parseNodesWithReference('', '++', '--'),
-			GTPackage.eINSTANCE.operatorReference,
-			GTValidator.NODE_TARGET_EXPECT_CONTEXT_OR_CREATE,
-			String.format(GTValidator.NODE_TARGET_EXPECT_CONTEXT_OR_CREATE_MESSAGE, 'eClassifiers')
+			GTPackage.eINSTANCE.reference,
+			GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT_OR_CREATE,
+			String.format(GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT_OR_CREATE_MESSAGE, 'eClassifiers')
 		)
 	}
 
@@ -203,9 +203,9 @@ class GTParsingReferencesTest extends GTParsingTest {
 	def void errorIfDeletedReferenceWithCreatedNodeTargetNode() {
 		this.assertValidationErrors(
 			this.parseNodesWithReference('', '--', '++'),
-			GTPackage.eINSTANCE.operatorReference,
-			GTValidator.NODE_TARGET_EXPECT_CONTEXT_OR_DELETE,
-			String.format(GTValidator.NODE_TARGET_EXPECT_CONTEXT_OR_DELETE_MESSAGE, 'eClassifiers')
+			GTPackage.eINSTANCE.reference,
+			GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT_OR_DELETE,
+			String.format(GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT_OR_DELETE_MESSAGE, 'eClassifiers')
 		)
 	}
 

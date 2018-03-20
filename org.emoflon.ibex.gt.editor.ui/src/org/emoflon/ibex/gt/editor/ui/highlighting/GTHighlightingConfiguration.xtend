@@ -20,9 +20,9 @@ class GTHighlightingConfiguration extends DefaultHighlightingConfiguration {
 
 	override void configure(IHighlightingConfigurationAcceptor acceptor) {
 		super.configure(acceptor);
-		addStyle(acceptor, CREATE, 	"Create Nodes and References", 	GREEN, SWT.NORMAL)
 		addStyle(acceptor, CONTEXT, "Context Nodes and References", BLACK, SWT.NORMAL)
-		addStyle(acceptor, DELETE, 	"Delete Nodes and References", 	RED, SWT.NORMAL)
+		addStyle(acceptor, CREATE, "Created Nodes and References", GREEN, SWT.NORMAL)
+		addStyle(acceptor, DELETE, "Deleted Nodes and References", RED, SWT.NORMAL)
 	}
 
 	def static addStyle(IHighlightingConfigurationAcceptor acceptor, String id, String name, RGB color, int style) {

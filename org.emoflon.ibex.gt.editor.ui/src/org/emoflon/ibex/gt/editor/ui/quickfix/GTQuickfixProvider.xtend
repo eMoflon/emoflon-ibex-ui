@@ -1,23 +1,26 @@
 package org.emoflon.ibex.gt.editor.ui.quickfix
 
+import java.util.regex.Pattern
+
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils
+import org.eclipse.xtext.ui.editor.model.IXtextDocument
 import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider
-import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
 import org.eclipse.xtext.ui.editor.quickfix.Fix
+import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
 import org.eclipse.xtext.ui.editor.utils.EditorUtils
 import org.eclipse.xtext.validation.Issue
 
-import org.emoflon.ibex.gt.editor.gT.ContextReference
+import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
 import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
-import org.emoflon.ibex.gt.editor.gT.GTFactory
 import org.emoflon.ibex.gt.editor.gT.Import
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Operator
-import org.emoflon.ibex.gt.editor.gT.OperatorNode
-import org.emoflon.ibex.gt.editor.gT.OperatorReference
+import org.emoflon.ibex.gt.editor.gT.Parameter
 import org.emoflon.ibex.gt.editor.gT.Reference
+import org.emoflon.ibex.gt.editor.gT.Relation
 import org.emoflon.ibex.gt.editor.gT.Rule
-import org.emoflon.ibex.gt.editor.validation.GTValidator
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
+import org.emoflon.ibex.gt.editor.validation.GTValidator
 
 /**
  * Custom quickfixes.
@@ -31,8 +34,10 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	 */
 	@Fix(GTValidator.IMPORT_DUPLICATE)
 	@Fix(GTValidator.IMPORT_FILE_DOES_NOT_EXIST)
+	@Fix(GTValidator.IMPORT_NO_ECORE)
 	def removeImport(Issue issue, IssueResolutionAcceptor acceptor) {
-		var label = 'Remove import.'
+		val importName = issue.data.get(0)
+		var label = '''Remove import '«importName»'.'''
 		acceptor.accept(
 			issue,
 			label,
@@ -48,7 +53,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	}
 
 	/**
-	 * Converts the name of a node or a rule to lower case. 
+	 * Converts the name of a node, a parameter or a rule to lower case. 
 	 */
 	@Fix(GTValidator.NAME_EXPECT_LOWER_CASE)
 	def convertNameToLowerCase(Issue issue, IssueResolutionAcceptor acceptor) {
@@ -60,6 +65,8 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			null,
 			[ element, context |
 				if (element instanceof Node) {
+					element.name = element.name.toFirstLower
+				} else if (element instanceof Parameter) {
 					element.name = element.name.toFirstLower
 				} else if (element instanceof Rule) {
 					element.name = element.name.toFirstLower
@@ -84,6 +91,9 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 					val node = element as Node
 					// Keep leading _ if present before.
 					node.name = (if(node.name.startsWith('_')) '_' else '') + convertToLowerCamelCase(node.name)
+				} else if (element instanceof Parameter) {
+					val parameter = element as Parameter
+					parameter.name = convertToLowerCamelCase(parameter.name)
 				} else if (element instanceof Rule) {
 					val rule = element as Rule
 					rule.name = convertToLowerCamelCase(rule.name)
@@ -108,12 +118,36 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	/**
 	 * Converts the target node of a reference to a context node. 
 	 */
-	@Fix(GTValidator.NODE_TARGET_EXPECT_CONTEXT)
-	@Fix(GTValidator.NODE_TARGET_EXPECT_CONTEXT_OR_CREATE)
-	@Fix(GTValidator.NODE_TARGET_EXPECT_CONTEXT_OR_DELETE)
-	def converTargetNodeToContextNode(Issue issue, IssueResolutionAcceptor acceptor) {
+	@Fix(GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT)
+	@Fix(GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT_OR_CREATE)
+	@Fix(GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT_OR_DELETE)
+	def convertTargetNodeToContextNode(Issue issue, IssueResolutionAcceptor acceptor) {
+		this.changeTargetNodeOperator(issue, acceptor, 'context', Operator.CONTEXT)
+	}
+
+	/**
+	 * Converts the target node of a created reference to a created node. 
+	 */
+	@Fix(GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT_OR_CREATE)
+	def convertTargetNodeToCreatedNode(Issue issue, IssueResolutionAcceptor acceptor) {
+		this.changeTargetNodeOperator(issue, acceptor, 'created', Operator.CREATE)
+	}
+
+	/**
+	 * Converts the target node of a deleted reference to a deleted node. 
+	 */
+	@Fix(GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT_OR_DELETE)
+	def convertTargetNodeToDeletedNode(Issue issue, IssueResolutionAcceptor acceptor) {
+		this.changeTargetNodeOperator(issue, acceptor, 'deleted', Operator.DELETE)
+	}
+
+	/**
+	 * Changes the operator of the target node of the reference to an operator node with the given operator. 
+	 */
+	private def changeTargetNodeOperator(Issue issue, IssueResolutionAcceptor acceptor, String operatorName,
+		Operator newOperator) {
 		val targetNodeName = issue.data.get(0)
-		val label = '''Convert node '«targetNodeName»' to to a context node.'''
+		val label = '''Convert target node '«targetNodeName»' to a «operatorName» node.'''
 		acceptor.accept(
 			issue,
 			label,
@@ -122,15 +156,12 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			[ element, context |
 				if (element instanceof Reference) {
 					val targetNode = element.target
-					if (targetNode instanceof OperatorNode) {
-						val contextNode = GTFactory.eINSTANCE.createContextNode
-						contextNode.name = targetNode.name
-						contextNode.type = targetNode.type
-						contextNode.constraints.addAll(targetNode.constraints)
-						element.target = contextNode
-
-						val rule = element.eContainer.eContainer as Rule
-						rule.nodes.set(rule.nodes.indexOf(targetNode), contextNode)
+					if (targetNode instanceof Node) {
+						if (newOperator == Operator.CONTEXT) {
+							this.removeNodeOperator(targetNode, context.xtextDocument)
+						} else {
+							targetNode.operator = newOperator
+						}
 					}
 				}
 			]
@@ -138,41 +169,15 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	}
 
 	/**
-	 * Converts the target node of a created reference to a created node. 
+	 * Removes the operator of the given node by modifying the Xtext document. 
 	 */
-	@Fix(GTValidator.NODE_TARGET_EXPECT_CONTEXT_OR_CREATE)
-	def converTargetNodeToCreatedNode(Issue issue, IssueResolutionAcceptor acceptor) {
-		this.acceptChangeOperatorNode(issue, acceptor, 'created', Operator.CREATE)
-	}
-
-	/**
-	 * Converts the target node of a deleted reference to a deleted node. 
-	 */
-	@Fix(GTValidator.NODE_TARGET_EXPECT_CONTEXT_OR_DELETE)
-	def converTargetNodeToDeletedNode(Issue issue, IssueResolutionAcceptor acceptor) {
-		this.acceptChangeOperatorNode(issue, acceptor, 'deleted', Operator.DELETE)
-	}
-
-	/**
-	 * Changes the operator of the target node of the reference to an operator node with the given operator. 
-	 */
-	private def acceptChangeOperatorNode(Issue issue, IssueResolutionAcceptor acceptor, String operatorName,
-		Operator newOperator) {
-		val targetNodeName = issue.data.get(0)
-		val label = '''Convert node '«targetNodeName»' to a «operatorName» node.'''
-		acceptor.accept(
-			issue,
-			label,
-			label,
-			null,
-			[ element, context |
-				if (element instanceof OperatorReference) {
-					if (element.target instanceof OperatorNode) {
-						(element.target as OperatorNode).operator = newOperator
-					}
-				}
-			]
-		)
+	private def removeNodeOperator(Node node, IXtextDocument document) {
+		if (node.operator != Operator.CONTEXT) {
+			val xtextNode = NodeModelUtils.getNode(node);
+			val regex = Pattern.quote(if(node.operator == Operator.CREATE) '++' else '--')
+			val newText = xtextNode.text.replaceFirst(regex, '').trim
+			document.replace(xtextNode.offset, xtextNode.length, newText)
+		}
 	}
 
 	/**
@@ -230,31 +235,81 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 		]
 	}
 
-	/**
-	 * Converts the operator node which contains a context reference with a context node.
-	 */
-	@Fix(GTValidator.REFERENCE_EXPECT_CREATED_BUT_IS_CONTEXT)
-	@Fix(GTValidator.REFERENCE_EXPECT_DELETED_BUT_IS_CONTEXT)
-	def convertToContextNode(Issue issue, IssueResolutionAcceptor acceptor) {
-		val nodeName = issue.data.get(2)
-		val label = '''Convert node '«nodeName»' to a context node.'''
+	@Fix(GTValidator.ATTRIBUTE_MULTIPLE_ASSIGNMENTS)
+	def removeAssignment(Issue issue, IssueResolutionAcceptor acceptor) {
+		val attributeName = issue.data.get(0)
+		val label = '''Remove assignment for attribute '«attributeName»'.'''
 		acceptor.accept(
 			issue,
 			label,
 			label,
 			null,
 			[ element, context |
-				if (element instanceof OperatorNode) {
-					val contextNode = GTFactory.eINSTANCE.createContextNode
-					contextNode.name = element.name
-					contextNode.type = element.type
-					contextNode.constraints.addAll(element.constraints)
-
-					val rule = element.eContainer as Rule
-					rule.nodes.set(rule.nodes.indexOf(element), contextNode)
+				if (element instanceof AttributeConstraint) {
+					val node = element.eContainer as Node
+					node.attributes.remove(element)
 				}
 			]
 		)
+	}
+
+	@Fix(GTValidator.ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE)
+	@Fix(GTValidator.ATTRIBUTE_MULTIPLE_ASSIGNMENTS)
+	def changeAttributeAssignmentToCondition(Issue issue, IssueResolutionAcceptor acceptor) {
+		if (issue.code.equals(GTValidator.ATTRIBUTE_MULTIPLE_ASSIGNMENTS) && issue.data.get(1).equals("CREATE")) {
+			// For created nodes this quickfix is not allowed.
+			return;
+		}
+
+		Relation.VALUES.filter[it != Relation.ASSIGNMENT].forEach [
+			this.changeAttributeConstraintRelation(
+				issue,
+				acceptor,
+				'''Convert assignment for '%s' to «it.literal» condition.''',
+				it
+			)
+		]
+	}
+
+	@Fix(GTValidator.ATTRIBUTE_CONDITION_IN_CREATED_NODE)
+	def changeAttributeConditionToAssignment(Issue issue, IssueResolutionAcceptor acceptor) {
+		this.changeAttributeConstraintRelation(
+			issue,
+			acceptor,
+			"Convert condition for '%s' to assignment.",
+			Relation.ASSIGNMENT
+		)
+	}
+
+	/**
+	 * Changes the relation of the attribute constraint.
+	 */
+	private def changeAttributeConstraintRelation(Issue issue, IssueResolutionAcceptor acceptor, String text,
+		Relation newRelation) {
+		val attributeName = issue.data.get(0)
+		val label = String.format(text, attributeName)
+		acceptor.accept(
+			issue,
+			label,
+			label,
+			null,
+			[ element, context |
+				if (element instanceof AttributeConstraint) {
+					element.relation = newRelation
+				}
+			]
+		)
+	}
+
+	/**
+	 * Converts the operator node which contains a context reference to a context node.
+	 */
+	@Fix(GTValidator.REFERENCE_EXPECT_CREATED_BUT_IS_CONTEXT)
+	@Fix(GTValidator.REFERENCE_EXPECT_CREATED_BUT_IS_DELETED)
+	@Fix(GTValidator.REFERENCE_EXPECT_DELETED_BUT_IS_CONTEXT)
+	@Fix(GTValidator.REFERENCE_EXPECT_DELETED_BUT_IS_CREATED)
+	def convertToContextNode(Issue issue, IssueResolutionAcceptor acceptor) {
+		this.changeNodeOperator(issue, acceptor, 'context', Operator.CONTEXT)
 	}
 
 	/**
@@ -262,7 +317,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	 */
 	@Fix(GTValidator.REFERENCE_EXPECT_CREATED_BUT_IS_DELETED)
 	def convertToDeletedNode(Issue issue, IssueResolutionAcceptor acceptor) {
-		this.acceptChangeOperatorOfOperatorNode(issue, acceptor, 'deleted', Operator.DELETE)
+		this.changeNodeOperator(issue, acceptor, 'deleted', Operator.DELETE)
 	}
 
 	/**
@@ -270,13 +325,13 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	 */
 	@Fix(GTValidator.REFERENCE_EXPECT_DELETED_BUT_IS_CREATED)
 	def convertToCreatedNode(Issue issue, IssueResolutionAcceptor acceptor) {
-		this.acceptChangeOperatorOfOperatorNode(issue, acceptor, 'created', Operator.CREATE)
+		this.changeNodeOperator(issue, acceptor, 'created', Operator.CREATE)
 	}
 
 	/**
-	 * Changes the operator of the operator node affected by the issue to the given operator.
+	 * Changes the operator of the node affected by the issue.
 	 */
-	private def acceptChangeOperatorOfOperatorNode(Issue issue, IssueResolutionAcceptor acceptor, String operatorName,
+	private def changeNodeOperator(Issue issue, IssueResolutionAcceptor acceptor, String operatorName,
 		Operator newOperator) {
 		val nodeName = issue.data.get(2)
 		val label = '''Convert node '«nodeName»' to a «operatorName» node.'''
@@ -286,8 +341,13 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			label,
 			null,
 			[ element, context |
-				if (element instanceof OperatorNode) {
-					element.operator = newOperator
+				if (element instanceof Reference) {
+					val node = element.eContainer as Node
+					if (newOperator == Operator.CONTEXT) {
+						this.removeNodeOperator(node, context.xtextDocument)
+					} else {
+						node.operator = newOperator
+					}
 				}
 			]
 		)
@@ -299,7 +359,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	@Fix(GTValidator.REFERENCE_EXPECT_CREATED_BUT_IS_CONTEXT)
 	@Fix(GTValidator.REFERENCE_EXPECT_CREATED_BUT_IS_DELETED)
 	def convertToCreatedReference(Issue issue, IssueResolutionAcceptor acceptor) {
-		this.acceptConvertOperatorReference(issue, acceptor, 'created', Operator.CREATE)
+		this.changeReferenceOperator(issue, acceptor, 'created', Operator.CREATE)
 	}
 
 	/**
@@ -308,39 +368,25 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	@Fix(GTValidator.REFERENCE_EXPECT_DELETED_BUT_IS_CONTEXT)
 	@Fix(GTValidator.REFERENCE_EXPECT_DELETED_BUT_IS_CREATED)
 	def convertToDeletedReference(Issue issue, IssueResolutionAcceptor acceptor) {
-		this.acceptConvertOperatorReference(issue, acceptor, 'deleted', Operator.DELETE)
+		this.changeReferenceOperator(issue, acceptor, 'deleted', Operator.DELETE)
 	}
 
 	/**
-	 * Converts the reference affected by the issue to an operator node with the given operator.
+	 * Changes the operator of the reference affected by the issue.
 	 */
-	private def acceptConvertOperatorReference(Issue issue, IssueResolutionAcceptor acceptor, String operatorName,
+	private def changeReferenceOperator(Issue issue, IssueResolutionAcceptor acceptor, String operatorName,
 		Operator newOperator) {
 		val referenceTypeName = issue.data.get(0)
 		val referenceTargetNodeName = issue.data.get(1)
-		val label = '''Convert reference '«referenceTypeName»' to a «operatorName» reference.'''
+		val label = '''Convert reference '«referenceTypeName» -> «referenceTargetNodeName»' to a «operatorName» reference.'''
 		acceptor.accept(
 			issue,
 			label,
 			label,
 			null,
 			[ element, context |
-				if (element instanceof Node) {
-					val node = element as Node
-					GTEditorModelUtils.getReferences(node).filter [
-						it.type.name.equals(referenceTypeName) && it.target.name.equals(referenceTargetNodeName)
-					].forEach [
-						if (it instanceof ContextReference) {
-							val newReference = GTFactory.eINSTANCE.createOperatorReference
-							newReference.operator = newOperator
-							newReference.type = it.type
-							newReference.target = it.target
-							it.eResource.contents.add(newReference)
-							node.constraints.set(node.constraints.indexOf(it), newReference)
-						} else if (it instanceof OperatorReference) {
-							it.operator = newOperator
-						}
-					]
+				if (element instanceof Reference) {
+					element.operator = newOperator
 				}
 			]
 		)

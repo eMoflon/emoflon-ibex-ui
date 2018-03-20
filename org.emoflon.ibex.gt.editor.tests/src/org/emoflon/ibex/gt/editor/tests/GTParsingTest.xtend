@@ -7,15 +7,13 @@ import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
-import org.emoflon.ibex.gt.editor.gT.AttributeAssignment
-import org.emoflon.ibex.gt.editor.gT.AttributeCondition
-import org.emoflon.ibex.gt.editor.gT.ContextNode
-import org.emoflon.ibex.gt.editor.gT.ContextReference
+import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
 import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
+import org.emoflon.ibex.gt.editor.gT.LiteralValue
 import org.emoflon.ibex.gt.editor.gT.Operator
-import org.emoflon.ibex.gt.editor.gT.OperatorNode
-import org.emoflon.ibex.gt.editor.gT.OperatorReference
+import org.emoflon.ibex.gt.editor.gT.ParameterValue
 import org.emoflon.ibex.gt.editor.gT.Reference
+import org.emoflon.ibex.gt.editor.gT.Relation
 import org.junit.Assert
 import org.junit.runner.RunWith
 
@@ -27,7 +25,7 @@ import org.junit.runner.RunWith
 @InjectWith(GTInjectorProvider)
 abstract class GTParsingTest {
 	public static val ecoreImport = 'http://www.eclipse.org/emf/2002/Ecore'
-	
+
 	@Inject
 	protected ParseHelper<GraphTransformationFile> parseHelper
 
@@ -80,27 +78,34 @@ abstract class GTParsingTest {
 		Assert.assertEquals(ruleCount, file.rules.size)
 	}
 
-	def void assertAttributeAssignment(GraphTransformationFile file, int constraintIndex, String name, String value) {
-		val attr = file.rules.get(0).nodes.get(0).constraints.get(constraintIndex) as AttributeAssignment
-		Assert.assertEquals(name, attr.attribute.name)
-		Assert.assertEquals(value, attr.value.value)
+	def void assertAttribute(AttributeConstraint attributeConstraint, String name, Relation relation) {
+		Assert.assertEquals(name, attributeConstraint.attribute.name)
+		Assert.assertEquals(relation, attributeConstraint.relation)
 	}
 
-	def void assertAttributeCondition(GraphTransformationFile file, int constraintIndex, String name, String value) {
-		val attr = file.rules.get(0).nodes.get(0).constraints.get(constraintIndex) as AttributeCondition
-		Assert.assertEquals(name, attr.attribute.name)
-		Assert.assertEquals(value, attr.value.value)
+	def void assertAttributeLiteral(GraphTransformationFile file, int index, String name, Relation relation,
+		String value) {
+		val attr = file.rules.get(0).nodes.get(0).attributes.get(index) as AttributeConstraint
+		this.assertAttribute(attr, name, relation)
+
+		Assert.assertTrue(attr.value instanceof LiteralValue)
+		Assert.assertEquals(value, (attr.value as LiteralValue).value)
+	}
+
+	def void assertAttributeParameter(GraphTransformationFile file, int attributeIndex, String name, Relation relation,
+		int parameterIndex) {
+		val attr = file.rules.get(0).nodes.get(0).attributes.get(attributeIndex) as AttributeConstraint
+		this.assertAttribute(attr, name, relation)
+
+		Assert.assertTrue(attr.value instanceof ParameterValue)
+		val parameter = file.rules.get(0).parameters.get(parameterIndex)
+		Assert.assertEquals(parameter, (attr.value as ParameterValue).parameter)
 	}
 
 	def assertNode(GraphTransformationFile file, int nodeIndex, Operator operator, String variableName,
 		String variableType) {
 		val node = file.rules.get(0).nodes.get(nodeIndex)
-		if (operator === null) {
-			Assert.assertTrue(node instanceof ContextNode)
-		} else {
-			Assert.assertTrue(node instanceof OperatorNode)
-			Assert.assertEquals(operator, (node as OperatorNode).operator)
-		}
+		Assert.assertEquals(operator, node.operator)
 		Assert.assertEquals(variableName, node.name)
 		Assert.assertEquals(variableType, node.type.name)
 	}
@@ -117,19 +122,14 @@ abstract class GTParsingTest {
 		val parameters = file.rules.get(0).parameters
 		Assert.assertEquals(types.size, parameters.size)
 		for (i : 0 .. types.size - 1) {
-			Assert.assertEquals(types.get(i), parameters.get(i).type)
+			Assert.assertEquals(types.get(i), parameters.get(i).type.name)
 		}
 	}
 
-	def assertReference(GraphTransformationFile file, int constraintIndex, Operator operator, String name,
+	def assertReference(GraphTransformationFile file, int referenceIndex, Operator operator, String name,
 		int targetNodeIndex) {
-		val reference = file.rules.get(0).nodes.get(0).constraints.get(constraintIndex) as Reference
-		if (operator === null) {
-			Assert.assertTrue(reference instanceof ContextReference)
-		} else {
-			Assert.assertTrue(reference instanceof OperatorReference)
-			Assert.assertEquals(operator, (reference as OperatorReference).operator)
-		}
+		val reference = file.rules.get(0).nodes.get(0).references.get(referenceIndex) as Reference
+		Assert.assertEquals(operator, reference.operator)
 		Assert.assertEquals(name, reference.type.name)
 		Assert.assertEquals(file.rules.get(0).nodes.get(targetNodeIndex), reference.target)
 	}

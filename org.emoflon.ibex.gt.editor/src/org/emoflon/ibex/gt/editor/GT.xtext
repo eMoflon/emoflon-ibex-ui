@@ -22,59 +22,57 @@ Rule:
 	(nacs+=NAC)*;
 
 Parameter:
-	name=ID ':' type=ID;
+	name=ID ':' type=[ecore::EDataType];
 
 	// Nodes
 Node:
-	ContextNode | OperatorNode;
-
-ContextNode:
+	(operator=OperatorForEditor)?
 	name=ID ':' type=[ecore::EClass]
 	('{'
-	constraints+=InnerNodeConstraint*
-	'}')?;
-
-OperatorNode:
-	operator=Operator
-	name=ID ':' type=[ecore::EClass]
-	('{'
-	constraints+=InnerNodeConstraint*
+	attributes+=AttributeConstraint*
+	references+=Reference*
 	'}')?;
 
 enum Operator:
+	CONTEXT |
+	CREATE |
+	DELETE;
+
+enum OperatorForEditor returns Operator:
 	CREATE='++' | DELETE='--';
 
-InnerNodeConstraint:
-	AttributeAssignment | AttributeCondition | Reference;
-
 	// Attribute Assignments and Conditions
-AttributeAssignment:
-	attribute=[ecore::EAttribute] '=' value=Expression;
+AttributeConstraint:
+	'.' attribute=[ecore::EAttribute] relation=Relation value=Expression;
 
-AttributeCondition:
-	attribute=[ecore::EAttribute] operator=('==' | '!=' | '<=' | '>=' | '>' | '<') value=Expression;
+enum Relation:
+	ASSIGNMENT=':=' |
+	GREATER='>' |
+	GREATER_OR_EQUAL='>=' |
+	EQUAL='==' |
+	UNEQUAL='!=' |
+	SMALLER_OR_EQUAL='<=' |
+	SMALLER='<';
 
 Expression:
-	{BooleanConstant} value=('true' | 'false') |
-	{NumberConstant} value=NumericExpression |
-	{StringConstant} value=STRING |
-	{Variable} value=ID;
+	LiteralValue | EnumValue | ParameterValue;
 
-terminal DECIMAL:
-	INT '.' INT;
+LiteralValue:
+	value=('true' | 'false' | Number) |
+	{StringConstant} value=STRING;
 
-NumericExpression:
-	(('-')? INT | ('-')? DECIMAL);
+Number:
+	('-')? INT ('.' INT)?;
+
+EnumValue:
+	'enum::' literal=[ecore::EEnumLiteral];
+
+ParameterValue:
+	'param::' parameter=[Parameter];
 
 	// References
 Reference:
-	ContextReference | OperatorReference;
-
-ContextReference:
-	'-' type=[ecore::EReference] '->' target=[Node];
-
-OperatorReference:
-	operator=Operator '-' type=[ecore::EReference] '->' target=[Node];
+	(operator=OperatorForEditor)? '-' type=[ecore::EReference] '->' target=[Node];
 
 	// Negative Application Conditions
 NAC:

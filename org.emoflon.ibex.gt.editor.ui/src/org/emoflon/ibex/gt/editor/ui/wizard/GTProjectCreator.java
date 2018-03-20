@@ -70,7 +70,7 @@ public class GTProjectCreator extends AbstractPluginProjectCreator {
 
 	@Override
 	protected List<String> getRequiredBundles() {
-		return Lists.newArrayList("org.emoflon.ibex.common", "org.emoflon.ibex.gt");
+		return Lists.newArrayList();
 	}
 
 	@Override

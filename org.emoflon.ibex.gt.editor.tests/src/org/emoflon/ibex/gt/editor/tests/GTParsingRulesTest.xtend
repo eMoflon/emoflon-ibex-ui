@@ -198,7 +198,7 @@ class GTParsingRulesTest extends GTParsingTest {
 	}
 
 	@Test
-	def void errorIfRuleNameContainsUnderscores() {
+	def void warningIfRuleNameContainsUnderscores() {
 		val ruleName = 'get_an_e_Object'
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
@@ -237,7 +237,7 @@ class GTParsingRulesTest extends GTParsingTest {
 	}
 
 	@Test
-	def void errorIfRuleNameStartsWithCapital() {
+	def void warningIfRuleNameStartsWithCapital() {
 		val ruleName = "AnInvalidName"
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
@@ -253,103 +253,6 @@ class GTParsingRulesTest extends GTParsingTest {
 			GTValidator.NAME_EXPECT_LOWER_CASE,
 			Severity.WARNING,
 			String.format(GTValidator.RULE_NAME_STARTS_WITH_LOWER_CASE_MESSAGE, ruleName)
-		)
-	}
-
-	@Test
-	def void validRuleWithNoParameters() {
-		val file = parseHelper.parse('''
-			import "«ecoreImport»"
-			
-			rule a() {
-				a: EObject
-			}
-		''')
-		this.assertValid(file)
-		Assert.assertTrue(file.rules.get(0).parameters.isEmpty)
-	}
-
-	@Test
-	def void validRuleWithOneParameter() {
-		val file = parseHelper.parse('''
-			import "«ecoreImport»"
-			
-			rule a(name: String) {
-				a: EObject
-			}
-		''')
-		this.assertValid(file)
-		this.assertParameterNames(file, "name")
-		this.assertParameterTypes(file, "String")
-	}
-
-	@Test
-	def void validRuleWithThreeParameters() {
-		val file = parseHelper.parse('''
-			import "«ecoreImport»"
-			
-			rule a(age: int, name: String, isMale: boolean) {
-				a: EObject
-			}
-		''')
-		this.assertValid(file)
-		this.assertParameterNames(file, "age", "name", "isMale")
-		this.assertParameterTypes(file, "int", "String", "boolean")
-	}
-
-	@Test
-	def void errorIfParameterListEndsWithComma() {
-		val file = parseHelper.parse('''
-			import "«ecoreImport»"
-			
-			rule a(age: int,) {
-				a: Ebject
-			}
-		''')
-		this.assertInvalidResource(file, 1)
-		this.assertValidationErrors(
-			file,
-			GTPackage.eINSTANCE.rule,
-			Diagnostic::SYNTAX_DIAGNOSTIC,
-			"mismatched input ')' expecting RULE_ID"
-		)
-	}
-
-	@Test
-	def void errorIfParameterListWithNoColons() {
-		val file = parseHelper.parse('''
-			import "«ecoreImport»"
-			
-			rule A(age int, name String, isMale boolean) {
-				a: Object
-			}
-		''')
-		this.assertInvalidResource(file, 3)
-		this.assertValidationErrors(
-			file,
-			GTPackage.eINSTANCE.parameter,
-			Diagnostic::SYNTAX_DIAGNOSTIC,
-			"missing ':' at 'int'",
-			"missing ':' at 'String'",
-			"missing ':' at 'boolean'"
-		)
-	}
-
-	@Test
-	def void errorIfParameterListContainsSemicolons() {
-		val file = parseHelper.parse('''
-			import "http://www.eclipse.org/emf/2002/Ecore"
-			
-			rule a(age: int; name: String; isMale: boolean) {
-				a: EObject
-			}
-		''')
-		this.assertInvalidResource(file, 1)
-		this.assertValidationErrors(
-			file,
-			GTPackage.eINSTANCE.rule,
-			Diagnostic::SYNTAX_DIAGNOSTIC,
-			"mismatched input ';' expecting ')'"
 		)
 	}
 }

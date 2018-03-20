@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -51,6 +52,10 @@ public class GTBuilder extends IncrementalProjectBuilder {
 			return null;
 		}
 
+		// Run builder extensions for the project.
+		this.runBuilderExtensions(ext -> ext.run(this.getProject()));
+
+		// Run builder extensions for each package.
 		switch (kind) {
 		case AUTO_BUILD:
 		case INCREMENTAL_BUILD:
@@ -62,7 +67,7 @@ public class GTBuilder extends IncrementalProjectBuilder {
 		case CLEAN_BUILD:
 		case FULL_BUILD:
 			this.log("full build");
-			buildPackages(this.findSourcePackages());
+			this.buildPackages(this.findSourcePackages());
 			break;
 		default:
 			break;
@@ -77,7 +82,7 @@ public class GTBuilder extends IncrementalProjectBuilder {
 	 *            the packages to build
 	 */
 	private void buildPackages(final List<IPath> packages) {
-		packages.forEach(p -> this.runExtraBuilderExtensions(p));
+		packages.forEach(packagePath -> this.runBuilderExtensions(ext -> ext.run(this.getProject(), packagePath)));
 	}
 
 	/**
@@ -106,12 +111,8 @@ public class GTBuilder extends IncrementalProjectBuilder {
 
 	/**
 	 * Runs the registered GTBuilderExtensions for the package.
-	 * 
-	 * @param packagePath
-	 *            the path of the package to build
 	 */
-	private void runExtraBuilderExtensions(final IPath packagePath) {
-		IProject project = this.getProject();
+	private void runBuilderExtensions(final Consumer<GTBuilderExtension> action) {
 		ISafeRunnable runnable = new ISafeRunnable() {
 			@Override
 			public void handleException(Throwable e) {
@@ -122,7 +123,7 @@ public class GTBuilder extends IncrementalProjectBuilder {
 			public void run() throws Exception {
 				ExtensionsUtil
 						.collectExtensions(GTBuilderExtension.BUILDER_EXTENSON_ID, "class", GTBuilderExtension.class)
-						.forEach(ext -> ext.run(project, packagePath));
+						.forEach(action);
 			}
 		};
 		SafeRunner.run(runnable);

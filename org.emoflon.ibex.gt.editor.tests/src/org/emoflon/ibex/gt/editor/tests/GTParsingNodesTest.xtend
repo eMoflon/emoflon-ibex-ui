@@ -27,8 +27,8 @@ class GTParsingNodesTest extends GTParsingTest {
 			}
 		''')
 		this.assertValid(file)
-		this.assertNode(file, 0, null, "a", "EPackage")
-		this.assertNode(file, 1, null, "b", "EClass")
+		this.assertNode(file, 0, Operator.CONTEXT, "a", "EPackage")
+		this.assertNode(file, 1, Operator.CONTEXT, "b", "EClass")
 	}
 
 	@Test
@@ -47,7 +47,7 @@ class GTParsingNodesTest extends GTParsingTest {
 	}
 
 	@Test
-	def void errorIfNodeNameStartsWithCapital() {
+	def void warningIfNodeNameStartsWithCapital() {
 		val nodeName = "AnInvalidNodeName"
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
@@ -86,7 +86,7 @@ class GTParsingNodesTest extends GTParsingTest {
 	}
 
 	@Test
-	def void errorIfNodeNameContainsUndercores() {
+	def void warningIfNodeNameContainsUndercores() {
 		val nodeName = 'the_e_Object'
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
@@ -159,6 +159,24 @@ class GTParsingNodesTest extends GTParsingTest {
 			GTPackage.eINSTANCE.node,
 			GTValidator.CREATE_NODE_TYPE_ABSTRACT,
 			String.format(GTValidator.CREATE_NODE_TYPE_ABSTRACT_MESSAGE, 'classifier')
+		)
+	}
+
+	@Test
+	def void errorIfNodeOfSameNameAsParameter() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			rule a(clazz: EString) {
+				++ clazz: EClass
+			}
+		''')
+		this.assertBasics(file)
+		this.assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.node,
+			GTValidator.NODE_NAME_EQUALS_PARAMETER_NAME,
+			String.format(GTValidator.NODE_NAME_EQUALS_PARAMETER_NAME_MESSAGE, 'clazz', 'clazz')
 		)
 	}
 }

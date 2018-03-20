@@ -21,8 +21,14 @@ class GTProposalProvider extends AbstractGTProposalProvider {
 		super.completeImport_Name(model, assignment, context, acceptor)
 
 		val gtFile = model.eContainer as GraphTransformationFile
-		WorkspaceSearch.getEcoreURIsInWorkspace(gtFile.imports.map[it.name].toList).forEach [
+		val currentImports = gtFile.imports.map[it.name].toList
+		WorkspaceSearch.getEcoreURIsInWorkspace(currentImports).forEach [
 			acceptor.accept(createCompletionProposal('''"«it»"''', context))
 		]
+
+		val ecoreImport = "http://www.eclipse.org/emf/2002/Ecore"
+		if (!currentImports.contains(ecoreImport)) {
+			acceptor.accept(createCompletionProposal('''"«ecoreImport»"''', context))
+		}
 	}
 }
