@@ -13,8 +13,8 @@ import org.emoflon.ibex.gt.editor.gT.Parameter
 import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Relation
 import org.emoflon.ibex.gt.editor.gT.Rule
-import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 import org.emoflon.ibex.gt.editor.utils.GTEditorAttributeUtils
+import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 
 /**
  * This class contains custom validation rules. 
@@ -108,6 +108,10 @@ class GTValidator extends AbstractGTValidator {
 
 	public static val ATTRIBUTE_MULTIPLE_ASSIGNMENTS = CODE_PREFIX + "attributeConstraint.duplicateAssignment"
 	public static val ATTRIBUTE_MULTIPLE_ASSIGNMENTS_MESSAGE = "%s assignments for attribute '%s'. Only one is allowed."
+
+	public static val ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE = CODE_PREFIX +
+		"attributeConstraint.relation.typeNotComparable"
+	public static val ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE_MESSAGE = "Relation '%s' is not supported for attribute '%s'."
 
 	// Errors for references.
 	public static val REFERENCE_EXPECT_CREATED_BUT_IS_CONTEXT = CODE_PREFIX +
@@ -395,6 +399,17 @@ class GTValidator extends AbstractGTValidator {
 				}
 			}
 		} else { // attribute constraint is a condition
+			if (!GTEditorAttributeUtils.isComparable(attribute.EAttributeType) &&
+				!GTEditorAttributeUtils.isEqualityCheck(attributeConstraint.relation)) {
+				// If the attribute type is not comparable, only equivalence relations are allowed.
+				error(
+					String.format(ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE_MESSAGE, attributeConstraint.relation.toString,
+						attribute.name),
+					GTPackage.Literals.ATTRIBUTE_CONSTRAINT__RELATION,
+					ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE,
+					attribute.name
+				)
+			}
 			if (node.operator == Operator.CREATE) {
 				// If the node is a created node, it may not contain attribute conditions.
 				error(

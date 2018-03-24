@@ -19,6 +19,7 @@ import org.emoflon.ibex.gt.editor.gT.Parameter
 import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Relation
 import org.emoflon.ibex.gt.editor.gT.Rule
+import org.emoflon.ibex.gt.editor.utils.GTEditorAttributeUtils
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 import org.emoflon.ibex.gt.editor.validation.GTValidator
 
@@ -279,6 +280,18 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			"Convert condition for '%s' to assignment.",
 			Relation.ASSIGNMENT
 		)
+	}
+
+	@Fix(GTValidator.ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE)
+	def changeAttributeConstraintToEqualityRelation(Issue issue, IssueResolutionAcceptor acceptor) {
+		GTEditorAttributeUtils.equalityChecks.forEach [
+			this.changeAttributeConstraintRelation(
+				issue,
+				acceptor,
+				'''Convert assignment for '%s' to «it.literal» condition.''',
+				it
+			)
+		]
 	}
 
 	/**
