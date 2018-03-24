@@ -6,6 +6,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile;
 import org.emoflon.ibex.gt.editor.gT.Rule;
@@ -52,9 +54,18 @@ public class GTVisualizer extends EMoflonVisualiser {
 	 */
 	private static Optional<Rule> determineSelectedRule(final ISelection selection, final EList<Rule> rules) {
 		if (selection instanceof TextSelection) {
-			TextSelection selectedText = (TextSelection) selection;
-			String text = selectedText.getText().trim();
-			return rules.stream().filter(rule -> rule.getName().equals(text)).findAny();
+			TextSelection textSelection = (TextSelection) selection;
+
+			// For the TextSelection documents start with line 0.
+			int selectionStart = textSelection.getStartLine() + 1;
+			int selectionEnd = textSelection.getEndLine() + 1;
+
+			for (final Rule rule : rules) {
+				ICompositeNode object = NodeModelUtils.getNode(rule);
+				if (selectionStart >= object.getStartLine() && selectionEnd <= object.getEndLine()) {
+					return Optional.of(rule);
+				}
+			}
 		}
 		return Optional.empty();
 	}
