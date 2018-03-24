@@ -19,41 +19,25 @@ import org.moflon.core.ui.visualisation.EMoflonVisualiser;
 public class GTVisualizer extends EMoflonVisualiser {
 
 	@Override
-	protected String getDiagramBody(IEditorPart editor, ISelection selection) {
-		return this.visualize(editor, selection) //
-				.orElse(EMoflonPlantUMLGenerator.emptyDiagram());
-	}
-
-	/**
-	 * Provides a PlantUML visualization for the selected content of the editor.
-	 * 
-	 * @param editor
-	 *            the editor
-	 * @param selection
-	 *            the current selection
-	 * @return an {@link Optional} for the PlantUML code
-	 */
-	private Optional<String> visualize(final IEditorPart editor, final ISelection selection) {
+	protected String getDiagramBody(final IEditorPart editor, final ISelection selection) {
 		Optional<GraphTransformationFile> file = this.loadFileFromEditor(editor);
 		if (!file.isPresent()) {
-			return Optional.empty();
+			return EMoflonPlantUMLGenerator.emptyDiagram();
 		}
 
 		EList<Rule> rules = file.get().getRules();
-		String visualizationCode = "";
 		if (rules.size() == 0) {
-			visualizationCode = GTPlantUMLGenerator.visualizeNothing();
-		} else if (rules.size() == 1) {
-			visualizationCode = GTPlantUMLGenerator.visualizeRule(rules.get(0));
-		} else {
-			Optional<Rule> rule = this.determineSelectedRule(selection, rules);
-			if (rule.isPresent()) {
-				visualizationCode = GTPlantUMLGenerator.visualizeRule(rule.get());
-			} else {
-				visualizationCode = GTPlantUMLGenerator.visualizeRuleHierarchy(rules);
-			}
+			return GTPlantUMLGenerator.visualizeNothing();
 		}
-		return Optional.of(visualizationCode);
+		if (rules.size() == 1) {
+			return GTPlantUMLGenerator.visualizeRule(rules.get(0));
+		}
+		Optional<Rule> rule = determineSelectedRule(selection, rules);
+		if (rule.isPresent()) {
+			return GTPlantUMLGenerator.visualizeRule(rule.get());
+		} else {
+			return GTPlantUMLGenerator.visualizeRuleHierarchy(rules);
+		}
 	}
 
 	/**
@@ -66,7 +50,7 @@ public class GTVisualizer extends EMoflonVisualiser {
 	 *            the rules
 	 * @return an {@link Optional} for a {@link Rule}
 	 */
-	private Optional<Rule> determineSelectedRule(ISelection selection, EList<Rule> rules) {
+	private static Optional<Rule> determineSelectedRule(final ISelection selection, final EList<Rule> rules) {
 		if (selection instanceof TextSelection) {
 			TextSelection selectedText = (TextSelection) selection;
 			String text = selectedText.getText().trim();
@@ -80,11 +64,6 @@ public class GTVisualizer extends EMoflonVisualiser {
 		return this.loadFileFromEditor(editor).isPresent();
 	}
 
-	@Override
-	public boolean supportsSelection(final ISelection selection) {
-		return true;
-	}
-
 	/**
 	 * Loads the file from the given editor.
 	 * 
@@ -95,9 +74,9 @@ public class GTVisualizer extends EMoflonVisualiser {
 	private Optional<GraphTransformationFile> loadFileFromEditor(final IEditorPart editor) {
 		try {
 			return Optional.of(editor) //
-					.filter(e -> e instanceof XtextEditor).map(e -> (XtextEditor) e)
+					.flatMap(maybeCast(XtextEditor.class))
 					.map(e -> e.getDocument().readOnly(res -> res.getContents().get(0)))
-					.filter(e -> e instanceof GraphTransformationFile).map(e -> (GraphTransformationFile) e);
+					.flatMap(maybeCast(GraphTransformationFile.class));
 		} catch (Exception e) {
 			return Optional.empty();
 		}
