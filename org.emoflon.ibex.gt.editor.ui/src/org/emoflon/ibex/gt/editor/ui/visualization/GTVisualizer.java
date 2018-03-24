@@ -26,8 +26,19 @@ public class GTVisualizer extends EMoflonVisualiser {
 		if (!file.isPresent()) {
 			return EMoflonPlantUMLGenerator.emptyDiagram();
 		}
+		return visualizeSelection(selection, file.get().getRules());
+	}
 
-		EList<Rule> rules = file.get().getRules();
+	/**
+	 * Returns the visualization of the selection.
+	 * 
+	 * @param selection
+	 *            the selection
+	 * @param rules
+	 *            the editor rules
+	 * @return the PlantUML code for the visualization
+	 */
+	private static String visualizeSelection(final ISelection selection, final EList<Rule> rules) {
 		if (rules.size() == 0) {
 			return GTPlantUMLGenerator.visualizeNothing();
 		}
@@ -37,9 +48,8 @@ public class GTVisualizer extends EMoflonVisualiser {
 		Optional<Rule> rule = determineSelectedRule(selection, rules);
 		if (rule.isPresent()) {
 			return GTPlantUMLGenerator.visualizeRule(rule.get());
-		} else {
-			return GTPlantUMLGenerator.visualizeRuleHierarchy(rules);
 		}
+		return GTPlantUMLGenerator.visualizeRuleHierarchy(rules);
 	}
 
 	/**
@@ -55,7 +65,6 @@ public class GTVisualizer extends EMoflonVisualiser {
 	private static Optional<Rule> determineSelectedRule(final ISelection selection, final EList<Rule> rules) {
 		if (selection instanceof TextSelection) {
 			TextSelection textSelection = (TextSelection) selection;
-
 			// For the TextSelection documents start with line 0.
 			int selectionStart = textSelection.getStartLine() + 1;
 			int selectionEnd = textSelection.getEndLine() + 1;
