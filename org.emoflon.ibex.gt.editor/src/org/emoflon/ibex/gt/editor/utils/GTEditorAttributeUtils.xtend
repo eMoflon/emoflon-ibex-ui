@@ -3,7 +3,9 @@ package org.emoflon.ibex.gt.editor.utils
 import java.util.Optional
 
 import org.eclipse.emf.ecore.EDataType
+import org.eclipse.emf.ecore.EEnum
 import org.emoflon.ibex.gt.editor.gT.LiteralValue
+import org.emoflon.ibex.gt.editor.gT.Relation
 import org.emoflon.ibex.gt.editor.gT.StringConstant
 
 /**
@@ -14,6 +16,16 @@ class GTEditorAttributeUtils {
 		"EChar",
 		"ECharacterObject",
 		"EString"
+	]
+
+	private static val incomparableType = #[
+		"EBoolean",
+		"EBooleanObject"
+	]
+
+	public static val equalityChecks = #[
+		Relation.EQUAL,
+		Relation.UNEQUAL
 	]
 
 	/**
@@ -42,5 +54,25 @@ class GTEditorAttributeUtils {
 		} catch (IllegalArgumentException e) {
 			return Optional.empty
 		}
+	}
+
+	/**
+	 * Checks whether the data type is comparable.
+	 */
+	static def isComparable(EDataType datatype) {
+		if (incomparableType.contains(datatype.name)) {
+			return false
+		}
+		if (datatype instanceof EEnum) {
+			return false
+		}
+		return true
+	}
+
+	/**
+	 * Checks whether the relation is an equality check.
+	 */
+	static def isEqualityCheck(Relation relation) {
+		return equalityChecks.contains(relation)
 	}
 }

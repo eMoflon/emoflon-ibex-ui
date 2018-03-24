@@ -111,7 +111,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 			String.format(GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE, "upperBound", "EInt")
 		)
 	}
-	
+
 	@Test
 	def void errorIfAttributeConstraintWithWrongStringConstant() {
 		val file = parseHelper.parse('''
@@ -129,6 +129,26 @@ class GTParsingAttributesTest extends GTParsingTest {
 			GTPackage.eINSTANCE.attributeConstraint,
 			GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE,
 			String.format(GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE, "name", "EString")
+		)
+	}
+
+	@Test
+	def void errorIfComparisonForIncomparableType() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			rule a {
+				clazz: EClass {
+					.^abstract >= false
+				}
+			}
+		''')
+		this.assertBasics(file)
+		this.assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.attributeConstraint,
+			GTValidator.ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE,
+			String.format(GTValidator.ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE_MESSAGE, ">=", "abstract")
 		)
 	}
 

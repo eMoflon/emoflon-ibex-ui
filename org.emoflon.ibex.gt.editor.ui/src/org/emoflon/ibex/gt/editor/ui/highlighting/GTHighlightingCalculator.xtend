@@ -2,16 +2,18 @@ package org.emoflon.ibex.gt.editor.ui.highlighting
 
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
-import org.eclipse.xtext.ide.editor.syntaxcoloring.IHighlightedPositionAcceptor
 import org.eclipse.xtext.ide.editor.syntaxcoloring.DefaultSemanticHighlightingCalculator
+import org.eclipse.xtext.ide.editor.syntaxcoloring.IHighlightedPositionAcceptor
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.util.CancelIndicator
 
+import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
 import org.emoflon.ibex.gt.editor.gT.GTPackage
-import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Operator
+import org.emoflon.ibex.gt.editor.gT.Reference
+import org.emoflon.ibex.gt.editor.gT.Relation
 
 /** 
  * Applying syntax highlighting configuration.
@@ -29,6 +31,12 @@ class GTHighlightingCalculator extends DefaultSemanticHighlightingCalculator {
 	}
 
 	def hightlightElement(EObject element, IHighlightedPositionAcceptor acceptor) {
+		if (element instanceof AttributeConstraint) {
+			if (element.relation == Relation.ASSIGNMENT) {
+				this.highlightNode(acceptor, element, getStyle(Operator.CREATE))
+			}
+		}
+
 		if (element instanceof Node) {
 			var String style = getStyle(element.operator)
 			if (element.operator == Operator.CREATE || element.operator == Operator.DELETE) {

@@ -11,6 +11,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 import org.emoflon.ibex.common.editor.utils.IBeXWorkspaceHelper;
 import org.emoflon.ibex.gt.editor.ui.builder.GTNature;
+import org.moflon.core.ui.UiUtilities;
 import org.moflon.core.utilities.LogUtils;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
@@ -70,6 +71,7 @@ public class GTNewFileWizard extends Wizard implements INewWizard {
 					file.getProject().getName()));
 		}
 		initialContents.initFileContent(file);
+		UiUtilities.openDefaultEditorForFile(file);
 		return file != null;
 	}
 }
