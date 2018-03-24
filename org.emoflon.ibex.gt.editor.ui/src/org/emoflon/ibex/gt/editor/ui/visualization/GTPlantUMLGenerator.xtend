@@ -41,12 +41,12 @@ class GTPlantUMLGenerator {
 			}
 			
 			«FOR node : rule.nodes»
-				class «nodeClassName(node)» <<«nodeSkin(node)»>>
+				class «nodeName(node)» <<«nodeSkin(node)»>>
 			«ENDFOR»
 			
 			«FOR node : rule.nodes»
 				«FOR reference : node.references»
-					«nodeClassName(node)» -[#«referenceColor(reference)»]-> «nodeClassName(reference.target)»: <color:«referenceColor(reference)»>«reference.type.name»
+					«nodeName(node)» -[#«referenceColor(reference)»]-> «nodeName(reference.target)»: «referenceLabel(reference)»
 				«ENDFOR»
 			«ENDFOR»
 			
@@ -57,8 +57,9 @@ class GTPlantUMLGenerator {
 	/**
 	 * Returns the name and type name of the node.
 	 */
-	private static def String nodeClassName(Node node) {
-		'''"«node.name»: «node.type.name»"'''
+	private static def String nodeName(Node node) {
+		val type = if(node.type === null) '?' else node.type.name
+		'''"«node.name»: «type»"'''
 	}
 
 	/**
@@ -81,6 +82,13 @@ class GTPlantUMLGenerator {
 		} else {
 			''
 		}
+	}
+
+	/**
+	 * Returns the PlantUML code for the reference label in the color of the reference operator.
+	 */
+	private static def String referenceLabel(Reference reference) {
+		'''<color:«referenceColor(reference)»>«reference.type.name»'''
 	}
 
 	/**
