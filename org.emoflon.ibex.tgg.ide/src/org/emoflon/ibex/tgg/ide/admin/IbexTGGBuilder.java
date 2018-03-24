@@ -84,18 +84,26 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	protected IProject[] build(int kind, Map<String, String> args, IProgressMonitor monitor) throws CoreException {
 		blackboard = new HashMap<>();
 		
+		long tic = System.currentTimeMillis();
+		
 		switch (kind) {
 		case CLEAN_BUILD:
 		case FULL_BUILD:
+			logger.info(getProject().getName() + ": Full build");
 			generateFiles();
+			break;
 		case AUTO_BUILD:
 		case INCREMENTAL_BUILD:
+			logger.info(getProject().getName() + ": Incremental build");
 			generateFilesIfchangeIsRelevant();
 			break;
 		default:
 			break;
 		}
+		
+		long toc = System.currentTimeMillis();
 
+		logger.info(getProject().getName() + ": Finished build (" + (toc - tic)/1000.0 + "s)");
 		return null;
 	}
 
