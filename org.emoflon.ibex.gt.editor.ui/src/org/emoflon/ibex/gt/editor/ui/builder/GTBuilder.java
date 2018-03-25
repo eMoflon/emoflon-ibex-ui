@@ -1,13 +1,10 @@
 package org.emoflon.ibex.gt.editor.ui.builder;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
@@ -46,28 +43,24 @@ public class GTBuilder extends IncrementalProjectBuilder {
 
 	@Override
 	protected IProject[] build(int kind, Map<String, String> args, IProgressMonitor monitor) throws CoreException {
-		this.srcFolder = this.getProject().getFolder(SOURCE_FOLDER);
-		if (!this.srcFolder.exists()) {
-			this.log("src folder is missing");
+		srcFolder = getProject().getFolder(SOURCE_FOLDER);
+		if (!srcFolder.exists()) {
+			log("src folder is missing");
 			return null;
 		}
 
 		// Run builder extensions for the project.
-		this.runBuilderExtensions(ext -> ext.run(this.getProject()));
+		runBuilderExtensions(ext -> ext.run(getProject()));
 
 		// Run builder extensions for each package.
 		switch (kind) {
 		case AUTO_BUILD:
 		case INCREMENTAL_BUILD:
-			this.log("incremental build");
-			Arrays.stream(this.getDelta(this.getProject()).getAffectedChildren())
-					.filter(affectedChild -> "src".equals(affectedChild.getProjectRelativePath().toString())).findAny()
-					.ifPresent(srcDelta -> this.buildPackages(this.getPackagesFromDelta(srcDelta)));
+			incrementalBuild();
 			break;
 		case CLEAN_BUILD:
 		case FULL_BUILD:
-			this.log("full build");
-			this.buildPackages(this.findSourcePackages());
+			fullBuild();
 			break;
 		default:
 			break;
@@ -76,41 +69,38 @@ public class GTBuilder extends IncrementalProjectBuilder {
 	}
 
 	/**
+	 * Performs an incremental build.
+	 */
+	private void incrementalBuild() {
+		log("incremental build");
+		Arrays.stream(getDelta(getProject()).getAffectedChildren())
+				.filter(child -> "src".equals(child.getProjectRelativePath().toString())).findAny()
+				.ifPresent(srcDelta -> buildPackages(getPackagesFromDelta(srcDelta)));
+	}
+
+	/**
+	 * Performs a full build.
+	 */
+	private void fullBuild() {
+		log("full build");
+		buildPackages(findFolders(srcFolder));
+	}
+
+	/**
 	 * Performs a build for the given packages.
 	 * 
 	 * @param packages
 	 *            the packages to build
 	 */
-	private void buildPackages(final List<IPath> packages) {
-		packages.forEach(packagePath -> this.runBuilderExtensions(ext -> ext.run(this.getProject(), packagePath)));
-	}
-
-	/**
-	 * Calculates the set of packages containing .gt files in the given delta.
-	 * 
-	 * @param delta
-	 *            the delta
-	 * @return the list of package paths affected by the delta
-	 */
-	private List<IPath> getPackagesFromDelta(final IResourceDelta delta) {
-		ArrayList<IPath> paths = new ArrayList<IPath>();
-		IResource deltaResource = delta.getResource();
-		if (deltaResource.getType() == IResource.FOLDER) {
-			Arrays.stream(delta.getAffectedChildren()).forEach(c -> {
-				paths.addAll(this.getPackagesFromDelta(c));
-			});
-			boolean isRulePackage = Arrays.stream(delta.getAffectedChildren()) //
-					.filter(c -> c.getResource().getType() == IResource.FILE)
-					.anyMatch(c -> c.getResource().getName().endsWith(".gt"));
-			if (isRulePackage) {
-				paths.add(deltaResource.getLocation().makeRelativeTo(this.srcFolder.getLocation()));
-			}
-		}
-		return paths;
+	private void buildPackages(final Set<IPath> packages) {
+		packages.forEach(packagePath -> runBuilderExtensions(ext -> ext.run(getProject(), packagePath)));
 	}
 
 	/**
 	 * Runs the registered GTBuilderExtensions for the package.
+	 * 
+	 * @param action
+	 *            the method to call on the builder extension
 	 */
 	private void runBuilderExtensions(final Consumer<GTBuilderExtension> action) {
 		ISafeRunnable runnable = new ISafeRunnable() {
@@ -133,52 +123,85 @@ public class GTBuilder extends IncrementalProjectBuilder {
 	 * Logs the message on the console.
 	 */
 	private void log(final String message) {
-		Logger.getRootLogger().info(this.getProject().getName() + ": " + message);
+		Logger.getRootLogger().info(getProject().getName() + ": " + message);
 	}
 
 	/**
 	 * Logs the error message on the console.
 	 */
 	private void logError(final String message) {
-		Logger.getRootLogger().error(this.getProject().getName() + ": " + message);
+		Logger.getRootLogger().error(getProject().getName() + ": " + message);
 	}
 
 	/**
-	 * Returns a list of packages in the project's source folder which contain .gt
-	 * files.
+	 * Determines the folders containing .gt files in the given delta.
 	 * 
-	 * @return the list of package paths
+	 * @param delta
+	 *            the delta
+	 * @return the package paths affected by the delta
 	 */
-	private List<IPath> findSourcePackages() {
-		return this.findFolders(this.srcFolder).stream() //
-				.map(p -> p.getLocation().makeRelativeTo(this.srcFolder.getLocation())) // relative paths
-				.collect(Collectors.toList());
+	private Set<IPath> getPackagesFromDelta(final IResourceDelta delta) {
+		Set<IPath> paths = new HashSet<IPath>();
+		IResource resource = delta.getResource();
+		if (resource.getType() == IResource.FOLDER) {
+			Arrays.stream(delta.getAffectedChildren()).forEach(c -> {
+				paths.addAll(getPackagesFromDelta(c));
+			});
+			if (isRulePackage(delta.getAffectedChildren())) {
+				paths.add(resource.getLocation().makeRelativeTo(srcFolder.getLocation()));
+			}
+		}
+		return paths;
 	}
 
 	/**
-	 * Determines the set of folders in the given container which contain .gt files.
+	 * Checks whether the given resource delta contains at least one gt file.
+	 * 
+	 * @param delta
+	 *            the resources delta
+	 * @return true if a gt file is found
+	 */
+	private static boolean isRulePackage(final IResourceDelta[] delta) {
+		return Arrays.stream(delta) //
+				.filter(c -> c.getResource().getType() == IResource.FILE)
+				.anyMatch(c -> c.getResource().getName().endsWith(".gt"));
+	}
+
+	/**
+	 * Determines the folders in the given container which contain .gt files.
 	 * 
 	 * @param container
 	 *            the container to check for folders
-	 * @return the folders in the container which contain .gt files
+	 * @return the package paths in the container which contain .gt files
 	 */
-	private Set<IContainer> findFolders(final IContainer container) {
-		final HashSet<IContainer> set = new HashSet<IContainer>();
+	private Set<IPath> findFolders(final IContainer container) {
+		Set<IPath> set = new HashSet<IPath>();
+		IResource[] members;
 		try {
-			for (final IResource member : container.members()) {
-				if (member instanceof IContainer) {
-					set.addAll(this.findFolders((IContainer) member));
-				}
-			}
-			boolean isRulePackage = Arrays.stream(container.members()) //
-					.filter(m -> m instanceof IFile).map(m -> (IFile) m) // find a file
-					.anyMatch(f -> "gt".equals(f.getFileExtension())); // with extension gt
-			if (isRulePackage) {
-				set.add(container);
-			}
+			members = container.members();
 		} catch (Throwable e) {
-			this.logError(e.getMessage());
+			logError(e.getMessage());
+			return set;
+		}
+		Arrays.stream(members) //
+				.filter(m -> m instanceof IContainer).map(m -> (IContainer) m) //
+				.forEach(m -> set.addAll(findFolders(m)));
+		if (isRulePackage(members)) {
+			set.add(container.getLocation().makeRelativeTo(srcFolder.getLocation()));
 		}
 		return set;
+	}
+
+	/**
+	 * Checks whether the given resources contain at least one gt file.
+	 * 
+	 * @param members
+	 *            the resources to search
+	 * @return true if a gt file is found
+	 */
+	private static boolean isRulePackage(final IResource[] members) {
+		return Arrays.stream(members) //
+				.filter(m -> m instanceof IFile).map(m -> (IFile) m) // find a file
+				.anyMatch(f -> "gt".equals(f.getFileExtension())); // with extension gt
 	}
 }
