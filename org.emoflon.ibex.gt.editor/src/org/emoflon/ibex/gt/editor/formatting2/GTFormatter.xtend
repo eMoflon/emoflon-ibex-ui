@@ -33,7 +33,7 @@ class GTFormatter extends AbstractFormatter2 {
 		this.formatList(file.imports, document, 0, 1, 2)
 
 		// Empty line between each rule.
-		this.formatList(file.rules, document, 2, 2, 1)
+		this.formatList(file.rules, document, if (file.imports.size > 0) 2 else 0, 2, 1)
 	}
 
 	def dispatch void format(Import i, extension IFormattableDocument document) {

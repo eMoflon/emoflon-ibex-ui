@@ -51,8 +51,6 @@ class GTFormattingTest {
 	@Test
 	def formatImportsIfEmpty() {
 		val expected = '''
-			
-			
 			rule test {
 				object: EObject
 			}
