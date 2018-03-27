@@ -1,6 +1,7 @@
 package org.emoflon.ibex.gt.editor.utils
 
 import java.util.Optional
+import java.util.Map
 
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EClass
@@ -15,6 +16,11 @@ import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
  * Utility methods for working with {@link GraphTransformationFile} models.
  */
 class GTEditorModelUtils {
+	/**
+	 * The set of meta-model resources loaded.
+	 */
+	private static Map<String, Resource> metaModelResources = newHashMap();
+
 	/**
 	 * Returns all EClasses imported into the given file.
 	 */
@@ -53,10 +59,17 @@ class GTEditorModelUtils {
 	 */
 	def static loadEcoreModel(String uri) {
 		try {
-			var resourceSet = new ResourceSetImpl()
-			var resource = resourceSet.getResource(URI.createURI(uri), true)
+			val resourceSet = new ResourceSetImpl()
+			val resource = resourceSet.getResource(URI.createURI(uri), true)
 			resource.load(null)
-			return Optional.of(resource)
+
+			// Add/update resource if necessary.
+			if (!metaModelResources.containsKey(uri) ||
+				metaModelResources.get(uri).getTimeStamp() < resource.getTimeStamp()) {
+				metaModelResources.put(uri, resource);
+			}
+
+			return Optional.of(metaModelResources.get(uri))
 		} catch (Exception e) {
 			return Optional.empty
 		}

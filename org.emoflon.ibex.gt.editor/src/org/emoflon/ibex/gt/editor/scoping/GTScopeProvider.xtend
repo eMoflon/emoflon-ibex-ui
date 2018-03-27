@@ -190,12 +190,12 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	 * Returns whether the node is of the given type.
 	 */
 	def static isNodeOfType(Node node, EClass expectedNodeType) {
-		if (node.type.name == expectedNodeType.name) {
+		if (node.type == expectedNodeType) {
 			return true
 		}
 
 		// Alternatively the node type can be a (grand)parent of the expected node type.
-		node.type.EAllSuperTypes.map[it.name].contains(expectedNodeType.name)
+		node.type.EAllSuperTypes.contains(expectedNodeType)
 	}
 
 	/**
