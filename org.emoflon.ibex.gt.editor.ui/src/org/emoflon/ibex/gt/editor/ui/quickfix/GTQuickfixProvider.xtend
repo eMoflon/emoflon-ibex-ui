@@ -117,6 +117,29 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	}
 
 	/**
+	 * Remove duplicate super rule.
+	 */
+	@Fix(GTValidator.RULE_SUPER_RULES_DUPLICATE)
+	def removeSuperRule(Issue issue, IssueResolutionAcceptor acceptor) {
+		val ruleName = issue.data.get(0)
+		val label = '''Remove duplicate super rule declarations of rule «ruleName».'''
+		acceptor.accept(
+			issue,
+			label,
+			label,
+			null,
+			[ element, context |
+				if (element instanceof Rule) {
+					val uniqueSuperRules = newHashSet()
+					uniqueSuperRules.addAll(element.superRules.clone)
+					element.superRules.clear
+					element.superRules.addAll(uniqueSuperRules)
+				}
+			]
+		)
+	}
+
+	/**
 	 * Converts the target node of a reference to a context node. 
 	 */
 	@Fix(GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT)

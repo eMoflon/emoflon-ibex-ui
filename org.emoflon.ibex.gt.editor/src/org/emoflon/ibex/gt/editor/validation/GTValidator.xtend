@@ -228,7 +228,8 @@ class GTValidator extends AbstractGTValidator {
 			error(
 				String.format(RULE_SUPER_RULES_DUPLICATE_MESSAGE, rule.name),
 				GTPackage.Literals.RULE__SUPER_RULES,
-				RULE_SUPER_RULES_DUPLICATE
+				RULE_SUPER_RULES_DUPLICATE,
+				rule.name
 			)
 		}
 
