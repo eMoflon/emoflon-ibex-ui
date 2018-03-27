@@ -25,7 +25,9 @@ class GTFormatter extends AbstractFormatter2 {
 
 	def dispatch void format(GraphTransformationFile file, extension IFormattableDocument document) {
 		// No space before first import.
-		file.imports.get(0).prepend[noSpace]
+		if (file.imports.size > 0) {
+			file.imports.get(0).prepend[noSpace]
+		}
 
 		// Empty line after imports
 		this.formatList(file.imports, document, 0, 1, 2)
@@ -44,14 +46,20 @@ class GTFormatter extends AbstractFormatter2 {
 			rule.regionFor.keyword("abstract").append[oneSpace]
 		}
 
-		// Check: One space between rule keyword and name.
+		// One space between rule keyword and name.
 		rule.regionFor.keyword("rule").append[oneSpace]
+
+		// New line before "refines", one space after "refines".
+		rule.regionFor.keyword("refines").prepend[newLine]
+		rule.regionFor.keyword("refines").append[oneSpace]
 
 		// No space between rule name, "(" and first parameter.
 		rule.regionFor.keyword("(").prepend[noSpace]
 		rule.regionFor.keyword("(").append[noSpace]
 
-		rule.parameters.forEach[it.format]
+		rule.parameters.forEach [
+			it.format
+		]
 
 		rule.regionFor.keywords(",").forEach [
 			it.prepend[noSpace]
@@ -66,7 +74,10 @@ class GTFormatter extends AbstractFormatter2 {
 		rule.regionFor.keyword("{").prepend[oneSpace]
 
 		// Indent everything between "{" and "}".
-		rule.regionFor.keywordPairs("{", "}").get(0).interior[indent]
+		val ruleBody = rule.regionFor.keywordPairs("{", "}")
+		if (ruleBody.size > 0) {
+			ruleBody.get(0).interior[indent]
+		}
 
 		// Empty line between nodes.
 		this.formatList(rule.nodes, document, 1, 2, 1)
@@ -135,16 +146,20 @@ class GTFormatter extends AbstractFormatter2 {
 	 */
 	def void formatList(List<? extends EObject> items, extension IFormattableDocument document, int newLinesBeforeFirst,
 		int newLinesAfterItem, int newLinesAfterLastItem) {
-		if (items !== null && items.size() > 0) {
-			if (newLinesBeforeFirst > 0) {
-				items.get(0).prepend[newLines = newLinesBeforeFirst]
-			}
-			for (var index = 0; index < items.size() - 1; index++) {
-				items.get(index).format
-				items.get(index).append[newLines = newLinesAfterItem]
-			}
-			items.get(items.size() - 1).format
-			items.get(items.size() - 1).append[newLines = newLinesAfterLastItem]
+		if (items.size() == 0) {
+			return;
 		}
+
+		if (newLinesBeforeFirst > 0) {
+			items.get(0).prepend[newLines = newLinesBeforeFirst]
+		}
+
+		for (var index = 0; index < items.size() - 1; index++) {
+			items.get(index).format
+			items.get(index).append[newLines = newLinesAfterItem]
+		}
+
+		items.get(items.size() - 1).format
+		items.get(items.size() - 1).append[newLines = newLinesAfterLastItem]
 	}
 }

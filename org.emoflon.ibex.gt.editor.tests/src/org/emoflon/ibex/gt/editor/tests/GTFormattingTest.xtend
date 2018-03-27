@@ -49,6 +49,25 @@ class GTFormattingTest {
 	}
 
 	@Test
+	def formatImportsIfEmpty() {
+		val expected = '''
+			
+			
+			rule test {
+				object: EObject
+			}
+		'''
+		this.testFormatting(
+			expected,
+			'''
+				rule test {
+					object: EObject
+				}
+			'''
+		)
+	}
+
+	@Test
 	def formatRules() {
 		val expected = '''
 			import "http://www.eclipse.org/emf/2002/Ecore"
@@ -60,6 +79,11 @@ class GTFormattingTest {
 			abstract rule test2 {
 				name: EAnnotation
 			}
+			
+			rule test3
+			refines test, test2 {
+				object2: EObject
+			}
 		'''
 		this.testFormatting(
 			expected,
@@ -67,6 +91,8 @@ class GTFormattingTest {
 				import "http://www.eclipse.org/emf/2002/Ecore"rule 
 				test{object: EObject}abstract 
 				rule test2 {name: EAnnotation}
+				rule test3  refines  test ,  test2 
+				{object2: EObject}
 			'''
 		)
 		this.testFormatting(
@@ -83,6 +109,35 @@ class GTFormattingTest {
 				rule  test2{
 					name   :   
 					EAnnotation}
+				rule test3  refines  
+				test ,  test2 {object2: EObject}
+			'''
+		)
+	}
+	
+	@Test
+	def formatRuleWithEmptyBody() {
+		val expected = '''
+			import "http://www.eclipse.org/emf/2002/Ecore"
+			
+			rule test {
+				object: EObject
+			}
+			
+			abstract rule test2 {
+				name: EAnnotation
+			}
+			
+			rule test3
+			refines test, test2
+		'''
+		this.testFormatting(
+			expected,
+			'''
+				import "http://www.eclipse.org/emf/2002/Ecore"rule 
+				test{object: EObject}abstract 
+				rule test2 {name: EAnnotation}
+				rule test3  refines  test ,  test2
 			'''
 		)
 	}
