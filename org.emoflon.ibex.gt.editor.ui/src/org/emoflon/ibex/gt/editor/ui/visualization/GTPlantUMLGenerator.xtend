@@ -5,6 +5,7 @@ import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Rule
+import org.emoflon.ibex.gt.editor.ui.transformation.GTFlattener
 
 /**
  * Utility methods to generate PlantUML code.
@@ -27,6 +28,7 @@ class GTPlantUMLGenerator {
 	 * Returns the PlantUML code for the visualization of the given rule.
 	 */
 	public static def String visualizeRule(Rule rule) {
+		val flattenedRule = new GTFlattener(rule).flattenedRule
 		'''
 			«printCommonLayoutSettings»
 			
@@ -40,11 +42,11 @@ class GTPlantUMLGenerator {
 				FontColor White
 			}
 			
-			«FOR node : rule.nodes»
+			«FOR node : flattenedRule.nodes»
 				class «nodeName(node)» <<«nodeSkin(node)»>>
 			«ENDFOR»
 			
-			«FOR node : rule.nodes»
+			«FOR node : flattenedRule.nodes»
 				«FOR reference : node.references»
 					«nodeName(node)» -[#«referenceColor(reference)»]-> «nodeName(reference.target)»: «referenceLabel(reference)»
 				«ENDFOR»
