@@ -1,6 +1,5 @@
 package org.emoflon.ibex.gt.editor.ui.visualization
 
-import java.util.List
 import org.eclipse.emf.common.util.EList
 import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
 import org.emoflon.ibex.gt.editor.gT.EnumValue
@@ -11,6 +10,7 @@ import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.gT.Parameter
 import org.emoflon.ibex.gt.editor.gT.ParameterValue
 import org.emoflon.ibex.gt.editor.gT.Reference
+import org.emoflon.ibex.gt.editor.gT.Relation
 import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.utils.GTFlattener
 
@@ -41,9 +41,9 @@ class GTPlantUMLGenerator {
 			«legendSettings»
 			
 			skinparam class {
-				BackgroundColor<<CONTEXT>> «ContextColor»
-				BackgroundColor<<CREATE>> «CreateColor»
-				BackgroundColor<<DELETE>> «DeleteColor»
+				HeaderBackgroundColor<<CONTEXT>> «ContextColor»
+				HeaderBackgroundColor<<CREATE>> «CreateColor»
+				HeaderBackgroundColor<<DELETE>> «DeleteColor»
 				BorderColor<<CONTEXT>> «ContextColor»
 				BorderColor<<CREATE>> «CreateColor»
 				BorderColor<<DELETE>> «DeleteColor»
@@ -51,7 +51,11 @@ class GTPlantUMLGenerator {
 			}
 			
 			«FOR node : flattenedRule.nodes»
-				class «nodeName(node)» <<«nodeSkin(node)»>>
+				class «nodeName(node)» <<«nodeSkin(node)»>> {
+					«FOR attr: node.attributes»
+						«attributeConstraint(attr)»
+					«ENDFOR»
+				}
 			«ENDFOR»
 			
 			«FOR node : flattenedRule.nodes»
@@ -59,11 +63,6 @@ class GTPlantUMLGenerator {
 					«nodeName(node)» -[#«referenceColor(reference)»]-> «nodeName(reference.target)»: «referenceLabel(reference)»
 				«ENDFOR»
 			«ENDFOR»
-			
-			legend
-				Attributes:
-				«attributeConstraints(flattenedRule.nodes)»
-			end legend
 			
 			center footer
 				= «rule.name»
@@ -91,6 +90,16 @@ class GTPlantUMLGenerator {
 	}
 
 	/**
+	 * Prints the attribute constraint.
+	 */
+	private static def String attributeConstraint(AttributeConstraint attr) {
+		val operator = if(attr.relation == Relation.ASSIGNMENT) '+' else '#'
+		val name = if(attr.attribute === null || attr.attribute.name === null) '?' else attr.attribute.name
+		val relation = if(attr.relation === null) '?' else attr.relation.toString
+		'''«operator» «name» «relation» «expression(attr.value)»'''
+	}
+
+	/**
 	 * Prints the color for the reference.
 	 */
 	private static def String referenceColor(Reference reference) {
@@ -110,28 +119,6 @@ class GTPlantUMLGenerator {
 	 */
 	private static def String referenceLabel(Reference reference) {
 		'''<color:«referenceColor(reference)»>«reference.type.name»'''
-	}
-
-	/**
-	 * Prints the attribute constraints of the given nodes.
-	 */
-	private static def String attributeConstraints(List<Node> nodes) {
-		'''
-			«FOR node : nodes»
-				«FOR attr: node.attributes»
-					«node.name».«attributeConstraint(attr)»
-				«ENDFOR»
-			«ENDFOR»
-		'''
-	}
-
-	/**
-	 * Prints the attribute constraint.
-	 */
-	private static def String attributeConstraint(AttributeConstraint attr) {
-		val name = if(attr.attribute === null || attr.attribute.name === null) '?' else attr.attribute.name
-		val relation = if(attr.relation === null) '?' else attr.relation.toString
-		'''«name» «relation» «expression(attr.value)»'''
 	}
 
 	/**

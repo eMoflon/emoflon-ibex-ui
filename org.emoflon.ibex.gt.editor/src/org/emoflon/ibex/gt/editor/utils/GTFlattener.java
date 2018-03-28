@@ -219,7 +219,6 @@ public class GTFlattener {
 						canAdd = false;
 					}
 				}
-
 				if (canAdd) {
 					node.getAttributes().add(EcoreUtil.copy(mergedAttribute));
 				}
@@ -279,9 +278,8 @@ public class GTFlattener {
 	 *         the same attribute
 	 */
 	private static boolean hasConflictingAssignment(final Node node, final AttributeConstraint b) {
-		return node.getAttributes().stream() //
-				.filter(a -> a.getRelation() == Relation.ASSIGNMENT //
-						&& a.getAttribute().equals(b.getAttribute()))
+		return !node.getAttributes().stream()
+				.filter(a -> a.getRelation() == Relation.ASSIGNMENT && a.getAttribute().equals(b.getAttribute()))
 				.allMatch(a -> areExpressionsEqual(a.getValue(), b.getValue()));
 	}
 

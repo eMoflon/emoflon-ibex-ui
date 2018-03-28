@@ -4,12 +4,13 @@ import org.eclipse.xtext.diagnostics.Diagnostic
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.emoflon.ibex.gt.editor.gT.GTPackage
+import org.emoflon.ibex.gt.editor.gT.Operator
+import org.emoflon.ibex.gt.editor.gT.Relation
 import org.emoflon.ibex.gt.editor.utils.GTFlattener
 import org.emoflon.ibex.gt.editor.validation.GTValidator
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.emoflon.ibex.gt.editor.gT.Operator
 
 /**
  * JUnit tests for rule refinement.
@@ -171,7 +172,69 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 	}
 
 	@Test
-	def void errorForFlatteningRuleWithInconsistentTypeDeclarations() {
+	def void validFlatteningOfRuleWithAttributes() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			rule findClass(name: EString) {
+				clazz: EClass {
+					.^abstract == false
+					.name == param::name
+				}
+			}
+			
+			rule renameClass
+			refines findClass(name: EString, newName: EString, interface: EBoolean) {
+				clazz: EClass {
+					.^abstract == false
+					.^abstract != true
+					.name := param::newName
+					.interface := param::interface
+				}
+			}
+		''')
+		this.assertValid(file, 2)
+		val flattener = new GTFlattener(file.getRule(1))
+		Assert.assertFalse(flattener.hasErrors)
+		Assert.assertEquals(#[], flattener.errors)
+
+		val flattenedRule = flattener.flattenedRule
+		assertParameters(flattenedRule, #{'name' -> 'EString', 'newName' -> 'EString', 'interface' -> 'EBoolean'})
+		Assert.assertArrayEquals(#['name', 'newName', 'interface'], flattenedRule.parameters.map[it.name].toArray)
+
+		assertNode(flattenedRule.getNode(0), Operator.CONTEXT, "clazz", "EClass", 5, 0)
+		Assert.assertEquals(2, flattenedRule.getNode(0).attributes.filter[it.relation == Relation.ASSIGNMENT].size)
+	}
+
+	@Test
+	def void errorForFlatteningRuleWithConflictingAttributeAssignments() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			rule renameClass(oldName: EString) {
+				clazz: EClass {
+					.name == param::oldName
+					.name := "Test"
+				}
+			}
+			
+			rule renameClass2
+			refines renameClass(oldName: EString, newName: EString) {
+				clazz: EClass {
+					.name == param::oldName
+					.name := param::newName
+				}
+			}
+		''')
+		this.assertValid(file, 2)
+		val flattener = new GTFlattener(file.getRule(1))
+		Assert.assertTrue(flattener.hasErrors)
+		val errors = #['Node clazz has multiple assignments for attribute name.']
+		Assert.assertEquals(errors, flattener.errors)
+	}
+
+	@Test
+	def void errorForFlatteningRuleWithInconsistentParameterDeclarations() {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
