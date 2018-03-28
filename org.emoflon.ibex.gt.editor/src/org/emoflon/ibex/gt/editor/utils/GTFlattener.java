@@ -1,7 +1,6 @@
 package org.emoflon.ibex.gt.editor.utils;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -9,10 +8,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.emoflon.ibex.gt.editor.gT.GTFactory;
 import org.emoflon.ibex.gt.editor.gT.Node;
 import org.emoflon.ibex.gt.editor.gT.Operator;
+import org.emoflon.ibex.gt.editor.gT.Parameter;
 import org.emoflon.ibex.gt.editor.gT.Reference;
 import org.emoflon.ibex.gt.editor.gT.Rule;
 
@@ -37,16 +38,18 @@ public class GTFlattener {
 	 *            the rule
 	 */
 	public GTFlattener(final Rule rule) {
-		List<Node> collectedNodes = new ArrayList<Node>();
-		collectedNodes.addAll(EcoreUtil.copyAll(rule.getNodes()));
-		getAllSuperRules(rule).forEach(r -> {
-			collectedNodes.addAll(EcoreUtil.copyAll(r.getNodes()));
-		});
+		Set<Rule> superRules = getAllSuperRules(rule);
 
 		flattenedRule = GTFactory.eINSTANCE.createRule();
 		flattenedRule.setAbstract(rule.isAbstract());
 		flattenedRule.setName(rule.getName());
-		flattenedRule.getNodes().addAll(mergeNodes(collectedNodes));
+
+		List<Parameter> parameters = mergeParameters(rule, superRules);
+		flattenedRule.getParameters().addAll(parameters);
+
+		List<Node> nodes = mergeNodes(rule, superRules, parameters);
+		nodes.sort((a, b) -> a.getName().compareTo(b.getName()));
+		flattenedRule.getNodes().addAll(nodes);
 	}
 
 	/**
@@ -77,14 +80,71 @@ public class GTFlattener {
 	}
 
 	/**
-	 * Merged the given nodes based on the convention hat nodes with the same name
+	 * Merged the given parameters based on the convention that parameters with the
+	 * same name must be equal.
+	 * 
+	 * @param rule
+	 *            the rule the rule
+	 * @param superRules
+	 *            the super rules of the rule
+	 * @return the merged parameters
+	 */
+	private List<Parameter> mergeParameters(final Rule rule, final Set<Rule> superRules) {
+		List<Parameter> parameters = new ArrayList<Parameter>();
+		Map<String, Parameter> parameterNameToParameter = new HashMap<String, Parameter>();
+		addParametersFromRule(rule, parameters, parameterNameToParameter);
+		superRules.forEach(r -> addParametersFromRule(r, parameters, parameterNameToParameter));
+		return parameters;
+	}
+
+	/**
+	 * Adds the parameters of the given rule.
+	 * 
+	 * @param rule
+	 *            the rule whose parameters to add
+	 * @param parameters
+	 *            the parameters (in order of adding to the list)
+	 * @param parameterNameToParameter
+	 *            the mapping between names and parameters
+	 */
+	private void addParametersFromRule(final Rule rule, final List<Parameter> parameters,
+			final Map<String, Parameter> parameterNameToParameter) {
+		for (final Parameter parameter : rule.getParameters()) {
+			if (parameterNameToParameter.containsKey(parameter.getName())) {
+				EDataType typeOfExistingParameter = parameterNameToParameter.get(parameter.getName()).getType();
+				if (!typeOfExistingParameter.equals(parameter.getType())) {
+					errors.add(String.format("Inconsistent type declarations for parameter %s: %s and %s.",
+							parameter.getName(), typeOfExistingParameter.getName(), parameter.getType().getName()));
+				}
+			} else {
+				Parameter copy = EcoreUtil.copy(parameter);
+				parameterNameToParameter.put(parameter.getName(), copy);
+				parameters.add(copy);
+			}
+		}
+	}
+
+	/**
+	 * Merged the given nodes based on the convention that nodes with the same name
 	 * are equal.
 	 * 
-	 * @param collectedNodes
-	 *            the nodes
+	 * @param rule
+	 *            the rule the rule
+	 * @param superRules
+	 *            the super rules of the rule
+	 * @param parameters
+	 *            the parameters of the flattened rule
 	 * @return the merged nodes
 	 */
-	private Collection<Node> mergeNodes(final List<Node> collectedNodes) {
+	private List<Node> mergeNodes(final Rule rule, final Set<Rule> superRules, final List<Parameter> parameters) {
+		// Collect nodes.
+		List<Node> collectedNodes = new ArrayList<Node>();
+		collectedNodes.addAll(EcoreUtil.copyAll(rule.getNodes()));
+		superRules.forEach(r -> {
+			collectedNodes.addAll(EcoreUtil.copyAll(r.getNodes()));
+		});
+
+		// Merge nodes with the same name.
 		Map<String, Node> nodeNameToNode = new HashMap<String, Node>();
 		for (final Node node : collectedNodes) {
 			if (nodeNameToNode.containsKey(node.getName())) {
@@ -95,7 +155,7 @@ public class GTFlattener {
 		}
 
 		// Cleanup reference targets.
-		Collection<Node> nodes = nodeNameToNode.values();
+		List<Node> nodes = new ArrayList<Node>(nodeNameToNode.values());
 		nodes.forEach(n -> {
 			n.getReferences().forEach(r -> {
 				r.setTarget(nodeNameToNode.get(r.getTarget().getName()));
@@ -182,7 +242,7 @@ public class GTFlattener {
 	}
 
 	/**
-	 * Returns the list of all transitive super rules.
+	 * Returns all transitive super rules of the given rule.
 	 * 
 	 * @param rule
 	 *            the rule

@@ -39,8 +39,7 @@ class GTParsingParametersTest extends GTParsingTest {
 			}
 		''')
 		this.assertValid(file)
-		this.assertParameterNames(file, "name")
-		this.assertParameterTypes(file, "EString")
+		this.assertParameters(file.getRule(0), #{'name' -> 'EString'})
 	}
 
 	@Test
@@ -53,8 +52,11 @@ class GTParsingParametersTest extends GTParsingTest {
 			}
 		''')
 		this.assertValid(file)
-		this.assertParameterNames(file, "age", "name", "isMale")
-		this.assertParameterTypes(file, "EDouble", "EString", "EBoolean")
+		this.assertParameters(file.getRule(0), #{
+			'age' -> 'EDouble',
+			'name' -> 'EString',
+			'isMale' -> 'EBoolean'
+		})
 	}
 
 	@Test

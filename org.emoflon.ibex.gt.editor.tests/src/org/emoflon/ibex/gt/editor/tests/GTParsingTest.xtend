@@ -1,6 +1,7 @@
 package org.emoflon.ibex.gt.editor.tests
 
 import com.google.inject.Inject
+import java.util.Map
 import org.eclipse.emf.ecore.EClass
 import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.testing.InjectWith
@@ -15,9 +16,9 @@ import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.gT.ParameterValue
 import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Relation
+import org.emoflon.ibex.gt.editor.gT.Rule
 import org.junit.Assert
 import org.junit.runner.RunWith
-import org.emoflon.ibex.gt.editor.gT.Rule
 
 /**
  * Abstract test class for JUnit parsing tests of the editor.
@@ -124,19 +125,12 @@ abstract class GTParsingTest {
 		Assert.assertEquals(parameter, (attr.value as ParameterValue).parameter)
 	}
 
-	def void assertParameterNames(GraphTransformationFile file, String... names) {
-		val parameters = file.rules.get(0).parameters
-		Assert.assertEquals(names.size, parameters.size)
-		for (i : 0 .. names.size - 1) {
-			Assert.assertEquals(names.get(i), parameters.get(i).name)
-		}
-	}
-
-	def void assertParameterTypes(GraphTransformationFile file, String... types) {
-		val parameters = file.rules.get(0).parameters
-		Assert.assertEquals(types.size, parameters.size)
-		for (i : 0 .. types.size - 1) {
-			Assert.assertEquals(types.get(i), parameters.get(i).type.name)
+	def void assertParameters(Rule rule, Map<String, String> parameterNameToType) {
+		Assert.assertEquals(parameterNameToType.size, rule.parameters.size)
+		for (parameter : rule.parameters) {
+			Assert.assertTrue("Found unexpected parameter " + parameter.name,
+				parameterNameToType.containsKey(parameter.name))
+			Assert.assertEquals(parameterNameToType.get(parameter.name), parameter.type.name)
 		}
 	}
 

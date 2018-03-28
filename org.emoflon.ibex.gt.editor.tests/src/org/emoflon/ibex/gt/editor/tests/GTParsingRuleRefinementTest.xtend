@@ -130,11 +130,11 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 	}
 
 	@Test
-	def void flattenedRule() {
+	def void validFlatteningOfRule() {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule findClassifierWithAnnotation(name: EString) {
+			abstract rule findClassifierWithAnnotation(name: EString) {
 				classifier: EClassifier {
 					.name == param::name
 					-eAnnotations -> annotation
@@ -144,18 +144,53 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 			}
 			
 			rule findClassWithAnnotation
-			refines findClassifierWithAnnotation {
-				classifier: EClass
+			refines findClassifierWithAnnotation(attributeName: EString) {
+				classifier: EClass {
+					-eAttributes -> attribute
+				}
+			
+				attribute: EAttribute {
+					.name == param::attributeName
+				}
 			}
 		''')
 		this.assertValid(file, 2)
-		val flattener = new GTFlattener(file.rules.get(1))
+		val flattener = new GTFlattener(file.getRule(1))
 		Assert.assertFalse(flattener.hasErrors)
 		Assert.assertEquals(#[], flattener.errors)
 
 		val flattenedRule = flattener.flattenedRule
-		Assert.assertEquals(2, flattenedRule.nodes.size);
+		assertParameters(flattenedRule, #{'attributeName' -> 'EString', 'name' -> 'EString'})
+		Assert.assertArrayEquals(#['attributeName', 'name'], flattenedRule.parameters.map[it.name].toArray)
+
+		Assert.assertEquals(3, flattenedRule.nodes.size);
 		assertNode(flattenedRule.getNode(0), Operator.CONTEXT, "annotation", "EAnnotation", 0, 0)
-		assertNode(flattenedRule.getNode(1), Operator.CONTEXT, "classifier", "EClass", 0, 1)
+		assertNode(flattenedRule.getNode(1), Operator.CONTEXT, "attribute", "EAttribute", 1, 0)
+		assertNode(flattenedRule.getNode(2), Operator.CONTEXT, "classifier", "EClass", 0, 2)
+	}
+
+	@Test
+	def void errorForFlatteningRuleWithInconsistentTypeDeclarations() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			rule findClass(interface: EBoolean, name: EString) {
+				clazz: EClass {
+					.interface == param::interface
+					.name == param::name
+				}
+			}
+			
+			rule findClassDuplicate
+			refines findClass(interface: EBoolean, name: EBoolean) {
+				clazz2: EClass {
+					.interface == param::interface
+				}
+			}
+		''')
+		val flattener = new GTFlattener(file.getRule(1))
+		Assert.assertTrue(flattener.hasErrors)
+		val errors = #['Inconsistent type declarations for parameter name: EBoolean and EString.']
+		Assert.assertEquals(errors, flattener.errors)
 	}
 }

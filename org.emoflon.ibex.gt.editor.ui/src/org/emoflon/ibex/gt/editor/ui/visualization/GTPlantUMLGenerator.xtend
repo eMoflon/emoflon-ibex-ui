@@ -3,6 +3,7 @@ package org.emoflon.ibex.gt.editor.ui.visualization
 import org.eclipse.emf.common.util.EList
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Operator
+import org.emoflon.ibex.gt.editor.gT.Parameter
 import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.utils.GTFlattener
@@ -52,7 +53,9 @@ class GTPlantUMLGenerator {
 				«ENDFOR»
 			«ENDFOR»
 			
-			center footer Rule «rule.name»
+			center footer
+				Rule «ruleSignature(flattenedRule)» 
+			end footer
 		'''
 	}
 
@@ -60,6 +63,9 @@ class GTPlantUMLGenerator {
 	 * Returns the name and type name of the node.
 	 */
 	private static def String nodeName(Node node) {
+		if (node === null) {
+			return '"?"'
+		}
 		val type = if(node.type === null) '?' else node.type.name
 		'''"«node.name»: «type»"'''
 	}
@@ -91,6 +97,21 @@ class GTPlantUMLGenerator {
 	 */
 	private static def String referenceLabel(Reference reference) {
 		'''<color:«referenceColor(reference)»>«reference.type.name»'''
+	}
+
+	/**
+	 * Returns the signature (name and parameters) for the rule.
+	 */
+	private static def String ruleSignature(Rule rule) {
+		'''
+			«rule.name»«IF rule.parameters.size == 0»()«ENDIF»
+			«FOR parameter : rule.parameters BEFORE '(' SEPARATOR ', ' AFTER ')'»«parameterName(parameter)»«ENDFOR»
+		'''
+	}
+
+	private static def parameterName(Parameter parameter) {
+		val type = if(parameter.type === null) '?' else parameter.type.name
+		'''«parameter.name»: «type»'''
 	}
 
 	/**
