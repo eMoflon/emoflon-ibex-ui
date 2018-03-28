@@ -146,6 +146,7 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 			rule findClassWithAnnotation
 			refines findClassifierWithAnnotation(attributeName: EString) {
 				classifier: EClass {
+					.interface == true
 					-eAttributes -> attribute
 				}
 			
@@ -166,7 +167,7 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 		Assert.assertEquals(3, flattenedRule.nodes.size);
 		assertNode(flattenedRule.getNode(0), Operator.CONTEXT, "annotation", "EAnnotation", 0, 0)
 		assertNode(flattenedRule.getNode(1), Operator.CONTEXT, "attribute", "EAttribute", 1, 0)
-		assertNode(flattenedRule.getNode(2), Operator.CONTEXT, "classifier", "EClass", 0, 2)
+		assertNode(flattenedRule.getNode(2), Operator.CONTEXT, "classifier", "EClass", 2, 2)
 	}
 
 	@Test

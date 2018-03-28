@@ -61,6 +61,7 @@ class GTPlantUMLGenerator {
 			«ENDFOR»
 			
 			legend
+				Attributes:
 				«attributeConstraints(flattenedRule.nodes)»
 			end legend
 			
