@@ -230,11 +230,13 @@ public class GTFlattener {
 	 * @return the operator of the merged element
 	 */
 	private Operator getMergedOperator(final Operator a, final Operator b) {
-		if (a == Operator.CONTEXT || b == Operator.CONTEXT) {
-			return Operator.CONTEXT;
-		}
 		if (a.equals(b)) {
 			return a;
+		}
+
+		// Context overwrites create/delete.
+		if (a == Operator.CONTEXT || b == Operator.CONTEXT) {
+			return Operator.CONTEXT;
 		}
 
 		String message = String.format("Cannot merge operators %s and %s.", a, b);
