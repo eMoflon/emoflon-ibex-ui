@@ -27,8 +27,9 @@ class GTParsingNodesTest extends GTParsingTest {
 			}
 		''')
 		this.assertValid(file)
-		this.assertNode(file, 0, Operator.CONTEXT, "a", "EPackage")
-		this.assertNode(file, 1, Operator.CONTEXT, "b", "EClass")
+		val rule = file.getRule(0)
+		this.assertNode(rule.getNode(0), Operator.CONTEXT, "a", "EPackage")
+		this.assertNode(rule.getNode(1), Operator.CONTEXT, "b", "EClass")
 	}
 
 	@Test
@@ -42,8 +43,9 @@ class GTParsingNodesTest extends GTParsingTest {
 			}
 		''')
 		this.assertValid(file)
-		this.assertNode(file, 0, Operator.CREATE, "a", "EClass")
-		this.assertNode(file, 1, Operator.DELETE, "b", "EObject")
+		val rule = file.getRule(0)
+		this.assertNode(rule.getNode(0), Operator.CREATE, "a", "EClass")
+		this.assertNode(rule.getNode(1), Operator.DELETE, "b", "EObject")
 	}
 
 	@Test
@@ -56,7 +58,7 @@ class GTParsingNodesTest extends GTParsingTest {
 				«nodeName»: EObject
 			}
 		''')
-		this.assertBasics(file)
+		this.assertFile(file)
 		this.assertValidationIssues(
 			file,
 			GTPackage.eINSTANCE.node,
@@ -76,7 +78,7 @@ class GTParsingNodesTest extends GTParsingTest {
 				«nodeName»: EObject
 			}
 		''')
-		this.assertBasics(file)
+		this.assertFile(file)
 		this.assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.node,
@@ -95,7 +97,7 @@ class GTParsingNodesTest extends GTParsingTest {
 				«nodeName»: EObject
 			}
 		''')
-		this.assertBasics(file)
+		this.assertFile(file)
 		this.assertValidationIssues(
 			file,
 			GTPackage.eINSTANCE.node,
@@ -117,7 +119,7 @@ class GTParsingNodesTest extends GTParsingTest {
 				«nodeName»: EObject
 			}
 		''')
-		this.assertBasics(file)
+		this.assertFile(file)
 		this.assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.node,
@@ -135,7 +137,7 @@ class GTParsingNodesTest extends GTParsingTest {
 				o: Object
 			}
 		''')
-		this.assertBasics(file)
+		this.assertFile(file)
 		this.assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.node,
@@ -153,7 +155,7 @@ class GTParsingNodesTest extends GTParsingTest {
 				++ classifier: EClassifier
 			}
 		''')
-		this.assertBasics(file)
+		this.assertFile(file)
 		this.assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.node,
@@ -171,7 +173,7 @@ class GTParsingNodesTest extends GTParsingTest {
 				++ clazz: EClass
 			}
 		''')
-		this.assertBasics(file)
+		this.assertFile(file)
 		this.assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.node,

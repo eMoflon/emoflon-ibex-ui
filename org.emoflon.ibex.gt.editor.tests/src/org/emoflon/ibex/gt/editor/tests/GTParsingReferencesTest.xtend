@@ -68,7 +68,7 @@ class GTParsingReferencesTest extends GTParsingTest {
 				clazz: EClass
 			}
 		''')
-		this.assertBasics(file)
+		this.assertFile(file)
 		this.assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.reference,
@@ -90,7 +90,7 @@ class GTParsingReferencesTest extends GTParsingTest {
 				clazz: EObject
 			}
 		''')
-		this.assertBasics(file)
+		this.assertFile(file)
 		this.assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.reference,

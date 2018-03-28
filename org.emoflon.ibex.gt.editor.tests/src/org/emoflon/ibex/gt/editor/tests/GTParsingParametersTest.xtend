@@ -66,7 +66,7 @@ class GTParsingParametersTest extends GTParsingTest {
 				a: EObject
 			}
 		''')
-		this.assertBasics(file)
+		this.assertFile(file)
 		this.assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.parameter,
@@ -203,7 +203,7 @@ class GTParsingParametersTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertBasics(file)
+		this.assertFile(file)
 		this.assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.parameter,

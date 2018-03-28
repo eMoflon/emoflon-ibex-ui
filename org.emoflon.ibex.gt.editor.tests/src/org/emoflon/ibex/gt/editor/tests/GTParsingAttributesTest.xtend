@@ -75,7 +75,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertBasics(file)
+		this.assertFile(file)
 		this.assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.parameterValue,
@@ -101,7 +101,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertBasics(file)
+		this.assertFile(file)
 		this.assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.attributeConstraint,
@@ -123,7 +123,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertBasics(file)
+		this.assertFile(file)
 		this.assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.attributeConstraint,
@@ -143,7 +143,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertBasics(file)
+		this.assertFile(file)
 		this.assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.attributeConstraint,
@@ -164,7 +164,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertBasics(file)
+		this.assertFile(file)
 		this.assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.attributeConstraint,
@@ -184,7 +184,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertBasics(file)
+		this.assertFile(file)
 		this.assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.attributeConstraint,
@@ -204,7 +204,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertBasics(file)
+		this.assertFile(file)
 		this.assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.attributeConstraint,
@@ -224,7 +224,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertBasics(file)
+		this.assertFile(file)
 		this.assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.attributeConstraint,

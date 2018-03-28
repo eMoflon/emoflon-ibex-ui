@@ -10,12 +10,14 @@ import org.eclipse.xtext.testing.validation.ValidationTestHelper
 import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
 import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
 import org.emoflon.ibex.gt.editor.gT.LiteralValue
+import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.gT.ParameterValue
 import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Relation
 import org.junit.Assert
 import org.junit.runner.RunWith
+import org.emoflon.ibex.gt.editor.gT.Rule
 
 /**
  * Abstract test class for JUnit parsing tests of the editor.
@@ -34,13 +36,13 @@ abstract class GTParsingTest {
 	def void assertValid(GraphTransformationFile file) {
 		Assert.assertNotNull(file)
 		this.validationHelper.assertNoIssues(file)
-		this.assertBasics(file, 1)
+		this.assertFile(file, 1)
 	}
 
 	def void assertValid(GraphTransformationFile file, int ruleCount) {
 		Assert.assertNotNull(file)
 		this.validationHelper.assertNoIssues(file)
-		this.assertBasics(file, ruleCount)
+		this.assertFile(file, ruleCount)
 	}
 
 	def void assertValidationErrors(GraphTransformationFile file, EClass objectType, String code, String... messages) {
@@ -64,11 +66,11 @@ abstract class GTParsingTest {
 		Assert.assertEquals(issueCount, file.eResource.errors.size + file.eResource.warnings.size)
 	}
 
-	def void assertBasics(GraphTransformationFile file) {
-		this.assertBasics(file, 1)
+	def void assertFile(GraphTransformationFile file) {
+		this.assertFile(file, 1)
 	}
 
-	def void assertBasics(GraphTransformationFile file, int ruleCount) {
+	def void assertFile(GraphTransformationFile file, int ruleCount) {
 		Assert.assertTrue(ruleCount > 0)
 		this.assertValidResource(file)
 
@@ -76,6 +78,26 @@ abstract class GTParsingTest {
 		Assert.assertEquals("http://www.eclipse.org/emf/2002/Ecore", file.imports.get(0).name)
 
 		Assert.assertEquals(ruleCount, file.rules.size)
+	}
+
+	def getRule(GraphTransformationFile file, int ruleIndex) {
+		return file.rules.get(ruleIndex)
+	}
+
+	def getNode(Rule rule, int nodeIndex) {
+		return rule.nodes.get(nodeIndex)
+	}
+
+	def assertNode(Node node, Operator operator, String variableName, String variableType) {
+		assertNode(node, operator, variableName, variableType, 0, 0)
+	}
+
+	def assertNode(Node node, Operator operator, String name, String type, int attributesCount, int referencesCount) {
+		Assert.assertEquals(operator, node.operator)
+		Assert.assertEquals(name, node.name)
+		Assert.assertEquals(type, node.type.name)
+		Assert.assertEquals(attributesCount, node.attributes.size)
+		Assert.assertEquals(referencesCount, node.references.size)
 	}
 
 	def void assertAttribute(AttributeConstraint attributeConstraint, String name, Relation relation) {
@@ -102,14 +124,6 @@ abstract class GTParsingTest {
 		Assert.assertEquals(parameter, (attr.value as ParameterValue).parameter)
 	}
 
-	def assertNode(GraphTransformationFile file, int nodeIndex, Operator operator, String variableName,
-		String variableType) {
-		val node = file.rules.get(0).nodes.get(nodeIndex)
-		Assert.assertEquals(operator, node.operator)
-		Assert.assertEquals(variableName, node.name)
-		Assert.assertEquals(variableType, node.type.name)
-	}
-
 	def void assertParameterNames(GraphTransformationFile file, String... names) {
 		val parameters = file.rules.get(0).parameters
 		Assert.assertEquals(names.size, parameters.size)
@@ -128,9 +142,16 @@ abstract class GTParsingTest {
 
 	def assertReference(GraphTransformationFile file, int referenceIndex, Operator operator, String name,
 		int targetNodeIndex) {
-		val reference = file.rules.get(0).nodes.get(0).references.get(referenceIndex) as Reference
+		val reference = file.rules.get(0).nodes.get(0).references.get(referenceIndex)
 		Assert.assertEquals(operator, reference.operator)
 		Assert.assertEquals(name, reference.type.name)
 		Assert.assertEquals(file.rules.get(0).nodes.get(targetNodeIndex), reference.target)
 	}
+
+	def assertReference(Reference reference, Operator operator, String name, String targetNodeName) {
+		Assert.assertEquals(operator, reference.operator)
+		Assert.assertEquals(name, reference.type.name)
+		Assert.assertEquals(targetNodeName, reference.target.name)
+	}
+
 }

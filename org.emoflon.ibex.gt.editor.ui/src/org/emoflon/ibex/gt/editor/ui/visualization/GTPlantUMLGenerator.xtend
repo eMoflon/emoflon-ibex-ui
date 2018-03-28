@@ -5,7 +5,7 @@ import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Rule
-import org.emoflon.ibex.gt.editor.ui.transformation.GTFlattener
+import org.emoflon.ibex.gt.editor.utils.GTFlattener
 
 /**
  * Utility methods to generate PlantUML code.

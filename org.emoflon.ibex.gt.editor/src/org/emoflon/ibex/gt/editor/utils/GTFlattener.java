@@ -1,4 +1,4 @@
-package org.emoflon.ibex.gt.editor.ui.transformation;
+package org.emoflon.ibex.gt.editor.utils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -86,7 +86,7 @@ public class GTFlattener {
 	 */
 	private Collection<Node> mergeNodes(final List<Node> collectedNodes) {
 		Map<String, Node> nodeNameToNode = new HashMap<String, Node>();
-		for (Node node : collectedNodes) {
+		for (final Node node : collectedNodes) {
 			if (nodeNameToNode.containsKey(node.getName())) {
 				mergeTwoNodes(nodeNameToNode.get(node.getName()), node);
 			} else {
