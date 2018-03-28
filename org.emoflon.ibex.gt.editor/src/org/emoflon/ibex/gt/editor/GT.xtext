@@ -18,8 +18,7 @@ Rule:
 	')')?
 	('{'
 	(nodes+=Node)*
-	'}')?
-	(nacs+=NAC)*;
+	'}')?;
 
 Parameter:
 	name=ID ':' type=[ecore::EDataType];
@@ -73,9 +72,3 @@ ParameterValue:
 	// References
 Reference:
 	(operator=OperatorForEditor)? '-' type=[ecore::EReference] '->' target=[Node];
-
-	// Negative Application Conditions
-NAC:
-	'nac' name=ID '{'
-	(nodes+=Node)*
-	'}';

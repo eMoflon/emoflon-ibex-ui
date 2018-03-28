@@ -12,7 +12,6 @@ import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
 import org.emoflon.ibex.gt.editor.gT.EnumValue
 import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
 import org.emoflon.ibex.gt.editor.gT.GTPackage
-import org.emoflon.ibex.gt.editor.gT.NAC
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Parameter
 import org.emoflon.ibex.gt.editor.gT.ParameterValue
@@ -120,9 +119,6 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		if (container instanceof Rule) {
 			return getClassesScope(container.eContainer as GraphTransformationFile)
 		}
-		if (container instanceof NAC) {
-			return getClassesScope(container.eContainer.eContainer as GraphTransformationFile)
-		}
 		return Scopes.scopeFor([])
 	}
 
@@ -162,14 +158,6 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 							val nodes = newArrayList()
 							nodes.addAll(filterNodesWithType(rule, targetNodeType))
 							rule.superRules.forEach[nodes.addAll(filterNodesWithType(it, targetNodeType))]
-							return Scopes.scopeFor(nodes)
-						}
-					}
-					if (container instanceof NAC) {
-						val nac = container as NAC
-						if (nac !== null) {
-							val nodes = newArrayList()
-							nodes.addAll(nac.nodes.filter[isNodeOfType(it, targetNodeType)])
 							return Scopes.scopeFor(nodes)
 						}
 					}
