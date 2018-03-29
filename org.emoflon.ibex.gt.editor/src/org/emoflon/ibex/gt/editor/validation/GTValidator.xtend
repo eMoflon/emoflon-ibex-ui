@@ -1,5 +1,6 @@
 package org.emoflon.ibex.gt.editor.validation
 
+import org.eclipse.emf.ecore.EPackage
 import org.eclipse.xtext.validation.Check
 
 import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
@@ -154,7 +155,7 @@ class GTValidator extends AbstractGTValidator {
 		val ecoreModel = GTEditorModelUtils.loadEcoreModel(importEcore.name)
 		if (ecoreModel.present) {
 			// Imports must be of type ecore.
-			if (GTEditorModelUtils.getClasses(ecoreModel.get).size == 0) {
+			if (GTEditorModelUtils.getElements(ecoreModel.get, EPackage).size > 0) {
 				error(
 					String.format(IMPORT_NO_ECORE_MESSAGE, importEcore.name),
 					GTPackage.Literals.IMPORT__NAME,
