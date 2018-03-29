@@ -10,6 +10,7 @@ import java.util.Set;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.emoflon.ibex.gt.editor.gT.AttributeConstraint;
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression;
 import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression;
 import org.emoflon.ibex.gt.editor.gT.EditorExpression;
 import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression;
@@ -253,6 +254,12 @@ public class GTFlattener {
 	 * @return <code>true</code> if the expressions are equal
 	 */
 	private static boolean areExpressionsEqual(final EditorExpression a, final EditorExpression b) {
+		if (a instanceof EditorAttributeExpression && b instanceof EditorAttributeExpression) {
+			EditorAttributeExpression aAttributeExp = (EditorAttributeExpression) a;
+			EditorAttributeExpression bAttributeExp = (EditorAttributeExpression) b;
+			return aAttributeExp.getNode().getName().equals(bAttributeExp.getNode().getName())
+					&& aAttributeExp.getAttribute().equals(bAttributeExp.getAttribute());
+		}
 		if (a instanceof EditorParameterExpression && b instanceof EditorParameterExpression) {
 			Parameter p1 = ((EditorParameterExpression) a).getParameter();
 			Parameter p2 = ((EditorParameterExpression) b).getParameter();

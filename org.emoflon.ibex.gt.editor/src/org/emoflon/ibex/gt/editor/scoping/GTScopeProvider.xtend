@@ -5,15 +5,16 @@ import org.eclipse.emf.ecore.EEnum
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.xtext.EcoreUtil2
-import org.eclipse.xtext.linking.lazy.LazyLinkingResource.CyclicLinkingException
 import org.eclipse.xtext.scoping.Scopes
 
 import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
 import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression
 import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
 import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
 import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.gT.Node
+import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.gT.Parameter
 import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Rule
@@ -35,11 +36,17 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		}
 
 		// Expressions
-		if (isParameterExpression(context, reference)) {
-			return getScopeForParameterExpressions(context as EditorParameterExpression)
+		if (isAttributeOfAttributeExpression(context, reference)) {
+			return getScopeForAttributeExpressionAttributes(context as EditorAttributeExpression)
+		}
+		if (isNodeOfAttributeExpression(context, reference)) {
+			return getScopeForAttributeExpressionNodes(context as EditorAttributeExpression)
 		}
 		if (isEnumExpression(context, reference)) {
 			return getScopeForEnumLiterals(context as EditorEnumExpression)
+		}
+		if (isParameterExpression(context, reference)) {
+			return getScopeForParameterExpressions(context as EditorParameterExpression)
 		}
 
 		// Nodes
@@ -71,6 +78,16 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	def isAttributeName(EObject context, EReference reference) {
 		return (context instanceof AttributeConstraint &&
 			reference == GTPackage.Literals.ATTRIBUTE_CONSTRAINT__ATTRIBUTE)
+	}
+
+	def isNodeOfAttributeExpression(EObject context, EReference reference) {
+		return (context instanceof EditorAttributeExpression &&
+			reference == GTPackage.Literals.EDITOR_ATTRIBUTE_EXPRESSION__NODE);
+	}
+
+	def isAttributeOfAttributeExpression(EObject context, EReference reference) {
+		return (context instanceof EditorAttributeExpression &&
+			reference == GTPackage.Literals.EDITOR_ATTRIBUTE_EXPRESSION__ATTRIBUTE);
 	}
 
 	def isEnumExpression(EObject context, EReference reference) {
@@ -111,7 +128,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		val rootElement = EcoreUtil2.getRootContainer(rule)
 		val candidates = EcoreUtil2.getAllContentsOfType(rootElement, Rule)
 		val validSuperRules = candidates.filter [
-			it != rule && !isRefinementOf(it as Rule, rule)
+			it != rule && !GTEditorRuleUtils.isRefinementOf(it as Rule, rule)
 		]
 		return Scopes.scopeFor(validSuperRules)
 	}
@@ -146,10 +163,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 			if (targetNodeType !== null) {
 				val rule = reference.eContainer.eContainer as Rule
 				if (rule !== null) {
-					val nodes = newArrayList()
-					GTEditorRuleUtils.getRuleAllWithSuperRules(rule).forEach [
-						nodes.addAll(filterNodesWithType(it, targetNodeType))
-					]
+					val nodes = GTEditorRuleUtils.getAllNodesOfRule(rule, [isNodeOfType(it, targetNodeType)])
 					return Scopes.scopeFor(nodes)
 				}
 			}
@@ -194,7 +208,28 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	}
 
 	/**
-	 * Return the parameters for the attribute value.
+	 * The node of an attribute expression can be any context node which is valid within the same rule.
+	 */
+	def getScopeForAttributeExpressionNodes(EditorAttributeExpression attributeExpression) {
+		val rule = attributeExpression.eContainer.eContainer.eContainer as Rule
+		val nodes = GTEditorRuleUtils.getAllNodesOfRule(rule, [it.operator == Operator.CONTEXT])
+		return Scopes.scopeFor(nodes)
+	}
+
+	/**
+	 * Any attributes of the node of the attribute expression are valid
+	 * if their type fits to the one expected for the attribute value. 
+	 */
+	def getScopeForAttributeExpressionAttributes(EditorAttributeExpression attributeExpression) {
+		val attributeConstraint = attributeExpression.eContainer as AttributeConstraint
+		val attributes = attributeExpression.node.type.EAllAttributes.filter [
+			it.EAttributeType == attributeConstraint.attribute.EAttributeType
+		]
+		return Scopes.scopeFor(attributes)
+	}
+
+	/**
+	 * Parameter expressions must reference a parameter of the type expected for the attribute value.
 	 */
 	def getScopeForParameterExpressions(EditorParameterExpression parameterExpression) {
 		val attributeConstraint = parameterExpression.eContainer as AttributeConstraint
@@ -207,7 +242,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	}
 
 	/**
-	 * Return the valid enum literals for the attribute value.
+	 * Any literal of the attribute's enum is valid.
 	 */
 	def getScopeForEnumLiterals(EditorEnumExpression enumExpression) {
 		val attributeConstraint = enumExpression.eContainer as AttributeConstraint
@@ -216,25 +251,5 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 			return Scopes.scopeFor(type.ELiterals)
 		}
 		return Scopes.scopeFor([])
-	}
-
-	/**
-	 * Checks whether a is a refinement of b.
-	 */
-	def static boolean isRefinementOf(Rule a, Rule b) {
-		try {
-			if (a.superRules.contains(b)) {
-				return true;
-			}
-		} catch (CyclicLinkingException e) {
-			// Cycling linking detected: a refines b and b refines a (directly or indirectly)
-			return true;
-		}
-		for (superRule : a.superRules) {
-			if (isRefinementOf(superRule, b)) {
-				return true;
-			}
-		}
-		return false;
 	}
 }

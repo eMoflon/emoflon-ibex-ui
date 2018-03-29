@@ -2,7 +2,11 @@ package org.emoflon.ibex.gt.editor.utils;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
+import org.eclipse.xtext.linking.lazy.LazyLinkingResource.CyclicLinkingException;
+import org.emoflon.ibex.gt.editor.gT.Node;
 import org.emoflon.ibex.gt.editor.gT.Rule;
 
 /**
@@ -35,5 +39,49 @@ public class GTEditorRuleUtils {
 		Set<Rule> rules = getAllSuperRules(rule);
 		rules.add(rule);
 		return rules;
+	}
+
+	/**
+	 * Returns all nodes which are valid in a rule (i. e. from the rule itself as
+	 * well as from super rules).
+	 * 
+	 * @param rule
+	 *            the rule
+	 * @param nodeFilter
+	 *            a filter for the nodes.
+	 * @return the nodes of the rule after applying the given filter
+	 */
+	public static Set<Node> getAllNodesOfRule(final Rule rule, final Predicate<Node> nodeFilter) {
+		Set<Node> nodes = new HashSet<Node>();
+		GTEditorRuleUtils.getRuleAllWithSuperRules(rule).forEach(r -> {
+			nodes.addAll(r.getNodes().stream().filter(nodeFilter).collect(Collectors.toSet()));
+		});
+		return nodes;
+	}
+
+	/**
+	 * Checks whether the first rule is an refinement of the second.
+	 * 
+	 * @param a
+	 *            the first rule
+	 * @param b
+	 *            the second rule
+	 * @return true if a directly or indirectly refines b
+	 */
+	public static boolean isRefinementOf(Rule a, Rule b) {
+		try {
+			if (a.getSuperRules().contains(b)) {
+				return true;
+			}
+		} catch (CyclicLinkingException e) {
+			// Cycling linking detected: a refines b and b refines a.
+			return true;
+		}
+		for (Rule superRule : a.getSuperRules()) {
+			if (isRefinementOf(superRule, b)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

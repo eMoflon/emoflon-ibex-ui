@@ -2,6 +2,7 @@ package org.emoflon.ibex.gt.editor.ui.visualization
 
 import org.eclipse.emf.common.util.EList
 import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
 import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression
 import org.emoflon.ibex.gt.editor.gT.EditorExpression
 import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression
@@ -125,6 +126,11 @@ class GTPlantUMLGenerator {
 	 * Prints the expression.
 	 */
 	private static def String expression(EditorExpression expression) {
+		if (expression instanceof EditorAttributeExpression) {
+			val nodeName = if(expression.node === null) '?' else expression.node.name
+			val attributeName = if(expression.attribute === null) '?' else expression.attribute.name
+			return '''«nodeName».«attributeName»'''
+		}
 		if (expression instanceof EditorEnumExpression) {
 			return '''«expression.literal.literal»'''
 		}
