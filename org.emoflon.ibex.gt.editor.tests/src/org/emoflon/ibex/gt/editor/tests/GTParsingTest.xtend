@@ -10,10 +10,10 @@ import org.eclipse.xtext.testing.util.ParseHelper
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
 import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
 import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
-import org.emoflon.ibex.gt.editor.gT.LiteralValue
+import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression
+import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Operator
-import org.emoflon.ibex.gt.editor.gT.ParameterValue
 import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Relation
 import org.emoflon.ibex.gt.editor.gT.Rule
@@ -111,8 +111,8 @@ abstract class GTParsingTest {
 		val attr = file.rules.get(0).nodes.get(0).attributes.get(index) as AttributeConstraint
 		this.assertAttribute(attr, name, relation)
 
-		Assert.assertTrue(attr.value instanceof LiteralValue)
-		Assert.assertEquals(value, (attr.value as LiteralValue).value)
+		Assert.assertTrue(attr.value instanceof EditorLiteralExpression)
+		Assert.assertEquals(value, (attr.value as EditorLiteralExpression).value)
 	}
 
 	def void assertAttributeParameter(GraphTransformationFile file, int attributeIndex, String name, Relation relation,
@@ -120,9 +120,9 @@ abstract class GTParsingTest {
 		val attr = file.rules.get(0).nodes.get(0).attributes.get(attributeIndex) as AttributeConstraint
 		this.assertAttribute(attr, name, relation)
 
-		Assert.assertTrue(attr.value instanceof ParameterValue)
+		Assert.assertTrue(attr.value instanceof EditorParameterExpression)
 		val parameter = file.rules.get(0).parameters.get(parameterIndex)
-		Assert.assertEquals(parameter, (attr.value as ParameterValue).parameter)
+		Assert.assertEquals(parameter, (attr.value as EditorParameterExpression).parameter)
 	}
 
 	def void assertParameters(Rule rule, Map<String, String> parameterNameToType) {

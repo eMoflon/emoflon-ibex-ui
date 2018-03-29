@@ -9,15 +9,16 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource.CyclicLinkingException
 import org.eclipse.xtext.scoping.Scopes
 
 import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
-import org.emoflon.ibex.gt.editor.gT.EnumValue
+import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression
+import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
 import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
 import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Parameter
-import org.emoflon.ibex.gt.editor.gT.ParameterValue
 import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
+import org.emoflon.ibex.gt.editor.utils.GTEditorRuleUtils
 
 /**
  * This class contains custom scoping description.
@@ -30,36 +31,38 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	override getScope(EObject context, EReference reference) {
 		// Attributes
 		if (isAttributeName(context, reference)) {
-			return getScopeForAttributes(context, reference)
+			return getScopeForAttributes(context as AttributeConstraint)
 		}
-		if (isParameterValue(context, reference)) {
-			return getScopeForParameters(context, reference)
+
+		// Expressions
+		if (isParameterExpression(context, reference)) {
+			return getScopeForParameterExpressions(context as EditorParameterExpression)
 		}
-		if (isEnumLiteral(context, reference)) {
-			return getScopeForEnumLiterals(context, reference)
+		if (isEnumExpression(context, reference)) {
+			return getScopeForEnumLiterals(context as EditorEnumExpression)
 		}
 
 		// Nodes
 		if (isNodeType(context, reference)) {
-			return getScopeForNodeTypes(context, reference)
+			return getScopeForNodeTypes(context as Node)
 		}
 
 		// Parameters
 		if (isParameterType(context, reference)) {
-			return getScopeForDatatypes(context, reference)
+			return getScopeForParameterDatatypes(context as Parameter)
 		}
 
 		// References
 		if (isReferenceType(context, reference)) {
-			return getScopeForReferenceTypes(context, reference)
+			return getScopeForReferenceTypes(context as Reference)
 		}
 		if (isReferenceTarget(context, reference)) {
-			return getScopeForReferenceTargets(context, reference)
+			return getScopeForReferenceTargets(context as Reference)
 		}
 
 		// Rules
 		if (isSuperRule(context, reference)) {
-			return getScopeForSuperRules(context, reference)
+			return getScopeForSuperRules(context as Rule)
 		}
 
 		return super.getScope(context, reference)
@@ -70,16 +73,18 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 			reference == GTPackage.Literals.ATTRIBUTE_CONSTRAINT__ATTRIBUTE)
 	}
 
-	def isEnumLiteral(EObject context, EReference reference) {
-		return (context instanceof EnumValue && reference == GTPackage.Literals.ENUM_VALUE__LITERAL)
+	def isEnumExpression(EObject context, EReference reference) {
+		return (context instanceof EditorEnumExpression &&
+			reference == GTPackage.Literals.EDITOR_ENUM_EXPRESSION__LITERAL)
+	}
+
+	def isParameterExpression(EObject context, EReference reference) {
+		return (context instanceof EditorParameterExpression &&
+			reference == GTPackage.Literals.EDITOR_PARAMETER_EXPRESSION__PARAMETER);
 	}
 
 	def isNodeType(EObject context, EReference reference) {
 		return (context instanceof Node && reference == GTPackage.Literals.NODE__TYPE)
-	}
-
-	def isParameterValue(EObject context, EReference reference) {
-		return (context instanceof ParameterValue && reference == GTPackage.Literals.PARAMETER_VALUE__PARAMETER);
 	}
 
 	def isParameterType(EObject context, EReference reference) {
@@ -102,11 +107,11 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	 * A rule can refine any rule except itself and rules which refine itself.
 	 * This avoids loops in the refinement hierarchy.
 	 */
-	def getScopeForSuperRules(EObject context, EReference reference) {
-		val rootElement = EcoreUtil2.getRootContainer(context)
+	def getScopeForSuperRules(Rule rule) {
+		val rootElement = EcoreUtil2.getRootContainer(rule)
 		val candidates = EcoreUtil2.getAllContentsOfType(rootElement, Rule)
 		val validSuperRules = candidates.filter [
-			it != context && !isRefinementOf(it as Rule, context as Rule)
+			it != rule && !isRefinementOf(it as Rule, rule)
 		]
 		return Scopes.scopeFor(validSuperRules)
 	}
@@ -114,29 +119,18 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	/**
 	 * The node type must be an EClass from the meta-model.
 	 */
-	def getScopeForNodeTypes(EObject context, EReference reference) {
-		val container = context.eContainer
-		if (container instanceof Rule) {
-			return getClassesScope(container.eContainer as GraphTransformationFile)
-		}
-		return Scopes.scopeFor([])
-	}
-
-	private def static getClassesScope(GraphTransformationFile file) {
-		return Scopes.scopeFor(GTEditorModelUtils.getClasses(file))
+	def getScopeForNodeTypes(Node node) {
+		return Scopes.scopeFor(GTEditorModelUtils.getClasses(node.eContainer.eContainer as GraphTransformationFile))
 	}
 
 	/**
 	 * The type of a reference must be one of the EReferences from the EClass
 	 * of the node containing the reference.
 	 */
-	def getScopeForReferenceTypes(EObject context, EReference reference) {
-		val container = context.eContainer
-		if (container instanceof Node) {
-			val containingNode = container as Node
-			if (containingNode.type !== null) {
-				return Scopes.scopeFor(containingNode.type.EAllReferences)
-			}
+	def getScopeForReferenceTypes(Reference context) {
+		val node = context.eContainer as Node
+		if (node.type !== null) {
+			return Scopes.scopeFor(node.type.EAllReferences)
 		}
 		return Scopes.scopeFor([])
 	}
@@ -145,22 +139,18 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	 * The target of the reference must be another node within the same rule 
 	 * (or its super rules) of the correct type.
 	 */
-	def getScopeForReferenceTargets(EObject context, EReference reference) {
-		if (context instanceof Reference) {
-			val referenceType = (context as Reference).type
-			if (referenceType !== null) {
-				val targetNodeType = referenceType.EReferenceType
-				if (targetNodeType !== null) {
-					val container = context.eContainer.eContainer
-					if (container instanceof Rule) {
-						val rule = container as Rule
-						if (rule !== null) {
-							val nodes = newArrayList()
-							nodes.addAll(filterNodesWithType(rule, targetNodeType))
-							rule.superRules.forEach[nodes.addAll(filterNodesWithType(it, targetNodeType))]
-							return Scopes.scopeFor(nodes)
-						}
-					}
+	def getScopeForReferenceTargets(Reference reference) {
+		val referenceType = reference.type
+		if (referenceType !== null) {
+			val targetNodeType = referenceType.EReferenceType
+			if (targetNodeType !== null) {
+				val rule = reference.eContainer.eContainer as Rule
+				if (rule !== null) {
+					val nodes = newArrayList()
+					GTEditorRuleUtils.getRuleAllWithSuperRules(rule).forEach [
+						nodes.addAll(filterNodesWithType(it, targetNodeType))
+					]
+					return Scopes.scopeFor(nodes)
 				}
 			}
 		}
@@ -190,50 +180,40 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	 * The attribute name must be one of the EAttribute from the EClass
 	 * of the node containing the attribute assignment or condition.
 	 */
-	def getScopeForAttributes(EObject context, EReference reference) {
-		val container = context.eContainer
-		if (container instanceof Node) {
-			val containingNode = container as Node
-			return Scopes.scopeFor(containingNode.type.EAllAttributes)
-		}
-		return Scopes.scopeFor([])
+	def getScopeForAttributes(AttributeConstraint context) {
+		val containingNode = context.eContainer as Node
+		return Scopes.scopeFor(containingNode.type.EAllAttributes)
 	}
 
 	/**
 	 * The parameter type must be one of the EDatatypes from the meta-models.
 	 */
-	def getScopeForDatatypes(EObject context, EReference reference) {
-		val container = context.eContainer
-		if (container instanceof Rule) {
-			return Scopes.scopeFor(GTEditorModelUtils.getDatatypes(container.eContainer as GraphTransformationFile))
-		}
-		return Scopes.scopeFor([])
+	def getScopeForParameterDatatypes(Parameter parameter) {
+		val file = parameter.eContainer.eContainer as GraphTransformationFile
+		return Scopes.scopeFor(GTEditorModelUtils.getDatatypes(file))
 	}
 
 	/**
 	 * Return the parameters for the attribute value.
 	 */
-	def getScopeForParameters(EObject context, EReference reference) {
-		val container = context.eContainer
-		if (container instanceof AttributeConstraint) {
-			val rule = container.eContainer.eContainer as Rule
-			return Scopes.scopeFor(rule.parameters.filter [
-				it.type.name == container.attribute.EAttributeType.name
-			])
-		}
-		return Scopes.scopeFor([])
+	def getScopeForParameterExpressions(EditorParameterExpression parameterExpression) {
+		val attributeConstraint = parameterExpression.eContainer as AttributeConstraint
+		val rule = attributeConstraint.eContainer.eContainer as Rule
+		val parameters = newArrayList()
+		GTEditorRuleUtils.getRuleAllWithSuperRules(rule).forEach [
+			parameters.addAll(it.parameters.filter[it.type == attributeConstraint.attribute.EAttributeType])
+		]
+		return Scopes.scopeFor(parameters)
 	}
 
 	/**
 	 * Return the valid enum literals for the attribute value.
 	 */
-	def getScopeForEnumLiterals(EObject context, EReference reference) {
-		val container = context.eContainer
-		if (container instanceof AttributeConstraint) {
-			val type = container.attribute.EAttributeType
-			if (type instanceof EEnum) {
-				return Scopes.scopeFor(type.ELiterals)
-			}
+	def getScopeForEnumLiterals(EditorEnumExpression enumExpression) {
+		val attributeConstraint = enumExpression.eContainer as AttributeConstraint
+		val type = attributeConstraint.attribute.EAttributeType
+		if (type instanceof EEnum) {
+			return Scopes.scopeFor(type.ELiterals)
 		}
 		return Scopes.scopeFor([])
 	}

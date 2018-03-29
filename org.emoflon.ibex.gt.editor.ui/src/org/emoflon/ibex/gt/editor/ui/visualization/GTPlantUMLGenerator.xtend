@@ -2,13 +2,13 @@ package org.emoflon.ibex.gt.editor.ui.visualization
 
 import org.eclipse.emf.common.util.EList
 import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
-import org.emoflon.ibex.gt.editor.gT.EnumValue
-import org.emoflon.ibex.gt.editor.gT.Expression
-import org.emoflon.ibex.gt.editor.gT.LiteralValue
+import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression
+import org.emoflon.ibex.gt.editor.gT.EditorExpression
+import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression
+import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.gT.Parameter
-import org.emoflon.ibex.gt.editor.gT.ParameterValue
 import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Relation
 import org.emoflon.ibex.gt.editor.gT.Rule
@@ -124,14 +124,14 @@ class GTPlantUMLGenerator {
 	/**
 	 * Prints the expression.
 	 */
-	private static def String expression(Expression expression) {
-		if (expression instanceof EnumValue) {
+	private static def String expression(EditorExpression expression) {
+		if (expression instanceof EditorEnumExpression) {
 			return '''«expression.literal.literal»'''
 		}
-		if (expression instanceof LiteralValue) {
+		if (expression instanceof EditorLiteralExpression) {
 			return '''«expression.value.toString»'''
 		}
-		if (expression instanceof ParameterValue) {
+		if (expression instanceof EditorParameterExpression) {
 			if (expression.parameter === null) {
 				return 'unknown parameter'
 			}

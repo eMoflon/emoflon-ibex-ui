@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
-import org.emoflon.ibex.gt.editor.gT.LiteralValue;
+import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression;
 import org.emoflon.ibex.gt.editor.gT.Relation;
 import org.emoflon.ibex.gt.editor.gT.StringConstant;
 
@@ -27,7 +27,8 @@ public class GTEditorAttributeUtils {
 	 * @return an Optional for an Object of the type if the expression can be
 	 *         converted to the type. Otherwise the Optional will be empty.
 	 */
-	public static Optional<Object> convertLiteralValueToObject(final EDataType type, final LiteralValue expression) {
+	public static Optional<Object> convertLiteralValueToObject(final EDataType type,
+			final EditorLiteralExpression expression) {
 		if (stringTypes.contains(type.getName()) && !(expression instanceof StringConstant)) {
 			return Optional.empty();
 		}

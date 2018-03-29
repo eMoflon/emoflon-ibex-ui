@@ -3,11 +3,11 @@ package org.emoflon.ibex.gt.editor.validation
 import org.eclipse.xtext.validation.Check
 
 import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
+import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression
 import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
 import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.gT.Import
 import org.emoflon.ibex.gt.editor.gT.Node
-import org.emoflon.ibex.gt.editor.gT.LiteralValue
 import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.gT.Parameter
 import org.emoflon.ibex.gt.editor.gT.Reference
@@ -362,7 +362,7 @@ class GTValidator extends AbstractGTValidator {
 		val value = attributeConstraint.value
 
 		// The attribute value must be of the correct type.
-		if (value instanceof LiteralValue) {
+		if (value instanceof EditorLiteralExpression) {
 			val expectedType = attribute.EAttributeType
 			if (!GTEditorAttributeUtils.convertLiteralValueToObject(expectedType, value).present) {
 				error(

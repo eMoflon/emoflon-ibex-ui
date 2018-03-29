@@ -42,7 +42,7 @@ enum OperatorForEditor returns Operator:
 
 	// Attribute Assignments and Conditions
 AttributeConstraint:
-	'.' attribute=[ecore::EAttribute] relation=Relation value=Expression;
+	'.' attribute=[ecore::EAttribute] relation=Relation value=EditorExpression;
 
 enum Relation:
 	ASSIGNMENT=':=' |
@@ -53,20 +53,23 @@ enum Relation:
 	SMALLER_OR_EQUAL='<=' |
 	SMALLER='<';
 
-Expression:
-	LiteralValue | EnumValue | ParameterValue;
+EditorExpression:
+	EditorAttributeExpression | EditorLiteralExpression | EditorEnumExpression | EditorParameterExpression;
 
-LiteralValue:
+EditorAttributeExpression:
+	node=[Node] '.' attribute=[ecore::EAttribute];
+
+EditorLiteralExpression:
 	value=('true' | 'false' | Number) |
 	{StringConstant} value=STRING;
 
 Number:
 	('-')? INT ('.' INT)?;
 
-EnumValue:
+EditorEnumExpression:
 	'enum::' literal=[ecore::EEnumLiteral];
 
-ParameterValue:
+EditorParameterExpression:
 	'param::' parameter=[Parameter];
 
 	// References

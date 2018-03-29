@@ -2,7 +2,6 @@ package org.emoflon.ibex.gt.editor.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -11,14 +10,14 @@ import java.util.Set;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.emoflon.ibex.gt.editor.gT.AttributeConstraint;
-import org.emoflon.ibex.gt.editor.gT.EnumValue;
-import org.emoflon.ibex.gt.editor.gT.Expression;
+import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression;
+import org.emoflon.ibex.gt.editor.gT.EditorExpression;
+import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression;
+import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression;
 import org.emoflon.ibex.gt.editor.gT.GTFactory;
-import org.emoflon.ibex.gt.editor.gT.LiteralValue;
 import org.emoflon.ibex.gt.editor.gT.Node;
 import org.emoflon.ibex.gt.editor.gT.Operator;
 import org.emoflon.ibex.gt.editor.gT.Parameter;
-import org.emoflon.ibex.gt.editor.gT.ParameterValue;
 import org.emoflon.ibex.gt.editor.gT.Reference;
 import org.emoflon.ibex.gt.editor.gT.Relation;
 import org.emoflon.ibex.gt.editor.gT.Rule;
@@ -44,7 +43,7 @@ public class GTFlattener {
 	 *            the rule
 	 */
 	public GTFlattener(final Rule rule) {
-		Set<Rule> superRules = getAllSuperRules(rule);
+		Set<Rule> superRules = GTEditorRuleUtils.getAllSuperRules(rule);
 
 		flattenedRule = GTFactory.eINSTANCE.createRule();
 		flattenedRule.setAbstract(rule.isAbstract());
@@ -164,7 +163,9 @@ public class GTFlattener {
 		List<Node> nodes = new ArrayList<Node>(nodeNameToNode.values());
 		nodes.forEach(n -> {
 			n.getReferences().forEach(r -> {
-				r.setTarget(nodeNameToNode.get(r.getTarget().getName()));
+				if (r.getTarget() != null) {
+					r.setTarget(nodeNameToNode.get(r.getTarget().getName()));
+				}
 			});
 		});
 		return nodes;
@@ -251,17 +252,17 @@ public class GTFlattener {
 	 *            the second expression
 	 * @return <code>true</code> if the expressions are equal
 	 */
-	private static boolean areExpressionsEqual(final Expression a, final Expression b) {
-		if (a instanceof ParameterValue && b instanceof ParameterValue) {
-			Parameter p1 = ((ParameterValue) a).getParameter();
-			Parameter p2 = ((ParameterValue) b).getParameter();
+	private static boolean areExpressionsEqual(final EditorExpression a, final EditorExpression b) {
+		if (a instanceof EditorParameterExpression && b instanceof EditorParameterExpression) {
+			Parameter p1 = ((EditorParameterExpression) a).getParameter();
+			Parameter p2 = ((EditorParameterExpression) b).getParameter();
 			return p1 != null && p2 != null && p1.getName().equals(p2.getName());
 		}
-		if (a instanceof EnumValue && b instanceof EnumValue) {
-			return ((EnumValue) a).getLiteral().equals(((EnumValue) b).getLiteral());
+		if (a instanceof EditorEnumExpression && b instanceof EditorEnumExpression) {
+			return ((EditorEnumExpression) a).getLiteral().equals(((EditorEnumExpression) b).getLiteral());
 		}
-		if (a instanceof LiteralValue && b instanceof LiteralValue) {
-			return ((LiteralValue) a).getValue().equals(((LiteralValue) b).getValue());
+		if (a instanceof EditorLiteralExpression && b instanceof EditorLiteralExpression) {
+			return ((EditorLiteralExpression) a).getValue().equals(((EditorLiteralExpression) b).getValue());
 		}
 		return false;
 	}
@@ -347,19 +348,5 @@ public class GTFlattener {
 
 		String message = String.format("Cannot merge operators %s and %s.", a, b);
 		throw new IllegalArgumentException(message);
-	}
-
-	/**
-	 * Returns all transitive super rules of the given rule.
-	 * 
-	 * @param rule
-	 *            the rule
-	 * @return all super rules of the rule
-	 */
-	private static Set<Rule> getAllSuperRules(final Rule rule) {
-		Set<Rule> rules = new HashSet<Rule>();
-		rules.addAll(rule.getSuperRules());
-		rule.getSuperRules().forEach(r -> rules.addAll(getAllSuperRules(r)));
-		return rules;
 	}
 }

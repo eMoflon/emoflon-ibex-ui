@@ -78,7 +78,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		this.assertFile(file)
 		this.assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.parameterValue,
+			GTPackage.eINSTANCE.editorParameterExpression,
 			Diagnostic::LINKING_DIAGNOSTIC,
 			"Couldn't resolve reference to Parameter 'name'."
 		)
