@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource.CyclicLinkingException;
 import org.emoflon.ibex.gt.editor.gT.Node;
+import org.emoflon.ibex.gt.editor.gT.Parameter;
 import org.emoflon.ibex.gt.editor.gT.Rule;
 
 /**
@@ -57,6 +58,14 @@ public class GTEditorRuleUtils {
 			nodes.addAll(r.getNodes().stream().filter(nodeFilter).collect(Collectors.toSet()));
 		});
 		return nodes;
+	}
+
+	public static Set<Parameter> getParametersOfSuperRules(final Rule rule) {
+		Set<Parameter> parameters = new HashSet<Parameter>();
+		GTEditorRuleUtils.getAllSuperRules(rule).forEach(r -> {
+			parameters.addAll(r.getParameters());
+		});
+		return parameters;
 	}
 
 	/**
