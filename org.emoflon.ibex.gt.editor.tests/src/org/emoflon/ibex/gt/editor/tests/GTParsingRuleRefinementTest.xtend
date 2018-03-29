@@ -144,8 +144,8 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 				annotation: EAnnotation
 			}
 			
-			rule findClassWithAnnotation
-			refines findClassifierWithAnnotation(attributeName: EString) {
+			rule findClassWithAnnotation(attributeName: EString)
+			refines findClassifierWithAnnotation {
 				classifier: EClass {
 					.interface == true
 					-eAttributes -> attribute
@@ -183,8 +183,8 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 				}
 			}
 			
-			rule renameClass
-			refines findClass(name: EString, newName: EString, interface: EBoolean) {
+			rule renameClass(name: EString, newName: EString, interface: EBoolean)
+			refines findClass {
 				clazz: EClass {
 					.^abstract == false
 					.^abstract != true
@@ -218,8 +218,8 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 				}
 			}
 			
-			rule renameClass2
-			refines renameClass(oldName: EString, newName: EString) {
+			rule renameClass2(oldName: EString, newName: EString)
+			refines renameClass {
 				clazz: EClass {
 					.name == param::oldName
 					.name := param::newName
@@ -245,8 +245,8 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 				}
 			}
 			
-			rule findClassDuplicate
-			refines findClass(interface: EBoolean, name: EBoolean) {
+			rule findClassDuplicate(interface: EBoolean, name: EBoolean)
+			refines findClass {
 				clazz2: EClass {
 					.interface == param::interface
 				}

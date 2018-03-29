@@ -12,10 +12,10 @@ Import:
 
 Rule:
 	(abstract?='abstract')? 'rule' name=ID
-	('refines' superRules+=[Rule] (',' superRules+=[Rule])*)?
 	('('
 	(parameters+=Parameter (',' parameters+=Parameter)*)?
 	')')?
+	('refines' superRules+=[Rule] (',' superRules+=[Rule])*)?
 	('{'
 	(nodes+=Node)*
 	'}')?;
