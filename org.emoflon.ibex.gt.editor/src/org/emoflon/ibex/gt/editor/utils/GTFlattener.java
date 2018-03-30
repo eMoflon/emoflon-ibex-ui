@@ -237,7 +237,7 @@ public class GTFlattener {
 	 * @return <code>true</code> if and only if the attribute constraints are of the
 	 *         same type and relation and have equal values
 	 */
-	private static boolean areAttributeConstraintsEqual(final AttributeConstraint a, final AttributeConstraint b) {
+	public static boolean areAttributeConstraintsEqual(final AttributeConstraint a, final AttributeConstraint b) {
 		return a.getAttribute().equals(b.getAttribute()) // equal types
 				&& a.getRelation().equals(b.getRelation()) // equal relation
 				&& areExpressionsEqual(a.getValue(), b.getValue()); // equal value

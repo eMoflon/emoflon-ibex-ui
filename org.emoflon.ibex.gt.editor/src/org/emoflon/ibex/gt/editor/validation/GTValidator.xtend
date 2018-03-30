@@ -19,6 +19,7 @@ import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.utils.GTEditorAttributeUtils
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 import org.emoflon.ibex.gt.editor.utils.GTEditorRuleUtils
+import org.emoflon.ibex.gt.editor.utils.GTFlattener
 
 /**
  * This class contains custom validation rules. 
@@ -78,7 +79,11 @@ class GTValidator extends AbstractGTValidator {
 	public static val RULE_SUPER_RULES_DUPLICATE_MESSAGE = "Super rules of rule '%s' must be distinct."
 
 	public static val RULE_REFINEMENT_INVALID_PARAMETER = CODE_PREFIX + "rule.superRules.invalidParameter"
-	public static val RULE_REFINEMENT_INVALID_PARAMETER_MESSAGE = "Rule '%s' has conflicting type declarations for parameter '%s': %s. Check declarations in super rules."
+	public static val RULE_REFINEMENT_INVALID_PARAMETER_MESSAGE = "Rule '%s' has conflicting type declarations for parameter '%s': %s."
+
+	public static val RULE_REFINEMENT_INVALID_ATTRIBUTE_ASSIGNMENT = CODE_PREFIX +
+		"rule.superRules.invalidAttributeAssignment"
+	public static val RULE_REFINEMENT_INVALID_ATTRIBUTE_ASSIGNMENT_MESSAGE = "Rule '%s' has conflicting attribute assignments for node '%s'."
 
 	public static val RULE_NAME_CONTAINS_UNDERSCORES_MESSAGE = "Rule name '%s' contains underscores. Use camelCase instead."
 	public static val RULE_NAME_FORBIDDEN_MESSAGE = "Rules cannot be named '%s'. Use a different name."
@@ -274,6 +279,36 @@ class GTValidator extends AbstractGTValidator {
 					String.format(RULE_REFINEMENT_INVALID_PARAMETER_MESSAGE, rule.name, parameterName, typeList),
 					GTPackage.Literals.RULE__SUPER_RULES,
 					RULE_REFINEMENT_INVALID_PARAMETER
+				)
+			}
+		}
+
+		// Nodes may not contain conflicting attribute assignments.
+		val allNodes = GTEditorRuleUtils.getAllNodesOfRule(rule, [true])
+		val nodeNames = allNodes.map[it.name].toSet
+		for (nodeName : nodeNames) {
+			val nodesForName = allNodes.filter[nodeName == it.name]
+			val attributeAssignments = newHashMap()
+			var hasConflictingAssignments = false
+			for (node : nodesForName.toList) {
+				val assignments = node.attributes.filter[it.relation == Relation.ASSIGNMENT]
+				for (assignment : assignments.toList) {
+					if (attributeAssignments.containsKey(assignment.attribute)) {
+						// Check whether the assignment is compatible with assignment in map
+						if (!GTFlattener.areAttributeConstraintsEqual(assignment,
+							attributeAssignments.get(assignment.attribute))) {
+							hasConflictingAssignments = true;
+						}
+					} else {
+						attributeAssignments.put(assignment.attribute, assignment)
+					}
+				}
+			}
+			if (hasConflictingAssignments) {
+				error(
+					String.format(RULE_REFINEMENT_INVALID_ATTRIBUTE_ASSIGNMENT_MESSAGE, rule.name, nodeName),
+					GTPackage.Literals.RULE__SUPER_RULES,
+					RULE_REFINEMENT_INVALID_ATTRIBUTE_ASSIGNMENT
 				)
 			}
 		}
@@ -594,6 +629,6 @@ class GTValidator extends AbstractGTValidator {
 		for (name : sortedNames.subList(0, names.size - 1)) {
 			s += "'" + name + "'"
 		}
-		return s + " and '" + sortedNames.get(sortedNames.size - 1) + "'"
+		return s + " and '" + sortedNames.last + "'"
 	}
 }

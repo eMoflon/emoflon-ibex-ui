@@ -177,4 +177,33 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 				GTValidator.concatNames(#['EBoolean', 'EString']))
 		)
 	}
+
+	@Test
+	def void errorIfConflictingAttributeAssignments() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			rule renameClassToTest1 {
+				clazz: EClass {
+					.name := "Test1"
+				}
+			}
+			
+			rule renameClassToTest2 {
+				clazz: EClass {
+					.name := "Test2"
+				}
+			}
+			
+			rule renameClass
+			refines renameClassToTest1, renameClassToTest2
+		''')
+		this.assertFile(file, 3)
+		this.assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.rule,
+			GTValidator.RULE_REFINEMENT_INVALID_ATTRIBUTE_ASSIGNMENT,
+			String.format(GTValidator.RULE_REFINEMENT_INVALID_ATTRIBUTE_ASSIGNMENT_MESSAGE, 'renameClass', 'clazz')
+		)
+	}
 }

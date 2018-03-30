@@ -112,7 +112,7 @@ class GTParsingRuleRefinementFlatteningTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertValid(file, 2)
+		this.assertFile(file, 2)
 		val flattener = new GTFlattener(file.getRule(1))
 		Assert.assertTrue(flattener.hasErrors)
 		val errors = #['Node clazz has multiple assignments for attribute name.']
