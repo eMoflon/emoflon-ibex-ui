@@ -49,15 +49,41 @@ public class GTEditorRuleUtils {
 	 * @param rule
 	 *            the rule
 	 * @param nodeFilter
-	 *            a filter for the nodes.
-	 * @return the nodes of the rule after applying the given filter
+	 *            a filter for the nodes
+	 * @return the nodes of the rule and its super rules after applying the filter
 	 */
 	public static Set<Node> getAllNodesOfRule(final Rule rule, final Predicate<Node> nodeFilter) {
 		Set<Node> nodes = new HashSet<Node>();
-		GTEditorRuleUtils.getRuleAllWithSuperRules(rule).forEach(r -> {
-			nodes.addAll(r.getNodes().stream().filter(nodeFilter).collect(Collectors.toSet()));
-		});
+		GTEditorRuleUtils.getRuleAllWithSuperRules(rule).forEach(r -> nodes.addAll(filterNodes(r, nodeFilter)));
 		return nodes;
+	}
+
+	/**
+	 * Returns all nodes which the inherited from super rules.
+	 * 
+	 * @param rule
+	 *            the rule
+	 * @param nodeFilter
+	 *            a filter for the nodes
+	 * @return the nodes from the super rules of the rule after applying the filter
+	 */
+	public static Set<Node> getAllNodesFromSuperRules(final Rule rule, final Predicate<Node> nodeFilter) {
+		Set<Node> nodes = new HashSet<Node>();
+		GTEditorRuleUtils.getAllSuperRules(rule).forEach(r -> nodes.addAll(filterNodes(r, nodeFilter)));
+		return nodes;
+	}
+
+	/**
+	 * Returns the nodes of the rule.
+	 * 
+	 * @param rule
+	 *            the rule
+	 * @param nodeFilter
+	 *            a filter for the nodes
+	 * @return the nodes of the rule after applying the given filter
+	 */
+	private static Set<Node> filterNodes(final Rule rule, final Predicate<Node> nodeFilter) {
+		return rule.getNodes().stream().filter(nodeFilter).collect(Collectors.toSet());
 	}
 
 	/**

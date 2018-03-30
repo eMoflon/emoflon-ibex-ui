@@ -185,7 +185,6 @@ public class GTFlattener {
 		if (node.getType().isSuperTypeOf(mergedNode.getType())) {
 			node.setType(mergedNode.getType());
 		}
-		// TODO: node types may be incompatible.
 
 		// Determine operator.
 		try {

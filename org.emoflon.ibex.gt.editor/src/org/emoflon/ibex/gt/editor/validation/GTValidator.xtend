@@ -102,6 +102,10 @@ class GTValidator extends AbstractGTValidator {
 	public static val CREATE_NODE_TYPE_ABSTRACT = CODE_PREFIX + "node.type.createdNodeAbstractType"
 	public static val CREATE_NODE_TYPE_ABSTRACT_MESSAGE = "The type of created node '%s' must not be abstract."
 
+	public static val NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE = CODE_PREFIX +
+		"node.type.notCompatibleWithDeclarationInSuperRule"
+	public static val NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE_MESSAGE = "The type of node '%s' is not compatible with '%s' from super rule '%s'."
+
 	// Errors for attributes.
 	public static val ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE = CODE_PREFIX + "attributeConstraint.literalValueWrongType"
 	public static val ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE = "The value of attribute '%s' must be of type '%s'."
@@ -378,6 +382,21 @@ class GTValidator extends AbstractGTValidator {
 						rule.name
 					)
 				}
+			}
+
+			if (node.type !== null && !rule.superRules.isEmpty) {
+				// The type of a node must be compatible with any type declarations in super rules.
+				GTEditorRuleUtils.getAllNodesFromSuperRules(rule, [node.name.equals(it.name)]).forEach [
+					if (!(it.type.equals(node.type) || it.type.isSuperTypeOf(node.type))) {
+						val superRule = it.eContainer as Rule
+						error(
+							String.format(NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE_MESSAGE, node.name,
+								it.type.name, superRule.name),
+							GTPackage.Literals.NODE__TYPE,
+							NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE
+						)
+					}
+				]
 			}
 		}
 	}

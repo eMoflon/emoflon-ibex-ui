@@ -181,4 +181,44 @@ class GTParsingNodesTest extends GTParsingTest {
 			String.format(GTValidator.NODE_NAME_EQUALS_PARAMETER_NAME_MESSAGE, 'clazz', 'clazz')
 		)
 	}
+
+	@Test
+	def void validNodeTypeChange() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			rule super {
+				c: EClassifier
+			}
+			
+			rule findClass
+			refines super {
+				c: EClass
+			}
+		''')
+		this.assertValid(file, 2)
+	}
+
+	@Test
+	def void errorIfInvalidNodeTypeChange() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			rule super {
+				c: EDataType
+			}
+			
+			rule findClass
+			refines super {
+				c: EClass
+			}
+		''')
+		this.assertFile(file, 2)
+		this.assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.node,
+			GTValidator.NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE,
+			String.format(GTValidator.NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE_MESSAGE, 'c', 'EDataType',
+				'super')
+		)
+	}
 }
