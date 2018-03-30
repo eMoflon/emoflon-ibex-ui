@@ -31,7 +31,8 @@ class GTParsingReferencesTest extends GTParsingTest {
 			}
 		''')
 		this.assertValid(file)
-		this.assertReference(file, 0, Operator.CONTEXT, "eClassifiers", 1)
+		val rule = file.getRule(0)
+		this.assertReference(rule.getNode(0).getReference(0), Operator.CONTEXT, "eClassifiers", rule.getNode(1))
 	}
 
 	@Test
@@ -50,8 +51,34 @@ class GTParsingReferencesTest extends GTParsingTest {
 			}
 		''')
 		this.assertValid(file)
-		this.assertReference(file, 0, Operator.CREATE, "eClassifiers", 1)
-		this.assertReference(file, 1, Operator.DELETE, "eClassifiers", 2)
+		val rule = file.getRule(0)
+		this.assertReference(rule.getNode(0).getReference(0), Operator.CREATE, "eClassifiers", rule.getNode(1))
+		this.assertReference(rule.getNode(0).getReference(1), Operator.DELETE, "eClassifiers", rule.getNode(2))
+	}
+
+	@Test
+	def void validUseOfNodesFromSuperRules() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			rule s {
+				++ createdClass: EClass
+				-- deletedClass: EClass
+			}
+			
+			rule r
+			refines s {
+				package: EPackage {
+					++ -eClassifiers -> createdClass
+					-- -eClassifiers -> deletedClass
+				}
+			}
+		''')
+		this.assertValid(file, 2)
+		val ruleS = file.getRule(0)
+		val ruleR = file.getRule(1)
+		this.assertReference(ruleR.getNode(0).getReference(0), Operator.CREATE, "eClassifiers", ruleS.getNode(0))
+		this.assertReference(ruleR.getNode(0).getReference(1), Operator.DELETE, "eClassifiers", ruleS.getNode(1))
 	}
 
 	@Ignore("Needs Causes Exception, seems to be a scoping problem")

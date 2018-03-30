@@ -260,9 +260,13 @@ class GTValidator extends AbstractGTValidator {
 		for (parameterName : parameterNames) {
 			val allTypesForName = superRuleParameters.filter[it.name == parameterName].map[it.type].toSet
 			if (allTypesForName.size > 1) {
+				val typeList = allTypesForName.stream.sorted [ a, b |
+					a.name.compareTo(b.name)
+				].map [
+					"'" + it.name + "'"
+				].collect(Collectors.joining(', '))
 				error(
-					String.format(RULE_REFINEMENT_INVALID_PARAMETER_MESSAGE, rule.name, parameterName,
-						allTypesForName.stream.map["'" + it.name + "'"].collect(Collectors.joining(', '))),
+					String.format(RULE_REFINEMENT_INVALID_PARAMETER_MESSAGE, rule.name, parameterName, typeList),
 					GTPackage.Literals.RULE__SUPER_RULES,
 					RULE_REFINEMENT_INVALID_PARAMETER
 				)

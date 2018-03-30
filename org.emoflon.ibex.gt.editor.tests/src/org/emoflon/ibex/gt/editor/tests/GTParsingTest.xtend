@@ -134,18 +134,13 @@ abstract class GTParsingTest {
 		}
 	}
 
-	def assertReference(GraphTransformationFile file, int referenceIndex, Operator operator, String name,
-		int targetNodeIndex) {
-		val reference = file.rules.get(0).nodes.get(0).references.get(referenceIndex)
-		Assert.assertEquals(operator, reference.operator)
-		Assert.assertEquals(name, reference.type.name)
-		Assert.assertEquals(file.rules.get(0).nodes.get(targetNodeIndex), reference.target)
+	def getReference(Node node, int referenceIndex) {
+		return node.references.get(referenceIndex)
 	}
 
-	def assertReference(Reference reference, Operator operator, String name, String targetNodeName) {
+	def assertReference(Reference reference, Operator operator, String name, Node target) {
 		Assert.assertEquals(operator, reference.operator)
 		Assert.assertEquals(name, reference.type.name)
-		Assert.assertEquals(targetNodeName, reference.target.name)
+		Assert.assertEquals(target, reference.target)
 	}
-
 }
