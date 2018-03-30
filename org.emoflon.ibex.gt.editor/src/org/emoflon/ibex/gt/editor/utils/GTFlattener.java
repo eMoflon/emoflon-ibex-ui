@@ -155,9 +155,7 @@ public class GTFlattener {
 		// Collect nodes.
 		List<Node> collectedNodes = new ArrayList<Node>();
 		collectedNodes.addAll(EcoreUtil.copyAll(rule.getNodes()));
-		superRules.forEach(r -> {
-			collectedNodes.addAll(EcoreUtil.copyAll(r.getNodes()));
-		});
+		superRules.forEach(r -> collectedNodes.addAll(EcoreUtil.copyAll(r.getNodes())));
 
 		// Merge nodes with the same name.
 		Map<String, Node> nodeNameToNode = new HashMap<String, Node>();
@@ -234,12 +232,10 @@ public class GTFlattener {
 					.filter(a -> GTEditorComparator.areAttributeConstraintsEqual(a, mergedAttribute)).findAny();
 			if (!attribute.isPresent()) {
 				boolean canAdd = true;
-				if (mergedAttribute.getRelation() == EditorRelation.ASSIGNMENT) {
-					if (hasConflictingAssignment(node, mergedAttribute)) {
-						errors.add(String.format("Node %s has multiple assignments for attribute %s.", node.getName(),
-								mergedAttribute.getAttribute().getName()));
-						canAdd = false;
-					}
+				if (hasConflictingAssignment(node, mergedAttribute)) {
+					errors.add(String.format("Node %s has multiple assignments for attribute %s.", node.getName(),
+							mergedAttribute.getAttribute().getName()));
+					canAdd = false;
 				}
 				if (canAdd) {
 					node.getAttributes().add(EcoreUtil.copy(mergedAttribute));
@@ -260,7 +256,8 @@ public class GTFlattener {
 	 *         the same attribute
 	 */
 	private static boolean hasConflictingAssignment(final Node node, final EditorAttribute b) {
-		return !node.getAttributes().stream()
+		boolean isAssignment = b.getRelation() == EditorRelation.ASSIGNMENT;
+		return isAssignment && !node.getAttributes().stream()
 				.filter(a -> a.getRelation() == EditorRelation.ASSIGNMENT && a.getAttribute().equals(b.getAttribute()))
 				.allMatch(a -> GTEditorComparator.areExpressionsEqual(a.getValue(), b.getValue()));
 	}
