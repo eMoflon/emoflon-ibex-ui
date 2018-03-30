@@ -7,15 +7,15 @@ import org.eclipse.emf.ecore.EReference
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.scoping.Scopes
 
-import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
+import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
 import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile
+import org.emoflon.ibex.gt.editor.gT.EditorOperator
 import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
 import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.gT.Node
-import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.gT.Parameter
 import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
@@ -32,7 +32,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	override getScope(EObject context, EReference reference) {
 		// Attributes
 		if (isAttributeName(context, reference)) {
-			return getScopeForAttributes(context as AttributeConstraint)
+			return getScopeForAttributes(context as EditorAttribute)
 		}
 
 		// Expressions
@@ -76,8 +76,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	}
 
 	def isAttributeName(EObject context, EReference reference) {
-		return (context instanceof AttributeConstraint &&
-			reference == GTPackage.Literals.ATTRIBUTE_CONSTRAINT__ATTRIBUTE)
+		return (context instanceof EditorAttribute && reference == GTPackage.Literals.EDITOR_ATTRIBUTE__ATTRIBUTE)
 	}
 
 	def isNodeOfAttributeExpression(EObject context, EReference reference) {
@@ -194,7 +193,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	 * The attribute name must be one of the EAttribute from the EClass
 	 * of the node containing the attribute assignment or condition.
 	 */
-	def getScopeForAttributes(AttributeConstraint context) {
+	def getScopeForAttributes(EditorAttribute context) {
 		val containingNode = context.eContainer as Node
 		return Scopes.scopeFor(containingNode.type.EAllAttributes)
 	}
@@ -212,7 +211,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	 */
 	def getScopeForAttributeExpressionNodes(EditorAttributeExpression attributeExpression) {
 		val rule = attributeExpression.eContainer.eContainer.eContainer as Rule
-		val nodes = GTEditorRuleUtils.getAllNodesOfRule(rule, [it.operator == Operator.CONTEXT])
+		val nodes = GTEditorRuleUtils.getAllNodesOfRule(rule, [it.operator == EditorOperator.CONTEXT])
 		return Scopes.scopeFor(nodes)
 	}
 
@@ -221,7 +220,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	 * if their type fits to the one expected for the attribute value. 
 	 */
 	def getScopeForAttributeExpressionAttributes(EditorAttributeExpression attributeExpression) {
-		val attributeConstraint = attributeExpression.eContainer as AttributeConstraint
+		val attributeConstraint = attributeExpression.eContainer as EditorAttribute
 		val node = attributeExpression.node
 		if (node === null || node.type === null) {
 			return Scopes.scopeFor([])
@@ -236,7 +235,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	 * Parameter expressions must reference a parameter of the type expected for the attribute value.
 	 */
 	def getScopeForParameterExpressions(EditorParameterExpression parameterExpression) {
-		val attributeConstraint = parameterExpression.eContainer as AttributeConstraint
+		val attributeConstraint = parameterExpression.eContainer as EditorAttribute
 		val rule = attributeConstraint.eContainer.eContainer as Rule
 		val parameters = newArrayList()
 		GTEditorRuleUtils.getRuleAllWithSuperRules(rule).forEach [
@@ -249,7 +248,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	 * Any literal of the attribute's enum is valid.
 	 */
 	def getScopeForEnumLiterals(EditorEnumExpression enumExpression) {
-		val attributeConstraint = enumExpression.eContainer as AttributeConstraint
+		val attributeConstraint = enumExpression.eContainer as EditorAttribute
 		val type = attributeConstraint.attribute.EAttributeType
 		if (type instanceof EEnum) {
 			return Scopes.scopeFor(type.ELiterals)

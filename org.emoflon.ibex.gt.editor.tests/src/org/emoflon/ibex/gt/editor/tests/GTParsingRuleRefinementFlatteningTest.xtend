@@ -2,8 +2,8 @@ package org.emoflon.ibex.gt.editor.tests
 
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
-import org.emoflon.ibex.gt.editor.gT.Operator
-import org.emoflon.ibex.gt.editor.gT.Relation
+import org.emoflon.ibex.gt.editor.gT.EditorOperator
+import org.emoflon.ibex.gt.editor.gT.EditorRelation
 import org.emoflon.ibex.gt.editor.utils.GTFlattener
 import org.junit.Assert
 import org.junit.Test
@@ -52,9 +52,9 @@ class GTParsingRuleRefinementFlatteningTest extends GTParsingTest {
 		Assert.assertArrayEquals(#['attributeName', 'name'], flattenedRule.parameters.map[it.name].toArray)
 
 		Assert.assertEquals(3, flattenedRule.nodes.size);
-		assertNode(flattenedRule.getNode(0), Operator.CONTEXT, "annotation", "EAnnotation", 0, 0)
-		assertNode(flattenedRule.getNode(1), Operator.CONTEXT, "attribute", "EAttribute", 1, 0)
-		assertNode(flattenedRule.getNode(2), Operator.CONTEXT, "classifier", "EClass", 2, 2)
+		assertNode(flattenedRule.getNode(0), EditorOperator.CONTEXT, "annotation", "EAnnotation", 0, 0)
+		assertNode(flattenedRule.getNode(1), EditorOperator.CONTEXT, "attribute", "EAttribute", 1, 0)
+		assertNode(flattenedRule.getNode(2), EditorOperator.CONTEXT, "classifier", "EClass", 2, 2)
 	}
 
 	@Test
@@ -88,8 +88,9 @@ class GTParsingRuleRefinementFlatteningTest extends GTParsingTest {
 		assertParameters(flattenedRule, #{'name' -> 'EString', 'newName' -> 'EString', 'interface' -> 'EBoolean'})
 		Assert.assertArrayEquals(#['name', 'newName', 'interface'], flattenedRule.parameters.map[it.name].toArray)
 
-		assertNode(flattenedRule.getNode(0), Operator.CONTEXT, "clazz", "EClass", 5, 0)
-		Assert.assertEquals(2, flattenedRule.getNode(0).attributes.filter[it.relation == Relation.ASSIGNMENT].size)
+		assertNode(flattenedRule.getNode(0), EditorOperator.CONTEXT, "clazz", "EClass", 5, 0)
+		Assert.assertEquals(2,
+			flattenedRule.getNode(0).attributes.filter[it.relation == EditorRelation.ASSIGNMENT].size)
 	}
 
 	@Test

@@ -4,8 +4,8 @@ import org.eclipse.xtext.diagnostics.Diagnostic
 import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
+import org.emoflon.ibex.gt.editor.gT.EditorOperator
 import org.emoflon.ibex.gt.editor.gT.GTPackage
-import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.validation.GTValidator
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -28,8 +28,8 @@ class GTParsingNodesTest extends GTParsingTest {
 		''')
 		this.assertValid(file)
 		val rule = file.getRule(0)
-		this.assertNode(rule.getNode(0), Operator.CONTEXT, "a", "EPackage")
-		this.assertNode(rule.getNode(1), Operator.CONTEXT, "b", "EClass")
+		this.assertNode(rule.getNode(0), EditorOperator.CONTEXT, "a", "EPackage")
+		this.assertNode(rule.getNode(1), EditorOperator.CONTEXT, "b", "EClass")
 	}
 
 	@Test
@@ -44,8 +44,8 @@ class GTParsingNodesTest extends GTParsingTest {
 		''')
 		this.assertValid(file)
 		val rule = file.getRule(0)
-		this.assertNode(rule.getNode(0), Operator.CREATE, "a", "EClass")
-		this.assertNode(rule.getNode(1), Operator.DELETE, "b", "EObject")
+		this.assertNode(rule.getNode(0), EditorOperator.CREATE, "a", "EClass")
+		this.assertNode(rule.getNode(1), EditorOperator.DELETE, "b", "EObject")
 	}
 
 	@Test

@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
 import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression;
-import org.emoflon.ibex.gt.editor.gT.Relation;
+import org.emoflon.ibex.gt.editor.gT.EditorRelation;
 import org.emoflon.ibex.gt.editor.gT.StringConstant;
 
 /**
@@ -15,7 +15,8 @@ import org.emoflon.ibex.gt.editor.gT.StringConstant;
 public class GTEditorAttributeUtils {
 	private final static List<String> stringTypes = Arrays.asList("EChar", "ECharacterObject", "EString");
 	private final static List<String> incomparableType = Arrays.asList("EBoolean", "EBooleanObject");
-	public final static List<Relation> equalityChecks = Arrays.asList(Relation.EQUAL, Relation.UNEQUAL);
+	public final static List<EditorRelation> equalityChecks = Arrays.asList(EditorRelation.EQUAL,
+			EditorRelation.UNEQUAL);
 
 	/**
 	 * Parses the literal value to the expected type.
@@ -84,7 +85,7 @@ public class GTEditorAttributeUtils {
 	 *            the relation to check
 	 * @return true if the relation is Equal or Unequal
 	 */
-	public static boolean isEqualityCheck(final Relation relation) {
+	public static boolean isEqualityCheck(final EditorRelation relation) {
 		return equalityChecks.contains(relation);
 	}
 }

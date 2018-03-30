@@ -28,23 +28,23 @@ Node:
 	(operator=OperatorForEditor)?
 	name=ID ':' type=[ecore::EClass]
 	('{'
-	attributes+=AttributeConstraint*
+	attributes+=EditorAttribute*
 	references+=EditorReference*
 	'}')?;
 
-enum Operator:
+enum EditorOperator:
 	CONTEXT |
 	CREATE |
 	DELETE;
 
-enum OperatorForEditor returns Operator:
+enum OperatorForEditor returns EditorOperator:
 	CREATE='++' | DELETE='--';
 
 	// Attribute Assignments and Conditions
-AttributeConstraint:
-	'.' attribute=[ecore::EAttribute] relation=Relation value=EditorExpression;
+EditorAttribute:
+	'.' attribute=[ecore::EAttribute] relation=EditorRelation value=EditorExpression;
 
-enum Relation:
+enum EditorRelation:
 	ASSIGNMENT=':=' |
 	GREATER='>' |
 	GREATER_OR_EQUAL='>=' |

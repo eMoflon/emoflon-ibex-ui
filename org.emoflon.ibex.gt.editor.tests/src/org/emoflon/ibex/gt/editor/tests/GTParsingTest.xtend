@@ -8,16 +8,16 @@ import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
-import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
+import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile
 import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression
+import org.emoflon.ibex.gt.editor.gT.EditorOperator
 import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
+import org.emoflon.ibex.gt.editor.gT.EditorRelation
 import org.emoflon.ibex.gt.editor.gT.Node
-import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.gT.Parameter
-import org.emoflon.ibex.gt.editor.gT.Relation
 import org.emoflon.ibex.gt.editor.gT.Rule
 import org.junit.Assert
 import org.junit.runner.RunWith
@@ -104,11 +104,12 @@ abstract class GTParsingTest {
 		return rule.nodes.get(nodeIndex)
 	}
 
-	def assertNode(Node node, Operator operator, String variableName, String variableType) {
+	def assertNode(Node node, EditorOperator operator, String variableName, String variableType) {
 		assertNode(node, operator, variableName, variableType, 0, 0)
 	}
 
-	def assertNode(Node node, Operator operator, String name, String type, int attributesCount, int referencesCount) {
+	def assertNode(Node node, EditorOperator operator, String name, String type, int attributesCount,
+		int referencesCount) {
 		Assert.assertEquals(operator, node.operator)
 		Assert.assertEquals(name, node.name)
 		Assert.assertEquals(type, node.type.name)
@@ -120,27 +121,27 @@ abstract class GTParsingTest {
 		return node.attributes.get(attributeIndex)
 	}
 
-	def void assertAttribute(AttributeConstraint attributeConstraint, String name, Relation relation) {
+	def void assertAttribute(EditorAttribute attributeConstraint, String name, EditorRelation relation) {
 		Assert.assertEquals(name, attributeConstraint.attribute.name)
 		Assert.assertEquals(relation, attributeConstraint.relation)
 	}
 
-	def void assertAttributeWithAttributeExpression(AttributeConstraint attributeConstraint, String name,
-		Relation relation, Node node, String attr) {
+	def void assertAttributeWithAttributeExpression(EditorAttribute attributeConstraint, String name,
+		EditorRelation relation, Node node, String attr) {
 		this.assertAttribute(attributeConstraint, name, relation)
 		Assert.assertTrue(attributeConstraint.value instanceof EditorAttributeExpression)
 		Assert.assertEquals(node, (attributeConstraint.value as EditorAttributeExpression).node)
 		Assert.assertEquals(attr, (attributeConstraint.value as EditorAttributeExpression).attribute.name)
 	}
 
-	def void assertAttributeLiteral(AttributeConstraint attributeConstraint, String name, Relation relation,
+	def void assertAttributeLiteral(EditorAttribute attributeConstraint, String name, EditorRelation relation,
 		String value) {
 		this.assertAttribute(attributeConstraint, name, relation)
 		Assert.assertTrue(attributeConstraint.value instanceof EditorLiteralExpression)
 		Assert.assertEquals(value, (attributeConstraint.value as EditorLiteralExpression).value)
 	}
 
-	def void assertAttributeParameter(AttributeConstraint attributeConstraint, String name, Relation relation,
+	def void assertAttributeParameter(EditorAttribute attributeConstraint, String name, EditorRelation relation,
 		Parameter parameter) {
 		this.assertAttribute(attributeConstraint, name, relation)
 		Assert.assertTrue(attributeConstraint.value instanceof EditorParameterExpression)
@@ -151,7 +152,7 @@ abstract class GTParsingTest {
 		return node.references.get(referenceIndex)
 	}
 
-	def assertReference(EditorReference reference, Operator operator, String name, Node target) {
+	def assertReference(EditorReference reference, EditorOperator operator, String name, Node target) {
 		Assert.assertEquals(operator, reference.operator)
 		Assert.assertEquals(name, reference.type.name)
 		Assert.assertEquals(target, reference.target)

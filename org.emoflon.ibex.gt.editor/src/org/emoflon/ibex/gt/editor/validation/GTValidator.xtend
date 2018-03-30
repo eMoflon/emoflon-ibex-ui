@@ -5,16 +5,16 @@ import java.util.Collection
 import org.eclipse.emf.ecore.EPackage
 import org.eclipse.xtext.validation.Check
 
-import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
+import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile
 import org.emoflon.ibex.gt.editor.gT.EditorImport
 import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression
+import org.emoflon.ibex.gt.editor.gT.EditorOperator
 import org.emoflon.ibex.gt.editor.gT.EditorReference
+import org.emoflon.ibex.gt.editor.gT.EditorRelation
 import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.gT.Node
-import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.gT.Parameter
-import org.emoflon.ibex.gt.editor.gT.Relation
 import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.utils.GTEditorAttributeUtils
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
@@ -291,7 +291,7 @@ class GTValidator extends AbstractGTValidator {
 			val attributeAssignments = newHashMap()
 			var hasConflictingAssignments = false
 			for (node : nodesForName.toList) {
-				val assignments = node.attributes.filter[it.relation == Relation.ASSIGNMENT]
+				val assignments = node.attributes.filter[it.relation == EditorRelation.ASSIGNMENT]
 				for (assignment : assignments.toList) {
 					if (attributeAssignments.containsKey(assignment.attribute)) {
 						// Check whether the assignment is compatible with assignment in map
@@ -408,7 +408,7 @@ class GTValidator extends AbstractGTValidator {
 			}
 
 			// The type of a created node must not be abstract.
-			if (node.operator == Operator.CREATE) {
+			if (node.operator == EditorOperator.CREATE) {
 				if (node.type.abstract && (!rule.abstract)) {
 					error(
 						String.format(CREATE_NODE_TYPE_ABSTRACT_MESSAGE, node.name),
@@ -426,8 +426,8 @@ class GTValidator extends AbstractGTValidator {
 				])
 
 				// If a node is context in super rule, it must have the same operator.
-				val contextNodesInSuperRule = nodeDeclarationsInSuperRules.filter[it.operator == Operator.CONTEXT]
-				if (!contextNodesInSuperRule.isEmpty && node.operator !== Operator.CONTEXT) {
+				val contextNodesInSuperRule = nodeDeclarationsInSuperRules.filter[it.operator == EditorOperator.CONTEXT]
+				if (!contextNodesInSuperRule.isEmpty && node.operator !== EditorOperator.CONTEXT) {
 					error(
 						String.format(NODE_OPERATOR_EXPECT_CONTEXT_DUE_TO_DECLARATION_IN_SUPER_RULE_MESSAGE, node.name,
 							concatNames(contextNodesInSuperRule.map[(it.eContainer as Rule).name].toSet)),
@@ -455,7 +455,7 @@ class GTValidator extends AbstractGTValidator {
 	}
 
 	@Check
-	def checkAttribute(AttributeConstraint attributeConstraint) {
+	def checkAttribute(EditorAttribute attributeConstraint) {
 		val attribute = attributeConstraint.attribute
 		val value = attributeConstraint.value
 
@@ -465,7 +465,7 @@ class GTValidator extends AbstractGTValidator {
 			if (!GTEditorAttributeUtils.convertLiteralValueToObject(expectedType, value).present) {
 				error(
 					String.format(ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE, attribute.name, expectedType.name),
-					GTPackage.Literals.ATTRIBUTE_CONSTRAINT__VALUE,
+					GTPackage.Literals.EDITOR_ATTRIBUTE__VALUE,
 					ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE,
 					expectedType.name
 				)
@@ -473,24 +473,24 @@ class GTValidator extends AbstractGTValidator {
 		}
 
 		val node = attributeConstraint.eContainer as Node
-		if (attributeConstraint.relation == Relation.ASSIGNMENT) {
-			if (node.operator == Operator.DELETE) {
+		if (attributeConstraint.relation == EditorRelation.ASSIGNMENT) {
+			if (node.operator == EditorOperator.DELETE) {
 				// If the node is a deleted node, it may not contain attribute assignments.
 				error(
 					String.format(ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE_MESSAGE, attribute.name, node.name),
-					GTPackage.Literals.ATTRIBUTE_CONSTRAINT__RELATION,
+					GTPackage.Literals.EDITOR_ATTRIBUTE__RELATION,
 					ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE,
 					attribute.name
 				)
 			} else {
 				// There may be at most one assignments per attribute in context and created nodes.
 				val attributeAssignmentCount = node.attributes.filter [
-					it.attribute == attribute && it.relation == Relation.ASSIGNMENT
+					it.attribute == attribute && it.relation == EditorRelation.ASSIGNMENT
 				].size
 				if (attributeAssignmentCount != 1) {
 					error(
 						String.format(ATTRIBUTE_MULTIPLE_ASSIGNMENTS_MESSAGE, attributeAssignmentCount, attribute.name),
-						GTPackage.Literals.ATTRIBUTE_CONSTRAINT__RELATION,
+						GTPackage.Literals.EDITOR_ATTRIBUTE__RELATION,
 						ATTRIBUTE_MULTIPLE_ASSIGNMENTS,
 						attribute.name,
 						node.operator.getName
@@ -504,16 +504,16 @@ class GTValidator extends AbstractGTValidator {
 				error(
 					String.format(ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE_MESSAGE, attributeConstraint.relation.toString,
 						attribute.name),
-					GTPackage.Literals.ATTRIBUTE_CONSTRAINT__RELATION,
+					GTPackage.Literals.EDITOR_ATTRIBUTE__RELATION,
 					ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE,
 					attribute.name
 				)
 			}
-			if (node.operator == Operator.CREATE) {
+			if (node.operator == EditorOperator.CREATE) {
 				// If the node is a created node, it may not contain attribute conditions.
 				error(
 					String.format(ATTRIBUTE_CONDITION_IN_CREATED_NODE_MESSAGE, attribute.name, node.name),
-					GTPackage.Literals.ATTRIBUTE_CONSTRAINT__RELATION,
+					GTPackage.Literals.EDITOR_ATTRIBUTE__RELATION,
 					ATTRIBUTE_CONDITION_IN_CREATED_NODE,
 					attribute.name
 				)
@@ -525,9 +525,9 @@ class GTValidator extends AbstractGTValidator {
 	def checkReference(EditorReference reference) {
 		val node = reference.eContainer as Node
 
-		if (reference.operator == Operator.CONTEXT) {
+		if (reference.operator == EditorOperator.CONTEXT) {
 			// The target of a context reference must be a context node.
-			if (reference.target.operator !== Operator.CONTEXT) {
+			if (reference.target.operator !== EditorOperator.CONTEXT) {
 				error(
 					String.format(REFERENCE_TARGET_EXPECT_CONTEXT_MESSAGE, reference.type.name),
 					GTPackage.Literals.EDITOR_REFERENCE__TARGET,
@@ -536,7 +536,7 @@ class GTValidator extends AbstractGTValidator {
 				)
 			}
 
-			if (node.operator == Operator.CREATE) {
+			if (node.operator == EditorOperator.CREATE) {
 				// Context references are not allowed in created nodes.
 				error(
 					String.format(REFERENCE_EXPECT_CREATED_MESSAGE, reference.type.name, reference.target.name),
@@ -546,7 +546,7 @@ class GTValidator extends AbstractGTValidator {
 					reference.target.name,
 					node.name
 				)
-			} else if (node.operator == Operator.DELETE) {
+			} else if (node.operator == EditorOperator.DELETE) {
 				// Context references are not allowed in deleted nodes.
 				error(
 					String.format(REFERENCE_EXPECT_DELETED_MESSAGE, reference.type.name, reference.target.name),
@@ -559,9 +559,9 @@ class GTValidator extends AbstractGTValidator {
 			}
 		}
 
-		if (reference.operator == Operator.CREATE) {
+		if (reference.operator == EditorOperator.CREATE) {
 			// The target of a created reference must be a context or a created node.
-			if (reference.target.operator == Operator.DELETE) {
+			if (reference.target.operator == EditorOperator.DELETE) {
 				error(
 					String.format(REFERENCE_TARGET_EXPECT_CONTEXT_OR_CREATE_MESSAGE, reference.type.name),
 					GTPackage.Literals.EDITOR_REFERENCE__TARGET,
@@ -571,7 +571,7 @@ class GTValidator extends AbstractGTValidator {
 			}
 
 			// Created references are not allowed in deleted nodes.
-			if (node.operator == Operator.DELETE) {
+			if (node.operator == EditorOperator.DELETE) {
 				error(
 					String.format(REFERENCE_EXPECT_DELETED_MESSAGE, reference.type.name, reference.target.name),
 					GTPackage.Literals.EDITOR_REFERENCE__OPERATOR,
@@ -583,9 +583,9 @@ class GTValidator extends AbstractGTValidator {
 			}
 		}
 
-		if (reference.operator == Operator.DELETE) {
+		if (reference.operator == EditorOperator.DELETE) {
 			// The target of a deleted reference must be a context or a deleted node.
-			if (reference.target.operator == Operator.CREATE) {
+			if (reference.target.operator == EditorOperator.CREATE) {
 				error(
 					String.format(REFERENCE_TARGET_EXPECT_CONTEXT_OR_DELETE_MESSAGE, reference.type.name),
 					GTPackage.Literals.EDITOR_REFERENCE__TARGET,
@@ -595,7 +595,7 @@ class GTValidator extends AbstractGTValidator {
 			}
 
 			// Deleted references are not allowed in created nodes.
-			if (node.operator == Operator.CREATE) {
+			if (node.operator == EditorOperator.CREATE) {
 				error(
 					String.format(REFERENCE_EXPECT_CREATED_MESSAGE, reference.type.name, reference.target.name),
 					GTPackage.Literals.EDITOR_REFERENCE__OPERATOR,

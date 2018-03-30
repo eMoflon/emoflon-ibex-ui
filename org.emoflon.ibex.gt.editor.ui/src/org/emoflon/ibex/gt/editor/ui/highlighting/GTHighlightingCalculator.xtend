@@ -8,12 +8,12 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.util.CancelIndicator
 
-import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
+import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorReference
+import org.emoflon.ibex.gt.editor.gT.EditorOperator
+import org.emoflon.ibex.gt.editor.gT.EditorRelation
 import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.gT.Node
-import org.emoflon.ibex.gt.editor.gT.Operator
-import org.emoflon.ibex.gt.editor.gT.Relation
 
 /** 
  * Applying syntax highlighting configuration.
@@ -31,15 +31,15 @@ class GTHighlightingCalculator extends DefaultSemanticHighlightingCalculator {
 	}
 
 	def hightlightElement(EObject element, IHighlightedPositionAcceptor acceptor) {
-		if (element instanceof AttributeConstraint) {
-			if (element.relation == Relation.ASSIGNMENT) {
-				this.highlightNode(acceptor, element, getStyle(Operator.CREATE))
+		if (element instanceof EditorAttribute) {
+			if (element.relation == EditorRelation.ASSIGNMENT) {
+				this.highlightNode(acceptor, element, getStyle(EditorOperator.CREATE))
 			}
 		}
 
 		if (element instanceof Node) {
 			var String style = getStyle(element.operator)
-			if (element.operator == Operator.CREATE || element.operator == Operator.DELETE) {
+			if (element.operator == EditorOperator.CREATE || element.operator == EditorOperator.DELETE) {
 				this.highlightFeature(acceptor, element, GTPackage.Literals.NODE__OPERATOR, style)
 			}
 			this.highlightFeature(acceptor, element, GTPackage.Literals.NODE__NAME, style)
@@ -52,11 +52,11 @@ class GTHighlightingCalculator extends DefaultSemanticHighlightingCalculator {
 		}
 	}
 
-	def getStyle(Operator operator) {
-		if (operator === Operator.CREATE) {
+	def getStyle(EditorOperator operator) {
+		if (operator === EditorOperator.CREATE) {
 			return GTHighlightingConfiguration.CREATE
 		}
-		if (operator === Operator.DELETE) {
+		if (operator === EditorOperator.DELETE) {
 			return GTHighlightingConfiguration.DELETE
 		}
 		return GTHighlightingConfiguration.CONTEXT

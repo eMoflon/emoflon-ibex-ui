@@ -6,15 +6,15 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.formatting2.AbstractFormatter2
 import org.eclipse.xtext.formatting2.IFormattableDocument
 
-import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
+import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile
 import org.emoflon.ibex.gt.editor.gT.EditorImport
 import org.emoflon.ibex.gt.editor.gT.EditorReference
+import org.emoflon.ibex.gt.editor.gT.EditorOperator
 import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Parameter
 import org.emoflon.ibex.gt.editor.gT.Rule
-import org.emoflon.ibex.gt.editor.gT.Operator
 
 /**
  * Formatting
@@ -33,7 +33,7 @@ class GTFormatter extends AbstractFormatter2 {
 		this.formatList(file.imports, document, 0, 1, 2)
 
 		// Empty line between each rule.
-		this.formatList(file.rules, document, if (file.imports.size > 0) 2 else 0, 2, 1)
+		this.formatList(file.rules, document, if(file.imports.size > 0) 2 else 0, 2, 1)
 	}
 
 	def dispatch void format(EditorImport i, extension IFormattableDocument document) {
@@ -116,16 +116,16 @@ class GTFormatter extends AbstractFormatter2 {
 		]
 	}
 
-	def dispatch void format(AttributeConstraint attributeConstraint, extension IFormattableDocument document) {
+	def dispatch void format(EditorAttribute attribute, extension IFormattableDocument document) {
 		// No space before and after ".".
-		attributeConstraint.regionFor.keyword(".").surround[noSpace]
+		attribute.regionFor.keyword(".").surround[noSpace]
 
 		// One space before and after the relation.
-		attributeConstraint.regionFor.feature(GTPackage.Literals.ATTRIBUTE_CONSTRAINT__RELATION).surround[oneSpace]
+		attribute.regionFor.feature(GTPackage.Literals.EDITOR_ATTRIBUTE__RELATION).surround[oneSpace]
 	}
 
 	def dispatch void format(EditorReference reference, extension IFormattableDocument document) {
-		if (reference.operator == Operator.CONTEXT) {
+		if (reference.operator == EditorOperator.CONTEXT) {
 			// No space before "-" and between "-" and the reference name.
 			reference.regionFor.keyword("-").surround[noSpace]
 		} else {

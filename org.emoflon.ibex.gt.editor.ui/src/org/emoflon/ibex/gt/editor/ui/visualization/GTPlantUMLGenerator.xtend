@@ -1,18 +1,18 @@
 package org.emoflon.ibex.gt.editor.ui.visualization
 
 import org.eclipse.emf.common.util.EList
-import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
+import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
 import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression
 import org.emoflon.ibex.gt.editor.gT.EditorExpression
 import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression
+import org.emoflon.ibex.gt.editor.gT.EditorOperator
 import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
 import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.Node
-import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.gT.Parameter
-import org.emoflon.ibex.gt.editor.gT.Relation
 import org.emoflon.ibex.gt.editor.gT.Rule
+import org.emoflon.ibex.gt.editor.gT.EditorRelation
 import org.emoflon.ibex.gt.editor.utils.GTFlattener
 
 /**
@@ -93,8 +93,8 @@ class GTPlantUMLGenerator {
 	/**
 	 * Prints the attribute constraint.
 	 */
-	private static def String attributeConstraint(AttributeConstraint attr) {
-		val operator = if(attr.relation == Relation.ASSIGNMENT) '+' else '#'
+	private static def String attributeConstraint(EditorAttribute attr) {
+		val operator = if(attr.relation == EditorRelation.ASSIGNMENT) '+' else '#'
 		val name = if(attr.attribute === null || attr.attribute.name === null) '?' else attr.attribute.name
 		val relation = if(attr.relation === null) '?' else attr.relation.toString
 		'''«operator» «name» «relation» «expression(attr.value)»'''
@@ -104,11 +104,11 @@ class GTPlantUMLGenerator {
 	 * Prints the color for the reference.
 	 */
 	private static def String referenceColor(EditorReference reference) {
-		if (reference.operator == Operator.CONTEXT) {
+		if (reference.operator == EditorOperator.CONTEXT) {
 			'''«ContextColor»'''
-		} else if (reference.operator === Operator.CREATE) {
+		} else if (reference.operator === EditorOperator.CREATE) {
 			'''«CreateColor»'''
-		} else if (reference.operator === Operator.DELETE) {
+		} else if (reference.operator === EditorOperator.DELETE) {
 			'''«DeleteColor»'''
 		} else {
 			''

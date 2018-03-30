@@ -9,18 +9,18 @@ import java.util.Set;
 
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.emoflon.ibex.gt.editor.gT.AttributeConstraint;
+import org.emoflon.ibex.gt.editor.gT.EditorAttribute;
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression;
 import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression;
 import org.emoflon.ibex.gt.editor.gT.EditorExpression;
 import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression;
+import org.emoflon.ibex.gt.editor.gT.EditorOperator;
 import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression;
 import org.emoflon.ibex.gt.editor.gT.EditorReference;
+import org.emoflon.ibex.gt.editor.gT.EditorRelation;
 import org.emoflon.ibex.gt.editor.gT.GTFactory;
 import org.emoflon.ibex.gt.editor.gT.Node;
-import org.emoflon.ibex.gt.editor.gT.Operator;
 import org.emoflon.ibex.gt.editor.gT.Parameter;
-import org.emoflon.ibex.gt.editor.gT.Relation;
 import org.emoflon.ibex.gt.editor.gT.Rule;
 
 /**
@@ -188,7 +188,7 @@ public class GTFlattener {
 
 		// Determine operator.
 		try {
-			Operator operator = getMergedOperator(node.getOperator(), mergedNode.getOperator());
+			EditorOperator operator = getMergedOperator(node.getOperator(), mergedNode.getOperator());
 			node.setOperator(operator);
 		} catch (IllegalArgumentException e) {
 			errors.add(String.format("Node %s: %s", node.getName(), e.getMessage()));
@@ -208,12 +208,12 @@ public class GTFlattener {
 	 *            the node merged into the first one
 	 */
 	private void mergeAttributesOfNodes(final Node node, final Node mergedNode) {
-		for (AttributeConstraint mergedAttribute : mergedNode.getAttributes()) {
-			Optional<AttributeConstraint> attribute = node.getAttributes().stream()
+		for (EditorAttribute mergedAttribute : mergedNode.getAttributes()) {
+			Optional<EditorAttribute> attribute = node.getAttributes().stream()
 					.filter(a -> areAttributeConstraintsEqual(a, mergedAttribute)).findAny();
 			if (!attribute.isPresent()) {
 				boolean canAdd = true;
-				if (mergedAttribute.getRelation() == Relation.ASSIGNMENT) {
+				if (mergedAttribute.getRelation() == EditorRelation.ASSIGNMENT) {
 					if (hasConflictingAssignment(node, mergedAttribute)) {
 						errors.add(String.format("Node %s has multiple assignments for attribute %s.", node.getName(),
 								mergedAttribute.getAttribute().getName()));
@@ -237,7 +237,7 @@ public class GTFlattener {
 	 * @return <code>true</code> if and only if the attribute constraints are of the
 	 *         same type and relation and have equal values
 	 */
-	public static boolean areAttributeConstraintsEqual(final AttributeConstraint a, final AttributeConstraint b) {
+	public static boolean areAttributeConstraintsEqual(final EditorAttribute a, final EditorAttribute b) {
 		return a.getAttribute().equals(b.getAttribute()) // equal types
 				&& a.getRelation().equals(b.getRelation()) // equal relation
 				&& areExpressionsEqual(a.getValue(), b.getValue()); // equal value
@@ -284,9 +284,9 @@ public class GTFlattener {
 	 * @return <code>true</code> if and only if the node has another assignment for
 	 *         the same attribute
 	 */
-	private static boolean hasConflictingAssignment(final Node node, final AttributeConstraint b) {
+	private static boolean hasConflictingAssignment(final Node node, final EditorAttribute b) {
 		return !node.getAttributes().stream()
-				.filter(a -> a.getRelation() == Relation.ASSIGNMENT && a.getAttribute().equals(b.getAttribute()))
+				.filter(a -> a.getRelation() == EditorRelation.ASSIGNMENT && a.getAttribute().equals(b.getAttribute()))
 				.allMatch(a -> areExpressionsEqual(a.getValue(), b.getValue()));
 	}
 
@@ -305,7 +305,7 @@ public class GTFlattener {
 					.filter(r -> areReferencesEqual(r, mergedReference)).findAny();
 			if (referenceInNode.isPresent()) {
 				try {
-					Operator operator = getMergedOperator(referenceInNode.get().getOperator(),
+					EditorOperator operator = getMergedOperator(referenceInNode.get().getOperator(),
 							mergedReference.getOperator());
 					referenceInNode.get().setOperator(operator);
 				} catch (IllegalArgumentException e) {
@@ -342,14 +342,14 @@ public class GTFlattener {
 	 *            the operator of the second element
 	 * @return the operator of the merged element
 	 */
-	private Operator getMergedOperator(final Operator a, final Operator b) {
+	private EditorOperator getMergedOperator(final EditorOperator a, final EditorOperator b) {
 		if (a.equals(b)) {
 			return a;
 		}
 
 		// Context overwrites create/delete.
-		if (a == Operator.CONTEXT || b == Operator.CONTEXT) {
-			return Operator.CONTEXT;
+		if (a == EditorOperator.CONTEXT || b == EditorOperator.CONTEXT) {
+			return EditorOperator.CONTEXT;
 		}
 
 		String message = String.format("Cannot merge operators %s and %s.", a, b);

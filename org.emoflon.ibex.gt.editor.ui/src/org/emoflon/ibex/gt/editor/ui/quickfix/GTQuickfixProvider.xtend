@@ -10,15 +10,15 @@ import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
 import org.eclipse.xtext.ui.editor.utils.EditorUtils
 import org.eclipse.xtext.validation.Issue
 
-import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
+import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile
 import org.emoflon.ibex.gt.editor.gT.EditorImport
 import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.Node
-import org.emoflon.ibex.gt.editor.gT.Operator
-import org.emoflon.ibex.gt.editor.gT.Parameter
-import org.emoflon.ibex.gt.editor.gT.Relation
 import org.emoflon.ibex.gt.editor.gT.Rule
+import org.emoflon.ibex.gt.editor.gT.EditorOperator
+import org.emoflon.ibex.gt.editor.gT.EditorRelation
+import org.emoflon.ibex.gt.editor.gT.Parameter
 import org.emoflon.ibex.gt.editor.utils.GTEditorAttributeUtils
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 import org.emoflon.ibex.gt.editor.validation.GTValidator
@@ -146,7 +146,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	@Fix(GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT_OR_CREATE)
 	@Fix(GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT_OR_DELETE)
 	def convertTargetNodeToContextNode(Issue issue, IssueResolutionAcceptor acceptor) {
-		this.changeTargetNodeOperator(issue, acceptor, 'context', Operator.CONTEXT)
+		this.changeTargetNodeOperator(issue, acceptor, 'context', EditorOperator.CONTEXT)
 	}
 
 	/**
@@ -154,7 +154,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	 */
 	@Fix(GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT_OR_CREATE)
 	def convertTargetNodeToCreatedNode(Issue issue, IssueResolutionAcceptor acceptor) {
-		this.changeTargetNodeOperator(issue, acceptor, 'created', Operator.CREATE)
+		this.changeTargetNodeOperator(issue, acceptor, 'created', EditorOperator.CREATE)
 	}
 
 	/**
@@ -162,14 +162,14 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	 */
 	@Fix(GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT_OR_DELETE)
 	def convertTargetNodeToDeletedNode(Issue issue, IssueResolutionAcceptor acceptor) {
-		this.changeTargetNodeOperator(issue, acceptor, 'deleted', Operator.DELETE)
+		this.changeTargetNodeOperator(issue, acceptor, 'deleted', EditorOperator.DELETE)
 	}
 
 	/**
 	 * Changes the operator of the target node of the reference to an operator node with the given operator. 
 	 */
 	private def changeTargetNodeOperator(Issue issue, IssueResolutionAcceptor acceptor, String operatorName,
-		Operator newOperator) {
+		EditorOperator newOperator) {
 		val targetNodeName = issue.data.get(0)
 		val label = '''Convert target node '«targetNodeName»' to a «operatorName» node.'''
 		acceptor.accept(
@@ -181,7 +181,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 				if (element instanceof EditorReference) {
 					val targetNode = element.target
 					if (targetNode instanceof Node) {
-						if (newOperator == Operator.CONTEXT) {
+						if (newOperator == EditorOperator.CONTEXT) {
 							this.removeNodeOperator(targetNode, context.xtextDocument)
 						} else {
 							targetNode.operator = newOperator
@@ -196,9 +196,9 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	 * Removes the operator of the given node by modifying the Xtext document. 
 	 */
 	private def removeNodeOperator(Node node, IXtextDocument document) {
-		if (node.operator != Operator.CONTEXT) {
+		if (node.operator != EditorOperator.CONTEXT) {
 			val xtextNode = NodeModelUtils.getNode(node);
-			val regex = Pattern.quote(if(node.operator == Operator.CREATE) '++' else '--')
+			val regex = Pattern.quote(if(node.operator == EditorOperator.CREATE) '++' else '--')
 			val newText = xtextNode.text.replaceFirst(regex, '').trim
 			document.replace(xtextNode.offset, xtextNode.length, newText)
 		}
@@ -269,7 +269,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			label,
 			null,
 			[ element, context |
-				if (element instanceof AttributeConstraint) {
+				if (element instanceof EditorAttribute) {
 					val node = element.eContainer as Node
 					node.attributes.remove(element)
 				}
@@ -285,7 +285,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			return;
 		}
 
-		Relation.VALUES.filter[it != Relation.ASSIGNMENT].forEach [
+		EditorRelation.VALUES.filter[it != EditorRelation.ASSIGNMENT].forEach [
 			this.changeAttributeConstraintRelation(
 				issue,
 				acceptor,
@@ -301,7 +301,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			issue,
 			acceptor,
 			"Convert condition for '%s' to assignment.",
-			Relation.ASSIGNMENT
+			EditorRelation.ASSIGNMENT
 		)
 	}
 
@@ -321,7 +321,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	 * Changes the relation of the attribute constraint.
 	 */
 	private def changeAttributeConstraintRelation(Issue issue, IssueResolutionAcceptor acceptor, String text,
-		Relation newRelation) {
+		EditorRelation newRelation) {
 		val attributeName = issue.data.get(0)
 		val label = String.format(text, attributeName)
 		acceptor.accept(
@@ -330,7 +330,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			label,
 			null,
 			[ element, context |
-				if (element instanceof AttributeConstraint) {
+				if (element instanceof EditorAttribute) {
 					element.relation = newRelation
 				}
 			]
@@ -345,7 +345,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	@Fix(GTValidator.REFERENCE_EXPECT_DELETED_BUT_IS_CONTEXT)
 	@Fix(GTValidator.REFERENCE_EXPECT_DELETED_BUT_IS_CREATED)
 	def convertToContextNode(Issue issue, IssueResolutionAcceptor acceptor) {
-		this.changeNodeOperator(issue, acceptor, 'context', Operator.CONTEXT)
+		this.changeNodeOperator(issue, acceptor, 'context', EditorOperator.CONTEXT)
 	}
 
 	/**
@@ -353,7 +353,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	 */
 	@Fix(GTValidator.REFERENCE_EXPECT_CREATED_BUT_IS_DELETED)
 	def convertToDeletedNode(Issue issue, IssueResolutionAcceptor acceptor) {
-		this.changeNodeOperator(issue, acceptor, 'deleted', Operator.DELETE)
+		this.changeNodeOperator(issue, acceptor, 'deleted', EditorOperator.DELETE)
 	}
 
 	/**
@@ -361,14 +361,14 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	 */
 	@Fix(GTValidator.REFERENCE_EXPECT_DELETED_BUT_IS_CREATED)
 	def convertToCreatedNode(Issue issue, IssueResolutionAcceptor acceptor) {
-		this.changeNodeOperator(issue, acceptor, 'created', Operator.CREATE)
+		this.changeNodeOperator(issue, acceptor, 'created', EditorOperator.CREATE)
 	}
 
 	/**
 	 * Changes the operator of the node affected by the issue.
 	 */
 	private def changeNodeOperator(Issue issue, IssueResolutionAcceptor acceptor, String operatorName,
-		Operator newOperator) {
+		EditorOperator newOperator) {
 		val nodeName = issue.data.get(2)
 		val label = '''Convert node '«nodeName»' to a «operatorName» node.'''
 		acceptor.accept(
@@ -379,7 +379,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			[ element, context |
 				if (element instanceof EditorReference) {
 					val node = element.eContainer as Node
-					if (newOperator == Operator.CONTEXT) {
+					if (newOperator == EditorOperator.CONTEXT) {
 						this.removeNodeOperator(node, context.xtextDocument)
 					} else {
 						node.operator = newOperator
@@ -395,7 +395,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	@Fix(GTValidator.REFERENCE_EXPECT_CREATED_BUT_IS_CONTEXT)
 	@Fix(GTValidator.REFERENCE_EXPECT_CREATED_BUT_IS_DELETED)
 	def convertToCreatedReference(Issue issue, IssueResolutionAcceptor acceptor) {
-		this.changeReferenceOperator(issue, acceptor, 'created', Operator.CREATE)
+		this.changeReferenceOperator(issue, acceptor, 'created', EditorOperator.CREATE)
 	}
 
 	/**
@@ -404,14 +404,14 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	@Fix(GTValidator.REFERENCE_EXPECT_DELETED_BUT_IS_CONTEXT)
 	@Fix(GTValidator.REFERENCE_EXPECT_DELETED_BUT_IS_CREATED)
 	def convertToDeletedReference(Issue issue, IssueResolutionAcceptor acceptor) {
-		this.changeReferenceOperator(issue, acceptor, 'deleted', Operator.DELETE)
+		this.changeReferenceOperator(issue, acceptor, 'deleted', EditorOperator.DELETE)
 	}
 
 	/**
 	 * Changes the operator of the reference affected by the issue.
 	 */
 	private def changeReferenceOperator(Issue issue, IssueResolutionAcceptor acceptor, String operatorName,
-		Operator newOperator) {
+		EditorOperator newOperator) {
 		val referenceTypeName = issue.data.get(0)
 		val referenceTargetNodeName = issue.data.get(1)
 		val label = '''Convert reference '«referenceTypeName» -> «referenceTargetNodeName»' to a «operatorName» reference.'''

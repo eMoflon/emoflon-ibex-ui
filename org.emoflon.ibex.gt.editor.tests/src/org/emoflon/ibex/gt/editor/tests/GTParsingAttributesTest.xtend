@@ -3,8 +3,8 @@ package org.emoflon.ibex.gt.editor.tests
 import org.eclipse.xtext.diagnostics.Diagnostic
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
+import org.emoflon.ibex.gt.editor.gT.EditorRelation
 import org.emoflon.ibex.gt.editor.gT.GTPackage
-import org.emoflon.ibex.gt.editor.gT.Relation
 import org.emoflon.ibex.gt.editor.validation.GTValidator
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -29,8 +29,8 @@ class GTParsingAttributesTest extends GTParsingTest {
 		''')
 		this.assertValid(file)
 		val node = file.getRule(0).getNode(0)
-		this.assertAttributeLiteral(node.getAttribute(0), "name", Relation.ASSIGNMENT, "Test1")
-		this.assertAttributeLiteral(node.getAttribute(1), "instanceTypeName", Relation.ASSIGNMENT, "Test2")
+		this.assertAttributeLiteral(node.getAttribute(0), "name", EditorRelation.ASSIGNMENT, "Test1")
+		this.assertAttributeLiteral(node.getAttribute(1), "instanceTypeName", EditorRelation.ASSIGNMENT, "Test2")
 	}
 
 	@Test
@@ -47,8 +47,8 @@ class GTParsingAttributesTest extends GTParsingTest {
 		''')
 		this.assertValid(file)
 		val node = file.getRule(0).getNode(0)
-		this.assertAttributeLiteral(node.getAttribute(0), "name", Relation.UNEQUAL, "Test1")
-		this.assertAttributeLiteral(node.getAttribute(1), "instanceTypeName", Relation.EQUAL, "Test2")
+		this.assertAttributeLiteral(node.getAttribute(0), "name", EditorRelation.UNEQUAL, "Test1")
+		this.assertAttributeLiteral(node.getAttribute(1), "instanceTypeName", EditorRelation.EQUAL, "Test2")
 	}
 
 	@Test
@@ -67,7 +67,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		this.assertValid(file)
 		val node = file.getRule(0).getNode(1)
 		val targetNode = file.getRule(0).getNode(0)
-		this.assertAttributeWithAttributeExpression(node.getAttribute(0), "name", Relation.EQUAL, targetNode, "name")
+		this.assertAttributeWithAttributeExpression(node.getAttribute(0), "name", EditorRelation.EQUAL, targetNode, "name")
 	}
 
 	@Test
@@ -128,7 +128,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		this.assertValid(file)
 		val node = file.getRule(0).getNode(0)
 		val parameter = file.getRule(0).getParameter(0)
-		this.assertAttributeParameter(node.getAttribute(0), "name", Relation.ASSIGNMENT, parameter)
+		this.assertAttributeParameter(node.getAttribute(0), "name", EditorRelation.ASSIGNMENT, parameter)
 	}
 
 	@Test
@@ -150,7 +150,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		this.assertValid(file, 2)
 		val node = file.getRule(1).getNode(0)
 		val parameter = file.getRule(0).getParameter(0)
-		this.assertAttributeParameter(node.getAttribute(0), "name", Relation.ASSIGNMENT, parameter)
+		this.assertAttributeParameter(node.getAttribute(0), "name", EditorRelation.ASSIGNMENT, parameter)
 	}
 
 	@Test
@@ -193,7 +193,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		this.assertFile(file)
 		this.assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.attributeConstraint,
+			GTPackage.eINSTANCE.editorAttribute,
 			GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE,
 			String.format(GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE, "abstract", "EBoolean"),
 			String.format(GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE, "lowerBound", "EInt"),
@@ -215,7 +215,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		this.assertFile(file)
 		this.assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.attributeConstraint,
+			GTPackage.eINSTANCE.editorAttribute,
 			GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE,
 			String.format(GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE, "name", "EString")
 		)
@@ -235,7 +235,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		this.assertFile(file)
 		this.assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.attributeConstraint,
+			GTPackage.eINSTANCE.editorAttribute,
 			GTValidator.ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE,
 			String.format(GTValidator.ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE_MESSAGE, ">=", "abstract")
 		)
@@ -256,7 +256,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		this.assertFile(file)
 		this.assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.attributeConstraint,
+			GTPackage.eINSTANCE.editorAttribute,
 			GTValidator.ATTRIBUTE_MULTIPLE_ASSIGNMENTS,
 			String.format(GTValidator.ATTRIBUTE_MULTIPLE_ASSIGNMENTS_MESSAGE, 2, 'name')
 		)
@@ -276,7 +276,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		this.assertFile(file)
 		this.assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.attributeConstraint,
+			GTPackage.eINSTANCE.editorAttribute,
 			GTValidator.ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE,
 			String.format(GTValidator.ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE_MESSAGE, 'name', 'clazz')
 		)
@@ -296,7 +296,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		this.assertFile(file)
 		this.assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.attributeConstraint,
+			GTPackage.eINSTANCE.editorAttribute,
 			GTValidator.ATTRIBUTE_CONDITION_IN_CREATED_NODE,
 			String.format(GTValidator.ATTRIBUTE_CONDITION_IN_CREATED_NODE_MESSAGE, 'name', 'clazz')
 		)
@@ -316,7 +316,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		this.assertFile(file)
 		this.assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.attributeConstraint,
+			GTPackage.eINSTANCE.editorAttribute,
 			Diagnostic::LINKING_DIAGNOSTIC,
 			"Couldn't resolve reference to EAttribute 'name'."
 		)
