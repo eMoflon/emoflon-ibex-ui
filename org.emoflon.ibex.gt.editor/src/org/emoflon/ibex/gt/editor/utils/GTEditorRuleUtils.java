@@ -60,9 +60,16 @@ public class GTEditorRuleUtils {
 		return nodes;
 	}
 
-	public static Set<Parameter> getParametersOfSuperRules(final Rule rule) {
+	/**
+	 * Returns all parameters of the rule including parameters from super rules.
+	 * 
+	 * @param rule
+	 *            the rule
+	 * @return the parameters of the rule
+	 */
+	public static Set<Parameter> getAllParametersOfRule(final Rule rule) {
 		Set<Parameter> parameters = new HashSet<Parameter>();
-		GTEditorRuleUtils.getAllSuperRules(rule).forEach(r -> {
+		GTEditorRuleUtils.getRuleAllWithSuperRules(rule).forEach(r -> {
 			parameters.addAll(r.getParameters());
 		});
 		return parameters;

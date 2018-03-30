@@ -77,7 +77,7 @@ class GTValidator extends AbstractGTValidator {
 	public static val RULE_SUPER_RULES_DUPLICATE_MESSAGE = "Super rules of rule '%s' must be distinct."
 
 	public static val RULE_REFINEMENT_INVALID_PARAMETER = CODE_PREFIX + "rule.superRules.invalidParameter"
-	public static val RULE_REFINEMENT_INVALID_PARAMETER_MESSAGE = "Rule '%s' inherits parameter '%s' from multiple rules with different types: %s."
+	public static val RULE_REFINEMENT_INVALID_PARAMETER_MESSAGE = "Rule '%s' has conflicting type declarations for parameter '%s': %s. Check declarations in super rules."
 
 	public static val RULE_NAME_CONTAINS_UNDERSCORES_MESSAGE = "Rule name '%s' contains underscores. Use camelCase instead."
 	public static val RULE_NAME_FORBIDDEN_MESSAGE = "Rules cannot be named '%s'. Use a different name."
@@ -255,20 +255,14 @@ class GTValidator extends AbstractGTValidator {
 		}
 
 		// Parameter names must be equal to definitions in the super type.
-		val superRuleParameters = GTEditorRuleUtils.getParametersOfSuperRules(rule)
-		for (p : rule.parameters) {
-			val parametersInSuperRule = superRuleParameters.filter[it.name == p.name]
-			val typesOfInvalidDefintions = newHashSet()
-			for (pSuper : parametersInSuperRule) {
-				if (pSuper.type !== p.type) {
-					typesOfInvalidDefintions.add(pSuper.type)
-				}
-			}
-			if (!typesOfInvalidDefintions.isEmpty) {
-				typesOfInvalidDefintions.add(p.type)
+		val superRuleParameters = GTEditorRuleUtils.getAllParametersOfRule(rule)
+		val parameterNames = superRuleParameters.map[it.name].toSet
+		for (parameterName : parameterNames) {
+			val allTypesForName = superRuleParameters.filter[it.name == parameterName].map[it.type].toSet
+			if (allTypesForName.size > 1) {
 				error(
-					String.format(RULE_REFINEMENT_INVALID_PARAMETER_MESSAGE, rule.name, p.name,
-						typesOfInvalidDefintions.stream.map["'" + it.name + "'"].collect(Collectors.joining(', '))),
+					String.format(RULE_REFINEMENT_INVALID_PARAMETER_MESSAGE, rule.name, parameterName,
+						allTypesForName.stream.map["'" + it.name + "'"].collect(Collectors.joining(', '))),
 					GTPackage.Literals.RULE__SUPER_RULES,
 					RULE_REFINEMENT_INVALID_PARAMETER
 				)
