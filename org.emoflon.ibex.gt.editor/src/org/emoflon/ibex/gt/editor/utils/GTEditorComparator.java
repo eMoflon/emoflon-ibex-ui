@@ -7,7 +7,6 @@ import org.emoflon.ibex.gt.editor.gT.EditorExpression;
 import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression;
 import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression;
 import org.emoflon.ibex.gt.editor.gT.EditorReference;
-import org.emoflon.ibex.gt.editor.gT.Parameter;
 
 /**
  * Utility methods to compare whether two editor elements are equal.

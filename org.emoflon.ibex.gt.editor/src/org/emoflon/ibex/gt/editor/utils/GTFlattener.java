@@ -41,15 +41,29 @@ public class GTFlattener {
 	public GTFlattener(final Rule rule) {
 		Set<Rule> superRules = GTEditorRuleUtils.getAllSuperRules(rule);
 
-		flattenedRule = GTFactory.eINSTANCE.createRule();
-		flattenedRule.setAbstract(rule.isAbstract());
-		flattenedRule.setName(rule.getName());
-
 		List<Parameter> parameters = mergeParameters(rule, superRules);
-		flattenedRule.getParameters().addAll(parameters);
 
 		List<Node> nodes = mergeNodes(rule, superRules, parameters);
 		nodes.sort((a, b) -> a.getName().compareTo(b.getName()));
+
+		createFlattenedRule(rule, parameters, nodes);
+	}
+
+	/**
+	 * Creates the flattened rule
+	 * 
+	 * @param rule
+	 *            the original rule
+	 * @param parameters
+	 *            the parameters
+	 * @param nodes
+	 *            the nodes
+	 */
+	private void createFlattenedRule(final Rule rule, final List<Parameter> parameters, final List<Node> nodes) {
+		flattenedRule = GTFactory.eINSTANCE.createRule();
+		flattenedRule.setAbstract(rule.isAbstract());
+		flattenedRule.setName(rule.getName());
+		flattenedRule.getParameters().addAll(parameters);
 		flattenedRule.getNodes().addAll(nodes);
 	}
 
@@ -157,6 +171,19 @@ public class GTFlattener {
 
 		// Cleanup reference targets.
 		List<Node> nodes = new ArrayList<Node>(nodeNameToNode.values());
+		cleanupNodes(nodes, nodeNameToNode);
+		return nodes;
+	}
+
+	/**
+	 * Sets the reference targets of all nodes to the correct node from the map.
+	 * 
+	 * @param nodes
+	 *            the nodes
+	 * @param nodeNameToNode
+	 *            the mapping between node names and nodes
+	 */
+	private void cleanupNodes(final List<Node> nodes, final Map<String, Node> nodeNameToNode) {
 		nodes.forEach(n -> {
 			n.getReferences().forEach(r -> {
 				if (r.getTarget() != null) {
@@ -164,7 +191,6 @@ public class GTFlattener {
 				}
 			});
 		});
-		return nodes;
 	}
 
 	/**
