@@ -345,7 +345,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	@Fix(GTValidator.REFERENCE_EXPECT_DELETED_BUT_IS_CONTEXT)
 	@Fix(GTValidator.REFERENCE_EXPECT_DELETED_BUT_IS_CREATED)
 	def convertToContextNode(Issue issue, IssueResolutionAcceptor acceptor) {
-		this.changeNodeOperator(issue, acceptor, 'context', EditorOperator.CONTEXT)
+		this.changeNodeOperator(issue, acceptor, issue.data.get(2), 'context', EditorOperator.CONTEXT)
 	}
 
 	/**
@@ -353,7 +353,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	 */
 	@Fix(GTValidator.REFERENCE_EXPECT_CREATED_BUT_IS_DELETED)
 	def convertToDeletedNode(Issue issue, IssueResolutionAcceptor acceptor) {
-		this.changeNodeOperator(issue, acceptor, 'deleted', EditorOperator.DELETE)
+		this.changeNodeOperator(issue, acceptor, issue.data.get(2), 'deleted', EditorOperator.DELETE)
 	}
 
 	/**
@@ -361,15 +361,22 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	 */
 	@Fix(GTValidator.REFERENCE_EXPECT_DELETED_BUT_IS_CREATED)
 	def convertToCreatedNode(Issue issue, IssueResolutionAcceptor acceptor) {
-		this.changeNodeOperator(issue, acceptor, 'created', EditorOperator.CREATE)
+		this.changeNodeOperator(issue, acceptor, issue.data.get(2), 'created', EditorOperator.CREATE)
+	}
+
+	/**
+	 * Converts the created/deleted node which is a context node in a super rule into a context node. 
+	 */
+	@Fix(GTValidator.NODE_OPERATOR_EXPECT_CONTEXT_DUE_TO_DECLARATION_IN_SUPER_RULE)
+	def convertToContextNode2(Issue issue, IssueResolutionAcceptor acceptor) {
+		this.changeNodeOperator(issue, acceptor, issue.data.get(0), 'context', EditorOperator.CONTEXT)
 	}
 
 	/**
 	 * Changes the operator of the node affected by the issue.
 	 */
-	private def changeNodeOperator(Issue issue, IssueResolutionAcceptor acceptor, String operatorName,
+	private def changeNodeOperator(Issue issue, IssueResolutionAcceptor acceptor, String nodeName, String operatorName,
 		EditorOperator newOperator) {
-		val nodeName = issue.data.get(2)
 		val label = '''Convert node '«nodeName»' to a «operatorName» node.'''
 		acceptor.accept(
 			issue,
@@ -377,13 +384,17 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			label,
 			null,
 			[ element, context |
+				var Node node
 				if (element instanceof EditorReference) {
-					val node = element.eContainer as Node
-					if (newOperator == EditorOperator.CONTEXT) {
-						this.removeNodeOperator(node, context.xtextDocument)
-					} else {
-						node.operator = newOperator
-					}
+					node = element.eContainer as Node
+				}
+				if (element instanceof Node) {
+					node = element as Node
+				}
+				if (newOperator == EditorOperator.CONTEXT) {
+					this.removeNodeOperator(node, context.xtextDocument)
+				} else {
+					node.operator = newOperator
 				}
 			]
 		)

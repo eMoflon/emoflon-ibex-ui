@@ -242,6 +242,7 @@ class GTParsingNodesTest extends GTParsingTest {
 	def void errorIfInvalidNodeOperatorChange() {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
+			
 			rule super {
 				c: EClass
 			}

@@ -106,7 +106,7 @@ class GTValidator extends AbstractGTValidator {
 	public static val NODE_NAME_EQUALS_PARAMETER_NAME_MESSAGE = "Node '%s' and parameter '%s' must not be named equal."
 
 	public static val NODE_OPERATOR_EXPECT_CONTEXT_DUE_TO_DECLARATION_IN_SUPER_RULE = CODE_PREFIX +
-		"node.operator.notCompatibleWithDeclarationInSuperRule"
+		"node.operator.expectContextDueToDeclarationInSuperRule"
 	public static val NODE_OPERATOR_EXPECT_CONTEXT_DUE_TO_DECLARATION_IN_SUPER_RULE_MESSAGE = "Node '%s' must be context due to declaration in super rule(s) %s."
 
 	public static val NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE = CODE_PREFIX +
@@ -425,14 +425,15 @@ class GTValidator extends AbstractGTValidator {
 					node.name.equals(it.name)
 				])
 
-				// If a node is context in super rule, it must have the same operator.
+				// If a node is context in super rule, it must be a context node.
 				val contextNodesInSuperRule = nodeDeclarationsInSuperRules.filter[it.operator == EditorOperator.CONTEXT]
 				if (!contextNodesInSuperRule.isEmpty && node.operator !== EditorOperator.CONTEXT) {
 					error(
 						String.format(NODE_OPERATOR_EXPECT_CONTEXT_DUE_TO_DECLARATION_IN_SUPER_RULE_MESSAGE, node.name,
 							concatNames(contextNodesInSuperRule.map[(it.eContainer as Rule).name].toSet)),
 						GTPackage.Literals.NODE__OPERATOR,
-						NODE_OPERATOR_EXPECT_CONTEXT_DUE_TO_DECLARATION_IN_SUPER_RULE
+						NODE_OPERATOR_EXPECT_CONTEXT_DUE_TO_DECLARATION_IN_SUPER_RULE,
+						node.name
 					)
 				}
 
