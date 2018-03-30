@@ -37,19 +37,14 @@ public class GTEditorComparator {
 	 *            the first expression
 	 * @param b
 	 *            the second expression
-	 * @return <code>true</code> if the expressions are equal
+	 * @return <code>true</code> if and only if the expressions are equal
 	 */
 	public static boolean areExpressionsEqual(final EditorExpression a, final EditorExpression b) {
 		if (a instanceof EditorAttributeExpression && b instanceof EditorAttributeExpression) {
-			EditorAttributeExpression aAttributeExp = (EditorAttributeExpression) a;
-			EditorAttributeExpression bAttributeExp = (EditorAttributeExpression) b;
-			return aAttributeExp.getNode().getName().equals(bAttributeExp.getNode().getName())
-					&& aAttributeExp.getAttribute().equals(bAttributeExp.getAttribute());
+			return areAttributeExpressionsEqual((EditorAttributeExpression) a, (EditorAttributeExpression) b);
 		}
 		if (a instanceof EditorParameterExpression && b instanceof EditorParameterExpression) {
-			Parameter p1 = ((EditorParameterExpression) a).getParameter();
-			Parameter p2 = ((EditorParameterExpression) b).getParameter();
-			return p1 != null && p2 != null && p1.getName().equals(p2.getName());
+			return areParameterExpressionsEqual((EditorParameterExpression) a, (EditorParameterExpression) b);
 		}
 		if (a instanceof EditorEnumExpression && b instanceof EditorEnumExpression) {
 			return ((EditorEnumExpression) a).getLiteral().equals(((EditorEnumExpression) b).getLiteral());
@@ -58,6 +53,37 @@ public class GTEditorComparator {
 			return ((EditorLiteralExpression) a).getValue().equals(((EditorLiteralExpression) b).getValue());
 		}
 		return false;
+	}
+
+	/**
+	 * Checks whether the attribute expressions are equal.
+	 * 
+	 * @param a
+	 *            the first attribute expression
+	 * @param b
+	 *            the second attribute expression
+	 * @return <code>true</code> if and only if the expressions refer to nodes of
+	 *         the same name and have the same attribute
+	 */
+	public static boolean areAttributeExpressionsEqual(final EditorAttributeExpression a,
+			final EditorAttributeExpression b) {
+		return a.getNode().getName().equals(b.getNode().getName()) && a.getAttribute().equals(b.getAttribute());
+	}
+
+	/**
+	 * Checks whether the parameter expressions are equal.
+	 * 
+	 * @param a
+	 *            the first parameter expression
+	 * @param b
+	 *            the second parameter expression
+	 * @return <code>true</code> if and only if the expressions refer to parameters
+	 *         of the same name
+	 */
+	public static boolean areParameterExpressionsEqual(final EditorParameterExpression a,
+			final EditorParameterExpression b) {
+		return a.getParameter() != null && b.getParameter() != null
+				&& a.getParameter().getName().equals(b.getParameter().getName());
 	}
 
 	/**
@@ -71,7 +97,6 @@ public class GTEditorComparator {
 	 *         and point to nodes of the same name
 	 */
 	public static boolean areReferencesEqual(final EditorReference a, final EditorReference b) {
-		return a.getType().equals(b.getType()) // equal type
-				&& a.getTarget().getName().equals(b.getTarget().getName()); // equal target
+		return a.getType().equals(b.getType()) && a.getTarget().getName().equals(b.getTarget().getName());
 	}
 }
