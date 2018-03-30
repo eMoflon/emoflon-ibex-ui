@@ -6,14 +6,14 @@ import org.eclipse.emf.ecore.EPackage
 import org.eclipse.xtext.validation.Check
 
 import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
+import org.emoflon.ibex.gt.editor.gT.EditorGTFile
+import org.emoflon.ibex.gt.editor.gT.EditorImport
 import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression
-import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
+import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.GTPackage
-import org.emoflon.ibex.gt.editor.gT.Import
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.gT.Parameter
-import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Relation
 import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.utils.GTEditorAttributeUtils
@@ -158,26 +158,26 @@ class GTValidator extends AbstractGTValidator {
 	public static val REFERENCE_TARGET_EXPECT_CONTEXT_OR_DELETE_MESSAGE = "The target of the deleted reference '%s must be a context or a deleted node."
 
 	@Check
-	def checkFile(GraphTransformationFile file) {
+	def checkFile(EditorGTFile file) {
 		// There must be at least one import.
 		if (file.imports.size === 0) {
 			error(
 				IMPORT_MISSING_META_MODEL_MESSAGE,
-				GTPackage.Literals.GRAPH_TRANSFORMATION_FILE__IMPORTS,
+				GTPackage.Literals.EDITOR_GT_FILE__IMPORTS,
 				IMPORT_MISSING_META_MODEL
 			)
 		}
 	}
 
 	@Check
-	def checkImport(Import importEcore) {
+	def checkImport(EditorImport importEcore) {
 		val ecoreModel = GTEditorModelUtils.loadEcoreModel(importEcore.name)
 		if (ecoreModel.present) {
 			// Imports must be of type ecore.
 			if (GTEditorModelUtils.getElements(ecoreModel.get, EPackage).size > 0) {
 				error(
 					String.format(IMPORT_NO_ECORE_MESSAGE, importEcore.name),
-					GTPackage.Literals.IMPORT__NAME,
+					GTPackage.Literals.EDITOR_IMPORT__NAME,
 					org.emoflon.ibex.gt.editor.validation.GTValidator.IMPORT_NO_ECORE,
 					importEcore.name
 				)
@@ -186,19 +186,19 @@ class GTValidator extends AbstractGTValidator {
 			// Import files must exist.
 			error(
 				String.format(IMPORT_FILE_DOES_NOT_EXIST_MESSAGE, importEcore.name),
-				GTPackage.Literals.IMPORT__NAME,
+				GTPackage.Literals.EDITOR_IMPORT__NAME,
 				IMPORT_FILE_DOES_NOT_EXIST,
 				importEcore.name
 			)
 		}
 
 		// Imports must be unique.
-		val file = importEcore.eContainer as GraphTransformationFile
+		val file = importEcore.eContainer as EditorGTFile
 		val importDeclarationCount = file.imports.filter[name.equals(importEcore.name)].size
 		if (importDeclarationCount !== 1) {
 			warning(
 				String.format(IMPORT_DUPLICATE_MESSAGE, importEcore.name, getTimes(importDeclarationCount)),
-				GTPackage.Literals.IMPORT__NAME,
+				GTPackage.Literals.EDITOR_IMPORT__NAME,
 				IMPORT_DUPLICATE,
 				importEcore.name
 			)
@@ -244,7 +244,7 @@ class GTValidator extends AbstractGTValidator {
 		}
 
 		// Rule names must be unique.
-		val file = rule.eContainer as GraphTransformationFile
+		val file = rule.eContainer as EditorGTFile
 		val ruleDeclarationCount = file.rules.filter[name.equals(rule.name)].size
 		if (ruleDeclarationCount !== 1) {
 			error(
@@ -522,7 +522,7 @@ class GTValidator extends AbstractGTValidator {
 	}
 
 	@Check
-	def checkReference(Reference reference) {
+	def checkReference(EditorReference reference) {
 		val node = reference.eContainer as Node
 
 		if (reference.operator == Operator.CONTEXT) {
@@ -530,7 +530,7 @@ class GTValidator extends AbstractGTValidator {
 			if (reference.target.operator !== Operator.CONTEXT) {
 				error(
 					String.format(REFERENCE_TARGET_EXPECT_CONTEXT_MESSAGE, reference.type.name),
-					GTPackage.Literals.REFERENCE__TARGET,
+					GTPackage.Literals.EDITOR_REFERENCE__TARGET,
 					REFERENCE_TARGET_EXPECT_CONTEXT,
 					reference.target.name
 				)
@@ -540,7 +540,7 @@ class GTValidator extends AbstractGTValidator {
 				// Context references are not allowed in created nodes.
 				error(
 					String.format(REFERENCE_EXPECT_CREATED_MESSAGE, reference.type.name, reference.target.name),
-					GTPackage.Literals.REFERENCE__OPERATOR,
+					GTPackage.Literals.EDITOR_REFERENCE__OPERATOR,
 					REFERENCE_EXPECT_CREATED_BUT_IS_CONTEXT,
 					reference.type.name,
 					reference.target.name,
@@ -550,7 +550,7 @@ class GTValidator extends AbstractGTValidator {
 				// Context references are not allowed in deleted nodes.
 				error(
 					String.format(REFERENCE_EXPECT_DELETED_MESSAGE, reference.type.name, reference.target.name),
-					GTPackage.Literals.REFERENCE__OPERATOR,
+					GTPackage.Literals.EDITOR_REFERENCE__OPERATOR,
 					REFERENCE_EXPECT_DELETED_BUT_IS_CONTEXT,
 					reference.type.name,
 					reference.target.name,
@@ -564,7 +564,7 @@ class GTValidator extends AbstractGTValidator {
 			if (reference.target.operator == Operator.DELETE) {
 				error(
 					String.format(REFERENCE_TARGET_EXPECT_CONTEXT_OR_CREATE_MESSAGE, reference.type.name),
-					GTPackage.Literals.REFERENCE__TARGET,
+					GTPackage.Literals.EDITOR_REFERENCE__TARGET,
 					REFERENCE_TARGET_EXPECT_CONTEXT_OR_CREATE,
 					reference.target.name
 				)
@@ -574,7 +574,7 @@ class GTValidator extends AbstractGTValidator {
 			if (node.operator == Operator.DELETE) {
 				error(
 					String.format(REFERENCE_EXPECT_DELETED_MESSAGE, reference.type.name, reference.target.name),
-					GTPackage.Literals.REFERENCE__OPERATOR,
+					GTPackage.Literals.EDITOR_REFERENCE__OPERATOR,
 					REFERENCE_EXPECT_DELETED_BUT_IS_CREATED,
 					reference.type.name,
 					reference.target.name,
@@ -588,7 +588,7 @@ class GTValidator extends AbstractGTValidator {
 			if (reference.target.operator == Operator.CREATE) {
 				error(
 					String.format(REFERENCE_TARGET_EXPECT_CONTEXT_OR_DELETE_MESSAGE, reference.type.name),
-					GTPackage.Literals.REFERENCE__TARGET,
+					GTPackage.Literals.EDITOR_REFERENCE__TARGET,
 					REFERENCE_TARGET_EXPECT_CONTEXT_OR_DELETE,
 					reference.target.name
 				)
@@ -598,7 +598,7 @@ class GTValidator extends AbstractGTValidator {
 			if (node.operator == Operator.CREATE) {
 				error(
 					String.format(REFERENCE_EXPECT_CREATED_MESSAGE, reference.type.name, reference.target.name),
-					GTPackage.Literals.REFERENCE__OPERATOR,
+					GTPackage.Literals.EDITOR_REFERENCE__OPERATOR,
 					REFERENCE_EXPECT_CREATED_BUT_IS_DELETED,
 					reference.type.name,
 					reference.target.name,

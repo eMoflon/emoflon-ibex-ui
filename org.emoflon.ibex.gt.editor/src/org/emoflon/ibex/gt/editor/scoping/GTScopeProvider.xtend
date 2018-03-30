@@ -10,13 +10,13 @@ import org.eclipse.xtext.scoping.Scopes
 import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
 import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression
+import org.emoflon.ibex.gt.editor.gT.EditorGTFile
 import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
-import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
+import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.gT.Parameter
-import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 import org.emoflon.ibex.gt.editor.utils.GTEditorRuleUtils
@@ -61,10 +61,10 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 
 		// References
 		if (isReferenceType(context, reference)) {
-			return getScopeForReferenceTypes(context as Reference)
+			return getScopeForReferenceTypes(context as EditorReference)
 		}
 		if (isReferenceTarget(context, reference)) {
-			return getScopeForReferenceTargets(context as Reference)
+			return getScopeForReferenceTargets(context as EditorReference)
 		}
 
 		// Rules
@@ -109,11 +109,11 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	}
 
 	def isReferenceType(EObject context, EReference reference) {
-		return (context instanceof Reference && reference == GTPackage.Literals.REFERENCE__TYPE)
+		return (context instanceof EditorReference && reference == GTPackage.Literals.EDITOR_REFERENCE__TYPE)
 	}
 
 	def isReferenceTarget(EObject context, EReference reference) {
-		return (context instanceof Reference && reference == GTPackage.Literals.REFERENCE__TARGET)
+		return (context instanceof EditorReference && reference == GTPackage.Literals.EDITOR_REFERENCE__TARGET)
 	}
 
 	def isSuperRule(EObject context, EReference reference) {
@@ -137,14 +137,14 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	 * The node type must be an EClass from the meta-model.
 	 */
 	def getScopeForNodeTypes(Node node) {
-		return Scopes.scopeFor(GTEditorModelUtils.getClasses(node.eContainer.eContainer as GraphTransformationFile))
+		return Scopes.scopeFor(GTEditorModelUtils.getClasses(node.eContainer.eContainer as EditorGTFile))
 	}
 
 	/**
 	 * The type of a reference must be one of the EReferences from the EClass
 	 * of the node containing the reference.
 	 */
-	def getScopeForReferenceTypes(Reference context) {
+	def getScopeForReferenceTypes(EditorReference context) {
 		val node = context.eContainer as Node
 		if (node.type !== null) {
 			return Scopes.scopeFor(node.type.EAllReferences)
@@ -156,7 +156,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	 * The target of the reference must be another node within the same rule 
 	 * (or its super rules) of the correct type.
 	 */
-	def getScopeForReferenceTargets(Reference reference) {
+	def getScopeForReferenceTargets(EditorReference reference) {
 		val referenceType = reference.type
 		if (referenceType !== null) {
 			val targetNodeType = referenceType.EReferenceType
@@ -203,7 +203,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	 * The parameter type must be one of the EDatatypes from the meta-models.
 	 */
 	def getScopeForParameterDatatypes(Parameter parameter) {
-		val file = parameter.eContainer.eContainer as GraphTransformationFile
+		val file = parameter.eContainer.eContainer as EditorGTFile
 		return Scopes.scopeFor(GTEditorModelUtils.getDatatypes(file))
 	}
 

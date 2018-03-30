@@ -3,7 +3,7 @@ package org.emoflon.ibex.gt.editor.tests
 import org.eclipse.xtext.diagnostics.Diagnostic
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
-import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
+import org.emoflon.ibex.gt.editor.gT.EditorGTFile
 import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.validation.GTValidator
@@ -98,7 +98,7 @@ class GTParsingReferencesTest extends GTParsingTest {
 		this.assertFile(file)
 		this.assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.reference,
+			GTPackage.eINSTANCE.editorReference,
 			Diagnostic::LINKING_DIAGNOSTIC,
 			"Couldn't resolve reference to EReference 'name'."
 		)
@@ -120,7 +120,7 @@ class GTParsingReferencesTest extends GTParsingTest {
 		this.assertFile(file)
 		this.assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.reference,
+			GTPackage.eINSTANCE.editorReference,
 			Diagnostic::LINKING_DIAGNOSTIC,
 			"Couldn't resolve reference to Node 'clazz'."
 		)
@@ -130,7 +130,7 @@ class GTParsingReferencesTest extends GTParsingTest {
 	def void errorIfCreatedNodeHasContextReference() {
 		this.assertValidationErrors(
 			this.parseNodesWithReference('++', '', ''),
-			GTPackage.eINSTANCE.reference,
+			GTPackage.eINSTANCE.editorReference,
 			GTValidator.REFERENCE_EXPECT_CREATED_BUT_IS_CONTEXT,
 			String.format(GTValidator.REFERENCE_EXPECT_CREATED_MESSAGE, 'eClassifiers', 'clazz')
 		)
@@ -145,7 +145,7 @@ class GTParsingReferencesTest extends GTParsingTest {
 	def void errorIfCreatedNodeHasDeletedReference() {
 		this.assertValidationErrors(
 			this.parseNodesWithReference('++', '--', ''),
-			GTPackage.eINSTANCE.reference,
+			GTPackage.eINSTANCE.editorReference,
 			GTValidator.REFERENCE_EXPECT_CREATED_BUT_IS_DELETED,
 			String.format(GTValidator.REFERENCE_EXPECT_CREATED_MESSAGE, 'eClassifiers', 'clazz')
 		)
@@ -155,7 +155,7 @@ class GTParsingReferencesTest extends GTParsingTest {
 	def void errorIfDeletedNodeHasContextReference() {
 		this.assertValidationErrors(
 			this.parseNodesWithReference('--', '', ''),
-			GTPackage.eINSTANCE.reference,
+			GTPackage.eINSTANCE.editorReference,
 			GTValidator.REFERENCE_EXPECT_DELETED_BUT_IS_CONTEXT,
 			String.format(GTValidator.REFERENCE_EXPECT_DELETED_MESSAGE, 'eClassifiers', 'clazz')
 		)
@@ -165,7 +165,7 @@ class GTParsingReferencesTest extends GTParsingTest {
 	def void errorIfDeletedNodeHasCreatedReference() {
 		this.assertValidationErrors(
 			this.parseNodesWithReference('--', '++', ''),
-			GTPackage.eINSTANCE.reference,
+			GTPackage.eINSTANCE.editorReference,
 			GTValidator.REFERENCE_EXPECT_DELETED_BUT_IS_CREATED,
 			String.format(GTValidator.REFERENCE_EXPECT_DELETED_MESSAGE, 'eClassifiers', 'clazz')
 		)
@@ -185,7 +185,7 @@ class GTParsingReferencesTest extends GTParsingTest {
 	def void errorIfContextReferenceWithCreatedTargetNode() {
 		this.assertValidationErrors(
 			this.parseNodesWithReference('', '', '++'),
-			GTPackage.eINSTANCE.reference,
+			GTPackage.eINSTANCE.editorReference,
 			GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT,
 			String.format(GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT_MESSAGE, 'eClassifiers')
 		)
@@ -195,7 +195,7 @@ class GTParsingReferencesTest extends GTParsingTest {
 	def void errorIfContextReferenceWithDeletedTargetNode() {
 		this.assertValidationErrors(
 			this.parseNodesWithReference('', '', '--'),
-			GTPackage.eINSTANCE.reference,
+			GTPackage.eINSTANCE.editorReference,
 			GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT,
 			String.format(GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT_MESSAGE, 'eClassifiers')
 		)
@@ -215,7 +215,7 @@ class GTParsingReferencesTest extends GTParsingTest {
 	def void errorIfCreatedReferenceWithDeletedTargetNode() {
 		this.assertValidationErrors(
 			this.parseNodesWithReference('', '++', '--'),
-			GTPackage.eINSTANCE.reference,
+			GTPackage.eINSTANCE.editorReference,
 			GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT_OR_CREATE,
 			String.format(GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT_OR_CREATE_MESSAGE, 'eClassifiers')
 		)
@@ -230,7 +230,7 @@ class GTParsingReferencesTest extends GTParsingTest {
 	def void errorIfDeletedReferenceWithCreatedNodeTargetNode() {
 		this.assertValidationErrors(
 			this.parseNodesWithReference('', '--', '++'),
-			GTPackage.eINSTANCE.reference,
+			GTPackage.eINSTANCE.editorReference,
 			GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT_OR_DELETE,
 			String.format(GTValidator.REFERENCE_TARGET_EXPECT_CONTEXT_OR_DELETE_MESSAGE, 'eClassifiers')
 		)
@@ -241,7 +241,7 @@ class GTParsingReferencesTest extends GTParsingTest {
 		this.assertValid(this.parseNodesWithReference('', '--', '--'))
 	}
 
-	def GraphTransformationFile parseNodesWithReference(String sourceNodeOperator, String referenceOperator,
+	def EditorGTFile parseNodesWithReference(String sourceNodeOperator, String referenceOperator,
 		String targetNodeOperator) {
 		parseHelper.parse('''
 			import "«ecoreImport»"

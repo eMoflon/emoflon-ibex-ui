@@ -11,12 +11,12 @@ import org.eclipse.xtext.ui.editor.utils.EditorUtils
 import org.eclipse.xtext.validation.Issue
 
 import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
-import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
-import org.emoflon.ibex.gt.editor.gT.Import
+import org.emoflon.ibex.gt.editor.gT.EditorGTFile
+import org.emoflon.ibex.gt.editor.gT.EditorImport
+import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.gT.Parameter
-import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Relation
 import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.utils.GTEditorAttributeUtils
@@ -45,8 +45,8 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			label,
 			null,
 			[ element, context |
-				if (element instanceof Import) {
-					val file = element.eContainer as GraphTransformationFile
+				if (element instanceof EditorImport) {
+					val file = element.eContainer as EditorGTFile
 					file.imports.remove(element)
 				}
 			]
@@ -178,7 +178,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			label,
 			null,
 			[ element, context |
-				if (element instanceof Reference) {
+				if (element instanceof EditorReference) {
 					val targetNode = element.target
 					if (targetNode instanceof Node) {
 						if (newOperator == Operator.CONTEXT) {
@@ -231,7 +231,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	def changeAbstractNodeTypeToConcreteType(Issue issue, IssueResolutionAcceptor acceptor) {
 		val allClasses = EditorUtils.getActiveXtextEditor().document.readOnly [ resource |
 			val file = resource.contents.get(0)
-			if (file instanceof GraphTransformationFile) {
+			if (file instanceof EditorGTFile) {
 				GTEditorModelUtils.getClasses(file)
 			}
 		]
@@ -377,7 +377,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			label,
 			null,
 			[ element, context |
-				if (element instanceof Reference) {
+				if (element instanceof EditorReference) {
 					val node = element.eContainer as Node
 					if (newOperator == Operator.CONTEXT) {
 						this.removeNodeOperator(node, context.xtextDocument)
@@ -421,7 +421,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			label,
 			null,
 			[ element, context |
-				if (element instanceof Reference) {
+				if (element instanceof EditorReference) {
 					element.operator = newOperator
 				}
 			]

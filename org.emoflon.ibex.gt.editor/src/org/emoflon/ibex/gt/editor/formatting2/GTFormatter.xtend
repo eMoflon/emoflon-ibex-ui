@@ -7,12 +7,12 @@ import org.eclipse.xtext.formatting2.AbstractFormatter2
 import org.eclipse.xtext.formatting2.IFormattableDocument
 
 import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
-import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
+import org.emoflon.ibex.gt.editor.gT.EditorGTFile
+import org.emoflon.ibex.gt.editor.gT.EditorImport
+import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.GTPackage
-import org.emoflon.ibex.gt.editor.gT.Import
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Parameter
-import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.gT.Operator
 
@@ -23,7 +23,7 @@ import org.emoflon.ibex.gt.editor.gT.Operator
  */
 class GTFormatter extends AbstractFormatter2 {
 
-	def dispatch void format(GraphTransformationFile file, extension IFormattableDocument document) {
+	def dispatch void format(EditorGTFile file, extension IFormattableDocument document) {
 		// No space before first import.
 		if (file.imports.size > 0) {
 			file.imports.get(0).prepend[noSpace]
@@ -36,7 +36,7 @@ class GTFormatter extends AbstractFormatter2 {
 		this.formatList(file.rules, document, if (file.imports.size > 0) 2 else 0, 2, 1)
 	}
 
-	def dispatch void format(Import i, extension IFormattableDocument document) {
+	def dispatch void format(EditorImport i, extension IFormattableDocument document) {
 		i.regionFor.keyword("import").append[oneSpace]
 	}
 
@@ -124,13 +124,13 @@ class GTFormatter extends AbstractFormatter2 {
 		attributeConstraint.regionFor.feature(GTPackage.Literals.ATTRIBUTE_CONSTRAINT__RELATION).surround[oneSpace]
 	}
 
-	def dispatch void format(Reference reference, extension IFormattableDocument document) {
+	def dispatch void format(EditorReference reference, extension IFormattableDocument document) {
 		if (reference.operator == Operator.CONTEXT) {
 			// No space before "-" and between "-" and the reference name.
 			reference.regionFor.keyword("-").surround[noSpace]
 		} else {
 			// One space between operator and "-".
-			reference.regionFor.feature(GTPackage.Literals.REFERENCE__OPERATOR).append[oneSpace]
+			reference.regionFor.feature(GTPackage.Literals.EDITOR_REFERENCE__OPERATOR).append[oneSpace]
 
 			// One space before "-", but no space between "-" and the reference name.
 			reference.regionFor.keyword("-").prepend[oneSpace]

@@ -9,10 +9,10 @@ import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.util.CancelIndicator
 
 import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
+import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Operator
-import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Relation
 
 /** 
@@ -46,7 +46,7 @@ class GTHighlightingCalculator extends DefaultSemanticHighlightingCalculator {
 			this.highlightFeature(acceptor, element, GTPackage.Literals.NODE__TYPE, style)
 		}
 
-		if (element instanceof Reference) {
+		if (element instanceof EditorReference) {
 			var style = getStyle(element.operator)
 			this.highlightNode(acceptor, element, style)
 		}

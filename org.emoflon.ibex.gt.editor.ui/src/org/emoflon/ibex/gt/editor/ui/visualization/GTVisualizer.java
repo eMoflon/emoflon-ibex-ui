@@ -9,7 +9,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.ui.editor.XtextEditor;
-import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile;
+import org.emoflon.ibex.gt.editor.gT.EditorGTFile;
 import org.emoflon.ibex.gt.editor.gT.Rule;
 import org.moflon.core.ui.visualisation.EMoflonPlantUMLGenerator;
 import org.moflon.core.ui.visualisation.EMoflonVisualiser;
@@ -22,7 +22,7 @@ public class GTVisualizer extends EMoflonVisualiser {
 
 	@Override
 	protected String getDiagramBody(final IEditorPart editor, final ISelection selection) {
-		Optional<GraphTransformationFile> file = this.loadFileFromEditor(editor);
+		Optional<EditorGTFile> file = this.loadFileFromEditor(editor);
 		if (!file.isPresent()) {
 			return EMoflonPlantUMLGenerator.emptyDiagram();
 		}
@@ -91,12 +91,12 @@ public class GTVisualizer extends EMoflonVisualiser {
 	 *            the editor
 	 * @return an {@link Optional} for the {@link GraphTransformationFile}
 	 */
-	private Optional<GraphTransformationFile> loadFileFromEditor(final IEditorPart editor) {
+	private Optional<EditorGTFile> loadFileFromEditor(final IEditorPart editor) {
 		try {
 			return Optional.of(editor) //
 					.flatMap(maybeCast(XtextEditor.class))
 					.map(e -> e.getDocument().readOnly(res -> res.getContents().get(0)))
-					.flatMap(maybeCast(GraphTransformationFile.class));
+					.flatMap(maybeCast(EditorGTFile.class));
 		} catch (Exception e) {
 			return Optional.empty();
 		}

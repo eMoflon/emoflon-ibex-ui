@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -12,7 +13,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.xtext.EcoreUtil2;
-import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile;
+import org.emoflon.ibex.gt.editor.gT.EditorGTFile;
 
 /**
  * Utility methods for dealing with meta-models in
@@ -27,7 +28,7 @@ public class GTEditorModelUtils {
 	/**
 	 * Returns all EClasses imported into the given file.
 	 */
-	public static ArrayList<EClass> getClasses(final GraphTransformationFile file) {
+	public static ArrayList<EClass> getClasses(final EditorGTFile file) {
 		final ArrayList<EClass> classes = new ArrayList<EClass>();
 		file.getImports().forEach(i -> {
 			loadEcoreModel(i.getName()).ifPresent(m -> classes.addAll(getElements(m, EClass.class)));
@@ -38,7 +39,7 @@ public class GTEditorModelUtils {
 	/**
 	 * Returns all EDataTypes imported into the given file.
 	 */
-	public static ArrayList<EDataType> getDatatypes(final GraphTransformationFile file) {
+	public static ArrayList<EDataType> getDatatypes(final EditorGTFile file) {
 		final ArrayList<EDataType> types = new ArrayList<EDataType>();
 		file.getImports().forEach(i -> {
 			loadEcoreModel(i.getName()).ifPresent(m -> types.addAll(getElements(m, EDataType.class)));

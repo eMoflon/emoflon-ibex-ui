@@ -15,11 +15,11 @@ import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression;
 import org.emoflon.ibex.gt.editor.gT.EditorExpression;
 import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression;
 import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression;
+import org.emoflon.ibex.gt.editor.gT.EditorReference;
 import org.emoflon.ibex.gt.editor.gT.GTFactory;
 import org.emoflon.ibex.gt.editor.gT.Node;
 import org.emoflon.ibex.gt.editor.gT.Operator;
 import org.emoflon.ibex.gt.editor.gT.Parameter;
-import org.emoflon.ibex.gt.editor.gT.Reference;
 import org.emoflon.ibex.gt.editor.gT.Relation;
 import org.emoflon.ibex.gt.editor.gT.Rule;
 
@@ -300,8 +300,8 @@ public class GTFlattener {
 	 *            the node merged into the first one
 	 */
 	private void mergeReferencesOfNodes(final Node node, final Node mergedNode) {
-		for (Reference mergedReference : mergedNode.getReferences()) {
-			Optional<Reference> referenceInNode = node.getReferences().stream()
+		for (EditorReference mergedReference : mergedNode.getReferences()) {
+			Optional<EditorReference> referenceInNode = node.getReferences().stream()
 					.filter(r -> areReferencesEqual(r, mergedReference)).findAny();
 			if (referenceInNode.isPresent()) {
 				try {
@@ -328,7 +328,7 @@ public class GTFlattener {
 	 * @return <code>true</code> if and only if the references are of the same type
 	 *         and point to nodes of the same name
 	 */
-	private static boolean areReferencesEqual(final Reference a, final Reference b) {
+	private static boolean areReferencesEqual(final EditorReference a, final EditorReference b) {
 		return a.getType().equals(b.getType()) // equal type
 				&& a.getTarget().getName().equals(b.getTarget().getName()); // equal target
 	}

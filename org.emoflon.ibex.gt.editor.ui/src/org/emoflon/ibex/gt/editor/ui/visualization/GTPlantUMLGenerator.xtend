@@ -7,10 +7,10 @@ import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression
 import org.emoflon.ibex.gt.editor.gT.EditorExpression
 import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression
 import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
+import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.gT.Parameter
-import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Relation
 import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.utils.GTFlattener
@@ -103,7 +103,7 @@ class GTPlantUMLGenerator {
 	/**
 	 * Prints the color for the reference.
 	 */
-	private static def String referenceColor(Reference reference) {
+	private static def String referenceColor(EditorReference reference) {
 		if (reference.operator == Operator.CONTEXT) {
 			'''«ContextColor»'''
 		} else if (reference.operator === Operator.CREATE) {
@@ -118,7 +118,7 @@ class GTPlantUMLGenerator {
 	/**
 	 * Prints the reference label in the color of the reference operator.
 	 */
-	private static def String referenceLabel(Reference reference) {
+	private static def String referenceLabel(EditorReference reference) {
 		'''<color:«referenceColor(reference)»>«reference.type.name»'''
 	}
 

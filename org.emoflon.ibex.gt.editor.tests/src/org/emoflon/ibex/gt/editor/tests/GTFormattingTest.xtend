@@ -6,7 +6,7 @@ import org.eclipse.xtext.serializer.ISerializer
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
-import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
+import org.emoflon.ibex.gt.editor.gT.EditorGTFile
 import org.junit.runner.RunWith
 import org.junit.Test
 import org.eclipse.xtext.resource.SaveOptions
@@ -20,7 +20,7 @@ import static org.junit.Assert.*
 @InjectWith(GTInjectorProvider)
 class GTFormattingTest {
 	@Inject
-	protected ParseHelper<GraphTransformationFile> parseHelper
+	protected ParseHelper<EditorGTFile> parseHelper
 
 	@Inject extension ISerializer
 

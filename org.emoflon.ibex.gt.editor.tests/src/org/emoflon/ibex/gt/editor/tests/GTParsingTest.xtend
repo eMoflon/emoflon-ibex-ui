@@ -10,13 +10,13 @@ import org.eclipse.xtext.testing.util.ParseHelper
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
 import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
-import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
+import org.emoflon.ibex.gt.editor.gT.EditorGTFile
+import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression
 import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Operator
 import org.emoflon.ibex.gt.editor.gT.Parameter
-import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Relation
 import org.emoflon.ibex.gt.editor.gT.Rule
 import org.junit.Assert
@@ -32,48 +32,48 @@ abstract class GTParsingTest {
 	public static val ecoreImport = 'http://www.eclipse.org/emf/2002/Ecore'
 
 	@Inject
-	protected ParseHelper<GraphTransformationFile> parseHelper
+	protected ParseHelper<EditorGTFile> parseHelper
 
 	@Inject extension private ValidationTestHelper validationHelper
 
-	def void assertValid(GraphTransformationFile file) {
+	def void assertValid(EditorGTFile file) {
 		Assert.assertNotNull(file)
 		this.validationHelper.assertNoIssues(file)
 		this.assertFile(file, 1)
 	}
 
-	def void assertValid(GraphTransformationFile file, int ruleCount) {
+	def void assertValid(EditorGTFile file, int ruleCount) {
 		Assert.assertNotNull(file)
 		this.validationHelper.assertNoIssues(file)
 		this.assertFile(file, ruleCount)
 	}
 
-	def void assertValidationErrors(GraphTransformationFile file, EClass objectType, String code, String... messages) {
+	def void assertValidationErrors(EditorGTFile file, EClass objectType, String code, String... messages) {
 		messages.forEach[this.validationHelper.assertError(file, objectType, code, it)]
 	}
 
-	def void assertValidationIssues(GraphTransformationFile file, EClass objectType, String code, Severity severity,
+	def void assertValidationIssues(EditorGTFile file, EClass objectType, String code, Severity severity,
 		String... messages) {
 		messages.forEach[this.validationHelper.assertIssue(file, objectType, code, severity, it)]
 	}
 
-	def void assertValidResource(GraphTransformationFile file) {
+	def void assertValidResource(EditorGTFile file) {
 		Assert.assertNotNull(file)
 		Assert.assertTrue(file.eResource.errors.isEmpty)
 		Assert.assertTrue(file.eResource.warnings.isEmpty)
 	}
 
-	def void assertInvalidResource(GraphTransformationFile file, int issueCount) {
+	def void assertInvalidResource(EditorGTFile file, int issueCount) {
 		Assert.assertTrue(issueCount > 0)
 		Assert.assertNotNull(file)
 		Assert.assertEquals(issueCount, file.eResource.errors.size + file.eResource.warnings.size)
 	}
 
-	def void assertFile(GraphTransformationFile file) {
+	def void assertFile(EditorGTFile file) {
 		this.assertFile(file, 1)
 	}
 
-	def void assertFile(GraphTransformationFile file, int ruleCount) {
+	def void assertFile(EditorGTFile file, int ruleCount) {
 		Assert.assertTrue(ruleCount > 0)
 		this.assertValidResource(file)
 
@@ -83,7 +83,7 @@ abstract class GTParsingTest {
 		Assert.assertEquals(ruleCount, file.rules.size)
 	}
 
-	def getRule(GraphTransformationFile file, int ruleIndex) {
+	def getRule(EditorGTFile file, int ruleIndex) {
 		return file.rules.get(ruleIndex)
 	}
 
@@ -151,7 +151,7 @@ abstract class GTParsingTest {
 		return node.references.get(referenceIndex)
 	}
 
-	def assertReference(Reference reference, Operator operator, String name, Node target) {
+	def assertReference(EditorReference reference, Operator operator, String name, Node target) {
 		Assert.assertEquals(operator, reference.operator)
 		Assert.assertEquals(name, reference.type.name)
 		Assert.assertEquals(target, reference.target)
