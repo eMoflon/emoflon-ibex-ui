@@ -9,11 +9,13 @@ import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
 import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
 import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
 import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression
 import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Operator
+import org.emoflon.ibex.gt.editor.gT.Parameter
 import org.emoflon.ibex.gt.editor.gT.Reference
 import org.emoflon.ibex.gt.editor.gT.Relation
 import org.emoflon.ibex.gt.editor.gT.Rule
@@ -85,6 +87,19 @@ abstract class GTParsingTest {
 		return file.rules.get(ruleIndex)
 	}
 
+	def getParameter(Rule rule, int parameterIndex) {
+		return rule.parameters.get(parameterIndex)
+	}
+
+	def void assertParameters(Rule rule, Map<String, String> parameterNameToType) {
+		Assert.assertEquals(parameterNameToType.size, rule.parameters.size)
+		for (parameter : rule.parameters) {
+			Assert.assertTrue("Found unexpected parameter " + parameter.name,
+				parameterNameToType.containsKey(parameter.name))
+			Assert.assertEquals(parameterNameToType.get(parameter.name), parameter.type.name)
+		}
+	}
+
 	def getNode(Rule rule, int nodeIndex) {
 		return rule.nodes.get(nodeIndex)
 	}
@@ -101,37 +116,35 @@ abstract class GTParsingTest {
 		Assert.assertEquals(referencesCount, node.references.size)
 	}
 
+	def getAttribute(Node node, int attributeIndex) {
+		return node.attributes.get(attributeIndex)
+	}
+
 	def void assertAttribute(AttributeConstraint attributeConstraint, String name, Relation relation) {
 		Assert.assertEquals(name, attributeConstraint.attribute.name)
 		Assert.assertEquals(relation, attributeConstraint.relation)
 	}
 
-	def void assertAttributeLiteral(GraphTransformationFile file, int index, String name, Relation relation,
+	def void assertAttributeWithAttributeExpression(AttributeConstraint attributeConstraint, String name,
+		Relation relation, Node node, String attr) {
+		this.assertAttribute(attributeConstraint, name, relation)
+		Assert.assertTrue(attributeConstraint.value instanceof EditorAttributeExpression)
+		Assert.assertEquals(node, (attributeConstraint.value as EditorAttributeExpression).node)
+		Assert.assertEquals(attr, (attributeConstraint.value as EditorAttributeExpression).attribute.name)
+	}
+
+	def void assertAttributeLiteral(AttributeConstraint attributeConstraint, String name, Relation relation,
 		String value) {
-		val attr = file.rules.get(0).nodes.get(0).attributes.get(index) as AttributeConstraint
-		this.assertAttribute(attr, name, relation)
-
-		Assert.assertTrue(attr.value instanceof EditorLiteralExpression)
-		Assert.assertEquals(value, (attr.value as EditorLiteralExpression).value)
+		this.assertAttribute(attributeConstraint, name, relation)
+		Assert.assertTrue(attributeConstraint.value instanceof EditorLiteralExpression)
+		Assert.assertEquals(value, (attributeConstraint.value as EditorLiteralExpression).value)
 	}
 
-	def void assertAttributeParameter(GraphTransformationFile file, int attributeIndex, String name, Relation relation,
-		int parameterIndex) {
-		val attr = file.rules.get(0).nodes.get(0).attributes.get(attributeIndex) as AttributeConstraint
-		this.assertAttribute(attr, name, relation)
-
-		Assert.assertTrue(attr.value instanceof EditorParameterExpression)
-		val parameter = file.rules.get(0).parameters.get(parameterIndex)
-		Assert.assertEquals(parameter, (attr.value as EditorParameterExpression).parameter)
-	}
-
-	def void assertParameters(Rule rule, Map<String, String> parameterNameToType) {
-		Assert.assertEquals(parameterNameToType.size, rule.parameters.size)
-		for (parameter : rule.parameters) {
-			Assert.assertTrue("Found unexpected parameter " + parameter.name,
-				parameterNameToType.containsKey(parameter.name))
-			Assert.assertEquals(parameterNameToType.get(parameter.name), parameter.type.name)
-		}
+	def void assertAttributeParameter(AttributeConstraint attributeConstraint, String name, Relation relation,
+		Parameter parameter) {
+		this.assertAttribute(attributeConstraint, name, relation)
+		Assert.assertTrue(attributeConstraint.value instanceof EditorParameterExpression)
+		Assert.assertEquals(parameter, (attributeConstraint.value as EditorParameterExpression).parameter)
 	}
 
 	def getReference(Node node, int referenceIndex) {

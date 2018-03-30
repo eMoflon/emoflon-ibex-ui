@@ -222,7 +222,11 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	 */
 	def getScopeForAttributeExpressionAttributes(EditorAttributeExpression attributeExpression) {
 		val attributeConstraint = attributeExpression.eContainer as AttributeConstraint
-		val attributes = attributeExpression.node.type.EAllAttributes.filter [
+		val node = attributeExpression.node
+		if (node === null || node.type === null) {
+			return Scopes.scopeFor([])
+		}
+		val attributes = node.type.EAllAttributes.filter [
 			it.EAttributeType == attributeConstraint.attribute.EAttributeType
 		]
 		return Scopes.scopeFor(attributes)

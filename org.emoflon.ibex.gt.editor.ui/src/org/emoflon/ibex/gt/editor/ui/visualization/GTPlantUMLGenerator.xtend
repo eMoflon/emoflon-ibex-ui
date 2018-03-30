@@ -126,6 +126,9 @@ class GTPlantUMLGenerator {
 	 * Prints the expression.
 	 */
 	private static def String expression(EditorExpression expression) {
+		if (expression === null) {
+			return 'INVALID expression'
+		}
 		if (expression instanceof EditorAttributeExpression) {
 			val nodeName = if(expression.node === null) '?' else expression.node.name
 			val attributeName = if(expression.attribute === null) '?' else expression.attribute.name

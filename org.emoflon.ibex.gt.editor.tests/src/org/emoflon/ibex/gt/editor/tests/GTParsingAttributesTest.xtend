@@ -16,7 +16,7 @@ import org.junit.runner.RunWith
 @InjectWith(GTInjectorProvider)
 class GTParsingAttributesTest extends GTParsingTest {
 	@Test
-	def void validAttributeAssignments() {
+	def void validAttributeAssignmentsWithLiteral() {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
@@ -28,12 +28,13 @@ class GTParsingAttributesTest extends GTParsingTest {
 			}
 		''')
 		this.assertValid(file)
-		this.assertAttributeLiteral(file, 0, "name", Relation.ASSIGNMENT, "Test1")
-		this.assertAttributeLiteral(file, 1, "instanceTypeName", Relation.ASSIGNMENT, "Test2")
+		val node = file.getRule(0).getNode(0)
+		this.assertAttributeLiteral(node.getAttribute(0), "name", Relation.ASSIGNMENT, "Test1")
+		this.assertAttributeLiteral(node.getAttribute(1), "instanceTypeName", Relation.ASSIGNMENT, "Test2")
 	}
 
 	@Test
-	def void validAttributeConditions() {
+	def void validAttributeWithLiteral() {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
@@ -45,12 +46,76 @@ class GTParsingAttributesTest extends GTParsingTest {
 			}
 		''')
 		this.assertValid(file)
-		this.assertAttributeLiteral(file, 0, "name", Relation.UNEQUAL, "Test1")
-		this.assertAttributeLiteral(file, 1, "instanceTypeName", Relation.EQUAL, "Test2")
+		val node = file.getRule(0).getNode(0)
+		this.assertAttributeLiteral(node.getAttribute(0), "name", Relation.UNEQUAL, "Test1")
+		this.assertAttributeLiteral(node.getAttribute(1), "instanceTypeName", Relation.EQUAL, "Test2")
 	}
 
 	@Test
-	def void validAttributeConditionReferencingParameter() {
+	def void validAttributeWithAttributeExpression() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			rule findClassAndPackageOfTheSameName {
+				package: EPackage
+			
+				clazz: EClass {
+					.name == package.name
+				}
+			}
+		''')
+		this.assertValid(file)
+		val node = file.getRule(0).getNode(1)
+		val targetNode = file.getRule(0).getNode(0)
+		this.assertAttributeWithAttributeExpression(node.getAttribute(0), "name", Relation.EQUAL, targetNode, "name")
+	}
+
+	@Test
+	def void errorIfAttributeWithAttributeExpressionReferencingInvalidNode() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			rule findClassAndPackageOfTheSameName {
+				++ package: EPackage
+			
+				clazz: EClass {
+					.name == package
+				}
+			}
+		''')
+		this.assertInvalidResource(file, 1)
+		this.assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.editorAttributeExpression,
+			Diagnostic::LINKING_DIAGNOSTIC,
+			"Couldn't resolve reference to Node 'package'."
+		)
+	}
+
+	@Test
+	def void errorIfAttributeWithAttributeExpressionReferencingInvalidAttribute() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			rule r {
+				dataType: EDataType
+				
+				clazz: EClass {
+					.name == dataType.serializable
+				}
+			}
+		''')
+		this.assertFile(file)
+		this.assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.editorAttributeExpression,
+			Diagnostic::LINKING_DIAGNOSTIC,
+			"Couldn't resolve reference to EAttribute 'serializable'."
+		)
+	}
+
+	@Test
+	def void validAttributeWithParameter() {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
@@ -61,11 +126,35 @@ class GTParsingAttributesTest extends GTParsingTest {
 			}
 		''')
 		this.assertValid(file)
-		this.assertAttributeParameter(file, 0, "name", Relation.ASSIGNMENT, 0)
+		val node = file.getRule(0).getNode(0)
+		val parameter = file.getRule(0).getParameter(0)
+		this.assertAttributeParameter(node.getAttribute(0), "name", Relation.ASSIGNMENT, parameter)
 	}
 
 	@Test
-	def void errorIfAttributeConditionReferencesParameterOfInvalidType() {
+	def void validAttributeWithParameterFromSuperRule() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			rule s(name: EString) {
+				object: EObject
+			}
+			
+			rule createClass
+			refines s {
+				clazz: EClass {
+					.name := param::name
+				}
+			}
+		''')
+		this.assertValid(file, 2)
+		val node = file.getRule(1).getNode(0)
+		val parameter = file.getRule(0).getParameter(0)
+		this.assertAttributeParameter(node.getAttribute(0), "name", Relation.ASSIGNMENT, parameter)
+	}
+
+	@Test
+	def void errorIfAttributeWithParameterOfInvalidType() {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
@@ -85,7 +174,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 	}
 
 	@Test
-	def void errorIfAttributeConstraintWithConstantOfWrongType() {
+	def void errorIfAttributeWithLiteralOfWrongType() {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
@@ -113,7 +202,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 	}
 
 	@Test
-	def void errorIfAttributeConstraintWithWrongStringConstant() {
+	def void errorIfAttributeWithWrongStringConstant() {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
