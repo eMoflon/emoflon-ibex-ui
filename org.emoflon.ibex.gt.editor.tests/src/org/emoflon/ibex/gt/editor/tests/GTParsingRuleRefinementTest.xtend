@@ -149,7 +149,8 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 			file,
 			GTPackage.eINSTANCE.rule,
 			GTValidator.RULE_REFINEMENT_INVALID_PARAMETER,
-			String.format(GTValidator.RULE_REFINEMENT_INVALID_PARAMETER_MESSAGE, 'r', 'name', "'EBoolean', 'EString'")
+			String.format(GTValidator.RULE_REFINEMENT_INVALID_PARAMETER_MESSAGE, 'r', 'name',
+				GTValidator.concatNames(#['EBoolean', 'EString']))
 		)
 	}
 
@@ -172,7 +173,8 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 			file,
 			GTPackage.eINSTANCE.rule,
 			GTValidator.RULE_REFINEMENT_INVALID_PARAMETER,
-			String.format(GTValidator.RULE_REFINEMENT_INVALID_PARAMETER_MESSAGE, 'r', 'name', "'EBoolean', 'EString'")
+			String.format(GTValidator.RULE_REFINEMENT_INVALID_PARAMETER_MESSAGE, 'r', 'name',
+				GTValidator.concatNames(#['EBoolean', 'EString']))
 		)
 	}
 }

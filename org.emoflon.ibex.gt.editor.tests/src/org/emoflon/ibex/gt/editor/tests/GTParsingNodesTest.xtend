@@ -221,4 +221,43 @@ class GTParsingNodesTest extends GTParsingTest {
 				'super')
 		)
 	}
+
+	@Test
+	def void validNodeOperatorChange() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			rule super {
+				++ c: EClass
+			}
+			
+			rule findClass
+			refines super {
+				c: EClass
+			}
+		''')
+		this.assertValid(file, 2)
+	}
+
+	@Test
+	def void errorIfInvalidNodeOperatorChange() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			rule super {
+				c: EClass
+			}
+			
+			rule findClass
+			refines super {
+				++ c: EClass
+			}
+		''')
+		this.assertFile(file, 2)
+		this.assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.node,
+			GTValidator.NODE_OPERATOR_EXPECT_CONTEXT_DUE_TO_DECLARATION_IN_SUPER_RULE,
+			String.format(GTValidator.NODE_OPERATOR_EXPECT_CONTEXT_DUE_TO_DECLARATION_IN_SUPER_RULE_MESSAGE, 'c',
+				GTValidator.concatNames(#['super']))
+		)
+	}
 }

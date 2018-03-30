@@ -1,6 +1,7 @@
 package org.emoflon.ibex.gt.editor.validation
 
-import java.util.stream.Collectors
+import java.util.Collection
+
 import org.eclipse.emf.ecore.EPackage
 import org.eclipse.xtext.validation.Check
 
@@ -99,12 +100,16 @@ class GTValidator extends AbstractGTValidator {
 	public static val NODE_NAME_EQUALS_PARAMETER_NAME = CODE_PREFIX + "node.name.equalsParameterName"
 	public static val NODE_NAME_EQUALS_PARAMETER_NAME_MESSAGE = "Node '%s' and parameter '%s' must not be named equal."
 
-	public static val CREATE_NODE_TYPE_ABSTRACT = CODE_PREFIX + "node.type.createdNodeAbstractType"
-	public static val CREATE_NODE_TYPE_ABSTRACT_MESSAGE = "The type of created node '%s' must not be abstract."
+	public static val NODE_OPERATOR_EXPECT_CONTEXT_DUE_TO_DECLARATION_IN_SUPER_RULE = CODE_PREFIX +
+		"node.operator.notCompatibleWithDeclarationInSuperRule"
+	public static val NODE_OPERATOR_EXPECT_CONTEXT_DUE_TO_DECLARATION_IN_SUPER_RULE_MESSAGE = "Node '%s' must be context due to declaration in super rule(s) %s."
 
 	public static val NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE = CODE_PREFIX +
 		"node.type.notCompatibleWithDeclarationInSuperRule"
 	public static val NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE_MESSAGE = "The type of node '%s' is not compatible with '%s' from super rule '%s'."
+
+	public static val CREATE_NODE_TYPE_ABSTRACT = CODE_PREFIX + "node.type.createdNodeAbstractType"
+	public static val CREATE_NODE_TYPE_ABSTRACT_MESSAGE = "The type of created node '%s' must not be abstract."
 
 	// Errors for attributes.
 	public static val ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE = CODE_PREFIX + "attributeConstraint.literalValueWrongType"
@@ -264,11 +269,7 @@ class GTValidator extends AbstractGTValidator {
 		for (parameterName : parameterNames) {
 			val allTypesForName = superRuleParameters.filter[it.name == parameterName].map[it.type].toSet
 			if (allTypesForName.size > 1) {
-				val typeList = allTypesForName.stream.sorted [ a, b |
-					a.name.compareTo(b.name)
-				].map [
-					"'" + it.name + "'"
-				].collect(Collectors.joining(', '))
+				val typeList = concatNames(allTypesForName.map[it.name].toSet)
 				error(
 					String.format(RULE_REFINEMENT_INVALID_PARAMETER_MESSAGE, rule.name, parameterName, typeList),
 					GTPackage.Literals.RULE__SUPER_RULES,
@@ -384,19 +385,36 @@ class GTValidator extends AbstractGTValidator {
 				}
 			}
 
-			if (node.type !== null && !rule.superRules.isEmpty) {
-				// The type of a node must be compatible with any type declarations in super rules.
-				GTEditorRuleUtils.getAllNodesFromSuperRules(rule, [node.name.equals(it.name)]).forEach [
-					if (!(it.type.equals(node.type) || it.type.isSuperTypeOf(node.type))) {
-						val superRule = it.eContainer as Rule
-						error(
-							String.format(NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE_MESSAGE, node.name,
-								it.type.name, superRule.name),
-							GTPackage.Literals.NODE__TYPE,
-							NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE
-						)
-					}
-				]
+			if (!rule.superRules.isEmpty) {
+				val nodeDeclarationsInSuperRules = GTEditorRuleUtils.getAllNodesFromSuperRules(rule, [
+					node.name.equals(it.name)
+				])
+
+				// If a node is context in super rule, it must have the same operator.
+				val contextNodesInSuperRule = nodeDeclarationsInSuperRules.filter[it.operator == Operator.CONTEXT]
+				if (!contextNodesInSuperRule.isEmpty && node.operator !== Operator.CONTEXT) {
+					error(
+						String.format(NODE_OPERATOR_EXPECT_CONTEXT_DUE_TO_DECLARATION_IN_SUPER_RULE_MESSAGE, node.name,
+							concatNames(contextNodesInSuperRule.map[(it.eContainer as Rule).name].toSet)),
+						GTPackage.Literals.NODE__OPERATOR,
+						NODE_OPERATOR_EXPECT_CONTEXT_DUE_TO_DECLARATION_IN_SUPER_RULE
+					)
+				}
+
+				if (node.type !== null) {
+					// The type of a node must be compatible with any type declarations in super rules.
+					nodeDeclarationsInSuperRules.forEach [
+						if (!(it.type.equals(node.type) || it.type.isSuperTypeOf(node.type))) {
+							val superRule = it.eContainer as Rule
+							error(
+								String.format(NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE_MESSAGE,
+									node.name, it.type.name, superRule.name),
+								GTPackage.Literals.NODE__TYPE,
+								NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE
+							)
+						}
+					]
+				}
 			}
 		}
 	}
@@ -560,5 +578,22 @@ class GTValidator extends AbstractGTValidator {
 	 */
 	def static String getTimes(int count) {
 		return if(count == 2) 'twice' else count + ' times'
+	}
+
+	/**
+	 * Converts the set of names to a string.
+	 */
+	def static String concatNames(Collection<String> names) {
+		if (names.size == 1) {
+			return "'" + names.get(0) + "'"
+		}
+		val sortedNames = names.sortWith [ a, b |
+			a.compareTo(b)
+		]
+		var s = ""
+		for (name : sortedNames.subList(0, names.size - 1)) {
+			s += "'" + name + "'"
+		}
+		return s + " and '" + sortedNames.get(sortedNames.size - 1) + "'"
 	}
 }
