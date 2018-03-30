@@ -17,9 +17,9 @@ import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Parameter
 import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.utils.GTEditorAttributeUtils
+import org.emoflon.ibex.gt.editor.utils.GTEditorComparator
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 import org.emoflon.ibex.gt.editor.utils.GTEditorRuleUtils
-import org.emoflon.ibex.gt.editor.utils.GTFlattener
 
 /**
  * This class contains custom validation rules. 
@@ -295,7 +295,7 @@ class GTValidator extends AbstractGTValidator {
 				for (assignment : assignments.toList) {
 					if (attributeAssignments.containsKey(assignment.attribute)) {
 						// Check whether the assignment is compatible with assignment in map
-						if (!GTFlattener.areAttributeConstraintsEqual(assignment,
+						if (!GTEditorComparator.areAttributeConstraintsEqual(assignment,
 							attributeAssignments.get(assignment.attribute))) {
 							hasConflictingAssignments = true;
 						}
