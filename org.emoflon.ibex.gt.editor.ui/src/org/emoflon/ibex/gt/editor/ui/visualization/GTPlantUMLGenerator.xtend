@@ -178,7 +178,7 @@ class GTPlantUMLGenerator {
 			}
 			
 			«FOR r : rules»
-				«IF r.abstract»abstract«ENDIF» class "«r.name»"
+				«IF r.abstract»abstract «ENDIF»class "«r.name»" «ruleLink(r)»
 			«ENDFOR»
 			
 			«FOR r : rules»
@@ -191,6 +191,15 @@ class GTPlantUMLGenerator {
 				= Rule Refinement Hierarchy
 			end footer
 		'''
+	}
+
+	/**
+	 * Prints the link to the rule.
+	 */
+	private static def ruleLink(Rule rule) {
+		val resource = rule.eResource
+		val uri = resource.URI + '#' + resource.getURIFragment(rule)
+		'''[[«uri»]]'''
 	}
 
 	/**
