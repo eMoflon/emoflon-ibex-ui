@@ -26,10 +26,10 @@ class GTParsingNodesTest extends GTParsingTest {
 				b: EClass
 			}
 		''')
-		this.assertValid(file)
+		assertValid(file)
 		val rule = file.getRule(0)
-		this.assertNode(rule.getNode(0), EditorOperator.CONTEXT, "a", "EPackage")
-		this.assertNode(rule.getNode(1), EditorOperator.CONTEXT, "b", "EClass")
+		assertNode(rule.getNode(0), EditorOperator.CONTEXT, "a", "EPackage")
+		assertNode(rule.getNode(1), EditorOperator.CONTEXT, "b", "EClass")
 	}
 
 	@Test
@@ -42,10 +42,10 @@ class GTParsingNodesTest extends GTParsingTest {
 				-- b: EObject
 			}
 		''')
-		this.assertValid(file)
+		assertValid(file)
 		val rule = file.getRule(0)
-		this.assertNode(rule.getNode(0), EditorOperator.CREATE, "a", "EClass")
-		this.assertNode(rule.getNode(1), EditorOperator.DELETE, "b", "EObject")
+		assertNode(rule.getNode(0), EditorOperator.CREATE, "a", "EClass")
+		assertNode(rule.getNode(1), EditorOperator.DELETE, "b", "EObject")
 	}
 
 	@Test
@@ -58,8 +58,8 @@ class GTParsingNodesTest extends GTParsingTest {
 				«nodeName»: EObject
 			}
 		''')
-		this.assertFile(file)
-		this.assertValidationIssues(
+		assertFile(file)
+		assertValidationIssues(
 			file,
 			GTPackage.eINSTANCE.node,
 			GTValidator.NAME_EXPECT_LOWER_CASE,
@@ -78,8 +78,8 @@ class GTParsingNodesTest extends GTParsingTest {
 				«nodeName»: EObject
 			}
 		''')
-		this.assertFile(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.node,
 			GTValidator.NAME_BLACKLISTED,
@@ -97,8 +97,8 @@ class GTParsingNodesTest extends GTParsingTest {
 				«nodeName»: EObject
 			}
 		''')
-		this.assertFile(file)
-		this.assertValidationIssues(
+		assertFile(file)
+		assertValidationIssues(
 			file,
 			GTPackage.eINSTANCE.node,
 			GTValidator.NAME_EXPECT_CAMEL_CASE,
@@ -119,8 +119,8 @@ class GTParsingNodesTest extends GTParsingTest {
 				«nodeName»: EObject
 			}
 		''')
-		this.assertFile(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.node,
 			GTValidator.NAME_EXPECT_UNIQUE,
@@ -137,8 +137,8 @@ class GTParsingNodesTest extends GTParsingTest {
 				o: Object
 			}
 		''')
-		this.assertFile(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.node,
 			Diagnostic::LINKING_DIAGNOSTIC,
@@ -155,8 +155,8 @@ class GTParsingNodesTest extends GTParsingTest {
 				++ classifier: EClassifier
 			}
 		''')
-		this.assertFile(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.node,
 			GTValidator.CREATE_NODE_TYPE_ABSTRACT,
@@ -173,8 +173,8 @@ class GTParsingNodesTest extends GTParsingTest {
 				++ clazz: EClass
 			}
 		''')
-		this.assertFile(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.node,
 			GTValidator.NODE_NAME_EQUALS_PARAMETER_NAME,
@@ -196,7 +196,7 @@ class GTParsingNodesTest extends GTParsingTest {
 				c: EClass
 			}
 		''')
-		this.assertValid(file, 2)
+		assertValid(file, 2)
 	}
 
 	@Test
@@ -212,8 +212,8 @@ class GTParsingNodesTest extends GTParsingTest {
 				c: EClass
 			}
 		''')
-		this.assertFile(file, 2)
-		this.assertValidationErrors(
+		assertFile(file, 2)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.node,
 			GTValidator.NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE,
@@ -235,7 +235,7 @@ class GTParsingNodesTest extends GTParsingTest {
 				c: EClass
 			}
 		''')
-		this.assertValid(file, 2)
+		assertValid(file, 2)
 	}
 
 	@Test
@@ -252,8 +252,8 @@ class GTParsingNodesTest extends GTParsingTest {
 				++ c: EClass
 			}
 		''')
-		this.assertFile(file, 2)
-		this.assertValidationErrors(
+		assertFile(file, 2)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.node,
 			GTValidator.NODE_OPERATOR_EXPECT_CONTEXT_DUE_TO_DECLARATION_IN_SUPER_RULE,

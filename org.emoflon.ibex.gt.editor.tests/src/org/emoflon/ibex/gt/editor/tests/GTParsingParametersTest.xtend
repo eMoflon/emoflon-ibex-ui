@@ -25,7 +25,7 @@ class GTParsingParametersTest extends GTParsingTest {
 				a: EObject
 			}
 		''')
-		this.assertValid(file)
+		assertValid(file)
 		Assert.assertTrue(file.rules.get(0).parameters.isEmpty)
 	}
 
@@ -38,8 +38,8 @@ class GTParsingParametersTest extends GTParsingTest {
 				a: EObject
 			}
 		''')
-		this.assertValid(file)
-		this.assertParameters(file.getRule(0), #{'name' -> 'EString'})
+		assertValid(file)
+		assertParameters(file.getRule(0), #{'name' -> 'EString'})
 	}
 
 	@Test
@@ -51,8 +51,8 @@ class GTParsingParametersTest extends GTParsingTest {
 				a: EObject
 			}
 		''')
-		this.assertValid(file)
-		this.assertParameters(file.getRule(0), #{
+		assertValid(file)
+		assertParameters(file.getRule(0), #{
 			'age' -> 'EDouble',
 			'name' -> 'EString',
 			'isMale' -> 'EBoolean'
@@ -68,8 +68,8 @@ class GTParsingParametersTest extends GTParsingTest {
 				a: EObject
 			}
 		''')
-		this.assertFile(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.parameter,
 			Diagnostic::LINKING_DIAGNOSTIC,
@@ -86,8 +86,8 @@ class GTParsingParametersTest extends GTParsingTest {
 				a: EObject
 			}
 		''')
-		this.assertInvalidResource(file, 1)
-		this.assertValidationErrors(
+		assertInvalidResource(file, 1)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.rule,
 			Diagnostic::SYNTAX_DIAGNOSTIC,
@@ -104,8 +104,8 @@ class GTParsingParametersTest extends GTParsingTest {
 				a: EObject
 			}
 		''')
-		this.assertInvalidResource(file, 3)
-		this.assertValidationErrors(
+		assertInvalidResource(file, 3)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.parameter,
 			Diagnostic::SYNTAX_DIAGNOSTIC,
@@ -124,8 +124,8 @@ class GTParsingParametersTest extends GTParsingTest {
 				a: EObject
 			}
 		''')
-		this.assertInvalidResource(file, 1)
-		this.assertValidationErrors(
+		assertInvalidResource(file, 1)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.rule,
 			Diagnostic::SYNTAX_DIAGNOSTIC,
@@ -144,7 +144,7 @@ class GTParsingParametersTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertValidationErrors(
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.parameter,
 			GTValidator.NAME_BLACKLISTED,
@@ -165,7 +165,7 @@ class GTParsingParametersTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertValidationIssues(
+		assertValidationIssues(
 			file,
 			GTPackage.eINSTANCE.parameter,
 			GTValidator.NAME_EXPECT_LOWER_CASE,
@@ -185,7 +185,7 @@ class GTParsingParametersTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertValidationIssues(
+		assertValidationIssues(
 			file,
 			GTPackage.eINSTANCE.parameter,
 			GTValidator.NAME_EXPECT_CAMEL_CASE,
@@ -205,8 +205,8 @@ class GTParsingParametersTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertFile(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.parameter,
 			GTValidator.NAME_EXPECT_UNIQUE,

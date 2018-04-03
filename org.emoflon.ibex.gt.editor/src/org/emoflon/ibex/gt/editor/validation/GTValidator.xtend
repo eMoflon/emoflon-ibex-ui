@@ -117,20 +117,22 @@ class GTValidator extends AbstractGTValidator {
 	public static val CREATE_NODE_TYPE_ABSTRACT_MESSAGE = "The type of created node '%s' must not be abstract."
 
 	// Errors for attributes.
-	public static val ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE = CODE_PREFIX + "attributeConstraint.literalValueWrongType"
+	public static val ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE = CODE_PREFIX + "attribute.literalValueWrongType"
 	public static val ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE = "The value of attribute '%s' must be of type '%s'."
 
-	public static val ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE = CODE_PREFIX + "attributeConstraint.assignmentInDeletedNode"
+	public static val ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE = CODE_PREFIX + "attribute.assignmentInDeletedNode"
 	public static val ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE_MESSAGE = "The assignment for attribute '%s' is forbidden in deleted node '%s'."
 
-	public static val ATTRIBUTE_CONDITION_IN_CREATED_NODE = CODE_PREFIX + "attributeConstraint.conditionInCreatedNode"
+	public static val ATTRIBUTE_CONDITION_IN_CREATED_NODE = CODE_PREFIX + "attribute.conditionInCreatedNode"
 	public static val ATTRIBUTE_CONDITION_IN_CREATED_NODE_MESSAGE = "The condition with attribute '%s' is forbidden in created node '%s'."
 
-	public static val ATTRIBUTE_MULTIPLE_ASSIGNMENTS = CODE_PREFIX + "attributeConstraint.duplicateAssignment"
+	public static val ATTRIBUTE_MULTIPLE_ASSIGNMENTS = CODE_PREFIX + "attribute.duplicateAssignment"
 	public static val ATTRIBUTE_MULTIPLE_ASSIGNMENTS_MESSAGE = "%s assignments for attribute '%s'. Only one is allowed."
 
-	public static val ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE = CODE_PREFIX +
-		"attributeConstraint.relation.typeNotComparable"
+	public static val ATTRIBUTE_DUPLICATE_CONDITION = CODE_PREFIX + "atttribute.duplicateCondition"
+	public static val ATTRIBUTE_DUPLICATE_CONDITION_MESSAGE = "Constraint for attribute '%s' in node '%s' declared %s."
+
+	public static val ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE = CODE_PREFIX + "attribute.relation.typeNotComparable"
 	public static val ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE_MESSAGE = "Relation '%s' is not supported for attribute '%s'."
 
 	// Errors for references.
@@ -484,7 +486,7 @@ class GTValidator extends AbstractGTValidator {
 					attribute.name
 				)
 			} else {
-				// There may be at most one assignments per attribute in context and created nodes.
+				// There may be at most one assignment per attribute in context and created nodes.
 				val attributeAssignmentCount = node.attributes.filter [
 					it.attribute == attribute && it.relation == EditorRelation.ASSIGNMENT
 				].size
@@ -509,6 +511,19 @@ class GTValidator extends AbstractGTValidator {
 					ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE,
 					attribute.name
 				)
+			} else {
+				// There should be no duplicate constraints within a node.
+				val constraints = node.attributes.filter [
+					GTEditorComparator.areAttributeConstraintsEqual(it, attributeConstraint)
+				]
+				if (constraints.size > 1) {
+					warning(
+						String.format(ATTRIBUTE_DUPLICATE_CONDITION_MESSAGE, attributeConstraint.attribute.name,
+							node.name, getTimes(constraints.size)),
+						GTPackage.Literals.EDITOR_ATTRIBUTE__ATTRIBUTE,
+						ATTRIBUTE_DUPLICATE_CONDITION
+					)
+				}
 			}
 			if (node.operator == EditorOperator.CREATE) {
 				// If the node is a created node, it may not contain attribute conditions.

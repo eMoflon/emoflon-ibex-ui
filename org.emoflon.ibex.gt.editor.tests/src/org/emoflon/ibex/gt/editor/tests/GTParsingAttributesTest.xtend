@@ -1,6 +1,7 @@
 package org.emoflon.ibex.gt.editor.tests
 
 import org.eclipse.xtext.diagnostics.Diagnostic
+import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
@@ -27,10 +28,10 @@ class GTParsingAttributesTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertValid(file)
+		assertValid(file)
 		val node = file.getRule(0).getNode(0)
-		this.assertAttributeLiteral(node.getAttribute(0), "name", EditorRelation.ASSIGNMENT, "Test1")
-		this.assertAttributeLiteral(node.getAttribute(1), "instanceTypeName", EditorRelation.ASSIGNMENT, "Test2")
+		assertAttributeLiteral(node.getAttribute(0), "name", EditorRelation.ASSIGNMENT, "Test1")
+		assertAttributeLiteral(node.getAttribute(1), "instanceTypeName", EditorRelation.ASSIGNMENT, "Test2")
 	}
 
 	@Test
@@ -45,10 +46,10 @@ class GTParsingAttributesTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertValid(file)
+		assertValid(file)
 		val node = file.getRule(0).getNode(0)
-		this.assertAttributeLiteral(node.getAttribute(0), "name", EditorRelation.UNEQUAL, "Test1")
-		this.assertAttributeLiteral(node.getAttribute(1), "instanceTypeName", EditorRelation.EQUAL, "Test2")
+		assertAttributeLiteral(node.getAttribute(0), "name", EditorRelation.UNEQUAL, "Test1")
+		assertAttributeLiteral(node.getAttribute(1), "instanceTypeName", EditorRelation.EQUAL, "Test2")
 	}
 
 	@Test
@@ -64,10 +65,10 @@ class GTParsingAttributesTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertValid(file)
+		assertValid(file)
 		val node = file.getRule(0).getNode(1)
 		val targetNode = file.getRule(0).getNode(0)
-		this.assertAttributeWithAttributeExpression(node.getAttribute(0), "name", EditorRelation.EQUAL, targetNode, "name")
+		assertAttributeWithAttributeExpression(node.getAttribute(0), "name", EditorRelation.EQUAL, targetNode, "name")
 	}
 
 	@Test
@@ -83,8 +84,8 @@ class GTParsingAttributesTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertInvalidResource(file, 1)
-		this.assertValidationErrors(
+		assertInvalidResource(file, 1)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorAttributeExpression,
 			Diagnostic::LINKING_DIAGNOSTIC,
@@ -105,8 +106,8 @@ class GTParsingAttributesTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertFile(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorAttributeExpression,
 			Diagnostic::LINKING_DIAGNOSTIC,
@@ -125,10 +126,10 @@ class GTParsingAttributesTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertValid(file)
+		assertValid(file)
 		val node = file.getRule(0).getNode(0)
 		val parameter = file.getRule(0).getParameter(0)
-		this.assertAttributeParameter(node.getAttribute(0), "name", EditorRelation.ASSIGNMENT, parameter)
+		assertAttributeParameter(node.getAttribute(0), "name", EditorRelation.ASSIGNMENT, parameter)
 	}
 
 	@Test
@@ -147,10 +148,10 @@ class GTParsingAttributesTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertValid(file, 2)
+		assertValid(file, 2)
 		val node = file.getRule(1).getNode(0)
 		val parameter = file.getRule(0).getParameter(0)
-		this.assertAttributeParameter(node.getAttribute(0), "name", EditorRelation.ASSIGNMENT, parameter)
+		assertAttributeParameter(node.getAttribute(0), "name", EditorRelation.ASSIGNMENT, parameter)
 	}
 
 	@Test
@@ -164,8 +165,8 @@ class GTParsingAttributesTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertFile(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorParameterExpression,
 			Diagnostic::LINKING_DIAGNOSTIC,
@@ -190,8 +191,8 @@ class GTParsingAttributesTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertFile(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorAttribute,
 			GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE,
@@ -212,8 +213,8 @@ class GTParsingAttributesTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertFile(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorAttribute,
 			GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE,
@@ -232,8 +233,8 @@ class GTParsingAttributesTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertFile(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorAttribute,
 			GTValidator.ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE,
@@ -253,8 +254,8 @@ class GTParsingAttributesTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertFile(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorAttribute,
 			GTValidator.ATTRIBUTE_MULTIPLE_ASSIGNMENTS,
@@ -273,8 +274,8 @@ class GTParsingAttributesTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertFile(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorAttribute,
 			GTValidator.ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE,
@@ -293,12 +294,34 @@ class GTParsingAttributesTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertFile(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorAttribute,
 			GTValidator.ATTRIBUTE_CONDITION_IN_CREATED_NODE,
 			String.format(GTValidator.ATTRIBUTE_CONDITION_IN_CREATED_NODE_MESSAGE, 'name', 'clazz')
+		)
+	}
+
+	@Test
+	def void warningIfDuplicateAttributeConditions() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			rule a {
+				clazz: EClass {
+					.name == "Test"
+					.name == "Test"
+				}
+			}
+		''')
+		assertFile(file)
+		assertValidationIssues(
+			file,
+			GTPackage.eINSTANCE.editorAttribute,
+			GTValidator.ATTRIBUTE_DUPLICATE_CONDITION,
+			Severity.WARNING,
+			String.format(GTValidator.ATTRIBUTE_DUPLICATE_CONDITION_MESSAGE, 'name', 'clazz', 'twice')
 		)
 	}
 
@@ -313,8 +336,8 @@ class GTParsingAttributesTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertFile(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorAttribute,
 			Diagnostic::LINKING_DIAGNOSTIC,

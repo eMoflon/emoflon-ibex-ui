@@ -32,7 +32,7 @@ class GTParsingReferencesTest extends GTParsingTest {
 		''')
 		this.assertValid(file)
 		val rule = file.getRule(0)
-		this.assertReference(rule.getNode(0).getReference(0), EditorOperator.CONTEXT, "eClassifiers", rule.getNode(1))
+		assertReference(rule.getNode(0).getReference(0), EditorOperator.CONTEXT, "eClassifiers", rule.getNode(1))
 	}
 
 	@Test
@@ -52,8 +52,8 @@ class GTParsingReferencesTest extends GTParsingTest {
 		''')
 		this.assertValid(file)
 		val rule = file.getRule(0)
-		this.assertReference(rule.getNode(0).getReference(0), EditorOperator.CREATE, "eClassifiers", rule.getNode(1))
-		this.assertReference(rule.getNode(0).getReference(1), EditorOperator.DELETE, "eClassifiers", rule.getNode(2))
+		assertReference(rule.getNode(0).getReference(0), EditorOperator.CREATE, "eClassifiers", rule.getNode(1))
+		assertReference(rule.getNode(0).getReference(1), EditorOperator.DELETE, "eClassifiers", rule.getNode(2))
 	}
 
 	@Test
@@ -77,8 +77,8 @@ class GTParsingReferencesTest extends GTParsingTest {
 		this.assertValid(file, 2)
 		val ruleS = file.getRule(0)
 		val ruleR = file.getRule(1)
-		this.assertReference(ruleR.getNode(0).getReference(0), EditorOperator.CREATE, "eClassifiers", ruleS.getNode(0))
-		this.assertReference(ruleR.getNode(0).getReference(1), EditorOperator.DELETE, "eClassifiers", ruleS.getNode(1))
+		assertReference(ruleR.getNode(0).getReference(0), EditorOperator.CREATE, "eClassifiers", ruleS.getNode(0))
+		assertReference(ruleR.getNode(0).getReference(1), EditorOperator.DELETE, "eClassifiers", ruleS.getNode(1))
 	}
 
 	@Ignore("Needs Causes Exception, seems to be a scoping problem")
@@ -95,8 +95,8 @@ class GTParsingReferencesTest extends GTParsingTest {
 				clazz: EClass
 			}
 		''')
-		this.assertFile(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorReference,
 			Diagnostic::LINKING_DIAGNOSTIC,
@@ -117,8 +117,8 @@ class GTParsingReferencesTest extends GTParsingTest {
 				clazz: EObject
 			}
 		''')
-		this.assertFile(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorReference,
 			Diagnostic::LINKING_DIAGNOSTIC,

@@ -21,8 +21,8 @@ class GTParsingImportsTest extends GTParsingTest {
 				object: EObject
 			}
 		''')
-		this.assertValidResource(file)
-		this.assertValidationErrors(
+		assertValidResource(file)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorGTFile,
 			GTValidator.IMPORT_MISSING_META_MODEL,
@@ -40,8 +40,8 @@ class GTParsingImportsTest extends GTParsingTest {
 				object: EObject
 			}
 		''')
-		this.assertValidResource(file)
-		this.assertValidationIssues(
+		assertValidResource(file)
+		assertValidationIssues(
 			file,
 			GTPackage.eINSTANCE.editorImport,
 			GTValidator.IMPORT_DUPLICATE,
@@ -60,8 +60,8 @@ class GTParsingImportsTest extends GTParsingTest {
 				object: EObject
 			}
 		''')
-		this.assertValidResource(file)
-		this.assertValidationErrors(
+		assertValidResource(file)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorImport,
 			GTValidator.IMPORT_FILE_DOES_NOT_EXIST,

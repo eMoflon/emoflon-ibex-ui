@@ -30,7 +30,7 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 			rule c
 			refines a, b
 		''')
-		this.assertValid(file, 3)
+		assertValid(file, 3)
 	}
 
 	@Test
@@ -43,8 +43,8 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 				object: EObject
 			}
 		''')
-		this.assertFile(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.rule,
 			Diagnostic::LINKING_DIAGNOSTIC,
@@ -67,8 +67,8 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 				object2: EObject
 			}
 		''')
-		this.assertFile(file, 2)
-		this.assertValidationErrors(
+		assertFile(file, 2)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.rule,
 			Diagnostic::LINKING_DIAGNOSTIC,
@@ -96,8 +96,8 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 				object: EObject
 			}
 		''')
-		this.assertFile(file, 3)
-		this.assertValidationErrors(
+		assertFile(file, 3)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.rule,
 			Diagnostic::LINKING_DIAGNOSTIC,
@@ -117,8 +117,8 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 			rule b
 			refines a, a
 		''')
-		this.assertValidResource(file)
-		this.assertValidationErrors(
+		assertValidResource(file)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.rule,
 			GTValidator.RULE_SUPER_RULES_DUPLICATE,
@@ -144,8 +144,8 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 				object: EObject
 			}
 		''')
-		this.assertFile(file, 3)
-		this.assertValidationErrors(
+		assertFile(file, 3)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.rule,
 			GTValidator.RULE_REFINEMENT_INVALID_PARAMETER,
@@ -168,8 +168,8 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 				object: EObject
 			}
 		''')
-		this.assertFile(file, 2)
-		this.assertValidationErrors(
+		assertFile(file, 2)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.rule,
 			GTValidator.RULE_REFINEMENT_INVALID_PARAMETER,
@@ -198,12 +198,35 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 			rule renameClass
 			refines renameClassToTest1, renameClassToTest2
 		''')
-		this.assertFile(file, 3)
-		this.assertValidationErrors(
+		assertFile(file, 3)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.rule,
 			GTValidator.RULE_REFINEMENT_INVALID_ATTRIBUTE_ASSIGNMENT,
 			String.format(GTValidator.RULE_REFINEMENT_INVALID_ATTRIBUTE_ASSIGNMENT_MESSAGE, 'renameClass', 'clazz')
 		)
+	}
+
+	@Test
+	def void validIfNoConflictBetweenAttributeAssignments() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			rule renameClassToTest1 {
+				clazz: EClass {
+					.name := "Test"
+				}
+			}
+			
+			rule renameClassToTest2 {
+				clazz: EClass {
+					.name := "Test"
+				}
+			}
+			
+			rule renameClass
+			refines renameClassToTest1, renameClassToTest2
+		''')
+		assertValid(file, 3)
 	}
 }

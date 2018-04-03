@@ -39,13 +39,13 @@ abstract class GTParsingTest {
 	def void assertValid(EditorGTFile file) {
 		Assert.assertNotNull(file)
 		this.validationHelper.assertNoIssues(file)
-		this.assertFile(file, 1)
+		assertFile(file, 1)
 	}
 
 	def void assertValid(EditorGTFile file, int ruleCount) {
 		Assert.assertNotNull(file)
 		this.validationHelper.assertNoIssues(file)
-		this.assertFile(file, ruleCount)
+		assertFile(file, ruleCount)
 	}
 
 	def void assertValidationErrors(EditorGTFile file, EClass objectType, String code, String... messages) {
@@ -57,25 +57,25 @@ abstract class GTParsingTest {
 		messages.forEach[this.validationHelper.assertIssue(file, objectType, code, severity, it)]
 	}
 
-	def void assertValidResource(EditorGTFile file) {
+	static def void assertValidResource(EditorGTFile file) {
 		Assert.assertNotNull(file)
 		Assert.assertTrue(file.eResource.errors.isEmpty)
 		Assert.assertTrue(file.eResource.warnings.isEmpty)
 	}
 
-	def void assertInvalidResource(EditorGTFile file, int issueCount) {
+	static def void assertInvalidResource(EditorGTFile file, int issueCount) {
 		Assert.assertTrue(issueCount > 0)
 		Assert.assertNotNull(file)
 		Assert.assertEquals(issueCount, file.eResource.errors.size + file.eResource.warnings.size)
 	}
 
-	def void assertFile(EditorGTFile file) {
-		this.assertFile(file, 1)
+	static def void assertFile(EditorGTFile file) {
+		assertFile(file, 1)
 	}
 
-	def void assertFile(EditorGTFile file, int ruleCount) {
+	static def void assertFile(EditorGTFile file, int ruleCount) {
 		Assert.assertTrue(ruleCount > 0)
-		this.assertValidResource(file)
+		assertValidResource(file)
 
 		Assert.assertEquals(1, file.imports.size)
 		Assert.assertEquals("http://www.eclipse.org/emf/2002/Ecore", file.imports.get(0).name)
@@ -83,15 +83,15 @@ abstract class GTParsingTest {
 		Assert.assertEquals(ruleCount, file.rules.size)
 	}
 
-	def getRule(EditorGTFile file, int ruleIndex) {
+	static def getRule(EditorGTFile file, int ruleIndex) {
 		return file.rules.get(ruleIndex)
 	}
 
-	def getParameter(Rule rule, int parameterIndex) {
+	static def getParameter(Rule rule, int parameterIndex) {
 		return rule.parameters.get(parameterIndex)
 	}
 
-	def void assertParameters(Rule rule, Map<String, String> parameterNameToType) {
+	static def void assertParameters(Rule rule, Map<String, String> parameterNameToType) {
 		Assert.assertEquals(parameterNameToType.size, rule.parameters.size)
 		for (parameter : rule.parameters) {
 			Assert.assertTrue("Found unexpected parameter " + parameter.name,
@@ -100,15 +100,15 @@ abstract class GTParsingTest {
 		}
 	}
 
-	def getNode(Rule rule, int nodeIndex) {
+	static def getNode(Rule rule, int nodeIndex) {
 		return rule.nodes.get(nodeIndex)
 	}
 
-	def assertNode(Node node, EditorOperator operator, String variableName, String variableType) {
+	static def assertNode(Node node, EditorOperator operator, String variableName, String variableType) {
 		assertNode(node, operator, variableName, variableType, 0, 0)
 	}
 
-	def assertNode(Node node, EditorOperator operator, String name, String type, int attributesCount,
+	static def assertNode(Node node, EditorOperator operator, String name, String type, int attributesCount,
 		int referencesCount) {
 		Assert.assertEquals(operator, node.operator)
 		Assert.assertEquals(name, node.name)
@@ -117,42 +117,42 @@ abstract class GTParsingTest {
 		Assert.assertEquals(referencesCount, node.references.size)
 	}
 
-	def getAttribute(Node node, int attributeIndex) {
+	static def getAttribute(Node node, int attributeIndex) {
 		return node.attributes.get(attributeIndex)
 	}
 
-	def void assertAttribute(EditorAttribute attributeConstraint, String name, EditorRelation relation) {
+	static def void assertAttribute(EditorAttribute attributeConstraint, String name, EditorRelation relation) {
 		Assert.assertEquals(name, attributeConstraint.attribute.name)
 		Assert.assertEquals(relation, attributeConstraint.relation)
 	}
 
-	def void assertAttributeWithAttributeExpression(EditorAttribute attributeConstraint, String name,
+	static def void assertAttributeWithAttributeExpression(EditorAttribute attributeConstraint, String name,
 		EditorRelation relation, Node node, String attr) {
-		this.assertAttribute(attributeConstraint, name, relation)
+		assertAttribute(attributeConstraint, name, relation)
 		Assert.assertTrue(attributeConstraint.value instanceof EditorAttributeExpression)
 		Assert.assertEquals(node, (attributeConstraint.value as EditorAttributeExpression).node)
 		Assert.assertEquals(attr, (attributeConstraint.value as EditorAttributeExpression).attribute.name)
 	}
 
-	def void assertAttributeLiteral(EditorAttribute attributeConstraint, String name, EditorRelation relation,
+	static def void assertAttributeLiteral(EditorAttribute attributeConstraint, String name, EditorRelation relation,
 		String value) {
-		this.assertAttribute(attributeConstraint, name, relation)
+		assertAttribute(attributeConstraint, name, relation)
 		Assert.assertTrue(attributeConstraint.value instanceof EditorLiteralExpression)
 		Assert.assertEquals(value, (attributeConstraint.value as EditorLiteralExpression).value)
 	}
 
-	def void assertAttributeParameter(EditorAttribute attributeConstraint, String name, EditorRelation relation,
+	static def void assertAttributeParameter(EditorAttribute attributeConstraint, String name, EditorRelation relation,
 		Parameter parameter) {
-		this.assertAttribute(attributeConstraint, name, relation)
+		assertAttribute(attributeConstraint, name, relation)
 		Assert.assertTrue(attributeConstraint.value instanceof EditorParameterExpression)
 		Assert.assertEquals(parameter, (attributeConstraint.value as EditorParameterExpression).parameter)
 	}
 
-	def getReference(Node node, int referenceIndex) {
+	static def getReference(Node node, int referenceIndex) {
 		return node.references.get(referenceIndex)
 	}
 
-	def assertReference(EditorReference reference, EditorOperator operator, String name, Node target) {
+	static def assertReference(EditorReference reference, EditorOperator operator, String name, Node target) {
 		Assert.assertEquals(operator, reference.operator)
 		Assert.assertEquals(name, reference.type.name)
 		Assert.assertEquals(target, reference.target)

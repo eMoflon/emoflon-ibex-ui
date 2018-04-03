@@ -22,8 +22,8 @@ class GTParsingRulesTest extends GTParsingTest {
 			
 			rule a() {}
 		''')
-		this.assertFile(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.rule,
 			GTValidator.RULE_EMPTY,
@@ -44,7 +44,7 @@ class GTParsingRulesTest extends GTParsingTest {
 				object2: EObject
 			}
 		''')
-		this.assertValid(file, 2)
+		assertValid(file, 2)
 		Assert.assertTrue(file.rules.get(0).abstract)
 		Assert.assertFalse(file.rules.get(1).abstract)
 	}
@@ -74,8 +74,8 @@ class GTParsingRulesTest extends GTParsingTest {
 				object: EObject
 			}
 		''')
-		this.assertFile(file, 5)
-		this.assertValidationErrors(
+		assertFile(file, 5)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.rule,
 			GTValidator.NAME_EXPECT_UNIQUE,
@@ -94,8 +94,8 @@ class GTParsingRulesTest extends GTParsingTest {
 				a: EObject
 			}
 		''')
-		this.assertFile(file)
-		this.assertValidationIssues(
+		assertFile(file)
+		assertValidationIssues(
 			file,
 			GTPackage.eINSTANCE.rule,
 			GTValidator.NAME_EXPECT_CAMEL_CASE,
@@ -114,8 +114,8 @@ class GTParsingRulesTest extends GTParsingTest {
 				a: EObject
 			}
 		''')
-		this.assertFile(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.rule,
 			GTValidator.NAME_BLACKLISTED,
@@ -133,8 +133,8 @@ class GTParsingRulesTest extends GTParsingTest {
 				a: EObject
 			}
 		''')
-		this.assertFile(file)
-		this.assertValidationIssues(
+		assertFile(file)
+		assertValidationIssues(
 			file,
 			GTPackage.eINSTANCE.rule,
 			GTValidator.NAME_EXPECT_LOWER_CASE,
