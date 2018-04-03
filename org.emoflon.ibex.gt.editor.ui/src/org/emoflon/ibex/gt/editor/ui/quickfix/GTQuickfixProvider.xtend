@@ -209,7 +209,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	 */
 	@Fix(GTValidator.CREATE_NODE_TYPE_ABSTRACT)
 	def addAbstractModifierToRuleWithAbstractNodeType(Issue issue, IssueResolutionAcceptor acceptor) {
-		val label = String.format("[Rule] Make rule '%s' abstract.", issue.data.get(1))
+		val label = String.format("Make rule '%s' abstract.", issue.data.get(1))
 		acceptor.accept(
 			issue,
 			label,
@@ -220,7 +220,8 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 				if (rule instanceof Rule) {
 					rule.abstract = true
 				}
-			]
+			],
+			3
 		)
 	}
 
@@ -239,12 +240,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			it.name == issue.data.get(0) // the name of the abstract class
 		]
 		allClasses.filter[!it.abstract].forEach [
-			var prefix = ''
-			if (it.EAllSuperTypes.contains(abstractClass)) {
-				// Workaround to display subclasses of the current abstract class as first elements
-				prefix = '[Subclass] '
-			}
-			val label = String.format(prefix + "Replace node type with '%s'.", it.name)
+			val label = String.format("Replace node type with '%s'.", it.name)
 			acceptor.accept(
 				issue,
 				label,
@@ -254,7 +250,8 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 					if (element instanceof Node) {
 						element.type = it
 					}
-				]
+				],
+				if (it.EAllSuperTypes.contains(abstractClass)) 2 else 1
 			)
 		]
 	}
