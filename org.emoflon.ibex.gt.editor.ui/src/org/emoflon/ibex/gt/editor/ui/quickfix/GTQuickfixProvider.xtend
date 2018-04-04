@@ -251,15 +251,33 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 						element.type = it
 					}
 				],
-				if (it.EAllSuperTypes.contains(abstractClass)) 2 else 1
+				if(it.EAllSuperTypes.contains(abstractClass)) 2 else 1
 			)
 		]
 	}
 
+	/**
+	 * Removes one of multiple conflicting attribute assignments.
+	 */
 	@Fix(GTValidator.ATTRIBUTE_MULTIPLE_ASSIGNMENTS)
 	def removeAssignment(Issue issue, IssueResolutionAcceptor acceptor) {
+		removeAttribute(issue, acceptor, 'assignment')
+	}
+
+	/**
+	 * Removes a duplicate attribute condition.
+	 */
+	@Fix(GTValidator.ATTRIBUTE_DUPLICATE_CONDITION)
+	def removeAttributeCondition(Issue issue, IssueResolutionAcceptor acceptor) {
+		removeAttribute(issue, acceptor, 'constraint')
+	}
+
+	/**
+	 * Removes an attribute assignment/constraint.
+	 */
+	private static def removeAttribute(Issue issue, IssueResolutionAcceptor acceptor, String name) {
 		val attributeName = issue.data.get(0)
-		val label = '''Remove assignment for attribute '«attributeName»'.'''
+		val label = '''Remove «name» for attribute '«attributeName»'.'''
 		acceptor.accept(
 			issue,
 			label,

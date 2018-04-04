@@ -518,10 +518,11 @@ class GTValidator extends AbstractGTValidator {
 				]
 				if (constraints.size > 1) {
 					warning(
-						String.format(ATTRIBUTE_DUPLICATE_CONDITION_MESSAGE, attributeConstraint.attribute.name,
-							node.name, getTimes(constraints.size)),
+						String.format(ATTRIBUTE_DUPLICATE_CONDITION_MESSAGE, attribute.name, node.name,
+							getTimes(constraints.size)),
 						GTPackage.Literals.EDITOR_ATTRIBUTE__ATTRIBUTE,
-						ATTRIBUTE_DUPLICATE_CONDITION
+						ATTRIBUTE_DUPLICATE_CONDITION,
+						attribute.name
 					)
 				}
 			}
