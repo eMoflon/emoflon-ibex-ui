@@ -182,8 +182,8 @@ public class GTFlattener {
 	 *            the mapping between node names and nodes
 	 */
 	private void cleanupNodes(final List<Node> nodes, final Map<String, Node> nodeNameToNode) {
-		nodes.forEach(n -> {
-			n.getReferences().forEach(r -> {
+		nodes.forEach(node -> {
+			node.getReferences().forEach(r -> {
 				if (r.getTarget() != null) {
 					r.setTarget(nodeNameToNode.get(r.getTarget().getName()));
 				}
@@ -205,7 +205,20 @@ public class GTFlattener {
 			node.setType(mergedNode.getType());
 		}
 
-		// Determine operator.
+		mergeOperatorsOfNodes(node, mergedNode);
+		mergeAttributesOfNodes(node, mergedNode);
+		mergeReferencesOfNodes(node, mergedNode);
+	}
+
+	/**
+	 * Merges the operators of the given nodes if possible.
+	 * 
+	 * @param node
+	 *            the node
+	 * @param mergedNode
+	 *            the node merged into the first one
+	 */
+	private void mergeOperatorsOfNodes(final Node node, final Node mergedNode) {
 		Optional<EditorOperator> operator = GTFlatteningUtils.getMergedOperator(node.getOperator(),
 				mergedNode.getOperator());
 		if (operator.isPresent()) {
@@ -214,9 +227,6 @@ public class GTFlattener {
 			errors.add(String.format("Node %s: Cannot merge operators %s and %s", //
 					node.getName(), node.getOperator(), mergedNode.getOperator()));
 		}
-
-		mergeAttributesOfNodes(node, mergedNode);
-		mergeReferencesOfNodes(node, mergedNode);
 	}
 
 	/**
@@ -230,18 +240,30 @@ public class GTFlattener {
 	 */
 	private void mergeAttributesOfNodes(final Node node, final Node mergedNode) {
 		for (EditorAttribute mergedAttribute : mergedNode.getAttributes()) {
-			Optional<EditorAttribute> attribute = node.getAttributes().stream()
-					.filter(a -> GTEditorComparator.areAttributeConstraintsEqual(a, mergedAttribute)).findAny();
-			if (!attribute.isPresent()) {
-				boolean canAdd = true;
-				if (hasConflictingAssignment(node, mergedAttribute)) {
-					errors.add(String.format("Node %s has multiple assignments for attribute %s.", node.getName(),
-							mergedAttribute.getAttribute().getName()));
-					canAdd = false;
-				}
-				if (canAdd) {
-					node.getAttributes().add(EcoreUtil.copy(mergedAttribute));
-				}
+			mergeAttribute(node, mergedAttribute);
+		}
+	}
+
+	/**
+	 * Merges the attribute into the attributes of the node.
+	 * 
+	 * @param node
+	 *            the node
+	 * @param mergedAttribute
+	 *            the attribute to merge
+	 */
+	private void mergeAttribute(final Node node, final EditorAttribute mergedAttribute) {
+		Optional<EditorAttribute> attribute = node.getAttributes().stream()
+				.filter(a -> GTEditorComparator.areAttributeConstraintsEqual(a, mergedAttribute)).findAny();
+		if (!attribute.isPresent()) {
+			boolean canAdd = true;
+			if (hasConflictingAssignment(node, mergedAttribute)) {
+				errors.add(String.format("Node %s has multiple assignments for attribute %s.", node.getName(),
+						mergedAttribute.getAttribute().getName()));
+				canAdd = false;
+			}
+			if (canAdd) {
+				node.getAttributes().add(EcoreUtil.copy(mergedAttribute));
 			}
 		}
 	}
@@ -275,21 +297,33 @@ public class GTFlattener {
 	 */
 	private void mergeReferencesOfNodes(final Node node, final Node mergedNode) {
 		for (EditorReference mergedReference : mergedNode.getReferences()) {
-			Optional<EditorReference> referenceInNode = node.getReferences().stream()
-					.filter(r -> GTEditorComparator.areReferencesEqual(r, mergedReference)).findAny();
-			if (referenceInNode.isPresent()) {
-				Optional<EditorOperator> operator = GTFlatteningUtils
-						.getMergedOperator(referenceInNode.get().getOperator(), mergedReference.getOperator());
-				if (operator.isPresent()) {
-					referenceInNode.get().setOperator(operator.get());
-				} else {
-					errors.add(String.format("Reference between %s and %s: Cannot merge operators %s and %s.",
-							node.getName(), mergedNode.getName(), referenceInNode.get().getOperator(),
-							mergedReference.getOperator()));
-				}
+			mergeReference(node, mergedReference);
+		}
+	}
+
+	/**
+	 * Merges the reference into the references of the node.
+	 * 
+	 * @param node
+	 *            the node
+	 * @param mergedReference
+	 *            the reference to merge
+	 */
+	private void mergeReference(final Node node, final EditorReference mergedReference) {
+		Optional<EditorReference> referenceInNode = node.getReferences().stream()
+				.filter(r -> GTEditorComparator.areReferencesEqual(r, mergedReference)).findAny();
+		if (referenceInNode.isPresent()) {
+			Optional<EditorOperator> operator = GTFlatteningUtils.getMergedOperator(referenceInNode.get().getOperator(),
+					mergedReference.getOperator());
+			if (operator.isPresent()) {
+				referenceInNode.get().setOperator(operator.get());
 			} else {
-				node.getReferences().add(EcoreUtil.copy(mergedReference));
+				errors.add(String.format("Reference between %s and %s: Cannot merge operators %s and %s.",
+						node.getName(), mergedReference.getTarget().getName(), referenceInNode.get().getOperator(),
+						mergedReference.getOperator()));
 			}
+		} else {
+			node.getReferences().add(EcoreUtil.copy(mergedReference));
 		}
 	}
 }
