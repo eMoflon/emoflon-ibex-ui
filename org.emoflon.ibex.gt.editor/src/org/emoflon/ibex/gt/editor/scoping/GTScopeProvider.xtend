@@ -144,11 +144,8 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	 * of the node containing the reference.
 	 */
 	def getScopeForReferenceTypes(EditorReference context) {
-		val node = context.eContainer as Node
-		if (node.type !== null) {
-			return Scopes.scopeFor(node.type.EAllReferences)
-		}
-		return Scopes.scopeFor([])
+		val containingNode = context.eContainer as Node
+		return Scopes.scopeFor(containingNode.type.EAllReferences)
 	}
 
 	/**

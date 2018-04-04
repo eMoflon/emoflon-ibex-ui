@@ -37,8 +37,9 @@ public class GTEditorRuleUtils {
 	 * @return the rule and all its super rules
 	 */
 	public static Set<Rule> getRuleAllWithSuperRules(final Rule rule) {
-		Set<Rule> rules = getAllSuperRules(rule);
+		Set<Rule> rules = new HashSet<Rule>();
 		rules.add(rule);
+		rules.addAll(getAllSuperRules(rule));
 		return rules;
 	}
 

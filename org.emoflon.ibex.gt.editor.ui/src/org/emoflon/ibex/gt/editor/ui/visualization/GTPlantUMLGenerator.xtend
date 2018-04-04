@@ -119,7 +119,8 @@ class GTPlantUMLGenerator {
 	 * Prints the reference label in the color of the reference operator.
 	 */
 	private static def String referenceLabel(EditorReference reference) {
-		'''<color:«referenceColor(reference)»>«reference.type.name»'''
+		val type = if(reference === null || reference.type === null) '?' else reference.type.name
+		'''<color:«referenceColor(reference)»>«type»'''
 	}
 
 	/**

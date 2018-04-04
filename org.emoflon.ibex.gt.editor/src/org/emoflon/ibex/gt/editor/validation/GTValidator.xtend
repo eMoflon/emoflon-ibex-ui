@@ -20,6 +20,7 @@ import org.emoflon.ibex.gt.editor.utils.GTEditorAttributeUtils
 import org.emoflon.ibex.gt.editor.utils.GTEditorComparator
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 import org.emoflon.ibex.gt.editor.utils.GTEditorRuleUtils
+import org.emoflon.ibex.gt.editor.utils.GTFlatteningUtils
 
 /**
  * This class contains custom validation rules. 
@@ -541,10 +542,15 @@ class GTValidator extends AbstractGTValidator {
 	@Check
 	def checkReference(EditorReference reference) {
 		val node = reference.eContainer as Node
+		val rule = node.eContainer as Rule
+
+		val targetNodeOperator = GTFlatteningUtils.mergeOperators(GTEditorRuleUtils.getAllNodesOfRule(rule, [
+			it.name.equals(reference.target.name)
+		]).map[it.operator])
 
 		if (reference.operator == EditorOperator.CONTEXT) {
 			// The target of a context reference must be a context node.
-			if (reference.target.operator !== EditorOperator.CONTEXT) {
+			if (targetNodeOperator.present && targetNodeOperator.get !== EditorOperator.CONTEXT) {
 				error(
 					String.format(REFERENCE_TARGET_EXPECT_CONTEXT_MESSAGE, reference.type.name),
 					GTPackage.Literals.EDITOR_REFERENCE__TARGET,
@@ -578,7 +584,7 @@ class GTValidator extends AbstractGTValidator {
 
 		if (reference.operator == EditorOperator.CREATE) {
 			// The target of a created reference must be a context or a created node.
-			if (reference.target.operator == EditorOperator.DELETE) {
+			if (targetNodeOperator.present && targetNodeOperator.get == EditorOperator.DELETE) {
 				error(
 					String.format(REFERENCE_TARGET_EXPECT_CONTEXT_OR_CREATE_MESSAGE, reference.type.name),
 					GTPackage.Literals.EDITOR_REFERENCE__TARGET,
@@ -602,7 +608,7 @@ class GTValidator extends AbstractGTValidator {
 
 		if (reference.operator == EditorOperator.DELETE) {
 			// The target of a deleted reference must be a context or a deleted node.
-			if (reference.target.operator == EditorOperator.CREATE) {
+			if (targetNodeOperator.present && targetNodeOperator.get == EditorOperator.CREATE) {
 				error(
 					String.format(REFERENCE_TARGET_EXPECT_CONTEXT_OR_DELETE_MESSAGE, reference.type.name),
 					GTPackage.Literals.EDITOR_REFERENCE__TARGET,

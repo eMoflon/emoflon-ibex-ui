@@ -206,11 +206,13 @@ public class GTFlattener {
 		}
 
 		// Determine operator.
-		try {
-			EditorOperator operator = getMergedOperator(node.getOperator(), mergedNode.getOperator());
-			node.setOperator(operator);
-		} catch (IllegalArgumentException e) {
-			errors.add(String.format("Node %s: %s", node.getName(), e.getMessage()));
+		Optional<EditorOperator> operator = GTFlatteningUtils.getMergedOperator(node.getOperator(),
+				mergedNode.getOperator());
+		if (operator.isPresent()) {
+			node.setOperator(operator.get());
+		} else {
+			errors.add(String.format("Node %s: Cannot merge operators %s and %s", //
+					node.getName(), node.getOperator(), mergedNode.getOperator()));
 		}
 
 		mergeAttributesOfNodes(node, mergedNode);
@@ -276,40 +278,18 @@ public class GTFlattener {
 			Optional<EditorReference> referenceInNode = node.getReferences().stream()
 					.filter(r -> GTEditorComparator.areReferencesEqual(r, mergedReference)).findAny();
 			if (referenceInNode.isPresent()) {
-				try {
-					EditorOperator operator = getMergedOperator(referenceInNode.get().getOperator(),
-							mergedReference.getOperator());
-					referenceInNode.get().setOperator(operator);
-				} catch (IllegalArgumentException e) {
-					errors.add(String.format("Reference between %s and %s: %s", node.getName(), mergedNode.getName(),
-							e.getMessage()));
+				Optional<EditorOperator> operator = GTFlatteningUtils
+						.getMergedOperator(referenceInNode.get().getOperator(), mergedReference.getOperator());
+				if (operator.isPresent()) {
+					referenceInNode.get().setOperator(operator.get());
+				} else {
+					errors.add(String.format("Reference between %s and %s: Cannot merge operators %s and %s.",
+							node.getName(), mergedNode.getName(), referenceInNode.get().getOperator(),
+							mergedReference.getOperator()));
 				}
 			} else {
 				node.getReferences().add(EcoreUtil.copy(mergedReference));
 			}
 		}
-	}
-
-	/**
-	 * Returns the operator if elements with the two given elements are merged.
-	 * 
-	 * @param a
-	 *            the operator of the first element
-	 * @param b
-	 *            the operator of the second element
-	 * @return the operator of the merged element
-	 */
-	private EditorOperator getMergedOperator(final EditorOperator a, final EditorOperator b) {
-		if (a.equals(b)) {
-			return a;
-		}
-
-		// Context overwrites create/delete.
-		if (a == EditorOperator.CONTEXT || b == EditorOperator.CONTEXT) {
-			return EditorOperator.CONTEXT;
-		}
-
-		String message = String.format("Cannot merge operators %s and %s.", a, b);
-		throw new IllegalArgumentException(message);
 	}
 }

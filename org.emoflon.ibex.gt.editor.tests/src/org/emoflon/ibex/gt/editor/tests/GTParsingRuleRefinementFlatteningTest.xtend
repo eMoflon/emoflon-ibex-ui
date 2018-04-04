@@ -34,6 +34,7 @@ class GTParsingRuleRefinementFlatteningTest extends GTParsingTest {
 			refines findClassifierWithAnnotation {
 				classifier: EClass {
 					.interface == true
+					-eAnnotations -> annotation
 					-eAttributes -> attribute
 				}
 			
@@ -91,6 +92,48 @@ class GTParsingRuleRefinementFlatteningTest extends GTParsingTest {
 		assertNode(flattenedRule.getNode(0), EditorOperator.CONTEXT, "clazz", "EClass", 5, 0)
 		Assert.assertEquals(2,
 			flattenedRule.getNode(0).attributes.filter[it.relation == EditorRelation.ASSIGNMENT].size)
+	}
+
+	@Test
+	def void validFlatteningOfReferences() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			abstract rule findClassifierWithAnnotation {
+				package: EPackage
+			
+				classifier: EClassifier {
+					-ePackage -> package
+					++ -eAnnotations -> annotation
+				}
+			
+				++ annotation: EAnnotation
+			}
+			
+			rule findClassWithAnnotation
+			refines findClassifierWithAnnotation {
+				classifier: EClass {
+					-eAnnotations -> annotation
+					-eAnnotations -> annotation2
+				}
+			
+				annotation: EAnnotation
+			
+				annotation2: EAnnotation
+			}
+		''')
+		this.assertValid(file, 2)
+		val flattener = new GTFlattener(file.getRule(1))
+		Assert.assertFalse(flattener.hasErrors)
+		Assert.assertEquals(#[], flattener.errors)
+
+		val flattenedRule = flattener.flattenedRule
+
+		Assert.assertEquals(4, flattenedRule.nodes.size);
+		assertNode(flattenedRule.getNode(0), EditorOperator.CONTEXT, "annotation", "EAnnotation", 0, 0)
+		assertNode(flattenedRule.getNode(1), EditorOperator.CONTEXT, "annotation2", "EAnnotation", 0, 0)
+		assertNode(flattenedRule.getNode(2), EditorOperator.CONTEXT, "classifier", "EClass", 0, 3)
+		assertNode(flattenedRule.getNode(3), EditorOperator.CONTEXT, "package", "EPackage", 0, 0)
 	}
 
 	@Test
