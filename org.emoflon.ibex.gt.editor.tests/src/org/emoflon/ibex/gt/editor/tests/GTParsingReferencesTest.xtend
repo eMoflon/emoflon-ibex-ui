@@ -6,6 +6,7 @@ import org.eclipse.xtext.testing.XtextRunner
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
 import org.emoflon.ibex.gt.editor.gT.GTPackage
+import org.emoflon.ibex.gt.editor.scoping.GTLinkingDiagnosticMessageProvider
 import org.emoflon.ibex.gt.editor.validation.GTValidator
 import org.junit.Ignore
 import org.junit.Test
@@ -121,8 +122,8 @@ class GTParsingReferencesTest extends GTParsingTest {
 		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorReference,
-			Diagnostic::LINKING_DIAGNOSTIC,
-			"Couldn't resolve reference to Node 'clazz'."
+			GTLinkingDiagnosticMessageProvider.REFERENCE_TARGET_NODE_NOT_FOUND,
+			String.format(GTLinkingDiagnosticMessageProvider.REFERENCE_TARGET_NODE_NOT_FOUND_MESSAGE, 'clazz', 'EClassifier')
 		)
 	}
 

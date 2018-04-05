@@ -1,9 +1,9 @@
 package org.emoflon.ibex.gt.editor.tests
 
-import org.eclipse.xtext.diagnostics.Diagnostic
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.emoflon.ibex.gt.editor.gT.GTPackage
+import org.emoflon.ibex.gt.editor.scoping.GTLinkingDiagnosticMessageProvider
 import org.emoflon.ibex.gt.editor.validation.GTValidator
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -47,8 +47,8 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.rule,
-			Diagnostic::LINKING_DIAGNOSTIC,
-			"Couldn't resolve reference to Rule 'A'."
+			GTLinkingDiagnosticMessageProvider.RULE_SUPER_RULE_NOT_FOUND,
+			String.format(GTLinkingDiagnosticMessageProvider.RULE_SUPER_RULE_NOT_FOUND_MESSAGE, 'a')
 		)
 	}
 
@@ -71,8 +71,8 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.rule,
-			Diagnostic::LINKING_DIAGNOSTIC,
-			"Couldn't resolve reference to Rule 'A'."
+			GTLinkingDiagnosticMessageProvider.RULE_SUPER_RULE_NOT_FOUND,
+			String.format(GTLinkingDiagnosticMessageProvider.RULE_SUPER_RULE_NOT_FOUND_MESSAGE, 'a')
 		)
 	}
 
@@ -100,8 +100,8 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.rule,
-			Diagnostic::LINKING_DIAGNOSTIC,
-			"Couldn't resolve reference to Rule 'A'."
+			GTLinkingDiagnosticMessageProvider.RULE_SUPER_RULE_NOT_FOUND,
+			String.format(GTLinkingDiagnosticMessageProvider.RULE_SUPER_RULE_NOT_FOUND_MESSAGE, 'a')
 		)
 	}
 

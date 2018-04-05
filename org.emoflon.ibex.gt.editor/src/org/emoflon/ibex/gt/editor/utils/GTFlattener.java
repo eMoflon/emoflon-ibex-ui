@@ -12,7 +12,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute;
 import org.emoflon.ibex.gt.editor.gT.EditorOperator;
 import org.emoflon.ibex.gt.editor.gT.EditorReference;
-import org.emoflon.ibex.gt.editor.gT.EditorRelation;
 import org.emoflon.ibex.gt.editor.gT.GTFactory;
 import org.emoflon.ibex.gt.editor.gT.Node;
 import org.emoflon.ibex.gt.editor.gT.Parameter;
@@ -257,7 +256,7 @@ public class GTFlattener {
 				.filter(a -> GTEditorComparator.areAttributeConstraintsEqual(a, mergedAttribute)).findAny();
 		if (!attribute.isPresent()) {
 			boolean canAdd = true;
-			if (hasConflictingAssignment(node, mergedAttribute)) {
+			if (GTFlatteningUtils.hasConflictingAssignment(node, mergedAttribute)) {
 				errors.add(String.format("Node %s has multiple assignments for attribute %s.", node.getName(),
 						mergedAttribute.getAttribute().getName()));
 				canAdd = false;
@@ -266,24 +265,6 @@ public class GTFlattener {
 				node.getAttributes().add(EcoreUtil.copy(mergedAttribute));
 			}
 		}
-	}
-
-	/**
-	 * Checks whether the node has any attribute assignment for the same attribute,
-	 * but another value.
-	 * 
-	 * @param node
-	 *            the node to check
-	 * @param b
-	 *            the attribute assignment to check
-	 * @return <code>true</code> if and only if the node has another assignment for
-	 *         the same attribute
-	 */
-	private static boolean hasConflictingAssignment(final Node node, final EditorAttribute b) {
-		boolean isAssignment = b.getRelation() == EditorRelation.ASSIGNMENT;
-		return isAssignment && !node.getAttributes().stream()
-				.filter(a -> a.getRelation() == EditorRelation.ASSIGNMENT && a.getAttribute().equals(b.getAttribute()))
-				.allMatch(a -> GTEditorComparator.areExpressionsEqual(a.getValue(), b.getValue()));
 	}
 
 	/**

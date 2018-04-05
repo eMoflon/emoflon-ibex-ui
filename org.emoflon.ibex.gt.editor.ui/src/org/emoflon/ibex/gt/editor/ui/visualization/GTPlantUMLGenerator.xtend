@@ -184,7 +184,9 @@ class GTPlantUMLGenerator {
 			
 			«FOR r : rules»
 				«FOR sup: r.superRules»
-					"«r.name»" -up-|> "«sup.name»"
+					«IF sup.name !== null»
+						"«r.name»" -up-|> "«sup.name»"
+					«ENDIF»
 				«ENDFOR»
 			«ENDFOR»
 			

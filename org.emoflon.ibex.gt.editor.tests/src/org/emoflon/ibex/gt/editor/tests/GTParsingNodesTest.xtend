@@ -1,11 +1,11 @@
 package org.emoflon.ibex.gt.editor.tests
 
-import org.eclipse.xtext.diagnostics.Diagnostic
 import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
 import org.emoflon.ibex.gt.editor.gT.GTPackage
+import org.emoflon.ibex.gt.editor.scoping.GTLinkingDiagnosticMessageProvider
 import org.emoflon.ibex.gt.editor.validation.GTValidator
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -141,8 +141,8 @@ class GTParsingNodesTest extends GTParsingTest {
 		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.node,
-			Diagnostic::LINKING_DIAGNOSTIC,
-			"Couldn't resolve reference to EClass 'Object'."
+			GTLinkingDiagnosticMessageProvider.NODE_TYPE_NOT_FOUND,
+			String.format(GTLinkingDiagnosticMessageProvider.NODE_TYPE_NOT_FOUND_MESSAGE, 'Object')
 		)
 	}
 

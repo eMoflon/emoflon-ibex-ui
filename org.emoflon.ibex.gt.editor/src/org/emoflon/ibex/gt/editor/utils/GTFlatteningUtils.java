@@ -2,7 +2,10 @@ package org.emoflon.ibex.gt.editor.utils;
 
 import java.util.Optional;
 
+import org.emoflon.ibex.gt.editor.gT.EditorAttribute;
 import org.emoflon.ibex.gt.editor.gT.EditorOperator;
+import org.emoflon.ibex.gt.editor.gT.EditorRelation;
+import org.emoflon.ibex.gt.editor.gT.Node;
 
 /**
  * Utility methods for flattening of rules.
@@ -54,5 +57,23 @@ public class GTFlatteningUtils {
 			}
 		}
 		return Optional.of(result);
+	}
+
+	/**
+	 * Checks whether the node has any attribute assignment for the same attribute,
+	 * but another value.
+	 * 
+	 * @param node
+	 *            the node to check
+	 * @param attribute
+	 *            the attribute assignment to check
+	 * @return <code>true</code> if and only if the node has another assignment for
+	 *         the same attribute
+	 */
+	public static boolean hasConflictingAssignment(final Node node, final EditorAttribute attribute) {
+		boolean isAssignment = attribute.getRelation() == EditorRelation.ASSIGNMENT;
+		return isAssignment && !node.getAttributes().stream().filter(
+				a -> a.getRelation() == EditorRelation.ASSIGNMENT && a.getAttribute().equals(attribute.getAttribute()))
+				.allMatch(a -> GTEditorComparator.areExpressionsEqual(a.getValue(), attribute.getValue()));
 	}
 }

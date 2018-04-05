@@ -5,6 +5,7 @@ import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.emoflon.ibex.gt.editor.gT.GTPackage
+import org.emoflon.ibex.gt.editor.scoping.GTLinkingDiagnosticMessageProvider
 import org.emoflon.ibex.gt.editor.validation.GTValidator
 import org.junit.Assert
 import org.junit.Test
@@ -72,8 +73,8 @@ class GTParsingParametersTest extends GTParsingTest {
 		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.parameter,
-			Diagnostic::LINKING_DIAGNOSTIC,
-			"Couldn't resolve reference to EDataType 'EClass'."
+			GTLinkingDiagnosticMessageProvider.PARAMETER_TYPE_NOT_FOUND,
+			String.format(GTLinkingDiagnosticMessageProvider.PARAMETER_TYPE_NOT_FOUND_MESSAGE, 'EClass')
 		)
 	}
 
