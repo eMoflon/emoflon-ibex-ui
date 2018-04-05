@@ -11,14 +11,17 @@ import org.eclipse.xtext.util.CancelIndicator
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorNode
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
+import org.emoflon.ibex.gt.editor.gT.EditorPattern
 import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
 import org.emoflon.ibex.gt.editor.gT.GTPackage
+import org.emoflon.ibex.gt.editor.utils.GTEditorPatternUtils
 
 /** 
  * Applying syntax highlighting configuration.
  */
 class GTHighlightingCalculator extends DefaultSemanticHighlightingCalculator {
+
 	override void provideHighlightingFor(XtextResource resource, IHighlightedPositionAcceptor acceptor,
 		CancelIndicator cancelIndicator) {
 		if (resource === null || resource.contents.length === 0) {
@@ -33,42 +36,36 @@ class GTHighlightingCalculator extends DefaultSemanticHighlightingCalculator {
 	def hightlightElement(EObject element, IHighlightedPositionAcceptor acceptor) {
 		if (element instanceof EditorAttribute) {
 			if (element.relation == EditorRelation.ASSIGNMENT) {
-				this.highlightNode(acceptor, element, getStyle(EditorOperator.CREATE))
+				val style = GTHighlightingConfiguration.getStyle(EditorOperator.CREATE)
+				highlight(acceptor, element, style)
 			}
 		}
 
 		if (element instanceof EditorNode) {
-			var String style = getStyle(element.operator)
+			val nodesFromSuperRules = GTEditorPatternUtils.getAllNodesFromSuperPatterns(
+				element.eContainer as EditorPattern, [it.name.equals(element.name)])
+			val styles = GTHighlightingConfiguration.getStyles(element.operator, !nodesFromSuperRules.isEmpty)
+
 			if (element.operator == EditorOperator.CREATE || element.operator == EditorOperator.DELETE) {
-				this.highlightFeature(acceptor, element, GTPackage.Literals.EDITOR_NODE__OPERATOR, style)
+				highlight(acceptor, element, GTPackage.Literals.EDITOR_NODE__OPERATOR, styles)
 			}
-			this.highlightFeature(acceptor, element, GTPackage.Literals.EDITOR_NODE__NAME, style)
-			this.highlightFeature(acceptor, element, GTPackage.Literals.EDITOR_NODE__TYPE, style)
+			highlight(acceptor, element, GTPackage.Literals.EDITOR_NODE__NAME, styles)
+			highlight(acceptor, element, GTPackage.Literals.EDITOR_NODE__TYPE, styles)
 		}
 
 		if (element instanceof EditorReference) {
-			var style = getStyle(element.operator)
-			this.highlightNode(acceptor, element, style)
+			val style = GTHighlightingConfiguration.getStyle(element.operator)
+			highlight(acceptor, element, style)
 		}
 	}
 
-	def getStyle(EditorOperator operator) {
-		if (operator === EditorOperator.CREATE) {
-			return GTHighlightingConfiguration.CREATE
-		}
-		if (operator === EditorOperator.DELETE) {
-			return GTHighlightingConfiguration.DELETE
-		}
-		return GTHighlightingConfiguration.CONTEXT
-	}
-
-	def highlightNode(IHighlightedPositionAcceptor acceptor, EObject element, String style) {
+	static def highlight(IHighlightedPositionAcceptor acceptor, EObject element, String... style) {
 		val node = NodeModelUtils.getNode(element)
 		acceptor.addPosition(node.getOffset(), node.getLength(), style)
 	}
 
-	def void highlightFeature(IHighlightedPositionAcceptor acceptor, EObject element, EStructuralFeature feature,
-		String style) {
+	static def void highlight(IHighlightedPositionAcceptor acceptor, EObject element, EStructuralFeature feature,
+		String... style) {
 		for (node : NodeModelUtils.findNodesForFeature(element, feature)) {
 			acceptor.addPosition(node.getOffset(), node.getLength(), style)
 		}
