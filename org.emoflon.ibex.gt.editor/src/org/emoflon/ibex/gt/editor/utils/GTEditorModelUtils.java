@@ -16,8 +16,7 @@ import org.eclipse.xtext.EcoreUtil2;
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile;
 
 /**
- * Utility methods for dealing with meta-models in
- * {@link GraphTransformationFile} models.
+ * Utility methods for dealing with meta-models.
  */
 public class GTEditorModelUtils {
 	/**

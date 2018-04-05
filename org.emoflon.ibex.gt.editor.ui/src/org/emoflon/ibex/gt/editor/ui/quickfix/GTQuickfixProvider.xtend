@@ -16,9 +16,9 @@ import org.emoflon.ibex.gt.editor.gT.EditorImport
 import org.emoflon.ibex.gt.editor.gT.EditorNode
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
 import org.emoflon.ibex.gt.editor.gT.EditorParameter
+import org.emoflon.ibex.gt.editor.gT.EditorPattern
 import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
-import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.utils.GTEditorAttributeUtils
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 import org.emoflon.ibex.gt.editor.validation.GTValidator
@@ -54,7 +54,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	}
 
 	/**
-	 * Converts the name of a node, a parameter or a rule to lower case. 
+	 * Converts the name of a node, a parameter or a pattern to lower case. 
 	 */
 	@Fix(GTValidator.NAME_EXPECT_LOWER_CASE)
 	def convertNameToLowerCase(Issue issue, IssueResolutionAcceptor acceptor) {
@@ -69,7 +69,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 					element.name = element.name.toFirstLower
 				} else if (element instanceof EditorParameter) {
 					element.name = element.name.toFirstLower
-				} else if (element instanceof Rule) {
+				} else if (element instanceof EditorPattern) {
 					element.name = element.name.toFirstLower
 				}
 			]
@@ -77,7 +77,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	}
 
 	/**
-	 * Converts the name of a node or a rule to lowerCamelCase.
+	 * Converts the name of a node, a parameter or a pattern to lowerCamelCase.
 	 */
 	@Fix(GTValidator.NAME_EXPECT_CAMEL_CASE)
 	def convertNameToLowerCamelCase(Issue issue, IssueResolutionAcceptor acceptor) {
@@ -93,11 +93,9 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 					// Keep leading _ if present before.
 					node.name = (if(node.name.startsWith('_')) '_' else '') + convertToLowerCamelCase(node.name)
 				} else if (element instanceof EditorParameter) {
-					val parameter = element as EditorParameter
-					parameter.name = convertToLowerCamelCase(parameter.name)
-				} else if (element instanceof Rule) {
-					val rule = element as Rule
-					rule.name = convertToLowerCamelCase(rule.name)
+					element.name = convertToLowerCamelCase(element.name)
+				} else if (element instanceof EditorPattern) {
+					element.name = convertToLowerCamelCase(element.name)
 				}
 			]
 		)
@@ -117,7 +115,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	}
 
 	/**
-	 * Remove duplicate super rule.
+	 * Remove duplicate super pattern.
 	 */
 	@Fix(GTValidator.RULE_SUPER_RULES_DUPLICATE)
 	def removeSuperRule(Issue issue, IssueResolutionAcceptor acceptor) {
@@ -129,11 +127,11 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			label,
 			null,
 			[ element, context |
-				if (element instanceof Rule) {
-					val uniqueSuperRules = newHashSet()
-					uniqueSuperRules.addAll(element.superRules.clone)
-					element.superRules.clear
-					element.superRules.addAll(uniqueSuperRules)
+				if (element instanceof EditorPattern) {
+					val uniqueSuperPatterns = newHashSet()
+					uniqueSuperPatterns.addAll(element.superPatterns.clone)
+					element.superPatterns.clear
+					element.superPatterns.addAll(uniqueSuperPatterns)
 				}
 			]
 		)
@@ -205,7 +203,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	}
 
 	/**
-	 * Adds an abstract modifier to the rule which contains a node with an abstract type.
+	 * Adds an abstract modifier to the rule which contains a created node with an abstract type.
 	 */
 	@Fix(GTValidator.CREATE_NODE_TYPE_ABSTRACT)
 	def addAbstractModifierToRuleWithAbstractNodeType(Issue issue, IssueResolutionAcceptor acceptor) {
@@ -217,7 +215,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			null,
 			[ element, context |
 				val rule = element.eContainer
-				if (rule instanceof Rule) {
+				if (rule instanceof EditorPattern) {
 					rule.abstract = true
 				}
 			],

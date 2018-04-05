@@ -12,9 +12,9 @@ import org.emoflon.ibex.gt.editor.gT.EditorImport
 import org.emoflon.ibex.gt.editor.gT.EditorNode
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
 import org.emoflon.ibex.gt.editor.gT.EditorParameter
+import org.emoflon.ibex.gt.editor.gT.EditorPattern
 import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.GTPackage
-import org.emoflon.ibex.gt.editor.gT.Rule
 
 /**
  * Formatting
@@ -32,55 +32,55 @@ class GTFormatter extends AbstractFormatter2 {
 		// Empty line after imports
 		this.formatList(file.imports, document, 0, 1, 2)
 
-		// Empty line between each rule.
-		this.formatList(file.rules, document, if(file.imports.size > 0) 2 else 0, 2, 1)
+		// Empty line between each pattern.
+		this.formatList(file.patterns, document, if(file.imports.size > 0) 2 else 0, 2, 1)
 	}
 
 	def dispatch void format(EditorImport i, extension IFormattableDocument document) {
 		i.regionFor.keyword("import").append[oneSpace]
 	}
 
-	def dispatch void format(Rule rule, extension IFormattableDocument document) {
-		// One space between modifier and rule keyword.
-		if (rule.abstract) {
-			rule.regionFor.keyword("abstract").append[oneSpace]
+	def dispatch void format(EditorPattern pattern, extension IFormattableDocument document) {
+		// One space between modifier and pattern keyword.
+		if (pattern.abstract) {
+			pattern.regionFor.keyword("abstract").append[oneSpace]
 		}
 
-		// One space between rule keyword and name.
-		rule.regionFor.keyword("rule").append[oneSpace]
+		// One space between pattern keyword and name.
+		pattern.regionFor.keyword("rule").append[oneSpace]
 
 		// New line before "refines", one space after "refines".
-		rule.regionFor.keyword("refines").prepend[newLine]
-		rule.regionFor.keyword("refines").append[oneSpace]
+		pattern.regionFor.keyword("refines").prepend[newLine]
+		pattern.regionFor.keyword("refines").append[oneSpace]
 
-		// No space between rule name, "(" and first parameter.
-		rule.regionFor.keyword("(").prepend[noSpace]
-		rule.regionFor.keyword("(").append[noSpace]
+		// No space between pattern name, "(" and first parameter.
+		pattern.regionFor.keyword("(").prepend[noSpace]
+		pattern.regionFor.keyword("(").append[noSpace]
 
-		rule.parameters.forEach [
+		pattern.parameters.forEach [
 			it.format
 		]
 
-		rule.regionFor.keywords(",").forEach [
+		pattern.regionFor.keywords(",").forEach [
 			it.prepend[noSpace]
 			it.append[oneSpace]
 		]
 
 		// No space between last parameter and ")", but one space between ")" and "{"
-		rule.regionFor.keyword(")").prepend[noSpace]
-		rule.regionFor.keyword(")").append[oneSpace]
+		pattern.regionFor.keyword(")").prepend[noSpace]
+		pattern.regionFor.keyword(")").append[oneSpace]
 
 		// One space before "{".
-		rule.regionFor.keyword("{").prepend[oneSpace]
+		pattern.regionFor.keyword("{").prepend[oneSpace]
 
 		// Indent everything between "{" and "}".
-		val ruleBody = rule.regionFor.keywordPairs("{", "}")
-		if (ruleBody.size > 0) {
-			ruleBody.get(0).interior[indent]
+		val body = pattern.regionFor.keywordPairs("{", "}")
+		if (body.size > 0) {
+			body.get(0).interior[indent]
 		}
 
 		// Empty line between nodes.
-		this.formatList(rule.nodes, document, 1, 2, 1)
+		this.formatList(pattern.nodes, document, 1, 2, 1)
 	}
 
 	def dispatch void format(EditorParameter parameter, extension IFormattableDocument document) {

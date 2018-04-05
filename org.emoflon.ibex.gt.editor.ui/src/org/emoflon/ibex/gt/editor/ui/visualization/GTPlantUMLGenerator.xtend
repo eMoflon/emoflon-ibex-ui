@@ -10,9 +10,9 @@ import org.emoflon.ibex.gt.editor.gT.EditorNode
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
 import org.emoflon.ibex.gt.editor.gT.EditorParameter
 import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
+import org.emoflon.ibex.gt.editor.gT.EditorPattern
 import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
-import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.utils.GTFlattener
 
 /**
@@ -33,10 +33,10 @@ class GTPlantUMLGenerator {
 	}
 
 	/**
-	 * Returns the PlantUML code for the visualization of the given rule.
+	 * Returns the PlantUML code for the visualization of the given pattern.
 	 */
-	public static def String visualizeRule(Rule rule) {
-		val flattenedRule = new GTFlattener(rule).flattenedRule
+	public static def String visualizePattern(EditorPattern pattern) {
+		val flattenedPattern = new GTFlattener(pattern).getFlattenedPattern
 		'''
 			«commonLayoutSettings»
 			«legendSettings»
@@ -51,7 +51,7 @@ class GTPlantUMLGenerator {
 				FontColor White
 			}
 			
-			«FOR node : flattenedRule.nodes»
+			«FOR node : flattenedPattern.nodes»
 				class «nodeName(node)» <<«nodeSkin(node)»>> {
 					«FOR attr: node.attributes»
 						«attributeConstraint(attr)»
@@ -59,15 +59,15 @@ class GTPlantUMLGenerator {
 				}
 			«ENDFOR»
 			
-			«FOR node : flattenedRule.nodes»
+			«FOR node : flattenedPattern.nodes»
 				«FOR reference : node.references»
 					«nodeName(node)» -[#«referenceColor(reference)»]-> «nodeName(reference.target)»: «referenceLabel(reference)»
 				«ENDFOR»
 			«ENDFOR»
 			
 			center footer
-				= «rule.name»
-				«ruleSignature(flattenedRule)»
+				= «pattern.name»
+				«org.emoflon.ibex.gt.editor.ui.visualization.GTPlantUMLGenerator.signature(flattenedPattern)»
 			end footer
 		'''
 	}
@@ -151,10 +151,10 @@ class GTPlantUMLGenerator {
 	}
 
 	/**
-	 * Prints the signature of the rule.
+	 * Prints the signature of the pattern.
 	 */
-	private static def String ruleSignature(Rule rule) {
-		'''«FOR parameter : rule.parameters BEFORE '(' SEPARATOR ', ' AFTER ')'»«parameterDeclaration(parameter)»«ENDFOR»'''
+	private static def String signature(EditorPattern pattern) {
+		'''«FOR parameter : pattern.parameters BEFORE '(' SEPARATOR ', ' AFTER ')'»«parameterDeclaration(parameter)»«ENDFOR»'''
 	}
 
 	/**
@@ -166,9 +166,9 @@ class GTPlantUMLGenerator {
 	}
 
 	/**
-	 * Returns the PlantUML code for the visualization of the refinement hierarchy of the given rules.
+	 * Returns the PlantUML code for the visualization of the refinement hierarchy of the given patterns.
 	 */
-	public static def String visualizeRuleHierarchy(EList<Rule> rules) {
+	public static def String visualizePatternHierarchy(EList<EditorPattern> patterns) {
 		'''
 			«commonLayoutSettings»
 			
@@ -178,30 +178,30 @@ class GTPlantUMLGenerator {
 				ArrowColor Black
 			}
 			
-			«FOR r : rules»
-				«IF r.abstract»abstract «ENDIF»class "«r.name»" «ruleLink(r)»
+			«FOR pattern : patterns»
+				«IF pattern.abstract»abstract «ENDIF»class "«pattern.name»" «link(pattern)»
 			«ENDFOR»
 			
-			«FOR r : rules»
-				«FOR sup: r.superRules»
+			«FOR pattern : patterns»
+				«FOR sup: pattern.superPatterns»
 					«IF sup.name !== null»
-						"«r.name»" -up-|> "«sup.name»"
+						"«pattern.name»" -up-|> "«sup.name»"
 					«ENDIF»
 				«ENDFOR»
 			«ENDFOR»
 			
 			center footer
-				= Rule Refinement Hierarchy
+				= Pattern Refinement Hierarchy
 			end footer
 		'''
 	}
 
 	/**
-	 * Prints the link to the rule.
+	 * Prints the link to the pattern.
 	 */
-	private static def ruleLink(Rule rule) {
-		val resource = rule.eResource
-		val uri = resource.URI + '#' + resource.getURIFragment(rule)
+	private static def link(EditorPattern pattern) {
+		val resource = pattern.eResource
+		val uri = resource.URI + '#' + resource.getURIFragment(pattern)
 		'''[[«uri»]]'''
 	}
 

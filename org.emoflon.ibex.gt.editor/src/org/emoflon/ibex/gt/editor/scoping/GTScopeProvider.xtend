@@ -15,11 +15,11 @@ import org.emoflon.ibex.gt.editor.gT.EditorNode
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
 import org.emoflon.ibex.gt.editor.gT.EditorParameter
 import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
+import org.emoflon.ibex.gt.editor.gT.EditorPattern
 import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.GTPackage
-import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
-import org.emoflon.ibex.gt.editor.utils.GTEditorRuleUtils
+import org.emoflon.ibex.gt.editor.utils.GTEditorPatternUtils
 
 /**
  * This class contains custom scoping description.
@@ -67,9 +67,9 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 			return getScopeForReferenceTargets(context as EditorReference)
 		}
 
-		// Rules
-		if (isSuperRule(context, reference)) {
-			return getScopeForSuperRules(context as Rule)
+		// Patterns
+		if (isSuperPattern(context, reference)) {
+			return getScopeForSuperPatterns(context as EditorPattern)
 		}
 
 		return super.getScope(context, reference)
@@ -115,21 +115,21 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		return (context instanceof EditorReference && reference == GTPackage.Literals.EDITOR_REFERENCE__TARGET)
 	}
 
-	def isSuperRule(EObject context, EReference reference) {
-		return (context instanceof Rule && reference == GTPackage.Literals.RULE__SUPER_RULES)
+	def isSuperPattern(EObject context, EReference reference) {
+		return (context instanceof EditorPattern && reference == GTPackage.Literals.EDITOR_PATTERN__SUPER_PATTERNS)
 	}
 
 	/**
-	 * A rule can refine any rule except itself and rules which refine itself.
+	 * A pattern can refine any pattern except itself and patterns which refine itself.
 	 * This avoids loops in the refinement hierarchy.
 	 */
-	def getScopeForSuperRules(Rule rule) {
-		val rootElement = EcoreUtil2.getRootContainer(rule)
-		val candidates = EcoreUtil2.getAllContentsOfType(rootElement, Rule)
-		val validSuperRules = candidates.filter [
-			it != rule && !GTEditorRuleUtils.isRefinementOf(it as Rule, rule)
+	def getScopeForSuperPatterns(EditorPattern pattern) {
+		val rootElement = EcoreUtil2.getRootContainer(pattern)
+		val candidates = EcoreUtil2.getAllContentsOfType(rootElement, EditorPattern)
+		val validSuperPatterns = candidates.filter [
+			it != pattern && !GTEditorPatternUtils.isRefinementOf(it as EditorPattern, pattern)
 		]
-		return Scopes.scopeFor(validSuperRules)
+		return Scopes.scopeFor(validSuperPatterns)
 	}
 
 	/**
@@ -149,17 +149,17 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	}
 
 	/**
-	 * The target of the reference must be another node within the same rule 
-	 * (or its super rules) of the correct type.
+	 * The target of the reference must be another node within the same pattern 
+	 * or its super patterns of the correct type.
 	 */
 	def getScopeForReferenceTargets(EditorReference reference) {
 		val referenceType = reference.type
 		if (referenceType !== null) {
 			val targetNodeType = referenceType.EReferenceType
 			if (targetNodeType !== null) {
-				val rule = reference.eContainer.eContainer as Rule
-				if (rule !== null) {
-					val nodes = GTEditorRuleUtils.getAllNodesOfRule(rule, [isNodeOfType(it, targetNodeType)])
+				val pattern = reference.eContainer.eContainer as EditorPattern
+				if (pattern !== null) {
+					val nodes = GTEditorPatternUtils.getAllNodesOfPattern(pattern, [isNodeOfType(it, targetNodeType)])
 					return Scopes.scopeFor(nodes)
 				}
 			}
@@ -168,10 +168,10 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	}
 
 	/**
-	 * Filters the nodes of the given rule for the ones with the given type.
+	 * Filters the nodes of the given pattern for the ones with the given type.
 	 */
-	def static filterNodesWithType(Rule rule, EClass nodeType) {
-		rule.nodes.filter[isNodeOfType(it, nodeType)].toList
+	def static filterNodesWithType(EditorPattern pattern, EClass nodeType) {
+		pattern.nodes.filter[isNodeOfType(it, nodeType)].toList
 	}
 
 	/**
@@ -207,8 +207,8 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	 * The node of an attribute expression can be any context node which is valid within the same rule.
 	 */
 	def getScopeForAttributeExpressionNodes(EditorAttributeExpression attributeExpression) {
-		val rule = attributeExpression.eContainer.eContainer.eContainer as Rule
-		val nodes = GTEditorRuleUtils.getAllNodesOfRule(rule, [it.operator == EditorOperator.CONTEXT])
+		val pattern = attributeExpression.eContainer.eContainer.eContainer as EditorPattern
+		val nodes = GTEditorPatternUtils.getAllNodesOfPattern(pattern, [it.operator == EditorOperator.CONTEXT])
 		return Scopes.scopeFor(nodes)
 	}
 
@@ -233,9 +233,9 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	 */
 	def getScopeForParameterExpressions(EditorParameterExpression parameterExpression) {
 		val attributeConstraint = parameterExpression.eContainer as EditorAttribute
-		val rule = attributeConstraint.eContainer.eContainer as Rule
+		val pattern = attributeConstraint.eContainer.eContainer as EditorPattern
 		val parameters = newArrayList()
-		GTEditorRuleUtils.getRuleAllWithSuperRules(rule).forEach [
+		GTEditorPatternUtils.getPatternWithAllSuperPatterns(pattern).forEach [
 			parameters.addAll(it.parameters.filter[it.type == attributeConstraint.attribute.EAttributeType])
 		]
 		return Scopes.scopeFor(parameters)

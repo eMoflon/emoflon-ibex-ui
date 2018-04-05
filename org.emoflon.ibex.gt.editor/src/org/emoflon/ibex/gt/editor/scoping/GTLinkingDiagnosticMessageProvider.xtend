@@ -89,7 +89,7 @@ class GTLinkingDiagnosticMessageProvider extends LinkingDiagnosticMessageProvide
 		}
 
 		// Super rule not found in scope.
-		if (context.reference === GTPackage.Literals.RULE__SUPER_RULES) {
+		if (context.reference === GTPackage.Literals.EDITOR_PATTERN__SUPER_PATTERNS) {
 			return new DiagnosticMessage(
 				String.format(RULE_SUPER_RULE_NOT_FOUND_MESSAGE, linkText),
 				Severity.ERROR,

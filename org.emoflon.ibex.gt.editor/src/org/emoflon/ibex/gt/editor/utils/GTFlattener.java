@@ -13,18 +13,18 @@ import org.emoflon.ibex.gt.editor.gT.EditorAttribute;
 import org.emoflon.ibex.gt.editor.gT.EditorOperator;
 import org.emoflon.ibex.gt.editor.gT.EditorNode;
 import org.emoflon.ibex.gt.editor.gT.EditorParameter;
+import org.emoflon.ibex.gt.editor.gT.EditorPattern;
 import org.emoflon.ibex.gt.editor.gT.EditorReference;
 import org.emoflon.ibex.gt.editor.gT.GTFactory;
-import org.emoflon.ibex.gt.editor.gT.Rule;
 
 /**
- * Provides flattening of refined rules.
+ * Provides flattening of refined patterns.
  */
 public class GTFlattener {
 	/**
-	 * The flattened rule.
+	 * The flattened pattern.
 	 */
-	private Rule flattenedRule;
+	private EditorPattern flattenedPattern;
 
 	/**
 	 * The errors occurred during flattening.
@@ -32,48 +32,48 @@ public class GTFlattener {
 	private List<String> errors = new ArrayList<String>();
 
 	/**
-	 * Creates a flattened version of the given rule.
+	 * Creates a flattened version of the given pattern.
 	 * 
-	 * @param rule
-	 *            the rule
+	 * @param pattern
+	 *            the pattern
 	 */
-	public GTFlattener(final Rule rule) {
-		Set<Rule> superRules = GTEditorRuleUtils.getAllSuperRules(rule);
+	public GTFlattener(final EditorPattern pattern) {
+		Set<EditorPattern> superPatterns = GTEditorPatternUtils.getAllSuperPatterns(pattern);
 
-		List<EditorParameter> parameters = mergeParameters(rule, superRules);
+		List<EditorParameter> parameters = mergeParameters(pattern, superPatterns);
 
-		List<EditorNode> nodes = mergeNodes(rule, superRules, parameters);
+		List<EditorNode> nodes = mergeNodes(pattern, superPatterns, parameters);
 		nodes.sort((a, b) -> a.getName().compareTo(b.getName()));
 
-		createFlattenedRule(rule, parameters, nodes);
+		flatten(pattern, parameters, nodes);
 	}
 
 	/**
-	 * Creates the flattened rule
+	 * Creates the flattened pattern.
 	 * 
-	 * @param rule
-	 *            the original rule
+	 * @param pattern
+	 *            the original pattern
 	 * @param parameters
 	 *            the parameters
 	 * @param nodes
 	 *            the nodes
 	 */
-	private void createFlattenedRule(final Rule rule, final List<EditorParameter> parameters,
+	private void flatten(final EditorPattern pattern, final List<EditorParameter> parameters,
 			final List<EditorNode> nodes) {
-		flattenedRule = GTFactory.eINSTANCE.createRule();
-		flattenedRule.setAbstract(rule.isAbstract());
-		flattenedRule.setName(rule.getName());
-		flattenedRule.getParameters().addAll(parameters);
-		flattenedRule.getNodes().addAll(nodes);
+		flattenedPattern = GTFactory.eINSTANCE.createEditorPattern();
+		flattenedPattern.setAbstract(pattern.isAbstract());
+		flattenedPattern.setName(pattern.getName());
+		flattenedPattern.getParameters().addAll(parameters);
+		flattenedPattern.getNodes().addAll(nodes);
 	}
 
 	/**
-	 * Returns the flattened rule.
+	 * Returns the flattened pattern.
 	 * 
-	 * @return the flattened rule
+	 * @return the flattened pattern
 	 */
-	public Rule getFlattenedRule() {
-		return flattenedRule;
+	public EditorPattern getFlattenedPattern() {
+		return flattenedPattern;
 	}
 
 	/**
@@ -95,36 +95,36 @@ public class GTFlattener {
 	}
 
 	/**
-	 * Merged the given parameters based on the convention that parameters with the
+	 * Merges the given parameters based on the convention that parameters with the
 	 * same name must be equal.
 	 * 
-	 * @param rule
-	 *            the rule the rule
-	 * @param superRules
-	 *            the super rules of the rule
+	 * @param pattern
+	 *            the pattern
+	 * @param superPatterns
+	 *            the super patterns of the pattern
 	 * @return the merged parameters
 	 */
-	private List<EditorParameter> mergeParameters(final Rule rule, final Set<Rule> superRules) {
+	private List<EditorParameter> mergeParameters(final EditorPattern pattern, final Set<EditorPattern> superPatterns) {
 		List<EditorParameter> parameters = new ArrayList<EditorParameter>();
 		Map<String, EditorParameter> parameterNameToParameter = new HashMap<String, EditorParameter>();
-		addParametersFromRule(rule, parameters, parameterNameToParameter);
-		superRules.forEach(r -> addParametersFromRule(r, parameters, parameterNameToParameter));
+		addParametersFromPattern(pattern, parameters, parameterNameToParameter);
+		superPatterns.forEach(r -> addParametersFromPattern(r, parameters, parameterNameToParameter));
 		return parameters;
 	}
 
 	/**
-	 * Adds the parameters of the given rule.
+	 * Adds the parameters of the given pattern.
 	 * 
-	 * @param rule
-	 *            the rule whose parameters to add
+	 * @param pattern
+	 *            the pattern whose parameters to add
 	 * @param parameters
 	 *            the parameters (in order of adding to the list)
 	 * @param parameterNameToParameter
 	 *            the mapping between names and parameters
 	 */
-	private void addParametersFromRule(final Rule rule, final List<EditorParameter> parameters,
+	private void addParametersFromPattern(final EditorPattern pattern, final List<EditorParameter> parameters,
 			final Map<String, EditorParameter> parameterNameToParameter) {
-		for (final EditorParameter parameter : rule.getParameters()) {
+		for (final EditorParameter parameter : pattern.getParameters()) {
 			if (parameterNameToParameter.containsKey(parameter.getName())) {
 				EDataType typeOfExistingParameter = parameterNameToParameter.get(parameter.getName()).getType();
 				if (!typeOfExistingParameter.equals(parameter.getType())) {
@@ -143,20 +143,20 @@ public class GTFlattener {
 	 * Merged the given nodes based on the convention that nodes with the same name
 	 * are equal.
 	 * 
-	 * @param rule
-	 *            the rule the rule
-	 * @param superRules
-	 *            the super rules of the rule
+	 * @param pattern
+	 *            the pattern
+	 * @param superPatterns
+	 *            the super patterns of the pattern
 	 * @param parameters
-	 *            the parameters of the flattened rule
+	 *            the parameters of the flattened pattern
 	 * @return the merged nodes
 	 */
-	private List<EditorNode> mergeNodes(final Rule rule, final Set<Rule> superRules,
+	private List<EditorNode> mergeNodes(final EditorPattern pattern, final Set<EditorPattern> superPatterns,
 			final List<EditorParameter> parameters) {
 		// Collect nodes.
 		List<EditorNode> collectedNodes = new ArrayList<EditorNode>();
-		collectedNodes.addAll(EcoreUtil.copyAll(rule.getNodes()));
-		superRules.forEach(r -> collectedNodes.addAll(EcoreUtil.copyAll(r.getNodes())));
+		collectedNodes.addAll(EcoreUtil.copyAll(pattern.getNodes()));
+		superPatterns.forEach(r -> collectedNodes.addAll(EcoreUtil.copyAll(r.getNodes())));
 
 		// Merge nodes with the same name.
 		Map<String, EditorNode> nodeNameToNode = new HashMap<String, EditorNode>();

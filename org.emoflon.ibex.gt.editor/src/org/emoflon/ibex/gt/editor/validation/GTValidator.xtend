@@ -12,15 +12,15 @@ import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression
 import org.emoflon.ibex.gt.editor.gT.EditorNode
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
 import org.emoflon.ibex.gt.editor.gT.EditorParameter
+import org.emoflon.ibex.gt.editor.gT.EditorPattern
 import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
 import org.emoflon.ibex.gt.editor.gT.GTPackage
-import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.utils.GTEditorAttributeUtils
 import org.emoflon.ibex.gt.editor.utils.GTEditorComparator
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
-import org.emoflon.ibex.gt.editor.utils.GTEditorRuleUtils
 import org.emoflon.ibex.gt.editor.utils.GTFlatteningUtils
+import org.emoflon.ibex.gt.editor.utils.GTEditorPatternUtils
 
 /**
  * This class contains custom validation rules. 
@@ -37,9 +37,9 @@ class GTValidator extends AbstractGTValidator {
 	]
 
 	/**
-	 * The list of invalid rule names.
+	 * The list of invalid pattern names.
 	 */
-	private static val ruleNameBlacklist = #[
+	private static val patternNameBlacklist = #[
 		"clone",
 		"equals",
 		"finalize",
@@ -72,7 +72,7 @@ class GTValidator extends AbstractGTValidator {
 	public static val IMPORT_MISSING_META_MODEL = CODE_PREFIX + "import.missingMetaModel"
 	public static val IMPORT_MISSING_META_MODEL_MESSAGE = "You must import the Ecore file of the meta-model here."
 
-	// Errors for rules.
+	// Errors for patterns.
 	public static val RULE_EMPTY = CODE_PREFIX + "rule.empty"
 	public static val RULE_EMPTY_MESSAGE = "Rule '%s' must not be empty."
 
@@ -209,85 +209,85 @@ class GTValidator extends AbstractGTValidator {
 	}
 
 	@Check
-	def checkRule(Rule rule) {
-		// The rule name must not be blacklisted.
-		if (ruleNameBlacklist.contains(rule.name)) {
+	def checkPattern(EditorPattern pattern) {
+		// The pattern name must not be blacklisted.
+		if (patternNameBlacklist.contains(pattern.name)) {
 			error(
-				String.format(RULE_NAME_FORBIDDEN_MESSAGE, rule.name),
-				GTPackage.Literals.RULE__NAME,
+				String.format(RULE_NAME_FORBIDDEN_MESSAGE, pattern.name),
+				GTPackage.Literals.EDITOR_PATTERN__NAME,
 				NAME_BLACKLISTED
 			)
 		} else {
-			// The rule name should be lowerCamelCase.
-			if (rule.name.contains('_')) {
+			// The pattern name should be lowerCamelCase.
+			if (pattern.name.contains('_')) {
 				warning(
-					String.format(RULE_NAME_CONTAINS_UNDERSCORES_MESSAGE, rule.name),
-					GTPackage.Literals.RULE__NAME,
+					String.format(RULE_NAME_CONTAINS_UNDERSCORES_MESSAGE, pattern.name),
+					GTPackage.Literals.EDITOR_PATTERN__NAME,
 					NAME_EXPECT_CAMEL_CASE
 				)
 			} else {
-				// The rule name should start with a lower case character. 
-				if (!Character.isLowerCase(rule.name.charAt(0))) {
+				// The pattern name should start with a lower case character. 
+				if (!Character.isLowerCase(pattern.name.charAt(0))) {
 					warning(
-						String.format(RULE_NAME_STARTS_WITH_LOWER_CASE_MESSAGE, rule.name),
-						GTPackage.Literals.RULE__NAME,
+						String.format(RULE_NAME_STARTS_WITH_LOWER_CASE_MESSAGE, pattern.name),
+						GTPackage.Literals.EDITOR_PATTERN__NAME,
 						NAME_EXPECT_LOWER_CASE
 					)
 				}
 			}
 		}
 
-		// The rule must contain at least one constraint or refine multiple rules.
-		if (rule.nodes.size == 0 && rule.superRules.size < 2) {
+		// The pattern must contain at least one constraint or refine multiple patterns.
+		if (pattern.nodes.size == 0 && pattern.superPatterns.size < 2) {
 			error(
-				String.format(RULE_EMPTY_MESSAGE, rule.name),
-				GTPackage.Literals.RULE__NODES,
-				RULE_EMPTY
+				String.format(RULE_EMPTY_MESSAGE, pattern.name),
+				GTPackage.Literals.EDITOR_PATTERN__NODES,
+				GTValidator.RULE_EMPTY
 			)
 		}
 
-		// Rule names must be unique.
-		val file = rule.eContainer as EditorGTFile
-		val ruleDeclarationCount = file.rules.filter[name.equals(rule.name)].size
-		if (ruleDeclarationCount !== 1) {
+		// Pattern names must be unique.
+		val file = pattern.eContainer as EditorGTFile
+		val count = file.patterns.filter[name.equals(pattern.name)].size
+		if (count !== 1) {
 			error(
-				String.format(RULE_NAME_MULTIPLE_DECLARATIONS_MESSAGE, rule.name, getTimes(ruleDeclarationCount)),
-				GTPackage.Literals.RULE__NAME,
+				String.format(RULE_NAME_MULTIPLE_DECLARATIONS_MESSAGE, pattern.name, getTimes(count)),
+				GTPackage.Literals.EDITOR_PATTERN__NAME,
 				NAME_EXPECT_UNIQUE
 			)
 		}
 
-		if (rule.superRules.isEmpty) {
+		if (pattern.superPatterns.isEmpty) {
 			return;
 		}
 
-		// The super rules of the rule must be distinct.
-		if (rule.superRules.size !== rule.superRules.stream.distinct.count) {
+		// The super patterns of the pattern must be distinct.
+		if (pattern.superPatterns.size !== pattern.superPatterns.stream.distinct.count) {
 			error(
-				String.format(RULE_SUPER_RULES_DUPLICATE_MESSAGE, rule.name),
-				GTPackage.Literals.RULE__SUPER_RULES,
+				String.format(RULE_SUPER_RULES_DUPLICATE_MESSAGE, pattern.name),
+				GTPackage.Literals.EDITOR_PATTERN__SUPER_PATTERNS,
 				RULE_SUPER_RULES_DUPLICATE,
-				rule.name
+				pattern.name
 			)
 		}
 
-		// Parameter names must be equal to definitions in the super type.
-		val superRuleParameters = GTEditorRuleUtils.getAllParametersOfRule(rule)
-		val parameterNames = superRuleParameters.map[it.name].toSet
+		// Parameter names must be equal to definitions in the super pattern.
+		val superParameters = GTEditorPatternUtils.getAllParametersOfPattern(pattern)
+		val parameterNames = superParameters.map[it.name].toSet
 		for (parameterName : parameterNames) {
-			val allTypesForName = superRuleParameters.filter[it.name == parameterName].map[it.type].toSet
+			val allTypesForName = superParameters.filter[it.name == parameterName].map[it.type].toSet
 			if (allTypesForName.size > 1) {
 				val typeList = concatNames(allTypesForName.map[it.name].toSet)
 				error(
-					String.format(RULE_REFINEMENT_INVALID_PARAMETER_MESSAGE, rule.name, parameterName, typeList),
-					GTPackage.Literals.RULE__SUPER_RULES,
+					String.format(RULE_REFINEMENT_INVALID_PARAMETER_MESSAGE, pattern.name, parameterName, typeList),
+					GTPackage.Literals.EDITOR_PATTERN__SUPER_PATTERNS,
 					RULE_REFINEMENT_INVALID_PARAMETER
 				)
 			}
 		}
 
 		// Nodes may not contain conflicting attribute assignments.
-		val allNodes = GTEditorRuleUtils.getAllNodesOfRule(rule, [true])
+		val allNodes = GTEditorPatternUtils.getAllNodesOfPattern(pattern, [true])
 		val nodeNames = allNodes.map[it.name].toSet
 		for (nodeName : nodeNames) {
 			val nodesForName = allNodes.filter[nodeName == it.name]
@@ -309,8 +309,8 @@ class GTValidator extends AbstractGTValidator {
 			}
 			if (hasConflictingAssignments) {
 				error(
-					String.format(RULE_REFINEMENT_INVALID_ATTRIBUTE_ASSIGNMENT_MESSAGE, rule.name, nodeName),
-					GTPackage.Literals.RULE__SUPER_RULES,
+					String.format(RULE_REFINEMENT_INVALID_ATTRIBUTE_ASSIGNMENT_MESSAGE, pattern.name, nodeName),
+					GTPackage.Literals.EDITOR_PATTERN__SUPER_PATTERNS,
 					RULE_REFINEMENT_INVALID_ATTRIBUTE_ASSIGNMENT
 				)
 			}
@@ -346,13 +346,12 @@ class GTValidator extends AbstractGTValidator {
 			}
 		}
 
-		// Parameter names within rule must be unique.
-		val rule = parameter.eContainer as Rule
-		val parameterDeclarationsCount = rule.parameters.filter[parameter.name.equals(it.name)].size
-		if (parameterDeclarationsCount !== 1) {
+		// Parameter names within pattern must be unique.
+		val pattern = parameter.eContainer as EditorPattern
+		val count = pattern.parameters.filter[parameter.name.equals(it.name)].size
+		if (count !== 1) {
 			error(
-				String.format(PARAMETER_NAME_MULTIPLE_DECLARATIONS_MESSAGE, parameter.name,
-					getTimes(parameterDeclarationsCount)),
+				String.format(PARAMETER_NAME_MULTIPLE_DECLARATIONS_MESSAGE, parameter.name, getTimes(count)),
 				GTPackage.Literals.EDITOR_PARAMETER__NAME,
 				NAME_EXPECT_UNIQUE
 			)
@@ -389,10 +388,10 @@ class GTValidator extends AbstractGTValidator {
 			}
 		}
 
-		val rule = node.eContainer
-		if (rule instanceof Rule) {
-			// Node names within rule must be unique.
-			val nodeDeclarationsCount = rule.nodes.filter[node.name.equals(it.name)].size
+		val pattern = node.eContainer
+		if (pattern instanceof EditorPattern) {
+			// Node names within pattern must be unique.
+			val nodeDeclarationsCount = pattern.nodes.filter[node.name.equals(it.name)].size
 			if (nodeDeclarationsCount !== 1) {
 				error(
 					String.format(NODE_NAME_MULTIPLE_DECLARATIONS_MESSAGE, node.name, getTimes(nodeDeclarationsCount)),
@@ -402,7 +401,7 @@ class GTValidator extends AbstractGTValidator {
 			}
 
 			// Node name must not be equal to a parameter name.
-			if (rule.parameters.exists[node.name.equals(it.name)]) {
+			if (pattern.parameters.exists[node.name.equals(it.name)]) {
 				error(
 					String.format(NODE_NAME_EQUALS_PARAMETER_NAME_MESSAGE, node.name, node.name),
 					GTPackage.Literals.EDITOR_NODE__NAME,
@@ -412,28 +411,30 @@ class GTValidator extends AbstractGTValidator {
 
 			// The type of a created node must not be abstract.
 			if (node.operator == EditorOperator.CREATE) {
-				if (node.type.abstract && (!rule.abstract)) {
+				if (node.type.abstract && (!pattern.abstract)) {
 					error(
 						String.format(CREATE_NODE_TYPE_ABSTRACT_MESSAGE, node.name),
 						GTPackage.Literals.EDITOR_NODE__TYPE,
 						CREATE_NODE_TYPE_ABSTRACT,
 						node.type.name,
-						rule.name
+						pattern.name
 					)
 				}
 			}
 
-			if (!rule.superRules.isEmpty) {
-				val nodeDeclarationsInSuperRules = GTEditorRuleUtils.getAllNodesFromSuperRules(rule, [
+			if (!pattern.superPatterns.isEmpty) {
+				val nodeDeclarationsInSuperPatterns = GTEditorPatternUtils.getAllNodesFromSuperPatterns(pattern, [
 					node.name.equals(it.name)
 				])
 
-				// If a node is context in super rule, it must be a context node.
-				val contextNodesInSuperRule = nodeDeclarationsInSuperRules.filter[it.operator == EditorOperator.CONTEXT]
-				if (!contextNodesInSuperRule.isEmpty && node.operator !== EditorOperator.CONTEXT) {
+				// If a node is context in super pattern, it must be a context node.
+				val contextNodesInSuperPattern = nodeDeclarationsInSuperPatterns.filter [
+					it.operator == EditorOperator.CONTEXT
+				]
+				if (!contextNodesInSuperPattern.isEmpty && node.operator !== EditorOperator.CONTEXT) {
 					error(
 						String.format(NODE_OPERATOR_EXPECT_CONTEXT_DUE_TO_DECLARATION_IN_SUPER_RULE_MESSAGE, node.name,
-							concatNames(contextNodesInSuperRule.map[(it.eContainer as Rule).name].toSet)),
+							concatNames(contextNodesInSuperPattern.map[(it.eContainer as EditorPattern).name].toSet)),
 						GTPackage.Literals.EDITOR_NODE__OPERATOR,
 						NODE_OPERATOR_EXPECT_CONTEXT_DUE_TO_DECLARATION_IN_SUPER_RULE,
 						node.name
@@ -441,13 +442,13 @@ class GTValidator extends AbstractGTValidator {
 				}
 
 				if (node.type !== null) {
-					// The type of a node must be compatible with any type declarations in super rules.
-					nodeDeclarationsInSuperRules.forEach [
+					// The type of a node must be compatible with any type declarations in super patterns.
+					nodeDeclarationsInSuperPatterns.forEach [
 						if (!(it.type.equals(node.type) || it.type.isSuperTypeOf(node.type))) {
-							val superRule = it.eContainer as Rule
+							val superPattern = it.eContainer as EditorPattern
 							error(
 								String.format(NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE_MESSAGE,
-									node.name, it.type.name, superRule.name),
+									node.name, it.type.name, superPattern.name),
 								GTPackage.Literals.EDITOR_NODE__TYPE,
 								NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE
 							)
@@ -542,9 +543,9 @@ class GTValidator extends AbstractGTValidator {
 	@Check
 	def checkReference(EditorReference reference) {
 		val node = reference.eContainer as EditorNode
-		val rule = node.eContainer as Rule
+		val pattern = node.eContainer as EditorPattern
 
-		val targetNodeOperator = GTFlatteningUtils.mergeOperators(GTEditorRuleUtils.getAllNodesOfRule(rule, [
+		val targetNodeOperator = GTFlatteningUtils.mergeOperators(GTEditorPatternUtils.getAllNodesOfPattern(pattern, [
 			it.name.equals(reference.target.name)
 		]).map[it.operator])
 

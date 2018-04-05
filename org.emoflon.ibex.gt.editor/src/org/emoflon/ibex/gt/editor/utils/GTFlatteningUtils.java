@@ -8,7 +8,7 @@ import org.emoflon.ibex.gt.editor.gT.EditorOperator;
 import org.emoflon.ibex.gt.editor.gT.EditorRelation;
 
 /**
- * Utility methods for flattening of rules.
+ * Utility methods for flattening of patterns.
  */
 public class GTFlatteningUtils {
 

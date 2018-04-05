@@ -27,7 +27,7 @@ class GTParsingParametersTest extends GTParsingTest {
 			}
 		''')
 		assertValid(file)
-		Assert.assertTrue(file.rules.get(0).parameters.isEmpty)
+		Assert.assertTrue(file.patterns.get(0).parameters.isEmpty)
 	}
 
 	@Test
@@ -90,7 +90,7 @@ class GTParsingParametersTest extends GTParsingTest {
 		assertInvalidResource(file, 1)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.rule,
+			GTPackage.eINSTANCE.editorPattern,
 			Diagnostic::SYNTAX_DIAGNOSTIC,
 			"mismatched input ')' expecting RULE_ID"
 		)
@@ -128,7 +128,7 @@ class GTParsingParametersTest extends GTParsingTest {
 		assertInvalidResource(file, 1)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.rule,
+			GTPackage.eINSTANCE.editorPattern,
 			Diagnostic::SYNTAX_DIAGNOSTIC,
 			"mismatched input ';' expecting ')'"
 		)

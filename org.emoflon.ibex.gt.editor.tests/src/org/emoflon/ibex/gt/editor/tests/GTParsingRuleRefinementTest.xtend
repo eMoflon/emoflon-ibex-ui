@@ -46,7 +46,7 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 		assertFile(file)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.rule,
+			GTPackage.eINSTANCE.editorPattern,
 			GTLinkingDiagnosticMessageProvider.RULE_SUPER_RULE_NOT_FOUND,
 			String.format(GTLinkingDiagnosticMessageProvider.RULE_SUPER_RULE_NOT_FOUND_MESSAGE, 'a')
 		)
@@ -70,7 +70,7 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 		assertFile(file, 2)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.rule,
+			GTPackage.eINSTANCE.editorPattern,
 			GTLinkingDiagnosticMessageProvider.RULE_SUPER_RULE_NOT_FOUND,
 			String.format(GTLinkingDiagnosticMessageProvider.RULE_SUPER_RULE_NOT_FOUND_MESSAGE, 'a')
 		)
@@ -99,7 +99,7 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 		assertFile(file, 3)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.rule,
+			GTPackage.eINSTANCE.editorPattern,
 			GTLinkingDiagnosticMessageProvider.RULE_SUPER_RULE_NOT_FOUND,
 			String.format(GTLinkingDiagnosticMessageProvider.RULE_SUPER_RULE_NOT_FOUND_MESSAGE, 'a')
 		)
@@ -120,7 +120,7 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 		assertValidResource(file)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.rule,
+			GTPackage.eINSTANCE.editorPattern,
 			GTValidator.RULE_SUPER_RULES_DUPLICATE,
 			String.format(GTValidator.RULE_SUPER_RULES_DUPLICATE_MESSAGE, 'b')
 		)
@@ -147,7 +147,7 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 		assertFile(file, 3)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.rule,
+			GTPackage.eINSTANCE.editorPattern,
 			GTValidator.RULE_REFINEMENT_INVALID_PARAMETER,
 			String.format(GTValidator.RULE_REFINEMENT_INVALID_PARAMETER_MESSAGE, 'r', 'name',
 				GTValidator.concatNames(#['EBoolean', 'EString']))
@@ -171,7 +171,7 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 		assertFile(file, 2)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.rule,
+			GTPackage.eINSTANCE.editorPattern,
 			GTValidator.RULE_REFINEMENT_INVALID_PARAMETER,
 			String.format(GTValidator.RULE_REFINEMENT_INVALID_PARAMETER_MESSAGE, 'r', 'name',
 				GTValidator.concatNames(#['EBoolean', 'EString']))
@@ -201,7 +201,7 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 		assertFile(file, 3)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.rule,
+			GTPackage.eINSTANCE.editorPattern,
 			GTValidator.RULE_REFINEMENT_INVALID_ATTRIBUTE_ASSIGNMENT,
 			String.format(GTValidator.RULE_REFINEMENT_INVALID_ATTRIBUTE_ASSIGNMENT_MESSAGE, 'renameClass', 'clazz')
 		)

@@ -48,7 +48,7 @@ class GTParsingRuleRefinementFlatteningTest extends GTParsingTest {
 		Assert.assertFalse(flattener.hasErrors)
 		Assert.assertEquals(#[], flattener.errors)
 
-		val flattenedRule = flattener.flattenedRule
+		val flattenedRule = flattener.getFlattenedPattern
 		assertParameters(flattenedRule, #{'attributeName' -> 'EString', 'name' -> 'EString'})
 		Assert.assertArrayEquals(#['attributeName', 'name'], flattenedRule.parameters.map[it.name].toArray)
 
@@ -85,7 +85,7 @@ class GTParsingRuleRefinementFlatteningTest extends GTParsingTest {
 		Assert.assertFalse(flattener.hasErrors)
 		Assert.assertEquals(#[], flattener.errors)
 
-		val flattenedRule = flattener.flattenedRule
+		val flattenedRule = flattener.getFlattenedPattern
 		assertParameters(flattenedRule, #{'name' -> 'EString', 'newName' -> 'EString', 'interface' -> 'EBoolean'})
 		Assert.assertArrayEquals(#['name', 'newName', 'interface'], flattenedRule.parameters.map[it.name].toArray)
 
@@ -127,7 +127,7 @@ class GTParsingRuleRefinementFlatteningTest extends GTParsingTest {
 		Assert.assertFalse(flattener.hasErrors)
 		Assert.assertEquals(#[], flattener.errors)
 
-		val flattenedRule = flattener.flattenedRule
+		val flattenedRule = flattener.getFlattenedPattern
 
 		Assert.assertEquals(4, flattenedRule.nodes.size);
 		assertNode(flattenedRule.getNode(0), EditorOperator.CONTEXT, "annotation", "EAnnotation", 0, 0)

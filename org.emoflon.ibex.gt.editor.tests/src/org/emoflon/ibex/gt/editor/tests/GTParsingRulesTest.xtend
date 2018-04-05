@@ -25,7 +25,7 @@ class GTParsingRulesTest extends GTParsingTest {
 		assertFile(file)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.rule,
+			GTPackage.eINSTANCE.editorPattern,
 			GTValidator.RULE_EMPTY,
 			String.format(GTValidator.RULE_EMPTY_MESSAGE, 'a')
 		)
@@ -45,8 +45,8 @@ class GTParsingRulesTest extends GTParsingTest {
 			}
 		''')
 		assertValid(file, 2)
-		Assert.assertTrue(file.rules.get(0).abstract)
-		Assert.assertFalse(file.rules.get(1).abstract)
+		Assert.assertTrue(file.patterns.get(0).abstract)
+		Assert.assertFalse(file.patterns.get(1).abstract)
 	}
 
 	@Test
@@ -77,7 +77,7 @@ class GTParsingRulesTest extends GTParsingTest {
 		assertFile(file, 5)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.rule,
+			GTPackage.eINSTANCE.editorPattern,
 			GTValidator.NAME_EXPECT_UNIQUE,
 			String.format(GTValidator.RULE_NAME_MULTIPLE_DECLARATIONS_MESSAGE, "a", "twice"),
 			String.format(GTValidator.RULE_NAME_MULTIPLE_DECLARATIONS_MESSAGE, "b", "3 times")
@@ -97,7 +97,7 @@ class GTParsingRulesTest extends GTParsingTest {
 		assertFile(file)
 		assertValidationIssues(
 			file,
-			GTPackage.eINSTANCE.rule,
+			GTPackage.eINSTANCE.editorPattern,
 			GTValidator.NAME_EXPECT_CAMEL_CASE,
 			Severity.WARNING,
 			String.format(GTValidator.RULE_NAME_CONTAINS_UNDERSCORES_MESSAGE, ruleName)
@@ -117,7 +117,7 @@ class GTParsingRulesTest extends GTParsingTest {
 		assertFile(file)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.rule,
+			GTPackage.eINSTANCE.editorPattern,
 			GTValidator.NAME_BLACKLISTED,
 			String.format(GTValidator.RULE_NAME_FORBIDDEN_MESSAGE, ruleName)
 		)
@@ -136,7 +136,7 @@ class GTParsingRulesTest extends GTParsingTest {
 		assertFile(file)
 		assertValidationIssues(
 			file,
-			GTPackage.eINSTANCE.rule,
+			GTPackage.eINSTANCE.editorPattern,
 			GTValidator.NAME_EXPECT_LOWER_CASE,
 			Severity.WARNING,
 			String.format(GTValidator.RULE_NAME_STARTS_WITH_LOWER_CASE_MESSAGE, ruleName)

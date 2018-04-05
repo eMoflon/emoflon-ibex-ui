@@ -17,8 +17,8 @@ import org.emoflon.ibex.gt.editor.gT.EditorNode
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
 import org.emoflon.ibex.gt.editor.gT.EditorParameter
 import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
+import org.emoflon.ibex.gt.editor.gT.EditorPattern
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
-import org.emoflon.ibex.gt.editor.gT.Rule
 import org.junit.Assert
 import org.junit.runner.RunWith
 
@@ -80,18 +80,18 @@ abstract class GTParsingTest {
 		Assert.assertEquals(1, file.imports.size)
 		Assert.assertEquals("http://www.eclipse.org/emf/2002/Ecore", file.imports.get(0).name)
 
-		Assert.assertEquals(ruleCount, file.rules.size)
+		Assert.assertEquals(ruleCount, file.patterns.size)
 	}
 
 	static def getRule(EditorGTFile file, int ruleIndex) {
-		return file.rules.get(ruleIndex)
+		return file.patterns.get(ruleIndex)
 	}
 
-	static def getParameter(Rule rule, int parameterIndex) {
+	static def getParameter(EditorPattern rule, int parameterIndex) {
 		return rule.parameters.get(parameterIndex)
 	}
 
-	static def void assertParameters(Rule rule, Map<String, String> parameterNameToType) {
+	static def void assertParameters(EditorPattern rule, Map<String, String> parameterNameToType) {
 		Assert.assertEquals(parameterNameToType.size, rule.parameters.size)
 		for (parameter : rule.parameters) {
 			Assert.assertTrue("Found unexpected parameter " + parameter.name,
@@ -100,7 +100,7 @@ abstract class GTParsingTest {
 		}
 	}
 
-	static def getNode(Rule rule, int nodeIndex) {
+	static def getNode(EditorPattern rule, int nodeIndex) {
 		return rule.nodes.get(nodeIndex)
 	}
 

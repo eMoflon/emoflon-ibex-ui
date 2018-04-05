@@ -5,17 +5,17 @@ generate gT "http://www.emoflon.org/ibex/gt/editor/GT"
 
 EditorGTFile:
 	(imports+=EditorImport)*
-	(rules+=Rule)*;
+	(patterns+=EditorPattern)*;
 
 EditorImport:
 	'import' name=STRING;
 
-Rule:
+EditorPattern:
 	(abstract?='abstract')? 'rule' name=ID
 	('('
 	(parameters+=EditorParameter (',' parameters+=EditorParameter)*)?
 	')')?
-	('refines' superRules+=[Rule] (',' superRules+=[Rule])*)?
+	('refines' superPatterns+=[EditorPattern] (',' superPatterns+=[EditorPattern])*)?
 	('{'
 	(nodes+=EditorNode)*
 	'}')?;
