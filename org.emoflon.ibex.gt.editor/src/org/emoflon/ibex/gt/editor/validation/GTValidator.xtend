@@ -271,14 +271,16 @@ class GTValidator extends AbstractGTValidator {
 			error(
 				String.format(PATTERN_TYPE_INVALID_PATTERN_MESSAGE, pattern.name),
 				GTPackage.Literals.EDITOR_PATTERN__TYPE,
-				PATTERN_TYPE_INVALID_PATTERN
+				PATTERN_TYPE_INVALID_PATTERN,
+				pattern.name
 			)
 		}
 		if (!isRule && pattern.type === EditorPatternType.RULE) {
 			error(
 				String.format(PATTERN_TYPE_INVALID_RULE_MESSAGE, pattern.name),
 				GTPackage.Literals.EDITOR_PATTERN__TYPE,
-				PATTERN_TYPE_INVALID_RULE
+				PATTERN_TYPE_INVALID_RULE,
+				pattern.name
 			)
 		}
 

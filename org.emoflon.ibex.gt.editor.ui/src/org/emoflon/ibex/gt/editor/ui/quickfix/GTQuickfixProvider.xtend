@@ -17,6 +17,7 @@ import org.emoflon.ibex.gt.editor.gT.EditorNode
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
 import org.emoflon.ibex.gt.editor.gT.EditorParameter
 import org.emoflon.ibex.gt.editor.gT.EditorPattern
+import org.emoflon.ibex.gt.editor.gT.EditorPatternType
 import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
 import org.emoflon.ibex.gt.editor.utils.GTEditorAttributeUtils
@@ -112,6 +113,16 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			}
 		}
 		return camelCase.toFirstLower
+	}
+
+	@Fix(GTValidator.PATTERN_TYPE_INVALID_PATTERN)
+	def convertPatternToRule(Issue issue, IssueResolutionAcceptor acceptor) {
+		GTPatternQuickfixes.acceptPatternTypeChange(issue, acceptor, EditorPatternType.PATTERN, EditorPatternType.RULE)
+	}
+
+	@Fix(GTValidator.PATTERN_TYPE_INVALID_RULE)
+	def convertRuleToPattern(Issue issue, IssueResolutionAcceptor acceptor) {
+		GTPatternQuickfixes.acceptPatternTypeChange(issue, acceptor, EditorPatternType.RULE, EditorPatternType.PATTERN)
 	}
 
 	/**
