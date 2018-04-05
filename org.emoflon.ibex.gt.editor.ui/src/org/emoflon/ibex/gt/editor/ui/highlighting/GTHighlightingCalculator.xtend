@@ -9,11 +9,11 @@ import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.util.CancelIndicator
 
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute
-import org.emoflon.ibex.gt.editor.gT.EditorReference
+import org.emoflon.ibex.gt.editor.gT.EditorNode
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
+import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
 import org.emoflon.ibex.gt.editor.gT.GTPackage
-import org.emoflon.ibex.gt.editor.gT.Node
 
 /** 
  * Applying syntax highlighting configuration.
@@ -37,13 +37,13 @@ class GTHighlightingCalculator extends DefaultSemanticHighlightingCalculator {
 			}
 		}
 
-		if (element instanceof Node) {
+		if (element instanceof EditorNode) {
 			var String style = getStyle(element.operator)
 			if (element.operator == EditorOperator.CREATE || element.operator == EditorOperator.DELETE) {
-				this.highlightFeature(acceptor, element, GTPackage.Literals.NODE__OPERATOR, style)
+				this.highlightFeature(acceptor, element, GTPackage.Literals.EDITOR_NODE__OPERATOR, style)
 			}
-			this.highlightFeature(acceptor, element, GTPackage.Literals.NODE__NAME, style)
-			this.highlightFeature(acceptor, element, GTPackage.Literals.NODE__TYPE, style)
+			this.highlightFeature(acceptor, element, GTPackage.Literals.EDITOR_NODE__NAME, style)
+			this.highlightFeature(acceptor, element, GTPackage.Literals.EDITOR_NODE__TYPE, style)
 		}
 
 		if (element instanceof EditorReference) {

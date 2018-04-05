@@ -13,11 +13,11 @@ import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile
 import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression
+import org.emoflon.ibex.gt.editor.gT.EditorNode
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
 import org.emoflon.ibex.gt.editor.gT.EditorParameter
 import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
-import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Rule
 import org.junit.Assert
 import org.junit.runner.RunWith
@@ -104,11 +104,11 @@ abstract class GTParsingTest {
 		return rule.nodes.get(nodeIndex)
 	}
 
-	static def assertNode(Node node, EditorOperator operator, String variableName, String variableType) {
+	static def assertNode(EditorNode node, EditorOperator operator, String variableName, String variableType) {
 		assertNode(node, operator, variableName, variableType, 0, 0)
 	}
 
-	static def assertNode(Node node, EditorOperator operator, String name, String type, int attributesCount,
+	static def assertNode(EditorNode node, EditorOperator operator, String name, String type, int attributesCount,
 		int referencesCount) {
 		Assert.assertEquals(operator, node.operator)
 		Assert.assertEquals(name, node.name)
@@ -117,7 +117,7 @@ abstract class GTParsingTest {
 		Assert.assertEquals(referencesCount, node.references.size)
 	}
 
-	static def getAttribute(Node node, int attributeIndex) {
+	static def getAttribute(EditorNode node, int attributeIndex) {
 		return node.attributes.get(attributeIndex)
 	}
 
@@ -127,7 +127,7 @@ abstract class GTParsingTest {
 	}
 
 	static def void assertAttributeWithAttributeExpression(EditorAttribute attributeConstraint, String name,
-		EditorRelation relation, Node node, String attr) {
+		EditorRelation relation, EditorNode node, String attr) {
 		assertAttribute(attributeConstraint, name, relation)
 		Assert.assertTrue(attributeConstraint.value instanceof EditorAttributeExpression)
 		Assert.assertEquals(node, (attributeConstraint.value as EditorAttributeExpression).node)
@@ -148,11 +148,11 @@ abstract class GTParsingTest {
 		Assert.assertEquals(parameter, (attributeConstraint.value as EditorParameterExpression).parameter)
 	}
 
-	static def getReference(Node node, int referenceIndex) {
+	static def getReference(EditorNode node, int referenceIndex) {
 		return node.references.get(referenceIndex)
 	}
 
-	static def assertReference(EditorReference reference, EditorOperator operator, String name, Node target) {
+	static def assertReference(EditorReference reference, EditorOperator operator, String name, EditorNode target) {
 		Assert.assertEquals(operator, reference.operator)
 		Assert.assertEquals(name, reference.type.name)
 		Assert.assertEquals(target, reference.target)

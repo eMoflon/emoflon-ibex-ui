@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource.CyclicLinkingException;
 import org.emoflon.ibex.gt.editor.gT.EditorParameter;
-import org.emoflon.ibex.gt.editor.gT.Node;
+import org.emoflon.ibex.gt.editor.gT.EditorNode;
 import org.emoflon.ibex.gt.editor.gT.Rule;
 
 /**
@@ -53,7 +53,7 @@ public class GTEditorRuleUtils {
 	 *            a filter for the nodes
 	 * @return the nodes of the rule and its super rules after applying the filter
 	 */
-	public static Set<Node> getAllNodesOfRule(final Rule rule, final Predicate<Node> nodeFilter) {
+	public static Set<EditorNode> getAllNodesOfRule(final Rule rule, final Predicate<EditorNode> nodeFilter) {
 		return getFilteredNodes(GTEditorRuleUtils.getRuleAllWithSuperRules(rule), nodeFilter);
 	}
 
@@ -66,7 +66,7 @@ public class GTEditorRuleUtils {
 	 *            a filter for the nodes
 	 * @return the nodes from the super rules of the rule after applying the filter
 	 */
-	public static Set<Node> getAllNodesFromSuperRules(final Rule rule, final Predicate<Node> nodeFilter) {
+	public static Set<EditorNode> getAllNodesFromSuperRules(final Rule rule, final Predicate<EditorNode> nodeFilter) {
 		return getFilteredNodes(GTEditorRuleUtils.getAllSuperRules(rule), nodeFilter);
 	}
 
@@ -79,8 +79,8 @@ public class GTEditorRuleUtils {
 	 *            a filter for the nodes
 	 * @return the nodes of the rules after applying the given filter
 	 */
-	private static Set<Node> getFilteredNodes(final Set<Rule> rules, final Predicate<Node> nodeFilter) {
-		Set<Node> nodes = new HashSet<Node>();
+	private static Set<EditorNode> getFilteredNodes(final Set<Rule> rules, final Predicate<EditorNode> nodeFilter) {
+		Set<EditorNode> nodes = new HashSet<EditorNode>();
 		rules.forEach(rule -> nodes.addAll(rule.getNodes().stream().filter(nodeFilter).collect(Collectors.toSet())));
 		return nodes;
 	}

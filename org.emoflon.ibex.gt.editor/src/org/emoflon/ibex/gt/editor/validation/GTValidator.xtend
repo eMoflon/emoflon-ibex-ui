@@ -9,12 +9,12 @@ import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile
 import org.emoflon.ibex.gt.editor.gT.EditorImport
 import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression
+import org.emoflon.ibex.gt.editor.gT.EditorNode
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
 import org.emoflon.ibex.gt.editor.gT.EditorParameter
 import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
 import org.emoflon.ibex.gt.editor.gT.GTPackage
-import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.utils.GTEditorAttributeUtils
 import org.emoflon.ibex.gt.editor.utils.GTEditorComparator
@@ -360,12 +360,12 @@ class GTValidator extends AbstractGTValidator {
 	}
 
 	@Check
-	def checkNode(Node node) {
+	def checkNode(EditorNode node) {
 		// The node name must not be blacklisted.
 		if (nodeNameBlacklist.contains(node.name)) {
 			error(
 				String.format(NODE_NAME_FORBIDDEN_MESSAGE, node.name),
-				GTPackage.Literals.NODE__NAME,
+				GTPackage.Literals.EDITOR_NODE__NAME,
 				NAME_BLACKLISTED
 			)
 		} else {
@@ -374,7 +374,7 @@ class GTValidator extends AbstractGTValidator {
 			if (node.name.substring(1).contains('_')) {
 				warning(
 					String.format(NODE_NAME_CONTAINS_UNDERSCORES_MESSAGE, node.name),
-					GTPackage.Literals.NODE__NAME,
+					GTPackage.Literals.EDITOR_NODE__NAME,
 					NAME_EXPECT_CAMEL_CASE
 				)
 			} else {
@@ -382,7 +382,7 @@ class GTValidator extends AbstractGTValidator {
 				if (Character.isUpperCase(node.name.charAt(0))) {
 					warning(
 						String.format(NODE_NAME_STARTS_WITH_LOWER_CASE_MESSAGE, node.name),
-						GTPackage.Literals.NODE__NAME,
+						GTPackage.Literals.EDITOR_NODE__NAME,
 						NAME_EXPECT_LOWER_CASE
 					)
 				}
@@ -396,7 +396,7 @@ class GTValidator extends AbstractGTValidator {
 			if (nodeDeclarationsCount !== 1) {
 				error(
 					String.format(NODE_NAME_MULTIPLE_DECLARATIONS_MESSAGE, node.name, getTimes(nodeDeclarationsCount)),
-					GTPackage.Literals.NODE__NAME,
+					GTPackage.Literals.EDITOR_NODE__NAME,
 					NAME_EXPECT_UNIQUE
 				)
 			}
@@ -405,7 +405,7 @@ class GTValidator extends AbstractGTValidator {
 			if (rule.parameters.exists[node.name.equals(it.name)]) {
 				error(
 					String.format(NODE_NAME_EQUALS_PARAMETER_NAME_MESSAGE, node.name, node.name),
-					GTPackage.Literals.NODE__NAME,
+					GTPackage.Literals.EDITOR_NODE__NAME,
 					NODE_NAME_EQUALS_PARAMETER_NAME
 				)
 			}
@@ -415,7 +415,7 @@ class GTValidator extends AbstractGTValidator {
 				if (node.type.abstract && (!rule.abstract)) {
 					error(
 						String.format(CREATE_NODE_TYPE_ABSTRACT_MESSAGE, node.name),
-						GTPackage.Literals.NODE__TYPE,
+						GTPackage.Literals.EDITOR_NODE__TYPE,
 						CREATE_NODE_TYPE_ABSTRACT,
 						node.type.name,
 						rule.name
@@ -434,7 +434,7 @@ class GTValidator extends AbstractGTValidator {
 					error(
 						String.format(NODE_OPERATOR_EXPECT_CONTEXT_DUE_TO_DECLARATION_IN_SUPER_RULE_MESSAGE, node.name,
 							concatNames(contextNodesInSuperRule.map[(it.eContainer as Rule).name].toSet)),
-						GTPackage.Literals.NODE__OPERATOR,
+						GTPackage.Literals.EDITOR_NODE__OPERATOR,
 						NODE_OPERATOR_EXPECT_CONTEXT_DUE_TO_DECLARATION_IN_SUPER_RULE,
 						node.name
 					)
@@ -448,7 +448,7 @@ class GTValidator extends AbstractGTValidator {
 							error(
 								String.format(NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE_MESSAGE,
 									node.name, it.type.name, superRule.name),
-								GTPackage.Literals.NODE__TYPE,
+								GTPackage.Literals.EDITOR_NODE__TYPE,
 								NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE
 							)
 						}
@@ -476,7 +476,7 @@ class GTValidator extends AbstractGTValidator {
 			}
 		}
 
-		val node = attributeConstraint.eContainer as Node
+		val node = attributeConstraint.eContainer as EditorNode
 		if (attributeConstraint.relation == EditorRelation.ASSIGNMENT) {
 			if (node.operator == EditorOperator.DELETE) {
 				// If the node is a deleted node, it may not contain attribute assignments.
@@ -541,7 +541,7 @@ class GTValidator extends AbstractGTValidator {
 
 	@Check
 	def checkReference(EditorReference reference) {
-		val node = reference.eContainer as Node
+		val node = reference.eContainer as EditorNode
 		val rule = node.eContainer as Rule
 
 		val targetNodeOperator = GTFlatteningUtils.mergeOperators(GTEditorRuleUtils.getAllNodesOfRule(rule, [

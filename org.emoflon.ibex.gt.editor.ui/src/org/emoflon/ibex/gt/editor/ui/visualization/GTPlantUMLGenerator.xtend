@@ -6,13 +6,13 @@ import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
 import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression
 import org.emoflon.ibex.gt.editor.gT.EditorExpression
 import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression
+import org.emoflon.ibex.gt.editor.gT.EditorNode
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
 import org.emoflon.ibex.gt.editor.gT.EditorParameter
 import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
 import org.emoflon.ibex.gt.editor.gT.EditorReference
-import org.emoflon.ibex.gt.editor.gT.Node
-import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
+import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.utils.GTFlattener
 
 /**
@@ -75,7 +75,7 @@ class GTPlantUMLGenerator {
 	/**
 	 * Prints the name and type name of the node.
 	 */
-	private static def String nodeName(Node node) {
+	private static def String nodeName(EditorNode node) {
 		if (node === null) {
 			return '"?"'
 		}
@@ -86,7 +86,7 @@ class GTPlantUMLGenerator {
 	/**
 	 * Prints the skin name for the node.
 	 */
-	private static def String nodeSkin(Node node) {
+	private static def String nodeSkin(EditorNode node) {
 		return node.operator.getName
 	}
 

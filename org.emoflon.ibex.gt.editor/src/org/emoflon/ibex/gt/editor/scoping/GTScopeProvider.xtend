@@ -11,12 +11,12 @@ import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
 import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile
+import org.emoflon.ibex.gt.editor.gT.EditorNode
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
 import org.emoflon.ibex.gt.editor.gT.EditorParameter
 import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
 import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.GTPackage
-import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 import org.emoflon.ibex.gt.editor.utils.GTEditorRuleUtils
@@ -51,7 +51,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 
 		// Nodes
 		if (isNodeType(context, reference)) {
-			return getScopeForNodeTypes(context as Node)
+			return getScopeForNodeTypes(context as EditorNode)
 		}
 
 		// Parameters
@@ -100,7 +100,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	}
 
 	def isNodeType(EObject context, EReference reference) {
-		return (context instanceof Node && reference == GTPackage.Literals.NODE__TYPE)
+		return (context instanceof EditorNode && reference == GTPackage.Literals.EDITOR_NODE__TYPE)
 	}
 
 	def isParameterType(EObject context, EReference reference) {
@@ -135,7 +135,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	/**
 	 * The node type must be an EClass from the meta-model.
 	 */
-	def getScopeForNodeTypes(Node node) {
+	def getScopeForNodeTypes(EditorNode node) {
 		return Scopes.scopeFor(GTEditorModelUtils.getClasses(node.eContainer.eContainer as EditorGTFile))
 	}
 
@@ -144,7 +144,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	 * of the node containing the reference.
 	 */
 	def getScopeForReferenceTypes(EditorReference context) {
-		val containingNode = context.eContainer as Node
+		val containingNode = context.eContainer as EditorNode
 		return Scopes.scopeFor(containingNode.type.EAllReferences)
 	}
 
@@ -177,7 +177,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	/**
 	 * Returns whether the node is of the given type.
 	 */
-	def static isNodeOfType(Node node, EClass expectedNodeType) {
+	def static isNodeOfType(EditorNode node, EClass expectedNodeType) {
 		if (node.type == expectedNodeType) {
 			return true
 		}
@@ -191,7 +191,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	 * of the node containing the attribute assignment or condition.
 	 */
 	def getScopeForAttributes(EditorAttribute context) {
-		val containingNode = context.eContainer as Node
+		val containingNode = context.eContainer as EditorNode
 		return Scopes.scopeFor(containingNode.type.EAllAttributes)
 	}
 

@@ -15,20 +15,22 @@ import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 class GTLinkingDiagnosticMessageProvider extends LinkingDiagnosticMessageProvider {
 	private static val CODE_PREFIX = "org.emoflon.ibex.gt.editor."
 
-	public static val NODE_TYPE_NOT_FOUND = CODE_PREFIX + "node.type.typeNotFound"
+	public static val ATTRIBUTE_EXPRESSION_NODE_NOT_FOUND = CODE_PREFIX + "attributeExpression.node.notFound"
+	public static val ATTRIBUTE_EXPRESSION_NODE_NOT_FOUND_MESSAGE = "Could not find node '%s'."
+
+	public static val NODE_TYPE_NOT_FOUND = CODE_PREFIX + "node.type.notFound"
 	public static val NODE_TYPE_NOT_FOUND_MESSAGE = "Could not find class '%s'."
 
-	public static val PARAMETER_TYPE_NOT_FOUND = CODE_PREFIX + "parameter.type.typeNotFound"
+	public static val PARAMETER_TYPE_NOT_FOUND = CODE_PREFIX + "parameter.type.notFound"
 	public static val PARAMETER_TYPE_NOT_FOUND_MESSAGE = "Could not find data type '%s'."
 
-	public static val PARAMETER_EXPRESSION_PARAMETER_NOT_FOUND = CODE_PREFIX +
-		"parameterExpression.parameter.parameterNotFound"
+	public static val PARAMETER_EXPRESSION_PARAMETER_NOT_FOUND = CODE_PREFIX + "parameterExpression.parameter.notFound"
 	public static val PARAMETER_EXPRESSION_PARAMETER_NOT_FOUND_MESSAGE = "Could not find parameter '%s' of type '%s'."
 
 	public static val REFERENCE_TARGET_NODE_NOT_FOUND = CODE_PREFIX + "reference.target.nodeNotFound"
 	public static val REFERENCE_TARGET_NODE_NOT_FOUND_MESSAGE = "Could not find node '%s' of type '%s'."
 
-	public static val RULE_SUPER_RULE_NOT_FOUND = CODE_PREFIX + "rule.superRules.ruleNotFound"
+	public static val RULE_SUPER_RULE_NOT_FOUND = CODE_PREFIX + "rule.superRules.notFound"
 	public static val RULE_SUPER_RULE_NOT_FOUND_MESSAGE = "Could not find rule '%s'."
 
 	override getUnresolvedProxyMessage(ILinkingDiagnosticContext context) {
@@ -37,6 +39,15 @@ class GTLinkingDiagnosticMessageProvider extends LinkingDiagnosticMessageProvide
 			linkText = context.getLinkText();
 		} catch (IllegalNodeException e) {
 			linkText = e.getNode().getText();
+		}
+
+		// Node of attribute expression not found.
+		if (context.reference === GTPackage.Literals.EDITOR_ATTRIBUTE_EXPRESSION__NODE) {
+			return new DiagnosticMessage(
+				String.format(ATTRIBUTE_EXPRESSION_NODE_NOT_FOUND_MESSAGE, linkText),
+				Severity.ERROR,
+				ATTRIBUTE_EXPRESSION_NODE_NOT_FOUND
+			)
 		}
 
 		// Parameter of parameter expression not found.
@@ -59,7 +70,7 @@ class GTLinkingDiagnosticMessageProvider extends LinkingDiagnosticMessageProvide
 		}
 
 		// Node type not found in scope.
-		if (context.reference === GTPackage.Literals.NODE__TYPE) {
+		if (context.reference === GTPackage.Literals.EDITOR_NODE__TYPE) {
 			return new DiagnosticMessage(
 				String.format(NODE_TYPE_NOT_FOUND_MESSAGE, linkText),
 				Severity.ERROR,

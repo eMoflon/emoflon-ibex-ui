@@ -17,14 +17,14 @@ Rule:
 	')')?
 	('refines' superRules+=[Rule] (',' superRules+=[Rule])*)?
 	('{'
-	(nodes+=Node)*
+	(nodes+=EditorNode)*
 	'}')?;
 
 EditorParameter:
 	name=ID ':' type=[ecore::EDataType];
 
 	// Nodes
-Node:
+EditorNode:
 	(operator=OperatorForEditor)?
 	name=ID ':' type=[ecore::EClass]
 	('{'
@@ -57,7 +57,7 @@ EditorExpression:
 	EditorAttributeExpression | EditorLiteralExpression | EditorEnumExpression | EditorParameterExpression;
 
 EditorAttributeExpression:
-	node=[Node] '.' attribute=[ecore::EAttribute];
+	node=[EditorNode] '.' attribute=[ecore::EAttribute];
 
 EditorLiteralExpression:
 	value=('true' | 'false' | Number) |
@@ -74,4 +74,4 @@ EditorParameterExpression:
 
 	// References
 EditorReference:
-	(operator=OperatorForEditor)? '-' type=[ecore::EReference] '->' target=[Node];
+	(operator=OperatorForEditor)? '-' type=[ecore::EReference] '->' target=[EditorNode];

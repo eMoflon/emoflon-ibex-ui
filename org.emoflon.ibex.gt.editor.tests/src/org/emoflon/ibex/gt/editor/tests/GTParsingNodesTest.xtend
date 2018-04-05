@@ -61,7 +61,7 @@ class GTParsingNodesTest extends GTParsingTest {
 		assertFile(file)
 		assertValidationIssues(
 			file,
-			GTPackage.eINSTANCE.node,
+			GTPackage.eINSTANCE.editorNode,
 			GTValidator.NAME_EXPECT_LOWER_CASE,
 			Severity.WARNING,
 			String.format(GTValidator.NODE_NAME_STARTS_WITH_LOWER_CASE_MESSAGE, nodeName)
@@ -81,7 +81,7 @@ class GTParsingNodesTest extends GTParsingTest {
 		assertFile(file)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.node,
+			GTPackage.eINSTANCE.editorNode,
 			GTValidator.NAME_BLACKLISTED,
 			String.format(GTValidator.NODE_NAME_FORBIDDEN_MESSAGE, nodeName)
 		)
@@ -100,7 +100,7 @@ class GTParsingNodesTest extends GTParsingTest {
 		assertFile(file)
 		assertValidationIssues(
 			file,
-			GTPackage.eINSTANCE.node,
+			GTPackage.eINSTANCE.editorNode,
 			GTValidator.NAME_EXPECT_CAMEL_CASE,
 			Severity.WARNING,
 			String.format(GTValidator.NODE_NAME_CONTAINS_UNDERSCORES_MESSAGE, nodeName)
@@ -122,7 +122,7 @@ class GTParsingNodesTest extends GTParsingTest {
 		assertFile(file)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.node,
+			GTPackage.eINSTANCE.editorNode,
 			GTValidator.NAME_EXPECT_UNIQUE,
 			String.format(GTValidator.NODE_NAME_MULTIPLE_DECLARATIONS_MESSAGE, nodeName, "twice")
 		)
@@ -140,7 +140,7 @@ class GTParsingNodesTest extends GTParsingTest {
 		assertFile(file)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.node,
+			GTPackage.eINSTANCE.editorNode,
 			GTLinkingDiagnosticMessageProvider.NODE_TYPE_NOT_FOUND,
 			String.format(GTLinkingDiagnosticMessageProvider.NODE_TYPE_NOT_FOUND_MESSAGE, 'Object')
 		)
@@ -158,7 +158,7 @@ class GTParsingNodesTest extends GTParsingTest {
 		assertFile(file)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.node,
+			GTPackage.eINSTANCE.editorNode,
 			GTValidator.CREATE_NODE_TYPE_ABSTRACT,
 			String.format(GTValidator.CREATE_NODE_TYPE_ABSTRACT_MESSAGE, 'classifier')
 		)
@@ -176,7 +176,7 @@ class GTParsingNodesTest extends GTParsingTest {
 		assertFile(file)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.node,
+			GTPackage.eINSTANCE.editorNode,
 			GTValidator.NODE_NAME_EQUALS_PARAMETER_NAME,
 			String.format(GTValidator.NODE_NAME_EQUALS_PARAMETER_NAME_MESSAGE, 'clazz', 'clazz')
 		)
@@ -215,7 +215,7 @@ class GTParsingNodesTest extends GTParsingTest {
 		assertFile(file, 2)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.node,
+			GTPackage.eINSTANCE.editorNode,
 			GTValidator.NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE,
 			String.format(GTValidator.NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE_MESSAGE, 'c', 'EDataType',
 				'super')
@@ -255,7 +255,7 @@ class GTParsingNodesTest extends GTParsingTest {
 		assertFile(file, 2)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.node,
+			GTPackage.eINSTANCE.editorNode,
 			GTValidator.NODE_OPERATOR_EXPECT_CONTEXT_DUE_TO_DECLARATION_IN_SUPER_RULE,
 			String.format(GTValidator.NODE_OPERATOR_EXPECT_CONTEXT_DUE_TO_DECLARATION_IN_SUPER_RULE_MESSAGE, 'c',
 				GTValidator.concatNames(#['super']))

@@ -13,12 +13,12 @@ import org.eclipse.xtext.validation.Issue
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile
 import org.emoflon.ibex.gt.editor.gT.EditorImport
-import org.emoflon.ibex.gt.editor.gT.EditorReference
-import org.emoflon.ibex.gt.editor.gT.Node
-import org.emoflon.ibex.gt.editor.gT.Rule
+import org.emoflon.ibex.gt.editor.gT.EditorNode
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
 import org.emoflon.ibex.gt.editor.gT.EditorParameter
+import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
+import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.utils.GTEditorAttributeUtils
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 import org.emoflon.ibex.gt.editor.validation.GTValidator
@@ -65,7 +65,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			label,
 			null,
 			[ element, context |
-				if (element instanceof Node) {
+				if (element instanceof EditorNode) {
 					element.name = element.name.toFirstLower
 				} else if (element instanceof EditorParameter) {
 					element.name = element.name.toFirstLower
@@ -88,8 +88,8 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			label,
 			null,
 			[ element, context |
-				if (element instanceof Node) {
-					val node = element as Node
+				if (element instanceof EditorNode) {
+					val node = element as EditorNode
 					// Keep leading _ if present before.
 					node.name = (if(node.name.startsWith('_')) '_' else '') + convertToLowerCamelCase(node.name)
 				} else if (element instanceof EditorParameter) {
@@ -180,7 +180,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			[ element, context |
 				if (element instanceof EditorReference) {
 					val targetNode = element.target
-					if (targetNode instanceof Node) {
+					if (targetNode instanceof EditorNode) {
 						if (newOperator == EditorOperator.CONTEXT) {
 							this.removeNodeOperator(targetNode, context.xtextDocument)
 						} else {
@@ -195,7 +195,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	/**
 	 * Removes the operator of the given node by modifying the Xtext document. 
 	 */
-	private def removeNodeOperator(Node node, IXtextDocument document) {
+	private def removeNodeOperator(EditorNode node, IXtextDocument document) {
 		if (node.operator != EditorOperator.CONTEXT) {
 			val xtextNode = NodeModelUtils.getNode(node);
 			val regex = Pattern.quote(if(node.operator == EditorOperator.CREATE) '++' else '--')
@@ -247,7 +247,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 				label,
 				null,
 				[ element, context |
-					if (element instanceof Node) {
+					if (element instanceof EditorNode) {
 						element.type = it
 					}
 				],
@@ -285,7 +285,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			null,
 			[ element, context |
 				if (element instanceof EditorAttribute) {
-					val node = element.eContainer as Node
+					val node = element.eContainer as EditorNode
 					node.attributes.remove(element)
 				}
 			]
@@ -399,12 +399,12 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			label,
 			null,
 			[ element, context |
-				var Node node
+				var EditorNode node
 				if (element instanceof EditorReference) {
-					node = element.eContainer as Node
+					node = element.eContainer as EditorNode
 				}
-				if (element instanceof Node) {
-					node = element as Node
+				if (element instanceof EditorNode) {
+					node = element as EditorNode
 				}
 				if (newOperator == EditorOperator.CONTEXT) {
 					this.removeNodeOperator(node, context.xtextDocument)

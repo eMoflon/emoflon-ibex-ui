@@ -89,8 +89,8 @@ class GTParsingAttributesTest extends GTParsingTest {
 		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorAttributeExpression,
-			Diagnostic::LINKING_DIAGNOSTIC,
-			"Couldn't resolve reference to Node 'package'."
+			GTLinkingDiagnosticMessageProvider.ATTRIBUTE_EXPRESSION_NODE_NOT_FOUND,
+			String.format(GTLinkingDiagnosticMessageProvider.ATTRIBUTE_EXPRESSION_NODE_NOT_FOUND_MESSAGE, 'package')
 		)
 	}
 
