@@ -22,7 +22,7 @@ class GTParsingParametersTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a() {
+			pattern a() {
 				a: EObject
 			}
 		''')
@@ -35,7 +35,7 @@ class GTParsingParametersTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a(name: EString) {
+			pattern a(name: EString) {
 				a: EObject
 			}
 		''')
@@ -48,7 +48,7 @@ class GTParsingParametersTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a(age: EDouble, name: EString, isMale: EBoolean) {
+			pattern a(age: EDouble, name: EString, isMale: EBoolean) {
 				a: EObject
 			}
 		''')
@@ -65,7 +65,7 @@ class GTParsingParametersTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a(age: EClass) {
+			pattern a(age: EClass) {
 				a: EObject
 			}
 		''')
@@ -83,7 +83,7 @@ class GTParsingParametersTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a(age: int,) {
+			pattern a(age: int,) {
 				a: EObject
 			}
 		''')
@@ -101,7 +101,7 @@ class GTParsingParametersTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule A(age EInt, name EString, isMale EBoolean) {
+			pattern A(age EInt, name EString, isMale EBoolean) {
 				a: EObject
 			}
 		''')
@@ -121,7 +121,7 @@ class GTParsingParametersTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "http://www.eclipse.org/emf/2002/Ecore"
 			
-			rule a(age: EInt; name: EString; isMale: EBoolean) {
+			pattern a(age: EInt; name: EString; isMale: EBoolean) {
 				a: EObject
 			}
 		''')

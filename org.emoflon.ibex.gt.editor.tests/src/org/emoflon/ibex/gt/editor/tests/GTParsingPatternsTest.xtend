@@ -10,17 +10,17 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * JUnit tests for features on file/rule level.
+ * JUnit tests for validation of patterns.
  */
 @RunWith(XtextRunner)
 @InjectWith(GTInjectorProvider)
-class GTParsingRulesTest extends GTParsingTest {
+class GTParsingPatternsTest extends GTParsingTest {
 	@Test
 	def void errorIfEmptyRuleBody() {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a() {}
+			pattern a() {}
 		''')
 		assertFile(file)
 		assertValidationErrors(
@@ -36,11 +36,11 @@ class GTParsingRulesTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			abstract rule a() {
+			abstract pattern a() {
 				object1: EObject
 			}
 			
-			rule b {
+			pattern b {
 				object2: EObject
 			}
 		''')
@@ -54,23 +54,23 @@ class GTParsingRulesTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a() {
+			pattern a() {
 				object: EObject
 			}
 			
-			rule a {
+			pattern a {
 				object: EObject
 			}
 			
-			rule b {
+			pattern b {
 				object: EObject
 			}
 			
-			rule b() {
+			pattern b() {
 				object: EObject
 			}
 			
-			rule b {
+			pattern b {
 				object: EObject
 			}
 		''')
@@ -90,7 +90,7 @@ class GTParsingRulesTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule «ruleName» {
+			pattern «ruleName» {
 				a: EObject
 			}
 		''')
@@ -110,7 +110,7 @@ class GTParsingRulesTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule «ruleName» {
+			pattern «ruleName» {
 				a: EObject
 			}
 		''')
@@ -129,7 +129,7 @@ class GTParsingRulesTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule «ruleName» {
+			pattern «ruleName» {
 				a: EObject
 			}
 		''')
@@ -140,6 +140,42 @@ class GTParsingRulesTest extends GTParsingTest {
 			GTValidator.NAME_EXPECT_LOWER_CASE,
 			Severity.WARNING,
 			String.format(GTValidator.RULE_NAME_STARTS_WITH_LOWER_CASE_MESSAGE, ruleName)
+		)
+	}
+
+	@Test
+	def void errorIfPatternContainsCreatedElement() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			pattern test {
+				++ a: EObject
+			}
+		''')
+		assertFile(file)
+		assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.editorPattern,
+			GTValidator.PATTERN_TYPE_INVALID_PATTERN,
+			String.format(GTValidator.PATTERN_TYPE_INVALID_PATTERN_MESSAGE, 'test')
+		)
+	}
+
+	@Test
+	def void errorIfRuleContainsNoCreatedOrDeletedElement() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			rule test {
+				a: EObject
+			}
+		''')
+		assertFile(file)
+		assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.editorPattern,
+			GTValidator.PATTERN_TYPE_INVALID_RULE,
+			String.format(GTValidator.PATTERN_TYPE_INVALID_RULE_MESSAGE, 'test')
 		)
 	}
 }

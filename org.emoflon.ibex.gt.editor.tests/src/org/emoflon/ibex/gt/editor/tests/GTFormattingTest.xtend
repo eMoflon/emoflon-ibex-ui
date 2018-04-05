@@ -34,7 +34,7 @@ class GTFormattingTest {
 				object: EObject
 			}
 		'''
-		this.testFormatting(
+		testFormatting(
 			expected,
 			'''
 				
@@ -55,7 +55,7 @@ class GTFormattingTest {
 				object: EObject
 			}
 		'''
-		this.testFormatting(
+		testFormatting(
 			expected,
 			'''
 				rule test {
@@ -83,7 +83,7 @@ class GTFormattingTest {
 				object2: EObject
 			}
 		'''
-		this.testFormatting(
+		testFormatting(
 			expected,
 			'''
 				import "http://www.eclipse.org/emf/2002/Ecore"rule 
@@ -93,7 +93,7 @@ class GTFormattingTest {
 				{object2: EObject}
 			'''
 		)
-		this.testFormatting(
+		testFormatting(
 			expected,
 			'''
 				
@@ -129,7 +129,7 @@ class GTFormattingTest {
 			rule test3
 			refines test, test2
 		'''
-		this.testFormatting(
+		testFormatting(
 			expected,
 			'''
 				import "http://www.eclipse.org/emf/2002/Ecore"rule 
@@ -149,7 +149,7 @@ class GTFormattingTest {
 				c: EObject
 			}
 		'''
-		this.testFormatting(
+		testFormatting(
 			expected,
 			'''
 				import "http://www.eclipse.org/emf/2002/Ecore"
@@ -173,7 +173,7 @@ class GTFormattingTest {
 				}
 			}
 		'''
-		this.testFormatting(
+		testFormatting(
 			expected,
 			'''
 				import "http://www.eclipse.org/emf/2002/Ecore"
@@ -203,7 +203,7 @@ class GTFormattingTest {
 				c: EAnnotation
 			}
 		'''
-		this.testFormatting(
+		testFormatting(
 			expected,
 			'''
 				import "http://www.eclipse.org/emf/2002/Ecore"

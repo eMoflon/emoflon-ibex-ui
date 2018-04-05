@@ -11,7 +11,7 @@ EditorImport:
 	'import' name=STRING;
 
 EditorPattern:
-	(abstract?='abstract')? 'rule' name=ID
+	(abstract?='abstract')? type=EditorPatternType name=ID
 	('('
 	(parameters+=EditorParameter (',' parameters+=EditorParameter)*)?
 	')')?
@@ -20,12 +20,16 @@ EditorPattern:
 	(nodes+=EditorNode)*
 	'}')?;
 
+enum EditorPatternType:
+	PATTERN='pattern' |
+	RULE='rule';
+
 EditorParameter:
 	name=ID ':' type=[ecore::EDataType];
 
 	// Nodes
 EditorNode:
-	(operator=OperatorForEditor)?
+	(operator=OperatorInEditor)?
 	name=ID ':' type=[ecore::EClass]
 	('{'
 	attributes+=EditorAttribute*
@@ -37,8 +41,9 @@ enum EditorOperator:
 	CREATE |
 	DELETE;
 
-enum OperatorForEditor returns EditorOperator:
-	CREATE='++' | DELETE='--';
+enum OperatorInEditor returns EditorOperator:
+	CREATE='++' |
+	DELETE='--';
 
 	// Attribute Assignments and Conditions
 EditorAttribute:
@@ -74,4 +79,4 @@ EditorParameterExpression:
 
 	// References
 EditorReference:
-	(operator=OperatorForEditor)? '-' type=[ecore::EReference] '->' target=[EditorNode];
+	(operator=OperatorInEditor)? '-' type=[ecore::EReference] '->' target=[EditorNode];

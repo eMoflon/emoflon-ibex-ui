@@ -13,21 +13,21 @@ import org.junit.runner.RunWith
  */
 @RunWith(XtextRunner)
 @InjectWith(GTInjectorProvider)
-class GTParsingRuleRefinementTest extends GTParsingTest {
+class GTParsingPatternRefinementTest extends GTParsingTest {
 	@Test
 	def void validIfEmptyRuleBodyAndMultipleRefinement() {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a {
+			pattern a {
 				object1: EObject
 			}
 			
-			rule b {
+			pattern b {
 				object2: EObject
 			}
 			
-			rule c
+			pattern c
 			refines a, b
 		''')
 		assertValid(file, 3)
@@ -38,7 +38,7 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a
+			pattern a
 			refines a {
 				object: EObject
 			}
@@ -57,12 +57,12 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a
+			pattern a
 			refines b {
 				object1: EObject
 			}
 			
-			rule b
+			pattern b
 			refines a {
 				object2: EObject
 			}
@@ -81,17 +81,17 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a
+			pattern a
 			refines b {
 				object: EObject
 			}
 			
-			rule b
+			pattern b
 			refines c {
 				object: EObject
 			}
 			
-			rule c
+			pattern c
 			refines a {
 				object: EObject
 			}
@@ -110,11 +110,11 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a {
+			pattern a {
 				object: EObject
 			}
 			
-			rule b
+			pattern b
 			refines a, a
 		''')
 		assertValidResource(file)
@@ -131,15 +131,15 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule s1(name: EString) {
+			pattern s1(name: EString) {
 				object: EObject
 			}
 			
-			rule s2(name: EBoolean) {
+			pattern s2(name: EBoolean) {
 				object: EObject
 			}
 			
-			rule r
+			pattern r
 			refines s1, s2 {
 				object: EObject
 			}
@@ -159,11 +159,11 @@ class GTParsingRuleRefinementTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule s(name: EString) {
+			pattern s(name: EString) {
 				object: EObject
 			}
 			
-			rule r(name: EBoolean)
+			pattern r(name: EBoolean)
 			refines s {
 				object: EObject
 			}

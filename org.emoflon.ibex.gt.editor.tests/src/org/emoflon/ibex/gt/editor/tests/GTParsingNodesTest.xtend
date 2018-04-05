@@ -11,7 +11,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * JUnit tests for simple constraints, adding and deleting nodes and references.
+ * JUnit tests for nodes.
  */
 @RunWith(XtextRunner)
 @InjectWith(GTInjectorProvider)
@@ -21,7 +21,7 @@ class GTParsingNodesTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a {
+			pattern a {
 				a: EPackage
 				b: EClass
 			}
@@ -54,7 +54,7 @@ class GTParsingNodesTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a {
+			pattern a {
 				«nodeName»: EObject
 			}
 		''')
@@ -74,7 +74,7 @@ class GTParsingNodesTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a {
+			pattern a {
 				«nodeName»: EObject
 			}
 		''')
@@ -93,7 +93,7 @@ class GTParsingNodesTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a {
+			pattern a {
 				«nodeName»: EObject
 			}
 		''')
@@ -113,7 +113,7 @@ class GTParsingNodesTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a {
+			pattern a {
 				«nodeName»: EAnnotation
 			
 				«nodeName»: EObject
@@ -133,7 +133,7 @@ class GTParsingNodesTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a() {
+			pattern a() {
 				o: Object
 			}
 		''')
@@ -187,11 +187,11 @@ class GTParsingNodesTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule super {
+			pattern super {
 				c: EClassifier
 			}
 			
-			rule findClass
+			pattern findClass
 			refines super {
 				c: EClass
 			}
@@ -203,11 +203,11 @@ class GTParsingNodesTest extends GTParsingTest {
 	def void errorIfInvalidNodeTypeChange() {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
-			rule super {
+			pattern super {
 				c: EDataType
 			}
 			
-			rule findClass
+			pattern findClass
 			refines super {
 				c: EClass
 			}
@@ -230,7 +230,7 @@ class GTParsingNodesTest extends GTParsingTest {
 				++ c: EClass
 			}
 			
-			rule findClass
+			pattern findClass
 			refines super {
 				c: EClass
 			}
@@ -243,11 +243,11 @@ class GTParsingNodesTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule super {
+			pattern super {
 				c: EClass
 			}
 			
-			rule findClass
+			pattern findClass
 			refines super {
 				++ c: EClass
 			}

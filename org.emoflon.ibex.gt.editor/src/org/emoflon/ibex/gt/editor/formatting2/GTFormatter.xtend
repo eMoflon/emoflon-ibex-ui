@@ -47,7 +47,7 @@ class GTFormatter extends AbstractFormatter2 {
 		}
 
 		// One space between pattern keyword and name.
-		pattern.regionFor.keyword("rule").append[oneSpace]
+		pattern.regionFor.feature(GTPackage.Literals.EDITOR_PATTERN__TYPE).append[oneSpace]
 
 		// New line before "refines", one space after "refines".
 		pattern.regionFor.keyword("refines").prepend[newLine]

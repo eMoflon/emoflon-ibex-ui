@@ -38,6 +38,12 @@ public class GTFlattener {
 	 *            the pattern
 	 */
 	public GTFlattener(final EditorPattern pattern) {
+		// Early return if nothing to flatten
+		if (pattern.getSuperPatterns().isEmpty()) {
+			flattenedPattern = pattern;
+			return;
+		}
+
 		Set<EditorPattern> superPatterns = GTEditorPatternUtils.getAllSuperPatterns(pattern);
 
 		List<EditorParameter> parameters = mergeParameters(pattern, superPatterns);
@@ -62,6 +68,7 @@ public class GTFlattener {
 			final List<EditorNode> nodes) {
 		flattenedPattern = GTFactory.eINSTANCE.createEditorPattern();
 		flattenedPattern.setAbstract(pattern.isAbstract());
+		flattenedPattern.setType(pattern.getType());
 		flattenedPattern.setName(pattern.getName());
 		flattenedPattern.getParameters().addAll(parameters);
 		flattenedPattern.getNodes().addAll(nodes);

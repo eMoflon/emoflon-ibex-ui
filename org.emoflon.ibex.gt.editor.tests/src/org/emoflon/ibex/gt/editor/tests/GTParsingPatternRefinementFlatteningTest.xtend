@@ -14,14 +14,14 @@ import org.junit.runner.RunWith
  */
 @RunWith(XtextRunner)
 @InjectWith(GTInjectorProvider)
-class GTParsingRuleRefinementFlatteningTest extends GTParsingTest {
+class GTParsingPatternRefinementFlatteningTest extends GTParsingTest {
 
 	@Test
-	def void validFlatteningOfRule() {
+	def void validFlattening() {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			abstract rule findClassifierWithAnnotation(name: EString) {
+			abstract pattern findClassifierWithAnnotation(name: EString) {
 				classifier: EClassifier {
 					.name == param::name
 					-eAnnotations -> annotation
@@ -30,7 +30,7 @@ class GTParsingRuleRefinementFlatteningTest extends GTParsingTest {
 				annotation: EAnnotation
 			}
 			
-			rule findClassWithAnnotation(attributeName: EString)
+			pattern findClassWithAnnotation(attributeName: EString)
 			refines findClassifierWithAnnotation {
 				classifier: EClass {
 					.interface == true
@@ -43,7 +43,7 @@ class GTParsingRuleRefinementFlatteningTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertValid(file, 2)
+		assertValid(file, 2)
 		val flattener = new GTFlattener(file.getRule(1))
 		Assert.assertFalse(flattener.hasErrors)
 		Assert.assertEquals(#[], flattener.errors)
@@ -59,11 +59,11 @@ class GTParsingRuleRefinementFlatteningTest extends GTParsingTest {
 	}
 
 	@Test
-	def void validFlatteningOfRuleWithAttributes() {
+	def void validFlatteningWithAttributes() {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule findClass(name: EString) {
+			pattern findClass(name: EString) {
 				clazz: EClass {
 					.^abstract == false
 					.name == param::name
@@ -80,7 +80,7 @@ class GTParsingRuleRefinementFlatteningTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertValid(file, 2)
+		assertValid(file, 2)
 		val flattener = new GTFlattener(file.getRule(1))
 		Assert.assertFalse(flattener.hasErrors)
 		Assert.assertEquals(#[], flattener.errors)
@@ -110,7 +110,7 @@ class GTParsingRuleRefinementFlatteningTest extends GTParsingTest {
 				++ annotation: EAnnotation
 			}
 			
-			rule findClassWithAnnotation
+			pattern findClassWithAnnotation
 			refines findClassifierWithAnnotation {
 				classifier: EClass {
 					-eAnnotations -> annotation
@@ -122,7 +122,7 @@ class GTParsingRuleRefinementFlatteningTest extends GTParsingTest {
 				annotation2: EAnnotation
 			}
 		''')
-		this.assertValid(file, 2)
+		assertValid(file, 2)
 		val flattener = new GTFlattener(file.getRule(1))
 		Assert.assertFalse(flattener.hasErrors)
 		Assert.assertEquals(#[], flattener.errors)
@@ -168,14 +168,14 @@ class GTParsingRuleRefinementFlatteningTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule findClass(interface: EBoolean, name: EString) {
+			pattern findClass(interface: EBoolean, name: EString) {
 				clazz: EClass {
 					.interface == param::interface
 					.name == param::name
 				}
 			}
 			
-			rule findClassDuplicate(interface: EBoolean, name: EBoolean)
+			pattern findClassDuplicate(interface: EBoolean, name: EBoolean)
 			refines findClass {
 				clazz2: EClass {
 					.interface == param::interface

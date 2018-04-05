@@ -21,6 +21,8 @@ import org.emoflon.ibex.gt.editor.utils.GTEditorComparator
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 import org.emoflon.ibex.gt.editor.utils.GTFlatteningUtils
 import org.emoflon.ibex.gt.editor.utils.GTEditorPatternUtils
+import org.emoflon.ibex.gt.editor.utils.GTFlattener
+import org.emoflon.ibex.gt.editor.gT.EditorPatternType
 
 /**
  * This class contains custom validation rules. 
@@ -73,6 +75,12 @@ class GTValidator extends AbstractGTValidator {
 	public static val IMPORT_MISSING_META_MODEL_MESSAGE = "You must import the Ecore file of the meta-model here."
 
 	// Errors for patterns.
+	public static val PATTERN_TYPE_INVALID_PATTERN = CODE_PREFIX + "pattern.type.invalidConstraint"
+	public static val PATTERN_TYPE_INVALID_PATTERN_MESSAGE = "The pattern '%s' must not contain created or deleted elements."
+
+	public static val PATTERN_TYPE_INVALID_RULE = CODE_PREFIX + "pattern.type.invalidRule"
+	public static val PATTERN_TYPE_INVALID_RULE_MESSAGE = "The rule '%s' must contain at least one created or deleted element."
+
 	public static val RULE_EMPTY = CODE_PREFIX + "rule.empty"
 	public static val RULE_EMPTY_MESSAGE = "Rule '%s' must not be empty."
 
@@ -254,6 +262,23 @@ class GTValidator extends AbstractGTValidator {
 				String.format(RULE_NAME_MULTIPLE_DECLARATIONS_MESSAGE, pattern.name, getTimes(count)),
 				GTPackage.Literals.EDITOR_PATTERN__NAME,
 				NAME_EXPECT_UNIQUE
+			)
+		}
+
+		val flattenedPattern = new GTFlattener(pattern).flattenedPattern
+		val isRule = GTEditorPatternUtils.containsCreatedOrDeletedElements(flattenedPattern)
+		if (isRule && pattern.type === EditorPatternType.PATTERN) {
+			error(
+				String.format(PATTERN_TYPE_INVALID_PATTERN_MESSAGE, pattern.name),
+				GTPackage.Literals.EDITOR_PATTERN__TYPE,
+				PATTERN_TYPE_INVALID_PATTERN
+			)
+		}
+		if (!isRule && pattern.type === EditorPatternType.RULE) {
+			error(
+				String.format(PATTERN_TYPE_INVALID_RULE_MESSAGE, pattern.name),
+				GTPackage.Literals.EDITOR_PATTERN__TYPE,
+				PATTERN_TYPE_INVALID_RULE
 			)
 		}
 

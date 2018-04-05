@@ -40,7 +40,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a {
+			pattern a {
 				classifier: EClassifier {
 					.name != "Test1"
 					.instanceTypeName == "Test2"
@@ -58,7 +58,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule findClassAndPackageOfTheSameName {
+			pattern findClassAndPackageOfTheSameName {
 				package: EPackage
 			
 				clazz: EClass {
@@ -99,7 +99,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule r {
+			pattern r {
 				dataType: EDataType
 				
 				clazz: EClass {
@@ -122,7 +122,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 			import "«ecoreImport»"
 			
 			rule createClass(name: EString) {
-				clazz: EClass {
+				++ clazz: EClass {
 					.name := param::name
 				}
 			}
@@ -138,7 +138,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule s(name: EString) {
+			pattern s(name: EString) {
 				object: EObject
 			}
 			
@@ -229,7 +229,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a {
+			pattern a {
 				clazz: EClass {
 					.^abstract >= false
 				}
@@ -310,7 +310,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a {
+			pattern a {
 				clazz: EClass {
 					.name == "Test"
 					.name == "Test"
@@ -332,7 +332,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a {
+			pattern a {
 				classifier: EObject {
 					.name == "Test"
 				}

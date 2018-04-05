@@ -17,7 +17,7 @@ class GTParsingImportsTest extends GTParsingTest {
 	@Test
 	def void errorIfNoImport() {
 		val file = parseHelper.parse('''
-			rule a {
+			pattern a {
 				object: EObject
 			}
 		''')
@@ -36,7 +36,7 @@ class GTParsingImportsTest extends GTParsingTest {
 			import "«ecoreImport»"
 			import "«ecoreImport»"
 			
-			rule a {
+			pattern a {
 				object: EObject
 			}
 		''')
@@ -56,7 +56,7 @@ class GTParsingImportsTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«importName»"
 			
-			rule a {
+			pattern a {
 				object: EObject
 			}
 		''')

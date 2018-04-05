@@ -7,8 +7,10 @@ import java.util.stream.Collectors;
 
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource.CyclicLinkingException;
 import org.emoflon.ibex.gt.editor.gT.EditorNode;
+import org.emoflon.ibex.gt.editor.gT.EditorOperator;
 import org.emoflon.ibex.gt.editor.gT.EditorParameter;
 import org.emoflon.ibex.gt.editor.gT.EditorPattern;
+import org.emoflon.ibex.gt.editor.gT.EditorRelation;
 
 /**
  * Utility methods for editor patterns.
@@ -128,5 +130,62 @@ public class GTEditorPatternUtils {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Checks whether the editor pattern contains at least one created or deleted
+	 * element (node or reference) or at least one attribute assignment.
+	 * 
+	 * @param editorPattern
+	 *            the editor pattern
+	 * @return true if the pattern contains a created or deleted element or an
+	 *         attribute assignment.
+	 */
+	public static boolean containsCreatedOrDeletedElements(final EditorPattern editorPattern) {
+		return hasCreatedOrDeletedNode(editorPattern) || hasCreatedOrDeletedReference(editorPattern)
+				|| hasAttributeAssignment(editorPattern);
+	}
+
+	/**
+	 * Checks whether the editor pattern contains at least one created or deleted
+	 * node.
+	 * 
+	 * @param editorPattern
+	 *            the editor pattern
+	 * @return true if the pattern contains a created or deleted node.
+	 */
+	public static boolean hasCreatedOrDeletedNode(final EditorPattern editorPattern) {
+		return editorPattern.getNodes().stream() //
+				.anyMatch(node -> node.getOperator() != EditorOperator.CONTEXT);
+	}
+
+	/**
+	 * Checks whether the editor pattern contains at least one created or deleted
+	 * reference.
+	 * 
+	 * @param editorPattern
+	 *            the editor pattern
+	 * @return true if the pattern contains a created or deleted reference.
+	 */
+	public static boolean hasCreatedOrDeletedReference(final EditorPattern editorPattern) {
+		return editorPattern.getNodes().stream() //
+				.map(node -> node.getReferences()) //
+				.flatMap(references -> references.stream())
+				.anyMatch(reference -> reference.getOperator() != EditorOperator.CONTEXT);
+	}
+
+	/**
+	 * Checks whether the editor pattern contains at least one operator node or
+	 * reference.
+	 * 
+	 * @param editorPattern
+	 *            the editor pattern
+	 * @return true if the pattern contains an attribute assignment.
+	 */
+	public static boolean hasAttributeAssignment(final EditorPattern editorPattern) {
+		return editorPattern.getNodes().stream() //
+				.map(node -> node.getAttributes()) //
+				.flatMap(attributes -> attributes.stream()) //
+				.anyMatch(attribute -> attribute.getRelation() == EditorRelation.ASSIGNMENT);
 	}
 }
