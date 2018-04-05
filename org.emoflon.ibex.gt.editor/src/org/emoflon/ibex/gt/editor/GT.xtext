@@ -13,14 +13,14 @@ EditorImport:
 Rule:
 	(abstract?='abstract')? 'rule' name=ID
 	('('
-	(parameters+=Parameter (',' parameters+=Parameter)*)?
+	(parameters+=EditorParameter (',' parameters+=EditorParameter)*)?
 	')')?
 	('refines' superRules+=[Rule] (',' superRules+=[Rule])*)?
 	('{'
 	(nodes+=Node)*
 	'}')?;
 
-Parameter:
+EditorParameter:
 	name=ID ':' type=[ecore::EDataType];
 
 	// Nodes
@@ -70,7 +70,7 @@ EditorEnumExpression:
 	'enum::' literal=[ecore::EEnumLiteral];
 
 EditorParameterExpression:
-	'param::' parameter=[Parameter];
+	'param::' parameter=[EditorParameter];
 
 	// References
 EditorReference:

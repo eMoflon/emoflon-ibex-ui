@@ -7,10 +7,10 @@ import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression
 import org.emoflon.ibex.gt.editor.gT.EditorExpression
 import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
+import org.emoflon.ibex.gt.editor.gT.EditorParameter
 import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
 import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.Node
-import org.emoflon.ibex.gt.editor.gT.Parameter
 import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
 import org.emoflon.ibex.gt.editor.utils.GTFlattener
@@ -160,7 +160,7 @@ class GTPlantUMLGenerator {
 	/**
 	 * Prints the parameter declaration. 
 	 */
-	private static def parameterDeclaration(Parameter parameter) {
+	private static def parameterDeclaration(EditorParameter parameter) {
 		val type = if(parameter.type === null) '?' else parameter.type.name
 		'''«parameter.name»: «type»'''
 	}

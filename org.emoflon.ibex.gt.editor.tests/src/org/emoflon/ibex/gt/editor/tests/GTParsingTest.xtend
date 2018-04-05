@@ -14,10 +14,10 @@ import org.emoflon.ibex.gt.editor.gT.EditorGTFile
 import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
+import org.emoflon.ibex.gt.editor.gT.EditorParameter
 import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
 import org.emoflon.ibex.gt.editor.gT.Node
-import org.emoflon.ibex.gt.editor.gT.Parameter
 import org.emoflon.ibex.gt.editor.gT.Rule
 import org.junit.Assert
 import org.junit.runner.RunWith
@@ -142,7 +142,7 @@ abstract class GTParsingTest {
 	}
 
 	static def void assertAttributeParameter(EditorAttribute attributeConstraint, String name, EditorRelation relation,
-		Parameter parameter) {
+		EditorParameter parameter) {
 		assertAttribute(attributeConstraint, name, relation)
 		Assert.assertTrue(attributeConstraint.value instanceof EditorParameterExpression)
 		Assert.assertEquals(parameter, (attributeConstraint.value as EditorParameterExpression).parameter)

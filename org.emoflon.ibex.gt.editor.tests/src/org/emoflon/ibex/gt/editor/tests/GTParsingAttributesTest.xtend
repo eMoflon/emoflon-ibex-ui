@@ -6,6 +6,7 @@ import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
 import org.emoflon.ibex.gt.editor.gT.GTPackage
+import org.emoflon.ibex.gt.editor.scoping.GTLinkingDiagnosticMessageProvider
 import org.emoflon.ibex.gt.editor.validation.GTValidator
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -169,8 +170,9 @@ class GTParsingAttributesTest extends GTParsingTest {
 		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorParameterExpression,
-			Diagnostic::LINKING_DIAGNOSTIC,
-			"Couldn't resolve reference to Parameter 'name'."
+			GTLinkingDiagnosticMessageProvider.PARAMETER_EXPRESSION_PARAMETER_NOT_FOUND,
+			String.format(GTLinkingDiagnosticMessageProvider.PARAMETER_EXPRESSION_PARAMETER_NOT_FOUND_MESSAGE, 'name',
+				'EString')
 		)
 	}
 

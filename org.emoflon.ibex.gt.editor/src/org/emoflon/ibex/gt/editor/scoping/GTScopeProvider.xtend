@@ -12,11 +12,11 @@ import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
 import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
+import org.emoflon.ibex.gt.editor.gT.EditorParameter
 import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
 import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.gT.Node
-import org.emoflon.ibex.gt.editor.gT.Parameter
 import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 import org.emoflon.ibex.gt.editor.utils.GTEditorRuleUtils
@@ -56,7 +56,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 
 		// Parameters
 		if (isParameterType(context, reference)) {
-			return getScopeForParameterDatatypes(context as Parameter)
+			return getScopeForParameterDatatypes(context as EditorParameter)
 		}
 
 		// References
@@ -104,7 +104,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	}
 
 	def isParameterType(EObject context, EReference reference) {
-		return (context instanceof Parameter && reference == GTPackage.Literals.PARAMETER__TYPE)
+		return (context instanceof EditorParameter && reference == GTPackage.Literals.EDITOR_PARAMETER__TYPE)
 	}
 
 	def isReferenceType(EObject context, EReference reference) {
@@ -198,7 +198,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	/**
 	 * The parameter type must be one of the EDatatypes from the meta-models.
 	 */
-	def getScopeForParameterDatatypes(Parameter parameter) {
+	def getScopeForParameterDatatypes(EditorParameter parameter) {
 		val file = parameter.eContainer.eContainer as EditorGTFile
 		return Scopes.scopeFor(GTEditorModelUtils.getDatatypes(file))
 	}

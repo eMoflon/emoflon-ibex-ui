@@ -72,7 +72,7 @@ class GTParsingParametersTest extends GTParsingTest {
 		assertFile(file)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.parameter,
+			GTPackage.eINSTANCE.editorParameter,
 			GTLinkingDiagnosticMessageProvider.PARAMETER_TYPE_NOT_FOUND,
 			String.format(GTLinkingDiagnosticMessageProvider.PARAMETER_TYPE_NOT_FOUND_MESSAGE, 'EClass')
 		)
@@ -108,7 +108,7 @@ class GTParsingParametersTest extends GTParsingTest {
 		assertInvalidResource(file, 3)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.parameter,
+			GTPackage.eINSTANCE.editorParameter,
 			Diagnostic::SYNTAX_DIAGNOSTIC,
 			"missing ':' at 'EInt'",
 			"missing ':' at 'EString'",
@@ -147,7 +147,7 @@ class GTParsingParametersTest extends GTParsingTest {
 		''')
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.parameter,
+			GTPackage.eINSTANCE.editorParameter,
 			GTValidator.NAME_BLACKLISTED,
 			String.format(GTValidator.PARAMETER_NAME_FORBIDDEN_MESSAGE, 'class')
 		)
@@ -168,7 +168,7 @@ class GTParsingParametersTest extends GTParsingTest {
 		''')
 		assertValidationIssues(
 			file,
-			GTPackage.eINSTANCE.parameter,
+			GTPackage.eINSTANCE.editorParameter,
 			GTValidator.NAME_EXPECT_LOWER_CASE,
 			Severity.WARNING,
 			String.format(GTValidator.PARAMETER_NAME_STARTS_WITH_LOWER_CASE_MESSAGE, 'ClassName')
@@ -188,7 +188,7 @@ class GTParsingParametersTest extends GTParsingTest {
 		''')
 		assertValidationIssues(
 			file,
-			GTPackage.eINSTANCE.parameter,
+			GTPackage.eINSTANCE.editorParameter,
 			GTValidator.NAME_EXPECT_CAMEL_CASE,
 			Severity.WARNING,
 			String.format(GTValidator.PARAMETER_NAME_CONTAINS_UNDERSCORES_MESSAGE, 'class_name')
@@ -209,7 +209,7 @@ class GTParsingParametersTest extends GTParsingTest {
 		assertFile(file)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.parameter,
+			GTPackage.eINSTANCE.editorParameter,
 			GTValidator.NAME_EXPECT_UNIQUE,
 			String.format(GTValidator.PARAMETER_NAME_MULTIPLE_DECLARATIONS_MESSAGE, 'name', 'twice')
 		)

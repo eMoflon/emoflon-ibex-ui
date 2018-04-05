@@ -9,11 +9,11 @@ import org.eclipse.xtext.formatting2.IFormattableDocument
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile
 import org.emoflon.ibex.gt.editor.gT.EditorImport
-import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
+import org.emoflon.ibex.gt.editor.gT.EditorParameter
+import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.gT.Node
-import org.emoflon.ibex.gt.editor.gT.Parameter
 import org.emoflon.ibex.gt.editor.gT.Rule
 
 /**
@@ -83,7 +83,7 @@ class GTFormatter extends AbstractFormatter2 {
 		this.formatList(rule.nodes, document, 1, 2, 1)
 	}
 
-	def dispatch void format(Parameter parameter, extension IFormattableDocument document) {
+	def dispatch void format(EditorParameter parameter, extension IFormattableDocument document) {
 		// No space before ":", one space after ":".
 		parameter.regionFor.keyword(":").prepend[noSpace]
 		parameter.regionFor.keyword(":").append[oneSpace]

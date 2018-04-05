@@ -9,7 +9,6 @@ import org.emoflon.ibex.gt.editor.scoping.GTLinkingDiagnosticMessageProvider
 class GTRuntimeModule extends AbstractGTRuntimeModule {
 
 	def Class<? extends ILinkingDiagnosticMessageProvider> bindILinkingDiagnosticMessageProvider() {
-		println("Bound GTLinkingDiagnosticMessageProvider")
 		return GTLinkingDiagnosticMessageProvider
 	}
 }

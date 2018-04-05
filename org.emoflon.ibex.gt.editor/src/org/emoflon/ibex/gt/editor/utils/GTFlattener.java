@@ -11,10 +11,10 @@ import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute;
 import org.emoflon.ibex.gt.editor.gT.EditorOperator;
+import org.emoflon.ibex.gt.editor.gT.EditorParameter;
 import org.emoflon.ibex.gt.editor.gT.EditorReference;
 import org.emoflon.ibex.gt.editor.gT.GTFactory;
 import org.emoflon.ibex.gt.editor.gT.Node;
-import org.emoflon.ibex.gt.editor.gT.Parameter;
 import org.emoflon.ibex.gt.editor.gT.Rule;
 
 /**
@@ -40,7 +40,7 @@ public class GTFlattener {
 	public GTFlattener(final Rule rule) {
 		Set<Rule> superRules = GTEditorRuleUtils.getAllSuperRules(rule);
 
-		List<Parameter> parameters = mergeParameters(rule, superRules);
+		List<EditorParameter> parameters = mergeParameters(rule, superRules);
 
 		List<Node> nodes = mergeNodes(rule, superRules, parameters);
 		nodes.sort((a, b) -> a.getName().compareTo(b.getName()));
@@ -58,7 +58,7 @@ public class GTFlattener {
 	 * @param nodes
 	 *            the nodes
 	 */
-	private void createFlattenedRule(final Rule rule, final List<Parameter> parameters, final List<Node> nodes) {
+	private void createFlattenedRule(final Rule rule, final List<EditorParameter> parameters, final List<Node> nodes) {
 		flattenedRule = GTFactory.eINSTANCE.createRule();
 		flattenedRule.setAbstract(rule.isAbstract());
 		flattenedRule.setName(rule.getName());
@@ -103,9 +103,9 @@ public class GTFlattener {
 	 *            the super rules of the rule
 	 * @return the merged parameters
 	 */
-	private List<Parameter> mergeParameters(final Rule rule, final Set<Rule> superRules) {
-		List<Parameter> parameters = new ArrayList<Parameter>();
-		Map<String, Parameter> parameterNameToParameter = new HashMap<String, Parameter>();
+	private List<EditorParameter> mergeParameters(final Rule rule, final Set<Rule> superRules) {
+		List<EditorParameter> parameters = new ArrayList<EditorParameter>();
+		Map<String, EditorParameter> parameterNameToParameter = new HashMap<String, EditorParameter>();
 		addParametersFromRule(rule, parameters, parameterNameToParameter);
 		superRules.forEach(r -> addParametersFromRule(r, parameters, parameterNameToParameter));
 		return parameters;
@@ -121,9 +121,9 @@ public class GTFlattener {
 	 * @param parameterNameToParameter
 	 *            the mapping between names and parameters
 	 */
-	private void addParametersFromRule(final Rule rule, final List<Parameter> parameters,
-			final Map<String, Parameter> parameterNameToParameter) {
-		for (final Parameter parameter : rule.getParameters()) {
+	private void addParametersFromRule(final Rule rule, final List<EditorParameter> parameters,
+			final Map<String, EditorParameter> parameterNameToParameter) {
+		for (final EditorParameter parameter : rule.getParameters()) {
 			if (parameterNameToParameter.containsKey(parameter.getName())) {
 				EDataType typeOfExistingParameter = parameterNameToParameter.get(parameter.getName()).getType();
 				if (!typeOfExistingParameter.equals(parameter.getType())) {
@@ -131,7 +131,7 @@ public class GTFlattener {
 							parameter.getName(), typeOfExistingParameter.getName(), parameter.getType().getName()));
 				}
 			} else {
-				Parameter copy = EcoreUtil.copy(parameter);
+				EditorParameter copy = EcoreUtil.copy(parameter);
 				parameterNameToParameter.put(parameter.getName(), copy);
 				parameters.add(copy);
 			}
@@ -150,7 +150,7 @@ public class GTFlattener {
 	 *            the parameters of the flattened rule
 	 * @return the merged nodes
 	 */
-	private List<Node> mergeNodes(final Rule rule, final Set<Rule> superRules, final List<Parameter> parameters) {
+	private List<Node> mergeNodes(final Rule rule, final Set<Rule> superRules, final List<EditorParameter> parameters) {
 		// Collect nodes.
 		List<Node> collectedNodes = new ArrayList<Node>();
 		collectedNodes.addAll(EcoreUtil.copyAll(rule.getNodes()));

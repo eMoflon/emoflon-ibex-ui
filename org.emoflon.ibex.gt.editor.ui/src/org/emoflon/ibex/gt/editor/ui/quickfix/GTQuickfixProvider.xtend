@@ -17,8 +17,8 @@ import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.Node
 import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
+import org.emoflon.ibex.gt.editor.gT.EditorParameter
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
-import org.emoflon.ibex.gt.editor.gT.Parameter
 import org.emoflon.ibex.gt.editor.utils.GTEditorAttributeUtils
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 import org.emoflon.ibex.gt.editor.validation.GTValidator
@@ -67,7 +67,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			[ element, context |
 				if (element instanceof Node) {
 					element.name = element.name.toFirstLower
-				} else if (element instanceof Parameter) {
+				} else if (element instanceof EditorParameter) {
 					element.name = element.name.toFirstLower
 				} else if (element instanceof Rule) {
 					element.name = element.name.toFirstLower
@@ -92,8 +92,8 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 					val node = element as Node
 					// Keep leading _ if present before.
 					node.name = (if(node.name.startsWith('_')) '_' else '') + convertToLowerCamelCase(node.name)
-				} else if (element instanceof Parameter) {
-					val parameter = element as Parameter
+				} else if (element instanceof EditorParameter) {
+					val parameter = element as EditorParameter
 					parameter.name = convertToLowerCamelCase(parameter.name)
 				} else if (element instanceof Rule) {
 					val rule = element as Rule

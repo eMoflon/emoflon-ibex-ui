@@ -10,11 +10,11 @@ import org.emoflon.ibex.gt.editor.gT.EditorGTFile
 import org.emoflon.ibex.gt.editor.gT.EditorImport
 import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
+import org.emoflon.ibex.gt.editor.gT.EditorParameter
 import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
 import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.gT.Node
-import org.emoflon.ibex.gt.editor.gT.Parameter
 import org.emoflon.ibex.gt.editor.gT.Rule
 import org.emoflon.ibex.gt.editor.utils.GTEditorAttributeUtils
 import org.emoflon.ibex.gt.editor.utils.GTEditorComparator
@@ -318,12 +318,12 @@ class GTValidator extends AbstractGTValidator {
 	}
 
 	@Check
-	def checkParameter(Parameter parameter) {
+	def checkParameter(EditorParameter parameter) {
 		// The parameter name must not be blacklisted.
 		if (nodeNameBlacklist.contains(parameter.name)) {
 			error(
 				String.format(PARAMETER_NAME_FORBIDDEN_MESSAGE, parameter.name),
-				GTPackage.Literals.PARAMETER__NAME,
+				GTPackage.Literals.EDITOR_PARAMETER__NAME,
 				NAME_BLACKLISTED
 			)
 		} else {
@@ -331,7 +331,7 @@ class GTValidator extends AbstractGTValidator {
 			if (parameter.name.contains('_')) {
 				warning(
 					String.format(PARAMETER_NAME_CONTAINS_UNDERSCORES_MESSAGE, parameter.name),
-					GTPackage.Literals.PARAMETER__NAME,
+					GTPackage.Literals.EDITOR_PARAMETER__NAME,
 					NAME_EXPECT_CAMEL_CASE
 				)
 			} else {
@@ -339,7 +339,7 @@ class GTValidator extends AbstractGTValidator {
 				if (Character.isUpperCase(parameter.name.charAt(0))) {
 					warning(
 						String.format(PARAMETER_NAME_STARTS_WITH_LOWER_CASE_MESSAGE, parameter.name),
-						GTPackage.Literals.PARAMETER__NAME,
+						GTPackage.Literals.EDITOR_PARAMETER__NAME,
 						NAME_EXPECT_LOWER_CASE
 					)
 				}
@@ -353,7 +353,7 @@ class GTValidator extends AbstractGTValidator {
 			error(
 				String.format(PARAMETER_NAME_MULTIPLE_DECLARATIONS_MESSAGE, parameter.name,
 					getTimes(parameterDeclarationsCount)),
-				GTPackage.Literals.PARAMETER__NAME,
+				GTPackage.Literals.EDITOR_PARAMETER__NAME,
 				NAME_EXPECT_UNIQUE
 			)
 		}

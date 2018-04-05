@@ -7,9 +7,10 @@ import org.eclipse.xtext.linking.impl.IllegalNodeException
 import org.eclipse.xtext.linking.impl.LinkingDiagnosticMessageProvider
 import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.GTPackage
+import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 
 /**
- * Custom error messages.
+ * Custom error codes and messages for scoping violations.
  */
 class GTLinkingDiagnosticMessageProvider extends LinkingDiagnosticMessageProvider {
 	private static val CODE_PREFIX = "org.emoflon.ibex.gt.editor."
@@ -17,8 +18,12 @@ class GTLinkingDiagnosticMessageProvider extends LinkingDiagnosticMessageProvide
 	public static val NODE_TYPE_NOT_FOUND = CODE_PREFIX + "node.type.typeNotFound"
 	public static val NODE_TYPE_NOT_FOUND_MESSAGE = "Could not find class '%s'."
 
-	public static val PARAMETER_TYPE_NOT_FOUND = CODE_PREFIX + "paramter.type.typeNotFound"
+	public static val PARAMETER_TYPE_NOT_FOUND = CODE_PREFIX + "parameter.type.typeNotFound"
 	public static val PARAMETER_TYPE_NOT_FOUND_MESSAGE = "Could not find data type '%s'."
+
+	public static val PARAMETER_EXPRESSION_PARAMETER_NOT_FOUND = CODE_PREFIX +
+		"parameterExpression.parameter.parameterNotFound"
+	public static val PARAMETER_EXPRESSION_PARAMETER_NOT_FOUND_MESSAGE = "Could not find parameter '%s' of type '%s'."
 
 	public static val REFERENCE_TARGET_NODE_NOT_FOUND = CODE_PREFIX + "reference.target.nodeNotFound"
 	public static val REFERENCE_TARGET_NODE_NOT_FOUND_MESSAGE = "Could not find node '%s' of type '%s'."
@@ -34,8 +39,18 @@ class GTLinkingDiagnosticMessageProvider extends LinkingDiagnosticMessageProvide
 			linkText = e.getNode().getText();
 		}
 
+		// Parameter of parameter expression not found.
+		if (context.reference === GTPackage.Literals.EDITOR_PARAMETER_EXPRESSION__PARAMETER) {
+			val expectedType = (context.context.eContainer as EditorAttribute).attribute.EAttributeType.name
+			return new DiagnosticMessage(
+				String.format(PARAMETER_EXPRESSION_PARAMETER_NOT_FOUND_MESSAGE, linkText, expectedType),
+				Severity.ERROR,
+				PARAMETER_EXPRESSION_PARAMETER_NOT_FOUND
+			)
+		}
+
 		// Parameter type not found in scope.
-		if (context.reference === GTPackage.Literals.PARAMETER__TYPE) {
+		if (context.reference === GTPackage.Literals.EDITOR_PARAMETER__TYPE) {
 			return new DiagnosticMessage(
 				String.format(PARAMETER_TYPE_NOT_FOUND_MESSAGE, linkText),
 				Severity.ERROR,

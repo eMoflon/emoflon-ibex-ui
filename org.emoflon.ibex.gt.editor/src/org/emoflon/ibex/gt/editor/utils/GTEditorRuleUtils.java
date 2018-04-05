@@ -6,8 +6,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource.CyclicLinkingException;
+import org.emoflon.ibex.gt.editor.gT.EditorParameter;
 import org.emoflon.ibex.gt.editor.gT.Node;
-import org.emoflon.ibex.gt.editor.gT.Parameter;
 import org.emoflon.ibex.gt.editor.gT.Rule;
 
 /**
@@ -92,8 +92,8 @@ public class GTEditorRuleUtils {
 	 *            the rule
 	 * @return the parameters of the rule
 	 */
-	public static Set<Parameter> getAllParametersOfRule(final Rule rule) {
-		Set<Parameter> parameters = new HashSet<Parameter>();
+	public static Set<EditorParameter> getAllParametersOfRule(final Rule rule) {
+		Set<EditorParameter> parameters = new HashSet<EditorParameter>();
 		GTEditorRuleUtils.getRuleAllWithSuperRules(rule).forEach(r -> {
 			parameters.addAll(r.getParameters());
 		});
