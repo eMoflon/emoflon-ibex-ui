@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: eMoflon::IBeX Editor for Graph Transformation Rules
+Bundle-Name: eMoflon::IBeX Editor for Graph Transformation Patterns
 Bundle-SymbolicName: org.emoflon.ibex.gt.editor; singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: eMoflon::IBeX Developers

@@ -3,49 +3,53 @@ grammar org.emoflon.ibex.gt.editor.GT with org.eclipse.xtext.common.Terminals
 import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 generate gT "http://www.emoflon.org/ibex/gt/editor/GT"
 
-GraphTransformationFile:
-	(imports+=Import)*
-	(rules+=Rule)*;
+EditorGTFile:
+	(imports+=EditorImport)*
+	(patterns+=EditorPattern)*;
 
-Import:
+EditorImport:
 	'import' name=STRING;
 
-Rule:
-	(abstract?='abstract')? 'rule' name=ID
-	('refines' superRules+=[Rule] (',' superRules+=[Rule])*)?
+EditorPattern:
+	(abstract?='abstract')? type=EditorPatternType name=ID
 	('('
-	(parameters+=Parameter (',' parameters+=Parameter)*)?
+	(parameters+=EditorParameter (',' parameters+=EditorParameter)*)?
 	')')?
+	('refines' superPatterns+=[EditorPattern] (',' superPatterns+=[EditorPattern])*)?
 	('{'
-	(nodes+=Node)*
-	'}')?
-	(nacs+=NAC)*;
+	(nodes+=EditorNode)*
+	'}')?;
 
-Parameter:
+enum EditorPatternType:
+	PATTERN='pattern' |
+	RULE='rule';
+
+EditorParameter:
 	name=ID ':' type=[ecore::EDataType];
 
 	// Nodes
-Node:
-	(operator=OperatorForEditor)?
+EditorNode:
+	(operator=OperatorInEditor)?
 	name=ID ':' type=[ecore::EClass]
 	('{'
-	attributes+=AttributeConstraint*
-	references+=Reference*
+	attributes+=EditorAttribute*
+	references+=EditorReference*
 	'}')?;
 
-enum Operator:
+enum EditorOperator:
 	CONTEXT |
 	CREATE |
 	DELETE;
 
-enum OperatorForEditor returns Operator:
-	CREATE='++' | DELETE='--';
+enum OperatorInEditor returns EditorOperator:
+	CREATE='++' |
+	DELETE='--';
 
 	// Attribute Assignments and Conditions
-AttributeConstraint:
-	'.' attribute=[ecore::EAttribute] relation=Relation value=Expression;
+EditorAttribute:
+	'.' attribute=[ecore::EAttribute] relation=EditorRelation value=EditorExpression;
 
-enum Relation:
+enum EditorRelation:
 	ASSIGNMENT=':=' |
 	GREATER='>' |
 	GREATER_OR_EQUAL='>=' |
@@ -54,28 +58,25 @@ enum Relation:
 	SMALLER_OR_EQUAL='<=' |
 	SMALLER='<';
 
-Expression:
-	LiteralValue | EnumValue | ParameterValue;
+EditorExpression:
+	EditorAttributeExpression | EditorLiteralExpression | EditorEnumExpression | EditorParameterExpression;
 
-LiteralValue:
+EditorAttributeExpression:
+	node=[EditorNode] '.' attribute=[ecore::EAttribute];
+
+EditorLiteralExpression:
 	value=('true' | 'false' | Number) |
 	{StringConstant} value=STRING;
 
 Number:
 	('-')? INT ('.' INT)?;
 
-EnumValue:
+EditorEnumExpression:
 	'enum::' literal=[ecore::EEnumLiteral];
 
-ParameterValue:
-	'param::' parameter=[Parameter];
+EditorParameterExpression:
+	'param::' parameter=[EditorParameter];
 
 	// References
-Reference:
-	(operator=OperatorForEditor)? '-' type=[ecore::EReference] '->' target=[Node];
-
-	// Negative Application Conditions
-NAC:
-	'nac' name=ID '{'
-	(nodes+=Node)*
-	'}';
+EditorReference:
+	(operator=OperatorInEditor)? '-' type=[ecore::EReference] '->' target=[EditorNode];

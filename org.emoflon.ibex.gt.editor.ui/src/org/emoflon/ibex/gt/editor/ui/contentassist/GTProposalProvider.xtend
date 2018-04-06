@@ -5,7 +5,7 @@ import org.eclipse.xtext.Assignment
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor
 import org.emoflon.ibex.common.editor.utils.WorkspaceSearch
-import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
+import org.emoflon.ibex.gt.editor.gT.EditorGTFile
 
 /**
  * See https://www.eclipse.org/Xtext/documentation/310_eclipse_support.html#content-assist
@@ -16,11 +16,11 @@ class GTProposalProvider extends AbstractGTProposalProvider {
 	/**
 	 * Suggest to import .ecore files in workspace.
 	 */
-	override completeImport_Name(EObject model, Assignment assignment, ContentAssistContext context,
+	override completeEditorImport_Name(EObject model, Assignment assignment, ContentAssistContext context,
 		ICompletionProposalAcceptor acceptor) {
-		super.completeImport_Name(model, assignment, context, acceptor)
+		super.completeEditorImport_Name(model, assignment, context, acceptor)
 
-		val gtFile = model.eContainer as GraphTransformationFile
+		val gtFile = model.eContainer as EditorGTFile
 		val currentImports = gtFile.imports.map[it.name].toList
 		WorkspaceSearch.getEcoreURIsInWorkspace(currentImports).forEach [
 			acceptor.accept(createCompletionProposal('''"«it»"''', context))

@@ -1,19 +1,24 @@
 package org.emoflon.ibex.gt.editor.tests
 
 import com.google.inject.Inject
+import java.util.Map
 import org.eclipse.emf.ecore.EClass
 import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
-import org.emoflon.ibex.gt.editor.gT.AttributeConstraint
-import org.emoflon.ibex.gt.editor.gT.GraphTransformationFile
-import org.emoflon.ibex.gt.editor.gT.LiteralValue
-import org.emoflon.ibex.gt.editor.gT.Operator
-import org.emoflon.ibex.gt.editor.gT.ParameterValue
-import org.emoflon.ibex.gt.editor.gT.Reference
-import org.emoflon.ibex.gt.editor.gT.Relation
+import org.emoflon.ibex.gt.editor.gT.EditorAttribute
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
+import org.emoflon.ibex.gt.editor.gT.EditorGTFile
+import org.emoflon.ibex.gt.editor.gT.EditorReference
+import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression
+import org.emoflon.ibex.gt.editor.gT.EditorNode
+import org.emoflon.ibex.gt.editor.gT.EditorOperator
+import org.emoflon.ibex.gt.editor.gT.EditorParameter
+import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
+import org.emoflon.ibex.gt.editor.gT.EditorPattern
+import org.emoflon.ibex.gt.editor.gT.EditorRelation
 import org.junit.Assert
 import org.junit.runner.RunWith
 
@@ -27,110 +32,129 @@ abstract class GTParsingTest {
 	public static val ecoreImport = 'http://www.eclipse.org/emf/2002/Ecore'
 
 	@Inject
-	protected ParseHelper<GraphTransformationFile> parseHelper
+	protected ParseHelper<EditorGTFile> parseHelper
 
 	@Inject extension private ValidationTestHelper validationHelper
 
-	def void assertValid(GraphTransformationFile file) {
+	def void assertValid(EditorGTFile file) {
 		Assert.assertNotNull(file)
 		this.validationHelper.assertNoIssues(file)
-		this.assertBasics(file, 1)
+		assertFile(file, 1)
 	}
 
-	def void assertValid(GraphTransformationFile file, int ruleCount) {
+	def void assertValid(EditorGTFile file, int ruleCount) {
 		Assert.assertNotNull(file)
 		this.validationHelper.assertNoIssues(file)
-		this.assertBasics(file, ruleCount)
+		assertFile(file, ruleCount)
 	}
 
-	def void assertValidationErrors(GraphTransformationFile file, EClass objectType, String code, String... messages) {
+	def void assertValidationErrors(EditorGTFile file, EClass objectType, String code, String... messages) {
 		messages.forEach[this.validationHelper.assertError(file, objectType, code, it)]
 	}
 
-	def void assertValidationIssues(GraphTransformationFile file, EClass objectType, String code, Severity severity,
+	def void assertValidationIssues(EditorGTFile file, EClass objectType, String code, Severity severity,
 		String... messages) {
 		messages.forEach[this.validationHelper.assertIssue(file, objectType, code, severity, it)]
 	}
 
-	def void assertValidResource(GraphTransformationFile file) {
+	static def void assertValidResource(EditorGTFile file) {
 		Assert.assertNotNull(file)
 		Assert.assertTrue(file.eResource.errors.isEmpty)
 		Assert.assertTrue(file.eResource.warnings.isEmpty)
 	}
 
-	def void assertInvalidResource(GraphTransformationFile file, int issueCount) {
+	static def void assertInvalidResource(EditorGTFile file, int issueCount) {
 		Assert.assertTrue(issueCount > 0)
 		Assert.assertNotNull(file)
 		Assert.assertEquals(issueCount, file.eResource.errors.size + file.eResource.warnings.size)
 	}
 
-	def void assertBasics(GraphTransformationFile file) {
-		this.assertBasics(file, 1)
+	static def void assertFile(EditorGTFile file) {
+		assertFile(file, 1)
 	}
 
-	def void assertBasics(GraphTransformationFile file, int ruleCount) {
+	static def void assertFile(EditorGTFile file, int ruleCount) {
 		Assert.assertTrue(ruleCount > 0)
-		this.assertValidResource(file)
+		assertValidResource(file)
 
 		Assert.assertEquals(1, file.imports.size)
 		Assert.assertEquals("http://www.eclipse.org/emf/2002/Ecore", file.imports.get(0).name)
 
-		Assert.assertEquals(ruleCount, file.rules.size)
+		Assert.assertEquals(ruleCount, file.patterns.size)
 	}
 
-	def void assertAttribute(AttributeConstraint attributeConstraint, String name, Relation relation) {
+	static def getRule(EditorGTFile file, int ruleIndex) {
+		return file.patterns.get(ruleIndex)
+	}
+
+	static def getParameter(EditorPattern rule, int parameterIndex) {
+		return rule.parameters.get(parameterIndex)
+	}
+
+	static def void assertParameters(EditorPattern rule, Map<String, String> parameterNameToType) {
+		Assert.assertEquals(parameterNameToType.size, rule.parameters.size)
+		for (parameter : rule.parameters) {
+			Assert.assertTrue("Found unexpected parameter " + parameter.name,
+				parameterNameToType.containsKey(parameter.name))
+			Assert.assertEquals(parameterNameToType.get(parameter.name), parameter.type.name)
+		}
+	}
+
+	static def getNode(EditorPattern rule, int nodeIndex) {
+		return rule.nodes.get(nodeIndex)
+	}
+
+	static def assertNode(EditorNode node, EditorOperator operator, String variableName, String variableType) {
+		assertNode(node, operator, variableName, variableType, 0, 0)
+	}
+
+	static def assertNode(EditorNode node, EditorOperator operator, String name, String type, int attributesCount,
+		int referencesCount) {
+		Assert.assertEquals(operator, node.operator)
+		Assert.assertEquals(name, node.name)
+		Assert.assertEquals(type, node.type.name)
+		Assert.assertEquals(attributesCount, node.attributes.size)
+		Assert.assertEquals(referencesCount, node.references.size)
+	}
+
+	static def getAttribute(EditorNode node, int attributeIndex) {
+		return node.attributes.get(attributeIndex)
+	}
+
+	static def void assertAttribute(EditorAttribute attributeConstraint, String name, EditorRelation relation) {
 		Assert.assertEquals(name, attributeConstraint.attribute.name)
 		Assert.assertEquals(relation, attributeConstraint.relation)
 	}
 
-	def void assertAttributeLiteral(GraphTransformationFile file, int index, String name, Relation relation,
+	static def void assertAttributeWithAttributeExpression(EditorAttribute attributeConstraint, String name,
+		EditorRelation relation, EditorNode node, String attr) {
+		assertAttribute(attributeConstraint, name, relation)
+		Assert.assertTrue(attributeConstraint.value instanceof EditorAttributeExpression)
+		Assert.assertEquals(node, (attributeConstraint.value as EditorAttributeExpression).node)
+		Assert.assertEquals(attr, (attributeConstraint.value as EditorAttributeExpression).attribute.name)
+	}
+
+	static def void assertAttributeLiteral(EditorAttribute attributeConstraint, String name, EditorRelation relation,
 		String value) {
-		val attr = file.rules.get(0).nodes.get(0).attributes.get(index) as AttributeConstraint
-		this.assertAttribute(attr, name, relation)
-
-		Assert.assertTrue(attr.value instanceof LiteralValue)
-		Assert.assertEquals(value, (attr.value as LiteralValue).value)
+		assertAttribute(attributeConstraint, name, relation)
+		Assert.assertTrue(attributeConstraint.value instanceof EditorLiteralExpression)
+		Assert.assertEquals(value, (attributeConstraint.value as EditorLiteralExpression).value)
 	}
 
-	def void assertAttributeParameter(GraphTransformationFile file, int attributeIndex, String name, Relation relation,
-		int parameterIndex) {
-		val attr = file.rules.get(0).nodes.get(0).attributes.get(attributeIndex) as AttributeConstraint
-		this.assertAttribute(attr, name, relation)
-
-		Assert.assertTrue(attr.value instanceof ParameterValue)
-		val parameter = file.rules.get(0).parameters.get(parameterIndex)
-		Assert.assertEquals(parameter, (attr.value as ParameterValue).parameter)
+	static def void assertAttributeParameter(EditorAttribute attributeConstraint, String name, EditorRelation relation,
+		EditorParameter parameter) {
+		assertAttribute(attributeConstraint, name, relation)
+		Assert.assertTrue(attributeConstraint.value instanceof EditorParameterExpression)
+		Assert.assertEquals(parameter, (attributeConstraint.value as EditorParameterExpression).parameter)
 	}
 
-	def assertNode(GraphTransformationFile file, int nodeIndex, Operator operator, String variableName,
-		String variableType) {
-		val node = file.rules.get(0).nodes.get(nodeIndex)
-		Assert.assertEquals(operator, node.operator)
-		Assert.assertEquals(variableName, node.name)
-		Assert.assertEquals(variableType, node.type.name)
+	static def getReference(EditorNode node, int referenceIndex) {
+		return node.references.get(referenceIndex)
 	}
 
-	def void assertParameterNames(GraphTransformationFile file, String... names) {
-		val parameters = file.rules.get(0).parameters
-		Assert.assertEquals(names.size, parameters.size)
-		for (i : 0 .. names.size - 1) {
-			Assert.assertEquals(names.get(i), parameters.get(i).name)
-		}
-	}
-
-	def void assertParameterTypes(GraphTransformationFile file, String... types) {
-		val parameters = file.rules.get(0).parameters
-		Assert.assertEquals(types.size, parameters.size)
-		for (i : 0 .. types.size - 1) {
-			Assert.assertEquals(types.get(i), parameters.get(i).type.name)
-		}
-	}
-
-	def assertReference(GraphTransformationFile file, int referenceIndex, Operator operator, String name,
-		int targetNodeIndex) {
-		val reference = file.rules.get(0).nodes.get(0).references.get(referenceIndex) as Reference
+	static def assertReference(EditorReference reference, EditorOperator operator, String name, EditorNode target) {
 		Assert.assertEquals(operator, reference.operator)
 		Assert.assertEquals(name, reference.type.name)
-		Assert.assertEquals(file.rules.get(0).nodes.get(targetNodeIndex), reference.target)
+		Assert.assertEquals(target, reference.target)
 	}
 }

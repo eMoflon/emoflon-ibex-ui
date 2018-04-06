@@ -5,6 +5,7 @@ import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.emoflon.ibex.gt.editor.gT.GTPackage
+import org.emoflon.ibex.gt.editor.scoping.GTLinkingDiagnosticMessageProvider
 import org.emoflon.ibex.gt.editor.validation.GTValidator
 import org.junit.Assert
 import org.junit.Test
@@ -21,12 +22,12 @@ class GTParsingParametersTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a() {
+			pattern a() {
 				a: EObject
 			}
 		''')
-		this.assertValid(file)
-		Assert.assertTrue(file.rules.get(0).parameters.isEmpty)
+		assertValid(file)
+		Assert.assertTrue(file.patterns.get(0).parameters.isEmpty)
 	}
 
 	@Test
@@ -34,13 +35,12 @@ class GTParsingParametersTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a(name: EString) {
+			pattern a(name: EString) {
 				a: EObject
 			}
 		''')
-		this.assertValid(file)
-		this.assertParameterNames(file, "name")
-		this.assertParameterTypes(file, "EString")
+		assertValid(file)
+		assertParameters(file.getRule(0), #{'name' -> 'EString'})
 	}
 
 	@Test
@@ -48,13 +48,16 @@ class GTParsingParametersTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a(age: EDouble, name: EString, isMale: EBoolean) {
+			pattern a(age: EDouble, name: EString, isMale: EBoolean) {
 				a: EObject
 			}
 		''')
-		this.assertValid(file)
-		this.assertParameterNames(file, "age", "name", "isMale")
-		this.assertParameterTypes(file, "EDouble", "EString", "EBoolean")
+		assertValid(file)
+		assertParameters(file.getRule(0), #{
+			'age' -> 'EDouble',
+			'name' -> 'EString',
+			'isMale' -> 'EBoolean'
+		})
 	}
 
 	@Test
@@ -62,16 +65,16 @@ class GTParsingParametersTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a(age: EClass) {
+			pattern a(age: EClass) {
 				a: EObject
 			}
 		''')
-		this.assertBasics(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.parameter,
-			Diagnostic::LINKING_DIAGNOSTIC,
-			"Couldn't resolve reference to EDataType 'EClass'."
+			GTPackage.eINSTANCE.editorParameter,
+			GTLinkingDiagnosticMessageProvider.PARAMETER_TYPE_NOT_FOUND,
+			String.format(GTLinkingDiagnosticMessageProvider.PARAMETER_TYPE_NOT_FOUND_MESSAGE, 'EClass')
 		)
 	}
 
@@ -80,14 +83,14 @@ class GTParsingParametersTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a(age: int,) {
+			pattern a(age: int,) {
 				a: EObject
 			}
 		''')
-		this.assertInvalidResource(file, 1)
-		this.assertValidationErrors(
+		assertInvalidResource(file, 1)
+		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.rule,
+			GTPackage.eINSTANCE.editorPattern,
 			Diagnostic::SYNTAX_DIAGNOSTIC,
 			"mismatched input ')' expecting RULE_ID"
 		)
@@ -98,14 +101,14 @@ class GTParsingParametersTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule A(age EInt, name EString, isMale EBoolean) {
+			pattern A(age EInt, name EString, isMale EBoolean) {
 				a: EObject
 			}
 		''')
-		this.assertInvalidResource(file, 3)
-		this.assertValidationErrors(
+		assertInvalidResource(file, 3)
+		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.parameter,
+			GTPackage.eINSTANCE.editorParameter,
 			Diagnostic::SYNTAX_DIAGNOSTIC,
 			"missing ':' at 'EInt'",
 			"missing ':' at 'EString'",
@@ -118,14 +121,14 @@ class GTParsingParametersTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "http://www.eclipse.org/emf/2002/Ecore"
 			
-			rule a(age: EInt; name: EString; isMale: EBoolean) {
+			pattern a(age: EInt; name: EString; isMale: EBoolean) {
 				a: EObject
 			}
 		''')
-		this.assertInvalidResource(file, 1)
-		this.assertValidationErrors(
+		assertInvalidResource(file, 1)
+		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.rule,
+			GTPackage.eINSTANCE.editorPattern,
 			Diagnostic::SYNTAX_DIAGNOSTIC,
 			"mismatched input ';' expecting ')'"
 		)
@@ -142,9 +145,9 @@ class GTParsingParametersTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertValidationErrors(
+		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.parameter,
+			GTPackage.eINSTANCE.editorParameter,
 			GTValidator.NAME_BLACKLISTED,
 			String.format(GTValidator.PARAMETER_NAME_FORBIDDEN_MESSAGE, 'class')
 		)
@@ -163,9 +166,9 @@ class GTParsingParametersTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertValidationIssues(
+		assertValidationIssues(
 			file,
-			GTPackage.eINSTANCE.parameter,
+			GTPackage.eINSTANCE.editorParameter,
 			GTValidator.NAME_EXPECT_LOWER_CASE,
 			Severity.WARNING,
 			String.format(GTValidator.PARAMETER_NAME_STARTS_WITH_LOWER_CASE_MESSAGE, 'ClassName')
@@ -183,9 +186,9 @@ class GTParsingParametersTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertValidationIssues(
+		assertValidationIssues(
 			file,
-			GTPackage.eINSTANCE.parameter,
+			GTPackage.eINSTANCE.editorParameter,
 			GTValidator.NAME_EXPECT_CAMEL_CASE,
 			Severity.WARNING,
 			String.format(GTValidator.PARAMETER_NAME_CONTAINS_UNDERSCORES_MESSAGE, 'class_name')
@@ -203,10 +206,10 @@ class GTParsingParametersTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertBasics(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.parameter,
+			GTPackage.eINSTANCE.editorParameter,
 			GTValidator.NAME_EXPECT_UNIQUE,
 			String.format(GTValidator.PARAMETER_NAME_MULTIPLE_DECLARATIONS_MESSAGE, 'name', 'twice')
 		)

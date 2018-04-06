@@ -1,10 +1,12 @@
 package org.emoflon.ibex.gt.editor.tests
 
 import org.eclipse.xtext.diagnostics.Diagnostic
+import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
+import org.emoflon.ibex.gt.editor.gT.EditorRelation
 import org.emoflon.ibex.gt.editor.gT.GTPackage
-import org.emoflon.ibex.gt.editor.gT.Relation
+import org.emoflon.ibex.gt.editor.scoping.GTLinkingDiagnosticMessageProvider
 import org.emoflon.ibex.gt.editor.validation.GTValidator
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -16,7 +18,7 @@ import org.junit.runner.RunWith
 @InjectWith(GTInjectorProvider)
 class GTParsingAttributesTest extends GTParsingTest {
 	@Test
-	def void validAttributeAssignments() {
+	def void validAttributeAssignmentsWithLiteral() {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
@@ -27,45 +29,134 @@ class GTParsingAttributesTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertValid(file)
-		this.assertAttributeLiteral(file, 0, "name", Relation.ASSIGNMENT, "Test1")
-		this.assertAttributeLiteral(file, 1, "instanceTypeName", Relation.ASSIGNMENT, "Test2")
+		assertValid(file)
+		val node = file.getRule(0).getNode(0)
+		assertAttributeLiteral(node.getAttribute(0), "name", EditorRelation.ASSIGNMENT, "Test1")
+		assertAttributeLiteral(node.getAttribute(1), "instanceTypeName", EditorRelation.ASSIGNMENT, "Test2")
 	}
 
 	@Test
-	def void validAttributeConditions() {
+	def void validAttributeWithLiteral() {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a {
+			pattern a {
 				classifier: EClassifier {
 					.name != "Test1"
 					.instanceTypeName == "Test2"
 				}
 			}
 		''')
-		this.assertValid(file)
-		this.assertAttributeLiteral(file, 0, "name", Relation.UNEQUAL, "Test1")
-		this.assertAttributeLiteral(file, 1, "instanceTypeName", Relation.EQUAL, "Test2")
+		assertValid(file)
+		val node = file.getRule(0).getNode(0)
+		assertAttributeLiteral(node.getAttribute(0), "name", EditorRelation.UNEQUAL, "Test1")
+		assertAttributeLiteral(node.getAttribute(1), "instanceTypeName", EditorRelation.EQUAL, "Test2")
 	}
 
 	@Test
-	def void validAttributeConditionReferencingParameter() {
+	def void validAttributeWithAttributeExpression() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			pattern findClassAndPackageOfTheSameName {
+				package: EPackage
+			
+				clazz: EClass {
+					.name == package.name
+				}
+			}
+		''')
+		assertValid(file)
+		val node = file.getRule(0).getNode(1)
+		val targetNode = file.getRule(0).getNode(0)
+		assertAttributeWithAttributeExpression(node.getAttribute(0), "name", EditorRelation.EQUAL, targetNode, "name")
+	}
+
+	@Test
+	def void errorIfAttributeWithAttributeExpressionReferencingInvalidNode() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			rule findClassAndPackageOfTheSameName {
+				++ package: EPackage
+			
+				clazz: EClass {
+					.name == package
+				}
+			}
+		''')
+		assertInvalidResource(file, 1)
+		assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.editorAttributeExpression,
+			GTLinkingDiagnosticMessageProvider.ATTRIBUTE_EXPRESSION_NODE_NOT_FOUND,
+			String.format(GTLinkingDiagnosticMessageProvider.ATTRIBUTE_EXPRESSION_NODE_NOT_FOUND_MESSAGE, 'package')
+		)
+	}
+
+	@Test
+	def void errorIfAttributeWithAttributeExpressionReferencingInvalidAttribute() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			pattern r {
+				dataType: EDataType
+				
+				clazz: EClass {
+					.name == dataType.serializable
+				}
+			}
+		''')
+		assertFile(file)
+		assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.editorAttributeExpression,
+			Diagnostic::LINKING_DIAGNOSTIC,
+			"Couldn't resolve reference to EAttribute 'serializable'."
+		)
+	}
+
+	@Test
+	def void validAttributeWithParameter() {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
 			rule createClass(name: EString) {
+				++ clazz: EClass {
+					.name := param::name
+				}
+			}
+		''')
+		assertValid(file)
+		val node = file.getRule(0).getNode(0)
+		val parameter = file.getRule(0).getParameter(0)
+		assertAttributeParameter(node.getAttribute(0), "name", EditorRelation.ASSIGNMENT, parameter)
+	}
+
+	@Test
+	def void validAttributeWithParameterFromSuperRule() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			pattern s(name: EString) {
+				object: EObject
+			}
+			
+			rule createClass
+			refines s {
 				clazz: EClass {
 					.name := param::name
 				}
 			}
 		''')
-		this.assertValid(file)
-		this.assertAttributeParameter(file, 0, "name", Relation.ASSIGNMENT, 0)
+		assertValid(file, 2)
+		val node = file.getRule(1).getNode(0)
+		val parameter = file.getRule(0).getParameter(0)
+		assertAttributeParameter(node.getAttribute(0), "name", EditorRelation.ASSIGNMENT, parameter)
 	}
 
 	@Test
-	def void errorIfAttributeConditionReferencesParameterOfInvalidType() {
+	def void errorIfAttributeWithParameterOfInvalidType() {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
@@ -75,17 +166,18 @@ class GTParsingAttributesTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertBasics(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.parameterValue,
-			Diagnostic::LINKING_DIAGNOSTIC,
-			"Couldn't resolve reference to Parameter 'name'."
+			GTPackage.eINSTANCE.editorParameterExpression,
+			GTLinkingDiagnosticMessageProvider.PARAMETER_EXPRESSION_PARAMETER_NOT_FOUND,
+			String.format(GTLinkingDiagnosticMessageProvider.PARAMETER_EXPRESSION_PARAMETER_NOT_FOUND_MESSAGE, 'name',
+				'EString')
 		)
 	}
 
 	@Test
-	def void errorIfAttributeConstraintWithConstantOfWrongType() {
+	def void errorIfAttributeWithLiteralOfWrongType() {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
@@ -101,10 +193,10 @@ class GTParsingAttributesTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertBasics(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.attributeConstraint,
+			GTPackage.eINSTANCE.editorAttribute,
 			GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE,
 			String.format(GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE, "abstract", "EBoolean"),
 			String.format(GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE, "lowerBound", "EInt"),
@@ -113,7 +205,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 	}
 
 	@Test
-	def void errorIfAttributeConstraintWithWrongStringConstant() {
+	def void errorIfAttributeWithWrongStringConstant() {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
@@ -123,10 +215,10 @@ class GTParsingAttributesTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertBasics(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.attributeConstraint,
+			GTPackage.eINSTANCE.editorAttribute,
 			GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE,
 			String.format(GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE, "name", "EString")
 		)
@@ -137,16 +229,16 @@ class GTParsingAttributesTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a {
+			pattern a {
 				clazz: EClass {
 					.^abstract >= false
 				}
 			}
 		''')
-		this.assertBasics(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.attributeConstraint,
+			GTPackage.eINSTANCE.editorAttribute,
 			GTValidator.ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE,
 			String.format(GTValidator.ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE_MESSAGE, ">=", "abstract")
 		)
@@ -164,10 +256,10 @@ class GTParsingAttributesTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertBasics(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.attributeConstraint,
+			GTPackage.eINSTANCE.editorAttribute,
 			GTValidator.ATTRIBUTE_MULTIPLE_ASSIGNMENTS,
 			String.format(GTValidator.ATTRIBUTE_MULTIPLE_ASSIGNMENTS_MESSAGE, 2, 'name')
 		)
@@ -184,10 +276,10 @@ class GTParsingAttributesTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertBasics(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.attributeConstraint,
+			GTPackage.eINSTANCE.editorAttribute,
 			GTValidator.ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE,
 			String.format(GTValidator.ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE_MESSAGE, 'name', 'clazz')
 		)
@@ -204,12 +296,34 @@ class GTParsingAttributesTest extends GTParsingTest {
 				}
 			}
 		''')
-		this.assertBasics(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.attributeConstraint,
+			GTPackage.eINSTANCE.editorAttribute,
 			GTValidator.ATTRIBUTE_CONDITION_IN_CREATED_NODE,
 			String.format(GTValidator.ATTRIBUTE_CONDITION_IN_CREATED_NODE_MESSAGE, 'name', 'clazz')
+		)
+	}
+
+	@Test
+	def void warningIfDuplicateAttributeConditions() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			pattern a {
+				clazz: EClass {
+					.name == "Test"
+					.name == "Test"
+				}
+			}
+		''')
+		assertFile(file)
+		assertValidationIssues(
+			file,
+			GTPackage.eINSTANCE.editorAttribute,
+			GTValidator.ATTRIBUTE_DUPLICATE_CONDITION,
+			Severity.WARNING,
+			String.format(GTValidator.ATTRIBUTE_DUPLICATE_CONDITION_MESSAGE, 'name', 'clazz', 'twice')
 		)
 	}
 
@@ -218,16 +332,16 @@ class GTParsingAttributesTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a {
+			pattern a {
 				classifier: EObject {
 					.name == "Test"
 				}
 			}
 		''')
-		this.assertBasics(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.attributeConstraint,
+			GTPackage.eINSTANCE.editorAttribute,
 			Diagnostic::LINKING_DIAGNOSTIC,
 			"Couldn't resolve reference to EAttribute 'name'."
 		)

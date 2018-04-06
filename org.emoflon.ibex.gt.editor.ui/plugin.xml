@@ -9,7 +9,7 @@
         contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
         default="true"
         extensions="gt"
-        icon="resources/icons/gt-rule.gif"
+        icon="icons/gt-rule.gif"
         id="org.emoflon.ibex.gt.editor.GT"
         name="GT Editor">
 		</editor>
@@ -424,7 +424,7 @@
    <extension
          point="org.eclipse.ui.ide.projectNatureImages">
       <image
-            icon="resources/icons/gt-project.gif"
+            icon="icons/gt-project.gif"
             id="org.emoflon.ibex.gt.editor.ui.natureImage"
             natureId="org.emoflon.ibex.gt.editor.ui.nature">
       </image>
@@ -458,7 +458,7 @@
             locationURI="toolbar:org.moflon.ide.ui.toolbar?after=org.moflon.newEmfProject">
          <command
                commandId="org.emoflon.ibex.gt.editor.ui.commandNewGTProject"
-               icon="resources/icons/gt-project.gif"
+               icon="icons/gt-project.gif"
                label="New Graph Transformation Project"
                style="push">
             <visibleWhen
@@ -470,7 +470,7 @@
          </command>
          <command
                commandId="org.emoflon.ibex.gt.editor.ui.commandNewGTFile"
-               icon="resources/icons/gt-rule.gif"
+               icon="icons/gt-rule.gif"
                label="New Graph Transformation File"
                style="push">
             <visibleWhen
@@ -487,7 +487,7 @@
 		<wizard
         category="org.moflon.ide.ui.category"
         class="org.emoflon.ibex.gt.editor.ui.GTExecutableExtensionFactory:org.emoflon.ibex.gt.editor.ui.wizard.GTNewProjectWizard"
-        icon="resources/icons/gt-project.gif"
+        icon="icons/gt-project.gif"
         id="org.emoflon.ibex.gt.editor.ui.wizard.GTNewProjectWizard"
         name="eMoflon Graph Transformation Project"
         project="true">
@@ -495,7 +495,7 @@
 		<wizard
         category="org.moflon.ide.ui.category"
         class="org.emoflon.ibex.gt.editor.ui.GTExecutableExtensionFactory:org.emoflon.ibex.gt.editor.ui.wizard.GTNewFileWizard"
-        icon="resources/icons/gt-rule.gif"
+        icon="icons/gt-rule.gif"
         id="org.emoflon.ibex.gt.editor.ui.wizard.GTNewFileWizard"
         name="eMoflon Graph Transformation File">
      	</wizard>
@@ -506,5 +506,11 @@
           priority="5"
           providerClass="org.emoflon.ibex.gt.editor.ui.visualization.GTVisualizer">
     </diagramTextProvider>
+ </extension>
+ <extension
+       point="net.sourceforge.plantuml.eclipse.linkOpener">
+    <linkOpener
+          linkOpenerClass="org.emoflon.ibex.gt.editor.ui.visualization.PlatformFragmentLinkOpener">
+    </linkOpener>
  </extension>
 </plugin>

@@ -17,14 +17,14 @@ class GTParsingImportsTest extends GTParsingTest {
 	@Test
 	def void errorIfNoImport() {
 		val file = parseHelper.parse('''
-			rule a {
+			pattern a {
 				object: EObject
 			}
 		''')
-		this.assertValidResource(file)
-		this.assertValidationErrors(
+		assertValidResource(file)
+		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.graphTransformationFile,
+			GTPackage.eINSTANCE.editorGTFile,
 			GTValidator.IMPORT_MISSING_META_MODEL,
 			GTValidator.IMPORT_MISSING_META_MODEL_MESSAGE
 		)
@@ -36,14 +36,14 @@ class GTParsingImportsTest extends GTParsingTest {
 			import "«ecoreImport»"
 			import "«ecoreImport»"
 			
-			rule a {
+			pattern a {
 				object: EObject
 			}
 		''')
-		this.assertValidResource(file)
-		this.assertValidationIssues(
+		assertValidResource(file)
+		assertValidationIssues(
 			file,
-			GTPackage.eINSTANCE.import,
+			GTPackage.eINSTANCE.editorImport,
 			GTValidator.IMPORT_DUPLICATE,
 			Severity.WARNING,
 			String.format(GTValidator.IMPORT_DUPLICATE_MESSAGE, ecoreImport, 'twice')
@@ -56,14 +56,14 @@ class GTParsingImportsTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«importName»"
 			
-			rule a {
+			pattern a {
 				object: EObject
 			}
 		''')
-		this.assertValidResource(file)
-		this.assertValidationErrors(
+		assertValidResource(file)
+		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.import,
+			GTPackage.eINSTANCE.editorImport,
 			GTValidator.IMPORT_FILE_DOES_NOT_EXIST,
 			String.format(GTValidator.IMPORT_FILE_DOES_NOT_EXIST_MESSAGE, importName)
 		)

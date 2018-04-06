@@ -1,10 +1,13 @@
 package org.emoflon.ibex.gt.editor.ui.outline
 
+import com.google.inject.Inject
+
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider
 import org.eclipse.xtext.ui.editor.outline.IOutlineNode
-
-import org.emoflon.ibex.gt.editor.gT.Rule
+import org.eclipse.xtext.ui.IImageHelper
+import org.emoflon.ibex.gt.editor.gT.EditorPattern
+import org.emoflon.ibex.gt.editor.gT.EditorPatternType
 
 /**
  * Customization of the default outline structure.
@@ -12,31 +15,41 @@ import org.emoflon.ibex.gt.editor.gT.Rule
  * See https://www.eclipse.org/Xtext/documentation/310_eclipse_support.html#outline
  */
 class GTOutlineTreeProvider extends DefaultOutlineTreeProvider {
+	@Inject
+	private IImageHelper imageHelper
+
 	override _createNode(IOutlineNode parentNode, EObject modelElement) {
-		if (modelElement instanceof Rule) {
+		if (modelElement instanceof EditorPattern) {
 			super._createNode(parentNode, modelElement)
 		}
 		return
 	}
 
 	/**
-	 * Customize the displayed text for rules.
+	 * Customize the displayed text for the pattern.
 	 */
-	def _text(Rule rule) {
-		var text = rule.name
-		if (rule.abstract) {
+	def _text(EditorPattern pattern) {
+		var text = pattern.name
+		if (pattern.abstract) {
 			text += ' (abstract)'
 		}
-		if (rule.superRules.size > 0) {
-			text += ' -> ' + String.join(", ", rule.superRules.map[it.name]);
+		if (pattern.superPatterns.size > 0) {
+			text += ' -> ' + String.join(", ", pattern.superPatterns.map[it.name]);
 		}
 		return text
+	}
+
+	def _image(EditorPattern pattern) {
+		if (pattern.type == EditorPatternType.RULE) {
+			return imageHelper.getImage('gt-rule.gif')
+		}
+		return imageHelper.getImage('gt-pattern.gif')
 	}
 
 	/**
 	 * Avoid display as expandable nodes.
 	 */
-	def boolean _isLeaf(Rule rule) {
+	def boolean _isLeaf(EditorPattern pattern) {
 		return true;
 	}
 }

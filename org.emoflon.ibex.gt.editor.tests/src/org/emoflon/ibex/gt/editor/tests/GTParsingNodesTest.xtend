@@ -1,17 +1,17 @@
 package org.emoflon.ibex.gt.editor.tests
 
-import org.eclipse.xtext.diagnostics.Diagnostic
 import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
+import org.emoflon.ibex.gt.editor.gT.EditorOperator
 import org.emoflon.ibex.gt.editor.gT.GTPackage
-import org.emoflon.ibex.gt.editor.gT.Operator
+import org.emoflon.ibex.gt.editor.scoping.GTLinkingDiagnosticMessageProvider
 import org.emoflon.ibex.gt.editor.validation.GTValidator
 import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * JUnit tests for simple constraints, adding and deleting nodes and references.
+ * JUnit tests for nodes.
  */
 @RunWith(XtextRunner)
 @InjectWith(GTInjectorProvider)
@@ -21,14 +21,15 @@ class GTParsingNodesTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a {
+			pattern a {
 				a: EPackage
 				b: EClass
 			}
 		''')
-		this.assertValid(file)
-		this.assertNode(file, 0, Operator.CONTEXT, "a", "EPackage")
-		this.assertNode(file, 1, Operator.CONTEXT, "b", "EClass")
+		assertValid(file)
+		val rule = file.getRule(0)
+		assertNode(rule.getNode(0), EditorOperator.CONTEXT, "a", "EPackage")
+		assertNode(rule.getNode(1), EditorOperator.CONTEXT, "b", "EClass")
 	}
 
 	@Test
@@ -41,9 +42,10 @@ class GTParsingNodesTest extends GTParsingTest {
 				-- b: EObject
 			}
 		''')
-		this.assertValid(file)
-		this.assertNode(file, 0, Operator.CREATE, "a", "EClass")
-		this.assertNode(file, 1, Operator.DELETE, "b", "EObject")
+		assertValid(file)
+		val rule = file.getRule(0)
+		assertNode(rule.getNode(0), EditorOperator.CREATE, "a", "EClass")
+		assertNode(rule.getNode(1), EditorOperator.DELETE, "b", "EObject")
 	}
 
 	@Test
@@ -52,14 +54,14 @@ class GTParsingNodesTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a {
+			pattern a {
 				«nodeName»: EObject
 			}
 		''')
-		this.assertBasics(file)
-		this.assertValidationIssues(
+		assertFile(file)
+		assertValidationIssues(
 			file,
-			GTPackage.eINSTANCE.node,
+			GTPackage.eINSTANCE.editorNode,
 			GTValidator.NAME_EXPECT_LOWER_CASE,
 			Severity.WARNING,
 			String.format(GTValidator.NODE_NAME_STARTS_WITH_LOWER_CASE_MESSAGE, nodeName)
@@ -72,14 +74,14 @@ class GTParsingNodesTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a {
+			pattern a {
 				«nodeName»: EObject
 			}
 		''')
-		this.assertBasics(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.node,
+			GTPackage.eINSTANCE.editorNode,
 			GTValidator.NAME_BLACKLISTED,
 			String.format(GTValidator.NODE_NAME_FORBIDDEN_MESSAGE, nodeName)
 		)
@@ -91,14 +93,14 @@ class GTParsingNodesTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a {
+			pattern a {
 				«nodeName»: EObject
 			}
 		''')
-		this.assertBasics(file)
-		this.assertValidationIssues(
+		assertFile(file)
+		assertValidationIssues(
 			file,
-			GTPackage.eINSTANCE.node,
+			GTPackage.eINSTANCE.editorNode,
 			GTValidator.NAME_EXPECT_CAMEL_CASE,
 			Severity.WARNING,
 			String.format(GTValidator.NODE_NAME_CONTAINS_UNDERSCORES_MESSAGE, nodeName)
@@ -111,16 +113,16 @@ class GTParsingNodesTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a {
+			pattern a {
 				«nodeName»: EAnnotation
 			
 				«nodeName»: EObject
 			}
 		''')
-		this.assertBasics(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.node,
+			GTPackage.eINSTANCE.editorNode,
 			GTValidator.NAME_EXPECT_UNIQUE,
 			String.format(GTValidator.NODE_NAME_MULTIPLE_DECLARATIONS_MESSAGE, nodeName, "twice")
 		)
@@ -131,16 +133,16 @@ class GTParsingNodesTest extends GTParsingTest {
 		val file = parseHelper.parse('''
 			import "«ecoreImport»"
 			
-			rule a() {
+			pattern a() {
 				o: Object
 			}
 		''')
-		this.assertBasics(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.node,
-			Diagnostic::LINKING_DIAGNOSTIC,
-			"Couldn't resolve reference to EClass 'Object'."
+			GTPackage.eINSTANCE.editorNode,
+			GTLinkingDiagnosticMessageProvider.NODE_TYPE_NOT_FOUND,
+			String.format(GTLinkingDiagnosticMessageProvider.NODE_TYPE_NOT_FOUND_MESSAGE, 'Object')
 		)
 	}
 
@@ -153,10 +155,10 @@ class GTParsingNodesTest extends GTParsingTest {
 				++ classifier: EClassifier
 			}
 		''')
-		this.assertBasics(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.node,
+			GTPackage.eINSTANCE.editorNode,
 			GTValidator.CREATE_NODE_TYPE_ABSTRACT,
 			String.format(GTValidator.CREATE_NODE_TYPE_ABSTRACT_MESSAGE, 'classifier')
 		)
@@ -171,12 +173,92 @@ class GTParsingNodesTest extends GTParsingTest {
 				++ clazz: EClass
 			}
 		''')
-		this.assertBasics(file)
-		this.assertValidationErrors(
+		assertFile(file)
+		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.node,
+			GTPackage.eINSTANCE.editorNode,
 			GTValidator.NODE_NAME_EQUALS_PARAMETER_NAME,
 			String.format(GTValidator.NODE_NAME_EQUALS_PARAMETER_NAME_MESSAGE, 'clazz', 'clazz')
+		)
+	}
+
+	@Test
+	def void validNodeTypeChange() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			pattern super {
+				c: EClassifier
+			}
+			
+			pattern findClass
+			refines super {
+				c: EClass
+			}
+		''')
+		assertValid(file, 2)
+	}
+
+	@Test
+	def void errorIfInvalidNodeTypeChange() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			pattern super {
+				c: EDataType
+			}
+			
+			pattern findClass
+			refines super {
+				c: EClass
+			}
+		''')
+		assertFile(file, 2)
+		assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.editorNode,
+			GTValidator.NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE,
+			String.format(GTValidator.NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE_MESSAGE, 'c', 'EDataType',
+				'super')
+		)
+	}
+
+	@Test
+	def void validNodeOperatorChange() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			rule super {
+				++ c: EClass
+			}
+			
+			pattern findClass
+			refines super {
+				c: EClass
+			}
+		''')
+		assertValid(file, 2)
+	}
+
+	@Test
+	def void errorIfInvalidNodeOperatorChange() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			pattern super {
+				c: EClass
+			}
+			
+			pattern findClass
+			refines super {
+				++ c: EClass
+			}
+		''')
+		assertFile(file, 2)
+		assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.editorNode,
+			GTValidator.NODE_OPERATOR_EXPECT_CONTEXT_DUE_TO_DECLARATION_IN_SUPER_RULE,
+			String.format(GTValidator.NODE_OPERATOR_EXPECT_CONTEXT_DUE_TO_DECLARATION_IN_SUPER_RULE_MESSAGE, 'c',
+				GTValidator.concatNames(#['super']))
 		)
 	}
 }
