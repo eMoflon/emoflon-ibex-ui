@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.SafeRunner;
-import org.emoflon.ibex.common.editor.utils.ExtensionsUtil;
+import org.moflon.core.utilities.ExtensionsUtil;
 
 /**
  * Builder for Graph Transformation Projects.
