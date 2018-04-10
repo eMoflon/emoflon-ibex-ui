@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.moflon.core.ui.autosetup.RegisterPsfUrlExtension">
+      <register_psf_uri_extension
+            class="org.emoflon.ibex.common.editor.handbook.RegisterPsfUrlForHandbookPart1">
+      </register_psf_uri_extension>
+      <register_psf_uri_extension
+            class="org.emoflon.ibex.common.editor.handbook.RegisterPsfUrlForHandbookPart2">
+      </register_psf_uri_extension>
+   </extension>
+
+</plugin>
