@@ -39,7 +39,6 @@ class GTPlantUMLGenerator {
 		val flattenedPattern = new GTFlattener(pattern).getFlattenedPattern
 		'''
 			«commonLayoutSettings»
-			«legendSettings»
 			
 			skinparam class {
 				HeaderBackgroundColor<<CONTEXT>> «ContextColor»
@@ -216,18 +215,6 @@ class GTPlantUMLGenerator {
 			
 			skinparam padding 2
 			skinparam shadowing false
-		'''
-	}
-
-	/**
-	 * Prints the legend settings.
-	 */
-	private static def String legendSettings() {
-		'''
-			skinparam legendBackgroundColor White
-			skinparam legendBorderColor White
-			skinparam legendFontSize 18
-			skinparam legendFontName Courier New
 		'''
 	}
 }
