@@ -25,7 +25,7 @@ class GTNewFileInitialContents {
 		// Add a file with an example rule.
 		fsa.generateFile(
 			"src/" + packagePath + "/Rules." + fileExtensionProvider.primaryFileExtension,
-			this.getFileContent("firstRule")
+			this.getFileContent("examplePattern")
 		)
 
 		// Add a .gitignore
@@ -45,7 +45,7 @@ class GTNewFileInitialContents {
 		'''
 			import "«metaModel»"
 			
-			rule «ruleName»() {
+			pattern «ruleName»() {
 				«ruleBody»
 			}
 		'''
