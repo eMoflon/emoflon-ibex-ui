@@ -36,4 +36,5 @@ Bundle-ClassPath: .
 Export-Package: org.emoflon.ibex.tgg.ide.admin,
  org.emoflon.ibex.tgg.ide.transformation,
  org.emoflon.ibex.tgg.ide.visualisation
+Automatic-Module-Name: org.emoflon.ibex.tgg.ide
 
