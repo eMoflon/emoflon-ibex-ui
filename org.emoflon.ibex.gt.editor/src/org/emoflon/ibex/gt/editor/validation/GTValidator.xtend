@@ -315,26 +315,8 @@ class GTValidator extends AbstractGTValidator {
 
 		// Nodes may not contain conflicting attribute assignments.
 		val allNodes = GTEditorPatternUtils.getAllNodesOfPattern(pattern, [true])
-		val nodeNames = allNodes.map[it.name].toSet
-		for (nodeName : nodeNames) {
-			val nodesForName = allNodes.filter[nodeName == it.name]
-			val attributeAssignments = newHashMap()
-			var hasConflictingAssignments = false
-			for (node : nodesForName.toList) {
-				val assignments = node.attributes.filter[it.relation == EditorRelation.ASSIGNMENT]
-				for (assignment : assignments.toList) {
-					if (attributeAssignments.containsKey(assignment.attribute)) {
-						// Check whether the assignment is compatible with assignment in map
-						if (!GTEditorComparator.areAttributeConstraintsEqual(assignment,
-							attributeAssignments.get(assignment.attribute))) {
-							hasConflictingAssignments = true;
-						}
-					} else {
-						attributeAssignments.put(assignment.attribute, assignment)
-					}
-				}
-			}
-			if (hasConflictingAssignments) {
+		for (nodeName : allNodes.map[it.name].toSet) {
+			if (GTFlatteningUtils.hasConflictingAssignment(allNodes, nodeName)) {
 				error(
 					String.format(RULE_REFINEMENT_INVALID_ATTRIBUTE_ASSIGNMENT_MESSAGE, pattern.name, nodeName),
 					GTPackage.Literals.EDITOR_PATTERN__SUPER_PATTERNS,
@@ -572,9 +554,8 @@ class GTValidator extends AbstractGTValidator {
 		val node = reference.eContainer as EditorNode
 		val pattern = node.eContainer as EditorPattern
 
-		val targetNodeOperator = GTFlatteningUtils.mergeOperators(GTEditorPatternUtils.getAllNodesOfPattern(pattern, [
-			it.name.equals(reference.target.name)
-		]).map[it.operator])
+		val targetNodes = GTEditorPatternUtils.getAllNodesOfPattern(pattern, [it.name.equals(reference.target.name)])
+		val targetNodeOperator = GTFlatteningUtils.mergeOperators(targetNodes.map[it.operator])
 
 		if (reference.operator == EditorOperator.CONTEXT) {
 			// The target of a context reference must be a context node.

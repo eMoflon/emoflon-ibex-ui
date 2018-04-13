@@ -144,7 +144,8 @@ class GTParsingPatternRefinementFlatteningTest extends GTParsingTest {
 			rule renameClass(oldName: EString) {
 				clazz: EClass {
 					.name == param::oldName
-					.name := "Test"
+					.instanceClassName := "Test"
+					.instanceTypeName := "TestType"
 				}
 			}
 			
@@ -152,14 +153,15 @@ class GTParsingPatternRefinementFlatteningTest extends GTParsingTest {
 			refines renameClass {
 				clazz: EClass {
 					.name == param::oldName
-					.name := param::newName
+					.instanceClassName := param::newName
+					.instanceTypeName == "TestType"
 				}
 			}
 		''')
 		assertFile(file, 2)
 		val flattener = new GTFlattener(file.getRule(1))
 		Assert.assertTrue(flattener.hasErrors)
-		val errors = #['Node clazz has multiple assignments for attribute name.']
+		val errors = #['Node clazz has multiple assignments for attribute instanceClassName.']
 		Assert.assertEquals(errors, flattener.errors)
 	}
 
@@ -185,6 +187,41 @@ class GTParsingPatternRefinementFlatteningTest extends GTParsingTest {
 		val flattener = new GTFlattener(file.getRule(1))
 		Assert.assertTrue(flattener.hasErrors)
 		val errors = #['Inconsistent type declarations for parameter name: EBoolean and EString.']
+		Assert.assertEquals(errors, flattener.errors)
+	}
+
+	@Test
+	def void errorForInvalidOperators() {
+		val file = parseHelper.parse('''
+			import "«ecoreImport»"
+			
+			rule createAnnotation {
+				package: EPackage
+			
+				classifier: EClassifier {
+					-ePackage -> package
+					++ -eAnnotations -> annotation
+				}
+			
+				++ annotation: EAnnotation
+			}
+			
+			rule deleteAnnotation
+			refines createAnnotation {
+				classifier: EClass {
+					-- -eAnnotations -> annotation
+				}
+			
+				-- annotation: EAnnotation
+			}
+		''')
+		assertValid(file, 2)
+		val flattener = new GTFlattener(file.getRule(1))
+		Assert.assertTrue(flattener.hasErrors)
+		val errors = #[
+			'Reference between classifier and annotation: Cannot merge operators DELETE and CREATE.',
+			'Node annotation: Cannot merge operators DELETE and CREATE.'
+		]
 		Assert.assertEquals(errors, flattener.errors)
 	}
 }

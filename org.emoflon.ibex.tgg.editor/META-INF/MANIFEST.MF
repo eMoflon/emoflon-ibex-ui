@@ -42,3 +42,4 @@ Export-Package: org.moflon.ide.mosl.core.scoping,
  org.moflon.tgg.mosl.tgg.impl,
  org.moflon.tgg.mosl.tgg.util,
  org.moflon.tgg.mosl.validation
+Automatic-Module-Name: org.emoflon.ibex.tgg.editor

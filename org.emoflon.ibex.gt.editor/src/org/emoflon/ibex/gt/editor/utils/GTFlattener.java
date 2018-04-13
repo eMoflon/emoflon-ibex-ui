@@ -232,7 +232,7 @@ public class GTFlattener {
 		if (operator.isPresent()) {
 			node.setOperator(operator.get());
 		} else {
-			errors.add(String.format("Node %s: Cannot merge operators %s and %s", //
+			errors.add(String.format("Node %s: Cannot merge operators %s and %s.", //
 					node.getName(), node.getOperator(), mergedNode.getOperator()));
 		}
 	}

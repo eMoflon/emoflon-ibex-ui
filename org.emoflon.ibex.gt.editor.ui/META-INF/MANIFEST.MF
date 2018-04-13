@@ -35,3 +35,4 @@ Export-Package: org.emoflon.ibex.gt.editor.ui.builder,
  org.emoflon.ibex.gt.editor.ui.internal,
  org.emoflon.ibex.gt.editor.ui.quickfix
 Bundle-Activator: org.emoflon.ibex.gt.editor.ui.internal.EditorActivator
+Automatic-Module-Name: org.emoflon.ibex.gt.editor.ui

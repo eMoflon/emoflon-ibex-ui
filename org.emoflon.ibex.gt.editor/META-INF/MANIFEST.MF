@@ -31,3 +31,4 @@ Export-Package: org.emoflon.ibex.gt.editor,
  org.emoflon.ibex.gt.editor.utils,
  org.emoflon.ibex.gt.editor.validation
 Import-Package: org.apache.log4j
+Automatic-Module-Name: org.emoflon.ibex.gt.editor
