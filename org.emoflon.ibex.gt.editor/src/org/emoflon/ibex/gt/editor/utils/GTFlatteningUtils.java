@@ -1,7 +1,12 @@
 package org.emoflon.ibex.gt.editor.utils;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.eclipse.emf.ecore.EAttribute;
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute;
 import org.emoflon.ibex.gt.editor.gT.EditorNode;
 import org.emoflon.ibex.gt.editor.gT.EditorOperator;
@@ -75,5 +80,38 @@ public class GTFlatteningUtils {
 		return isAssignment && !node.getAttributes().stream().filter(
 				a -> a.getRelation() == EditorRelation.ASSIGNMENT && a.getAttribute().equals(attribute.getAttribute()))
 				.allMatch(a -> GTEditorComparator.areExpressionsEqual(a.getValue(), attribute.getValue()));
+	}
+
+	/**
+	 * Checks whether the nodes with the given same name have conflicting
+	 * assignments.
+	 * 
+	 * @param nodes
+	 *            the nodes
+	 * @param name
+	 *            the name of the nodes to check
+	 * @return <code>true</code> if and only if there are multiple, different
+	 *         assignments for the same attribute
+	 */
+	public static boolean hasConflictingAssignment(final Set<EditorNode> nodes, final String name) {
+		List<EditorAttribute> assignments = nodes.stream() //
+				.filter(n -> n.getName().equals(name)) //
+				.flatMap(n -> n.getAttributes().stream()) //
+				.filter(a -> a.getRelation() == EditorRelation.ASSIGNMENT) //
+				.collect(Collectors.toList());
+
+		HashMap<EAttribute, EditorAttribute> attributeAssignments = new HashMap<EAttribute, EditorAttribute>();
+		for (EditorAttribute assignment : assignments) {
+			if (attributeAssignments.containsKey(assignment.getAttribute())) {
+				// Check whether the assignment is compatible with assignment in map
+				if (!GTEditorComparator.areAttributeConstraintsEqual(assignment,
+						attributeAssignments.get(assignment.getAttribute()))) {
+					return true;
+				}
+			} else {
+				attributeAssignments.put(assignment.getAttribute(), assignment);
+			}
+		}
+		return false;
 	}
 }
