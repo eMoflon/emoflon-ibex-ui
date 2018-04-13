@@ -5,7 +5,8 @@ generate gT "http://www.emoflon.org/ibex/gt/editor/GT"
 
 EditorGTFile:
 	(imports+=EditorImport)*
-	(patterns+=EditorPattern)*;
+	(patterns+=EditorPattern)*
+	(conditions+=EditorCondition)*;
 
 EditorImport:
 	'import' name=STRING;
@@ -80,3 +81,34 @@ EditorParameterExpression:
 	// References
 EditorReference:
 	(operator=OperatorInEditor)? '-' type=[ecore::EReference] '->' target=[EditorNode];
+
+	// Graph Conditions
+EditorCondition:
+	'condition' name=ID
+	'=' condition=EditorConditionExpression;
+
+EditorConditionExpression:
+	EditorOr;
+
+EditorOr returns EditorConditionExpression:
+	EditorAnd ({EditorOr.left=current} '||' right=EditorAnd)*;
+
+EditorAnd returns EditorConditionExpression:
+	EditorNegation ({EditorAnd.left=current} '&&' right=EditorNegation)*;
+
+EditorNegation returns EditorConditionExpression:
+	'!' EditorBasicExpression |
+	EditorBasicExpression;
+
+EditorBasicExpression returns EditorConditionExpression:
+	EditorPatternCondition |
+	'(' EditorOr ')';
+
+EditorPatternCondition returns EditorConditionExpression:
+	{EditorEnforce}
+	'enforce' pattern=[EditorPattern] |
+	{EditorForbid}
+	'forbid' pattern=[EditorPattern] |
+	{EditorConstraint}
+	'check' premise=[EditorPattern]
+	'implies' conclusions+=[EditorPattern] ('||' conditions+=[EditorPattern])*;
