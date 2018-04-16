@@ -8,6 +8,7 @@ import org.eclipse.xtext.ui.editor.outline.IOutlineNode
 import org.eclipse.xtext.ui.IImageHelper
 import org.emoflon.ibex.gt.editor.gT.EditorPattern
 import org.emoflon.ibex.gt.editor.gT.EditorPatternType
+import org.emoflon.ibex.gt.editor.gT.EditorCondition
 
 /**
  * Customization of the default outline structure.
@@ -19,10 +20,24 @@ class GTOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	private IImageHelper imageHelper
 
 	override _createNode(IOutlineNode parentNode, EObject modelElement) {
-		if (modelElement instanceof EditorPattern) {
+		if (modelElement instanceof EditorPattern || modelElement instanceof EditorCondition) {
 			super._createNode(parentNode, modelElement)
 		}
 		return
+	}
+
+	/**
+	 * Avoid display patterns as expandable nodes.
+	 */
+	def _isLeaf(EditorPattern pattern) {
+		return true;
+	}
+
+	/**
+	 * Avoid display conditions as expandable nodes.
+	 */
+	def _isLeaf(EditorCondition condition) {
+		return true;
 	}
 
 	/**
@@ -39,17 +54,13 @@ class GTOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		return text
 	}
 
+	/**
+	 * Customize the image for the pattern/rule.
+	 */
 	def _image(EditorPattern pattern) {
 		if (pattern.type == EditorPatternType.RULE) {
 			return imageHelper.getImage('gt-rule.gif')
 		}
 		return imageHelper.getImage('gt-pattern.gif')
-	}
-
-	/**
-	 * Avoid display as expandable nodes.
-	 */
-	def boolean _isLeaf(EditorPattern pattern) {
-		return true;
 	}
 }
