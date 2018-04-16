@@ -245,8 +245,8 @@ class GTValidator extends AbstractGTValidator {
 			}
 		}
 
-		// The pattern must contain at least one constraint or refine multiple patterns.
-		if (pattern.nodes.size == 0 && pattern.superPatterns.size < 2) {
+		// The pattern must contain at least one node or refine multiple patterns or have graph conditions.
+		if (pattern.nodes.size == 0 && pattern.superPatterns.size < 2 && pattern.conditions.size == 0) {
 			error(
 				String.format(RULE_EMPTY_MESSAGE, pattern.name),
 				GTPackage.Literals.EDITOR_PATTERN__NODES,

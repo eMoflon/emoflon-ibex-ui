@@ -19,7 +19,8 @@ EditorPattern:
 	('refines' superPatterns+=[EditorPattern] (',' superPatterns+=[EditorPattern])*)?
 	('{'
 	(nodes+=EditorNode)*
-	'}')?;
+	'}')?
+	('when' conditions+=[EditorCondition] ('&&' conditions+=[EditorCondition])*)?;
 
 enum EditorPatternType:
 	PATTERN='pattern' |
