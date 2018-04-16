@@ -111,11 +111,10 @@ EditorNegativeExpression returns EditorConditionExpression:
 
 EditorSimpleCondition returns EditorConditionExpression:
 	{EditorConditionReference}
-	'ref' condition=[EditorCondition] |
+	'check' condition=[EditorCondition] |
 	{EditorEnforce}
 	'enforce' pattern=[EditorPattern] |
 	{EditorForbid}
 	'forbid' pattern=[EditorPattern] |
 	{EditorConstraint}
-	'check' premise=[EditorPattern] 'implies' conclusions+=[EditorPattern] ('||'
-	conditions+=[EditorPattern])*;
+	'if' premise=[EditorPattern] 'then' conclusions+=[EditorPattern] ('||' conclusions+=[EditorPattern])*;

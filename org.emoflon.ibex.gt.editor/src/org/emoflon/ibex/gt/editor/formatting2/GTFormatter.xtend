@@ -5,12 +5,21 @@ import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.formatting2.AbstractFormatter2
 import org.eclipse.xtext.formatting2.IFormattableDocument
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 
+import org.emoflon.ibex.gt.editor.gT.EditorAnd
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute
+import org.emoflon.ibex.gt.editor.gT.EditorCondition
+import org.emoflon.ibex.gt.editor.gT.EditorConditionExpression
+import org.emoflon.ibex.gt.editor.gT.EditorConditionReference
+import org.emoflon.ibex.gt.editor.gT.EditorConstraint
+import org.emoflon.ibex.gt.editor.gT.EditorEnforce
+import org.emoflon.ibex.gt.editor.gT.EditorForbid
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile
 import org.emoflon.ibex.gt.editor.gT.EditorImport
 import org.emoflon.ibex.gt.editor.gT.EditorNode
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
+import org.emoflon.ibex.gt.editor.gT.EditorOr
 import org.emoflon.ibex.gt.editor.gT.EditorParameter
 import org.emoflon.ibex.gt.editor.gT.EditorPattern
 import org.emoflon.ibex.gt.editor.gT.EditorReference
@@ -30,10 +39,33 @@ class GTFormatter extends AbstractFormatter2 {
 		}
 
 		// Empty line after imports
-		this.formatList(file.imports, document, 0, 1, 2)
+		formatList(file.imports, document, 0, 1, 2)
+
+		val lastPattern = NodeModelUtils.getNode(file.patterns.last)
+		val lastCondition = NodeModelUtils.getNode(file.conditions.last)
+		val isLastElementACondition = //
+			if (lastPattern === null || lastCondition === null)
+				false
+			else
+				lastCondition.endLine > lastPattern.endLine
 
 		// Empty line between each pattern.
-		this.formatList(file.patterns, document, if(file.imports.size > 0) 2 else 0, 2, 1)
+		formatList(
+			file.patterns,
+			document,
+			if(file.imports.size > 0) 2 else 0,
+			2,
+			if(!isLastElementACondition) 1 else 2
+		)
+
+		// Empty line between each condition.
+		formatList(
+			file.conditions,
+			document,
+			2,
+			2,
+			if(isLastElementACondition) 1 else 2
+		)
 	}
 
 	def dispatch void format(EditorImport i, extension IFormattableDocument document) {
@@ -80,7 +112,7 @@ class GTFormatter extends AbstractFormatter2 {
 		}
 
 		// Empty line between nodes.
-		this.formatList(pattern.nodes, document, 1, 2, 1)
+		formatList(pattern.nodes, document, 1, 2, 1)
 	}
 
 	def dispatch void format(EditorParameter parameter, extension IFormattableDocument document) {
@@ -141,11 +173,62 @@ class GTFormatter extends AbstractFormatter2 {
 		reference.regionFor.keyword("->").surround[oneSpace]
 	}
 
+	def dispatch void format(EditorCondition condition, extension IFormattableDocument document) {
+		// No space before and one space after 'condition'.
+		condition.regionFor.keyword('condition').prepend[noSpace]
+		condition.regionFor.keyword('condition').append[oneSpace]
+
+		// One space before and after "=".
+		condition.regionFor.keyword('=').surround[oneSpace]
+
+		// Format condition value.
+		condition.condition.format
+	}
+
+	def dispatch void format(EditorOr condition, extension IFormattableDocument document) {
+		condition.regionFor.keyword('||').surround[oneSpace]
+		formatExpressions(condition.left, condition.right, document)
+	}
+
+	def dispatch void format(EditorAnd condition, extension IFormattableDocument document) {
+		condition.regionFor.keyword('&&').surround[oneSpace]
+		formatExpressions(condition.left, condition.right, document)
+	}
+
+	def dispatch void format(EditorConditionReference condition, extension IFormattableDocument document) {
+		condition.regionFor.keyword('check').append[oneSpace]
+	}
+
+	def dispatch void format(EditorEnforce condition, extension IFormattableDocument document) {
+		condition.regionFor.keyword('enforce').append[oneSpace]
+	}
+
+	def dispatch void format(EditorForbid condition, extension IFormattableDocument document) {
+		condition.regionFor.keyword('forbid').append[oneSpace]
+	}
+
+	def dispatch void format(EditorConstraint condition, extension IFormattableDocument document) {
+		condition.regionFor.keyword('if').append[oneSpace]
+		condition.regionFor.keyword('then').surround[oneSpace]
+		condition.regionFor.keywords('||').forEach [
+			it.surround[oneSpace]
+		]
+	}
+
+	/**
+	 * Formats the given condition expressions.
+	 */
+	private static def formatExpressions(EditorConditionExpression left, EditorConditionExpression right,
+		extension IFormattableDocument document) {
+		left.format
+		right.format
+	}
+
 	/**
 	 * Formats a list.
 	 */
-	def void formatList(List<? extends EObject> items, extension IFormattableDocument document, int newLinesBeforeFirst,
-		int newLinesAfterItem, int newLinesAfterLastItem) {
+	private static def formatList(List<? extends EObject> items, extension IFormattableDocument document,
+		int newLinesBeforeFirst, int newLinesAfterItem, int newLinesAfterLastItem) {
 		if (items.size() == 0) {
 			return;
 		}

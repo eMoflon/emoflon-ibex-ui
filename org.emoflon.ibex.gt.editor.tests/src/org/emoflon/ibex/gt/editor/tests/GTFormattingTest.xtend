@@ -112,7 +112,7 @@ class GTFormattingTest {
 			'''
 		)
 	}
-	
+
 	@Test
 	def formatRuleWithEmptyBody() {
 		val expected = '''
@@ -217,6 +217,63 @@ class GTFormattingTest {
 				}
 				c: EAnnotation
 				}
+			'''
+		)
+	}
+
+	@Test
+	def formatConditions() {
+		val expected = '''
+			import "http://www.eclipse.org/emf/2002/Ecore"
+			
+			pattern findClassWithoutAnnotation {
+				clazz: EClass
+			}
+			
+			abstract pattern findClassWithAnnotation {
+				clazz: EClass {
+					-eAnnotations -> annotation
+				}
+			
+				annotation: EAnnotation
+			}
+			
+			condition noAnnotation = forbid findClassWithAnnotation
+			
+			condition hasAnnotation = enforce findClassifierWithAnnotation
+			
+			condition orTest = check noAnnotation || check hasAnnotation
+			
+			condition andTest = check noAnnotation && check hasAnnotation
+			
+			condition hasAnnotationConstraint = if findClassWithoutAnnotation then findClassWithoutAnnotation || findClassWithAnnotation
+		'''
+		testFormatting(
+			expected,
+			'''
+				import "http://www.eclipse.org/emf/2002/Ecore"	
+					pattern findClassWithoutAnnotation {clazz: EClass}
+					
+					
+				abstract pattern findClassWithAnnotation {
+				clazz: EClass {-eAnnotations -> annotation}
+				annotation: EAnnotation}
+					
+				condition noAnnotation 
+					= forbid  findClassWithAnnotation
+				condition hasAnnotation  =  enforce  findClassifierWithAnnotation
+				
+				condition  orTest 
+					= check   noAnnotation
+						|| check  hasAnnotation
+							
+					condition  andTest 
+					= check noAnnotation    &&    	check hasAnnotation
+				
+					condition hasAnnotationConstraint  =  if findClassWithoutAnnotation 
+					then findClassWithoutAnnotation  ||  findClassWithAnnotation
+				
+				
 			'''
 		)
 	}
