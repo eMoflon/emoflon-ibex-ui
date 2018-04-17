@@ -1,15 +1,20 @@
 package org.emoflon.ibex.gt.editor.scoping
 
+import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EEnum
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.scoping.Scopes
+import org.eclipse.xtext.scoping.impl.FilteringScope
 
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
+import org.emoflon.ibex.gt.editor.gT.EditorConstraint
+import org.emoflon.ibex.gt.editor.gT.EditorEnforce
 import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression
+import org.emoflon.ibex.gt.editor.gT.EditorForbid
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile
 import org.emoflon.ibex.gt.editor.gT.EditorNode
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
@@ -49,6 +54,11 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 			return getScopeForParameterExpressions(context as EditorParameterExpression)
 		}
 
+		// Graph Conditions
+		if (isPatternOfGraphCondition(context, reference)) {
+			return getScopeForPatternsWithoutParameters(context, reference)
+		}
+
 		// Nodes
 		if (isNodeType(context, reference)) {
 			return getScopeForNodeTypes(context as EditorNode)
@@ -81,12 +91,12 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 
 	def isNodeOfAttributeExpression(EObject context, EReference reference) {
 		return (context instanceof EditorAttributeExpression &&
-			reference == GTPackage.Literals.EDITOR_ATTRIBUTE_EXPRESSION__NODE);
+			reference == GTPackage.Literals.EDITOR_ATTRIBUTE_EXPRESSION__NODE)
 	}
 
 	def isAttributeOfAttributeExpression(EObject context, EReference reference) {
 		return (context instanceof EditorAttributeExpression &&
-			reference == GTPackage.Literals.EDITOR_ATTRIBUTE_EXPRESSION__ATTRIBUTE);
+			reference == GTPackage.Literals.EDITOR_ATTRIBUTE_EXPRESSION__ATTRIBUTE)
 	}
 
 	def isEnumExpression(EObject context, EReference reference) {
@@ -97,6 +107,14 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	def isParameterExpression(EObject context, EReference reference) {
 		return (context instanceof EditorParameterExpression &&
 			reference == GTPackage.Literals.EDITOR_PARAMETER_EXPRESSION__PARAMETER);
+	}
+
+	def isPatternOfGraphCondition(EObject context, EReference reference) {
+		return (context instanceof EditorEnforce && reference == GTPackage.Literals.EDITOR_ENFORCE__PATTERN) ||
+			(context instanceof EditorForbid && reference == GTPackage.Literals.EDITOR_FORBID__PATTERN) ||
+			(context instanceof EditorConstraint &&
+				(reference == GTPackage.Literals.EDITOR_CONSTRAINT__PREMISE || reference == GTPackage.Literals.EDITOR_CONSTRAINT__CONCLUSIONS)
+			)
 	}
 
 	def isNodeType(EObject context, EReference reference) {
@@ -126,10 +144,30 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	def getScopeForSuperPatterns(EditorPattern pattern) {
 		val rootElement = EcoreUtil2.getRootContainer(pattern)
 		val candidates = EcoreUtil2.getAllContentsOfType(rootElement, EditorPattern)
+		// TODO use getScopeForPatternsInSamePackage(EObject context, EReference reference) as candidates
 		val validSuperPatterns = candidates.filter [
 			it != pattern && !GTEditorPatternUtils.isRefinementOf(it as EditorPattern, pattern)
 		]
 		return Scopes.scopeFor(validSuperPatterns)
+	}
+
+	/**
+	 * A pattern referenced in a condition must be a pattern without parameters.
+	 */
+	def getScopeForPatternsWithoutParameters(EObject context, EReference reference) {
+		// TODO filter pattern.type === EditorPatternType.PATTERN
+		// TODO filter pattern.parameters.isEmpty
+		return getScopeForPatternsInSamePackage(context, reference)
+	}
+
+	/**
+	 * Filters the scope of the super scope provider for the patterns
+	 * which are in the same package as the file containing the context. 
+	 */
+	def getScopeForPatternsInSamePackage(EObject context, EReference reference) {
+		return new FilteringScope(super.getScope(context, reference), [
+			context.eResource.URI.trimFragment.trimSegments(1).equals(it.EObjectURI.trimFragment.trimSegments(1))
+		])
 	}
 
 	/**
@@ -159,7 +197,9 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 			if (targetNodeType !== null) {
 				val pattern = reference.eContainer.eContainer as EditorPattern
 				if (pattern !== null) {
-					val nodes = GTEditorPatternUtils.getAllNodesOfPattern(pattern, [isNodeOfType(it, targetNodeType)])
+					val nodes = GTEditorPatternUtils.getAllNodesOfPattern(pattern, [
+						isNodeOfType(it, targetNodeType)
+					])
 					return Scopes.scopeFor(nodes)
 				}
 			}
@@ -208,7 +248,9 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	 */
 	def getScopeForAttributeExpressionNodes(EditorAttributeExpression attributeExpression) {
 		val pattern = attributeExpression.eContainer.eContainer.eContainer as EditorPattern
-		val nodes = GTEditorPatternUtils.getAllNodesOfPattern(pattern, [it.operator == EditorOperator.CONTEXT])
+		val nodes = GTEditorPatternUtils.getAllNodesOfPattern(pattern, [
+			it.operator == EditorOperator.CONTEXT
+		])
 		return Scopes.scopeFor(nodes)
 	}
 
@@ -236,7 +278,9 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		val pattern = attributeConstraint.eContainer.eContainer as EditorPattern
 		val parameters = newArrayList()
 		GTEditorPatternUtils.getPatternWithAllSuperPatterns(pattern).forEach [
-			parameters.addAll(it.parameters.filter[it.type == attributeConstraint.attribute.EAttributeType])
+			parameters.addAll(it.parameters.filter [
+				it.type == attributeConstraint.attribute.EAttributeType
+			])
 		]
 		return Scopes.scopeFor(parameters)
 	}
