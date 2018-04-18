@@ -86,30 +86,23 @@ EditorReference:
 	// Graph Conditions
 EditorCondition:
 	'condition' name=ID
-	'=' condition=EditorConditionExpression;
+	'=' expression=EditorConditionExpression;
 
 EditorConditionExpression:
-	EditorOr;
+	EditorOrCondition;
 
-EditorOr returns EditorConditionExpression:
-	EditorAnd ({EditorOr.left=current} '||' right=EditorAnd)*;
+EditorOrCondition returns EditorConditionExpression:
+	EditorAndCondition ({EditorOrCondition.left=current} '||' right=EditorAndCondition)*;
 
-EditorAnd returns EditorConditionExpression:
-	EditorNegation ({EditorAnd.left=current} '&&' right=EditorNegation)*;
+EditorAndCondition returns EditorConditionExpression:
+	EditorNegation ({EditorAndCondition.left=current} '&&' right=EditorNegation)*;
 
 EditorNegation returns EditorConditionExpression:
-	EditorBasicExpression |
-	EditorNegativeExpression;
-
-EditorBasicExpression returns EditorConditionExpression:
-	EditorSimpleCondition |
-	'(' EditorOr ')';
-
-EditorNegativeExpression returns EditorConditionExpression:
-	'!' (EditorSimpleCondition |
-	'(' EditorOr ')');
+	{EditorNegativeCondition} '!' expression=EditorSimpleCondition |
+	EditorSimpleCondition;
 
 EditorSimpleCondition returns EditorConditionExpression:
+	'(' EditorOrCondition ')' |
 	{EditorConditionReference}
 	'check' condition=[EditorCondition] |
 	{EditorEnforce}
@@ -117,4 +110,5 @@ EditorSimpleCondition returns EditorConditionExpression:
 	{EditorForbid}
 	'forbid' pattern=[EditorPattern] |
 	{EditorConstraint}
-	'if' premise=[EditorPattern] 'then' conclusions+=[EditorPattern] ('||' conclusions+=[EditorPattern])*;
+	'if' premise=[EditorPattern] 'then'
+	'(' conclusions+=[EditorPattern] ('||' conclusions+=[EditorPattern])* ')';

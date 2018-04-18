@@ -1,13 +1,24 @@
 package org.emoflon.ibex.gt.editor.ui.visualization
 
+import java.util.HashSet
+import java.util.Set
+
 import org.eclipse.emf.common.util.EList
+import org.emoflon.ibex.gt.editor.gT.EditorAndCondition
+import org.emoflon.ibex.gt.editor.gT.EditorConditionReference
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
+import org.emoflon.ibex.gt.editor.gT.EditorConditionExpression
+import org.emoflon.ibex.gt.editor.gT.EditorConstraint
+import org.emoflon.ibex.gt.editor.gT.EditorEnforce
 import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression
 import org.emoflon.ibex.gt.editor.gT.EditorExpression
+import org.emoflon.ibex.gt.editor.gT.EditorForbid
 import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression
+import org.emoflon.ibex.gt.editor.gT.EditorNegativeCondition
 import org.emoflon.ibex.gt.editor.gT.EditorNode
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
+import org.emoflon.ibex.gt.editor.gT.EditorOrCondition
 import org.emoflon.ibex.gt.editor.gT.EditorParameter
 import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
 import org.emoflon.ibex.gt.editor.gT.EditorPattern
@@ -37,6 +48,7 @@ class GTPlantUMLGenerator {
 	 */
 	public static def String visualizePattern(EditorPattern pattern) {
 		val flattenedPattern = new GTFlattener(pattern).getFlattenedPattern
+		val nodeNamesInFlattenedPattern = flattenedPattern.nodes.map[it.name]
 		'''
 			«commonLayoutSettings»
 			
@@ -50,24 +62,58 @@ class GTPlantUMLGenerator {
 				FontColor White
 			}
 			
-			«FOR node : flattenedPattern.nodes»
-				class «nodeName(node)» <<«nodeSkin(node)»>> {
+			«IF pattern.conditions.isEmpty»
+				«visualizeGraph(flattenedPattern)»
+			«ELSE»
+				namespace «pattern.name» {
+					«visualizeGraph(flattenedPattern)»
+				}
+				
+				«FOR p : getConditionPatterns(pattern)»
+					«val f = new GTFlattener(p).getFlattenedPattern»
+					namespace «p.name» #EEEEEE {
+						«visualizeGraph(f)»
+					}
+					
+					«FOR node : f.nodes»
+						«IF nodeNamesInFlattenedPattern.contains(node.name)»
+							"«pattern.name».«nodeName(node)»" #--# "«p.name».«nodeName(node)»"
+						«ENDIF»
+					«ENDFOR»
+				«ENDFOR»
+			«ENDIF»
+			
+			«IF !pattern.conditions.isEmpty»
+				legend bottom
+					«getConditionString(pattern)»
+				endlegend
+			«ENDIF»
+			
+			center footer
+				= «pattern.name»
+				«signature(flattenedPattern)»
+			end footer
+		'''
+	}
+
+	/**
+	 * Visualizes the nodes and edges. 
+	 */
+	private static def String visualizeGraph(EditorPattern pattern) {
+		'''
+			«FOR node : pattern.nodes»
+				class "«nodeName(node)»" <<«nodeSkin(node)»>> {
 					«FOR attr: node.attributes»
 						«attributeConstraint(attr)»
 					«ENDFOR»
 				}
 			«ENDFOR»
 			
-			«FOR node : flattenedPattern.nodes»
+			«FOR node : pattern.nodes»
 				«FOR reference : node.references»
-					«nodeName(node)» -[#«referenceColor(reference)»]-> «nodeName(reference.target)»: «referenceLabel(reference)»
+					"«nodeName(node)»" -[#«referenceColor(reference)»]-> "«nodeName(reference.target)»": «referenceLabel(reference)»
 				«ENDFOR»
 			«ENDFOR»
-			
-			center footer
-				= «pattern.name»
-				«org.emoflon.ibex.gt.editor.ui.visualization.GTPlantUMLGenerator.signature(flattenedPattern)»
-			end footer
 		'''
 	}
 
@@ -76,10 +122,10 @@ class GTPlantUMLGenerator {
 	 */
 	private static def String nodeName(EditorNode node) {
 		if (node === null) {
-			return '"?"'
+			return '?'
 		}
 		val type = if(node.type === null) '?' else node.type.name
-		'''"«node.name»: «type»"'''
+		'''«node.name»: «type»'''
 	}
 
 	/**
@@ -147,6 +193,86 @@ class GTPlantUMLGenerator {
 			return '''«expression.parameter.name»'''
 		}
 		return '''«expression.toString»'''
+	}
+
+	/**
+	 * Extracts the patterns from the conditions of the pattern.
+	 */
+	private static def Set<EditorPattern> getConditionPatterns(EditorPattern pattern) {
+		val patterns = new HashSet
+		pattern.conditions.forEach [
+			patterns.addAll(getConditionPatterns(it.expression))
+		]
+		return patterns
+	}
+
+	/**
+	 * Extracts the patterns from a single condition. 
+	 */
+	private static def Set<EditorPattern> getConditionPatterns(EditorConditionExpression condition) {
+		val patterns = new HashSet
+
+		if (condition instanceof EditorAndCondition) {
+			patterns.addAll(getConditionPatterns(condition.left))
+			patterns.addAll(getConditionPatterns(condition.right))
+		}
+		if (condition instanceof EditorOrCondition) {
+			patterns.addAll(getConditionPatterns(condition.left))
+			patterns.addAll(getConditionPatterns(condition.right))
+		}
+		if (condition instanceof EditorNegativeCondition) {
+			patterns.addAll(getConditionPatterns(condition.expression))
+		}
+
+		if (condition instanceof EditorConditionReference) {
+			patterns.addAll(getConditionPatterns(condition.condition.expression))
+		}
+		if (condition instanceof EditorConstraint) {
+			patterns.add(condition.premise)
+			patterns.addAll(condition.conclusions)
+		}
+		if (condition instanceof EditorEnforce) {
+			patterns.add(condition.pattern)
+		}
+		if (condition instanceof EditorForbid) {
+			patterns.add(condition.pattern)
+		}
+		return patterns
+	}
+
+	/**
+	 * Prints the conditions of the pattern.
+	 */
+	private static def String getConditionString(EditorPattern pattern) {
+		'''«FOR c : pattern.conditions SEPARATOR ' **&&** '»«getConditionString(c.expression)»«ENDFOR»'''
+	}
+
+	/**
+	 * Print the condition.
+	 */
+	private static def String getConditionString(EditorConditionExpression condition) {
+		if (condition instanceof EditorAndCondition) {
+			return '''(«getConditionString(condition.left)» **&&** «getConditionString(condition.right)»)'''
+		}
+		if (condition instanceof EditorOrCondition) {
+			return '''(«getConditionString(condition.left)» **||** «getConditionString(condition.right)»)'''
+		}
+		if (condition instanceof EditorNegativeCondition) {
+			return '''**!**«getConditionString(condition.expression)»'''
+		}
+
+		if (condition instanceof EditorConditionReference) {
+			return '''«getConditionString(condition.condition.expression)»'''
+		}
+		if (condition instanceof EditorConstraint) {
+			return '''**if** «condition.premise.name» **then** «FOR c : condition.conclusions»«c.name»«ENDFOR»'''
+		}
+		if (condition instanceof EditorEnforce) {
+			return '''**enforce** «condition.pattern.name»'''
+		}
+		if (condition instanceof EditorForbid) {
+			return '''**forbid** «condition.pattern.name»'''
+		}
 	}
 
 	/**

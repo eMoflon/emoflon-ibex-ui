@@ -7,7 +7,7 @@ import org.eclipse.xtext.formatting2.AbstractFormatter2
 import org.eclipse.xtext.formatting2.IFormattableDocument
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 
-import org.emoflon.ibex.gt.editor.gT.EditorAnd
+import org.emoflon.ibex.gt.editor.gT.EditorAndCondition
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorCondition
 import org.emoflon.ibex.gt.editor.gT.EditorConditionExpression
@@ -19,7 +19,7 @@ import org.emoflon.ibex.gt.editor.gT.EditorGTFile
 import org.emoflon.ibex.gt.editor.gT.EditorImport
 import org.emoflon.ibex.gt.editor.gT.EditorNode
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
-import org.emoflon.ibex.gt.editor.gT.EditorOr
+import org.emoflon.ibex.gt.editor.gT.EditorOrCondition
 import org.emoflon.ibex.gt.editor.gT.EditorParameter
 import org.emoflon.ibex.gt.editor.gT.EditorPattern
 import org.emoflon.ibex.gt.editor.gT.EditorReference
@@ -182,15 +182,15 @@ class GTFormatter extends AbstractFormatter2 {
 		condition.regionFor.keyword('=').surround[oneSpace]
 
 		// Format condition value.
-		condition.condition.format
+		condition.expression.format
 	}
 
-	def dispatch void format(EditorOr condition, extension IFormattableDocument document) {
+	def dispatch void format(EditorOrCondition condition, extension IFormattableDocument document) {
 		condition.regionFor.keyword('||').surround[oneSpace]
 		formatExpressions(condition.left, condition.right, document)
 	}
 
-	def dispatch void format(EditorAnd condition, extension IFormattableDocument document) {
+	def dispatch void format(EditorAndCondition condition, extension IFormattableDocument document) {
 		condition.regionFor.keyword('&&').surround[oneSpace]
 		formatExpressions(condition.left, condition.right, document)
 	}

@@ -246,7 +246,7 @@ class GTFormattingTest {
 			
 			condition andTest = check noAnnotation && check hasAnnotation
 			
-			condition hasAnnotationConstraint = if findClassWithoutAnnotation then findClassWithoutAnnotation || findClassWithAnnotation
+			condition hasAnnotationConstraint = if findClassWithoutAnnotation then (findClassWithoutAnnotation || findClassWithAnnotation)
 		'''
 		testFormatting(
 			expected,
@@ -271,7 +271,7 @@ class GTFormattingTest {
 					= check noAnnotation    &&    	check hasAnnotation
 				
 					condition hasAnnotationConstraint  =  if findClassWithoutAnnotation 
-					then findClassWithoutAnnotation  ||  findClassWithAnnotation
+					then (findClassWithoutAnnotation  ||  findClassWithAnnotation)
 				
 				
 			'''
