@@ -4,6 +4,7 @@ import java.util.Collection
 
 import org.eclipse.emf.ecore.EPackage
 import org.eclipse.xtext.validation.Check
+import org.eclipse.xtext.validation.CheckType
 
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile
@@ -265,6 +266,22 @@ class GTValidator extends AbstractGTValidator {
 			)
 		}
 
+		// The super patterns of the pattern must be distinct.
+		if (pattern.superPatterns.size !== pattern.superPatterns.stream.distinct.count) {
+			error(
+				String.format(RULE_SUPER_RULES_DUPLICATE_MESSAGE, pattern.name),
+				GTPackage.Literals.EDITOR_PATTERN__SUPER_PATTERNS,
+				RULE_SUPER_RULES_DUPLICATE,
+				pattern.name
+			)
+		}
+	}
+
+	@Check(CheckType.NORMAL) // Only on save/build.
+	def checkPatternTypeAndRefinement(EditorPattern pattern) {
+		println("checkPatternTypeAndRefinement " + pattern)
+
+		// Type: pattern vs. rule
 		val flattenedPattern = new GTFlattener(pattern).flattenedPattern
 		val isRule = GTEditorPatternUtils.containsCreatedOrDeletedElements(flattenedPattern)
 		if (isRule && pattern.type === EditorPatternType.PATTERN) {
@@ -286,16 +303,6 @@ class GTValidator extends AbstractGTValidator {
 
 		if (pattern.superPatterns.isEmpty) {
 			return;
-		}
-
-		// The super patterns of the pattern must be distinct.
-		if (pattern.superPatterns.size !== pattern.superPatterns.stream.distinct.count) {
-			error(
-				String.format(RULE_SUPER_RULES_DUPLICATE_MESSAGE, pattern.name),
-				GTPackage.Literals.EDITOR_PATTERN__SUPER_PATTERNS,
-				RULE_SUPER_RULES_DUPLICATE,
-				pattern.name
-			)
 		}
 
 		// Parameter names must be equal to definitions in the super pattern.
