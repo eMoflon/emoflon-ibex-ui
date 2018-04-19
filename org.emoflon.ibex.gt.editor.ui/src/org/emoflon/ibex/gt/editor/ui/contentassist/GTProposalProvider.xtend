@@ -20,7 +20,7 @@ class GTProposalProvider extends AbstractGTProposalProvider {
 		ICompletionProposalAcceptor acceptor) {
 		super.completeEditorImport_Name(model, assignment, context, acceptor)
 
-		val gtFile = model.eContainer as EditorGTFile
+		val gtFile = if(model instanceof EditorGTFile) model else model.eContainer as EditorGTFile
 		val currentImports = gtFile.imports.map[it.name].toList
 		WorkspaceSearch.getEcoreURIsInWorkspace(currentImports).forEach [
 			acceptor.accept(createCompletionProposal('''"«it»"''', context))
