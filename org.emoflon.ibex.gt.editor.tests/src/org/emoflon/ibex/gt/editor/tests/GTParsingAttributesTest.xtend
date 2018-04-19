@@ -19,7 +19,7 @@ import org.junit.runner.RunWith
 class GTParsingAttributesTest extends GTParsingTest {
 	@Test
 	def void validAttributeAssignmentsWithLiteral() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			rule a {
@@ -37,7 +37,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 
 	@Test
 	def void validAttributeWithLiteral() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern a {
@@ -55,7 +55,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 
 	@Test
 	def void validAttributeWithAttributeExpression() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern findClassAndPackageOfTheSameName {
@@ -74,7 +74,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 
 	@Test
 	def void errorIfAttributeWithAttributeExpressionReferencingInvalidNode() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			rule findClassAndPackageOfTheSameName {
@@ -96,7 +96,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 
 	@Test
 	def void errorIfAttributeWithAttributeExpressionReferencingInvalidAttribute() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern r {
@@ -118,7 +118,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 
 	@Test
 	def void validAttributeWithParameter() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			rule createClass(name: EString) {
@@ -135,7 +135,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 
 	@Test
 	def void validAttributeWithParameterFromSuperRule() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern s(name: EString) {
@@ -157,7 +157,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 
 	@Test
 	def void errorIfAttributeWithParameterOfInvalidType() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			rule createClass(name: EBoolean) {
@@ -178,7 +178,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 
 	@Test
 	def void errorIfAttributeWithLiteralOfWrongType() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			rule createAbstractTestClass {
@@ -206,7 +206,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 
 	@Test
 	def void errorIfAttributeWithWrongStringConstant() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			rule createAbstractTestClass {
@@ -226,7 +226,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 
 	@Test
 	def void errorIfComparisonForIncomparableType() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern a {
@@ -246,7 +246,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 
 	@Test
 	def void errorIfMultipleAttributeAssignmentsForSameAttribute() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			rule a {
@@ -267,7 +267,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 
 	@Test
 	def void errorIfAttributeAssignmentInDeletedNode() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			rule a {
@@ -287,7 +287,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 
 	@Test
 	def void errorIfAttributeConditionInCreatedNode() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			rule a {
@@ -307,7 +307,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 
 	@Test
 	def void warningIfDuplicateAttributeConditions() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern a {
@@ -329,7 +329,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 
 	@Test
 	def void errorIfNoSuchAttributeInMetaModel() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern a {

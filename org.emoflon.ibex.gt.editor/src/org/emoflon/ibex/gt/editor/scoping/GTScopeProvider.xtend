@@ -4,7 +4,6 @@ import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EEnum
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
-import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.scoping.Scopes
 import org.eclipse.xtext.scoping.impl.FilteringScope
 
@@ -53,11 +52,6 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 			return getScopeForParameterExpressions(context as EditorParameterExpression)
 		}
 
-		// Graph Conditions
-		if (isPatternOfGraphCondition(context, reference)) {
-			return getScopeForPatternsWithoutParameters(context, reference)
-		}
-
 		// Nodes
 		if (isNodeType(context, reference)) {
 			return getScopeForNodeTypes(context as EditorNode)
@@ -77,8 +71,8 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		}
 
 		// Patterns
-		if (isSuperPattern(context, reference)) {
-			return getScopeForSuperPatterns(context as EditorPattern)
+		if (isSuperPattern(context, reference) || isPatternOfGraphCondition(context, reference)) {
+			return getScopeForPatternsInSamePackage(context, reference)
 		}
 
 		return super.getScope(context, reference)
@@ -137,35 +131,14 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	}
 
 	/**
-	 * A pattern can refine any pattern except itself and patterns which refine itself.
-	 * This avoids loops in the refinement hierarchy.
-	 */
-	def getScopeForSuperPatterns(EditorPattern pattern) {
-		val rootElement = EcoreUtil2.getRootContainer(pattern)
-		val candidates = EcoreUtil2.getAllContentsOfType(rootElement, EditorPattern)
-		// TODO use getScopeForPatternsInSamePackage(EObject context, EReference reference) as candidates
-		val validSuperPatterns = candidates.filter [
-			it != pattern && !GTEditorPatternUtils.isRefinementOf(it as EditorPattern, pattern)
-		]
-		return Scopes.scopeFor(validSuperPatterns)
-	}
-
-	/**
-	 * A pattern referenced in a condition must be a pattern without parameters.
-	 */
-	def getScopeForPatternsWithoutParameters(EObject context, EReference reference) {
-		// TODO filter pattern.type === EditorPatternType.PATTERN
-		// TODO filter pattern.parameters.isEmpty
-		return getScopeForPatternsInSamePackage(context, reference)
-	}
-
-	/**
 	 * Filters the scope of the super scope provider for the patterns
 	 * which are in the same package as the file containing the context. 
 	 */
 	def getScopeForPatternsInSamePackage(EObject context, EReference reference) {
+		val contextURI = context.eResource.URI.appendFragment(context.eResource.getURIFragment(context))
 		return new FilteringScope(super.getScope(context, reference), [
-			context.eResource.URI.trimFragment.trimSegments(1).equals(it.EObjectURI.trimFragment.trimSegments(1))
+			context.eResource.URI.trimFragment.trimSegments(1).equals(it.EObjectURI.trimFragment.trimSegments(1)) &&
+				it.EObjectURI !== contextURI
 		])
 	}
 

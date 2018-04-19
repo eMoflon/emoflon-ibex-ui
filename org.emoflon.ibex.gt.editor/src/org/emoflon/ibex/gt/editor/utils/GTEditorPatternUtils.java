@@ -26,8 +26,13 @@ public class GTEditorPatternUtils {
 	 */
 	public static Set<EditorPattern> getAllSuperPatterns(final EditorPattern pattern) {
 		Set<EditorPattern> patterns = new HashSet<EditorPattern>();
-		patterns.addAll(pattern.getSuperPatterns());
-		pattern.getSuperPatterns().forEach(p -> patterns.addAll(getAllSuperPatterns(p)));
+		for (EditorPattern superPattern : pattern.getSuperPatterns()) {
+			// Check necessary to avoid 
+			if (!isRefinementOf(superPattern, pattern)) {
+				patterns.add(superPattern);
+				patterns.addAll(getAllSuperPatterns(superPattern));
+			}
+		}
 		return patterns;
 	}
 

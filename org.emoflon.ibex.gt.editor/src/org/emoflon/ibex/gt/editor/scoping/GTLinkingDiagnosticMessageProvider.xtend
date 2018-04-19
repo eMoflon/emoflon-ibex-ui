@@ -30,9 +30,6 @@ class GTLinkingDiagnosticMessageProvider extends LinkingDiagnosticMessageProvide
 	public static val REFERENCE_TARGET_NODE_NOT_FOUND = CODE_PREFIX + "reference.target.nodeNotFound"
 	public static val REFERENCE_TARGET_NODE_NOT_FOUND_MESSAGE = "Could not find node '%s' of type '%s'."
 
-	public static val RULE_SUPER_RULE_NOT_FOUND = CODE_PREFIX + "rule.superRules.notFound"
-	public static val RULE_SUPER_RULE_NOT_FOUND_MESSAGE = "Could not find rule '%s'."
-
 	override getUnresolvedProxyMessage(ILinkingDiagnosticContext context) {
 		var linkText = "";
 		try {
@@ -85,15 +82,6 @@ class GTLinkingDiagnosticMessageProvider extends LinkingDiagnosticMessageProvide
 				String.format(REFERENCE_TARGET_NODE_NOT_FOUND_MESSAGE, linkText, expectedType),
 				Severity.ERROR,
 				REFERENCE_TARGET_NODE_NOT_FOUND
-			)
-		}
-
-		// Super rule not found in scope.
-		if (context.reference === GTPackage.Literals.EDITOR_PATTERN__SUPER_PATTERNS) {
-			return new DiagnosticMessage(
-				String.format(RULE_SUPER_RULE_NOT_FOUND_MESSAGE, linkText),
-				Severity.ERROR,
-				RULE_SUPER_RULE_NOT_FOUND
 			)
 		}
 

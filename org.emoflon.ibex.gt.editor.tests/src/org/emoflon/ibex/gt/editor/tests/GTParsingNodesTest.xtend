@@ -18,7 +18,7 @@ import org.junit.runner.RunWith
 class GTParsingNodesTest extends GTParsingTest {
 	@Test
 	def void validContextNodes() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern a {
@@ -34,7 +34,7 @@ class GTParsingNodesTest extends GTParsingTest {
 
 	@Test
 	def void validCreateAndDeleteNodes() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			rule a() {
@@ -51,7 +51,7 @@ class GTParsingNodesTest extends GTParsingTest {
 	@Test
 	def void warningIfNodeNameStartsWithCapital() {
 		val nodeName = "AnInvalidNodeName"
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern a {
@@ -71,7 +71,7 @@ class GTParsingNodesTest extends GTParsingTest {
 	@Test
 	def void errorIfNodeNameBlacklisted() {
 		val nodeName = 'class'
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern a {
@@ -90,7 +90,7 @@ class GTParsingNodesTest extends GTParsingTest {
 	@Test
 	def void warningIfNodeNameContainsUndercores() {
 		val nodeName = 'the_e_Object'
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern a {
@@ -110,7 +110,7 @@ class GTParsingNodesTest extends GTParsingTest {
 	@Test
 	def void errorIfMultipleNodesWithTheSameName() {
 		val nodeName = 'a'
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern a {
@@ -130,7 +130,7 @@ class GTParsingNodesTest extends GTParsingTest {
 
 	@Test
 	def void errorIfNoSuchNodeType() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern a() {
@@ -148,7 +148,7 @@ class GTParsingNodesTest extends GTParsingTest {
 
 	@Test
 	def void errorIfCreatedNodeHasAbstractType() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			rule a() {
@@ -166,7 +166,7 @@ class GTParsingNodesTest extends GTParsingTest {
 
 	@Test
 	def void errorIfNodeOfSameNameAsParameter() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			rule a(clazz: EString) {
@@ -184,7 +184,7 @@ class GTParsingNodesTest extends GTParsingTest {
 
 	@Test
 	def void validNodeTypeChange() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern super {
@@ -201,7 +201,7 @@ class GTParsingNodesTest extends GTParsingTest {
 
 	@Test
 	def void errorIfInvalidNodeTypeChange() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			pattern super {
 				c: EDataType
@@ -224,7 +224,7 @@ class GTParsingNodesTest extends GTParsingTest {
 
 	@Test
 	def void validNodeOperatorChange() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			rule super {
 				++ c: EClass
@@ -240,7 +240,7 @@ class GTParsingNodesTest extends GTParsingTest {
 
 	@Test
 	def void errorIfInvalidNodeOperatorChange() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern super {

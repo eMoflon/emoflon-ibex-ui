@@ -16,7 +16,7 @@ import org.junit.runner.RunWith
 class GTParsingImportsTest extends GTParsingTest {
 	@Test
 	def void errorIfNoImport() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			pattern a {
 				object: EObject
 			}
@@ -32,7 +32,7 @@ class GTParsingImportsTest extends GTParsingTest {
 
 	@Test
 	def void warningIfDuplicateImport() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			import "«ecoreImport»"
 			
@@ -53,7 +53,7 @@ class GTParsingImportsTest extends GTParsingTest {
 	@Test
 	def void errorIfInvalidImport() {
 		val importName = 'test.ecore'
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«importName»"
 			
 			pattern a {

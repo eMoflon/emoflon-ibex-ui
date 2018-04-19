@@ -3,7 +3,6 @@ package org.emoflon.ibex.gt.editor.tests
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.emoflon.ibex.gt.editor.gT.GTPackage
-import org.emoflon.ibex.gt.editor.scoping.GTLinkingDiagnosticMessageProvider
 import org.emoflon.ibex.gt.editor.validation.GTValidator
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -16,7 +15,7 @@ import org.junit.runner.RunWith
 class GTParsingPatternRefinementTest extends GTParsingTest {
 	@Test
 	def void validIfEmptyRuleBodyAndMultipleRefinement() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern a {
@@ -35,7 +34,7 @@ class GTParsingPatternRefinementTest extends GTParsingTest {
 
 	@Test
 	def void errorForSelfRefinement() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern a
@@ -47,14 +46,14 @@ class GTParsingPatternRefinementTest extends GTParsingTest {
 		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorPattern,
-			GTLinkingDiagnosticMessageProvider.RULE_SUPER_RULE_NOT_FOUND,
-			String.format(GTLinkingDiagnosticMessageProvider.RULE_SUPER_RULE_NOT_FOUND_MESSAGE, 'a')
+			GTValidator.PATTERN_SUPER_PATTERNS_INVALID,
+			String.format(GTValidator.PATTERN_SUPER_PATTERNS_INVALID_MESSAGE, 'a', 'a')
 		)
 	}
 
 	@Test
 	def void errorIfLoopinRulesRefinementHierarchyLevel1() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern a
@@ -71,14 +70,14 @@ class GTParsingPatternRefinementTest extends GTParsingTest {
 		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorPattern,
-			GTLinkingDiagnosticMessageProvider.RULE_SUPER_RULE_NOT_FOUND,
-			String.format(GTLinkingDiagnosticMessageProvider.RULE_SUPER_RULE_NOT_FOUND_MESSAGE, 'a')
+			GTValidator.PATTERN_SUPER_PATTERNS_INVALID,
+			String.format(GTValidator.PATTERN_SUPER_PATTERNS_INVALID_MESSAGE, 'a', 'b')
 		)
 	}
 
 	@Test
 	def void errorIfLoopinRulesRefinementHierarchyLevel2() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern a
@@ -100,14 +99,14 @@ class GTParsingPatternRefinementTest extends GTParsingTest {
 		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorPattern,
-			GTLinkingDiagnosticMessageProvider.RULE_SUPER_RULE_NOT_FOUND,
-			String.format(GTLinkingDiagnosticMessageProvider.RULE_SUPER_RULE_NOT_FOUND_MESSAGE, 'a')
+			GTValidator.PATTERN_SUPER_PATTERNS_INVALID,
+			String.format(GTValidator.PATTERN_SUPER_PATTERNS_INVALID_MESSAGE, 'a', 'b')
 		)
 	}
 
 	@Test
 	def void errorIfNoDistinctSuperRules() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern a {
@@ -128,7 +127,7 @@ class GTParsingPatternRefinementTest extends GTParsingTest {
 
 	@Test
 	def void errorIfConclictingParameterDeclarationsBetweenSuperRules() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern s1(name: EString) {
@@ -156,7 +155,7 @@ class GTParsingPatternRefinementTest extends GTParsingTest {
 
 	@Test
 	def void errorIfConclictingParameterDeclarationsRuleAndSuperRule() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern s(name: EString) {
@@ -180,7 +179,7 @@ class GTParsingPatternRefinementTest extends GTParsingTest {
 
 	@Test
 	def void errorIfConflictingAttributeAssignments() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			rule renameClassToTest1 {
@@ -209,7 +208,7 @@ class GTParsingPatternRefinementTest extends GTParsingTest {
 
 	@Test
 	def void validIfNoConflictBetweenAttributeAssignments() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			rule renameClassToTest1 {

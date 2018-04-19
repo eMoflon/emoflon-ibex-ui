@@ -88,6 +88,9 @@ class GTValidator extends AbstractGTValidator {
 	public static val RULE_SUPER_RULES_DUPLICATE = CODE_PREFIX + "rule.superRules.duplicate"
 	public static val RULE_SUPER_RULES_DUPLICATE_MESSAGE = "Super rules of rule '%s' must be distinct."
 
+	public static val PATTERN_SUPER_PATTERNS_INVALID = CODE_PREFIX + "pattern.superPattern.invalid"
+	public static val PATTERN_SUPER_PATTERNS_INVALID_MESSAGE = "Cycle in refinement hierarchy: '%s' and '%s'."
+
 	public static val RULE_REFINEMENT_INVALID_PARAMETER = CODE_PREFIX + "rule.superRules.invalidParameter"
 	public static val RULE_REFINEMENT_INVALID_PARAMETER_MESSAGE = "Rule '%s' has conflicting type declarations for parameter '%s': %s."
 
@@ -266,6 +269,11 @@ class GTValidator extends AbstractGTValidator {
 			)
 		}
 
+		if (pattern.superPatterns.isEmpty) {
+			// The following checks can only fail if there is at least one super pattern.
+			return;
+		}
+
 		// The super patterns of the pattern must be distinct.
 		if (pattern.superPatterns.size !== pattern.superPatterns.stream.distinct.count) {
 			error(
@@ -275,35 +283,18 @@ class GTValidator extends AbstractGTValidator {
 				pattern.name
 			)
 		}
-	}
 
-	@Check(CheckType.NORMAL) // Only on save/build.
-	def checkPatternTypeAndRefinement(EditorPattern pattern) {
-		println("checkPatternTypeAndRefinement " + pattern)
-
-		// Type: pattern vs. rule
-		val flattenedPattern = new GTFlattener(pattern).flattenedPattern
-		val isRule = GTEditorPatternUtils.containsCreatedOrDeletedElements(flattenedPattern)
-		if (isRule && pattern.type === EditorPatternType.PATTERN) {
-			error(
-				String.format(PATTERN_TYPE_INVALID_PATTERN_MESSAGE, pattern.name),
-				GTPackage.Literals.EDITOR_PATTERN__TYPE,
-				PATTERN_TYPE_INVALID_PATTERN,
-				pattern.name
-			)
-		}
-		if (!isRule && pattern.type === EditorPatternType.RULE) {
-			error(
-				String.format(PATTERN_TYPE_INVALID_RULE_MESSAGE, pattern.name),
-				GTPackage.Literals.EDITOR_PATTERN__TYPE,
-				PATTERN_TYPE_INVALID_RULE,
-				pattern.name
-			)
-		}
-
-		if (pattern.superPatterns.isEmpty) {
-			return;
-		}
+		// The super patterns must not cause a cycle.
+		pattern.superPatterns.forEach [
+			if (GTEditorPatternUtils.isRefinementOf(pattern, it) && GTEditorPatternUtils.isRefinementOf(it, pattern)) {
+				error(
+					String.format(PATTERN_SUPER_PATTERNS_INVALID_MESSAGE, pattern.name, it.name),
+					GTPackage.Literals.EDITOR_PATTERN__SUPER_PATTERNS,
+					PATTERN_SUPER_PATTERNS_INVALID,
+					pattern.name
+				)
+			}
+		]
 
 		// Parameter names must be equal to definitions in the super pattern.
 		val superParameters = GTEditorPatternUtils.getAllParametersOfPattern(pattern)
@@ -330,6 +321,29 @@ class GTValidator extends AbstractGTValidator {
 					RULE_REFINEMENT_INVALID_ATTRIBUTE_ASSIGNMENT
 				)
 			}
+		}
+	}
+
+	@Check(CheckType.NORMAL) // Only on save/build.
+	def checkPatternTypeAndRefinement(EditorPattern pattern) {
+		// Type: pattern vs. rule
+		val flattenedPattern = new GTFlattener(pattern).flattenedPattern
+		val isRule = GTEditorPatternUtils.containsCreatedOrDeletedElements(flattenedPattern)
+		if (isRule && pattern.type === EditorPatternType.PATTERN) {
+			error(
+				String.format(PATTERN_TYPE_INVALID_PATTERN_MESSAGE, pattern.name),
+				GTPackage.Literals.EDITOR_PATTERN__TYPE,
+				PATTERN_TYPE_INVALID_PATTERN,
+				pattern.name
+			)
+		}
+		if (!isRule && pattern.type === EditorPatternType.RULE) {
+			error(
+				String.format(PATTERN_TYPE_INVALID_RULE_MESSAGE, pattern.name),
+				GTPackage.Literals.EDITOR_PATTERN__TYPE,
+				PATTERN_TYPE_INVALID_RULE,
+				pattern.name
+			)
 		}
 	}
 

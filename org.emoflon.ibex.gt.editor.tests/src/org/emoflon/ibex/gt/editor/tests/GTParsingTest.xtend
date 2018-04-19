@@ -2,7 +2,9 @@ package org.emoflon.ibex.gt.editor.tests
 
 import com.google.inject.Inject
 import java.util.Map
+import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EClass
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -35,6 +37,14 @@ abstract class GTParsingTest {
 	protected ParseHelper<EditorGTFile> parseHelper
 
 	@Inject extension private ValidationTestHelper validationHelper
+
+	def parse(CharSequence s) {
+		return parseHelper.parse(
+			s,
+			URI.createPlatformResourceURI("/TestProject/src/Test.gt", true),
+			new ResourceSetImpl
+		)
+	}
 
 	def void assertValid(EditorGTFile file) {
 		Assert.assertNotNull(file)

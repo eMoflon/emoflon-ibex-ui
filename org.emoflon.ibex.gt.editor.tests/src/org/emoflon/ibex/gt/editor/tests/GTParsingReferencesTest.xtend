@@ -20,7 +20,7 @@ import org.junit.runner.RunWith
 class GTParsingReferencesTest extends GTParsingTest {
 	@Test
 	def void validContextReference() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern findClass() {
@@ -38,7 +38,7 @@ class GTParsingReferencesTest extends GTParsingTest {
 
 	@Test
 	def void validCreateAndDeleteReferences() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			rule createAndDeleteClass() {
@@ -59,7 +59,7 @@ class GTParsingReferencesTest extends GTParsingTest {
 
 	@Test
 	def void validUseOfNodesFromSuperRules() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			rule s {
@@ -85,7 +85,7 @@ class GTParsingReferencesTest extends GTParsingTest {
 	@Ignore("Needs Causes Exception, seems to be a scoping problem")
 	@Test
 	def void errorIfNoSuchReferenceTypeInMetaModel() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern findClass() {
@@ -107,7 +107,7 @@ class GTParsingReferencesTest extends GTParsingTest {
 
 	@Test
 	def void errorIfReferenceHasWrongTargetType() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern findClass() {
@@ -246,7 +246,7 @@ class GTParsingReferencesTest extends GTParsingTest {
 	def EditorGTFile parseNodesWithReference(String sourceNodeOperator, String referenceOperator,
 		String targetNodeOperator) {
 		val type = if(sourceNodeOperator + referenceOperator + targetNodeOperator == '') 'pattern' else 'rule'
-		parseHelper.parse('''
+		parse('''
 			import "«ecoreImport»"
 			
 			«type» r1 {

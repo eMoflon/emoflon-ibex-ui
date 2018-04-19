@@ -17,7 +17,7 @@ import org.junit.runner.RunWith
 class GTParsingPatternsTest extends GTParsingTest {
 	@Test
 	def void errorIfEmptyRuleBody() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern a() {}
@@ -33,7 +33,7 @@ class GTParsingPatternsTest extends GTParsingTest {
 
 	@Test
 	def void validModifiers() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			abstract pattern a() {
@@ -51,7 +51,7 @@ class GTParsingPatternsTest extends GTParsingTest {
 
 	@Test
 	def void errorIfRuleNameDuplicates() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern a() {
@@ -87,7 +87,7 @@ class GTParsingPatternsTest extends GTParsingTest {
 	@Test
 	def void warningIfRuleNameContainsUnderscores() {
 		val ruleName = 'get_an_e_Object'
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern «ruleName» {
@@ -107,7 +107,7 @@ class GTParsingPatternsTest extends GTParsingTest {
 	@Test
 	def void errorIfRuleNameInBlacklist() {
 		val ruleName = "hashCode"
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern «ruleName» {
@@ -126,7 +126,7 @@ class GTParsingPatternsTest extends GTParsingTest {
 	@Test
 	def void warningIfRuleNameStartsWithCapital() {
 		val ruleName = "AnInvalidName"
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern «ruleName» {
@@ -145,7 +145,7 @@ class GTParsingPatternsTest extends GTParsingTest {
 
 	@Test
 	def void errorIfPatternContainsCreatedElement() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern test {
@@ -163,7 +163,7 @@ class GTParsingPatternsTest extends GTParsingTest {
 
 	@Test
 	def void errorIfRuleContainsNoCreatedOrDeletedElement() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			rule test {
