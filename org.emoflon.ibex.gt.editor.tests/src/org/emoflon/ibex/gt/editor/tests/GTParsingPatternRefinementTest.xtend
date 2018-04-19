@@ -120,8 +120,8 @@ class GTParsingPatternRefinementTest extends GTParsingTest {
 		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorPattern,
-			GTValidator.RULE_SUPER_RULES_DUPLICATE,
-			String.format(GTValidator.RULE_SUPER_RULES_DUPLICATE_MESSAGE, 'b')
+			GTValidator.PATTERN_SUPER_PATTERNS_DUPLICATE,
+			String.format(GTValidator.PATTERN_SUPER_PATTERNS_DUPLICATE_MESSAGE, 'b')
 		)
 	}
 
@@ -147,8 +147,8 @@ class GTParsingPatternRefinementTest extends GTParsingTest {
 		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorPattern,
-			GTValidator.RULE_REFINEMENT_INVALID_PARAMETER,
-			String.format(GTValidator.RULE_REFINEMENT_INVALID_PARAMETER_MESSAGE, 'r', 'name',
+			GTValidator.PATTERN_REFINEMENT_INVALID_PARAMETER,
+			String.format(GTValidator.PATTERN_REFINEMENT_INVALID_PARAMETER_MESSAGE, 'r', 'name',
 				GTValidator.concatNames(#['EBoolean', 'EString']))
 		)
 	}
@@ -171,8 +171,8 @@ class GTParsingPatternRefinementTest extends GTParsingTest {
 		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorPattern,
-			GTValidator.RULE_REFINEMENT_INVALID_PARAMETER,
-			String.format(GTValidator.RULE_REFINEMENT_INVALID_PARAMETER_MESSAGE, 'r', 'name',
+			GTValidator.PATTERN_REFINEMENT_INVALID_PARAMETER,
+			String.format(GTValidator.PATTERN_REFINEMENT_INVALID_PARAMETER_MESSAGE, 'r', 'name',
 				GTValidator.concatNames(#['EBoolean', 'EString']))
 		)
 	}
@@ -201,8 +201,8 @@ class GTParsingPatternRefinementTest extends GTParsingTest {
 		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorPattern,
-			GTValidator.RULE_REFINEMENT_INVALID_ATTRIBUTE_ASSIGNMENT,
-			String.format(GTValidator.RULE_REFINEMENT_INVALID_ATTRIBUTE_ASSIGNMENT_MESSAGE, 'renameClass', 'clazz')
+			GTValidator.PATTERN_REFINEMENT_INVALID_ATTRIBUTE_ASSIGNMENT,
+			String.format(GTValidator.PATTERN_REFINEMENT_INVALID_ATTRIBUTE_ASSIGNMENT_MESSAGE, 'renameClass', 'clazz')
 		)
 	}
 

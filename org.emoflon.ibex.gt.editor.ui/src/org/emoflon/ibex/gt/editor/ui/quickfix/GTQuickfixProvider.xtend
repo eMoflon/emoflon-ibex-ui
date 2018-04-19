@@ -64,9 +64,9 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	}
 
 	/**
-	 * Removes duplicates in super patterns.
+	 * Removes the duplicate super pattern(s).
 	 */
-	@Fix(GTValidator.RULE_SUPER_RULES_DUPLICATE)
+	@Fix(GTValidator.PATTERN_SUPER_PATTERNS_DUPLICATE)
 	def removeSuperRule(Issue issue, IssueResolutionAcceptor acceptor) {
 		GTPatternQuickfixes.makeSuperPatternsDistinct(issue, acceptor)
 	}
