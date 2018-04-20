@@ -1,6 +1,5 @@
 package org.emoflon.ibex.gt.editor.tests
 
-import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.emoflon.ibex.gt.editor.gT.GTPackage
@@ -16,7 +15,7 @@ import org.junit.runner.RunWith
 class GTParsingImportsTest extends GTParsingTest {
 	@Test
 	def void errorIfNoImport() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			pattern a {
 				object: EObject
 			}
@@ -32,7 +31,7 @@ class GTParsingImportsTest extends GTParsingTest {
 
 	@Test
 	def void warningIfDuplicateImport() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			import "«ecoreImport»"
 			
@@ -41,11 +40,10 @@ class GTParsingImportsTest extends GTParsingTest {
 			}
 		''')
 		assertValidResource(file)
-		assertValidationIssues(
+		assertValidationWarnings(
 			file,
 			GTPackage.eINSTANCE.editorImport,
 			GTValidator.IMPORT_DUPLICATE,
-			Severity.WARNING,
 			String.format(GTValidator.IMPORT_DUPLICATE_MESSAGE, ecoreImport, 'twice')
 		)
 	}
@@ -53,7 +51,7 @@ class GTParsingImportsTest extends GTParsingTest {
 	@Test
 	def void errorIfInvalidImport() {
 		val importName = 'test.ecore'
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«importName»"
 			
 			pattern a {

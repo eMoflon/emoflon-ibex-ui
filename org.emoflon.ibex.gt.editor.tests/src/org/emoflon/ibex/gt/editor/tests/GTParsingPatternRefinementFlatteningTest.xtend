@@ -18,7 +18,7 @@ class GTParsingPatternRefinementFlatteningTest extends GTParsingTest {
 
 	@Test
 	def void validFlattening() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			abstract pattern findClassifierWithAnnotation(name: EString) {
@@ -60,7 +60,7 @@ class GTParsingPatternRefinementFlatteningTest extends GTParsingTest {
 
 	@Test
 	def void validFlatteningWithAttributes() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern findClass(name: EString) {
@@ -96,7 +96,7 @@ class GTParsingPatternRefinementFlatteningTest extends GTParsingTest {
 
 	@Test
 	def void validFlatteningOfReferences() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			abstract rule findClassifierWithAnnotation {
@@ -138,7 +138,7 @@ class GTParsingPatternRefinementFlatteningTest extends GTParsingTest {
 
 	@Test
 	def void errorForFlatteningRuleWithConflictingAttributeAssignments() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			rule renameClass(oldName: EString) {
@@ -167,7 +167,7 @@ class GTParsingPatternRefinementFlatteningTest extends GTParsingTest {
 
 	@Test
 	def void errorForFlatteningRuleWithInconsistentParameterDeclarations() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern findClass(interface: EBoolean, name: EString) {
@@ -192,7 +192,7 @@ class GTParsingPatternRefinementFlatteningTest extends GTParsingTest {
 
 	@Test
 	def void errorForInvalidOperators() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			rule createAnnotation {

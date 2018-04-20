@@ -5,7 +5,8 @@ generate gT "http://www.emoflon.org/ibex/gt/editor/GT"
 
 EditorGTFile:
 	(imports+=EditorImport)*
-	(patterns+=EditorPattern)*;
+	(patterns+=EditorPattern |
+	conditions+=EditorCondition)*;
 
 EditorImport:
 	'import' name=STRING;
@@ -18,7 +19,8 @@ EditorPattern:
 	('refines' superPatterns+=[EditorPattern] (',' superPatterns+=[EditorPattern])*)?
 	('{'
 	(nodes+=EditorNode)*
-	'}')?;
+	'}')?
+	('when' conditions+=[EditorCondition] ('&&' conditions+=[EditorCondition])*)?;
 
 enum EditorPatternType:
 	PATTERN='pattern' |
@@ -80,3 +82,33 @@ EditorParameterExpression:
 	// References
 EditorReference:
 	(operator=OperatorInEditor)? '-' type=[ecore::EReference] '->' target=[EditorNode];
+
+	// Graph Conditions
+EditorCondition:
+	'condition' name=ID
+	'=' expression=EditorConditionExpression;
+
+EditorConditionExpression:
+	EditorOrCondition;
+
+EditorOrCondition returns EditorConditionExpression:
+	EditorAndCondition ({EditorOrCondition.left=current} '||' right=EditorAndCondition)*;
+
+EditorAndCondition returns EditorConditionExpression:
+	EditorNegation ({EditorAndCondition.left=current} '&&' right=EditorNegation)*;
+
+EditorNegation returns EditorConditionExpression:
+	{EditorNegativeCondition} '!' expression=EditorSimpleCondition |
+	EditorSimpleCondition;
+
+EditorSimpleCondition returns EditorConditionExpression:
+	'(' EditorOrCondition ')' |
+	{EditorConditionReference}
+	'check' condition=[EditorCondition] |
+	{EditorEnforce}
+	'enforce' pattern=[EditorPattern] |
+	{EditorForbid}
+	'forbid' pattern=[EditorPattern] |
+	{EditorConstraint}
+	'if' premise=[EditorPattern] 'then'
+	'(' conclusions+=[EditorPattern] ('||' conclusions+=[EditorPattern])* ')';

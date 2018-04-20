@@ -1,6 +1,5 @@
 package org.emoflon.ibex.gt.editor.tests
 
-import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.emoflon.ibex.gt.editor.gT.GTPackage
@@ -17,7 +16,7 @@ import org.junit.runner.RunWith
 class GTParsingPatternsTest extends GTParsingTest {
 	@Test
 	def void errorIfEmptyRuleBody() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern a() {}
@@ -26,14 +25,14 @@ class GTParsingPatternsTest extends GTParsingTest {
 		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorPattern,
-			GTValidator.RULE_EMPTY,
-			String.format(GTValidator.RULE_EMPTY_MESSAGE, 'a')
+			GTValidator.PATTERN_EMPTY,
+			String.format(GTValidator.PATTERN_EMPTY_MESSAGE, 'a')
 		)
 	}
 
 	@Test
 	def void validModifiers() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			abstract pattern a() {
@@ -51,7 +50,7 @@ class GTParsingPatternsTest extends GTParsingTest {
 
 	@Test
 	def void errorIfRuleNameDuplicates() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern a() {
@@ -79,15 +78,15 @@ class GTParsingPatternsTest extends GTParsingTest {
 			file,
 			GTPackage.eINSTANCE.editorPattern,
 			GTValidator.NAME_EXPECT_UNIQUE,
-			String.format(GTValidator.RULE_NAME_MULTIPLE_DECLARATIONS_MESSAGE, "a", "twice"),
-			String.format(GTValidator.RULE_NAME_MULTIPLE_DECLARATIONS_MESSAGE, "b", "3 times")
+			String.format(GTValidator.PATTERN_NAME_MULTIPLE_DECLARATIONS_MESSAGE, "a", "twice"),
+			String.format(GTValidator.PATTERN_NAME_MULTIPLE_DECLARATIONS_MESSAGE, "b", "3 times")
 		)
 	}
 
 	@Test
 	def void warningIfRuleNameContainsUnderscores() {
 		val ruleName = 'get_an_e_Object'
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern «ruleName» {
@@ -95,19 +94,18 @@ class GTParsingPatternsTest extends GTParsingTest {
 			}
 		''')
 		assertFile(file)
-		assertValidationIssues(
+		assertValidationWarnings(
 			file,
 			GTPackage.eINSTANCE.editorPattern,
 			GTValidator.NAME_EXPECT_CAMEL_CASE,
-			Severity.WARNING,
-			String.format(GTValidator.RULE_NAME_CONTAINS_UNDERSCORES_MESSAGE, ruleName)
+			String.format(GTValidator.PATTERN_NAME_CONTAINS_UNDERSCORES_MESSAGE, ruleName)
 		)
 	}
 
 	@Test
 	def void errorIfRuleNameInBlacklist() {
 		val ruleName = "hashCode"
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern «ruleName» {
@@ -119,14 +117,14 @@ class GTParsingPatternsTest extends GTParsingTest {
 			file,
 			GTPackage.eINSTANCE.editorPattern,
 			GTValidator.NAME_BLACKLISTED,
-			String.format(GTValidator.RULE_NAME_FORBIDDEN_MESSAGE, ruleName)
+			String.format(GTValidator.PATTERN_NAME_FORBIDDEN_MESSAGE, ruleName)
 		)
 	}
 
 	@Test
 	def void warningIfRuleNameStartsWithCapital() {
 		val ruleName = "AnInvalidName"
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern «ruleName» {
@@ -134,18 +132,17 @@ class GTParsingPatternsTest extends GTParsingTest {
 			}
 		''')
 		assertFile(file)
-		assertValidationIssues(
+		assertValidationWarnings(
 			file,
 			GTPackage.eINSTANCE.editorPattern,
 			GTValidator.NAME_EXPECT_LOWER_CASE,
-			Severity.WARNING,
-			String.format(GTValidator.RULE_NAME_STARTS_WITH_LOWER_CASE_MESSAGE, ruleName)
+			String.format(GTValidator.PATTERN_NAME_STARTS_WITH_LOWER_CASE_MESSAGE, ruleName)
 		)
 	}
 
 	@Test
 	def void errorIfPatternContainsCreatedElement() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern test {
@@ -163,7 +160,7 @@ class GTParsingPatternsTest extends GTParsingTest {
 
 	@Test
 	def void errorIfRuleContainsNoCreatedOrDeletedElement() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			rule test {

@@ -2,7 +2,9 @@ package org.emoflon.ibex.gt.editor.tests
 
 import com.google.inject.Inject
 import java.util.Map
+import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EClass
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -11,13 +13,13 @@ import org.eclipse.xtext.testing.validation.ValidationTestHelper
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile
-import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression
 import org.emoflon.ibex.gt.editor.gT.EditorNode
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
 import org.emoflon.ibex.gt.editor.gT.EditorParameter
 import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
 import org.emoflon.ibex.gt.editor.gT.EditorPattern
+import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
 import org.junit.Assert
 import org.junit.runner.RunWith
@@ -36,6 +38,14 @@ abstract class GTParsingTest {
 
 	@Inject extension private ValidationTestHelper validationHelper
 
+	def parse(CharSequence s) {
+		return parseHelper.parse(
+			s,
+			URI.createPlatformResourceURI("/TestProject/src/Test.gt", true),
+			new ResourceSetImpl
+		)
+	}
+
 	def void assertValid(EditorGTFile file) {
 		Assert.assertNotNull(file)
 		this.validationHelper.assertNoIssues(file)
@@ -49,12 +59,15 @@ abstract class GTParsingTest {
 	}
 
 	def void assertValidationErrors(EditorGTFile file, EClass objectType, String code, String... messages) {
-		messages.forEach[this.validationHelper.assertError(file, objectType, code, it)]
+		messages.forEach [
+			this.validationHelper.assertError(file, objectType, code, it)
+		]
 	}
 
-	def void assertValidationIssues(EditorGTFile file, EClass objectType, String code, Severity severity,
-		String... messages) {
-		messages.forEach[this.validationHelper.assertIssue(file, objectType, code, severity, it)]
+	def void assertValidationWarnings(EditorGTFile file, EClass objectType, String code, String... messages) {
+		messages.forEach [
+			this.validationHelper.assertIssue(file, objectType, code, Severity.WARNING, it)
+		]
 	}
 
 	static def void assertValidResource(EditorGTFile file) {

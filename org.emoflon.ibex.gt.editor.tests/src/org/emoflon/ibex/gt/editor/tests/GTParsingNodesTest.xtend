@@ -1,6 +1,5 @@
 package org.emoflon.ibex.gt.editor.tests
 
-import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
@@ -18,7 +17,7 @@ import org.junit.runner.RunWith
 class GTParsingNodesTest extends GTParsingTest {
 	@Test
 	def void validContextNodes() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern a {
@@ -34,7 +33,7 @@ class GTParsingNodesTest extends GTParsingTest {
 
 	@Test
 	def void validCreateAndDeleteNodes() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			rule a() {
@@ -51,7 +50,7 @@ class GTParsingNodesTest extends GTParsingTest {
 	@Test
 	def void warningIfNodeNameStartsWithCapital() {
 		val nodeName = "AnInvalidNodeName"
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern a {
@@ -59,11 +58,10 @@ class GTParsingNodesTest extends GTParsingTest {
 			}
 		''')
 		assertFile(file)
-		assertValidationIssues(
+		assertValidationWarnings(
 			file,
 			GTPackage.eINSTANCE.editorNode,
 			GTValidator.NAME_EXPECT_LOWER_CASE,
-			Severity.WARNING,
 			String.format(GTValidator.NODE_NAME_STARTS_WITH_LOWER_CASE_MESSAGE, nodeName)
 		)
 	}
@@ -71,7 +69,7 @@ class GTParsingNodesTest extends GTParsingTest {
 	@Test
 	def void errorIfNodeNameBlacklisted() {
 		val nodeName = 'class'
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern a {
@@ -90,7 +88,7 @@ class GTParsingNodesTest extends GTParsingTest {
 	@Test
 	def void warningIfNodeNameContainsUndercores() {
 		val nodeName = 'the_e_Object'
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern a {
@@ -98,11 +96,10 @@ class GTParsingNodesTest extends GTParsingTest {
 			}
 		''')
 		assertFile(file)
-		assertValidationIssues(
+		assertValidationWarnings(
 			file,
 			GTPackage.eINSTANCE.editorNode,
 			GTValidator.NAME_EXPECT_CAMEL_CASE,
-			Severity.WARNING,
 			String.format(GTValidator.NODE_NAME_CONTAINS_UNDERSCORES_MESSAGE, nodeName)
 		)
 	}
@@ -110,7 +107,7 @@ class GTParsingNodesTest extends GTParsingTest {
 	@Test
 	def void errorIfMultipleNodesWithTheSameName() {
 		val nodeName = 'a'
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern a {
@@ -130,7 +127,7 @@ class GTParsingNodesTest extends GTParsingTest {
 
 	@Test
 	def void errorIfNoSuchNodeType() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern a() {
@@ -148,7 +145,7 @@ class GTParsingNodesTest extends GTParsingTest {
 
 	@Test
 	def void errorIfCreatedNodeHasAbstractType() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			rule a() {
@@ -166,7 +163,7 @@ class GTParsingNodesTest extends GTParsingTest {
 
 	@Test
 	def void errorIfNodeOfSameNameAsParameter() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			rule a(clazz: EString) {
@@ -184,7 +181,7 @@ class GTParsingNodesTest extends GTParsingTest {
 
 	@Test
 	def void validNodeTypeChange() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern super {
@@ -201,7 +198,7 @@ class GTParsingNodesTest extends GTParsingTest {
 
 	@Test
 	def void errorIfInvalidNodeTypeChange() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			pattern super {
 				c: EDataType
@@ -224,7 +221,7 @@ class GTParsingNodesTest extends GTParsingTest {
 
 	@Test
 	def void validNodeOperatorChange() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			rule super {
 				++ c: EClass
@@ -240,7 +237,7 @@ class GTParsingNodesTest extends GTParsingTest {
 
 	@Test
 	def void errorIfInvalidNodeOperatorChange() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern super {

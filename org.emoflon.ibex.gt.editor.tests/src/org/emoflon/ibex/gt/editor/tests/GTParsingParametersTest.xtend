@@ -1,7 +1,6 @@
 package org.emoflon.ibex.gt.editor.tests
 
 import org.eclipse.xtext.diagnostics.Diagnostic
-import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.emoflon.ibex.gt.editor.gT.GTPackage
@@ -19,7 +18,7 @@ import org.junit.runner.RunWith
 class GTParsingParametersTest extends GTParsingTest {
 	@Test
 	def void validRuleWithNoParameters() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern a() {
@@ -32,7 +31,7 @@ class GTParsingParametersTest extends GTParsingTest {
 
 	@Test
 	def void validRuleWithOneParameter() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern a(name: EString) {
@@ -45,7 +44,7 @@ class GTParsingParametersTest extends GTParsingTest {
 
 	@Test
 	def void validRuleWithThreeParameters() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern a(age: EDouble, name: EString, isMale: EBoolean) {
@@ -62,7 +61,7 @@ class GTParsingParametersTest extends GTParsingTest {
 
 	@Test
 	def void errorIfRuleWithInvalidParameterType() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern a(age: EClass) {
@@ -80,7 +79,7 @@ class GTParsingParametersTest extends GTParsingTest {
 
 	@Test
 	def void errorIfParameterListEndsWithComma() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern a(age: int,) {
@@ -98,7 +97,7 @@ class GTParsingParametersTest extends GTParsingTest {
 
 	@Test
 	def void errorIfParameterListWithNoColons() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "«ecoreImport»"
 			
 			pattern A(age EInt, name EString, isMale EBoolean) {
@@ -118,7 +117,7 @@ class GTParsingParametersTest extends GTParsingTest {
 
 	@Test
 	def void errorIfParameterListContainsSemicolons() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "http://www.eclipse.org/emf/2002/Ecore"
 			
 			pattern a(age: EInt; name: EString; isMale: EBoolean) {
@@ -136,7 +135,7 @@ class GTParsingParametersTest extends GTParsingTest {
 
 	@Test
 	def void errorIfParameterNameBlacklisted() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "http://www.eclipse.org/emf/2002/Ecore"
 			
 			rule createClass(class: EString) {
@@ -155,7 +154,7 @@ class GTParsingParametersTest extends GTParsingTest {
 
 	@Test
 	def void warningIfParameterNameStartsWithCapital() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "http://www.eclipse.org/emf/2002/Ecore"
 			
 			import "http://www.eclipse.org/emf/2002/Ecore"
@@ -166,18 +165,17 @@ class GTParsingParametersTest extends GTParsingTest {
 				}
 			}
 		''')
-		assertValidationIssues(
+		assertValidationWarnings(
 			file,
 			GTPackage.eINSTANCE.editorParameter,
 			GTValidator.NAME_EXPECT_LOWER_CASE,
-			Severity.WARNING,
 			String.format(GTValidator.PARAMETER_NAME_STARTS_WITH_LOWER_CASE_MESSAGE, 'ClassName')
 		)
 	}
 
 	@Test
 	def void warningIfParameterNameContainsUnderscores() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "http://www.eclipse.org/emf/2002/Ecore"
 			
 			rule createClass(class_name: EString) {
@@ -186,18 +184,17 @@ class GTParsingParametersTest extends GTParsingTest {
 				}
 			}
 		''')
-		assertValidationIssues(
+		assertValidationWarnings(
 			file,
 			GTPackage.eINSTANCE.editorParameter,
 			GTValidator.NAME_EXPECT_CAMEL_CASE,
-			Severity.WARNING,
 			String.format(GTValidator.PARAMETER_NAME_CONTAINS_UNDERSCORES_MESSAGE, 'class_name')
 		)
 	}
 
 	@Test
 	def void errorIfMultipleParametersWithTheSameName() {
-		val file = parseHelper.parse('''
+		val file = parse('''
 			import "http://www.eclipse.org/emf/2002/Ecore"
 			
 			rule createClass(name: EString, name: EChar) {
