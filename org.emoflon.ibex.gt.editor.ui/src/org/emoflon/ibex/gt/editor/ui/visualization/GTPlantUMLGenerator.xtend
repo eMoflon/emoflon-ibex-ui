@@ -24,6 +24,7 @@ import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
 import org.emoflon.ibex.gt.editor.gT.EditorPattern
 import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
+import org.emoflon.ibex.gt.editor.utils.GTEditorPatternUtils
 import org.emoflon.ibex.gt.editor.utils.GTFlattener
 
 /**
@@ -294,6 +295,15 @@ class GTPlantUMLGenerator {
 	 * Returns the PlantUML code for the visualization of the refinement hierarchy of the given patterns.
 	 */
 	public static def String visualizePatternHierarchy(EList<EditorPattern> patterns) {
+		val allPatterns = new HashSet(patterns)
+		for (p : patterns) {
+			for (s : GTEditorPatternUtils.getAllSuperPatterns(p)) {
+				if (!allPatterns.contains(s)) {
+					allPatterns.add(s)
+				}
+			}
+		}
+
 		'''
 			«commonLayoutSettings»
 			
@@ -303,11 +313,11 @@ class GTPlantUMLGenerator {
 				ArrowColor Black
 			}
 			
-			«FOR pattern : patterns»
+			«FOR pattern : allPatterns»
 				«IF pattern.abstract»abstract «ENDIF»class "«pattern.name»" «link(pattern)»
 			«ENDFOR»
 			
-			«FOR pattern : patterns»
+			«FOR pattern : allPatterns»
 				«FOR sup: pattern.superPatterns»
 					«IF sup.name !== null»
 						"«pattern.name»" -up-|> "«sup.name»"
