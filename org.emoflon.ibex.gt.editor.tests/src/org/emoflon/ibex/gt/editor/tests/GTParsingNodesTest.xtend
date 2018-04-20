@@ -1,6 +1,5 @@
 package org.emoflon.ibex.gt.editor.tests
 
-import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
@@ -59,11 +58,10 @@ class GTParsingNodesTest extends GTParsingTest {
 			}
 		''')
 		assertFile(file)
-		assertValidationIssues(
+		assertValidationWarnings(
 			file,
 			GTPackage.eINSTANCE.editorNode,
 			GTValidator.NAME_EXPECT_LOWER_CASE,
-			Severity.WARNING,
 			String.format(GTValidator.NODE_NAME_STARTS_WITH_LOWER_CASE_MESSAGE, nodeName)
 		)
 	}
@@ -98,11 +96,10 @@ class GTParsingNodesTest extends GTParsingTest {
 			}
 		''')
 		assertFile(file)
-		assertValidationIssues(
+		assertValidationWarnings(
 			file,
 			GTPackage.eINSTANCE.editorNode,
 			GTValidator.NAME_EXPECT_CAMEL_CASE,
-			Severity.WARNING,
 			String.format(GTValidator.NODE_NAME_CONTAINS_UNDERSCORES_MESSAGE, nodeName)
 		)
 	}

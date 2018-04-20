@@ -1,7 +1,6 @@
 package org.emoflon.ibex.gt.editor.tests
 
 import org.eclipse.xtext.diagnostics.Diagnostic
-import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
@@ -318,11 +317,10 @@ class GTParsingAttributesTest extends GTParsingTest {
 			}
 		''')
 		assertFile(file)
-		assertValidationIssues(
+		assertValidationWarnings(
 			file,
 			GTPackage.eINSTANCE.editorAttribute,
 			GTValidator.ATTRIBUTE_DUPLICATE_CONDITION,
-			Severity.WARNING,
 			String.format(GTValidator.ATTRIBUTE_DUPLICATE_CONDITION_MESSAGE, 'name', 'clazz', 'twice')
 		)
 	}

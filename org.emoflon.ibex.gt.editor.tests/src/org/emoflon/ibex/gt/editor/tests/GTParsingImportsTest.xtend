@@ -1,6 +1,5 @@
 package org.emoflon.ibex.gt.editor.tests
 
-import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.emoflon.ibex.gt.editor.gT.GTPackage
@@ -41,11 +40,10 @@ class GTParsingImportsTest extends GTParsingTest {
 			}
 		''')
 		assertValidResource(file)
-		assertValidationIssues(
+		assertValidationWarnings(
 			file,
 			GTPackage.eINSTANCE.editorImport,
 			GTValidator.IMPORT_DUPLICATE,
-			Severity.WARNING,
 			String.format(GTValidator.IMPORT_DUPLICATE_MESSAGE, ecoreImport, 'twice')
 		)
 	}
