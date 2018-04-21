@@ -6,17 +6,22 @@ import java.net.URL;
 import org.moflon.core.ui.autosetup.handler.RegisterPsfUrlExtension;
 
 public abstract class SokobanHandbookPsfUrlRegistration implements RegisterPsfUrlExtension {
-	private String part;
+	protected static final String PREFIX = "IBeX Handbook:";
+	private String label;
 	private String url;
 
-	public SokobanHandbookPsfUrlRegistration(String part, String url) {
-		this.part = part;
+	public SokobanHandbookPsfUrlRegistration(int part, String url) {
+		this(PREFIX + " Part " + part, url);
+	}
+	
+	public SokobanHandbookPsfUrlRegistration(String label, String url) {
 		this.url = url;
+		this.label = label;
 	}
 	
 	@Override
 	public String getLabel() {
-		return "IBeX Handbook: Part " + part;
+		return label;
 	}
 
 	@Override
