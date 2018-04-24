@@ -72,6 +72,7 @@ public class GTFlattener {
 		flattenedPattern.setName(pattern.getName());
 		flattenedPattern.getParameters().addAll(parameters);
 		flattenedPattern.getNodes().addAll(nodes);
+		flattenedPattern.getConditions().addAll(pattern.getConditions());
 	}
 
 	/**
