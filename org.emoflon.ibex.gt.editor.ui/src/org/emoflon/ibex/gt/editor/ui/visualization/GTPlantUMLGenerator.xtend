@@ -229,7 +229,7 @@ class GTPlantUMLGenerator {
 	 * Prints the conditions of the pattern.
 	 */
 	private static def String getConditionString(EditorPattern pattern) {
-		'''«FOR c : pattern.conditions SEPARATOR ' **||** '»«getConditionString(c.expression)»«ENDFOR»'''
+		'''«FOR c : pattern.conditions SEPARATOR ' **||** '»(«getConditionString(c.expression)»)«ENDFOR»'''
 	}
 
 	/**
@@ -237,7 +237,7 @@ class GTPlantUMLGenerator {
 	 */
 	private static def String getConditionString(EditorConditionExpression condition) {
 		if (condition instanceof EditorAndCondition) {
-			return '''(«getConditionString(condition.left)» **&&** «getConditionString(condition.right)»)'''
+			return '''«getConditionString(condition.left)» **&&** «getConditionString(condition.right)»'''
 		}
 		if (condition instanceof EditorConditionReference) {
 			return '''«getConditionString(condition.condition.expression)»'''
