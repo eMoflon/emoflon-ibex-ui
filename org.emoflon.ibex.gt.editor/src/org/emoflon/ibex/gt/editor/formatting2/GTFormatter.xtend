@@ -10,16 +10,13 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.emoflon.ibex.gt.editor.gT.EditorAndCondition
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorCondition
-import org.emoflon.ibex.gt.editor.gT.EditorConditionExpression
 import org.emoflon.ibex.gt.editor.gT.EditorConditionReference
-import org.emoflon.ibex.gt.editor.gT.EditorConstraint
 import org.emoflon.ibex.gt.editor.gT.EditorEnforce
 import org.emoflon.ibex.gt.editor.gT.EditorForbid
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile
 import org.emoflon.ibex.gt.editor.gT.EditorImport
 import org.emoflon.ibex.gt.editor.gT.EditorNode
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
-import org.emoflon.ibex.gt.editor.gT.EditorOrCondition
 import org.emoflon.ibex.gt.editor.gT.EditorParameter
 import org.emoflon.ibex.gt.editor.gT.EditorPattern
 import org.emoflon.ibex.gt.editor.gT.EditorReference
@@ -113,6 +110,15 @@ class GTFormatter extends AbstractFormatter2 {
 
 		// Empty line between nodes.
 		formatList(pattern.nodes, document, 1, 2, 1)
+
+		// New line before and one space after for keyword "when".
+		pattern.regionFor.keyword("when").prepend[newLine]
+		pattern.regionFor.keyword("when").append[oneSpace]
+
+		// One space before and after "||".
+		pattern.regionFor.keywords('||').forEach [
+			it.surround[oneSpace]
+		]
 	}
 
 	def dispatch void format(EditorParameter parameter, extension IFormattableDocument document) {
@@ -185,14 +191,10 @@ class GTFormatter extends AbstractFormatter2 {
 		condition.expression.format
 	}
 
-	def dispatch void format(EditorOrCondition condition, extension IFormattableDocument document) {
-		condition.regionFor.keyword('||').surround[oneSpace]
-		formatExpressions(condition.left, condition.right, document)
-	}
-
 	def dispatch void format(EditorAndCondition condition, extension IFormattableDocument document) {
 		condition.regionFor.keyword('&&').surround[oneSpace]
-		formatExpressions(condition.left, condition.right, document)
+		condition.left.format
+		condition.right.format
 	}
 
 	def dispatch void format(EditorConditionReference condition, extension IFormattableDocument document) {
@@ -205,23 +207,6 @@ class GTFormatter extends AbstractFormatter2 {
 
 	def dispatch void format(EditorForbid condition, extension IFormattableDocument document) {
 		condition.regionFor.keyword('forbid').append[oneSpace]
-	}
-
-	def dispatch void format(EditorConstraint condition, extension IFormattableDocument document) {
-		condition.regionFor.keyword('if').append[oneSpace]
-		condition.regionFor.keyword('then').surround[oneSpace]
-		condition.regionFor.keywords('||').forEach [
-			it.surround[oneSpace]
-		]
-	}
-
-	/**
-	 * Formats the given condition expressions.
-	 */
-	private static def formatExpressions(EditorConditionExpression left, EditorConditionExpression right,
-		extension IFormattableDocument document) {
-		left.format
-		right.format
 	}
 
 	/**

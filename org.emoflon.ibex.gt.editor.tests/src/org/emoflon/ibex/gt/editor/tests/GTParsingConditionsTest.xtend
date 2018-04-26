@@ -27,23 +27,10 @@ class GTParsingConditionsTest extends GTParsingTest {
 				++ object: EObject
 			}
 			
-			condition constraintCond = if a then (a || b) 
 			condition enforceCond = enforce a
 			condition forbidCond = forbid a
 		''')
 		assertFile(file, 2)
-		assertValidationErrors(
-			file,
-			GTPackage.eINSTANCE.editorConstraint,
-			GTValidator.CONDITION_PATTERN_INVALID_RULE,
-			String.format(GTValidator.CONDITION_PATTERN_INVALID_RULE_MESSAGE, 'a')
-		)
-		assertValidationErrors(
-			file,
-			GTPackage.eINSTANCE.editorConstraint,
-			GTValidator.CONDITION_PATTERN_INVALID_RULE,
-			String.format(GTValidator.CONDITION_PATTERN_INVALID_RULE_MESSAGE, 'b')
-		)
 		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorEnforce,
@@ -71,23 +58,10 @@ class GTParsingConditionsTest extends GTParsingTest {
 				object: EObject
 			}
 			
-			condition constraintCond = if a then (a || b) 
 			condition enforceCond = enforce a
 			condition forbidCond = forbid a
 		''')
 		assertFile(file, 2)
-		assertValidationErrors(
-			file,
-			GTPackage.eINSTANCE.editorConstraint,
-			GTValidator.CONDITION_PATTERN_INVALID_PARAMETERS,
-			String.format(GTValidator.CONDITION_PATTERN_INVALID_PARAMETERS_MESSAGE, 'a')
-		)
-		assertValidationErrors(
-			file,
-			GTPackage.eINSTANCE.editorConstraint,
-			GTValidator.CONDITION_PATTERN_INVALID_PARAMETERS,
-			String.format(GTValidator.CONDITION_PATTERN_INVALID_PARAMETERS_MESSAGE, 'b')
-		)
 		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorEnforce,

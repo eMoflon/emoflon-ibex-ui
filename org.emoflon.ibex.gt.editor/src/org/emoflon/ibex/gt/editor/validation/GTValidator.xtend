@@ -8,7 +8,6 @@ import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.CheckType
 
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute
-import org.emoflon.ibex.gt.editor.gT.EditorConstraint
 import org.emoflon.ibex.gt.editor.gT.EditorEnforce
 import org.emoflon.ibex.gt.editor.gT.EditorForbid
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile
@@ -680,14 +679,6 @@ class GTValidator extends AbstractGTValidator {
 	@Check
 	def checkForbid(EditorForbid forbid) {
 		checkPatternInCondition(forbid.pattern, GTPackage.Literals.EDITOR_FORBID__PATTERN)
-	}
-
-	@Check
-	def checkConstraint(EditorConstraint constraint) {
-		checkPatternInCondition(constraint.premise, GTPackage.Literals.EDITOR_CONSTRAINT__PREMISE)
-		constraint.conclusions.forEach [
-			checkPatternInCondition(it, GTPackage.Literals.EDITOR_CONSTRAINT__CONCLUSIONS)
-		]
 	}
 
 	/**
