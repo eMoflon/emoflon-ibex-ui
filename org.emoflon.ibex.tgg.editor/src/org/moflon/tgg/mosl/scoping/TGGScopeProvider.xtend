@@ -41,6 +41,7 @@ import org.moflon.tgg.mosl.tgg.Rule
 import org.moflon.tgg.mosl.tgg.Schema
 import org.moflon.tgg.mosl.tgg.TggPackage
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
+import org.emoflon.ibex.common.utils.EcoreUtils
 
 /**
  * This class contains custom scoping description.
@@ -241,7 +242,7 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 	
 	def is_equal_or_super_type_of_ov(EClass sup, IEObjectDescription desc){
 		val sub = getOVType(desc.EObjectOrProxy)
-		sub != null && (sub.equals(sup) || sub.EAllSuperTypes.contains(sup) || EcorePackage.eINSTANCE.EObject.equals(sup))
+		sub != null && (EcoreUtils.equalsFQN(sub, sup) || sub.EAllSuperTypes.contains(sup) || EcorePackage.eINSTANCE.EObject.equals(sup))
 	}
 
 	def is_type_of_ov(EObject context, EReference reference) {
