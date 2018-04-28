@@ -182,6 +182,10 @@ class GTValidator extends AbstractGTValidator {
 	// Errors for conditions
 	public static val CONDITION_NAME_MULTIPLE_DECLARATIONS_MESSAGE = "Condition '%s' must not be declared %s."
 
+	public static val CONDITION_PATTERN_INVALID_CONDITIONS = CODE_PREFIX +
+		"condition.pattern.invalid.hasMultipleConditions"
+	public static val CONDITION_PATTERN_INVALID_CONDITIONS_MESSAGE = "Condition may not use '%s' because it has multiple conditions."
+
 	public static val CONDITION_PATTERN_INVALID_PARAMETERS = CODE_PREFIX + "condition.pattern.invalid.hasParameters"
 	public static val CONDITION_PATTERN_INVALID_PARAMETERS_MESSAGE = "Condition may not use '%s' because it has parameters."
 
@@ -725,6 +729,7 @@ class GTValidator extends AbstractGTValidator {
 	 * Validates that the given pattern has no parameters and is no rule. 
 	 */
 	def checkPatternInCondition(EditorPattern pattern, EStructuralFeature feature) {
+		// Patterns in conditions must not be rules.
 		if (pattern.type === EditorPatternType.RULE) {
 			error(
 				String.format(CONDITION_PATTERN_INVALID_RULE_MESSAGE, pattern.name),
@@ -732,12 +737,22 @@ class GTValidator extends AbstractGTValidator {
 				CONDITION_PATTERN_INVALID_RULE
 			)
 		} else {
+			// Patterns in conditions must not have any parameters.
 			if (pattern.parameters.size > 0) {
 				error(
 					String.format(CONDITION_PATTERN_INVALID_PARAMETERS_MESSAGE, pattern.name),
 					feature,
 					CONDITION_PATTERN_INVALID_PARAMETERS
 				)
+			} else {
+				// Patterns in conditons must not have more than one condition.
+				if (pattern.conditions.size > 1) {
+					error(
+						String.format(CONDITION_PATTERN_INVALID_CONDITIONS_MESSAGE, pattern.name),
+						feature,
+						CONDITION_PATTERN_INVALID_CONDITIONS
+					)
+				}
 			}
 		}
 	}

@@ -69,14 +69,11 @@ class GTParsingConditionsTest extends GTParsingTest {
 				++ object: EObject
 			}
 			
-			rule b {
-				++ object: EObject
-			}
-			
 			condition enforceCond = enforce a
+			
 			condition forbidCond = forbid a
 		''')
-		assertFile(file, 2)
+		assertFile(file)
 		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorEnforce,
@@ -100,14 +97,11 @@ class GTParsingConditionsTest extends GTParsingTest {
 				object: EObject
 			}
 			
-			pattern b(i: EInt) {
-				object: EObject
-			}
-			
 			condition enforceCond = enforce a
+			
 			condition forbidCond = forbid a
 		''')
-		assertFile(file, 2)
+		assertFile(file)
 		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorEnforce,
@@ -119,6 +113,35 @@ class GTParsingConditionsTest extends GTParsingTest {
 			GTPackage.eINSTANCE.editorForbid,
 			GTValidator.CONDITION_PATTERN_INVALID_PARAMETERS,
 			String.format(GTValidator.CONDITION_PATTERN_INVALID_PARAMETERS_MESSAGE, 'a')
+		)
+	}
+
+	@Test
+	def void errorIfConditionReferencesPatternWithMultipleConditions() {
+		val file = parse('''
+			import "«ecoreImport»"
+			
+			pattern p1 {
+				object: EObject
+			}
+			
+			condition c1 = enforce p1
+			
+			condition c2 = enforce p1
+			
+			pattern p2 {
+				object: EObject
+			}
+			when c1 || c2
+			
+			condition c3 = enforce p2
+		''')
+		assertFile(file, 2)
+		assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.editorEnforce,
+			GTValidator.CONDITION_PATTERN_INVALID_CONDITIONS,
+			String.format(GTValidator.CONDITION_PATTERN_INVALID_CONDITIONS_MESSAGE, 'p2')
 		)
 	}
 }
