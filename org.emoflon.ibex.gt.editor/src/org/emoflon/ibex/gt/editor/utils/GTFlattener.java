@@ -38,20 +38,16 @@ public class GTFlattener {
 	 *            the pattern
 	 */
 	public GTFlattener(final EditorPattern pattern) {
-		// Early return if nothing to flatten
+		// Early return if there's nothing to flatten.
 		if (pattern.getSuperPatterns().isEmpty()) {
 			flattenedPattern = pattern;
 			return;
 		}
 
 		Set<EditorPattern> superPatterns = GTEditorPatternUtils.getAllSuperPatterns(pattern);
-
 		List<EditorParameter> parameters = mergeParameters(pattern, superPatterns);
-
 		List<EditorNode> nodes = mergeNodes(pattern, superPatterns, parameters);
-		nodes.sort((a, b) -> a.getName().compareTo(b.getName()));
-
-		flatten(pattern, parameters, nodes);
+		createFlattenedPattern(pattern, parameters, nodes);
 	}
 
 	/**
@@ -64,7 +60,7 @@ public class GTFlattener {
 	 * @param nodes
 	 *            the nodes
 	 */
-	private void flatten(final EditorPattern pattern, final List<EditorParameter> parameters,
+	private void createFlattenedPattern(final EditorPattern pattern, final List<EditorParameter> parameters,
 			final List<EditorNode> nodes) {
 		flattenedPattern = GTFactory.eINSTANCE.createEditorPattern();
 		flattenedPattern.setAbstract(pattern.isAbstract());
@@ -167,6 +163,22 @@ public class GTFlattener {
 		superPatterns.forEach(r -> collectedNodes.addAll(EcoreUtil.copyAll(r.getNodes())));
 
 		// Merge nodes with the same name.
+		Map<String, EditorNode> nodeNameToNode = mergeNodesOfTheSameName(collectedNodes);
+
+		// Cleanup reference targets.
+		List<EditorNode> nodes = new ArrayList<EditorNode>(nodeNameToNode.values());
+		cleanupNodes(nodes, nodeNameToNode);
+		return nodes;
+	}
+
+	/**
+	 * Merges nodes of the same name.
+	 * 
+	 * @param collectedNodes
+	 *            the nodes to merge
+	 * @return a map node name -> node
+	 */
+	private Map<String, EditorNode> mergeNodesOfTheSameName(final List<EditorNode> collectedNodes) {
 		Map<String, EditorNode> nodeNameToNode = new HashMap<String, EditorNode>();
 		for (final EditorNode node : collectedNodes) {
 			if (nodeNameToNode.containsKey(node.getName())) {
@@ -175,11 +187,7 @@ public class GTFlattener {
 				nodeNameToNode.put(node.getName(), node);
 			}
 		}
-
-		// Cleanup reference targets.
-		List<EditorNode> nodes = new ArrayList<EditorNode>(nodeNameToNode.values());
-		cleanupNodes(nodes, nodeNameToNode);
-		return nodes;
+		return nodeNameToNode;
 	}
 
 	/**
@@ -191,13 +199,10 @@ public class GTFlattener {
 	 *            the mapping between node names and nodes
 	 */
 	private void cleanupNodes(final List<EditorNode> nodes, final Map<String, EditorNode> nodeNameToNode) {
-		nodes.forEach(node -> {
-			node.getReferences().forEach(r -> {
-				if (r.getTarget() != null) {
-					r.setTarget(nodeNameToNode.get(r.getTarget().getName()));
-				}
-			});
-		});
+		nodes.stream().flatMap(node -> node.getReferences().stream()) //
+				.filter(r -> r.getTarget() != null) //
+				.forEach(r -> r.setTarget(nodeNameToNode.get(r.getTarget().getName())));
+		nodes.sort((a, b) -> a.getName().compareTo(b.getName()));
 	}
 
 	/**
@@ -265,13 +270,10 @@ public class GTFlattener {
 		Optional<EditorAttribute> attribute = node.getAttributes().stream()
 				.filter(a -> GTEditorComparator.areAttributeConstraintsEqual(a, mergedAttribute)).findAny();
 		if (!attribute.isPresent()) {
-			boolean canAdd = true;
 			if (GTFlatteningUtils.hasConflictingAssignment(node, mergedAttribute)) {
 				errors.add(String.format("Node %s has multiple assignments for attribute %s.", node.getName(),
 						mergedAttribute.getAttribute().getName()));
-				canAdd = false;
-			}
-			if (canAdd) {
+			} else {
 				node.getAttributes().add(EcoreUtil.copy(mergedAttribute));
 			}
 		}
