@@ -15,6 +15,52 @@ import org.junit.runner.RunWith
 class GTParsingConditionsTest extends GTParsingTest {
 
 	@Test
+	def void errorIfMultipleConditionsWithTheSameName() {
+		val file = parse('''
+			import "«ecoreImport»"
+			
+			pattern a {
+				object: EObject
+			}
+			
+			condition b = enforce a
+			condition b = forbid a
+		''')
+		assertFile(file)
+		assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.editorCondition,
+			GTValidator.NAME_EXPECT_UNIQUE,
+			String.format(GTValidator.CONDITION_NAME_MULTIPLE_DECLARATIONS_MESSAGE, 'b', 'twice')
+		)
+	}
+
+	@Test
+	def void errorIfNoDistinctConditionsForPattern() {
+		val file = parse('''
+			import "«ecoreImport»"
+			
+			pattern a {
+				anyObject: EObject
+			}
+			
+			pattern b {
+				object: EObject
+			}
+			when c || c
+			
+			condition c = forbid a
+		''')
+		assertFile(file, 2)
+		assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.editorPattern,
+			GTValidator.PATTERN_CONDITIONS_DUPLICATE,
+			String.format(GTValidator.PATTERN_CONDITIONS_DUPLICATE_MESSAGE, 'b')
+		)
+	}
+
+	@Test
 	def void errorIfConditionReferencesRule() {
 		val file = parse('''
 			import "«ecoreImport»"
