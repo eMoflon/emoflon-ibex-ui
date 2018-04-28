@@ -103,12 +103,12 @@ class GTValidator extends AbstractGTValidator {
 	public static val PATTERN_SUPER_PATTERNS_INVALID = CODE_PREFIX + "pattern.superPatterns.invalid"
 	public static val PATTERN_SUPER_PATTERNS_INVALID_MESSAGE = "Cycle in refinement hierarchy: '%s' and '%s'."
 
-	public static val PATTERN_REFINEMENT_INVALID_PARAMETER = CODE_PREFIX + "pattern.superPatterns.invalidParameter"
-	public static val PATTERN_REFINEMENT_INVALID_PARAMETER_MESSAGE = "Pattern/rule '%s' has conflicting type declarations for parameter '%s': %s."
+	public static val PATTERN_SUPER_PATTERNS_INVALID_PARAMETER = CODE_PREFIX + "pattern.superPatterns.invalidParameter"
+	public static val PATTERN_SUPER_PATTERNS_INVALID_PARAMETER_MESSAGE = "Pattern/rule '%s' has conflicting type declarations for parameter '%s': %s."
 
-	public static val PATTERN_REFINEMENT_INVALID_ATTRIBUTE_ASSIGNMENT = CODE_PREFIX +
+	public static val PATTERN_SUPER_PATTERNS_INVALID_ATTRIBUTE_ASSIGNMENT = CODE_PREFIX +
 		"pattern.superPatterns.invalidAttributeAssignment"
-	public static val PATTERN_REFINEMENT_INVALID_ATTRIBUTE_ASSIGNMENT_MESSAGE = "Rule '%s' has conflicting attribute assignments for node '%s'."
+	public static val PATTERN_SUPER_PATTERNS_INVALID_ATTRIBUTE_ASSIGNMENT_MESSAGE = "Rule '%s' has conflicting attribute assignments for node '%s'."
 
 	// Errors for parameters.
 	public static val PARAMETER_NAME_CONTAINS_UNDERSCORES_MESSAGE = "Parameter name '%s' contains underscores. Use camelCase instead."
@@ -343,9 +343,10 @@ class GTValidator extends AbstractGTValidator {
 			if (allTypesForName.size > 1) {
 				val typeList = concatNames(allTypesForName.map[it.name].toSet)
 				error(
-					String.format(PATTERN_REFINEMENT_INVALID_PARAMETER_MESSAGE, pattern.name, parameterName, typeList),
+					String.format(PATTERN_SUPER_PATTERNS_INVALID_PARAMETER_MESSAGE, pattern.name, parameterName,
+						typeList),
 					GTPackage.Literals.EDITOR_PATTERN__SUPER_PATTERNS,
-					PATTERN_REFINEMENT_INVALID_PARAMETER
+					PATTERN_SUPER_PATTERNS_INVALID_PARAMETER
 				)
 			}
 		}
@@ -355,9 +356,9 @@ class GTValidator extends AbstractGTValidator {
 		for (nodeName : allNodes.map[it.name].toSet) {
 			if (GTFlatteningUtils.hasConflictingAssignment(allNodes, nodeName)) {
 				error(
-					String.format(PATTERN_REFINEMENT_INVALID_ATTRIBUTE_ASSIGNMENT_MESSAGE, pattern.name, nodeName),
+					String.format(PATTERN_SUPER_PATTERNS_INVALID_ATTRIBUTE_ASSIGNMENT_MESSAGE, pattern.name, nodeName),
 					GTPackage.Literals.EDITOR_PATTERN__SUPER_PATTERNS,
-					PATTERN_REFINEMENT_INVALID_ATTRIBUTE_ASSIGNMENT
+					PATTERN_SUPER_PATTERNS_INVALID_ATTRIBUTE_ASSIGNMENT
 				)
 			}
 		}
