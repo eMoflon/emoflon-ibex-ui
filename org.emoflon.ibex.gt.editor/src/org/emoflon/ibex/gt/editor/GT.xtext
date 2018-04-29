@@ -20,7 +20,7 @@ EditorPattern:
 	('{'
 	(nodes+=EditorNode)*
 	'}')?
-	('when' conditions+=[EditorCondition] ('&&' conditions+=[EditorCondition])*)?;
+	('when' conditions+=[EditorCondition] ('||' conditions+=[EditorCondition])*)?;
 
 enum EditorPatternType:
 	PATTERN='pattern' |
@@ -89,26 +89,16 @@ EditorCondition:
 	'=' expression=EditorConditionExpression;
 
 EditorConditionExpression:
-	EditorOrCondition;
-
-EditorOrCondition returns EditorConditionExpression:
-	EditorAndCondition ({EditorOrCondition.left=current} '||' right=EditorAndCondition)*;
+	EditorAndCondition;
 
 EditorAndCondition returns EditorConditionExpression:
-	EditorNegation ({EditorAndCondition.left=current} '&&' right=EditorNegation)*;
-
-EditorNegation returns EditorConditionExpression:
-	{EditorNegativeCondition} '!' expression=EditorSimpleCondition |
-	EditorSimpleCondition;
+	EditorSimpleCondition ({EditorAndCondition.left=current} '&&' right=EditorSimpleCondition)*;
 
 EditorSimpleCondition returns EditorConditionExpression:
-	'(' EditorOrCondition ')' |
+	'(' EditorAndCondition ')' |
 	{EditorConditionReference}
 	'check' condition=[EditorCondition] |
 	{EditorEnforce}
 	'enforce' pattern=[EditorPattern] |
 	{EditorForbid}
-	'forbid' pattern=[EditorPattern] |
-	{EditorConstraint}
-	'if' premise=[EditorPattern] 'then'
-	'(' conclusions+=[EditorPattern] ('||' conclusions+=[EditorPattern])* ')';
+	'forbid' pattern=[EditorPattern];

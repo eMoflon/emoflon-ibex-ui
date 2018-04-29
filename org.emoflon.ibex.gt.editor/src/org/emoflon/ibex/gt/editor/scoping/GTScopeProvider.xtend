@@ -9,7 +9,6 @@ import org.eclipse.xtext.scoping.impl.FilteringScope
 
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
-import org.emoflon.ibex.gt.editor.gT.EditorConstraint
 import org.emoflon.ibex.gt.editor.gT.EditorEnforce
 import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression
 import org.emoflon.ibex.gt.editor.gT.EditorForbid
@@ -104,10 +103,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 
 	def isPatternOfGraphCondition(EObject context, EReference reference) {
 		return (context instanceof EditorEnforce && reference == GTPackage.Literals.EDITOR_ENFORCE__PATTERN) ||
-			(context instanceof EditorForbid && reference == GTPackage.Literals.EDITOR_FORBID__PATTERN) ||
-			(context instanceof EditorConstraint &&
-				(reference == GTPackage.Literals.EDITOR_CONSTRAINT__PREMISE || reference == GTPackage.Literals.EDITOR_CONSTRAINT__CONCLUSIONS)
-			)
+			(context instanceof EditorForbid && reference == GTPackage.Literals.EDITOR_FORBID__PATTERN)
 	}
 
 	def isNodeType(EObject context, EReference reference) {
