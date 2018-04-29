@@ -60,26 +60,22 @@ class GTPlantUMLGenerator {
 				FontColor White
 			}
 			
-			«IF pattern.conditions.isEmpty»
+			namespace «pattern.name» {
 				«visualizeGraph(flattenedPattern)»
-			«ELSE»
-				namespace «pattern.name» {
-					«visualizeGraph(flattenedPattern)»
+			}
+			
+			«FOR p : getConditionPatterns(pattern)»
+				«val f = new GTFlattener(p).getFlattenedPattern»
+				namespace «p.name» #EEEEEE {
+					«visualizeGraph(f)»
 				}
 				
-				«FOR p : getConditionPatterns(pattern)»
-					«val f = new GTFlattener(p).getFlattenedPattern»
-					namespace «p.name» #EEEEEE {
-						«visualizeGraph(f)»
-					}
-					
-					«FOR node : f.nodes»
-						«IF nodeNamesInFlattenedPattern.contains(node.name)»
-							"«pattern.name».«nodeName(node)»" #--# "«p.name».«nodeName(node)»"
-						«ENDIF»
-					«ENDFOR»
+				«FOR node : f.nodes»
+					«IF nodeNamesInFlattenedPattern.contains(node.name)»
+						"«pattern.name».«nodeName(node)»" #--# "«p.name».«nodeName(node)»"
+					«ENDIF»
 				«ENDFOR»
-			«ENDIF»
+			«ENDFOR»
 			
 			«IF !pattern.conditions.isEmpty»
 				legend bottom
