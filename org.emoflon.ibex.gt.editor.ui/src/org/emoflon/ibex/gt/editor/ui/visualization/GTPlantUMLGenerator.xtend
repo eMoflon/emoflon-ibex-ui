@@ -65,14 +65,14 @@ class GTPlantUMLGenerator {
 			}
 			
 			«FOR p : getConditionPatterns(pattern)»
-				«val f = new GTFlattener(p).getFlattenedPattern»
+				«val flattenedConditionPattern = new GTFlattener(p).getFlattenedPattern»
 				namespace «p.name» #EEEEEE {
-					«visualizeGraph(f)»
+					«visualizeGraph(flattenedConditionPattern)»
 				}
 				
-				«FOR node : f.nodes»
+				«FOR node : flattenedConditionPattern.nodes»
 					«IF nodeNamesInFlattenedPattern.contains(node.name)»
-						"«pattern.name».«nodeName(node)»" #--# "«p.name».«nodeName(node)»"
+						"«pattern.name».«nodeName(flattenedPattern, node.name)»" #--# "«p.name».«nodeName(node)»"
 					«ENDIF»
 				«ENDFOR»
 			«ENDFOR»
@@ -120,6 +120,13 @@ class GTPlantUMLGenerator {
 		}
 		val type = if(node.type === null) '?' else node.type.name
 		'''«node.name»: «type»'''
+	}
+	
+	/**
+	 * Prints the node with the given name in the pattern.
+	 */
+	private static def String nodeName(EditorPattern pattern, String name) {
+		return nodeName(pattern.nodes.findFirst[it.name == name])
 	}
 
 	/**
