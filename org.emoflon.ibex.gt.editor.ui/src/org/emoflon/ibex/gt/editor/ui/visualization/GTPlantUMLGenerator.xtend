@@ -281,6 +281,8 @@ class GTPlantUMLGenerator {
 		'''
 			«commonLayoutSettings»
 			
+			left to right direction
+			
 			skinparam class {
 				BackgroundColor White
 				BorderColor Black
@@ -294,7 +296,7 @@ class GTPlantUMLGenerator {
 			«FOR pattern : allPatterns»
 				«FOR sup: pattern.superPatterns»
 					«IF sup.name !== null»
-						"«pattern.name»" -up-|> "«sup.name»"
+						"«pattern.name»" --|> "«sup.name»"
 					«ENDIF»
 				«ENDFOR»
 			«ENDFOR»
