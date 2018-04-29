@@ -229,7 +229,11 @@ class GTPlantUMLGenerator {
 	 * Prints the conditions of the pattern.
 	 */
 	private static def String getConditionString(EditorPattern pattern) {
-		'''«FOR c : pattern.conditions SEPARATOR ' **||** '»(«getConditionString(c.expression)»)«ENDFOR»'''
+		'''
+			«FOR c : pattern.conditions SEPARATOR ' **||** '»
+				(«getConditionString(c.expression)»)
+			«ENDFOR»
+		'''
 	}
 
 	/**
