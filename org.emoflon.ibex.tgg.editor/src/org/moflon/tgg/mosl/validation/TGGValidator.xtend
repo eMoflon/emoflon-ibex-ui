@@ -121,7 +121,7 @@ class TGGValidator extends AbstractTGGValidator {
 		  var isGeneration = operator != null && operator.value != null && operator.value.equalsIgnoreCase("++");
 		  var isAnError = !ruleIsAbstract && typeIsAbstract && isGeneration;
 		  if(isAnError){
-		  	error("The type of the object variable '" + objectVariablePattern.name + "' is abstract and the rule '" + Rule.name + "' is not abstract", TggPackage.Literals.OBJECT_VARIABLE_PATTERN__TYPE, TGGValidator.TYPE_IS_ABSTRACT);
+		  	error("The type of the created object variable '" + objectVariablePattern.name + "' is abstract although the rule '" + Rule.name + "' is not.", TggPackage.Literals.OBJECT_VARIABLE_PATTERN__TYPE, TGGValidator.TYPE_IS_ABSTRACT);
 		  }
 		  
 		}		

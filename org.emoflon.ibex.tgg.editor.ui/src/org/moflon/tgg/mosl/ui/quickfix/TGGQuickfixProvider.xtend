@@ -54,8 +54,8 @@ class TGGQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQu
 
 		acceptor.accept(
 			issue,
-			"change Rule to abstract", // label
-			"change Rule to abstract '" + name + "'", // description
+			"make rule abstract", // label
+			"make rule abstract '" + name + "'", // description
 			null, // icon 
 			new ISemanticModification() {
 				override apply(EObject element, IModificationContext context) {
@@ -80,8 +80,8 @@ class TGGQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQu
 
 		acceptor.accept(
 			issue,
-			"delete all Refinements", // label
-			"delete all Refinements from '" + name + "'", // description
+			"delete all refinements", // label
+			"delete all refinements from '" + name + "'", // description
 			null, // icon 
 			new ISemanticModification() {
 				override apply(EObject element, IModificationContext context) {
@@ -104,8 +104,8 @@ class TGGQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQu
 		val refinementName = refinement;
 		acceptor.accept(
 			issue,
-			"delete the Refinement", // label
-			"delete the Refinements '" + refinement + "' from '" + name + "'", // description
+			"delete the refinement", // label
+			"delete the refinements '" + refinement + "' from '" + name + "'", // description
 			null, // icon 
 			new ISemanticModification() {
 				override apply(EObject element, IModificationContext context) {
@@ -125,8 +125,8 @@ class TGGQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQu
 	def addCorrectOperator(Issue issue, IssueResolutionAcceptor acceptor){
 		acceptor.accept(
 			issue,
-			"add correct Operator", // label
-			"adds the Operator from the Object Variable'", // description
+			"add correct operator", // label
+			"adds the operator from the object variable'", // description
 			null, // icon 
 			new ISemanticModification() {
 				override apply(EObject element, IModificationContext context) {
@@ -144,8 +144,8 @@ class TGGQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQu
 	def addCorrectTargetOperator(Issue issue, IssueResolutionAcceptor acceptor){
 		acceptor.accept(
 			issue,
-			"add correct Operator", // label
-			"adds the Operator from the Target Object Variable'", // description
+			"add correct operator", // label
+			"adds the operator from the target object variable'", // description
 			null, // icon 
 			new ISemanticModification() {
 				override apply(EObject element, IModificationContext context) {
