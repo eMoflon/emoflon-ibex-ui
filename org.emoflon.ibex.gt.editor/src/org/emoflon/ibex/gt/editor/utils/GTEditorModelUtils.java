@@ -12,6 +12,7 @@ import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.EcoreUtil2;
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile;
 
@@ -23,6 +24,11 @@ public class GTEditorModelUtils {
 	 * The set of meta-model resources loaded.
 	 */
 	private static Map<String, Resource> metaModelResources = new HashMap<String, Resource>();
+
+	/**
+	 * The resource set used for loading the meta-model resources.
+	 */
+	private static final ResourceSetImpl resourceSet = new ResourceSetImpl();
 
 	/**
 	 * Returns all EClasses imported into the given file.
@@ -64,9 +70,9 @@ public class GTEditorModelUtils {
 	 */
 	public static Optional<Resource> loadEcoreModel(final String uri) {
 		try {
-			final ResourceSetImpl resourceSet = new ResourceSetImpl();
 			final Resource resource = resourceSet.getResource(URI.createURI(uri), true);
 			resource.load(null);
+			EcoreUtil.resolveAll(resourceSet);
 
 			// Add/update resource if necessary.
 			if (!metaModelResources.containsKey(uri)
