@@ -74,6 +74,10 @@ public class GTEditorModelUtils {
 			resource.load(null);
 			EcoreUtil.resolveAll(resourceSet);
 
+			if (resource.getContents().isEmpty()) {
+				return Optional.empty();
+			}
+
 			// Add/update resource if necessary.
 			if (!metaModelResources.containsKey(uri)
 					|| metaModelResources.get(uri).getTimeStamp() < resource.getTimeStamp()) {
