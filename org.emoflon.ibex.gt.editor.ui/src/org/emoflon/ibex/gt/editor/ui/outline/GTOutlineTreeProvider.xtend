@@ -55,12 +55,19 @@ class GTOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	}
 
 	/**
-	 * Customize the image for the pattern/rule.
+	 * Customize the image for patterns/rules.
 	 */
 	def _image(EditorPattern pattern) {
 		if (pattern.type == EditorPatternType.RULE) {
 			return imageHelper.getImage('gt-rule.gif')
 		}
 		return imageHelper.getImage('gt-pattern.gif')
+	}
+	
+	/**
+	 * Customize the image for conditions.
+	 */
+	def _image(EditorCondition condition) {
+		return imageHelper.getImage('gt-condition.gif')
 	}
 }
