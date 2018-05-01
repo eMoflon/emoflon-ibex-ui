@@ -3,8 +3,12 @@ package org.emoflon.ibex.gt.editor.ui.outline
 import com.google.inject.Inject
 
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.swt.SWT
+import org.eclipse.swt.graphics.FontData
 import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider
 import org.eclipse.xtext.ui.editor.outline.IOutlineNode
+import org.eclipse.xtext.ui.editor.utils.TextStyle
+import org.eclipse.xtext.ui.label.StylerFactory
 import org.eclipse.xtext.ui.IImageHelper
 import org.emoflon.ibex.gt.editor.gT.EditorPattern
 import org.emoflon.ibex.gt.editor.gT.EditorPatternType
@@ -18,6 +22,9 @@ import org.emoflon.ibex.gt.editor.gT.EditorCondition
 class GTOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	@Inject
 	private IImageHelper imageHelper
+
+	@Inject
+	private StylerFactory stylerFactory
 
 	override _createNode(IOutlineNode parentNode, EObject modelElement) {
 		if (modelElement instanceof EditorPattern || modelElement instanceof EditorCondition) {
@@ -45,11 +52,14 @@ class GTOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	 */
 	def _text(EditorPattern pattern) {
 		var text = pattern.name
-		if (pattern.abstract) {
-			text += ' (abstract)'
-		}
 		if (pattern.superPatterns.size > 0) {
-			text += ' -> ' + String.join(", ", pattern.superPatterns.map[it.name]);
+			text += ' -> ' + String.join(", ", pattern.superPatterns.map[it.name])
+		}
+
+		if (pattern.abstract) {
+			val italicStyle = new TextStyle()
+			italicStyle.fontData = new FontData("Segoe UI", 9, SWT.ITALIC)
+			return stylerFactory.createFromXtextStyle(text, italicStyle)
 		}
 		return text
 	}
@@ -63,7 +73,7 @@ class GTOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		}
 		return imageHelper.getImage('gt-pattern.gif')
 	}
-	
+
 	/**
 	 * Customize the image for conditions.
 	 */
