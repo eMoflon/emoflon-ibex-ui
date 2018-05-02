@@ -12,25 +12,35 @@ import org.emoflon.ibex.gt.editor.gT.EditorPattern;
 public class GTCommentExtractor {
 
 	/**
-	 * Extracts the editor comment from the Xtext node of the pattern if such a
-	 * comment is available.
+	 * Extracts the editor comment for the pattern if such a comment is available.
 	 * 
 	 * @param editorPattern
 	 *            the editor pattern
-	 * @return the text of the comment (may be empty)
+	 * @return the text of the comment (can be the empty String)
 	 */
 	public static String getComment(final EditorPattern editorPattern) {
-		StringBuilder documentation = new StringBuilder();
 		ICompositeNode xtextNodeForPattern = NodeModelUtils.getNode(editorPattern);
 		INode firstChild = xtextNodeForPattern.getFirstChild();
 		if (firstChild instanceof ICompositeNode) {
-			ICompositeNode xtextNodeContaingComment = (ICompositeNode) firstChild;
-			xtextNodeContaingComment.getChildren().forEach(i -> {
-				if (i instanceof HiddenLeafNode) {
-					documentation.append(extract(i.getText()));
-				}
-			});
+			return extract((ICompositeNode) firstChild);
 		}
+		return "";
+	}
+
+	/**
+	 * Extracts the editor comment from an Xtext node.
+	 * 
+	 * @param xtextNode
+	 *            the Xtext node containing the comment
+	 * @return the text of the comment (can be the empty String)
+	 */
+	private static String extract(final ICompositeNode xtextNode) {
+		StringBuilder documentation = new StringBuilder();
+		xtextNode.getChildren().forEach(i -> {
+			if (i instanceof HiddenLeafNode) {
+				documentation.append(extract(i.getText()));
+			}
+		});
 		return documentation.toString().trim();
 	}
 
@@ -39,7 +49,7 @@ public class GTCommentExtractor {
 	 * 
 	 * @param comment
 	 *            a comment
-	 * @return the text of the comment
+	 * @return the text of the comment (can be the empty String)
 	 */
 	private static String extract(final String comment) {
 		if (comment == null) {

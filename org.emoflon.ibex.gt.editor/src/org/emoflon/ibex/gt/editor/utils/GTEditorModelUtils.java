@@ -32,6 +32,9 @@ public class GTEditorModelUtils {
 
 	/**
 	 * Returns all EClasses imported into the given file.
+	 * 
+	 * @param file
+	 *            the GT file
 	 */
 	public static ArrayList<EClass> getClasses(final EditorGTFile file) {
 		final ArrayList<EClass> classes = new ArrayList<EClass>();
@@ -43,6 +46,9 @@ public class GTEditorModelUtils {
 
 	/**
 	 * Returns all EDataTypes imported into the given file.
+	 * 
+	 * @param file
+	 *            the GT file
 	 */
 	public static ArrayList<EDataType> getDatatypes(final EditorGTFile file) {
 		final ArrayList<EDataType> types = new ArrayList<EDataType>();
@@ -67,6 +73,9 @@ public class GTEditorModelUtils {
 
 	/**
 	 * Returns an Optional for the Ecore model resource with the given URI.
+	 * 
+	 * @param uri
+	 *            the URI of the resource to load
 	 */
 	public static Optional<Resource> loadEcoreModel(final String uri) {
 		try {
@@ -74,18 +83,33 @@ public class GTEditorModelUtils {
 			resource.load(null);
 			EcoreUtil.resolveAll(resourceSet);
 
-			if (resource.getContents().isEmpty()) {
-				return Optional.empty();
-			}
-
-			// Add/update resource if necessary.
-			if (!metaModelResources.containsKey(uri)
-					|| metaModelResources.get(uri).getTimeStamp() < resource.getTimeStamp()) {
-				metaModelResources.put(uri, resource);
-			}
-			return Optional.of(metaModelResources.get(uri));
+			return getResource(uri, resource);
 		} catch (final Exception e) {
 			return Optional.empty();
 		}
+	}
+
+	/**
+	 * Adds/updates the resource for the given URI if the given resource has a more
+	 * recent timestamp than the current one.
+	 * 
+	 * @param uri
+	 *            the URI
+	 * @param resource
+	 *            the resource to compare with the current resource
+	 * @return the update resource
+	 */
+	private static Optional<Resource> getResource(final String uri, final Resource resource) {
+		// Early return if the resource is empty.
+		if (resource.getContents().isEmpty()) {
+			return Optional.empty();
+		}
+
+		// Add/update resource if necessary.
+		if (!metaModelResources.containsKey(uri)
+				|| metaModelResources.get(uri).getTimeStamp() < resource.getTimeStamp()) {
+			metaModelResources.put(uri, resource);
+		}
+		return Optional.of(metaModelResources.get(uri));
 	}
 }
