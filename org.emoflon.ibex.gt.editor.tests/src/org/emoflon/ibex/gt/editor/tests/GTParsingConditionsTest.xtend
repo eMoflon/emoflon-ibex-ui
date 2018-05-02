@@ -144,4 +144,35 @@ class GTParsingConditionsTest extends GTParsingTest {
 			String.format(GTValidator.CONDITION_PATTERN_INVALID_CONDITIONS_MESSAGE, 'p2')
 		)
 	}
+
+	@Test
+	def void warningIfAbstractPatternHasConditions() {
+		val file = parse('''
+			import "«ecoreImport»"
+			
+			pattern a {
+				object: EObject
+			}
+			
+			condition c = enforce a
+			
+			abstract pattern p {
+				object: EObject
+			}
+			when c
+			
+			abstract rule r {
+				++ object: EObject
+			}
+			when c
+		''')
+		assertFile(file, 3)
+		assertValidationWarnings(
+			file,
+			GTPackage.eINSTANCE.editorPattern,
+			GTValidator.PATTERN_CONDITIONS_NOT_ALLOWED_ABSTRACT,
+			String.format(GTValidator.PATTERN_CONDITIONS_NOT_ALLOWED_ABSTRACT_MESSAGE, 'pattern', 'p'),
+			String.format(GTValidator.PATTERN_CONDITIONS_NOT_ALLOWED_ABSTRACT_MESSAGE, 'rule', 'r')
+		)
+	}
 }

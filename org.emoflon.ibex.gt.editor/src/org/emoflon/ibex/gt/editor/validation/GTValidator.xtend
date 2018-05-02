@@ -84,6 +84,10 @@ class GTValidator extends AbstractGTValidator {
 	public static val PATTERN_CONDITIONS_DUPLICATE = CODE_PREFIX + "pattern.conditions.duplicate"
 	public static val PATTERN_CONDITIONS_DUPLICATE_MESSAGE = "The conditions of '%s' must be distinct."
 
+	public static val PATTERN_CONDITIONS_NOT_ALLOWED_ABSTRACT = CODE_PREFIX +
+		"pattern.conditions.withoutEffectForAbstractPattern"
+	public static val PATTERN_CONDITIONS_NOT_ALLOWED_ABSTRACT_MESSAGE = "Conditions for abstract %s '%s' don't have any effect."
+
 	public static val PATTERN_EMPTY = CODE_PREFIX + "pattern.empty"
 	public static val PATTERN_EMPTY_MESSAGE = "Pattern/rule '%s' must not be empty."
 
@@ -299,6 +303,16 @@ class GTValidator extends AbstractGTValidator {
 	def checkConditionsOfPattern(EditorPattern pattern) {
 		if (pattern.conditions.isEmpty) {
 			return;
+		}
+
+		// Abstract patterns must not have any conditions.
+		if (pattern.abstract) {
+			warning(
+				String.format(PATTERN_CONDITIONS_NOT_ALLOWED_ABSTRACT_MESSAGE, pattern.type, pattern.name),
+				GTPackage.Literals.EDITOR_PATTERN__CONDITIONS,
+				PATTERN_CONDITIONS_NOT_ALLOWED_ABSTRACT,
+				pattern.name
+			)
 		}
 
 		if (pattern.conditions.size !== pattern.conditions.stream.distinct.count) {
