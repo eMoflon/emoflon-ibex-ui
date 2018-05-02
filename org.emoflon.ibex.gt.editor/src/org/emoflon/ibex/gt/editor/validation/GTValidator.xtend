@@ -82,14 +82,14 @@ class GTValidator extends AbstractGTValidator {
 
 	// Errors for patterns.
 	public static val PATTERN_CONDITIONS_DUPLICATE = CODE_PREFIX + "pattern.conditions.duplicate"
-	public static val PATTERN_CONDITIONS_DUPLICATE_MESSAGE = "The conditions of '%s' must be distinct."
+	public static val PATTERN_CONDITIONS_DUPLICATE_MESSAGE = "The conditions of %s must be distinct."
 
 	public static val PATTERN_CONDITIONS_NOT_ALLOWED_ABSTRACT = CODE_PREFIX +
 		"pattern.conditions.withoutEffectForAbstractPattern"
-	public static val PATTERN_CONDITIONS_NOT_ALLOWED_ABSTRACT_MESSAGE = "Conditions for abstract %s '%s' don't have any effect."
+	public static val PATTERN_CONDITIONS_NOT_ALLOWED_ABSTRACT_MESSAGE = "Conditions for abstract %s don't have any effect."
 
 	public static val PATTERN_EMPTY = CODE_PREFIX + "pattern.empty"
-	public static val PATTERN_EMPTY_MESSAGE = "Pattern/rule '%s' must not be empty."
+	public static val PATTERN_EMPTY_MESSAGE = "The %s must not be empty."
 
 	public static val PATTERN_NAME_CONTAINS_UNDERSCORES_MESSAGE = "Pattern/rule name '%s' contains underscores. Use camelCase instead."
 	public static val PATTERN_NAME_FORBIDDEN_MESSAGE = "Patterns/rules cannot be named '%s'. Use a different name."
@@ -109,11 +109,11 @@ class GTValidator extends AbstractGTValidator {
 	public static val PATTERN_SUPER_PATTERNS_INVALID_MESSAGE = "Cycle in refinement hierarchy: '%s' and '%s'."
 
 	public static val PATTERN_SUPER_PATTERNS_INVALID_PARAMETER = CODE_PREFIX + "pattern.superPatterns.invalidParameter"
-	public static val PATTERN_SUPER_PATTERNS_INVALID_PARAMETER_MESSAGE = "Pattern/rule '%s' has conflicting type declarations for parameter '%s': %s."
+	public static val PATTERN_SUPER_PATTERNS_INVALID_PARAMETER_MESSAGE = "%s has conflicting type declarations for parameter '%s': %s."
 
 	public static val PATTERN_SUPER_PATTERNS_INVALID_ATTRIBUTE_ASSIGNMENT = CODE_PREFIX +
 		"pattern.superPatterns.invalidAttributeAssignment"
-	public static val PATTERN_SUPER_PATTERNS_INVALID_ATTRIBUTE_ASSIGNMENT_MESSAGE = "Rule '%s' has conflicting attribute assignments for node '%s'."
+	public static val PATTERN_SUPER_PATTERNS_INVALID_ATTRIBUTE_ASSIGNMENT_MESSAGE = "%s has conflicting attribute assignments for node '%s'."
 
 	// Errors for parameters.
 	public static val PARAMETER_NAME_CONTAINS_UNDERSCORES_MESSAGE = "Parameter name '%s' contains underscores. Use camelCase instead."
@@ -136,7 +136,7 @@ class GTValidator extends AbstractGTValidator {
 
 	public static val NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE = CODE_PREFIX +
 		"node.type.notCompatibleWithDeclarationInSuperRule"
-	public static val NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE_MESSAGE = "The type of node '%s' is not compatible with '%s' from super rule '%s'."
+	public static val NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE_MESSAGE = "The type of node '%s' is not compatible with '%s' defined in super %s."
 
 	public static val CREATE_NODE_TYPE_ABSTRACT = CODE_PREFIX + "node.type.createdNodeAbstractType"
 	public static val CREATE_NODE_TYPE_ABSTRACT_MESSAGE = "The type of created node '%s' must not be abstract."
@@ -279,7 +279,7 @@ class GTValidator extends AbstractGTValidator {
 		// The pattern must contain at least one node or refine multiple patterns or have graph conditions.
 		if (pattern.nodes.size == 0 && pattern.superPatterns.size < 2 && pattern.conditions.size == 0) {
 			error(
-				String.format(PATTERN_EMPTY_MESSAGE, pattern.name),
+				String.format(PATTERN_EMPTY_MESSAGE, pattern.toText),
 				GTPackage.Literals.EDITOR_PATTERN__NODES,
 				GTValidator.PATTERN_EMPTY
 			)
@@ -305,22 +305,24 @@ class GTValidator extends AbstractGTValidator {
 			return;
 		}
 
+		val text = pattern.toText
+
 		// Abstract patterns must not have any conditions.
 		if (pattern.abstract) {
 			warning(
-				String.format(PATTERN_CONDITIONS_NOT_ALLOWED_ABSTRACT_MESSAGE, pattern.type, pattern.name),
+				String.format(PATTERN_CONDITIONS_NOT_ALLOWED_ABSTRACT_MESSAGE, text),
 				GTPackage.Literals.EDITOR_PATTERN__CONDITIONS,
 				PATTERN_CONDITIONS_NOT_ALLOWED_ABSTRACT,
-				pattern.name
+				text
 			)
 		}
 
 		if (pattern.conditions.size !== pattern.conditions.stream.distinct.count) {
 			error(
-				String.format(PATTERN_CONDITIONS_DUPLICATE_MESSAGE, pattern.name),
+				String.format(PATTERN_CONDITIONS_DUPLICATE_MESSAGE, pattern.toText),
 				GTPackage.Literals.EDITOR_PATTERN__CONDITIONS,
 				PATTERN_CONDITIONS_DUPLICATE,
-				pattern.name
+				pattern.toText
 			)
 		}
 	}
@@ -360,7 +362,7 @@ class GTValidator extends AbstractGTValidator {
 			if (allTypesForName.size > 1) {
 				val typeList = concatNames(allTypesForName.map[it.name].toSet)
 				error(
-					String.format(PATTERN_SUPER_PATTERNS_INVALID_PARAMETER_MESSAGE, pattern.name, parameterName,
+					String.format(PATTERN_SUPER_PATTERNS_INVALID_PARAMETER_MESSAGE, pattern.toText, parameterName,
 						typeList),
 					GTPackage.Literals.EDITOR_PATTERN__SUPER_PATTERNS,
 					PATTERN_SUPER_PATTERNS_INVALID_PARAMETER
@@ -373,7 +375,8 @@ class GTValidator extends AbstractGTValidator {
 		for (nodeName : allNodes.map[it.name].toSet) {
 			if (GTFlatteningUtils.hasConflictingAssignment(allNodes, nodeName)) {
 				error(
-					String.format(PATTERN_SUPER_PATTERNS_INVALID_ATTRIBUTE_ASSIGNMENT_MESSAGE, pattern.name, nodeName),
+					String.format(PATTERN_SUPER_PATTERNS_INVALID_ATTRIBUTE_ASSIGNMENT_MESSAGE, pattern.toText,
+						nodeName),
 					GTPackage.Literals.EDITOR_PATTERN__SUPER_PATTERNS,
 					PATTERN_SUPER_PATTERNS_INVALID_ATTRIBUTE_ASSIGNMENT
 				)
@@ -535,7 +538,7 @@ class GTValidator extends AbstractGTValidator {
 							val superPattern = it.eContainer as EditorPattern
 							error(
 								String.format(NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE_MESSAGE,
-									node.name, it.type.name, superPattern.name),
+									node.name, it.type.name, superPattern.toText),
 								GTPackage.Literals.EDITOR_NODE__TYPE,
 								NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE
 							)
@@ -773,6 +776,13 @@ class GTValidator extends AbstractGTValidator {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Returns a String for the pattern containing type and name.
+	 */
+	def static String toText(EditorPattern pattern) {
+		return String.format("%s '%s'", pattern.type, pattern.name)
 	}
 
 	/**

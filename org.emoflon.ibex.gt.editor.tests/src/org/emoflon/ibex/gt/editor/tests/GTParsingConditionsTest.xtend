@@ -56,7 +56,7 @@ class GTParsingConditionsTest extends GTParsingTest {
 			file,
 			GTPackage.eINSTANCE.editorPattern,
 			GTValidator.PATTERN_CONDITIONS_DUPLICATE,
-			String.format(GTValidator.PATTERN_CONDITIONS_DUPLICATE_MESSAGE, 'b')
+			String.format(GTValidator.PATTERN_CONDITIONS_DUPLICATE_MESSAGE, "pattern 'b'")
 		)
 	}
 
@@ -171,8 +171,8 @@ class GTParsingConditionsTest extends GTParsingTest {
 			file,
 			GTPackage.eINSTANCE.editorPattern,
 			GTValidator.PATTERN_CONDITIONS_NOT_ALLOWED_ABSTRACT,
-			String.format(GTValidator.PATTERN_CONDITIONS_NOT_ALLOWED_ABSTRACT_MESSAGE, 'pattern', 'p'),
-			String.format(GTValidator.PATTERN_CONDITIONS_NOT_ALLOWED_ABSTRACT_MESSAGE, 'rule', 'r')
+			String.format(GTValidator.PATTERN_CONDITIONS_NOT_ALLOWED_ABSTRACT_MESSAGE, "pattern 'p'"),
+			String.format(GTValidator.PATTERN_CONDITIONS_NOT_ALLOWED_ABSTRACT_MESSAGE, "rule 'r'")
 		)
 	}
 }

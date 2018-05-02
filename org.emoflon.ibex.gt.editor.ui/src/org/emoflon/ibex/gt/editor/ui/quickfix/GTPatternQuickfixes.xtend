@@ -32,6 +32,28 @@ class GTPatternQuickfixes {
 	}
 
 	/**
+	 * Remove duplicate conditions.
+	 */
+	public static def makeConditionsDistinct(Issue issue, IssueResolutionAcceptor acceptor) {
+		val name = issue.data?.get(0)
+		val label = '''Remove duplicate conditions declarations of «name».'''
+		acceptor.accept(
+			issue,
+			label,
+			label,
+			null,
+			[ element, context |
+				if (element instanceof EditorPattern) {
+					val uniqueConditions = newHashSet()
+					uniqueConditions.addAll(element.conditions.clone)
+					element.conditions.clear
+					element.conditions.addAll(uniqueConditions)
+				}
+			]
+		)
+	}
+
+	/**
 	 * Remove duplicate super patterns.
 	 */
 	public static def makeSuperPatternsDistinct(Issue issue, IssueResolutionAcceptor acceptor) {
@@ -57,7 +79,8 @@ class GTPatternQuickfixes {
 	 * Makes the pattern abstract.
 	 */
 	public static def makeAbstract(Issue issue, IssueResolutionAcceptor acceptor) {
-		val label = String.format("Make rule '%s' abstract.", issue.data.get(1))
+		val name = issue.data?.get(1)
+		val label = '''Make rule '«name»' abstract.'''
 		acceptor.accept(
 			issue,
 			label,
@@ -70,6 +93,25 @@ class GTPatternQuickfixes {
 				}
 			],
 			3
+		)
+	}
+
+	/**
+	 * Removes all conditions of the pattern.
+	 */
+	public static def removeConditions(Issue issue, IssueResolutionAcceptor acceptor) {
+		val name = issue.data?.get(0)
+		val label = '''Remove all conditions of «name».'''
+		acceptor.accept(
+			issue,
+			label,
+			label,
+			null,
+			[ element, context |
+				if (element instanceof EditorPattern) {
+					element.conditions.clear
+				}
+			]
 		)
 	}
 }
