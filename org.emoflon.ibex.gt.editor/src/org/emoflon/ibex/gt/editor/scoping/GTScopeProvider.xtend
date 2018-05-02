@@ -71,7 +71,10 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 
 		// Patterns
 		if (isSuperPattern(context, reference) || isPatternOfGraphCondition(context, reference)) {
-			return getScopeForPatternsInSamePackage(context, reference)
+			return filterScopeForOtherObjectsFromSamePackage(context, reference)
+		}
+		if (isConditionOfPattern(context, reference)) {
+			return filterScopeForOtherObjectsFromSamePackage(context, reference)
 		}
 
 		return super.getScope(context, reference)
@@ -126,11 +129,15 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		return (context instanceof EditorPattern && reference == GTPackage.Literals.EDITOR_PATTERN__SUPER_PATTERNS)
 	}
 
+	def isConditionOfPattern(EObject context, EReference reference) {
+		return (context instanceof EditorPattern && reference == GTPackage.Literals.EDITOR_PATTERN__CONDITIONS)
+	}
+
 	/**
-	 * Filters the scope of the super scope provider for the patterns
-	 * which are in the same package as the file containing the context. 
+	 * Filters the scope of the super scope provider of the context for the objects
+	 * which are defined in the same package as the file containing the context. 
 	 */
-	def getScopeForPatternsInSamePackage(EObject context, EReference reference) {
+	def filterScopeForOtherObjectsFromSamePackage(EObject context, EReference reference) {
 		val contextURI = context.eResource.URI.appendFragment(context.eResource.getURIFragment(context))
 		return new FilteringScope(super.getScope(context, reference), [
 			context.eResource.URI.trimFragment.trimSegments(1).equals(it.EObjectURI.trimFragment.trimSegments(1)) &&
