@@ -9,6 +9,7 @@ import org.eclipse.xtext.scoping.impl.FilteringScope
 
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
+import org.emoflon.ibex.gt.editor.gT.EditorConditionReference
 import org.emoflon.ibex.gt.editor.gT.EditorEnforce
 import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression
 import org.emoflon.ibex.gt.editor.gT.EditorForbid
@@ -35,6 +36,14 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		// Attributes
 		if (isAttributeName(context, reference)) {
 			return getScopeForAttributes(context as EditorAttribute)
+		}
+
+		// Condition
+		if (isConditionOfCondition(context, reference)) {
+			return filterScopeForOtherObjectsFromSamePackage(context, reference)
+		}
+		if (isPatternOfCondition(context, reference)) {
+			return filterScopeForOtherObjectsFromSamePackage(context, reference)
 		}
 
 		// Expressions
@@ -70,7 +79,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		}
 
 		// Patterns
-		if (isSuperPattern(context, reference) || isPatternOfGraphCondition(context, reference)) {
+		if (isSuperPattern(context, reference)) {
 			return filterScopeForOtherObjectsFromSamePackage(context, reference)
 		}
 		if (isConditionOfPattern(context, reference)) {
@@ -104,7 +113,12 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 			reference == GTPackage.Literals.EDITOR_PARAMETER_EXPRESSION__PARAMETER);
 	}
 
-	def isPatternOfGraphCondition(EObject context, EReference reference) {
+	def isConditionOfCondition(EObject context, EReference reference) {
+		return (context instanceof EditorConditionReference &&
+			reference == GTPackage.Literals.EDITOR_CONDITION_REFERENCE__CONDITION)
+	}
+
+	def isPatternOfCondition(EObject context, EReference reference) {
 		return (context instanceof EditorEnforce && reference == GTPackage.Literals.EDITOR_ENFORCE__PATTERN) ||
 			(context instanceof EditorForbid && reference == GTPackage.Literals.EDITOR_FORBID__PATTERN)
 	}
