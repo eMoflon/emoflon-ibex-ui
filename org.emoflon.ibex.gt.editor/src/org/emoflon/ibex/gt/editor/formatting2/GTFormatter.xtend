@@ -35,7 +35,7 @@ class GTFormatter extends AbstractFormatter2 {
 			file.imports.get(0).prepend[noSpace]
 		}
 
-		// Empty line after imports
+		// Empty line after imports.
 		formatList(file.imports, document, 0, 1, 2)
 
 		val lastPattern = NodeModelUtils.getNode(file.patterns.last)
@@ -66,6 +66,7 @@ class GTFormatter extends AbstractFormatter2 {
 	}
 
 	def dispatch void format(EditorImport i, extension IFormattableDocument document) {
+		// One space after the "import" keyword.
 		i.regionFor.keyword("import").append[oneSpace]
 	}
 
@@ -79,25 +80,21 @@ class GTFormatter extends AbstractFormatter2 {
 		pattern.regionFor.feature(GTPackage.Literals.EDITOR_PATTERN__TYPE).append[oneSpace]
 
 		// New line before "refines", one space after "refines".
-		pattern.regionFor.keyword("refines").prepend[newLine]
-		pattern.regionFor.keyword("refines").append[oneSpace]
+		pattern.regionFor.keyword("refines").prepend[newLine].append[oneSpace]
 
 		// No space between pattern name, "(" and first parameter.
-		pattern.regionFor.keyword("(").prepend[noSpace]
-		pattern.regionFor.keyword("(").append[noSpace]
+		pattern.regionFor.keyword("(").prepend[noSpace].append[noSpace]
 
 		pattern.parameters.forEach [
 			it.format
 		]
 
 		pattern.regionFor.keywords(",").forEach [
-			it.prepend[noSpace]
-			it.append[oneSpace]
+			it.prepend[noSpace].append[oneSpace]
 		]
 
 		// No space between last parameter and ")", but one space between ")" and "{"
-		pattern.regionFor.keyword(")").prepend[noSpace]
-		pattern.regionFor.keyword(")").append[oneSpace]
+		pattern.regionFor.keyword(")").prepend[noSpace].append[oneSpace]
 
 		// One space before "{".
 		pattern.regionFor.keyword("{").prepend[oneSpace]
@@ -112,8 +109,7 @@ class GTFormatter extends AbstractFormatter2 {
 		formatList(pattern.nodes, document, 1, 2, 1)
 
 		// New line before and one space after for keyword "when".
-		pattern.regionFor.keyword("when").prepend[newLine]
-		pattern.regionFor.keyword("when").append[oneSpace]
+		pattern.regionFor.keyword("when").prepend[newLine].append[oneSpace]
 
 		// One space before and after "||".
 		pattern.regionFor.keywords('||').forEach [
@@ -123,8 +119,7 @@ class GTFormatter extends AbstractFormatter2 {
 
 	def dispatch void format(EditorParameter parameter, extension IFormattableDocument document) {
 		// No space before ":", one space after ":".
-		parameter.regionFor.keyword(":").prepend[noSpace]
-		parameter.regionFor.keyword(":").append[oneSpace]
+		parameter.regionFor.keyword(":").prepend[noSpace].append[oneSpace]
 	}
 
 	def dispatch void format(EditorNode node, extension IFormattableDocument document) {
@@ -132,8 +127,7 @@ class GTFormatter extends AbstractFormatter2 {
 		node.regionFor.keyword("{").prepend[oneSpace]
 
 		// No space before ":", but one space after ":".
-		node.regionFor.keyword(":").prepend[noSpace]
-		node.regionFor.keyword(":").append[oneSpace]
+		node.regionFor.keyword(":").prepend[noSpace].append[oneSpace]
 
 		// Indent everything between "{" and "}".
 		val nodeContent = node.regionFor.keywordPairs("{", "}")
@@ -143,14 +137,12 @@ class GTFormatter extends AbstractFormatter2 {
 
 		// New line for each attribute.
 		node.attributes.forEach [
-			it.format
-			it.surround[newLine]
+			it.format.surround[newLine]
 		]
 
 		// New line for each reference.
 		node.references.forEach [
-			it.format
-			it.surround[newLine]
+			it.format.surround[newLine]
 		]
 	}
 
@@ -171,8 +163,7 @@ class GTFormatter extends AbstractFormatter2 {
 			reference.regionFor.feature(GTPackage.Literals.EDITOR_REFERENCE__OPERATOR).append[oneSpace]
 
 			// One space before "-", but no space between "-" and the reference name.
-			reference.regionFor.keyword("-").prepend[oneSpace]
-			reference.regionFor.keyword("-").append[noSpace]
+			reference.regionFor.keyword("-").prepend[oneSpace].append[noSpace]
 		}
 
 		// One space before and after ->.
@@ -181,8 +172,7 @@ class GTFormatter extends AbstractFormatter2 {
 
 	def dispatch void format(EditorCondition condition, extension IFormattableDocument document) {
 		// No space before and one space after 'condition'.
-		condition.regionFor.keyword('condition').prepend[noSpace]
-		condition.regionFor.keyword('condition').append[oneSpace]
+		condition.regionFor.keyword('condition').prepend[noSpace].append[oneSpace]
 
 		// One space before and after "=".
 		condition.regionFor.keyword('=').surround[oneSpace]
@@ -223,11 +213,9 @@ class GTFormatter extends AbstractFormatter2 {
 		}
 
 		for (var index = 0; index < items.size() - 1; index++) {
-			items.get(index).format
-			items.get(index).append[newLines = newLinesAfterItem]
+			items.get(index).format.append[newLines = newLinesAfterItem]
 		}
 
-		items.get(items.size() - 1).format
-		items.get(items.size() - 1).append[newLines = newLinesAfterLastItem]
+		items.get(items.size() - 1).format.append[newLines = newLinesAfterLastItem]
 	}
 }
