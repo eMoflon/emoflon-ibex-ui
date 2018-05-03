@@ -7,7 +7,6 @@ import org.eclipse.xtext.formatting2.AbstractFormatter2
 import org.eclipse.xtext.formatting2.IFormattableDocument
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 
-import org.emoflon.ibex.gt.editor.gT.EditorAndCondition
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorCondition
 import org.emoflon.ibex.gt.editor.gT.EditorConditionReference
@@ -112,7 +111,6 @@ class GTFormatter extends AbstractFormatter2 {
 		// New line before and one space after for keyword "when".
 		pattern.regionFor.keyword("when").prepend[newLine].append[oneSpace]
 
-		// One space before and after "||".
 		if (pattern.conditions.size > 0) {
 			val alternatives = pattern.regionFor.keywords('||')
 			var length = 5 + 4 * (pattern.conditions.size - 1) // length of "when " and " || "s 
@@ -122,10 +120,12 @@ class GTFormatter extends AbstractFormatter2 {
 			}
 
 			if (length < MAX_LINE_WIDTH) {
+				// One space before and after "||".
 				alternatives.forEach [
 					it.surround[oneSpace]
 				]
 			} else {
+				// One condition per line: line break and two spaces after "||".
 				alternatives.forEach [
 					it.prepend[space = System.lineSeparator + "  "].append[oneSpace]
 				]
@@ -193,14 +193,15 @@ class GTFormatter extends AbstractFormatter2 {
 		// One space before and after "=".
 		condition.regionFor.keyword('=').surround[oneSpace]
 
-		// Format condition value.
-		condition.expression.format
-	}
+		// One space before and after "&&".
+		val ands = condition.regionFor.keywords('&&')
+		ands.forEach [
+			it.surround[oneSpace]
+		]
 
-	def dispatch void format(EditorAndCondition condition, extension IFormattableDocument document) {
-		condition.regionFor.keyword('&&').surround[oneSpace]
-		condition.left.format
-		condition.right.format
+		condition.conditions.forEach [
+			it.format
+		]
 	}
 
 	def dispatch void format(EditorConditionReference condition, extension IFormattableDocument document) {

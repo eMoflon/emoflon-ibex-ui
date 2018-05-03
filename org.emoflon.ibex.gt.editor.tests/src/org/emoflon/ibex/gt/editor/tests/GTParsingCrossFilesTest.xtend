@@ -85,8 +85,10 @@ class GTParsingCrossFilesTest extends GTParsingTest {
 		Assert.assertEquals(c, q.conditions.get(0))
 
 		// file2.gt: resolve reference to pattern p from file1.gt
-		Assert.assertTrue(c.expression instanceof EditorForbid)
-		Assert.assertEquals(p, (c.expression as EditorForbid).pattern)
+		Assert.assertEquals(1, c.conditions.size)
+		val c1 = c.conditions.get(0)
+		Assert.assertTrue(c1 instanceof EditorForbid)
+		Assert.assertEquals(p, (c1 as EditorForbid).pattern)
 	}
 
 	def parseTwoFilesFromSamePackage(CharSequence s1, CharSequence s2) {

@@ -85,17 +85,10 @@ EditorReference:
 
 	// Graph Conditions
 EditorCondition:
-	'condition' name=ID
-	'=' expression=EditorConditionExpression;
+	'condition' name=ID '='
+	conditions+=EditorSimpleCondition ('&&' conditions+=EditorSimpleCondition)*;
 
-EditorConditionExpression:
-	EditorAndCondition;
-
-EditorAndCondition returns EditorConditionExpression:
-	EditorSimpleCondition ({EditorAndCondition.left=current} '&&' right=EditorSimpleCondition)*;
-
-EditorSimpleCondition returns EditorConditionExpression:
-	'(' EditorAndCondition ')' |
+EditorSimpleCondition:
 	{EditorConditionReference}
 	'check' condition=[EditorCondition] |
 	{EditorEnforce}

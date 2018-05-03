@@ -4,10 +4,8 @@ import java.util.HashSet
 import java.util.Set
 
 import org.eclipse.emf.common.util.EList
-import org.emoflon.ibex.gt.editor.gT.EditorAndCondition
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
-import org.emoflon.ibex.gt.editor.gT.EditorConditionExpression
 import org.emoflon.ibex.gt.editor.gT.EditorConditionReference
 import org.emoflon.ibex.gt.editor.gT.EditorEnforce
 import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression
@@ -20,8 +18,10 @@ import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
 import org.emoflon.ibex.gt.editor.gT.EditorPattern
 import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
+import org.emoflon.ibex.gt.editor.gT.EditorSimpleCondition
 import org.emoflon.ibex.gt.editor.utils.GTEditorPatternUtils
 import org.emoflon.ibex.gt.editor.utils.GTFlattener
+import java.util.List
 
 /**
  * Utility methods to generate PlantUML code.
@@ -201,7 +201,18 @@ class GTPlantUMLGenerator {
 	private static def Set<EditorPattern> getConditionPatterns(EditorPattern pattern) {
 		val patterns = new HashSet
 		pattern.conditions.forEach [
-			patterns.addAll(getConditionPatterns(it.expression))
+			patterns.addAll(getConditionPatterns(it.conditions))
+		]
+		return patterns
+	}
+
+	/**
+	 * Extracts the patterns from a list of simple conditions.
+	 */
+	private static def Set<EditorPattern> getConditionPatterns(List<EditorSimpleCondition> conditions) {
+		val patterns = new HashSet
+		conditions.forEach [
+			patterns.addAll(getConditionPatterns(it))
 		]
 		return patterns
 	}
@@ -209,14 +220,10 @@ class GTPlantUMLGenerator {
 	/**
 	 * Extracts the patterns from a single condition. 
 	 */
-	private static def Set<EditorPattern> getConditionPatterns(EditorConditionExpression condition) {
+	private static def Set<EditorPattern> getConditionPatterns(EditorSimpleCondition condition) {
 		val patterns = new HashSet
-		if (condition instanceof EditorAndCondition) {
-			patterns.addAll(getConditionPatterns(condition.left))
-			patterns.addAll(getConditionPatterns(condition.right))
-		}
 		if (condition instanceof EditorConditionReference) {
-			patterns.addAll(getConditionPatterns(condition.condition.expression))
+			patterns.addAll(getConditionPatterns(condition.condition.conditions))
 		}
 		if (condition instanceof EditorEnforce) {
 			patterns.add(condition.pattern)
