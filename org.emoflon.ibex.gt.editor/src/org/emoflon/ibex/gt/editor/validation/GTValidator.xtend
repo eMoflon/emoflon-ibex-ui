@@ -23,6 +23,7 @@ import org.emoflon.ibex.gt.editor.gT.EditorPatternType
 import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
 import org.emoflon.ibex.gt.editor.gT.GTPackage
+import org.emoflon.ibex.gt.editor.utils.GTConditionHelper
 import org.emoflon.ibex.gt.editor.utils.GTEditorAttributeComparator
 import org.emoflon.ibex.gt.editor.utils.GTEditorAttributeUtils
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
@@ -196,6 +197,9 @@ class GTValidator extends AbstractGTValidator {
 
 	public static val CONDITION_PATTERN_INVALID_RULE = CODE_PREFIX + "condition.pattern.invalid.isRule"
 	public static val CONDITION_PATTERN_INVALID_RULE_MESSAGE = "Condition may not use '%s' because it is a rule."
+
+	public static val CONDITION_SELF_REFERENCE = CODE_PREFIX + "condition.selfReference"
+	public static val CONDITION_SELF_REFERENCE_MESSAGE = "Condition '%s' references itself which is not allowed."
 
 	@Check
 	def checkFile(EditorGTFile file) {
@@ -723,6 +727,7 @@ class GTValidator extends AbstractGTValidator {
 
 	@Check
 	def checkCondition(EditorCondition condition) {
+		// Names of conditions must be unique.
 		val file = condition.eContainer as EditorGTFile
 		val conditionDeclarationsCount = file.conditions.filter[condition.name.equals(it.name)].size
 		if (conditionDeclarationsCount !== 1) {
@@ -734,6 +739,15 @@ class GTValidator extends AbstractGTValidator {
 			)
 		}
 
+		// A condition may not reference itself.
+		val conditionHelper = new GTConditionHelper(condition);
+		if (conditionHelper.hasSelfReference()) {
+			error(
+				String.format(CONDITION_SELF_REFERENCE_MESSAGE, condition.name),
+				GTPackage.Literals.EDITOR_CONDITION__CONDITIONS,
+				CONDITION_SELF_REFERENCE
+			)
+		}
 	}
 
 	@Check

@@ -175,4 +175,38 @@ class GTParsingConditionsTest extends GTParsingTest {
 			String.format(GTValidator.PATTERN_CONDITIONS_NOT_ALLOWED_ABSTRACT_MESSAGE, "rule 'r'")
 		)
 	}
+
+	@Test
+	def void errorIfSelfReferenceLevel1() {
+		val file = parse('''
+			import "«ecoreImport»"
+			
+			condition c = c
+		''')
+		assertFile(file, 0)
+		assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.editorCondition,
+			GTValidator.CONDITION_SELF_REFERENCE,
+			String.format(GTValidator.CONDITION_SELF_REFERENCE_MESSAGE, 'c')
+		)
+	}
+
+	@Test
+	def void errorIfSelfReferenceLevel2() {
+		val file = parse('''
+			import "«ecoreImport»"
+			
+			condition c1 = c2
+			condition c2 = c1
+		''')
+		assertFile(file, 0)
+		assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.editorCondition,
+			GTValidator.CONDITION_SELF_REFERENCE,
+			String.format(GTValidator.CONDITION_SELF_REFERENCE_MESSAGE, 'c1'),
+			String.format(GTValidator.CONDITION_SELF_REFERENCE_MESSAGE, 'c2')
+		)
+	}
 }

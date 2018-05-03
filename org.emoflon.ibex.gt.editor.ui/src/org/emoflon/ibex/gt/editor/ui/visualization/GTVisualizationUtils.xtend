@@ -1,17 +1,17 @@
 package org.emoflon.ibex.gt.editor.ui.visualization
 
-import org.emoflon.ibex.gt.editor.gT.EditorConditionReference
+import org.emoflon.ibex.gt.editor.gT.EditorCondition
 import org.emoflon.ibex.gt.editor.gT.EditorEnforce
 import org.emoflon.ibex.gt.editor.gT.EditorForbid
 import org.emoflon.ibex.gt.editor.gT.EditorPattern
 import org.emoflon.ibex.gt.editor.gT.EditorParameter
 import org.emoflon.ibex.gt.editor.gT.EditorSimpleCondition
-import java.util.List
+import org.emoflon.ibex.gt.editor.utils.GTConditionHelper
 
 /**
  * Utility methods to print objects of the editor model.
  */
-class GTVisualizationHelper {
+class GTVisualizationUtils {
 
 	/**
 	 * Returns the signature of the pattern.
@@ -34,15 +34,16 @@ class GTVisualizationHelper {
 	public static def String getConditionString(EditorPattern pattern) {
 		'''
 			«FOR c : pattern.conditions SEPARATOR ' **||** '»
-				«getConditionString(c.conditions)»
+				«getConditionString(c)»
 			«ENDFOR»
 		'''
 	}
 
 	/**
-	 * Returns a String representation of the simple conditions.
+	 * Returns a String representation of the flattened clauses of the condition.
 	 */
-	public static def String getConditionString(List<EditorSimpleCondition> conditions) {
+	public static def String getConditionString(EditorCondition condition) {
+		val conditions = new GTConditionHelper(condition).getAllConditions()
 		'''«FOR c : conditions SEPARATOR ' **&&** '»«getConditionString(c)»«ENDFOR»'''
 	}
 
@@ -50,9 +51,6 @@ class GTVisualizationHelper {
 	 * Returns a String representation of the simple condition.
 	 */
 	private static def String getConditionString(EditorSimpleCondition condition) {
-		if (condition instanceof EditorConditionReference) {
-			return '''«getConditionString(condition.condition.conditions)»'''
-		}
 		if (condition instanceof EditorEnforce) {
 			return '''**enforce** «condition.pattern.name»'''
 		}

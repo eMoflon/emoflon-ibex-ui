@@ -6,7 +6,7 @@ import java.util.Set
 import org.eclipse.emf.common.util.EList
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
-import org.emoflon.ibex.gt.editor.gT.EditorConditionReference
+import org.emoflon.ibex.gt.editor.gT.EditorCondition
 import org.emoflon.ibex.gt.editor.gT.EditorEnforce
 import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression
 import org.emoflon.ibex.gt.editor.gT.EditorExpression
@@ -18,10 +18,9 @@ import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
 import org.emoflon.ibex.gt.editor.gT.EditorPattern
 import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
-import org.emoflon.ibex.gt.editor.gT.EditorSimpleCondition
+import org.emoflon.ibex.gt.editor.utils.GTConditionHelper
 import org.emoflon.ibex.gt.editor.utils.GTEditorPatternUtils
 import org.emoflon.ibex.gt.editor.utils.GTFlattener
-import java.util.List
 
 /**
  * Utility methods to generate PlantUML code.
@@ -78,13 +77,13 @@ class GTPlantUMLGenerator {
 			
 			«IF !pattern.conditions.isEmpty»
 				legend bottom
-					«GTVisualizationHelper.getConditionString(pattern)»
+					«GTVisualizationUtils.getConditionString(pattern)»
 				endlegend
 			«ENDIF»
 			
 			center footer
 				= «pattern.name»
-				«GTVisualizationHelper.signature(flattenedPattern)»
+				«GTVisualizationUtils.signature(flattenedPattern)»
 			end footer
 		'''
 	}
@@ -200,36 +199,24 @@ class GTPlantUMLGenerator {
 	 */
 	private static def Set<EditorPattern> getConditionPatterns(EditorPattern pattern) {
 		val patterns = new HashSet
-		pattern.conditions.forEach [
-			patterns.addAll(getConditionPatterns(it.conditions))
-		]
+		for (c : pattern.conditions) {
+			patterns.addAll(getConditionPatterns(c))
+		}
 		return patterns
 	}
 
 	/**
 	 * Extracts the patterns from a list of simple conditions.
 	 */
-	private static def Set<EditorPattern> getConditionPatterns(List<EditorSimpleCondition> conditions) {
+	private static def Set<EditorPattern> getConditionPatterns(EditorCondition condition) {
 		val patterns = new HashSet
-		conditions.forEach [
-			patterns.addAll(getConditionPatterns(it))
-		]
-		return patterns
-	}
-
-	/**
-	 * Extracts the patterns from a single condition. 
-	 */
-	private static def Set<EditorPattern> getConditionPatterns(EditorSimpleCondition condition) {
-		val patterns = new HashSet
-		if (condition instanceof EditorConditionReference) {
-			patterns.addAll(getConditionPatterns(condition.condition.conditions))
-		}
-		if (condition instanceof EditorEnforce) {
-			patterns.add(condition.pattern)
-		}
-		if (condition instanceof EditorForbid) {
-			patterns.add(condition.pattern)
+		for (c : new GTConditionHelper(condition).getAllConditions()) {
+			if (c instanceof EditorEnforce) {
+				patterns.add(c.pattern)
+			}
+			if (c instanceof EditorForbid) {
+				patterns.add(c.pattern)
+			}
 		}
 		return patterns
 	}
