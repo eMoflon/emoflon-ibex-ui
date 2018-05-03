@@ -268,7 +268,61 @@ class GTFormattingTest {
 		)
 	}
 
+	@Test
+	def formatConditionsWithLongLines() {
+		val expected = '''
+			import "http://www.eclipse.org/emf/2002/Ecore"
+			
+			pattern p {
+				object: EObject
+			}
+			when conditionOneWithAVeryLongName
+			  || conditionTwoWithAVeryLongName
+			  || conditionThreeWithAVeryLongName
+			
+			pattern theFirstPatternUsedInTheConditionsWithAVeryLongName {
+				object: EObject
+			}
+			
+			condition conditionOneWithAVeryLongName = forbid theFirstPatternUsedInTheConditionsWithAVeryLongName
+			
+			condition conditionTwoWithAVeryLongName = enforce theFirstPatternUsedInTheConditionsWithAVeryLongName
+			
+			condition conditionThreeWithAVeryLongName = check conditionOneWithAVeryLongName && check conditionTwoWithAVeryLongName
+		'''
+		testFormatting(
+			expected,
+			'''
+				import "http://www.eclipse.org/emf/2002/Ecore"
+							
+							pattern p {
+								object: EObject
+							} when  conditionOneWithAVeryLongName  || conditionTwoWithAVeryLongName || conditionThreeWithAVeryLongName
+							
+							pattern theFirstPatternUsedInTheConditionsWithAVeryLongName {
+								object: EObject
+							}
+							
+							condition
+							conditionOneWithAVeryLongName 
+								= 
+								forbid 
+								theFirstPatternUsedInTheConditionsWithAVeryLongName
+							
+							condition
+								conditionTwoWithAVeryLongName 
+								= 
+								enforce theFirstPatternUsedInTheConditionsWithAVeryLongName
+							
+							condition   conditionThreeWithAVeryLongName 
+								=  check  conditionOneWithAVeryLongName
+								&& 	check conditionTwoWithAVeryLongName
+			'''
+		)
+	}
+
 	def testFormatting(String expected, String code) {
-		assertEquals(expected, parseHelper.parse(code).serialize(SaveOptions.newBuilder.format.options))
+		val actual = parseHelper.parse(code).serialize(SaveOptions.newBuilder.format.options)
+		assertEquals(expected, actual)
 	}
 }

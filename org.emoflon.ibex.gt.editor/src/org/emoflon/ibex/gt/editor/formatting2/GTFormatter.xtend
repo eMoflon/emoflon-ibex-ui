@@ -28,6 +28,7 @@ import org.emoflon.ibex.gt.editor.gT.GTPackage
  * https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#formatting
  */
 class GTFormatter extends AbstractFormatter2 {
+	private static val MAX_LINE_WIDTH = 100
 
 	def dispatch void format(EditorGTFile file, extension IFormattableDocument document) {
 		// No space before first import.
@@ -112,9 +113,24 @@ class GTFormatter extends AbstractFormatter2 {
 		pattern.regionFor.keyword("when").prepend[newLine].append[oneSpace]
 
 		// One space before and after "||".
-		pattern.regionFor.keywords('||').forEach [
-			it.surround[oneSpace]
-		]
+		if (pattern.conditions.size > 0) {
+			val alternatives = pattern.regionFor.keywords('||')
+			var length = 5 + 4 * (pattern.conditions.size - 1) // length of "when " and " || "s 
+			length += alternatives.get(0).previousSemanticRegion.length
+			for (a : alternatives) {
+				length += a.nextSemanticRegion.length
+			}
+
+			if (length < MAX_LINE_WIDTH) {
+				alternatives.forEach [
+					it.surround[oneSpace]
+				]
+			} else {
+				alternatives.forEach [
+					it.prepend[space = System.lineSeparator + "  "].append[oneSpace]
+				]
+			}
+		}
 	}
 
 	def dispatch void format(EditorParameter parameter, extension IFormattableDocument document) {
