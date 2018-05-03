@@ -209,4 +209,24 @@ class GTParsingConditionsTest extends GTParsingTest {
 			String.format(GTValidator.CONDITION_SELF_REFERENCE_MESSAGE, 'c2')
 		)
 	}
+
+	@Test
+	def void errorIfPACandNACforTheSamePattern() {
+		val file = parse('''
+			import "«ecoreImport»"
+			
+			pattern p {
+				object: EObject
+			}
+			
+			condition c = enforce p && forbid p
+		''')
+		assertFile(file, 1)
+		assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.editorCondition,
+			GTValidator.CONDITION_PAC_AND_NAC_FOR_SAME_PATTERN,
+			String.format(GTValidator.CONDITION_PAC_AND_NAC_FOR_SAME_PATTERN_MESSAGE, 'c', 'p')
+		)
+	}
 }

@@ -188,6 +188,9 @@ class GTValidator extends AbstractGTValidator {
 	// Errors for conditions
 	public static val CONDITION_NAME_MULTIPLE_DECLARATIONS_MESSAGE = "Condition '%s' must not be declared %s."
 
+	public static val CONDITION_PAC_AND_NAC_FOR_SAME_PATTERN = CODE_PREFIX + "condition.conflicting"
+	public static val CONDITION_PAC_AND_NAC_FOR_SAME_PATTERN_MESSAGE = "Condition '%s' contains a positive and a negative application condition for pattern '%s'."
+
 	public static val CONDITION_PATTERN_INVALID_CONDITIONS = CODE_PREFIX +
 		"condition.pattern.invalid.hasMultipleConditions"
 	public static val CONDITION_PATTERN_INVALID_CONDITIONS_MESSAGE = "Condition may not use '%s' because it has multiple conditions."
@@ -747,6 +750,22 @@ class GTValidator extends AbstractGTValidator {
 				GTPackage.Literals.EDITOR_CONDITION__CONDITIONS,
 				CONDITION_SELF_REFERENCE
 			)
+		}
+
+		// An and clause must not contain a PAC and a NAC for the same pattern.
+		val conditions = conditionHelper.allConditions
+		val pacs = conditions.filter[it instanceof EditorEnforce].map[it as EditorEnforce]
+		val nacs = conditions.filter[it instanceof EditorForbid].map[it as EditorForbid]
+		for (pac : pacs) {
+			for (nac : nacs) {
+				if (pac.pattern === nac.pattern) {
+					error(
+						String.format(CONDITION_PAC_AND_NAC_FOR_SAME_PATTERN_MESSAGE, condition.name, pac.pattern.name),
+						GTPackage.Literals.EDITOR_CONDITION__CONDITIONS,
+						CONDITION_PAC_AND_NAC_FOR_SAME_PATTERN
+					)
+				}
+			}
 		}
 	}
 
