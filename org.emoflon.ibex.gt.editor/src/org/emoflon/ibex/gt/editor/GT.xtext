@@ -90,7 +90,7 @@ EditorCondition:
 
 EditorSimpleCondition:
 	{EditorConditionReference}
-	'check' condition=[EditorCondition] |
+	condition=[EditorCondition] |
 	{EditorEnforce}
 	'enforce' pattern=[EditorPattern] |
 	{EditorForbid}

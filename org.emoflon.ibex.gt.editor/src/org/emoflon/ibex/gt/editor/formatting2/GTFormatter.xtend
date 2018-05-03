@@ -9,7 +9,6 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorCondition
-import org.emoflon.ibex.gt.editor.gT.EditorConditionReference
 import org.emoflon.ibex.gt.editor.gT.EditorEnforce
 import org.emoflon.ibex.gt.editor.gT.EditorForbid
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile
@@ -202,10 +201,6 @@ class GTFormatter extends AbstractFormatter2 {
 		condition.conditions.forEach [
 			it.format
 		]
-	}
-
-	def dispatch void format(EditorConditionReference condition, extension IFormattableDocument document) {
-		condition.regionFor.keyword('check').append[oneSpace]
 	}
 
 	def dispatch void format(EditorEnforce condition, extension IFormattableDocument document) {

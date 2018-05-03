@@ -243,7 +243,7 @@ class GTFormattingTest {
 			
 			condition hasAnnotation = enforce findClassifierWithAnnotation
 			
-			condition andTest = check noAnnotation && check hasAnnotation
+			condition andTest = noAnnotation && hasAnnotation
 		'''
 		testFormatting(
 			expected,
@@ -263,7 +263,7 @@ class GTFormattingTest {
 				condition hasAnnotation  =  enforce  findClassifierWithAnnotation
 				
 					condition  andTest 
-					= check noAnnotation    &&    	check hasAnnotation
+					=  noAnnotation    &&     hasAnnotation
 			'''
 		)
 	}
@@ -288,7 +288,7 @@ class GTFormattingTest {
 			
 			condition conditionTwoWithAVeryLongName = enforce theFirstPatternUsedInTheConditionsWithAVeryLongName
 			
-			condition conditionThreeWithAVeryLongName = check conditionOneWithAVeryLongName && check conditionTwoWithAVeryLongName
+			condition conditionThreeWithAVeryLongName = conditionOneWithAVeryLongName && conditionTwoWithAVeryLongName
 		'''
 		testFormatting(
 			expected,
@@ -315,8 +315,8 @@ class GTFormattingTest {
 								enforce theFirstPatternUsedInTheConditionsWithAVeryLongName
 							
 							condition   conditionThreeWithAVeryLongName 
-								=  check  conditionOneWithAVeryLongName
-								&& 	check conditionTwoWithAVeryLongName
+								=    conditionOneWithAVeryLongName
+								&& 	 conditionTwoWithAVeryLongName
 			'''
 		)
 	}
