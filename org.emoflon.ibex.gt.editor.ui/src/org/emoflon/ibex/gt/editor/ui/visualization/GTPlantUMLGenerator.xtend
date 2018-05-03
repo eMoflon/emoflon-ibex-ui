@@ -7,10 +7,8 @@ import org.eclipse.emf.common.util.EList
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
 import org.emoflon.ibex.gt.editor.gT.EditorCondition
-import org.emoflon.ibex.gt.editor.gT.EditorEnforce
 import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression
 import org.emoflon.ibex.gt.editor.gT.EditorExpression
-import org.emoflon.ibex.gt.editor.gT.EditorForbid
 import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression
 import org.emoflon.ibex.gt.editor.gT.EditorNode
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
@@ -210,13 +208,8 @@ class GTPlantUMLGenerator {
 	 */
 	private static def Set<EditorPattern> getConditionPatterns(EditorCondition condition) {
 		val patterns = new HashSet
-		for (c : new GTConditionHelper(condition).getAllConditions()) {
-			if (c instanceof EditorEnforce) {
-				patterns.add(c.pattern)
-			}
-			if (c instanceof EditorForbid) {
-				patterns.add(c.pattern)
-			}
+		for (c : new GTConditionHelper(condition).getApplicationConditions()) {
+			patterns.add(c.pattern)
 		}
 		return patterns
 	}

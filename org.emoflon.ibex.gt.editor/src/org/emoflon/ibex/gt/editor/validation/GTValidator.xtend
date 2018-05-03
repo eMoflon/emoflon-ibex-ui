@@ -8,10 +8,10 @@ import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.CheckType
 
+import org.emoflon.ibex.gt.editor.gT.EditorApplicationCondition
+import org.emoflon.ibex.gt.editor.gT.EditorApplicationConditionType
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorCondition
-import org.emoflon.ibex.gt.editor.gT.EditorEnforce
-import org.emoflon.ibex.gt.editor.gT.EditorForbid
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile
 import org.emoflon.ibex.gt.editor.gT.EditorImport
 import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression
@@ -753,9 +753,9 @@ class GTValidator extends AbstractGTValidator {
 		}
 
 		// An and clause must not contain a PAC and a NAC for the same pattern.
-		val conditions = conditionHelper.allConditions
-		val pacs = conditions.filter[it instanceof EditorEnforce].map[it as EditorEnforce]
-		val nacs = conditions.filter[it instanceof EditorForbid].map[it as EditorForbid]
+		val conditions = conditionHelper.getApplicationConditions
+		val pacs = conditions.filter[it.type == EditorApplicationConditionType.POSITIVE]
+		val nacs = conditions.filter[it.type == EditorApplicationConditionType.NEGATIVE]
 		for (pac : pacs) {
 			for (nac : nacs) {
 				if (pac.pattern === nac.pattern) {
@@ -770,19 +770,15 @@ class GTValidator extends AbstractGTValidator {
 	}
 
 	@Check
-	def checkEnforce(EditorEnforce enforce) {
-		checkPatternInCondition(enforce.pattern, GTPackage.Literals.EDITOR_ENFORCE__PATTERN)
-	}
-
-	@Check
-	def checkForbid(EditorForbid forbid) {
-		checkPatternInCondition(forbid.pattern, GTPackage.Literals.EDITOR_FORBID__PATTERN)
+	def checkEnforce(EditorApplicationCondition applicationCondition) {
+		checkPatternInApplicationCondition(applicationCondition.pattern,
+			GTPackage.Literals.EDITOR_APPLICATION_CONDITION__PATTERN)
 	}
 
 	/**
 	 * Validates that the given pattern has no parameters and is no rule. 
 	 */
-	def checkPatternInCondition(EditorPattern pattern, EStructuralFeature feature) {
+	def checkPatternInApplicationCondition(EditorPattern pattern, EStructuralFeature feature) {
 		// Patterns in conditions must not be rules.
 		if (pattern.type === EditorPatternType.RULE) {
 			error(

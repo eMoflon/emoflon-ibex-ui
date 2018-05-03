@@ -1,13 +1,14 @@
 package org.emoflon.ibex.gt.editor.tests
 
+import org.eclipse.emf.common.util.URI
+import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
-import org.emoflon.ibex.gt.editor.gT.EditorForbid
+import org.emoflon.ibex.gt.editor.gT.EditorApplicationCondition
+import org.emoflon.ibex.gt.editor.gT.EditorApplicationConditionType
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.eclipse.emf.common.util.URI
-import org.eclipse.xtext.resource.XtextResourceSet
 
 /**
  * JUnit tests for cross file references for conditions and patterns.
@@ -87,8 +88,10 @@ class GTParsingCrossFilesTest extends GTParsingTest {
 		// file2.gt: resolve reference to pattern p from file1.gt
 		Assert.assertEquals(1, c.conditions.size)
 		val c1 = c.conditions.get(0)
-		Assert.assertTrue(c1 instanceof EditorForbid)
-		Assert.assertEquals(p, (c1 as EditorForbid).pattern)
+		Assert.assertTrue(c1 instanceof EditorApplicationCondition)
+		val c1a = c1 as EditorApplicationCondition
+		Assert.assertEquals(EditorApplicationConditionType.NEGATIVE, c1a.type)
+		Assert.assertEquals(p, c1a.pattern)
 	}
 
 	def parseTwoFilesFromSamePackage(CharSequence s1, CharSequence s2) {

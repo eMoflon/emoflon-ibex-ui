@@ -7,12 +7,11 @@ import org.eclipse.emf.ecore.EReference
 import org.eclipse.xtext.scoping.Scopes
 import org.eclipse.xtext.scoping.impl.FilteringScope
 
+import org.emoflon.ibex.gt.editor.gT.EditorApplicationCondition
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
 import org.emoflon.ibex.gt.editor.gT.EditorConditionReference
-import org.emoflon.ibex.gt.editor.gT.EditorEnforce
 import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression
-import org.emoflon.ibex.gt.editor.gT.EditorForbid
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile
 import org.emoflon.ibex.gt.editor.gT.EditorNode
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
@@ -119,8 +118,8 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	}
 
 	def isPatternOfCondition(EObject context, EReference reference) {
-		return (context instanceof EditorEnforce && reference == GTPackage.Literals.EDITOR_ENFORCE__PATTERN) ||
-			(context instanceof EditorForbid && reference == GTPackage.Literals.EDITOR_FORBID__PATTERN)
+		return (context instanceof EditorApplicationCondition &&
+			reference == GTPackage.Literals.EDITOR_APPLICATION_CONDITION__PATTERN)
 	}
 
 	def isNodeType(EObject context, EReference reference) {

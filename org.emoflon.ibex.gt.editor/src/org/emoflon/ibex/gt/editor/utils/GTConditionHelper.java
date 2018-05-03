@@ -3,17 +3,16 @@ package org.emoflon.ibex.gt.editor.utils;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.emoflon.ibex.gt.editor.gT.EditorApplicationCondition;
 import org.emoflon.ibex.gt.editor.gT.EditorCondition;
 import org.emoflon.ibex.gt.editor.gT.EditorConditionReference;
-import org.emoflon.ibex.gt.editor.gT.EditorEnforce;
-import org.emoflon.ibex.gt.editor.gT.EditorForbid;
 import org.emoflon.ibex.gt.editor.gT.EditorSimpleCondition;
 
 /**
  * Utility class to flatten {@link EditorConditionReference}s.
  */
 public class GTConditionHelper {
-	private Set<EditorSimpleCondition> simpleConditions = new HashSet<EditorSimpleCondition>();
+	private Set<EditorApplicationCondition> applicationConditions = new HashSet<EditorApplicationCondition>();
 	private Set<EditorCondition> visitedConditions = new HashSet<EditorCondition>();
 	private boolean hasIllegalReferences = false;
 
@@ -36,8 +35,8 @@ public class GTConditionHelper {
 	}
 
 	private void visit(final EditorSimpleCondition simpleCondition) {
-		if (simpleCondition instanceof EditorEnforce || simpleCondition instanceof EditorForbid) {
-			simpleConditions.add(simpleCondition);
+		if (simpleCondition instanceof EditorApplicationCondition) {
+			applicationConditions.add((EditorApplicationCondition) simpleCondition);
 		} else if (simpleCondition instanceof EditorConditionReference) {
 			EditorCondition referencedCondition = ((EditorConditionReference) simpleCondition).getCondition();
 			if (visitedConditions.contains(referencedCondition)) {
@@ -53,8 +52,8 @@ public class GTConditionHelper {
 	 * 
 	 * @return the enforce and forbid conditions
 	 */
-	public Set<EditorSimpleCondition> getAllConditions() {
-		return simpleConditions;
+	public Set<EditorApplicationCondition> getApplicationConditions() {
+		return applicationConditions;
 	}
 
 	/**

@@ -91,7 +91,9 @@ EditorCondition:
 EditorSimpleCondition:
 	{EditorConditionReference}
 	condition=[EditorCondition] |
-	{EditorEnforce}
-	'enforce' pattern=[EditorPattern] |
-	{EditorForbid}
-	'forbid' pattern=[EditorPattern];
+	{EditorApplicationCondition}
+	type=EditorApplicationConditionType pattern=[EditorPattern];
+
+enum EditorApplicationConditionType:
+	POSITIVE='enforce' |
+	NEGATIVE='forbid';

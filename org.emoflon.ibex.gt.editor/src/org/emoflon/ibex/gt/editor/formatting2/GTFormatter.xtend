@@ -7,10 +7,9 @@ import org.eclipse.xtext.formatting2.AbstractFormatter2
 import org.eclipse.xtext.formatting2.IFormattableDocument
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 
+import org.emoflon.ibex.gt.editor.gT.EditorApplicationCondition
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorCondition
-import org.emoflon.ibex.gt.editor.gT.EditorEnforce
-import org.emoflon.ibex.gt.editor.gT.EditorForbid
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile
 import org.emoflon.ibex.gt.editor.gT.EditorImport
 import org.emoflon.ibex.gt.editor.gT.EditorNode
@@ -203,12 +202,8 @@ class GTFormatter extends AbstractFormatter2 {
 		]
 	}
 
-	def dispatch void format(EditorEnforce condition, extension IFormattableDocument document) {
-		condition.regionFor.keyword('enforce').append[oneSpace]
-	}
-
-	def dispatch void format(EditorForbid condition, extension IFormattableDocument document) {
-		condition.regionFor.keyword('forbid').append[oneSpace]
+	def dispatch void format(EditorApplicationCondition condition, extension IFormattableDocument document) {
+		condition.regionFor.feature(GTPackage.Literals.EDITOR_APPLICATION_CONDITION__TYPE).append[oneSpace]
 	}
 
 	/**

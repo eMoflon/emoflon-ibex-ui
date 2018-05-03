@@ -1,11 +1,10 @@
 package org.emoflon.ibex.gt.editor.ui.visualization
 
+import org.emoflon.ibex.gt.editor.gT.EditorApplicationCondition
+import org.emoflon.ibex.gt.editor.gT.EditorApplicationConditionType
 import org.emoflon.ibex.gt.editor.gT.EditorCondition
-import org.emoflon.ibex.gt.editor.gT.EditorEnforce
-import org.emoflon.ibex.gt.editor.gT.EditorForbid
 import org.emoflon.ibex.gt.editor.gT.EditorPattern
 import org.emoflon.ibex.gt.editor.gT.EditorParameter
-import org.emoflon.ibex.gt.editor.gT.EditorSimpleCondition
 import org.emoflon.ibex.gt.editor.utils.GTConditionHelper
 
 /**
@@ -43,18 +42,18 @@ class GTVisualizationUtils {
 	 * Returns a String representation of the flattened clauses of the condition.
 	 */
 	public static def String getConditionString(EditorCondition condition) {
-		val conditions = new GTConditionHelper(condition).getAllConditions()
+		val conditions = new GTConditionHelper(condition).getApplicationConditions()
 		'''«FOR c : conditions SEPARATOR ' **&&** '»«getConditionString(c)»«ENDFOR»'''
 	}
 
 	/**
-	 * Returns a String representation of the simple condition.
+	 * Returns a String representation of the application condition.
 	 */
-	private static def String getConditionString(EditorSimpleCondition condition) {
-		if (condition instanceof EditorEnforce) {
+	private static def String getConditionString(EditorApplicationCondition condition) {
+		if (condition.type == EditorApplicationConditionType.POSITIVE) {
 			return '''**enforce** «condition.pattern.name»'''
 		}
-		if (condition instanceof EditorForbid) {
+		if (condition.type == EditorApplicationConditionType.NEGATIVE) {
 			return '''**forbid** «condition.pattern.name»'''
 		}
 		return ""
