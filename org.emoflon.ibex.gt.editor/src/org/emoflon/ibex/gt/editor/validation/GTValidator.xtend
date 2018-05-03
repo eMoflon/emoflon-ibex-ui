@@ -23,8 +23,8 @@ import org.emoflon.ibex.gt.editor.gT.EditorPatternType
 import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
 import org.emoflon.ibex.gt.editor.gT.GTPackage
+import org.emoflon.ibex.gt.editor.utils.GTEditorAttributeComparator
 import org.emoflon.ibex.gt.editor.utils.GTEditorAttributeUtils
-import org.emoflon.ibex.gt.editor.utils.GTEditorComparator
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 import org.emoflon.ibex.gt.editor.utils.GTFlatteningUtils
 import org.emoflon.ibex.gt.editor.utils.GTEditorPatternUtils
@@ -606,7 +606,7 @@ class GTValidator extends AbstractGTValidator {
 			} else {
 				// There should be no duplicate constraints within a node.
 				val constraints = node.attributes.filter [
-					GTEditorComparator.areAttributeConstraintsEqual(it, attributeConstraint)
+					GTEditorAttributeComparator.areAttributeConstraintsEqual(it, attributeConstraint)
 				]
 				if (constraints.size > 1) {
 					warning(

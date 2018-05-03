@@ -27,7 +27,7 @@ public class GTEditorPatternUtils {
 	public static Set<EditorPattern> getAllSuperPatterns(final EditorPattern pattern) {
 		Set<EditorPattern> patterns = new HashSet<EditorPattern>();
 		for (EditorPattern superPattern : pattern.getSuperPatterns()) {
-			// Check necessary to avoid 
+			// Check necessary to avoid endless loop.
 			if (!isRefinementOf(superPattern, pattern)) {
 				patterns.add(superPattern);
 				patterns.addAll(getAllSuperPatterns(superPattern));

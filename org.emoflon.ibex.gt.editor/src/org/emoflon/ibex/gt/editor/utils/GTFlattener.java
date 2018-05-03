@@ -268,7 +268,7 @@ public class GTFlattener {
 	 */
 	private void mergeAttribute(final EditorNode node, final EditorAttribute mergedAttribute) {
 		Optional<EditorAttribute> attribute = node.getAttributes().stream()
-				.filter(a -> GTEditorComparator.areAttributeConstraintsEqual(a, mergedAttribute)).findAny();
+				.filter(a -> GTEditorAttributeComparator.areAttributeConstraintsEqual(a, mergedAttribute)).findAny();
 		if (!attribute.isPresent()) {
 			if (GTFlatteningUtils.hasConflictingAssignment(node, mergedAttribute)) {
 				errors.add(String.format("Node %s has multiple assignments for attribute %s.", node.getName(),
@@ -304,7 +304,7 @@ public class GTFlattener {
 	 */
 	private void mergeReference(final EditorNode node, final EditorReference mergedReference) {
 		Optional<EditorReference> referenceInNode = node.getReferences().stream()
-				.filter(r -> GTEditorComparator.areReferencesEqual(r, mergedReference)).findAny();
+				.filter(r -> GTEditorAttributeComparator.areReferencesEqual(r, mergedReference)).findAny();
 		if (referenceInNode.isPresent()) {
 			Optional<EditorOperator> operator = GTFlatteningUtils.getMergedOperator(referenceInNode.get().getOperator(),
 					mergedReference.getOperator());
