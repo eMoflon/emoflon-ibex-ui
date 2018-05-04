@@ -229,6 +229,11 @@ class GTFormattingTest {
 			pattern findClassWithoutAnnotation {
 				clazz: EClass
 			}
+			when noAnnotation
+			
+			pattern findClass {
+				clazz: EClass
+			}
 			when noAnnotation || hasAnnotation
 			
 			abstract pattern findClassWithAnnotation {
@@ -249,10 +254,12 @@ class GTFormattingTest {
 			expected,
 			'''
 				import "http://www.eclipse.org/emf/2002/Ecore"	
-					pattern findClassWithoutAnnotation {clazz: EClass}	when 
-					noAnnotation 
+					pattern findClassWithoutAnnotation {clazz: EClass}	when  noAnnotation  
+								
+				pattern findClass { clazz: EClass }	when 
+						noAnnotation 
 					|| 
-					hasAnnotation
+						hasAnnotation
 					
 				abstract pattern findClassWithAnnotation {
 				clazz: EClass {-eAnnotations -> annotation}
@@ -284,39 +291,48 @@ class GTFormattingTest {
 				object: EObject
 			}
 			
+			pattern theSecondPatternUsedInTheConditionsWithAVeryLongName {
+				object: EObject
+			}
+			
 			condition conditionOneWithAVeryLongName = forbid theFirstPatternUsedInTheConditionsWithAVeryLongName
 			
-			condition conditionTwoWithAVeryLongName = enforce theFirstPatternUsedInTheConditionsWithAVeryLongName
+			condition conditionTwoWithAVeryLongName = enforce theSecondPatternUsedInTheConditionsWithAVeryLongName
 			
-			condition conditionThreeWithAVeryLongName = conditionOneWithAVeryLongName && conditionTwoWithAVeryLongName
+			condition conditionThreeWithAVeryLongName = conditionOneWithAVeryLongName
+				&& conditionTwoWithAVeryLongName
 		'''
 		testFormatting(
 			expected,
 			'''
 				import "http://www.eclipse.org/emf/2002/Ecore"
-							
-							pattern p {
-								object: EObject
-							} when  conditionOneWithAVeryLongName  || conditionTwoWithAVeryLongName || conditionThreeWithAVeryLongName
-							
-							pattern theFirstPatternUsedInTheConditionsWithAVeryLongName {
+					
+				pattern p {
+					object: EObject
+				} when  conditionOneWithAVeryLongName  || conditionTwoWithAVeryLongName || conditionThreeWithAVeryLongName
+				
+				pattern theFirstPatternUsedInTheConditionsWithAVeryLongName {
+					object: EObject
+				}
+				
+				pattern theSecondPatternUsedInTheConditionsWithAVeryLongName {
 								object: EObject
 							}
-							
-							condition
-							conditionOneWithAVeryLongName 
-								= 
-								forbid 
-								theFirstPatternUsedInTheConditionsWithAVeryLongName
-							
-							condition
-								conditionTwoWithAVeryLongName 
-								= 
-								enforce theFirstPatternUsedInTheConditionsWithAVeryLongName
-							
-							condition   conditionThreeWithAVeryLongName 
-								=    conditionOneWithAVeryLongName
-								&& 	 conditionTwoWithAVeryLongName
+				
+					condition
+				conditionOneWithAVeryLongName 
+					= 
+					forbid 
+					theFirstPatternUsedInTheConditionsWithAVeryLongName
+				
+				condition
+					conditionTwoWithAVeryLongName 
+					= 
+					enforce theSecondPatternUsedInTheConditionsWithAVeryLongName
+				
+				condition   conditionThreeWithAVeryLongName 
+					=    conditionOneWithAVeryLongName 
+					&& 	 conditionTwoWithAVeryLongName
 			'''
 		)
 	}

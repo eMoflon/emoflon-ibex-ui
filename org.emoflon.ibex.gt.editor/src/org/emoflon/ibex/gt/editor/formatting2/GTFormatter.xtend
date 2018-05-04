@@ -109,7 +109,7 @@ class GTFormatter extends AbstractFormatter2 {
 		// New line before and one space after for keyword "when".
 		pattern.regionFor.keyword("when").prepend[newLine].append[oneSpace]
 
-		if (pattern.conditions.size > 0) {
+		if (pattern.conditions.size > 1) {
 			val alternatives = pattern.regionFor.keywords('||')
 			var length = 5 + 4 * (pattern.conditions.size - 1) // length of "when " and " || "s 
 			length += alternatives.get(0).previousSemanticRegion.length
@@ -123,7 +123,7 @@ class GTFormatter extends AbstractFormatter2 {
 					it.surround[oneSpace]
 				]
 			} else {
-				// One condition per line: line break and two spaces after "||".
+				// One condition per line: line break and two spaces before "||".
 				alternatives.forEach [
 					it.prepend[space = System.lineSeparator + "  "].append[oneSpace]
 				]
@@ -191,15 +191,33 @@ class GTFormatter extends AbstractFormatter2 {
 		// One space before and after "=".
 		condition.regionFor.keyword('=').surround[oneSpace]
 
-		// One space before and after "&&".
-		val ands = condition.regionFor.keywords('&&')
-		ands.forEach [
-			it.surround[oneSpace]
-		]
-
+		// Format the application conditions.
 		condition.conditions.forEach [
 			it.format
 		]
+
+		if (condition.conditions.size > 1) {
+			val nameRegion = condition.regionFor.feature(GTPackage.Literals.EDITOR_CONDITION__NAME)
+			var length = 10 + nameRegion.length + 3 // length of "condition <name> = "
+			val andRegions = condition.regionFor.keywords('&&')
+			length += 4 * (condition.conditions.size - 1) // length of " && "s 
+			length += andRegions.get(0).previousSemanticRegion.length
+			for (a : andRegions) {
+				length += a.nextSemanticRegion.length
+			}
+
+			if (length < MAX_LINE_WIDTH) {
+				// One space before and after "&&".
+				andRegions.forEach [
+					it.surround[oneSpace]
+				]
+			} else {
+				// One condition per line: line break and tab before "&&".
+				andRegions.forEach [
+					it.prepend[space = System.lineSeparator + "\t"].append[oneSpace]
+				]
+			}
+		}
 	}
 
 	def dispatch void format(EditorApplicationCondition condition, extension IFormattableDocument document) {
