@@ -284,12 +284,16 @@ class GTValidator extends AbstractGTValidator {
 		}
 
 		// The pattern must contain at least one node or refine multiple patterns or have graph conditions.
-		if (pattern.nodes.size == 0 && pattern.superPatterns.size < 2 && pattern.conditions.size == 0) {
-			error(
-				String.format(PATTERN_EMPTY_MESSAGE, pattern.toText),
-				GTPackage.Literals.EDITOR_PATTERN__NODES,
-				GTValidator.PATTERN_EMPTY
-			)
+		if (pattern.nodes.size == 0) {
+			val noSuperPatterns = pattern.superPatterns.size == 0
+			val oneSuperPatternAndNoConditions = pattern.superPatterns.size == 1 && pattern.conditions.size == 0
+			if (noSuperPatterns || oneSuperPatternAndNoConditions) {
+				error(
+					String.format(PATTERN_EMPTY_MESSAGE, pattern.toText),
+					GTPackage.Literals.EDITOR_PATTERN__NODES,
+					GTValidator.PATTERN_EMPTY
+				)
+			}
 		}
 
 		// Pattern names must be unique.
