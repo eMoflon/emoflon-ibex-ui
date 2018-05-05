@@ -215,7 +215,7 @@ class GTParsingNodesTest extends GTParsingTest {
 			GTPackage.eINSTANCE.editorNode,
 			GTValidator.NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE,
 			String.format(GTValidator.NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE_MESSAGE, 'c', 'EDataType',
-				'super')
+				"pattern 'super'")
 		)
 	}
 

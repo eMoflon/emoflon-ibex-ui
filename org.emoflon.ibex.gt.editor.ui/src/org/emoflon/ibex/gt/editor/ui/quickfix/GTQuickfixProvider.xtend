@@ -48,6 +48,22 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 	}
 
 	/**
+	 * Removes the duplicate conditions.
+	 */
+	@Fix(GTValidator.PATTERN_CONDITIONS_DUPLICATE)
+	def removeDuplicateConditions(Issue issue, IssueResolutionAcceptor acceptor) {
+		GTPatternQuickfixes.makeConditionsDistinct(issue, acceptor)
+	}
+
+	/**
+	 * Removes all conditions of the abstract pattern.
+	 */
+	@Fix(GTValidator.PATTERN_CONDITIONS_NOT_ALLOWED_ABSTRACT)
+	def removeConditions(Issue issue, IssueResolutionAcceptor acceptor) {
+		GTPatternQuickfixes.removeConditions(issue, acceptor)
+	}
+
+	/**
 	 * Converts a pattern to a rule.
 	 */
 	@Fix(GTValidator.PATTERN_TYPE_INVALID_PATTERN)

@@ -7,12 +7,9 @@ import org.eclipse.xtext.formatting2.AbstractFormatter2
 import org.eclipse.xtext.formatting2.IFormattableDocument
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 
-import org.emoflon.ibex.gt.editor.gT.EditorAndCondition
+import org.emoflon.ibex.gt.editor.gT.EditorApplicationCondition
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorCondition
-import org.emoflon.ibex.gt.editor.gT.EditorConditionReference
-import org.emoflon.ibex.gt.editor.gT.EditorEnforce
-import org.emoflon.ibex.gt.editor.gT.EditorForbid
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile
 import org.emoflon.ibex.gt.editor.gT.EditorImport
 import org.emoflon.ibex.gt.editor.gT.EditorNode
@@ -28,6 +25,7 @@ import org.emoflon.ibex.gt.editor.gT.GTPackage
  * https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#formatting
  */
 class GTFormatter extends AbstractFormatter2 {
+	private static val MAX_LINE_WIDTH = 100
 
 	def dispatch void format(EditorGTFile file, extension IFormattableDocument document) {
 		// No space before first import.
@@ -35,7 +33,7 @@ class GTFormatter extends AbstractFormatter2 {
 			file.imports.get(0).prepend[noSpace]
 		}
 
-		// Empty line after imports
+		// Empty line after imports.
 		formatList(file.imports, document, 0, 1, 2)
 
 		val lastPattern = NodeModelUtils.getNode(file.patterns.last)
@@ -66,6 +64,7 @@ class GTFormatter extends AbstractFormatter2 {
 	}
 
 	def dispatch void format(EditorImport i, extension IFormattableDocument document) {
+		// One space after the "import" keyword.
 		i.regionFor.keyword("import").append[oneSpace]
 	}
 
@@ -79,25 +78,21 @@ class GTFormatter extends AbstractFormatter2 {
 		pattern.regionFor.feature(GTPackage.Literals.EDITOR_PATTERN__TYPE).append[oneSpace]
 
 		// New line before "refines", one space after "refines".
-		pattern.regionFor.keyword("refines").prepend[newLine]
-		pattern.regionFor.keyword("refines").append[oneSpace]
+		pattern.regionFor.keyword("refines").prepend[newLine].append[oneSpace]
 
 		// No space between pattern name, "(" and first parameter.
-		pattern.regionFor.keyword("(").prepend[noSpace]
-		pattern.regionFor.keyword("(").append[noSpace]
+		pattern.regionFor.keyword("(").prepend[noSpace].append[noSpace]
 
 		pattern.parameters.forEach [
 			it.format
 		]
 
 		pattern.regionFor.keywords(",").forEach [
-			it.prepend[noSpace]
-			it.append[oneSpace]
+			it.prepend[noSpace].append[oneSpace]
 		]
 
 		// No space between last parameter and ")", but one space between ")" and "{"
-		pattern.regionFor.keyword(")").prepend[noSpace]
-		pattern.regionFor.keyword(")").append[oneSpace]
+		pattern.regionFor.keyword(")").prepend[noSpace].append[oneSpace]
 
 		// One space before "{".
 		pattern.regionFor.keyword("{").prepend[oneSpace]
@@ -112,19 +107,33 @@ class GTFormatter extends AbstractFormatter2 {
 		formatList(pattern.nodes, document, 1, 2, 1)
 
 		// New line before and one space after for keyword "when".
-		pattern.regionFor.keyword("when").prepend[newLine]
-		pattern.regionFor.keyword("when").append[oneSpace]
+		pattern.regionFor.keyword("when").prepend[newLine].append[oneSpace]
 
-		// One space before and after "||".
-		pattern.regionFor.keywords('||').forEach [
-			it.surround[oneSpace]
-		]
+		if (pattern.conditions.size > 1) {
+			val alternatives = pattern.regionFor.keywords('||')
+			var length = 5 + 4 * (pattern.conditions.size - 1) // length of "when " and " || "s 
+			length += alternatives.get(0).previousSemanticRegion.length
+			for (a : alternatives) {
+				length += a.nextSemanticRegion.length
+			}
+
+			if (length < MAX_LINE_WIDTH) {
+				// One space before and after "||".
+				alternatives.forEach [
+					it.surround[oneSpace]
+				]
+			} else {
+				// One condition per line: line break and two spaces before "||".
+				alternatives.forEach [
+					it.prepend[space = System.lineSeparator + "  "].append[oneSpace]
+				]
+			}
+		}
 	}
 
 	def dispatch void format(EditorParameter parameter, extension IFormattableDocument document) {
 		// No space before ":", one space after ":".
-		parameter.regionFor.keyword(":").prepend[noSpace]
-		parameter.regionFor.keyword(":").append[oneSpace]
+		parameter.regionFor.keyword(":").prepend[noSpace].append[oneSpace]
 	}
 
 	def dispatch void format(EditorNode node, extension IFormattableDocument document) {
@@ -132,8 +141,7 @@ class GTFormatter extends AbstractFormatter2 {
 		node.regionFor.keyword("{").prepend[oneSpace]
 
 		// No space before ":", but one space after ":".
-		node.regionFor.keyword(":").prepend[noSpace]
-		node.regionFor.keyword(":").append[oneSpace]
+		node.regionFor.keyword(":").prepend[noSpace].append[oneSpace]
 
 		// Indent everything between "{" and "}".
 		val nodeContent = node.regionFor.keywordPairs("{", "}")
@@ -143,14 +151,12 @@ class GTFormatter extends AbstractFormatter2 {
 
 		// New line for each attribute.
 		node.attributes.forEach [
-			it.format
-			it.surround[newLine]
+			it.format.surround[newLine]
 		]
 
 		// New line for each reference.
 		node.references.forEach [
-			it.format
-			it.surround[newLine]
+			it.format.surround[newLine]
 		]
 	}
 
@@ -171,8 +177,7 @@ class GTFormatter extends AbstractFormatter2 {
 			reference.regionFor.feature(GTPackage.Literals.EDITOR_REFERENCE__OPERATOR).append[oneSpace]
 
 			// One space before "-", but no space between "-" and the reference name.
-			reference.regionFor.keyword("-").prepend[oneSpace]
-			reference.regionFor.keyword("-").append[noSpace]
+			reference.regionFor.keyword("-").prepend[oneSpace].append[noSpace]
 		}
 
 		// One space before and after ->.
@@ -181,32 +186,42 @@ class GTFormatter extends AbstractFormatter2 {
 
 	def dispatch void format(EditorCondition condition, extension IFormattableDocument document) {
 		// No space before and one space after 'condition'.
-		condition.regionFor.keyword('condition').prepend[noSpace]
-		condition.regionFor.keyword('condition').append[oneSpace]
+		condition.regionFor.keyword('condition').prepend[noSpace].append[oneSpace]
 
 		// One space before and after "=".
 		condition.regionFor.keyword('=').surround[oneSpace]
 
-		// Format condition value.
-		condition.expression.format
+		// Format the application conditions.
+		condition.conditions.forEach [
+			it.format
+		]
+
+		if (condition.conditions.size > 1) {
+			val nameRegion = condition.regionFor.feature(GTPackage.Literals.EDITOR_CONDITION__NAME)
+			var length = 10 + nameRegion.length + 3 // length of "condition <name> = "
+			val andRegions = condition.regionFor.keywords('&&')
+			length += 4 * (condition.conditions.size - 1) // length of " && "s 
+			length += andRegions.get(0).previousSemanticRegion.length
+			for (a : andRegions) {
+				length += a.nextSemanticRegion.length
+			}
+
+			if (length < MAX_LINE_WIDTH) {
+				// One space before and after "&&".
+				andRegions.forEach [
+					it.surround[oneSpace]
+				]
+			} else {
+				// One condition per line: line break and tab before "&&".
+				andRegions.forEach [
+					it.prepend[space = System.lineSeparator + "\t"].append[oneSpace]
+				]
+			}
+		}
 	}
 
-	def dispatch void format(EditorAndCondition condition, extension IFormattableDocument document) {
-		condition.regionFor.keyword('&&').surround[oneSpace]
-		condition.left.format
-		condition.right.format
-	}
-
-	def dispatch void format(EditorConditionReference condition, extension IFormattableDocument document) {
-		condition.regionFor.keyword('check').append[oneSpace]
-	}
-
-	def dispatch void format(EditorEnforce condition, extension IFormattableDocument document) {
-		condition.regionFor.keyword('enforce').append[oneSpace]
-	}
-
-	def dispatch void format(EditorForbid condition, extension IFormattableDocument document) {
-		condition.regionFor.keyword('forbid').append[oneSpace]
+	def dispatch void format(EditorApplicationCondition condition, extension IFormattableDocument document) {
+		condition.regionFor.feature(GTPackage.Literals.EDITOR_APPLICATION_CONDITION__TYPE).append[oneSpace]
 	}
 
 	/**
@@ -223,11 +238,9 @@ class GTFormatter extends AbstractFormatter2 {
 		}
 
 		for (var index = 0; index < items.size() - 1; index++) {
-			items.get(index).format
-			items.get(index).append[newLines = newLinesAfterItem]
+			items.get(index).format.append[newLines = newLinesAfterItem]
 		}
 
-		items.get(items.size() - 1).format
-		items.get(items.size() - 1).append[newLines = newLinesAfterLastItem]
+		items.get(items.size() - 1).format.append[newLines = newLinesAfterLastItem]
 	}
 }

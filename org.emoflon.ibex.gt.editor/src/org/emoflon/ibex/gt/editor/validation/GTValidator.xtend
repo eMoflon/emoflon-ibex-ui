@@ -2,15 +2,16 @@ package org.emoflon.ibex.gt.editor.validation
 
 import java.util.Collection
 
-import org.eclipse.emf.ecore.EPackage
+import org.eclipse.emf.ecore.EClass
+import org.eclipse.emf.ecore.EDataType
 import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.CheckType
 
+import org.emoflon.ibex.gt.editor.gT.EditorApplicationCondition
+import org.emoflon.ibex.gt.editor.gT.EditorApplicationConditionType
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorCondition
-import org.emoflon.ibex.gt.editor.gT.EditorEnforce
-import org.emoflon.ibex.gt.editor.gT.EditorForbid
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile
 import org.emoflon.ibex.gt.editor.gT.EditorImport
 import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression
@@ -22,8 +23,9 @@ import org.emoflon.ibex.gt.editor.gT.EditorPatternType
 import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
 import org.emoflon.ibex.gt.editor.gT.GTPackage
+import org.emoflon.ibex.gt.editor.utils.GTConditionHelper
+import org.emoflon.ibex.gt.editor.utils.GTEditorAttributeComparator
 import org.emoflon.ibex.gt.editor.utils.GTEditorAttributeUtils
-import org.emoflon.ibex.gt.editor.utils.GTEditorComparator
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 import org.emoflon.ibex.gt.editor.utils.GTFlatteningUtils
 import org.emoflon.ibex.gt.editor.utils.GTEditorPatternUtils
@@ -81,10 +83,14 @@ class GTValidator extends AbstractGTValidator {
 
 	// Errors for patterns.
 	public static val PATTERN_CONDITIONS_DUPLICATE = CODE_PREFIX + "pattern.conditions.duplicate"
-	public static val PATTERN_CONDITIONS_DUPLICATE_MESSAGE = "The conditions of '%s' must be distinct."
+	public static val PATTERN_CONDITIONS_DUPLICATE_MESSAGE = "The conditions of %s must be distinct."
+
+	public static val PATTERN_CONDITIONS_NOT_ALLOWED_ABSTRACT = CODE_PREFIX +
+		"pattern.conditions.withoutEffectForAbstractPattern"
+	public static val PATTERN_CONDITIONS_NOT_ALLOWED_ABSTRACT_MESSAGE = "Conditions for abstract %s don't have any effect."
 
 	public static val PATTERN_EMPTY = CODE_PREFIX + "pattern.empty"
-	public static val PATTERN_EMPTY_MESSAGE = "Pattern/rule '%s' must not be empty."
+	public static val PATTERN_EMPTY_MESSAGE = "The %s must not be empty."
 
 	public static val PATTERN_NAME_CONTAINS_UNDERSCORES_MESSAGE = "Pattern/rule name '%s' contains underscores. Use camelCase instead."
 	public static val PATTERN_NAME_FORBIDDEN_MESSAGE = "Patterns/rules cannot be named '%s'. Use a different name."
@@ -104,11 +110,11 @@ class GTValidator extends AbstractGTValidator {
 	public static val PATTERN_SUPER_PATTERNS_INVALID_MESSAGE = "Cycle in refinement hierarchy: '%s' and '%s'."
 
 	public static val PATTERN_SUPER_PATTERNS_INVALID_PARAMETER = CODE_PREFIX + "pattern.superPatterns.invalidParameter"
-	public static val PATTERN_SUPER_PATTERNS_INVALID_PARAMETER_MESSAGE = "Pattern/rule '%s' has conflicting type declarations for parameter '%s': %s."
+	public static val PATTERN_SUPER_PATTERNS_INVALID_PARAMETER_MESSAGE = "%s has conflicting type declarations for parameter '%s': %s."
 
 	public static val PATTERN_SUPER_PATTERNS_INVALID_ATTRIBUTE_ASSIGNMENT = CODE_PREFIX +
 		"pattern.superPatterns.invalidAttributeAssignment"
-	public static val PATTERN_SUPER_PATTERNS_INVALID_ATTRIBUTE_ASSIGNMENT_MESSAGE = "Rule '%s' has conflicting attribute assignments for node '%s'."
+	public static val PATTERN_SUPER_PATTERNS_INVALID_ATTRIBUTE_ASSIGNMENT_MESSAGE = "%s has conflicting attribute assignments for node '%s'."
 
 	// Errors for parameters.
 	public static val PARAMETER_NAME_CONTAINS_UNDERSCORES_MESSAGE = "Parameter name '%s' contains underscores. Use camelCase instead."
@@ -131,7 +137,7 @@ class GTValidator extends AbstractGTValidator {
 
 	public static val NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE = CODE_PREFIX +
 		"node.type.notCompatibleWithDeclarationInSuperRule"
-	public static val NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE_MESSAGE = "The type of node '%s' is not compatible with '%s' from super rule '%s'."
+	public static val NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE_MESSAGE = "The type of node '%s' is not compatible with '%s' defined in super %s."
 
 	public static val CREATE_NODE_TYPE_ABSTRACT = CODE_PREFIX + "node.type.createdNodeAbstractType"
 	public static val CREATE_NODE_TYPE_ABSTRACT_MESSAGE = "The type of created node '%s' must not be abstract."
@@ -182,6 +188,9 @@ class GTValidator extends AbstractGTValidator {
 	// Errors for conditions
 	public static val CONDITION_NAME_MULTIPLE_DECLARATIONS_MESSAGE = "Condition '%s' must not be declared %s."
 
+	public static val CONDITION_PAC_AND_NAC_FOR_SAME_PATTERN = CODE_PREFIX + "condition.conflicting"
+	public static val CONDITION_PAC_AND_NAC_FOR_SAME_PATTERN_MESSAGE = "Condition '%s' contains a positive and a negative application condition for pattern '%s'."
+
 	public static val CONDITION_PATTERN_INVALID_CONDITIONS = CODE_PREFIX +
 		"condition.pattern.invalid.hasMultipleConditions"
 	public static val CONDITION_PATTERN_INVALID_CONDITIONS_MESSAGE = "Condition may not use '%s' because it has multiple conditions."
@@ -191,6 +200,9 @@ class GTValidator extends AbstractGTValidator {
 
 	public static val CONDITION_PATTERN_INVALID_RULE = CODE_PREFIX + "condition.pattern.invalid.isRule"
 	public static val CONDITION_PATTERN_INVALID_RULE_MESSAGE = "Condition may not use '%s' because it is a rule."
+
+	public static val CONDITION_SELF_REFERENCE = CODE_PREFIX + "condition.selfReference"
+	public static val CONDITION_SELF_REFERENCE_MESSAGE = "Condition '%s' references itself which is not allowed."
 
 	@Check
 	def checkFile(EditorGTFile file) {
@@ -209,7 +221,9 @@ class GTValidator extends AbstractGTValidator {
 		val ecoreModel = GTEditorModelUtils.loadEcoreModel(importEcore.name)
 		if (ecoreModel.present) {
 			// Imports must be of type ecore.
-			if (GTEditorModelUtils.getElements(ecoreModel.get, EPackage).size > 0) {
+			val classes = GTEditorModelUtils.getElements(ecoreModel.get, EClass).size
+			val datatypes = GTEditorModelUtils.getElements(ecoreModel.get, EDataType).size
+			if (classes + datatypes == 0) {
 				error(
 					String.format(IMPORT_NO_ECORE_MESSAGE, importEcore.name),
 					GTPackage.Literals.EDITOR_IMPORT__NAME,
@@ -270,12 +284,16 @@ class GTValidator extends AbstractGTValidator {
 		}
 
 		// The pattern must contain at least one node or refine multiple patterns or have graph conditions.
-		if (pattern.nodes.size == 0 && pattern.superPatterns.size < 2 && pattern.conditions.size == 0) {
-			error(
-				String.format(PATTERN_EMPTY_MESSAGE, pattern.name),
-				GTPackage.Literals.EDITOR_PATTERN__NODES,
-				GTValidator.PATTERN_EMPTY
-			)
+		if (pattern.nodes.size == 0) {
+			val noSuperPatterns = pattern.superPatterns.size == 0
+			val oneSuperPatternAndNoConditions = pattern.superPatterns.size == 1 && pattern.conditions.size == 0
+			if (noSuperPatterns || oneSuperPatternAndNoConditions) {
+				error(
+					String.format(PATTERN_EMPTY_MESSAGE, pattern.toText),
+					GTPackage.Literals.EDITOR_PATTERN__NODES,
+					GTValidator.PATTERN_EMPTY
+				)
+			}
 		}
 
 		// Pattern names must be unique.
@@ -298,12 +316,24 @@ class GTValidator extends AbstractGTValidator {
 			return;
 		}
 
+		val text = pattern.toText
+
+		// Abstract patterns must not have any conditions.
+		if (pattern.abstract) {
+			warning(
+				String.format(PATTERN_CONDITIONS_NOT_ALLOWED_ABSTRACT_MESSAGE, text),
+				GTPackage.Literals.EDITOR_PATTERN__CONDITIONS,
+				PATTERN_CONDITIONS_NOT_ALLOWED_ABSTRACT,
+				text
+			)
+		}
+
 		if (pattern.conditions.size !== pattern.conditions.stream.distinct.count) {
 			error(
-				String.format(PATTERN_CONDITIONS_DUPLICATE_MESSAGE, pattern.name),
+				String.format(PATTERN_CONDITIONS_DUPLICATE_MESSAGE, pattern.toText),
 				GTPackage.Literals.EDITOR_PATTERN__CONDITIONS,
 				PATTERN_CONDITIONS_DUPLICATE,
-				pattern.name
+				pattern.toText
 			)
 		}
 	}
@@ -343,7 +373,7 @@ class GTValidator extends AbstractGTValidator {
 			if (allTypesForName.size > 1) {
 				val typeList = concatNames(allTypesForName.map[it.name].toSet)
 				error(
-					String.format(PATTERN_SUPER_PATTERNS_INVALID_PARAMETER_MESSAGE, pattern.name, parameterName,
+					String.format(PATTERN_SUPER_PATTERNS_INVALID_PARAMETER_MESSAGE, pattern.toText, parameterName,
 						typeList),
 					GTPackage.Literals.EDITOR_PATTERN__SUPER_PATTERNS,
 					PATTERN_SUPER_PATTERNS_INVALID_PARAMETER
@@ -356,7 +386,8 @@ class GTValidator extends AbstractGTValidator {
 		for (nodeName : allNodes.map[it.name].toSet) {
 			if (GTFlatteningUtils.hasConflictingAssignment(allNodes, nodeName)) {
 				error(
-					String.format(PATTERN_SUPER_PATTERNS_INVALID_ATTRIBUTE_ASSIGNMENT_MESSAGE, pattern.name, nodeName),
+					String.format(PATTERN_SUPER_PATTERNS_INVALID_ATTRIBUTE_ASSIGNMENT_MESSAGE, pattern.toText,
+						nodeName),
 					GTPackage.Literals.EDITOR_PATTERN__SUPER_PATTERNS,
 					PATTERN_SUPER_PATTERNS_INVALID_ATTRIBUTE_ASSIGNMENT
 				)
@@ -518,7 +549,7 @@ class GTValidator extends AbstractGTValidator {
 							val superPattern = it.eContainer as EditorPattern
 							error(
 								String.format(NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE_MESSAGE,
-									node.name, it.type.name, superPattern.name),
+									node.name, it.type.name, superPattern.toText),
 								GTPackage.Literals.EDITOR_NODE__TYPE,
 								NODE_TYPE_NOT_COMPATIBLE_WITH_DECLARATION_IN_SUPER_RULE
 							)
@@ -586,7 +617,7 @@ class GTValidator extends AbstractGTValidator {
 			} else {
 				// There should be no duplicate constraints within a node.
 				val constraints = node.attributes.filter [
-					GTEditorComparator.areAttributeConstraintsEqual(it, attributeConstraint)
+					GTEditorAttributeComparator.areAttributeConstraintsEqual(it, attributeConstraint)
 				]
 				if (constraints.size > 1) {
 					warning(
@@ -703,6 +734,7 @@ class GTValidator extends AbstractGTValidator {
 
 	@Check
 	def checkCondition(EditorCondition condition) {
+		// Names of conditions must be unique.
 		val file = condition.eContainer as EditorGTFile
 		val conditionDeclarationsCount = file.conditions.filter[condition.name.equals(it.name)].size
 		if (conditionDeclarationsCount !== 1) {
@@ -714,22 +746,43 @@ class GTValidator extends AbstractGTValidator {
 			)
 		}
 
+		// A condition may not reference itself.
+		val conditionHelper = new GTConditionHelper(condition);
+		if (conditionHelper.hasSelfReference()) {
+			error(
+				String.format(CONDITION_SELF_REFERENCE_MESSAGE, condition.name),
+				GTPackage.Literals.EDITOR_CONDITION__CONDITIONS,
+				CONDITION_SELF_REFERENCE
+			)
+		}
+
+		// An and clause must not contain a PAC and a NAC for the same pattern.
+		val conditions = conditionHelper.getApplicationConditions
+		val pacs = conditions.filter[it.type == EditorApplicationConditionType.POSITIVE]
+		val nacs = conditions.filter[it.type == EditorApplicationConditionType.NEGATIVE]
+		for (pac : pacs) {
+			for (nac : nacs) {
+				if (pac.pattern === nac.pattern) {
+					error(
+						String.format(CONDITION_PAC_AND_NAC_FOR_SAME_PATTERN_MESSAGE, condition.name, pac.pattern.name),
+						GTPackage.Literals.EDITOR_CONDITION__CONDITIONS,
+						CONDITION_PAC_AND_NAC_FOR_SAME_PATTERN
+					)
+				}
+			}
+		}
 	}
 
 	@Check
-	def checkEnforce(EditorEnforce enforce) {
-		checkPatternInCondition(enforce.pattern, GTPackage.Literals.EDITOR_ENFORCE__PATTERN)
-	}
-
-	@Check
-	def checkForbid(EditorForbid forbid) {
-		checkPatternInCondition(forbid.pattern, GTPackage.Literals.EDITOR_FORBID__PATTERN)
+	def checkEnforce(EditorApplicationCondition applicationCondition) {
+		checkPatternInApplicationCondition(applicationCondition.pattern,
+			GTPackage.Literals.EDITOR_APPLICATION_CONDITION__PATTERN)
 	}
 
 	/**
 	 * Validates that the given pattern has no parameters and is no rule. 
 	 */
-	def checkPatternInCondition(EditorPattern pattern, EStructuralFeature feature) {
+	def checkPatternInApplicationCondition(EditorPattern pattern, EStructuralFeature feature) {
 		// Patterns in conditions must not be rules.
 		if (pattern.type === EditorPatternType.RULE) {
 			error(
@@ -756,6 +809,13 @@ class GTValidator extends AbstractGTValidator {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Returns a String for the pattern containing type and name.
+	 */
+	def static String toText(EditorPattern pattern) {
+		return String.format("%s '%s'", pattern.type, pattern.name)
 	}
 
 	/**

@@ -26,7 +26,7 @@ class GTParsingPatternsTest extends GTParsingTest {
 			file,
 			GTPackage.eINSTANCE.editorPattern,
 			GTValidator.PATTERN_EMPTY,
-			String.format(GTValidator.PATTERN_EMPTY_MESSAGE, 'a')
+			String.format(GTValidator.PATTERN_EMPTY_MESSAGE, "pattern 'a'")
 		)
 	}
 

@@ -87,7 +87,6 @@ abstract class GTParsingTest {
 	}
 
 	static def void assertFile(EditorGTFile file, int ruleCount) {
-		Assert.assertTrue(ruleCount > 0)
 		assertValidResource(file)
 
 		Assert.assertEquals(1, file.imports.size)

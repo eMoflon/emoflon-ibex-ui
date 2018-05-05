@@ -79,7 +79,7 @@ public class GTFlatteningUtils {
 		boolean isAssignment = attribute.getRelation() == EditorRelation.ASSIGNMENT;
 		return isAssignment && !node.getAttributes().stream().filter(
 				a -> a.getRelation() == EditorRelation.ASSIGNMENT && a.getAttribute().equals(attribute.getAttribute()))
-				.allMatch(a -> GTEditorComparator.areExpressionsEqual(a.getValue(), attribute.getValue()));
+				.allMatch(a -> GTEditorAttributeComparator.areExpressionsEqual(a.getValue(), attribute.getValue()));
 	}
 
 	/**
@@ -104,7 +104,7 @@ public class GTFlatteningUtils {
 		for (EditorAttribute assignment : assignments) {
 			if (attributeAssignments.containsKey(assignment.getAttribute())) {
 				// Check whether the assignment is compatible with assignment in map
-				if (!GTEditorComparator.areAttributeConstraintsEqual(assignment,
+				if (!GTEditorAttributeComparator.areAttributeConstraintsEqual(assignment,
 						attributeAssignments.get(assignment.getAttribute()))) {
 					return true;
 				}

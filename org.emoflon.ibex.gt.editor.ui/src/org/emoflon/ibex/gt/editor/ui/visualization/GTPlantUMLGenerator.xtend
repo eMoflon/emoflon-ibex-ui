@@ -4,23 +4,19 @@ import java.util.HashSet
 import java.util.Set
 
 import org.eclipse.emf.common.util.EList
-import org.emoflon.ibex.gt.editor.gT.EditorAndCondition
-import org.emoflon.ibex.gt.editor.gT.EditorConditionReference
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
-import org.emoflon.ibex.gt.editor.gT.EditorConditionExpression
-import org.emoflon.ibex.gt.editor.gT.EditorEnforce
+import org.emoflon.ibex.gt.editor.gT.EditorCondition
 import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression
 import org.emoflon.ibex.gt.editor.gT.EditorExpression
-import org.emoflon.ibex.gt.editor.gT.EditorForbid
 import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression
 import org.emoflon.ibex.gt.editor.gT.EditorNode
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
-import org.emoflon.ibex.gt.editor.gT.EditorParameter
 import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
 import org.emoflon.ibex.gt.editor.gT.EditorPattern
 import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
+import org.emoflon.ibex.gt.editor.utils.GTConditionHelper
 import org.emoflon.ibex.gt.editor.utils.GTEditorPatternUtils
 import org.emoflon.ibex.gt.editor.utils.GTFlattener
 
@@ -79,13 +75,13 @@ class GTPlantUMLGenerator {
 			
 			«IF !pattern.conditions.isEmpty»
 				legend bottom
-					«getConditionString(pattern)»
+					«GTVisualizationUtils.getConditionString(pattern)»
 				endlegend
 			«ENDIF»
 			
 			center footer
 				= «pattern.name»
-				«signature(flattenedPattern)»
+				«GTVisualizationUtils.signature(flattenedPattern)»
 			end footer
 		'''
 	}
@@ -121,7 +117,7 @@ class GTPlantUMLGenerator {
 		val type = if(node.type === null) '?' else node.type.name
 		'''«node.name»: «type»'''
 	}
-	
+
 	/**
 	 * Prints the node with the given name in the pattern.
 	 */
@@ -201,75 +197,21 @@ class GTPlantUMLGenerator {
 	 */
 	private static def Set<EditorPattern> getConditionPatterns(EditorPattern pattern) {
 		val patterns = new HashSet
-		pattern.conditions.forEach [
-			patterns.addAll(getConditionPatterns(it.expression))
-		]
+		for (c : pattern.conditions) {
+			patterns.addAll(getConditionPatterns(c))
+		}
 		return patterns
 	}
 
 	/**
-	 * Extracts the patterns from a single condition. 
+	 * Extracts the patterns from a list of simple conditions.
 	 */
-	private static def Set<EditorPattern> getConditionPatterns(EditorConditionExpression condition) {
+	private static def Set<EditorPattern> getConditionPatterns(EditorCondition condition) {
 		val patterns = new HashSet
-		if (condition instanceof EditorAndCondition) {
-			patterns.addAll(getConditionPatterns(condition.left))
-			patterns.addAll(getConditionPatterns(condition.right))
-		}
-		if (condition instanceof EditorConditionReference) {
-			patterns.addAll(getConditionPatterns(condition.condition.expression))
-		}
-		if (condition instanceof EditorEnforce) {
-			patterns.add(condition.pattern)
-		}
-		if (condition instanceof EditorForbid) {
-			patterns.add(condition.pattern)
+		for (c : new GTConditionHelper(condition).getApplicationConditions()) {
+			patterns.add(c.pattern)
 		}
 		return patterns
-	}
-
-	/**
-	 * Prints the conditions of the pattern.
-	 */
-	private static def String getConditionString(EditorPattern pattern) {
-		'''
-			«FOR c : pattern.conditions SEPARATOR ' **||** '»
-				(«getConditionString(c.expression)»)
-			«ENDFOR»
-		'''
-	}
-
-	/**
-	 * Print the condition.
-	 */
-	private static def String getConditionString(EditorConditionExpression condition) {
-		if (condition instanceof EditorAndCondition) {
-			return '''«getConditionString(condition.left)» **&&** «getConditionString(condition.right)»'''
-		}
-		if (condition instanceof EditorConditionReference) {
-			return '''«getConditionString(condition.condition.expression)»'''
-		}
-		if (condition instanceof EditorEnforce) {
-			return '''**enforce** «condition.pattern.name»'''
-		}
-		if (condition instanceof EditorForbid) {
-			return '''**forbid** «condition.pattern.name»'''
-		}
-	}
-
-	/**
-	 * Prints the signature of the pattern.
-	 */
-	private static def String signature(EditorPattern pattern) {
-		'''«FOR parameter : pattern.parameters BEFORE '(' SEPARATOR ', ' AFTER ')'»«parameterDeclaration(parameter)»«ENDFOR»'''
-	}
-
-	/**
-	 * Prints the parameter declaration. 
-	 */
-	private static def parameterDeclaration(EditorParameter parameter) {
-		val type = if(parameter.type === null) '?' else parameter.type.name
-		'''«parameter.name»: «type»'''
 	}
 
 	/**

@@ -56,7 +56,7 @@ class GTParsingConditionsTest extends GTParsingTest {
 			file,
 			GTPackage.eINSTANCE.editorPattern,
 			GTValidator.PATTERN_CONDITIONS_DUPLICATE,
-			String.format(GTValidator.PATTERN_CONDITIONS_DUPLICATE_MESSAGE, 'b')
+			String.format(GTValidator.PATTERN_CONDITIONS_DUPLICATE_MESSAGE, "pattern 'b'")
 		)
 	}
 
@@ -76,13 +76,13 @@ class GTParsingConditionsTest extends GTParsingTest {
 		assertFile(file)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.editorEnforce,
+			GTPackage.eINSTANCE.editorApplicationCondition,
 			GTValidator.CONDITION_PATTERN_INVALID_RULE,
 			String.format(GTValidator.CONDITION_PATTERN_INVALID_RULE_MESSAGE, 'a')
 		)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.editorForbid,
+			GTPackage.eINSTANCE.editorApplicationCondition,
 			GTValidator.CONDITION_PATTERN_INVALID_RULE,
 			String.format(GTValidator.CONDITION_PATTERN_INVALID_RULE_MESSAGE, 'a')
 		)
@@ -104,13 +104,13 @@ class GTParsingConditionsTest extends GTParsingTest {
 		assertFile(file)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.editorEnforce,
+			GTPackage.eINSTANCE.editorApplicationCondition,
 			GTValidator.CONDITION_PATTERN_INVALID_PARAMETERS,
 			String.format(GTValidator.CONDITION_PATTERN_INVALID_PARAMETERS_MESSAGE, 'a')
 		)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.editorForbid,
+			GTPackage.eINSTANCE.editorApplicationCondition,
 			GTValidator.CONDITION_PATTERN_INVALID_PARAMETERS,
 			String.format(GTValidator.CONDITION_PATTERN_INVALID_PARAMETERS_MESSAGE, 'a')
 		)
@@ -139,9 +139,94 @@ class GTParsingConditionsTest extends GTParsingTest {
 		assertFile(file, 2)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.editorEnforce,
+			GTPackage.eINSTANCE.editorApplicationCondition,
 			GTValidator.CONDITION_PATTERN_INVALID_CONDITIONS,
 			String.format(GTValidator.CONDITION_PATTERN_INVALID_CONDITIONS_MESSAGE, 'p2')
+		)
+	}
+
+	@Test
+	def void warningIfAbstractPatternHasConditions() {
+		val file = parse('''
+			import "«ecoreImport»"
+			
+			pattern a {
+				object: EObject
+			}
+			
+			condition c = enforce a
+			
+			abstract pattern p {
+				object: EObject
+			}
+			when c
+			
+			abstract rule r {
+				++ object: EObject
+			}
+			when c
+		''')
+		assertFile(file, 3)
+		assertValidationWarnings(
+			file,
+			GTPackage.eINSTANCE.editorPattern,
+			GTValidator.PATTERN_CONDITIONS_NOT_ALLOWED_ABSTRACT,
+			String.format(GTValidator.PATTERN_CONDITIONS_NOT_ALLOWED_ABSTRACT_MESSAGE, "pattern 'p'"),
+			String.format(GTValidator.PATTERN_CONDITIONS_NOT_ALLOWED_ABSTRACT_MESSAGE, "rule 'r'")
+		)
+	}
+
+	@Test
+	def void errorIfSelfReferenceLevel1() {
+		val file = parse('''
+			import "«ecoreImport»"
+			
+			condition c = c
+		''')
+		assertFile(file, 0)
+		assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.editorCondition,
+			GTValidator.CONDITION_SELF_REFERENCE,
+			String.format(GTValidator.CONDITION_SELF_REFERENCE_MESSAGE, 'c')
+		)
+	}
+
+	@Test
+	def void errorIfSelfReferenceLevel2() {
+		val file = parse('''
+			import "«ecoreImport»"
+			
+			condition c1 = c2
+			condition c2 = c1
+		''')
+		assertFile(file, 0)
+		assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.editorCondition,
+			GTValidator.CONDITION_SELF_REFERENCE,
+			String.format(GTValidator.CONDITION_SELF_REFERENCE_MESSAGE, 'c1'),
+			String.format(GTValidator.CONDITION_SELF_REFERENCE_MESSAGE, 'c2')
+		)
+	}
+
+	@Test
+	def void errorIfPACandNACforTheSamePattern() {
+		val file = parse('''
+			import "«ecoreImport»"
+			
+			pattern p {
+				object: EObject
+			}
+			
+			condition c = enforce p && forbid p
+		''')
+		assertFile(file, 1)
+		assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.editorCondition,
+			GTValidator.CONDITION_PAC_AND_NAC_FOR_SAME_PATTERN,
+			String.format(GTValidator.CONDITION_PAC_AND_NAC_FOR_SAME_PATTERN_MESSAGE, 'c', 'p')
 		)
 	}
 }

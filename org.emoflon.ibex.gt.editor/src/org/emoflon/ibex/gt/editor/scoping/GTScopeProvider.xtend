@@ -7,11 +7,11 @@ import org.eclipse.emf.ecore.EReference
 import org.eclipse.xtext.scoping.Scopes
 import org.eclipse.xtext.scoping.impl.FilteringScope
 
+import org.emoflon.ibex.gt.editor.gT.EditorApplicationCondition
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
-import org.emoflon.ibex.gt.editor.gT.EditorEnforce
+import org.emoflon.ibex.gt.editor.gT.EditorConditionReference
 import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression
-import org.emoflon.ibex.gt.editor.gT.EditorForbid
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile
 import org.emoflon.ibex.gt.editor.gT.EditorNode
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
@@ -35,6 +35,14 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		// Attributes
 		if (isAttributeName(context, reference)) {
 			return getScopeForAttributes(context as EditorAttribute)
+		}
+
+		// Condition
+		if (isConditionOfCondition(context, reference)) {
+			return filterScopeForOtherObjectsFromSamePackage(context, reference)
+		}
+		if (isPatternOfCondition(context, reference)) {
+			return filterScopeForOtherObjectsFromSamePackage(context, reference)
 		}
 
 		// Expressions
@@ -70,8 +78,11 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		}
 
 		// Patterns
-		if (isSuperPattern(context, reference) || isPatternOfGraphCondition(context, reference)) {
-			return getScopeForPatternsInSamePackage(context, reference)
+		if (isSuperPattern(context, reference)) {
+			return filterScopeForOtherObjectsFromSamePackage(context, reference)
+		}
+		if (isConditionOfPattern(context, reference)) {
+			return filterScopeForOtherObjectsFromSamePackage(context, reference)
 		}
 
 		return super.getScope(context, reference)
@@ -101,9 +112,14 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 			reference == GTPackage.Literals.EDITOR_PARAMETER_EXPRESSION__PARAMETER);
 	}
 
-	def isPatternOfGraphCondition(EObject context, EReference reference) {
-		return (context instanceof EditorEnforce && reference == GTPackage.Literals.EDITOR_ENFORCE__PATTERN) ||
-			(context instanceof EditorForbid && reference == GTPackage.Literals.EDITOR_FORBID__PATTERN)
+	def isConditionOfCondition(EObject context, EReference reference) {
+		return (context instanceof EditorConditionReference &&
+			reference == GTPackage.Literals.EDITOR_CONDITION_REFERENCE__CONDITION)
+	}
+
+	def isPatternOfCondition(EObject context, EReference reference) {
+		return (context instanceof EditorApplicationCondition &&
+			reference == GTPackage.Literals.EDITOR_APPLICATION_CONDITION__PATTERN)
 	}
 
 	def isNodeType(EObject context, EReference reference) {
@@ -126,11 +142,15 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		return (context instanceof EditorPattern && reference == GTPackage.Literals.EDITOR_PATTERN__SUPER_PATTERNS)
 	}
 
+	def isConditionOfPattern(EObject context, EReference reference) {
+		return (context instanceof EditorPattern && reference == GTPackage.Literals.EDITOR_PATTERN__CONDITIONS)
+	}
+
 	/**
-	 * Filters the scope of the super scope provider for the patterns
-	 * which are in the same package as the file containing the context. 
+	 * Filters the scope of the super scope provider of the context for the objects
+	 * which are defined in the same package as the file containing the context. 
 	 */
-	def getScopeForPatternsInSamePackage(EObject context, EReference reference) {
+	def filterScopeForOtherObjectsFromSamePackage(EObject context, EReference reference) {
 		val contextURI = context.eResource.URI.appendFragment(context.eResource.getURIFragment(context))
 		return new FilteringScope(super.getScope(context, reference), [
 			context.eResource.URI.trimFragment.trimSegments(1).equals(it.EObjectURI.trimFragment.trimSegments(1)) &&

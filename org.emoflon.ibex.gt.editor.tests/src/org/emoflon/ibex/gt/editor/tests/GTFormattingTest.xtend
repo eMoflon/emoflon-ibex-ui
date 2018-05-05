@@ -229,6 +229,11 @@ class GTFormattingTest {
 			pattern findClassWithoutAnnotation {
 				clazz: EClass
 			}
+			when noAnnotation
+			
+			pattern findClass {
+				clazz: EClass
+			}
 			when noAnnotation || hasAnnotation
 			
 			abstract pattern findClassWithAnnotation {
@@ -243,16 +248,18 @@ class GTFormattingTest {
 			
 			condition hasAnnotation = enforce findClassifierWithAnnotation
 			
-			condition andTest = check noAnnotation && check hasAnnotation
+			condition andTest = noAnnotation && hasAnnotation
 		'''
 		testFormatting(
 			expected,
 			'''
 				import "http://www.eclipse.org/emf/2002/Ecore"	
-					pattern findClassWithoutAnnotation {clazz: EClass}	when 
-					noAnnotation 
+					pattern findClassWithoutAnnotation {clazz: EClass}	when  noAnnotation  
+								
+				pattern findClass { clazz: EClass }	when 
+						noAnnotation 
 					|| 
-					hasAnnotation
+						hasAnnotation
 					
 				abstract pattern findClassWithAnnotation {
 				clazz: EClass {-eAnnotations -> annotation}
@@ -263,12 +270,75 @@ class GTFormattingTest {
 				condition hasAnnotation  =  enforce  findClassifierWithAnnotation
 				
 					condition  andTest 
-					= check noAnnotation    &&    	check hasAnnotation
+					=  noAnnotation    &&     hasAnnotation
+			'''
+		)
+	}
+
+	@Test
+	def formatConditionsWithLongLines() {
+		val expected = '''
+			import "http://www.eclipse.org/emf/2002/Ecore"
+			
+			pattern p {
+				object: EObject
+			}
+			when conditionOneWithAVeryLongName
+			  || conditionTwoWithAVeryLongName
+			  || conditionThreeWithAVeryLongName
+			
+			pattern theFirstPatternUsedInTheConditionsWithAVeryLongName {
+				object: EObject
+			}
+			
+			pattern theSecondPatternUsedInTheConditionsWithAVeryLongName {
+				object: EObject
+			}
+			
+			condition conditionOneWithAVeryLongName = forbid theFirstPatternUsedInTheConditionsWithAVeryLongName
+			
+			condition conditionTwoWithAVeryLongName = enforce theSecondPatternUsedInTheConditionsWithAVeryLongName
+			
+			condition conditionThreeWithAVeryLongName = conditionOneWithAVeryLongName
+				&& conditionTwoWithAVeryLongName
+		'''
+		testFormatting(
+			expected,
+			'''
+				import "http://www.eclipse.org/emf/2002/Ecore"
+					
+				pattern p {
+					object: EObject
+				} when  conditionOneWithAVeryLongName  || conditionTwoWithAVeryLongName || conditionThreeWithAVeryLongName
+				
+				pattern theFirstPatternUsedInTheConditionsWithAVeryLongName {
+					object: EObject
+				}
+				
+				pattern theSecondPatternUsedInTheConditionsWithAVeryLongName {
+								object: EObject
+							}
+				
+					condition
+				conditionOneWithAVeryLongName 
+					= 
+					forbid 
+					theFirstPatternUsedInTheConditionsWithAVeryLongName
+				
+				condition
+					conditionTwoWithAVeryLongName 
+					= 
+					enforce theSecondPatternUsedInTheConditionsWithAVeryLongName
+				
+				condition   conditionThreeWithAVeryLongName 
+					=    conditionOneWithAVeryLongName 
+					&& 	 conditionTwoWithAVeryLongName
 			'''
 		)
 	}
 
 	def testFormatting(String expected, String code) {
-		assertEquals(expected, parseHelper.parse(code).serialize(SaveOptions.newBuilder.format.options))
+		val actual = parseHelper.parse(code).serialize(SaveOptions.newBuilder.format.options)
+		assertEquals(expected, actual)
 	}
 }

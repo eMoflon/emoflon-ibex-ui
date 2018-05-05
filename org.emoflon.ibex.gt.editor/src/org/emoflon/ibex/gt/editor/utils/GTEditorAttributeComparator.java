@@ -11,7 +11,7 @@ import org.emoflon.ibex.gt.editor.gT.EditorReference;
 /**
  * Utility methods to compare whether two editor elements are equal.
  */
-public class GTEditorComparator {
+public class GTEditorAttributeComparator {
 
 	/**
 	 * Checks whether the attribute constraints express the same.

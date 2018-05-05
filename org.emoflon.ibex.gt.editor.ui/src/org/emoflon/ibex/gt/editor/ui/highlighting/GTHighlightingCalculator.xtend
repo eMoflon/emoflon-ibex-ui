@@ -28,35 +28,38 @@ class GTHighlightingCalculator extends DefaultSemanticHighlightingCalculator {
 			return
 		}
 		for (val contents = resource.allContents; contents.hasNext;) {
-			hightlightElement(contents.next, acceptor)
+			highlightElement(contents.next, acceptor)
 		}
 		super.doProvideHighlightingFor(resource, acceptor, cancelIndicator)
 	}
 
-	def hightlightElement(EObject element, IHighlightedPositionAcceptor acceptor) {
-		if (element instanceof EditorAttribute) {
-			if (element.relation == EditorRelation.ASSIGNMENT) {
-				val style = GTHighlightingConfiguration.getStyle(EditorOperator.CREATE)
-				highlight(acceptor, element, style)
-			}
+	def dispatch void highlightElement(EditorAttribute element, IHighlightedPositionAcceptor acceptor) {
+		if (element.relation == EditorRelation.ASSIGNMENT) {
+			val style = GTHighlightingConfiguration.getStyle(EditorOperator.CREATE)
+			highlight(acceptor, element, GTPackage.Literals.EDITOR_ATTRIBUTE__ATTRIBUTE, style)
+			highlight(acceptor, element, GTPackage.Literals.EDITOR_ATTRIBUTE__RELATION, style)
 		}
+	}
 
-		if (element instanceof EditorNode) {
-			val nodesFromSuperRules = GTEditorPatternUtils.getAllNodesFromSuperPatterns(
-				element.eContainer as EditorPattern, [it.name.equals(element.name)])
-			val styles = GTHighlightingConfiguration.getStyles(element.operator, !nodesFromSuperRules.isEmpty)
+	def dispatch void highlightElement(EditorNode element, IHighlightedPositionAcceptor acceptor) {
+		val nodesFromSuperRules = GTEditorPatternUtils.getAllNodesFromSuperPatterns(
+			element.eContainer as EditorPattern, [it.name.equals(element.name)])
+		val styles = GTHighlightingConfiguration.getStyles(element.operator, !nodesFromSuperRules.isEmpty)
 
-			if (element.operator == EditorOperator.CREATE || element.operator == EditorOperator.DELETE) {
-				highlight(acceptor, element, GTPackage.Literals.EDITOR_NODE__OPERATOR, styles)
-			}
-			highlight(acceptor, element, GTPackage.Literals.EDITOR_NODE__NAME, styles)
-			highlight(acceptor, element, GTPackage.Literals.EDITOR_NODE__TYPE, styles)
+		if (element.operator == EditorOperator.CREATE || element.operator == EditorOperator.DELETE) {
+			highlight(acceptor, element, GTPackage.Literals.EDITOR_NODE__OPERATOR, styles)
 		}
+		highlight(acceptor, element, GTPackage.Literals.EDITOR_NODE__NAME, styles)
+		highlight(acceptor, element, GTPackage.Literals.EDITOR_NODE__TYPE, styles)
+	}
 
-		if (element instanceof EditorReference) {
-			val style = GTHighlightingConfiguration.getStyle(element.operator)
-			highlight(acceptor, element, style)
-		}
+	def dispatch void highlightElement(EditorReference element, IHighlightedPositionAcceptor acceptor) {
+		val style = GTHighlightingConfiguration.getStyle(element.operator)
+		highlight(acceptor, element, style)
+	}
+
+	def dispatch void highlightElement(EObject element, IHighlightedPositionAcceptor acceptor) {
+		// No highlighting for other elements.
 	}
 
 	static def highlight(IHighlightedPositionAcceptor acceptor, EObject element, String... style) {

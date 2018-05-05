@@ -33,6 +33,24 @@ class GTParsingPatternRefinementTest extends GTParsingTest {
 	}
 
 	@Test
+	def void validIfEmptyRuleBodyAndRefinementAndCondition() {
+		val file = parse('''
+			import "«ecoreImport»"
+			
+			pattern a {
+				object1: EObject
+			}
+			
+			pattern b
+			refines a
+			when c
+			
+			condition c = enforce a
+		''')
+		assertValid(file, 2)
+	}
+
+	@Test
 	def void errorForSelfRefinement() {
 		val file = parse('''
 			import "«ecoreImport»"
@@ -148,7 +166,7 @@ class GTParsingPatternRefinementTest extends GTParsingTest {
 			file,
 			GTPackage.eINSTANCE.editorPattern,
 			GTValidator.PATTERN_SUPER_PATTERNS_INVALID_PARAMETER,
-			String.format(GTValidator.PATTERN_SUPER_PATTERNS_INVALID_PARAMETER_MESSAGE, 'r', 'name',
+			String.format(GTValidator.PATTERN_SUPER_PATTERNS_INVALID_PARAMETER_MESSAGE, "pattern 'r'", 'name',
 				GTValidator.concatNames(#['EBoolean', 'EString']))
 		)
 	}
@@ -172,7 +190,7 @@ class GTParsingPatternRefinementTest extends GTParsingTest {
 			file,
 			GTPackage.eINSTANCE.editorPattern,
 			GTValidator.PATTERN_SUPER_PATTERNS_INVALID_PARAMETER,
-			String.format(GTValidator.PATTERN_SUPER_PATTERNS_INVALID_PARAMETER_MESSAGE, 'r', 'name',
+			String.format(GTValidator.PATTERN_SUPER_PATTERNS_INVALID_PARAMETER_MESSAGE, "pattern 'r'", 'name',
 				GTValidator.concatNames(#['EBoolean', 'EString']))
 		)
 	}
@@ -202,7 +220,7 @@ class GTParsingPatternRefinementTest extends GTParsingTest {
 			file,
 			GTPackage.eINSTANCE.editorPattern,
 			GTValidator.PATTERN_SUPER_PATTERNS_INVALID_ATTRIBUTE_ASSIGNMENT,
-			String.format(GTValidator.PATTERN_SUPER_PATTERNS_INVALID_ATTRIBUTE_ASSIGNMENT_MESSAGE, 'renameClass',
+			String.format(GTValidator.PATTERN_SUPER_PATTERNS_INVALID_ATTRIBUTE_ASSIGNMENT_MESSAGE, "rule 'renameClass'",
 				'clazz')
 		)
 	}
