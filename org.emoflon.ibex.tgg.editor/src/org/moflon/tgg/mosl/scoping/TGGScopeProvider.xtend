@@ -422,6 +422,10 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 		}
 	}
 	
+	def dispatch getSchema(Rule r){
+		r.schema
+	}
+	
 	def dispatch getSchema(ContextObjectVariablePattern ov) {
 		(ov.eContainer as Nac).rule.schema
 	}
