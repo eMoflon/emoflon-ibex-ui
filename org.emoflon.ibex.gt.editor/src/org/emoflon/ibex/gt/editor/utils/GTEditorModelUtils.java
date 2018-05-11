@@ -1,5 +1,6 @@
 package org.emoflon.ibex.gt.editor.utils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,42 +75,62 @@ public class GTEditorModelUtils {
 	/**
 	 * Returns an Optional for the Ecore model resource with the given URI.
 	 * 
-	 * @param uri
+	 * @param uriString
 	 *            the URI of the resource to load
 	 */
-	public static Optional<Resource> loadEcoreModel(final String uri) {
+	public static Optional<Resource> loadEcoreModel(final String uriString) {
 		try {
-			final Resource resource = resourceSet.getResource(URI.createURI(uri), true);
+			URI uri = URI.createURI(uriString);
+			final Resource resource = new ResourceSetImpl().getResource(uri, true);
 			resource.load(null);
-			EcoreUtil.resolveAll(resourceSet);
 
-			return getResource(uri, resource);
+			// Early return if the resource does not exist or is empty.
+			if (resource.getContents().isEmpty()) {
+				removeResource(uriString);
+				return Optional.empty();
+			}
+
+			// Add/update resource if necessary.
+			if (!metaModelResources.containsKey(uriString)
+					|| metaModelResources.get(uriString).getTimeStamp() < resource.getTimeStamp()) {
+				updateResource(uriString);
+			}
+			return Optional.of(metaModelResources.get(uriString));
 		} catch (final Exception e) {
+			removeResource(uriString);
 			return Optional.empty();
 		}
 	}
 
 	/**
-	 * Adds/updates the resource for the given URI if the given resource has a more
-	 * recent timestamp than the current one.
+	 * Removes the resource for the given URI from the resource set and the mapping
+	 * between URIs and resources.
 	 * 
-	 * @param uri
-	 *            the URI
-	 * @param resource
-	 *            the resource to compare with the current resource
-	 * @return the update resource
+	 * @param uriString
+	 *            the URI to remove
+	 * @return an empty optional
 	 */
-	private static Optional<Resource> getResource(final String uri, final Resource resource) {
-		// Early return if the resource is empty.
-		if (resource.getContents().isEmpty()) {
-			return Optional.empty();
-		}
+	private static void removeResource(final String uriString) {
+		URI uri = URI.createURI(uriString);
+		resourceSet.getResources().removeIf(r -> r.getURI().equals(uri));
+		metaModelResources.remove(uriString);
+	}
 
-		// Add/update resource if necessary.
-		if (!metaModelResources.containsKey(uri)
-				|| metaModelResources.get(uri).getTimeStamp() < resource.getTimeStamp()) {
-			metaModelResources.put(uri, resource);
-		}
-		return Optional.of(metaModelResources.get(uri));
+	/**
+	 * Updates the resource for the given URI in the resource set and the mapping
+	 * between URIs and resources.
+	 * 
+	 * @param uriString
+	 *            the URI to update
+	 * @throws IOException
+	 *             if the resource cannot be loaded
+	 */
+	private static void updateResource(final String uriString) throws IOException {
+		URI uri = URI.createURI(uriString);
+		resourceSet.getResources().removeIf(r -> r.getURI().equals(uri));
+		Resource resource = resourceSet.getResource(uri, true);
+		resource.load(null);
+		EcoreUtil.resolveAll(resourceSet);
+		metaModelResources.put(uriString, resource);
 	}
 }
