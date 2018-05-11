@@ -43,7 +43,10 @@ class GTVisualizationUtils {
 	 */
 	public static def String getConditionString(EditorCondition condition) {
 		val conditions = new GTConditionHelper(condition).getApplicationConditions()
-		'''«FOR c : conditions SEPARATOR ' **&&** '»«getConditionString(c)»«ENDFOR»'''
+		if (conditions.size == 1) {
+			return getConditionString(conditions.get(0))
+		}
+		'''(«FOR c : conditions SEPARATOR ' **&&** '»«getConditionString(c)»«ENDFOR»)'''
 	}
 
 	/**
