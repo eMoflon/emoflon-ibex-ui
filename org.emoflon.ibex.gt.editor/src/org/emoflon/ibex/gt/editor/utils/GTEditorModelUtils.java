@@ -24,7 +24,7 @@ public class GTEditorModelUtils {
 	/**
 	 * The set of meta-model resources loaded.
 	 */
-	private static Map<String, Resource> metaModelResources = new HashMap<String, Resource>();
+	private static Map<URI, Resource> metaModelResources = new HashMap<URI, Resource>();
 
 	/**
 	 * The resource set used for loading the meta-model resources.
@@ -79,25 +79,25 @@ public class GTEditorModelUtils {
 	 *            the URI of the resource to load
 	 */
 	public static Optional<Resource> loadEcoreModel(final String uriString) {
+		URI uri = URI.createURI(uriString);
 		try {
-			URI uri = URI.createURI(uriString);
 			final Resource resource = new ResourceSetImpl().getResource(uri, true);
 			resource.load(null);
 
 			// Early return if the resource does not exist or is empty.
 			if (resource.getContents().isEmpty()) {
-				removeResource(uriString);
+				removeResource(uri);
 				return Optional.empty();
 			}
 
 			// Add/update resource if necessary.
-			if (!metaModelResources.containsKey(uriString)
-					|| metaModelResources.get(uriString).getTimeStamp() < resource.getTimeStamp()) {
-				updateResource(uriString);
+			if (!metaModelResources.containsKey(uri)
+					|| metaModelResources.get(uri).getTimeStamp() < resource.getTimeStamp()) {
+				updateResource(uri);
 			}
-			return Optional.of(metaModelResources.get(uriString));
+			return Optional.of(metaModelResources.get(uri));
 		} catch (final Exception e) {
-			removeResource(uriString);
+			removeResource(uri);
 			return Optional.empty();
 		}
 	}
@@ -106,31 +106,30 @@ public class GTEditorModelUtils {
 	 * Removes the resource for the given URI from the resource set and the mapping
 	 * between URIs and resources.
 	 * 
-	 * @param uriString
+	 * @param uri
 	 *            the URI to remove
 	 * @return an empty optional
 	 */
-	private static void removeResource(final String uriString) {
-		URI uri = URI.createURI(uriString);
+	private static void removeResource(final URI uri) {
 		resourceSet.getResources().removeIf(r -> r.getURI().equals(uri));
-		metaModelResources.remove(uriString);
+		metaModelResources.remove(uri);
 	}
 
 	/**
 	 * Updates the resource for the given URI in the resource set and the mapping
 	 * between URIs and resources.
 	 * 
-	 * @param uriString
+	 * @param uri
 	 *            the URI to update
 	 * @throws IOException
 	 *             if the resource cannot be loaded
 	 */
-	private static void updateResource(final String uriString) throws IOException {
-		URI uri = URI.createURI(uriString);
+	private static void updateResource(final URI uri) throws IOException {
+		// Remove resource if it was loaded before -> force reload.
 		resourceSet.getResources().removeIf(r -> r.getURI().equals(uri));
 		Resource resource = resourceSet.getResource(uri, true);
 		resource.load(null);
 		EcoreUtil.resolveAll(resourceSet);
-		metaModelResources.put(uriString, resource);
+		metaModelResources.put(uri, resource);
 	}
 }
