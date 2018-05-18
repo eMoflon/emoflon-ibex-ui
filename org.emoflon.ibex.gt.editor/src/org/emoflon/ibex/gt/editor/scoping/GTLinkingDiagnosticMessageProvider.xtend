@@ -15,6 +15,9 @@ import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 class GTLinkingDiagnosticMessageProvider extends LinkingDiagnosticMessageProvider {
 	private static val CODE_PREFIX = "org.emoflon.ibex.gt.editor."
 
+	public static val ATTRIBUTE_NOT_FOUND = CODE_PREFIX + "attribute.type.notFound"
+	public static val ATTRIBUTE_NOT_FOUND_MESSAGE = "Could not find attribute '%s'."
+
 	public static val ATTRIBUTE_EXPRESSION_NODE_NOT_FOUND = CODE_PREFIX + "attributeExpression.node.notFound"
 	public static val ATTRIBUTE_EXPRESSION_NODE_NOT_FOUND_MESSAGE = "Could not find node '%s'."
 
@@ -36,6 +39,15 @@ class GTLinkingDiagnosticMessageProvider extends LinkingDiagnosticMessageProvide
 			linkText = context.getLinkText();
 		} catch (IllegalNodeException e) {
 			linkText = e.getNode().getText();
+		}
+
+		// Attribute not found.
+		if (context.reference === GTPackage.Literals.EDITOR_ATTRIBUTE__ATTRIBUTE) {
+			return new DiagnosticMessage(
+				String.format(ATTRIBUTE_NOT_FOUND_MESSAGE, linkText),
+				Severity.ERROR,
+				ATTRIBUTE_NOT_FOUND
+			)
 		}
 
 		// Node of attribute expression not found.

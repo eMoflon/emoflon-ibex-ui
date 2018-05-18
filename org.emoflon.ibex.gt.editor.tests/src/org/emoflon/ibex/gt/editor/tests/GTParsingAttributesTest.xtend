@@ -340,8 +340,8 @@ class GTParsingAttributesTest extends GTParsingTest {
 		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorAttribute,
-			Diagnostic::LINKING_DIAGNOSTIC,
-			"Couldn't resolve reference to EAttribute 'name'."
+			GTLinkingDiagnosticMessageProvider.ATTRIBUTE_NOT_FOUND,
+			String.format(GTLinkingDiagnosticMessageProvider.ATTRIBUTE_NOT_FOUND_MESSAGE, 'name')
 		)
 	}
 }
