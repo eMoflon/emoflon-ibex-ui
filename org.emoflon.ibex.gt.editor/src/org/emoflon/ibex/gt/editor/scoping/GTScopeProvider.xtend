@@ -180,26 +180,20 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	 */
 	def getScopeForReferenceTargets(EditorReference reference) {
 		val referenceType = reference.type
+		val pattern = reference.eContainer.eContainer as EditorPattern
+
 		if (referenceType !== null) {
 			val targetNodeType = referenceType.EReferenceType
 			if (targetNodeType !== null) {
-				val pattern = reference.eContainer.eContainer as EditorPattern
-				if (pattern !== null) {
-					val nodes = GTEditorPatternUtils.getAllNodesOfPattern(pattern, [
-						isNodeOfType(it, targetNodeType)
-					])
-					return Scopes.scopeFor(nodes)
-				}
+				val nodes = GTEditorPatternUtils.getAllNodesOfPattern(pattern, [
+					isNodeOfType(it, targetNodeType)
+				])
+				return Scopes.scopeFor(nodes)
 			}
 		}
-		return Scopes.scopeFor([])
-	}
 
-	/**
-	 * Filters the nodes of the given pattern for the ones with the given type.
-	 */
-	def static filterNodesWithType(EditorPattern pattern, EClass nodeType) {
-		pattern.nodes.filter[isNodeOfType(it, nodeType)].toList
+		// If the type cannot be resolved return all nodes.
+		return Scopes.scopeFor(GTEditorPatternUtils.getAllNodesOfPattern(pattern, [true]))
 	}
 
 	/**
