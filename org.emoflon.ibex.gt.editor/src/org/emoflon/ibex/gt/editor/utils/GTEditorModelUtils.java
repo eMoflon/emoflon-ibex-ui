@@ -111,8 +111,12 @@ public class GTEditorModelUtils {
 	 * @return an empty optional
 	 */
 	private static void removeResource(final URI uri) {
-		resourceSet.getResources().removeIf(r -> r.getURI().equals(uri));
-		metaModelResources.remove(uri);
+		if (metaModelResources.containsKey(uri)) {
+			Resource resource = metaModelResources.get(uri);
+			resource.unload();
+			resourceSet.getResources().remove(resource);
+			metaModelResources.remove(uri);
+		}
 	}
 
 	/**
@@ -126,7 +130,8 @@ public class GTEditorModelUtils {
 	 */
 	private static void updateResource(final URI uri) throws IOException {
 		// Remove resource if it was loaded before -> force reload.
-		resourceSet.getResources().removeIf(r -> r.getURI().equals(uri));
+		removeResource(uri);
+
 		Resource resource = resourceSet.getResource(uri, true);
 		resource.load(null);
 		EcoreUtil.resolveAll(resourceSet);
