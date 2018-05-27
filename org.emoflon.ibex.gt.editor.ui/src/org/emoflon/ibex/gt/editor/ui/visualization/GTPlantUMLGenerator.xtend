@@ -5,14 +5,9 @@ import java.util.Set
 
 import org.eclipse.emf.common.util.EList
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute
-import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
 import org.emoflon.ibex.gt.editor.gT.EditorCondition
-import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression
-import org.emoflon.ibex.gt.editor.gT.EditorExpression
-import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression
 import org.emoflon.ibex.gt.editor.gT.EditorNode
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
-import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
 import org.emoflon.ibex.gt.editor.gT.EditorPattern
 import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
@@ -139,7 +134,7 @@ class GTPlantUMLGenerator {
 		val operator = if(attr.relation == EditorRelation.ASSIGNMENT) '+' else '#'
 		val name = if(attr.attribute === null || attr.attribute.name === null) '?' else attr.attribute.name
 		val relation = if(attr.relation === null) '?' else attr.relation.toString
-		'''«operator» «name» «relation» «expression(attr.value)»'''
+		'''«operator» «name» «relation» «GTVisualizationUtils.toString(attr.value)»'''
 	}
 
 	/**
@@ -163,33 +158,6 @@ class GTPlantUMLGenerator {
 	private static def String referenceLabel(EditorReference reference) {
 		val type = if(reference === null || reference.type === null) '?' else reference.type.name
 		'''<color:«referenceColor(reference)»>«type»'''
-	}
-
-	/**
-	 * Prints the expression.
-	 */
-	private static def String expression(EditorExpression expression) {
-		if (expression === null) {
-			return 'INVALID expression'
-		}
-		if (expression instanceof EditorAttributeExpression) {
-			val nodeName = if(expression.node === null) '?' else expression.node.name
-			val attributeName = if(expression.attribute === null) '?' else expression.attribute.name
-			return '''«nodeName».«attributeName»'''
-		}
-		if (expression instanceof EditorEnumExpression) {
-			return '''«expression.literal.literal»'''
-		}
-		if (expression instanceof EditorLiteralExpression) {
-			return '''«expression.value.toString»'''
-		}
-		if (expression instanceof EditorParameterExpression) {
-			if (expression.parameter === null) {
-				return 'unknown parameter'
-			}
-			return '''«expression.parameter.name»'''
-		}
-		return '''«expression.toString»'''
 	}
 
 	/**

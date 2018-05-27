@@ -2,9 +2,14 @@ package org.emoflon.ibex.gt.editor.ui.visualization
 
 import org.emoflon.ibex.gt.editor.gT.EditorApplicationCondition
 import org.emoflon.ibex.gt.editor.gT.EditorApplicationConditionType
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
 import org.emoflon.ibex.gt.editor.gT.EditorCondition
-import org.emoflon.ibex.gt.editor.gT.EditorPattern
+import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression
+import org.emoflon.ibex.gt.editor.gT.EditorExpression
+import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression
 import org.emoflon.ibex.gt.editor.gT.EditorParameter
+import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
+import org.emoflon.ibex.gt.editor.gT.EditorPattern
 import org.emoflon.ibex.gt.editor.utils.GTConditionHelper
 
 /**
@@ -60,5 +65,46 @@ class GTVisualizationUtils {
 			return '''**forbid** «condition.pattern.name»'''
 		}
 		return ""
+	}
+
+	/**
+	 * Returns a String representation of the expression.
+	 */
+	public static def String toString(EditorExpression expression) {
+		if (expression === null) {
+			return 'INVALID expression'
+		}
+		if (expression instanceof EditorAttributeExpression) {
+			val nodeName = if(expression.node === null) '?' else expression.node.name
+			val attributeName = if(expression.attribute === null) '?' else expression.attribute.name
+			return '''«nodeName».«attributeName»'''
+		}
+		if (expression instanceof EditorEnumExpression) {
+			return toString(expression)
+		}
+		if (expression instanceof EditorLiteralExpression) {
+			return '''«expression.value.toString»'''
+		}
+		if (expression instanceof EditorParameterExpression) {
+			if (expression.parameter === null) {
+				return 'unknown parameter'
+			}
+			return '''«expression.parameter.name»'''
+		}
+		return '''«expression.toString»'''
+	}
+
+	private static def String toString(EditorEnumExpression expression) {
+		if (expression.literal === null) {
+			return ''
+		}
+		val literal = expression.literal.literal
+		if (literal !== null && !literal.isEmpty) {
+			return literal
+		}
+		val name = expression.literal.name
+		if (name !== null && !name.isEmpty) {
+			return name
+		}
 	}
 }
