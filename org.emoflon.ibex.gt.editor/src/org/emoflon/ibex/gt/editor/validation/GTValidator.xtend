@@ -109,12 +109,15 @@ class GTValidator extends AbstractGTValidator {
 	public static val PATTERN_SUPER_PATTERNS_INVALID = CODE_PREFIX + "pattern.superPatterns.invalid"
 	public static val PATTERN_SUPER_PATTERNS_INVALID_MESSAGE = "Cycle in refinement hierarchy: '%s' and '%s'."
 
-	public static val PATTERN_SUPER_PATTERNS_INVALID_PARAMETER = CODE_PREFIX + "pattern.superPatterns.invalidParameter"
-	public static val PATTERN_SUPER_PATTERNS_INVALID_PARAMETER_MESSAGE = "%s has conflicting type declarations for parameter '%s': %s."
-
 	public static val PATTERN_SUPER_PATTERNS_INVALID_ATTRIBUTE_ASSIGNMENT = CODE_PREFIX +
 		"pattern.superPatterns.invalidAttributeAssignment"
 	public static val PATTERN_SUPER_PATTERNS_INVALID_ATTRIBUTE_ASSIGNMENT_MESSAGE = "%s has conflicting attribute assignments for node '%s'."
+
+	public static val PATTERN_SUPER_PATTERNS_INVALID_NODE_TYPE = CODE_PREFIX + "pattern.superPatterns.invalidNodeType"
+	public static val PATTERN_SUPER_PATTERNS_INVALID_NODE_TYPE_MESSAGE = "%s has conflicting type declarations for node '%s': %s."
+
+	public static val PATTERN_SUPER_PATTERNS_INVALID_PARAMETER = CODE_PREFIX + "pattern.superPatterns.invalidParameter"
+	public static val PATTERN_SUPER_PATTERNS_INVALID_PARAMETER_MESSAGE = "%s has conflicting type declarations for parameter '%s': %s."
 
 	// Errors for parameters.
 	public static val PARAMETER_NAME_CONTAINS_UNDERSCORES_MESSAGE = "Parameter name '%s' contains underscores. Use camelCase instead."
@@ -268,7 +271,7 @@ class GTValidator extends AbstractGTValidator {
 			checkPatternDistinctSuperPatterns(pattern)
 			checkPatternNoCycleInRefinementHierarchy(pattern)
 			checkPatternNoConflictingParameterDeclarations(pattern)
-			checkPatternNoConflictingAttributeAssignments(pattern)
+			checkPatternNoConflictingNodes(pattern)
 		}
 	}
 
@@ -393,12 +396,26 @@ class GTValidator extends AbstractGTValidator {
 	}
 
 	/**
-	 * Nodes may not contain conflicting attribute assignments.
+	 * Nodes may not contain conflicting type declarations or attribute assignments.
 	 */
-	def checkPatternNoConflictingAttributeAssignments(EditorPattern pattern) {
+	def checkPatternNoConflictingNodes(EditorPattern pattern) {
 		val allNodes = GTEditorPatternUtils.getAllNodesOfPattern(pattern, [true])
 		for (nodeName : allNodes.map[it.name].toSet) {
-			if (GTFlatteningUtils.hasConflictingAssignment(allNodes, nodeName)) {
+			val nodesWithSameName = allNodes.filter[it.name == nodeName].toSet
+
+			// The type of a node must be compatible with type declarations in super patterns.
+			val conflicts = GTFlatteningUtils.getConflictingNodeTypes(nodesWithSameName);
+			if (!conflicts.isEmpty) {
+				error(
+					String.format(PATTERN_SUPER_PATTERNS_INVALID_NODE_TYPE_MESSAGE, pattern.toText, nodeName,
+						concatNames(conflicts.map[it.name].toSet)),
+					GTPackage.Literals.EDITOR_PATTERN__SUPER_PATTERNS,
+					PATTERN_SUPER_PATTERNS_INVALID_NODE_TYPE
+				)
+			}
+
+			// A node may not inherit conflicting attribute assignments.
+			if (GTFlatteningUtils.hasConflictingAssignment(nodesWithSameName)) {
 				error(
 					String.format(PATTERN_SUPER_PATTERNS_INVALID_ATTRIBUTE_ASSIGNMENT_MESSAGE, pattern.toText,
 						nodeName),

@@ -248,7 +248,7 @@ public class GTFlattener {
 	 *            the node merged into the first one
 	 */
 	private void mergeOperatorsOfNodes(final EditorNode node, final EditorNode mergedNode) {
-		Optional<EditorOperator> operator = GTFlatteningUtils.getMergedOperator(node.getOperator(),
+		Optional<EditorOperator> operator = GTFlatteningUtils.mergedOperators(node.getOperator(),
 				mergedNode.getOperator());
 		if (operator.isPresent()) {
 			node.setOperator(operator.get());
@@ -321,7 +321,7 @@ public class GTFlattener {
 		Optional<EditorReference> referenceInNode = node.getReferences().stream()
 				.filter(r -> GTEditorAttributeComparator.areReferencesEqual(r, mergedReference)).findAny();
 		if (referenceInNode.isPresent()) {
-			Optional<EditorOperator> operator = GTFlatteningUtils.getMergedOperator(referenceInNode.get().getOperator(),
+			Optional<EditorOperator> operator = GTFlatteningUtils.mergedOperators(referenceInNode.get().getOperator(),
 					mergedReference.getOperator());
 			if (operator.isPresent()) {
 				referenceInNode.get().setOperator(operator.get());
