@@ -214,14 +214,29 @@ public class GTFlattener {
 	 *            the node merged into the other node
 	 */
 	private void mergeTwoNodes(final EditorNode node, final EditorNode mergedNode) {
-		// Determine type: Choose more concrete one.
-		if (node.getType().isSuperTypeOf(mergedNode.getType())) {
-			node.setType(mergedNode.getType());
-		}
-
+		mergeTypesOfNodes(node, mergedNode);
 		mergeOperatorsOfNodes(node, mergedNode);
 		mergeAttributesOfNodes(node, mergedNode);
 		mergeReferencesOfNodes(node, mergedNode);
+	}
+
+	/**
+	 * Merges the type of the second node with the one of the first one.
+	 * 
+	 * @param node
+	 *            the node
+	 * @param mergedNode
+	 *            the node merged into the other node
+	 */
+	private void mergeTypesOfNodes(final EditorNode node, final EditorNode mergedNode) {
+		if (node.getType() == null && mergedNode.getType() == null) {
+			errors.add(String.format("No type can be determined for node %s", node.getName()));
+		}
+
+		// Determine type: Choose more concrete one.
+		if (node.getType() == null || node.getType().isSuperTypeOf(mergedNode.getType())) {
+			node.setType(mergedNode.getType());
+		}
 	}
 
 	/**
