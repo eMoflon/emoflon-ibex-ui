@@ -109,12 +109,15 @@ class GTValidator extends AbstractGTValidator {
 	public static val PATTERN_SUPER_PATTERNS_INVALID = CODE_PREFIX + "pattern.superPatterns.invalid"
 	public static val PATTERN_SUPER_PATTERNS_INVALID_MESSAGE = "Cycle in refinement hierarchy: '%s' and '%s'."
 
-	public static val PATTERN_SUPER_PATTERNS_INVALID_PARAMETER = CODE_PREFIX + "pattern.superPatterns.invalidParameter"
-	public static val PATTERN_SUPER_PATTERNS_INVALID_PARAMETER_MESSAGE = "%s has conflicting type declarations for parameter '%s': %s."
-
 	public static val PATTERN_SUPER_PATTERNS_INVALID_ATTRIBUTE_ASSIGNMENT = CODE_PREFIX +
 		"pattern.superPatterns.invalidAttributeAssignment"
 	public static val PATTERN_SUPER_PATTERNS_INVALID_ATTRIBUTE_ASSIGNMENT_MESSAGE = "%s has conflicting attribute assignments for node '%s'."
+
+	public static val PATTERN_SUPER_PATTERNS_INVALID_NODE_TYPE = CODE_PREFIX + "pattern.superPatterns.invalidNodeType"
+	public static val PATTERN_SUPER_PATTERNS_INVALID_NODE_TYPE_MESSAGE = "%s has conflicting type declarations for node '%s': %s."
+
+	public static val PATTERN_SUPER_PATTERNS_INVALID_PARAMETER = CODE_PREFIX + "pattern.superPatterns.invalidParameter"
+	public static val PATTERN_SUPER_PATTERNS_INVALID_PARAMETER_MESSAGE = "%s has conflicting type declarations for parameter '%s': %s."
 
 	// Errors for parameters.
 	public static val PARAMETER_NAME_CONTAINS_UNDERSCORES_MESSAGE = "Parameter name '%s' contains underscores. Use camelCase instead."
@@ -256,6 +259,23 @@ class GTValidator extends AbstractGTValidator {
 
 	@Check
 	def checkPattern(EditorPattern pattern) {
+		checkPatternNameValid(pattern)
+		checkPatternNameUnique(pattern)
+
+		if (!pattern.conditions.isEmpty) {
+			checkPatternNoConditionsIfAbstract(pattern)
+			checkPatternDistinctConditions(pattern)
+		}
+
+		if (!pattern.superPatterns.isEmpty) {
+			checkPatternDistinctSuperPatterns(pattern)
+			checkPatternNoCycleInRefinementHierarchy(pattern)
+			checkPatternNoConflictingParameterDeclarations(pattern)
+			checkPatternNoConflictingNodes(pattern)
+		}
+	}
+
+	def checkPatternNameValid(EditorPattern pattern) {
 		// The pattern name must not be blacklisted.
 		if (patternNameBlacklist.contains(pattern.name)) {
 			error(
@@ -282,21 +302,12 @@ class GTValidator extends AbstractGTValidator {
 				}
 			}
 		}
+	}
 
-		// The pattern must contain at least one node or refine multiple patterns or have graph conditions.
-		if (pattern.nodes.size == 0) {
-			val noSuperPatterns = pattern.superPatterns.size == 0
-			val oneSuperPatternAndNoConditions = pattern.superPatterns.size == 1 && pattern.conditions.size == 0
-			if (noSuperPatterns || oneSuperPatternAndNoConditions) {
-				error(
-					String.format(PATTERN_EMPTY_MESSAGE, pattern.toText),
-					GTPackage.Literals.EDITOR_PATTERN__NODES,
-					GTValidator.PATTERN_EMPTY
-				)
-			}
-		}
-
-		// Pattern names must be unique.
+	/**
+	 * Pattern names must be unique.
+	 */
+	def checkPatternNameUnique(EditorPattern pattern) {
 		val file = pattern.eContainer as EditorGTFile
 		val count = file.patterns.filter[name.equals(pattern.name)].size
 		if (count !== 1) {
@@ -306,20 +317,14 @@ class GTValidator extends AbstractGTValidator {
 				NAME_EXPECT_UNIQUE
 			)
 		}
-
-		checkConditionsOfPattern(pattern)
-		checkRefinementHierarchyOfPattern(pattern)
 	}
 
-	def checkConditionsOfPattern(EditorPattern pattern) {
-		if (pattern.conditions.isEmpty) {
-			return;
-		}
-
-		val text = pattern.toText
-
-		// Abstract patterns must not have any conditions.
-		if (pattern.abstract) {
+	/**
+	 * Abstract patterns must not have any conditions.
+	 */
+	def checkPatternNoConditionsIfAbstract(EditorPattern pattern) {
+		if (pattern.abstract && !pattern.conditions.isEmpty) {
+			val text = pattern.toText
 			warning(
 				String.format(PATTERN_CONDITIONS_NOT_ALLOWED_ABSTRACT_MESSAGE, text),
 				GTPackage.Literals.EDITOR_PATTERN__CONDITIONS,
@@ -327,7 +332,9 @@ class GTValidator extends AbstractGTValidator {
 				text
 			)
 		}
+	}
 
+	def checkPatternDistinctConditions(EditorPattern pattern) {
 		if (pattern.conditions.size !== pattern.conditions.stream.distinct.count) {
 			error(
 				String.format(PATTERN_CONDITIONS_DUPLICATE_MESSAGE, pattern.toText),
@@ -338,12 +345,10 @@ class GTValidator extends AbstractGTValidator {
 		}
 	}
 
-	def checkRefinementHierarchyOfPattern(EditorPattern pattern) {
-		if (pattern.superPatterns.isEmpty) {
-			return;
-		}
-
-		// The super patterns of the pattern must be distinct.
+	/**
+	 * The super patterns of the pattern must be distinct.
+	 */
+	def checkPatternDistinctSuperPatterns(EditorPattern pattern) {
 		if (pattern.superPatterns.size !== pattern.superPatterns.stream.distinct.count) {
 			error(
 				String.format(PATTERN_SUPER_PATTERNS_DUPLICATE_MESSAGE, pattern.name),
@@ -352,8 +357,12 @@ class GTValidator extends AbstractGTValidator {
 				pattern.name
 			)
 		}
+	}
 
-		// The super patterns must not cause a cycle.
+	/**
+	 * The super patterns must not cause a cycle.
+	 */
+	def checkPatternNoCycleInRefinementHierarchy(EditorPattern pattern) {
 		pattern.superPatterns.forEach [
 			if (GTEditorPatternUtils.isRefinementOf(pattern, it) && GTEditorPatternUtils.isRefinementOf(it, pattern)) {
 				error(
@@ -364,8 +373,12 @@ class GTValidator extends AbstractGTValidator {
 				)
 			}
 		]
+	}
 
-		// Parameter names must be equal to definitions in the super pattern.
+	/**
+	 * Parameter types must be equal to definitions in the super pattern.
+	 */
+	def checkPatternNoConflictingParameterDeclarations(EditorPattern pattern) {
 		val superParameters = GTEditorPatternUtils.getAllParametersOfPattern(pattern)
 		val parameterNames = superParameters.map[it.name].toSet
 		for (parameterName : parameterNames) {
@@ -380,11 +393,29 @@ class GTValidator extends AbstractGTValidator {
 				)
 			}
 		}
+	}
 
-		// Nodes may not contain conflicting attribute assignments.
+	/**
+	 * Nodes may not contain conflicting type declarations or attribute assignments.
+	 */
+	def checkPatternNoConflictingNodes(EditorPattern pattern) {
 		val allNodes = GTEditorPatternUtils.getAllNodesOfPattern(pattern, [true])
 		for (nodeName : allNodes.map[it.name].toSet) {
-			if (GTFlatteningUtils.hasConflictingAssignment(allNodes, nodeName)) {
+			val nodesWithSameName = allNodes.filter[it.name == nodeName].toSet
+
+			// The type of a node must be compatible with type declarations in super patterns.
+			val conflicts = GTFlatteningUtils.getConflictingNodeTypes(nodesWithSameName);
+			if (!conflicts.isEmpty) {
+				error(
+					String.format(PATTERN_SUPER_PATTERNS_INVALID_NODE_TYPE_MESSAGE, pattern.toText, nodeName,
+						concatNames(conflicts.map[it.name].toSet)),
+					GTPackage.Literals.EDITOR_PATTERN__SUPER_PATTERNS,
+					PATTERN_SUPER_PATTERNS_INVALID_NODE_TYPE
+				)
+			}
+
+			// A node may not inherit conflicting attribute assignments.
+			if (GTFlatteningUtils.hasConflictingAssignment(nodesWithSameName)) {
 				error(
 					String.format(PATTERN_SUPER_PATTERNS_INVALID_ATTRIBUTE_ASSIGNMENT_MESSAGE, pattern.toText,
 						nodeName),
@@ -396,8 +427,32 @@ class GTValidator extends AbstractGTValidator {
 	}
 
 	@Check(CheckType.NORMAL) // Only on save/build.
-	def checkPatternTypeAndRefinement(EditorPattern pattern) {
-		// Type: pattern vs. rule
+	def checkPatternOnSave(EditorPattern pattern) {
+		checkPatternNotEmpty(pattern)
+		checkPatternType(pattern)
+	}
+
+	/**
+	 * The pattern must contain at least one node or refine multiple patterns or have graph conditions.
+	 */
+	def checkPatternNotEmpty(EditorPattern pattern) {
+		if (pattern.nodes.size == 0) {
+			val noSuperPatterns = pattern.superPatterns.size == 0
+			val oneSuperPatternAndNoConditions = pattern.superPatterns.size == 1 && pattern.conditions.size == 0
+			if (noSuperPatterns || oneSuperPatternAndNoConditions) {
+				error(
+					String.format(PATTERN_EMPTY_MESSAGE, pattern.toText),
+					GTPackage.Literals.EDITOR_PATTERN__NODES,
+					GTValidator.PATTERN_EMPTY
+				)
+			}
+		}
+	}
+
+	/**
+	 * Check type: pattern vs. rule
+	 */
+	def checkPatternType(EditorPattern pattern) {
 		val flattenedPattern = new GTFlattener(pattern).flattenedPattern
 		val isRule = GTEditorPatternUtils.containsCreatedOrDeletedElements(flattenedPattern)
 		if (isRule && pattern.type === EditorPatternType.PATTERN) {

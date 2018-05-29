@@ -144,7 +144,7 @@ class GTParsingPatternRefinementTest extends GTParsingTest {
 	}
 
 	@Test
-	def void errorIfConclictingParameterDeclarationsBetweenSuperRules() {
+	def void errorIfConflictingParameterDeclarationsBetweenSuperRules() {
 		val file = parse('''
 			import "«ecoreImport»"
 			
@@ -172,7 +172,7 @@ class GTParsingPatternRefinementTest extends GTParsingTest {
 	}
 
 	@Test
-	def void errorIfConclictingParameterDeclarationsRuleAndSuperRule() {
+	def void errorIfConflictingParameterDeclarationsRuleAndSuperRule() {
 		val file = parse('''
 			import "«ecoreImport»"
 			
@@ -222,6 +222,36 @@ class GTParsingPatternRefinementTest extends GTParsingTest {
 			GTValidator.PATTERN_SUPER_PATTERNS_INVALID_ATTRIBUTE_ASSIGNMENT,
 			String.format(GTValidator.PATTERN_SUPER_PATTERNS_INVALID_ATTRIBUTE_ASSIGNMENT_MESSAGE, "rule 'renameClass'",
 				'clazz')
+		)
+	}
+
+	@Test
+	def void validIfNoConflictBetweenNodeTypes() {
+		val file = parse('''
+			import "«ecoreImport»"
+			
+			pattern a {
+				n: EClass
+			}
+			
+			pattern b {
+				n: EAnnotation
+			}
+			
+			pattern c {
+				n: EClassifier
+			}
+			
+			pattern d
+			refines a, b
+		''')
+		assertFile(file, 4)
+		assertValidationErrors(
+			file,
+			GTPackage.eINSTANCE.editorPattern,
+			GTValidator.PATTERN_SUPER_PATTERNS_INVALID_NODE_TYPE,
+			String.format(GTValidator.PATTERN_SUPER_PATTERNS_INVALID_NODE_TYPE_MESSAGE, "pattern 'd'", 'n',
+				"'EAnnotation' and 'EClass'")
 		)
 	}
 
