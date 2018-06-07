@@ -3,14 +3,14 @@
  */
 package org.emoflon.ibex.tgg.weights.ui.labeling
 
-import org.eclipse.xtext.ui.label.DefaultDescriptionLabelProvider
+import org.eclipse.xtext.xbase.ui.labeling.XbaseDescriptionLabelProvider
 
 /**
  * Provides labels for IEObjectDescriptions and IResourceDescriptions.
  * 
  * See https://www.eclipse.org/Xtext/documentation/304_ide_concepts.html#label-provider
  */
-class WeightDefinitionDescriptionLabelProvider extends DefaultDescriptionLabelProvider {
+class WeightDefinitionDescriptionLabelProvider extends XbaseDescriptionLabelProvider {
 
 	// Labels and icons can be computed like this:
 	

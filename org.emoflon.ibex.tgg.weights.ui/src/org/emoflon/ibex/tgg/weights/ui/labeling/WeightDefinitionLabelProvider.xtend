@@ -5,27 +5,33 @@ package org.emoflon.ibex.tgg.weights.ui.labeling
 
 import com.google.inject.Inject
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
-import org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider
+import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile
+import org.eclipse.xtext.xbase.ui.labeling.XbaseLabelProvider
+import org.emoflon.ibex.tgg.weights.weightDefinition.RuleWeightDefinition
+import org.emoflon.ibex.tgg.weights.weightDefinition.DefaultCalculation
 
 /**
  * Provides labels for EObjects.
  * 
  * See https://www.eclipse.org/Xtext/documentation/304_ide_concepts.html#label-provider
  */
-class WeightDefinitionLabelProvider extends DefaultEObjectLabelProvider {
+class WeightDefinitionLabelProvider extends XbaseLabelProvider {
 
 	@Inject
 	new(AdapterFactoryLabelProvider delegate) {
 		super(delegate);
 	}
-
-	// Labels and icons can be computed like this:
 	
-//	def text(Greeting ele) {
-//		'A greeting to ' + ele.name
-//	}
-//
-//	def image(Greeting ele) {
-//		'Greeting.gif'
-//	}
+	def text(WeightDefinitionFile file) {
+		val fileName = file.eResource.URI.lastSegment
+		fileName.substring(0, fileName.length - 5)
+	}
+	
+	def text(RuleWeightDefinition ruleElement) {
+		ruleElement.rule.name
+	}
+	
+	def text(DefaultCalculation defaultCalc) {
+		"Default weight"
+	}
 }

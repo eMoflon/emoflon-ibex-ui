@@ -3,13 +3,23 @@
  */
 package org.emoflon.ibex.tgg.weights.ui.outline
 
-import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider
+import org.eclipse.xtext.xbase.ui.outline.XbaseOutlineTreeProvider
+import org.emoflon.ibex.tgg.weights.weightDefinition.RuleWeightDefinition
+import org.emoflon.ibex.tgg.weights.weightDefinition.DefaultCalculation
 
 /**
  * Customization of the default outline structure.
  *
  * See https://www.eclipse.org/Xtext/documentation/310_eclipse_support.html#outline
  */
-class WeightDefinitionOutlineTreeProvider extends DefaultOutlineTreeProvider {
-
+class WeightDefinitionOutlineTreeProvider extends XbaseOutlineTreeProvider {
+	
+	def _isLeaf(RuleWeightDefinition ruleDef) {
+		true
+	}
+	
+	def _isLeaf(DefaultCalculation defaultCalc) {
+		true
+	}
+	
 }

@@ -3,10 +3,38 @@
  */
 package org.emoflon.ibex.tgg.weights.ui.contentassist
 
+import java.util.Arrays
+import org.eclipse.core.resources.ResourcesPlugin
+import org.eclipse.core.runtime.CoreException
+import org.eclipse.emf.common.util.URI
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.xtext.Assignment
+import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext
+import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor
+import org.moflon.core.utilities.WorkspaceHelper
 
 /**
  * See https://www.eclipse.org/Xtext/documentation/304_ide_concepts.html#content-assist
  * on how to customize the content assistant.
  */
 class WeightDefinitionProposalProvider extends AbstractWeightDefinitionProposalProvider {
+
+	override completeImport_ImportURI(EObject model, Assignment assignment, ContentAssistContext context,
+		ICompletionProposalAcceptor acceptor) {
+		Arrays.stream(ResourcesPlugin.getWorkspace().getRoot().getProjects()) //
+		.forEach [
+			val modelFolder = WorkspaceHelper.getModelFolder(project);
+			if (modelFolder.exists()) {
+				try {
+					val members = modelFolder.members();
+					Arrays.stream(members).filter[it.getFileExtension().equals("xmi")].forEach [
+						val uri = URI.createPlatformResourceURI(it.getFullPath().toString(), true);
+						acceptor.accept(createCompletionProposal('''"«uri.toString»"''', context))
+					];
+				} catch (CoreException e) {
+					// Do nothing.
+				}
+			}
+		];
+	}
 }

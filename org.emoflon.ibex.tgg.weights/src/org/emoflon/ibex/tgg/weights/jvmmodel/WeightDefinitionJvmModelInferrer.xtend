@@ -20,6 +20,7 @@ import org.emoflon.ibex.tgg.operational.matches.IMatch
 import org.emoflon.ibex.tgg.operational.strategies.OPT
 import org.emoflon.ibex.tgg.weights.weightDefinition.DefaultCalculation
 import org.emoflon.ibex.tgg.operational.strategies.IWeightCalculationStrategy
+import org.eclipse.xtext.xbase.jvmmodel.JvmAnnotationReferenceBuilder
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -65,12 +66,13 @@ class WeightDefinitionJvmModelInferrer extends AbstractModelInferrer {
 			superTypes += typeRef(IWeightCalculationStrategy)
 			packageName = "org.emoflon.ibex.tgg.weights"
 			visibility = JvmVisibility.PUBLIC
-			documentation = '''This class defines the calculation of weights of found matches. 
-			Calculations are defined in «element.eResource.URI.path»'''
+			documentation = '''This class defines the calculation of weights of found matches.'''
+				+ "\n" + '''Calculations are defined in "«element.eResource.URI.toString»"'''
 			
 			members += element.toField("app", typeRef(OPT)) [
 				visibility = JvmVisibility.PRIVATE
 				final = true
+				documentation = "The app this weight calculation strategy is registered at."
 			]
 
 			// create constructor
@@ -86,6 +88,7 @@ class WeightDefinitionJvmModelInferrer extends AbstractModelInferrer {
 				parameters += element.toParameter("comatch", typeRef(IMatch))
 				body = '''«getBodyForGenericMethod(element.weigthDefinitions.map[it as RuleWeightDefinition].map[it.rule].toList())»'''
 				documentation = '''Switching method that delegates the weight calculation to the methods dedicated to a single rule or to the default strategy if no calculation is specified'''
+				annotations += (new JvmAnnotationReferenceBuilder()).annotationRef(Override)
 			]
 			
 			// create the method for each weight definition
