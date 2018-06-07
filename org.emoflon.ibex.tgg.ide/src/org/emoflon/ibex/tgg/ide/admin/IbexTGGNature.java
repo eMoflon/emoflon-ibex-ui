@@ -25,8 +25,6 @@ import org.eclipse.ui.PlatformUI;
 import org.moflon.core.utilities.ExtensionsUtil;
 import org.moflon.core.plugins.BuildPropertiesFileBuilder;
 import org.moflon.core.plugins.manifest.ManifestFileUpdater;
-import org.moflon.core.plugins.manifest.ManifestFileUpdater.AttributeUpdatePolicy;
-import org.moflon.core.plugins.manifest.PluginManifestConstants;
 import org.moflon.core.utilities.LogUtils;
 import org.moflon.core.utilities.WorkspaceHelper;
 
@@ -107,8 +105,7 @@ public class IbexTGGNature implements IProjectNature {
 			boolean changed = false;
 			changed |= ManifestFileUpdater.updateDependencies(manifest, Arrays.asList(
 					// Misc deps
-					"org.apache.log4j", "com.google.guava",
-					"org.sat4j.core", "org.sat4j.pb",
+					"org.apache.log4j", "com.google.guava", "org.sat4j.core", "org.sat4j.pb",
 
 					// EMF deps
 					"org.eclipse.emf.ecore.xmi",
@@ -202,24 +199,7 @@ public class IbexTGGNature implements IProjectNature {
 	private void setUpManifestFile() throws CoreException, IOException {
 		logger.debug("Adding MANIFEST.MF");
 		new ManifestFileUpdater().processManifest(project, manifest -> {
-			boolean changed = false;
-			changed |= ManifestFileUpdater.updateAttribute(manifest, PluginManifestConstants.MANIFEST_VERSION, "1.0",
-					AttributeUpdatePolicy.KEEP);
-			changed |= ManifestFileUpdater.updateAttribute(manifest, PluginManifestConstants.BUNDLE_MANIFEST_VERSION,
-					"2", AttributeUpdatePolicy.KEEP);
-			changed |= ManifestFileUpdater.updateAttribute(manifest, PluginManifestConstants.BUNDLE_NAME,
-					project.getName(), AttributeUpdatePolicy.KEEP);
-			changed |= ManifestFileUpdater.updateAttribute(manifest, PluginManifestConstants.BUNDLE_SYMBOLIC_NAME,
-					project.getName() + ";singleton:=true", AttributeUpdatePolicy.KEEP);
-			changed |= ManifestFileUpdater.updateAttribute(manifest, PluginManifestConstants.BUNDLE_VERSION, "1.0",
-					AttributeUpdatePolicy.KEEP);
-			changed |= ManifestFileUpdater.updateAttribute(manifest, PluginManifestConstants.BUNDLE_VENDOR,
-					"eMoflon IBeX", AttributeUpdatePolicy.KEEP);
-			changed |= ManifestFileUpdater.updateAttribute(manifest, PluginManifestConstants.BUNDLE_ACTIVATION_POLICY,
-					"lazy", AttributeUpdatePolicy.KEEP);
-			changed |= ManifestFileUpdater.updateAttribute(manifest,
-					PluginManifestConstants.BUNDLE_EXECUTION_ENVIRONMENT, "JavaSE-1.8", AttributeUpdatePolicy.KEEP);
-			return changed;
+			return ManifestFileUpdater.setBasicProperties(manifest, project.getName());
 		});
 	}
 
