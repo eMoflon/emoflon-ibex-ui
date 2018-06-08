@@ -5,10 +5,5 @@ Bundle-SymbolicName: org.emoflon.ibex.common.editor.utils;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: eMoflon::IBeX Developers
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Export-Package: org.emoflon.ibex.common.editor.utils
-Require-Bundle: org.eclipse.core.resources,
- org.eclipse.core.runtime,
- org.eclipse.emf.common,
- org.moflon.core.utilities,
- org.moflon.core.ui.autosetup
+Require-Bundle: org.moflon.core.ui.autosetup
 Automatic-Module-Name: org.emoflon.ibex.common.editor.utils
