@@ -42,6 +42,7 @@ import org.moflon.tgg.mosl.tgg.Schema
 import org.moflon.tgg.mosl.tgg.TggPackage
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
 import org.emoflon.ibex.common.utils.EcoreUtils
+import org.moflon.tgg.mosl.tgg.AttrCond
 
 /**
  * This class contains custom scoping description.
@@ -166,6 +167,34 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 		context instanceof AttributeExpression && reference == TggPackage.Literals.ATTRIBUTE_EXPRESSION__ATTRIBUTE
 	}
 	
+	def is_objectvar_of_attr_expression(EObject context, EReference reference) {
+		context instanceof AttributeExpression && reference == TggPackage.Literals.ATTRIBUTE_EXPRESSION__OBJECT_VAR
+	}
+	
+	def object_must_be_of_ovPattern_or_cOvPattern(EObject context) {
+		Scopes.scopeFor(getCObjectVariablePatterns(context));
+	}
+	
+	def getCObjectVariablePatterns(EObject context) {
+		var scopeOVs = new ArrayList
+		var container = context.eContainer
+		while(container != null) {
+			switch container {
+				Rule : {
+					scopeOVs.addAll(container.sourcePatterns)
+					scopeOVs.addAll(container.targetPatterns)
+					return scopeOVs
+				}
+				Nac : {
+					scopeOVs.addAll(container.sourcePatterns)
+					scopeOVs.addAll(container.targetPatterns)
+					return scopeOVs
+				}
+			}
+			container = container.eContainer
+		}
+	}
+	
 	def attr_must_be_of_ov(EObject context) {
 		return Scopes.scopeFor(getOVType(context).EAllAttributes)
 	}
@@ -244,7 +273,7 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 		val sub = getOVType(desc.EObjectOrProxy)
 		sub != null && (EcoreUtils.equalsFQN(sub, sup) || sub.EAllSuperTypes.contains(sup) || EcorePackage.eINSTANCE.EObject.equals(sup))
 	}
-
+	
 	def is_type_of_ov(EObject context, EReference reference) {
 		if(context instanceof ObjectVariablePattern)
 			reference == TggPackage.Literals.OBJECT_VARIABLE_PATTERN__TYPE

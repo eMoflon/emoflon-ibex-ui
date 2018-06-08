@@ -150,7 +150,7 @@ EnumExpression:
 ;
 
 AttributeExpression:
-	objectVar = [ObjectVariablePattern] '.' attribute = [ecore::EAttribute]
+	objectVar = [ecore::EObject] '.' attribute = [ecore::EAttribute]
 ;
 
 LiteralExpression:
@@ -258,5 +258,5 @@ NamedElements:
 ;
 
 NamePattern:
-	CorrVariablePattern | ObjectVariablePattern
+	CorrVariablePattern | ObjectVariablePattern 
 ;
