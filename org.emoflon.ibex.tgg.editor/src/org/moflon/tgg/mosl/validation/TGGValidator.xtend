@@ -29,6 +29,7 @@ import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
 import org.moflon.tgg.mosl.tgg.impl.LocalVariableImpl
 import org.moflon.tgg.mosl.tgg.CorrVariablePattern
 import org.eclipse.emf.ecore.EStructuralFeature
+import org.moflon.tgg.mosl.tgg.ContextObjectVariablePattern
 
 /**
  * This class contains custom validation rules. 
@@ -53,11 +54,11 @@ class TGGValidator extends AbstractTGGValidator {
 	@Check
 	def checkAttributeExpression(AttributeExpression attrVar){
 		var attrNames = new BasicEList()
-		for (attr : attrVar.objectVar.type.EAllAttributes) {
+		for (attr : getOPatternType(attrVar.objectVar).EAllAttributes) {
 			attrNames.add(attr)
 		}
 		if (!attrNames.contains(attrVar.attribute)) {
-			error("EClass " + attrVar.objectVar.type.name + " does not contain EAttribute " + attrVar.attribute.name + ".", TggPackage.Literals.ATTRIBUTE_EXPRESSION__ATTRIBUTE, TGGValidator.INVALID_ATTRIBUTE_VARIABLE);
+			error("EClass " + getOPatternType(attrVar.objectVar).name + " does not contain EAttribute " + attrVar.attribute.name + ".", TggPackage.Literals.ATTRIBUTE_EXPRESSION__ATTRIBUTE, TGGValidator.INVALID_ATTRIBUTE_VARIABLE);
 		}
 	}
 	
@@ -279,6 +280,14 @@ class TGGValidator extends AbstractTGGValidator {
 			error("The ecore file '" + importEcore.name +"' does not exist" ,TggPackage.Literals.IMPORT__NAME, TGGValidator.INVALID_IMPORT)
 		}
  	}
+ 	
+ 	
+	def getOPatternType(EObject obj) {
+		switch obj {
+			ObjectVariablePattern : obj.type
+			ContextObjectVariablePattern : obj.type
+		}
+	}
  	
  	@Check
  	def checkForAssignmentOperator(ObjectVariablePattern ov){
