@@ -3,18 +3,19 @@
  */
 package org.emoflon.ibex.tgg.weights.validation
 
-import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile
-import org.eclipse.xtext.validation.Check
-import org.emoflon.ibex.tgg.weights.weightDefinition.RuleWeightDefinition
-import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionPackage
-import org.emoflon.ibex.tgg.weights.weightDefinition.Import
-import org.eclipse.emf.common.util.URI
-import org.eclipse.emf.ecore.util.EcoreUtil
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
-import org.eclipse.emf.ecore.resource.ContentHandler
-import org.eclipse.emf.ecore.resource.Resource
 import language.TGG
 import language.TGGRule
+import language.TGGRuleCorr
+import org.eclipse.emf.common.util.URI
+import org.eclipse.emf.ecore.resource.ContentHandler
+import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
+import org.eclipse.emf.ecore.util.EcoreUtil
+import org.eclipse.xtext.validation.Check
+import org.emoflon.ibex.tgg.weights.weightDefinition.Import
+import org.emoflon.ibex.tgg.weights.weightDefinition.RuleWeightDefinition
+import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile
+import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionPackage
 
 /**
  * This class contains custom validation rules. 
@@ -22,21 +23,42 @@ import language.TGGRule
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
-	
+
 	@Check
 	def checkRuleUniqueness(RuleWeightDefinition ruleWeightDefinition) {
-		(ruleWeightDefinition.eContainer as WeightDefinitionFile)
-			.weigthDefinitions.map[(it as RuleWeightDefinition)]
-			.filter[it !== ruleWeightDefinition]
-			.filter[it.rule === ruleWeightDefinition.rule]
-			.forEach[
-				error("Duplicated rule: "+(it.rule.name),
+		(ruleWeightDefinition.eContainer as WeightDefinitionFile).weigthDefinitions.map[(it as RuleWeightDefinition)].
+			filter[it !== ruleWeightDefinition].filter[it.rule === ruleWeightDefinition.rule].forEach [
+				error(
+					"Duplicated rule: " + (it.rule.name),
 					ruleWeightDefinition,
 					WeightDefinitionPackage.Literals.RULE_WEIGHT_DEFINITION__RULE
 				)
 			]
 	}
-	
+
+	@Check
+	def checkNodeImports(RuleWeightDefinition ruleWeightDefinition) {
+		for (node : ruleWeightDefinition.rule.nodes.filter[!(it instanceof TGGRuleCorr)]) {
+			val typename = node.type.name
+			val packageName = node.type.EPackage.name
+			var Class<?> ref = null
+			try {
+				ref = Class.forName(packageName + "." + typename)
+			} catch (Exception e) {
+				System.err.println(e)
+			}
+
+			if (ref === null) {
+				warning(
+					'''Could not resolve type "«packageName + "." + typename»" of node "«node.name»"''',
+					ruleWeightDefinition,
+					WeightDefinitionPackage.Literals.RULE_WEIGHT_DEFINITION__WEIGHT_CALC
+				)
+			}
+
+		}
+	}
+
 	@Check
 	def checkTggFileExists(Import importFile) {
 		var Resource importedTGG
@@ -46,24 +68,27 @@ class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
 			importedTGG = new ResourceSetImpl().createResource(resolvedUri, ContentHandler.UNSPECIFIED_CONTENT_TYPE);
 			importedTGG.load(null);
 			EcoreUtil.resolveAll(importedTGG);
-		} catch(Exception e) {
-			error("Cannot load TGG from "+(importFile.importURI),
-					importFile,
-					WeightDefinitionPackage.Literals.IMPORT__IMPORT_URI
-				)
+		} catch (Exception e) {
+			error(
+				"Cannot load TGG from " + (importFile.importURI),
+				importFile,
+				WeightDefinitionPackage.Literals.IMPORT__IMPORT_URI
+			)
 		}
-		
-		if(!importedTGG.contents.exists[it instanceof TGG]) {
-			error("File at \""+(importFile.importURI) + "\" does not contain a TGG",
-					importFile,
-					WeightDefinitionPackage.Literals.IMPORT__IMPORT_URI
-				)
+
+		if (!importedTGG.contents.exists[it instanceof TGG]) {
+			error(
+				"File at \"" + (importFile.importURI) + "\" does not contain a TGG",
+				importFile,
+				WeightDefinitionPackage.Literals.IMPORT__IMPORT_URI
+			)
 		}
-		if(!importedTGG.contents.filter[it instanceof TGG].flatMap[(it as TGG).rules].exists[it instanceof TGGRule]) {
-			error("File at \""+(importFile.importURI) + "\" does not contain any TGG rules",
-					importFile,
-					WeightDefinitionPackage.Literals.IMPORT__IMPORT_URI
-				)
+		if (!importedTGG.contents.filter[it instanceof TGG].flatMap[(it as TGG).rules].exists[it instanceof TGGRule]) {
+			error(
+				"File at \"" + (importFile.importURI) + "\" does not contain any TGG rules",
+				importFile,
+				WeightDefinitionPackage.Literals.IMPORT__IMPORT_URI
+			)
 		}
 	}
 }

@@ -69,9 +69,9 @@ class WeightDefinitionJvmModelInferrer extends AbstractModelInferrer {
 			packageName = "org.emoflon.ibex.tgg.weights"
 			visibility = JvmVisibility.PUBLIC
 			annotations += annotationRef(Generated)
-			documentation = '''This class defines the calculation of weights of found matches.'''
-				+ "\n" + '''Calculations are defined in "«element.eResource.URI.toString»"'''
-			
+			documentation = '''This class defines the calculation of weights of found matches.''' + "\n" +
+				'''Calculations are defined in "«element.eResource.URI.toString»"'''
+
 			members += element.toField("app", typeRef(OPT)) [
 				visibility = JvmVisibility.PRIVATE
 				final = true
@@ -94,7 +94,7 @@ class WeightDefinitionJvmModelInferrer extends AbstractModelInferrer {
 				annotations += annotationRef(Override)
 				final = true
 			]
-			
+
 			// create the method for each weight definition
 			for (rule : element.weigthDefinitions) {
 				val r = rule as RuleWeightDefinition
@@ -107,7 +107,7 @@ class WeightDefinitionJvmModelInferrer extends AbstractModelInferrer {
 					final = true
 					body = '''«r.rule.bodyThatRetrievesMatchedNodes»'''
 				]
-				
+
 				// actual calculation method
 				members += r.toMethod('''calculateWeightFor«r.rule.name»''', typeRef(double)) [
 					documentation = '''Weight calculation for matched nodes of rule «r.rule.name»'''
@@ -126,10 +126,10 @@ class WeightDefinitionJvmModelInferrer extends AbstractModelInferrer {
 					body = (r.weightCalc as WeightCalculation).calc
 				]
 			}
-			
+
 			// add default calculation method
 			val defaultCalculation = element.^default as DefaultCalculation
-			if(defaultCalculation !== null) {
+			if (defaultCalculation !== null) {
 				members += defaultCalculation.toMethod("calculateDefaultWeight", typeRef(double)) [
 					val p1 = element.toParameter("ruleName", typeRef(String))
 					p1.documentation = "Name of the rule the match corresponds to"
@@ -159,20 +159,20 @@ class WeightDefinitionJvmModelInferrer extends AbstractModelInferrer {
 
 	def String getBodyForGenericMethod(Iterable<TGGRule> rules) {
 		'''switch(ruleName) {
-			«FOR rule : rules»
-				case "«rule.name»": 
-					return calculateWeightFor«rule.name»(ruleName, comatch);
-			«ENDFOR»
-			default: 
-				return this.calculateDefaultWeight(ruleName, comatch);
+		«FOR rule : rules»
+			case "«rule.name»": 
+				return calculateWeightFor«rule.name»(ruleName, comatch);
+		«ENDFOR»
+		default: 
+			return this.calculateDefaultWeight(ruleName, comatch);
 		}'''
 	}
 
 	def String getBodyThatRetrievesMatchedNodes(TGGRule rule) {
 		'''«FOR node : rule.nodes.filter[!(it instanceof TGGRuleCorr)]»
 			«node.typeNameForNode» «node.name» = («node.typeNameForNode») comatch.get("«node.name»");
-		«ENDFOR»'''+
-		'''return calculateWeightFor«rule.name»(«rule.nodes.filter[!(it instanceof TGGRuleCorr)].map[it.name].join(", ")» );'''
+		«ENDFOR»''' +
+			'''return calculateWeightFor«rule.name»(«rule.nodes.filter[!(it instanceof TGGRuleCorr)].map[it.name].join(", ")» );'''
 	}
 
 	def String getTypeNameForNode(TGGRuleNode node) {
