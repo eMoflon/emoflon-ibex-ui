@@ -36,6 +36,7 @@ import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionPackage;
  *   <li>{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightDefinitionFileImpl#getImports <em>Imports</em>}</li>
  *   <li>{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightDefinitionFileImpl#getWeigthDefinitions <em>Weigth Definitions</em>}</li>
  *   <li>{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightDefinitionFileImpl#getDefault <em>Default</em>}</li>
+ *   <li>{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightDefinitionFileImpl#getHelperFuntions <em>Helper Funtions</em>}</li>
  * </ul>
  *
  * @generated
@@ -71,6 +72,16 @@ public class WeightDefinitionFileImpl extends MinimalEObjectImpl.Container imple
    * @ordered
    */
   protected XExpression default_;
+
+  /**
+   * The cached value of the '{@link #getHelperFuntions() <em>Helper Funtions</em>}' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getHelperFuntions()
+   * @generated
+   * @ordered
+   */
+  protected EList<XExpression> helperFuntions;
 
   /**
    * <!-- begin-user-doc -->
@@ -208,6 +219,20 @@ public class WeightDefinitionFileImpl extends MinimalEObjectImpl.Container imple
    * <!-- end-user-doc -->
    * @generated
    */
+  public EList<XExpression> getHelperFuntions()
+  {
+    if (helperFuntions == null)
+    {
+      helperFuntions = new EObjectContainmentEList<XExpression>(XExpression.class, this, WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__HELPER_FUNTIONS);
+    }
+    return helperFuntions;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   @Override
   public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
   {
@@ -219,6 +244,8 @@ public class WeightDefinitionFileImpl extends MinimalEObjectImpl.Container imple
         return ((InternalEList<?>)getWeigthDefinitions()).basicRemove(otherEnd, msgs);
       case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__DEFAULT:
         return basicSetDefault(null, msgs);
+      case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__HELPER_FUNTIONS:
+        return ((InternalEList<?>)getHelperFuntions()).basicRemove(otherEnd, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -239,6 +266,8 @@ public class WeightDefinitionFileImpl extends MinimalEObjectImpl.Container imple
         return getWeigthDefinitions();
       case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__DEFAULT:
         return getDefault();
+      case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__HELPER_FUNTIONS:
+        return getHelperFuntions();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -264,6 +293,10 @@ public class WeightDefinitionFileImpl extends MinimalEObjectImpl.Container imple
       case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__DEFAULT:
         setDefault((XExpression)newValue);
         return;
+      case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__HELPER_FUNTIONS:
+        getHelperFuntions().clear();
+        getHelperFuntions().addAll((Collection<? extends XExpression>)newValue);
+        return;
     }
     super.eSet(featureID, newValue);
   }
@@ -287,6 +320,9 @@ public class WeightDefinitionFileImpl extends MinimalEObjectImpl.Container imple
       case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__DEFAULT:
         setDefault((XExpression)null);
         return;
+      case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__HELPER_FUNTIONS:
+        getHelperFuntions().clear();
+        return;
     }
     super.eUnset(featureID);
   }
@@ -307,6 +343,8 @@ public class WeightDefinitionFileImpl extends MinimalEObjectImpl.Container imple
         return weigthDefinitions != null && !weigthDefinitions.isEmpty();
       case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__DEFAULT:
         return default_ != null;
+      case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__HELPER_FUNTIONS:
+        return helperFuntions != null && !helperFuntions.isEmpty();
     }
     return super.eIsSet(featureID);
   }

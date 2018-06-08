@@ -21,6 +21,7 @@ import org.eclipse.xtext.xbase.XExpression;
  *   <li>{@link org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile#getImports <em>Imports</em>}</li>
  *   <li>{@link org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile#getWeigthDefinitions <em>Weigth Definitions</em>}</li>
  *   <li>{@link org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile#getDefault <em>Default</em>}</li>
+ *   <li>{@link org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile#getHelperFuntions <em>Helper Funtions</em>}</li>
  * </ul>
  *
  * @see org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionPackage#getWeightDefinitionFile()
@@ -96,5 +97,21 @@ public interface WeightDefinitionFile extends EObject
    * @generated
    */
   void setDefault(XExpression value);
+
+  /**
+   * Returns the value of the '<em><b>Helper Funtions</b></em>' containment reference list.
+   * The list contents are of type {@link org.eclipse.xtext.xbase.XExpression}.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Helper Funtions</em>' containment reference list isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Helper Funtions</em>' containment reference list.
+   * @see org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionPackage#getWeightDefinitionFile_HelperFuntions()
+   * @model containment="true"
+   * @generated
+   */
+  EList<XExpression> getHelperFuntions();
 
 } // WeightDefinitionFile

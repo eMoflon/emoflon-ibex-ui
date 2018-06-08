@@ -15,7 +15,8 @@ generate weightDefinition "http://www.emoflon.org/ibex/tgg/weights/WeightDefinit
 WeightDefinitionFile:
 	imports = Import
 	weigthDefinitions+=RuleWeightDefinition*
-	default = DefaultCalculation?;
+	default = DefaultCalculation?
+	helperFuntions += HelperFuntion*;
 
 Import:
 	'import' importURI=STRING
@@ -33,3 +34,22 @@ WeightCalculation returns xbase::XExpression:
 DefaultCalculation returns xbase::XExpression:
 	{DefaultCalculation} 'default' calc = XBlockExpression
 ;
+
+HelperFuntion returns xbase::XExpression:
+	{HelperFunction}
+	'function' 
+	returnType = JvmTypeReference
+	name=ValidID
+	'('
+	(
+		params += HelperFuncParameter
+		(',' params += HelperFuncParameter)*
+	)?
+	')'
+	body = XBlockExpression
+;
+
+HelperFuncParameter:
+	parameterType=JvmTypeReference name=ValidID
+;
+

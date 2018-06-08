@@ -67,9 +67,11 @@ public class WeightDefinitionFactoryImpl extends EFactoryImpl implements WeightD
     {
       case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE: return createWeightDefinitionFile();
       case WeightDefinitionPackage.IMPORT: return createImport();
+      case WeightDefinitionPackage.HELPER_FUNC_PARAMETER: return createHelperFuncParameter();
       case WeightDefinitionPackage.RULE_WEIGHT_DEFINITION: return createRuleWeightDefinition();
       case WeightDefinitionPackage.WEIGHT_CALCULATION: return createWeightCalculation();
       case WeightDefinitionPackage.DEFAULT_CALCULATION: return createDefaultCalculation();
+      case WeightDefinitionPackage.HELPER_FUNCTION: return createHelperFunction();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
     }
@@ -95,6 +97,17 @@ public class WeightDefinitionFactoryImpl extends EFactoryImpl implements WeightD
   {
     ImportImpl import_ = new ImportImpl();
     return import_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public HelperFuncParameter createHelperFuncParameter()
+  {
+    HelperFuncParameterImpl helperFuncParameter = new HelperFuncParameterImpl();
+    return helperFuncParameter;
   }
 
   /**
@@ -128,6 +141,17 @@ public class WeightDefinitionFactoryImpl extends EFactoryImpl implements WeightD
   {
     DefaultCalculationImpl defaultCalculation = new DefaultCalculationImpl();
     return defaultCalculation;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public HelperFunction createHelperFunction()
+  {
+    HelperFunctionImpl helperFunction = new HelperFunctionImpl();
+    return helperFunction;
   }
 
   /**

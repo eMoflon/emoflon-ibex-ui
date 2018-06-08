@@ -16,6 +16,8 @@ import org.emoflon.ibex.tgg.weights.weightDefinition.Import
 import org.emoflon.ibex.tgg.weights.weightDefinition.RuleWeightDefinition
 import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile
 import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionPackage
+import org.emoflon.ibex.tgg.weights.weightDefinition.HelperFunction
+import org.emoflon.ibex.tgg.weights.weightDefinition.HelperFuncParameter
 
 /**
  * This class contains custom validation rules. 
@@ -45,14 +47,14 @@ class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
 			try {
 				ref = Class.forName(packageName + "." + typename)
 			} catch (Exception e) {
-				System.err.println(e)
+//				System.err.println(e)
 			}
 
 			if (ref === null) {
 				warning(
 					'''Could not resolve type "«packageName + "." + typename»" of node "«node.name»"''',
 					ruleWeightDefinition,
-					WeightDefinitionPackage.Literals.RULE_WEIGHT_DEFINITION__WEIGHT_CALC
+					WeightDefinitionPackage.Literals.RULE_WEIGHT_DEFINITION__RULE
 				)
 			}
 
@@ -90,5 +92,46 @@ class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
 				WeightDefinitionPackage.Literals.IMPORT__IMPORT_URI
 			)
 		}
+	}
+	
+	@Check
+	def checkHelperFunctionNameUniqueness(HelperFunction helperFuntion) {
+		val sameName = (helperFuntion.eContainer as WeightDefinitionFile).helperFuntions.map[(it as HelperFunction)].
+			filter[it !== helperFuntion]
+			.filter[it.name == helperFuntion.name]
+			
+		val sameParameters = sameName
+			.filter[helperFuntion.checkAllParametersEqual(it)]
+		sameParameters
+			.forEach[
+				error(
+					"Duplicated function name: " + (it.name),
+					helperFuntion,
+					WeightDefinitionPackage.Literals.HELPER_FUNCTION__NAME
+				)
+			]
+	}
+	
+	@Check
+	def checkFunctionParameterUniqueness(HelperFuncParameter parameter) {
+		(parameter.eContainer as HelperFunction).params.map[(it as HelperFuncParameter)].
+			filter[it !== parameter].filter[it.name == parameter.name].forEach [
+				error(
+					"Duplicated variable name: " + (it.name),
+					parameter,
+					WeightDefinitionPackage.Literals.HELPER_FUNC_PARAMETER__NAME
+				)
+			]
+	}
+	
+	def checkAllParametersEqual(HelperFunction a, HelperFunction b) {
+		if(a.params.size !== b.params.size)
+			return false
+		for(var i=0; i< a.params.size; i++) {
+			if(a.params.get(i).parameterType.type != b.params.get(i).parameterType.type) {
+					return false
+				}
+		}
+		return true
 	}
 }

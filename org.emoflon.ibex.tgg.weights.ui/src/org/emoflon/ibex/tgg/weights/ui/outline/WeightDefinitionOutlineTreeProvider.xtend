@@ -6,6 +6,7 @@ package org.emoflon.ibex.tgg.weights.ui.outline
 import org.eclipse.xtext.xbase.ui.outline.XbaseOutlineTreeProvider
 import org.emoflon.ibex.tgg.weights.weightDefinition.RuleWeightDefinition
 import org.emoflon.ibex.tgg.weights.weightDefinition.DefaultCalculation
+import org.emoflon.ibex.tgg.weights.weightDefinition.HelperFunction
 
 /**
  * Customization of the default outline structure.
@@ -22,4 +23,7 @@ class WeightDefinitionOutlineTreeProvider extends XbaseOutlineTreeProvider {
 		true
 	}
 	
+	def _isLeaf(HelperFunction helperFunc) {
+		true
+	}
 }

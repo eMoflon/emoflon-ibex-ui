@@ -133,6 +133,25 @@ ruleWeightDefinitionFile returns [EObject current=null]
 				}
 			)
 		)?
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getWeightDefinitionFileAccess().getHelperFuntionsHelperFuntionParserRuleCall_3_0());
+				}
+				lv_helperFuntions_3_0=ruleHelperFuntion
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getWeightDefinitionFileRule());
+					}
+					add(
+						$current,
+						"helperFuntions",
+						lv_helperFuntions_3_0,
+						"org.emoflon.ibex.tgg.weights.WeightDefinition.HelperFuntion");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)*
 	)
 ;
 
@@ -326,6 +345,204 @@ ruleDefaultCalculation returns [EObject current=null]
 						"calc",
 						lv_calc_2_0,
 						"org.eclipse.xtext.xbase.Xbase.XBlockExpression");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+	)
+;
+
+// Entry rule entryRuleHelperFuntion
+entryRuleHelperFuntion returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getHelperFuntionRule()); }
+	iv_ruleHelperFuntion=ruleHelperFuntion
+	{ $current=$iv_ruleHelperFuntion.current; }
+	EOF;
+
+// Rule HelperFuntion
+ruleHelperFuntion returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			{
+				$current = forceCreateModelElement(
+					grammarAccess.getHelperFuntionAccess().getHelperFunctionAction_0(),
+					$current);
+			}
+		)
+		otherlv_1='function'
+		{
+			newLeafNode(otherlv_1, grammarAccess.getHelperFuntionAccess().getFunctionKeyword_1());
+		}
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getHelperFuntionAccess().getReturnTypeJvmTypeReferenceParserRuleCall_2_0());
+				}
+				lv_returnType_2_0=ruleJvmTypeReference
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getHelperFuntionRule());
+					}
+					set(
+						$current,
+						"returnType",
+						lv_returnType_2_0,
+						"org.eclipse.xtext.xbase.Xtype.JvmTypeReference");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getHelperFuntionAccess().getNameValidIDParserRuleCall_3_0());
+				}
+				lv_name_3_0=ruleValidID
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getHelperFuntionRule());
+					}
+					set(
+						$current,
+						"name",
+						lv_name_3_0,
+						"org.eclipse.xtext.xbase.Xtype.ValidID");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+		otherlv_4='('
+		{
+			newLeafNode(otherlv_4, grammarAccess.getHelperFuntionAccess().getLeftParenthesisKeyword_4());
+		}
+		(
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getHelperFuntionAccess().getParamsHelperFuncParameterParserRuleCall_5_0_0());
+					}
+					lv_params_5_0=ruleHelperFuncParameter
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getHelperFuntionRule());
+						}
+						add(
+							$current,
+							"params",
+							lv_params_5_0,
+							"org.emoflon.ibex.tgg.weights.WeightDefinition.HelperFuncParameter");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+			(
+				otherlv_6=','
+				{
+					newLeafNode(otherlv_6, grammarAccess.getHelperFuntionAccess().getCommaKeyword_5_1_0());
+				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getHelperFuntionAccess().getParamsHelperFuncParameterParserRuleCall_5_1_1_0());
+						}
+						lv_params_7_0=ruleHelperFuncParameter
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getHelperFuntionRule());
+							}
+							add(
+								$current,
+								"params",
+								lv_params_7_0,
+								"org.emoflon.ibex.tgg.weights.WeightDefinition.HelperFuncParameter");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+			)*
+		)?
+		otherlv_8=')'
+		{
+			newLeafNode(otherlv_8, grammarAccess.getHelperFuntionAccess().getRightParenthesisKeyword_6());
+		}
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getHelperFuntionAccess().getBodyXBlockExpressionParserRuleCall_7_0());
+				}
+				lv_body_9_0=ruleXBlockExpression
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getHelperFuntionRule());
+					}
+					set(
+						$current,
+						"body",
+						lv_body_9_0,
+						"org.eclipse.xtext.xbase.Xbase.XBlockExpression");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+	)
+;
+
+// Entry rule entryRuleHelperFuncParameter
+entryRuleHelperFuncParameter returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getHelperFuncParameterRule()); }
+	iv_ruleHelperFuncParameter=ruleHelperFuncParameter
+	{ $current=$iv_ruleHelperFuncParameter.current; }
+	EOF;
+
+// Rule HelperFuncParameter
+ruleHelperFuncParameter returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getHelperFuncParameterAccess().getParameterTypeJvmTypeReferenceParserRuleCall_0_0());
+				}
+				lv_parameterType_0_0=ruleJvmTypeReference
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getHelperFuncParameterRule());
+					}
+					set(
+						$current,
+						"parameterType",
+						lv_parameterType_0_0,
+						"org.eclipse.xtext.xbase.Xtype.JvmTypeReference");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getHelperFuncParameterAccess().getNameValidIDParserRuleCall_1_0());
+				}
+				lv_name_1_0=ruleValidID
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getHelperFuncParameterRule());
+					}
+					set(
+						$current,
+						"name",
+						lv_name_1_0,
+						"org.eclipse.xtext.xbase.Xtype.ValidID");
 					afterParserOrEnumRuleCall();
 				}
 			)

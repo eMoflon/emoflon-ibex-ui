@@ -61,6 +61,8 @@ import org.eclipse.xtext.xtype.XImportSection;
 import org.eclipse.xtext.xtype.XtypePackage;
 import org.emoflon.ibex.tgg.weights.services.WeightDefinitionGrammarAccess;
 import org.emoflon.ibex.tgg.weights.weightDefinition.DefaultCalculation;
+import org.emoflon.ibex.tgg.weights.weightDefinition.HelperFuncParameter;
+import org.emoflon.ibex.tgg.weights.weightDefinition.HelperFunction;
 import org.emoflon.ibex.tgg.weights.weightDefinition.Import;
 import org.emoflon.ibex.tgg.weights.weightDefinition.RuleWeightDefinition;
 import org.emoflon.ibex.tgg.weights.weightDefinition.WeightCalculation;
@@ -141,6 +143,12 @@ public class WeightDefinitionSemanticSequencer extends XbaseSemanticSequencer {
 			switch (semanticObject.eClass().getClassifierID()) {
 			case WeightDefinitionPackage.DEFAULT_CALCULATION:
 				sequence_DefaultCalculation(context, (DefaultCalculation) semanticObject); 
+				return; 
+			case WeightDefinitionPackage.HELPER_FUNC_PARAMETER:
+				sequence_HelperFuncParameter(context, (HelperFuncParameter) semanticObject); 
+				return; 
+			case WeightDefinitionPackage.HELPER_FUNCTION:
+				sequence_HelperFuntion(context, (HelperFunction) semanticObject); 
 				return; 
 			case WeightDefinitionPackage.IMPORT:
 				sequence_Import(context, (Import) semanticObject); 
@@ -360,6 +368,39 @@ public class WeightDefinitionSemanticSequencer extends XbaseSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     HelperFuncParameter returns HelperFuncParameter
+	 *
+	 * Constraint:
+	 *     (parameterType=JvmTypeReference name=ValidID)
+	 */
+	protected void sequence_HelperFuncParameter(ISerializationContext context, HelperFuncParameter semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, WeightDefinitionPackage.Literals.HELPER_FUNC_PARAMETER__PARAMETER_TYPE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, WeightDefinitionPackage.Literals.HELPER_FUNC_PARAMETER__PARAMETER_TYPE));
+			if (transientValues.isValueTransient(semanticObject, WeightDefinitionPackage.Literals.HELPER_FUNC_PARAMETER__NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, WeightDefinitionPackage.Literals.HELPER_FUNC_PARAMETER__NAME));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getHelperFuncParameterAccess().getParameterTypeJvmTypeReferenceParserRuleCall_0_0(), semanticObject.getParameterType());
+		feeder.accept(grammarAccess.getHelperFuncParameterAccess().getNameValidIDParserRuleCall_1_0(), semanticObject.getName());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     HelperFuntion returns HelperFunction
+	 *
+	 * Constraint:
+	 *     (returnType=JvmTypeReference name=ValidID (params+=HelperFuncParameter params+=HelperFuncParameter*)? body=XBlockExpression)
+	 */
+	protected void sequence_HelperFuntion(ISerializationContext context, HelperFunction semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     Import returns Import
 	 *
 	 * Constraint:
@@ -420,7 +461,7 @@ public class WeightDefinitionSemanticSequencer extends XbaseSemanticSequencer {
 	 *     WeightDefinitionFile returns WeightDefinitionFile
 	 *
 	 * Constraint:
-	 *     (imports=Import weigthDefinitions+=RuleWeightDefinition* default=DefaultCalculation?)
+	 *     (imports=Import weigthDefinitions+=RuleWeightDefinition* default=DefaultCalculation? helperFuntions+=HelperFuntion*)
 	 */
 	protected void sequence_WeightDefinitionFile(ISerializationContext context, WeightDefinitionFile semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

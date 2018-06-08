@@ -50,7 +50,9 @@ class WeightDefinitionScopeProvider extends AbstractWeightDefinitionScopeProvide
 		return Scopes.scopeFor(
 			importedTGG.contents
 				.filter[it instanceof TGG]
-				.flatMap[(it as TGG).rules].toList
+				.flatMap[(it as TGG).rules]
+				.filter[!it.abstract]
+				.toList
 		);
 	}
 //	

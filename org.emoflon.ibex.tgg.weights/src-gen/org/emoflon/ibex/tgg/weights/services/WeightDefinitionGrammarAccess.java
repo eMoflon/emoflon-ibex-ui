@@ -33,14 +33,17 @@ public class WeightDefinitionGrammarAccess extends AbstractGrammarElementFinder 
 		private final RuleCall cWeigthDefinitionsRuleWeightDefinitionParserRuleCall_1_0 = (RuleCall)cWeigthDefinitionsAssignment_1.eContents().get(0);
 		private final Assignment cDefaultAssignment_2 = (Assignment)cGroup.eContents().get(2);
 		private final RuleCall cDefaultDefaultCalculationParserRuleCall_2_0 = (RuleCall)cDefaultAssignment_2.eContents().get(0);
+		private final Assignment cHelperFuntionsAssignment_3 = (Assignment)cGroup.eContents().get(3);
+		private final RuleCall cHelperFuntionsHelperFuntionParserRuleCall_3_0 = (RuleCall)cHelperFuntionsAssignment_3.eContents().get(0);
 		
 		//WeightDefinitionFile:
 		//	imports=Import
 		//	weigthDefinitions+=RuleWeightDefinition*
-		//	default=DefaultCalculation?;
+		//	default=DefaultCalculation?
+		//	helperFuntions+=HelperFuntion*;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//imports=Import weigthDefinitions+=RuleWeightDefinition* default=DefaultCalculation?
+		//imports=Import weigthDefinitions+=RuleWeightDefinition* default=DefaultCalculation? helperFuntions+=HelperFuntion*
 		public Group getGroup() { return cGroup; }
 		
 		//imports=Import
@@ -60,6 +63,12 @@ public class WeightDefinitionGrammarAccess extends AbstractGrammarElementFinder 
 		
 		//DefaultCalculation
 		public RuleCall getDefaultDefaultCalculationParserRuleCall_2_0() { return cDefaultDefaultCalculationParserRuleCall_2_0; }
+		
+		//helperFuntions+=HelperFuntion*
+		public Assignment getHelperFuntionsAssignment_3() { return cHelperFuntionsAssignment_3; }
+		
+		//HelperFuntion
+		public RuleCall getHelperFuntionsHelperFuntionParserRuleCall_3_0() { return cHelperFuntionsHelperFuntionParserRuleCall_3_0; }
 	}
 	public class ImportElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.weights.WeightDefinition.Import");
@@ -173,6 +182,119 @@ public class WeightDefinitionGrammarAccess extends AbstractGrammarElementFinder 
 		//XBlockExpression
 		public RuleCall getCalcXBlockExpressionParserRuleCall_2_0() { return cCalcXBlockExpressionParserRuleCall_2_0; }
 	}
+	public class HelperFuntionElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.weights.WeightDefinition.HelperFuntion");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Action cHelperFunctionAction_0 = (Action)cGroup.eContents().get(0);
+		private final Keyword cFunctionKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final Assignment cReturnTypeAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final RuleCall cReturnTypeJvmTypeReferenceParserRuleCall_2_0 = (RuleCall)cReturnTypeAssignment_2.eContents().get(0);
+		private final Assignment cNameAssignment_3 = (Assignment)cGroup.eContents().get(3);
+		private final RuleCall cNameValidIDParserRuleCall_3_0 = (RuleCall)cNameAssignment_3.eContents().get(0);
+		private final Keyword cLeftParenthesisKeyword_4 = (Keyword)cGroup.eContents().get(4);
+		private final Group cGroup_5 = (Group)cGroup.eContents().get(5);
+		private final Assignment cParamsAssignment_5_0 = (Assignment)cGroup_5.eContents().get(0);
+		private final RuleCall cParamsHelperFuncParameterParserRuleCall_5_0_0 = (RuleCall)cParamsAssignment_5_0.eContents().get(0);
+		private final Group cGroup_5_1 = (Group)cGroup_5.eContents().get(1);
+		private final Keyword cCommaKeyword_5_1_0 = (Keyword)cGroup_5_1.eContents().get(0);
+		private final Assignment cParamsAssignment_5_1_1 = (Assignment)cGroup_5_1.eContents().get(1);
+		private final RuleCall cParamsHelperFuncParameterParserRuleCall_5_1_1_0 = (RuleCall)cParamsAssignment_5_1_1.eContents().get(0);
+		private final Keyword cRightParenthesisKeyword_6 = (Keyword)cGroup.eContents().get(6);
+		private final Assignment cBodyAssignment_7 = (Assignment)cGroup.eContents().get(7);
+		private final RuleCall cBodyXBlockExpressionParserRuleCall_7_0 = (RuleCall)cBodyAssignment_7.eContents().get(0);
+		
+		//HelperFuntion xbase::XExpression:
+		//	{HelperFunction}
+		//	'function'
+		//	returnType=JvmTypeReference
+		//	name=ValidID
+		//	'(' (params+=HelperFuncParameter (',' params+=HelperFuncParameter)*)?
+		//	')'
+		//	body=XBlockExpression;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//{HelperFunction} 'function' returnType=JvmTypeReference name=ValidID '(' (params+=HelperFuncParameter (','
+		//params+=HelperFuncParameter)*)? ')' body=XBlockExpression
+		public Group getGroup() { return cGroup; }
+		
+		//{HelperFunction}
+		public Action getHelperFunctionAction_0() { return cHelperFunctionAction_0; }
+		
+		//'function'
+		public Keyword getFunctionKeyword_1() { return cFunctionKeyword_1; }
+		
+		//returnType=JvmTypeReference
+		public Assignment getReturnTypeAssignment_2() { return cReturnTypeAssignment_2; }
+		
+		//JvmTypeReference
+		public RuleCall getReturnTypeJvmTypeReferenceParserRuleCall_2_0() { return cReturnTypeJvmTypeReferenceParserRuleCall_2_0; }
+		
+		//name=ValidID
+		public Assignment getNameAssignment_3() { return cNameAssignment_3; }
+		
+		//ValidID
+		public RuleCall getNameValidIDParserRuleCall_3_0() { return cNameValidIDParserRuleCall_3_0; }
+		
+		//'('
+		public Keyword getLeftParenthesisKeyword_4() { return cLeftParenthesisKeyword_4; }
+		
+		//(params+=HelperFuncParameter (',' params+=HelperFuncParameter)*)?
+		public Group getGroup_5() { return cGroup_5; }
+		
+		//params+=HelperFuncParameter
+		public Assignment getParamsAssignment_5_0() { return cParamsAssignment_5_0; }
+		
+		//HelperFuncParameter
+		public RuleCall getParamsHelperFuncParameterParserRuleCall_5_0_0() { return cParamsHelperFuncParameterParserRuleCall_5_0_0; }
+		
+		//(',' params+=HelperFuncParameter)*
+		public Group getGroup_5_1() { return cGroup_5_1; }
+		
+		//','
+		public Keyword getCommaKeyword_5_1_0() { return cCommaKeyword_5_1_0; }
+		
+		//params+=HelperFuncParameter
+		public Assignment getParamsAssignment_5_1_1() { return cParamsAssignment_5_1_1; }
+		
+		//HelperFuncParameter
+		public RuleCall getParamsHelperFuncParameterParserRuleCall_5_1_1_0() { return cParamsHelperFuncParameterParserRuleCall_5_1_1_0; }
+		
+		//')'
+		public Keyword getRightParenthesisKeyword_6() { return cRightParenthesisKeyword_6; }
+		
+		//body=XBlockExpression
+		public Assignment getBodyAssignment_7() { return cBodyAssignment_7; }
+		
+		//XBlockExpression
+		public RuleCall getBodyXBlockExpressionParserRuleCall_7_0() { return cBodyXBlockExpressionParserRuleCall_7_0; }
+	}
+	public class HelperFuncParameterElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.weights.WeightDefinition.HelperFuncParameter");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Assignment cParameterTypeAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final RuleCall cParameterTypeJvmTypeReferenceParserRuleCall_0_0 = (RuleCall)cParameterTypeAssignment_0.eContents().get(0);
+		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cNameValidIDParserRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
+		
+		//HelperFuncParameter:
+		//	parameterType=JvmTypeReference name=ValidID;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//parameterType=JvmTypeReference name=ValidID
+		public Group getGroup() { return cGroup; }
+		
+		//parameterType=JvmTypeReference
+		public Assignment getParameterTypeAssignment_0() { return cParameterTypeAssignment_0; }
+		
+		//JvmTypeReference
+		public RuleCall getParameterTypeJvmTypeReferenceParserRuleCall_0_0() { return cParameterTypeJvmTypeReferenceParserRuleCall_0_0; }
+		
+		//name=ValidID
+		public Assignment getNameAssignment_1() { return cNameAssignment_1; }
+		
+		//ValidID
+		public RuleCall getNameValidIDParserRuleCall_1_0() { return cNameValidIDParserRuleCall_1_0; }
+	}
 	
 	
 	private final WeightDefinitionFileElements pWeightDefinitionFile;
@@ -180,6 +302,8 @@ public class WeightDefinitionGrammarAccess extends AbstractGrammarElementFinder 
 	private final RuleWeightDefinitionElements pRuleWeightDefinition;
 	private final WeightCalculationElements pWeightCalculation;
 	private final DefaultCalculationElements pDefaultCalculation;
+	private final HelperFuntionElements pHelperFuntion;
+	private final HelperFuncParameterElements pHelperFuncParameter;
 	
 	private final Grammar grammar;
 	
@@ -199,6 +323,8 @@ public class WeightDefinitionGrammarAccess extends AbstractGrammarElementFinder 
 		this.pRuleWeightDefinition = new RuleWeightDefinitionElements();
 		this.pWeightCalculation = new WeightCalculationElements();
 		this.pDefaultCalculation = new DefaultCalculationElements();
+		this.pHelperFuntion = new HelperFuntionElements();
+		this.pHelperFuncParameter = new HelperFuncParameterElements();
 	}
 	
 	protected Grammar internalFindGrammar(GrammarProvider grammarProvider) {
@@ -235,7 +361,8 @@ public class WeightDefinitionGrammarAccess extends AbstractGrammarElementFinder 
 	//WeightDefinitionFile:
 	//	imports=Import
 	//	weigthDefinitions+=RuleWeightDefinition*
-	//	default=DefaultCalculation?;
+	//	default=DefaultCalculation?
+	//	helperFuntions+=HelperFuntion*;
 	public WeightDefinitionFileElements getWeightDefinitionFileAccess() {
 		return pWeightDefinitionFile;
 	}
@@ -282,6 +409,32 @@ public class WeightDefinitionGrammarAccess extends AbstractGrammarElementFinder 
 	
 	public ParserRule getDefaultCalculationRule() {
 		return getDefaultCalculationAccess().getRule();
+	}
+	
+	//HelperFuntion xbase::XExpression:
+	//	{HelperFunction}
+	//	'function'
+	//	returnType=JvmTypeReference
+	//	name=ValidID
+	//	'(' (params+=HelperFuncParameter (',' params+=HelperFuncParameter)*)?
+	//	')'
+	//	body=XBlockExpression;
+	public HelperFuntionElements getHelperFuntionAccess() {
+		return pHelperFuntion;
+	}
+	
+	public ParserRule getHelperFuntionRule() {
+		return getHelperFuntionAccess().getRule();
+	}
+	
+	//HelperFuncParameter:
+	//	parameterType=JvmTypeReference name=ValidID;
+	public HelperFuncParameterElements getHelperFuncParameterAccess() {
+		return pHelperFuncParameter;
+	}
+	
+	public ParserRule getHelperFuncParameterRule() {
+		return getHelperFuncParameterAccess().getRule();
 	}
 	
 	//XExpression:

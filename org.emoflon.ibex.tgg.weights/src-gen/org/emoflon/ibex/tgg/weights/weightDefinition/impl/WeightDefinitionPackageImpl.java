@@ -18,6 +18,8 @@ import org.eclipse.xtext.common.types.TypesPackage;
 import org.eclipse.xtext.xbase.XbasePackage;
 
 import org.emoflon.ibex.tgg.weights.weightDefinition.DefaultCalculation;
+import org.emoflon.ibex.tgg.weights.weightDefinition.HelperFuncParameter;
+import org.emoflon.ibex.tgg.weights.weightDefinition.HelperFunction;
 import org.emoflon.ibex.tgg.weights.weightDefinition.Import;
 import org.emoflon.ibex.tgg.weights.weightDefinition.RuleWeightDefinition;
 import org.emoflon.ibex.tgg.weights.weightDefinition.WeightCalculation;
@@ -52,6 +54,13 @@ public class WeightDefinitionPackageImpl extends EPackageImpl implements WeightD
    * <!-- end-user-doc -->
    * @generated
    */
+  private EClass helperFuncParameterEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   private EClass ruleWeightDefinitionEClass = null;
 
   /**
@@ -67,6 +76,13 @@ public class WeightDefinitionPackageImpl extends EPackageImpl implements WeightD
    * @generated
    */
   private EClass defaultCalculationEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass helperFunctionEClass = null;
 
   /**
    * Creates an instance of the model <b>Package</b>, registered with
@@ -119,9 +135,9 @@ public class WeightDefinitionPackageImpl extends EPackageImpl implements WeightD
 
     // Initialize simple dependencies
     EcorePackage.eINSTANCE.eClass();
+    TypesPackage.eINSTANCE.eClass();
     XbasePackage.eINSTANCE.eClass();
     LanguagePackage.eINSTANCE.eClass();
-    TypesPackage.eINSTANCE.eClass();
 
     // Create package meta-data objects
     theWeightDefinitionPackage.createPackageContents();
@@ -182,6 +198,16 @@ public class WeightDefinitionPackageImpl extends EPackageImpl implements WeightD
    * <!-- end-user-doc -->
    * @generated
    */
+  public EReference getWeightDefinitionFile_HelperFuntions()
+  {
+    return (EReference)weightDefinitionFileEClass.getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getImport()
   {
     return importEClass;
@@ -195,6 +221,36 @@ public class WeightDefinitionPackageImpl extends EPackageImpl implements WeightD
   public EAttribute getImport_ImportURI()
   {
     return (EAttribute)importEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getHelperFuncParameter()
+  {
+    return helperFuncParameterEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getHelperFuncParameter_ParameterType()
+  {
+    return (EReference)helperFuncParameterEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getHelperFuncParameter_Name()
+  {
+    return (EAttribute)helperFuncParameterEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -272,6 +328,56 @@ public class WeightDefinitionPackageImpl extends EPackageImpl implements WeightD
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getHelperFunction()
+  {
+    return helperFunctionEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getHelperFunction_ReturnType()
+  {
+    return (EReference)helperFunctionEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getHelperFunction_Name()
+  {
+    return (EAttribute)helperFunctionEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getHelperFunction_Params()
+  {
+    return (EReference)helperFunctionEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getHelperFunction_Body()
+  {
+    return (EReference)helperFunctionEClass.getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public WeightDefinitionFactory getWeightDefinitionFactory()
   {
     return (WeightDefinitionFactory)getEFactoryInstance();
@@ -301,9 +407,14 @@ public class WeightDefinitionPackageImpl extends EPackageImpl implements WeightD
     createEReference(weightDefinitionFileEClass, WEIGHT_DEFINITION_FILE__IMPORTS);
     createEReference(weightDefinitionFileEClass, WEIGHT_DEFINITION_FILE__WEIGTH_DEFINITIONS);
     createEReference(weightDefinitionFileEClass, WEIGHT_DEFINITION_FILE__DEFAULT);
+    createEReference(weightDefinitionFileEClass, WEIGHT_DEFINITION_FILE__HELPER_FUNTIONS);
 
     importEClass = createEClass(IMPORT);
     createEAttribute(importEClass, IMPORT__IMPORT_URI);
+
+    helperFuncParameterEClass = createEClass(HELPER_FUNC_PARAMETER);
+    createEReference(helperFuncParameterEClass, HELPER_FUNC_PARAMETER__PARAMETER_TYPE);
+    createEAttribute(helperFuncParameterEClass, HELPER_FUNC_PARAMETER__NAME);
 
     ruleWeightDefinitionEClass = createEClass(RULE_WEIGHT_DEFINITION);
     createEReference(ruleWeightDefinitionEClass, RULE_WEIGHT_DEFINITION__RULE);
@@ -314,6 +425,12 @@ public class WeightDefinitionPackageImpl extends EPackageImpl implements WeightD
 
     defaultCalculationEClass = createEClass(DEFAULT_CALCULATION);
     createEReference(defaultCalculationEClass, DEFAULT_CALCULATION__CALC);
+
+    helperFunctionEClass = createEClass(HELPER_FUNCTION);
+    createEReference(helperFunctionEClass, HELPER_FUNCTION__RETURN_TYPE);
+    createEAttribute(helperFunctionEClass, HELPER_FUNCTION__NAME);
+    createEReference(helperFunctionEClass, HELPER_FUNCTION__PARAMS);
+    createEReference(helperFunctionEClass, HELPER_FUNCTION__BODY);
   }
 
   /**
@@ -343,6 +460,7 @@ public class WeightDefinitionPackageImpl extends EPackageImpl implements WeightD
     // Obtain other dependent packages
     XbasePackage theXbasePackage = (XbasePackage)EPackage.Registry.INSTANCE.getEPackage(XbasePackage.eNS_URI);
     EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
+    TypesPackage theTypesPackage = (TypesPackage)EPackage.Registry.INSTANCE.getEPackage(TypesPackage.eNS_URI);
     LanguagePackage theLanguagePackage = (LanguagePackage)EPackage.Registry.INSTANCE.getEPackage(LanguagePackage.eNS_URI);
 
     // Create type parameters
@@ -353,15 +471,21 @@ public class WeightDefinitionPackageImpl extends EPackageImpl implements WeightD
     ruleWeightDefinitionEClass.getESuperTypes().add(theXbasePackage.getXExpression());
     weightCalculationEClass.getESuperTypes().add(theXbasePackage.getXExpression());
     defaultCalculationEClass.getESuperTypes().add(theXbasePackage.getXExpression());
+    helperFunctionEClass.getESuperTypes().add(theXbasePackage.getXExpression());
 
     // Initialize classes and features; add operations and parameters
     initEClass(weightDefinitionFileEClass, WeightDefinitionFile.class, "WeightDefinitionFile", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getWeightDefinitionFile_Imports(), this.getImport(), null, "imports", null, 0, 1, WeightDefinitionFile.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getWeightDefinitionFile_WeigthDefinitions(), theXbasePackage.getXExpression(), null, "weigthDefinitions", null, 0, -1, WeightDefinitionFile.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getWeightDefinitionFile_Default(), theXbasePackage.getXExpression(), null, "default", null, 0, 1, WeightDefinitionFile.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getWeightDefinitionFile_HelperFuntions(), theXbasePackage.getXExpression(), null, "helperFuntions", null, 0, -1, WeightDefinitionFile.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(importEClass, Import.class, "Import", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getImport_ImportURI(), theEcorePackage.getEString(), "importURI", null, 0, 1, Import.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(helperFuncParameterEClass, HelperFuncParameter.class, "HelperFuncParameter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getHelperFuncParameter_ParameterType(), theTypesPackage.getJvmTypeReference(), null, "parameterType", null, 0, 1, HelperFuncParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getHelperFuncParameter_Name(), theEcorePackage.getEString(), "name", null, 0, 1, HelperFuncParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(ruleWeightDefinitionEClass, RuleWeightDefinition.class, "RuleWeightDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getRuleWeightDefinition_Rule(), theLanguagePackage.getTGGRule(), null, "rule", null, 0, 1, RuleWeightDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -372,6 +496,12 @@ public class WeightDefinitionPackageImpl extends EPackageImpl implements WeightD
 
     initEClass(defaultCalculationEClass, DefaultCalculation.class, "DefaultCalculation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getDefaultCalculation_Calc(), theXbasePackage.getXExpression(), null, "calc", null, 0, 1, DefaultCalculation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(helperFunctionEClass, HelperFunction.class, "HelperFunction", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getHelperFunction_ReturnType(), theTypesPackage.getJvmTypeReference(), null, "returnType", null, 0, 1, HelperFunction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getHelperFunction_Name(), theEcorePackage.getEString(), "name", null, 0, 1, HelperFunction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getHelperFunction_Params(), this.getHelperFuncParameter(), null, "params", null, 0, -1, HelperFunction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getHelperFunction_Body(), theXbasePackage.getXExpression(), null, "body", null, 0, 1, HelperFunction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     // Create resource
     createResource(eNS_URI);
