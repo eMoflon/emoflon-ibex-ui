@@ -70,21 +70,20 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	private static final String IBUILDER_EXTENSON_ID = "org.emoflon.ibex.tgg.ide.IbexTGGBuilderExtension";
 	public static final Logger logger = Logger.getLogger(IbexTGGBuilder.class);
 	private boolean buildIsNecessary = false;
-	
+
 	private Collection<BuilderExtension> builderExtensions;
-	
+
 	// Blackboard for computed results and sharing data between builder extensions
 	private Map<String, Object> blackboard;
 
 	public IbexTGGBuilder() {
 		builderExtensions = ExtensionsUtil.collectExtensions(IBUILDER_EXTENSON_ID, "class", BuilderExtension.class);
 	}
-	
+
 	@Override
 	protected IProject[] build(int kind, Map<String, String> args, IProgressMonitor monitor) throws CoreException {
 		blackboard = new HashMap<>();
-		
-		
+
 		switch (kind) {
 		case CLEAN_BUILD:
 		case FULL_BUILD:
@@ -98,22 +97,22 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 		default:
 			break;
 		}
-		
+
 		return null;
 	}
 
 	private void generateFilesIfchangeIsRelevant() throws CoreException {
 		IResourceDelta delta = getDelta(getProject());
-		
-		if(delta != null)
+
+		if (delta != null)
 			delta.accept(this);
-		
-		if(buildIsNecessary) {
+
+		if (buildIsNecessary) {
 			logger.info(getProject().getName() + ": Incremental build");
 			generateFiles();
 		}
-		
-		buildIsNecessary = false;		
+
+		buildIsNecessary = false;
 	}
 
 	private void generateFiles() {
@@ -121,19 +120,14 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 
 		performClean();
 		generateAttrCondLib();
-		generateEditorModel()
-			.ifPresent(editorModel -> 
-				generateFlattenedEditorModel(editorModel)
-					.ifPresent(flattenedEditorModel -> 
-						generateExtraModels(this, editorModel, flattenedEditorModel)
-					)
-			);
-		
+		generateEditorModel().ifPresent(editorModel -> generateFlattenedEditorModel(editorModel)
+				.ifPresent(flattenedEditorModel -> generateExtraModels(this, editorModel, flattenedEditorModel)));
+
 		long toc = System.currentTimeMillis();
-		
-		logger.info(getProject().getName() + ": Finished build (" + (toc - tic)/1000.0 + "s)");
+
+		logger.info(getProject().getName() + ": Finished build (" + (toc - tic) / 1000.0 + "s)");
 	}
-	
+
 	private Optional<TripleGraphGrammarFile> generateFlattenedEditorModel(TripleGraphGrammarFile editorModel) {
 		EditorTGGtoFlattenedTGG flattener = new EditorTGGtoFlattenedTGG();
 		Optional<TripleGraphGrammarFile> flattenedTGGOp = flattener.flatten(editorModel);
@@ -156,37 +150,54 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	 * @param fileName
 	 *            The name of the file to be generated
 	 * @param generator
-	 *            A bi-function used to generate the string content of the new file of the form: (project name, file name) -> file
-	 *            contents
+	 *            A bi-function used to generate the string content of the new file
+	 *            of the form: (project name, file name) -> file contents
 	 * @throws CoreException
 	 */
-	public void createDefaultRunFile(String fileName, BiFunction<String, String, String> generator) throws CoreException {
-		createIfNotExists(RUN_FILE_PATH_PREFIX+getProject().getName().toLowerCase()+"/", fileName, ".java", generator);
+	public void createDefaultRunFile(String fileName, BiFunction<String, String, String> generator)
+			throws CoreException {
+		establishDefaultRunFile(fileName, generator, false);
+	}
+
+	public void enforceDefaultRunFile(String fileName, BiFunction<String, String, String> generator)
+			throws CoreException {
+		establishDefaultRunFile(fileName, generator, true);
+	}
+
+	public void establishDefaultRunFile(String fileName, BiFunction<String, String, String> generator, Boolean force)
+			throws CoreException {
+		createIfNotExists(RUN_FILE_PATH_PREFIX + getProject().getName().toLowerCase() + "/", fileName, ".java",
+				generator, force);
 	}
 
 	/**
 	 * Creates a new file as path + fileName + ending
 	 * 
 	 * @param path
-	 * 			The project relative path to the file
+	 *            The project relative path to the file
 	 * @param ending
-	 * 			The file extension to use
+	 *            The file extension to use
 	 * @param fileName
 	 *            The name of the file to be generated
 	 * @param generator
-	 *            A bi-function used to generate the string content of the new file of the form: (project name, file name) -> file
-	 *            contents
+	 *            A bi-function used to generate the string content of the new file
+	 *            of the form: (project name, file name) -> file contents
 	 * @throws CoreException
 	 */
-	public void createIfNotExists(String path, String fileName, String ending, BiFunction<String, String, String> generator) throws CoreException {
+	public void createIfNotExists(String path, String fileName, String ending,
+			BiFunction<String, String, String> generator, Boolean force) throws CoreException {
 		IPath pathToFile = new Path(path + fileName + ending);
 		IFile file = getProject().getFile(pathToFile);
-		if (!file.exists()){ 
+
+		if (force)
+			file.delete(true, new NullProgressMonitor());
+
+		if (!file.exists()) {
 			String defaultContent = generator.apply(getProject().getName(), fileName);
 			WorkspaceHelper.addAllFoldersAndFile(getProject(), pathToFile, defaultContent, new NullProgressMonitor());
 		}
 	}
-	
+
 	private void generateAttrCondLib() {
 		try {
 			AttrCondDefLibraryProvider.syncAttrCondDefLibrary(getProject());
@@ -204,23 +215,25 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 				if (schemaIsOfExpectedType(schemaResource)) {
 					// Load
 					visitAllFiles(resourceSet, getProject().getFolder(SRC_FOLDER), this::loadRules);
-					EcoreUtil2.resolveLazyCrossReferences(schemaResource, () -> false); 
+					EcoreUtil2.resolveLazyCrossReferences(schemaResource, () -> false);
 					resourceSet.getResources().forEach(r -> EcoreUtil2.resolveLazyCrossReferences(r, () -> false));
 					EcoreUtil.resolveAll(resourceSet);
-					
+
 					// Combine to form single tgg model
-					TripleGraphGrammarFile xtextParsedTGG = (TripleGraphGrammarFile) schemaResource.getContents().get(0);
+					TripleGraphGrammarFile xtextParsedTGG = (TripleGraphGrammarFile) schemaResource.getContents()
+							.get(0);
 					collectAllRules(xtextParsedTGG, resourceSet);
 					addAttrCondDefLibraryReferencesToSchema(xtextParsedTGG);
-					
+
 					// Persist and return
-					IFile editorFile = getProject().getFolder(IbexTGGBuilder.MODEL_FOLDER).getFile(getProject().getName() + EDITOR_MODEL_EXTENSION);
-					
+					IFile editorFile = getProject().getFolder(IbexTGGBuilder.MODEL_FOLDER)
+							.getFile(getProject().getName() + EDITOR_MODEL_EXTENSION);
+
 					saveModelInProject(editorFile, resourceSet, xtextParsedTGG);
 
 					// Validate
 					validateEditorTGGModel(xtextParsedTGG, editorFile);
-					
+
 					return Optional.of(xtextParsedTGG);
 				}
 			}
@@ -240,7 +253,7 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 		names = Stream.concat(names, xtextParsedTGG.getComplementRules().stream().map(r -> r.getName()));
 		names = Stream.concat(names, xtextParsedTGG.getNacs().stream().map(r -> r.getName()));
 		names = names.sorted();
-		
+
 		List<String> namesIterator = names.collect(Collectors.toList());
 		for (int i = 0; i < namesIterator.size() - 1; i++) {
 			String next = namesIterator.get(i);
@@ -249,7 +262,8 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 				getTGGFileContainingName(next).forEach(f -> {
 					try {
 						IMarker m = f.createMarker(IMarker.PROBLEM);
-						m.setAttribute(IMarker.MESSAGE, "At least one other rule or NAC in your TGG has this name already: " + next);
+						m.setAttribute(IMarker.MESSAGE,
+								"At least one other rule or NAC in your TGG has this name already: " + next);
 						m.setAttribute(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
 						m.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
 					} catch (Exception e) {
@@ -263,12 +277,12 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	private Collection<IFile> getTGGFileContainingName(String name) {
 		try {
 			List<IFile> allTGGFiles = new ArrayList<>();
-			visitAllFiles(allTGGFiles, getProject().getFolder("src"), (file, acc) -> 
-			{
-				if(file.getFileExtension().equals("tgg")) {
+			visitAllFiles(allTGGFiles, getProject().getFolder("src"), (file, acc) -> {
+				if (file.getFileExtension().equals("tgg")) {
 					try {
 						String contents = FileUtils.readFileToString(file.getLocation().toFile());
-						if(contents.split("#rule\\s+" + name).length > 1) acc.add(file);
+						if (contents.split("#rule\\s+" + name).length > 1)
+							acc.add(file);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -283,7 +297,7 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	private void collectAllRules(TripleGraphGrammarFile xtextParsedTGG, XtextResourceSet resourceSet) {
 		Collection<Resource> resources = resourceSet.getResources();
 		for (Resource resource : resources) {
-			assert(resource.getContents().size() == 1);
+			assert (resource.getContents().size() == 1);
 			if (!resource.getContents().isEmpty()) {
 				EObject root = resource.getContents().get(0);
 				if (root instanceof TripleGraphGrammarFile) {
@@ -306,9 +320,9 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 			}
 		}
 		for (ComplementRule crule : xtextParsedTGG.getComplementRules()) {
-				for (AttrCond attrCond : crule.getAttrConditions()) {
-					if (!usedAttrCondDefs.contains(attrCond.getName()) && !attrCond.getName().isUserDefined()) {
-						usedAttrCondDefs.add(attrCond.getName());
+			for (AttrCond attrCond : crule.getAttrConditions()) {
+				if (!usedAttrCondDefs.contains(attrCond.getName()) && !attrCond.getName().isUserDefined()) {
+					usedAttrCondDefs.add(attrCond.getName());
 				}
 			}
 		}
@@ -321,12 +335,12 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 		}
 		xtextParsedTGG.getSchema().getAttributeCondDefs().addAll(usedAttrCondDefs);
 	}
-	
 
-	private <ACC> void visitAllFiles(ACC accumulator, IFolder root, BiConsumer<IFile, ACC> action) throws CoreException, IOException {
+	private <ACC> void visitAllFiles(ACC accumulator, IFolder root, BiConsumer<IFile, ACC> action)
+			throws CoreException, IOException {
 		for (IResource iResource : root.members()) {
 			if (iResource instanceof IFile) {
-				action.accept((IFile)iResource, accumulator);
+				action.accept((IFile) iResource, accumulator);
 			} else if (iResource instanceof IFolder) {
 				visitAllFiles(accumulator, IFolder.class.cast(iResource), action);
 			}
@@ -335,7 +349,7 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 
 	private void loadRules(IFile file, XtextResourceSet resourceSet) {
 		if (file.getName().endsWith(TGG_FILE_EXTENSION)) {
-			resourceSet.getResource(URI.createPlatformResourceURI(file.getFullPath().toString(), true), true);	
+			resourceSet.getResource(URI.createPlatformResourceURI(file.getFullPath().toString(), true), true);
 		}
 	}
 
@@ -351,8 +365,9 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 		EcoreUtil.resolveAll(resourceSet);
 		return schemaResource;
 	}
-	
-	private void generateExtraModels(IbexTGGBuilder builder, TripleGraphGrammarFile editorModel, TripleGraphGrammarFile flattenedEditorModel) {
+
+	private void generateExtraModels(IbexTGGBuilder builder, TripleGraphGrammarFile editorModel,
+			TripleGraphGrammarFile flattenedEditorModel) {
 		ISafeRunnable runnable = new ISafeRunnable() {
 			@Override
 			public void handleException(Throwable e) {
@@ -368,7 +383,8 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	}
 
 	public static void saveModelInProject(IFile file, ResourceSet rs, EObject model) throws IOException {
-		URI uri = URI.createPlatformResourceURI(file.getProject().getName() + "/" + file.getProjectRelativePath().toString(), true);
+		URI uri = URI.createPlatformResourceURI(
+				file.getProject().getName() + "/" + file.getProjectRelativePath().toString(), true);
 		Resource resource = rs.createResource(uri);
 		resource.getContents().add(model);
 		Map<Object, Object> options = ((XMLResource) resource).getDefaultSaveOptions();
@@ -384,17 +400,17 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 
 	@Override
 	public boolean visit(IResourceDelta delta) throws CoreException {
-		if(buildIsNecessary)
+		if (buildIsNecessary)
 			return false;
-		
+
 		if (isTggFileToBeCompiled(delta)) {
 			buildIsNecessary = true;
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	private boolean isTggFileToBeCompiled(IResourceDelta delta) {
 		return delta.getResource().getName().endsWith(TGG_FILE_EXTENSION)
 				&& !delta.getResource().getProjectRelativePath().toString().startsWith("bin/");
@@ -412,14 +428,12 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 		} catch (CoreException e) {
 			LogUtils.error(logger, e);
 		}
-		
-		List<String> toDelete = Arrays.asList(
-				MODEL_FOLDER + "/" + getProject().getName() + ECORE_FILE_EXTENSION,
+
+		List<String> toDelete = Arrays.asList(MODEL_FOLDER + "/" + getProject().getName() + ECORE_FILE_EXTENSION,
 				MODEL_FOLDER + "/" + getProject().getName() + EDITOR_MODEL_EXTENSION,
 				MODEL_FOLDER + "/" + getProject().getName() + INTERNAL_TGG_MODEL_EXTENSION,
 				MODEL_FOLDER + "/" + getProject().getName() + EDITOR_FLATTENED_MODEL_EXTENSION,
-				MODEL_FOLDER + "/" + getProject().getName() + INTERNAL_TGG_FLATTENED_MODEL_EXTENSION
-			);
+				MODEL_FOLDER + "/" + getProject().getName() + INTERNAL_TGG_FLATTENED_MODEL_EXTENSION);
 		toDelete.stream().map(f -> getProject().getFile(f)).filter(IFile::exists).forEach(f -> {
 			try {
 				f.delete(true, new NullProgressMonitor());
@@ -427,15 +441,15 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 				LogUtils.error(logger, e);
 			}
 		});
-		
+
 		builderExtensions.forEach(be -> be.performClean(this));
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public <T> T computeOrGetFromBlackboard(String key, Supplier<T> computation){
-		if(!blackboard.containsKey(key))
+	public <T> T computeOrGetFromBlackboard(String key, Supplier<T> computation) {
+		if (!blackboard.containsKey(key))
 			blackboard.put(key, computation.get());
-		
+
 		return (T) blackboard.get(key);
 	}
 }
