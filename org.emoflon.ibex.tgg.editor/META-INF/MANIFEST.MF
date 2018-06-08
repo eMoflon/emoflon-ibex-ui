@@ -23,8 +23,7 @@ Require-Bundle: org.antlr.runtime,
  org.eclipse.xtext.util,
  org.eclipse.xtext.xbase.lib,
  org.moflon.core.utilities,
- org.objectweb.asm;resolution:=optional,
- org.emoflon.ibex.common;bundle-version="1.0.0"
+ org.objectweb.asm;resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ClassPath: .antlr-generator-3.2.0-patch.jar,.
 Export-Package: org.moflon.ide.mosl.core.scoping,
