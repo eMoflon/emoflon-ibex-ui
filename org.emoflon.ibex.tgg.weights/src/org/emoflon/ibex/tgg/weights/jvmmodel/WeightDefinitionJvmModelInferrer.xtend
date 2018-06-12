@@ -115,6 +115,7 @@ class WeightDefinitionJvmModelInferrer extends AbstractModelInferrer {
 				parameters += param.toParameter(param.name, param.parameterType)
 			}
 			body = helperFunction.body
+			documentation = helperFunction.documentation
 			visibility = JvmVisibility.PRIVATE
 			final = true
 		]
@@ -134,7 +135,12 @@ class WeightDefinitionJvmModelInferrer extends AbstractModelInferrer {
 				p2.documentation = "The comatch to calculate the weight for"
 				parameters += p2
 				body = defaultCalculation.calc
-				documentation = '''Default calculation for matches of rules that do not have a specific calculation'''
+				if(defaultCalculation.documentation !== null && !defaultCalculation.documentation.empty) {
+					documentation = defaultCalculation.documentation
+				} else {
+					documentation = '''Default calculation for matches of rules that do not have a specific calculation'''
+				}
+				
 				visibility = JvmVisibility.PROTECTED
 			]
 		} else {
@@ -171,7 +177,12 @@ class WeightDefinitionJvmModelInferrer extends AbstractModelInferrer {
 	 */
 	def createParameterizedMethodForRule(RuleWeightDefinition rule) {
 		rule.toMethod('''calculateWeightFor«rule.rule.name»''', typeRef(double)) [
-			documentation = '''Weight calculation for matched nodes of rule «rule.rule.name»'''
+			if(rule.documentation !== null && !rule.documentation.empty) {
+					documentation = rule.documentation
+			} else {
+				documentation = '''Weight calculation for matched nodes of rule «rule.rule.name»'''
+			}
+			
 			visibility = JvmVisibility.PROTECTED
 			for (node : rule.rule.nodes.filter[!(it instanceof TGGRuleCorr)]) {
 				val typename = node.type.name
@@ -181,6 +192,7 @@ class WeightDefinitionJvmModelInferrer extends AbstractModelInferrer {
 					ref = typeRef(EObject)
 				}
 				val p = rule.toParameter(node.name, ref)
+				
 				p.documentation = '''The matched element for node "«node.name»" of type "«node.type.name»"'''
 				parameters += p
 			}

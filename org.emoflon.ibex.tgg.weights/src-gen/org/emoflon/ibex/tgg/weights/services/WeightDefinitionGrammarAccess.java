@@ -105,7 +105,8 @@ public class WeightDefinitionGrammarAccess extends AbstractGrammarElementFinder 
 		private final RuleCall cWeightCalcWeightCalculationParserRuleCall_3_0 = (RuleCall)cWeightCalcAssignment_3.eContents().get(0);
 		
 		//RuleWeightDefinition xbase::XExpression:
-		//	{RuleWeightDefinition} 'rule' rule=[language::TGGRule] weightCalc=WeightCalculation;
+		//	{RuleWeightDefinition}
+		//	'rule' rule=[language::TGGRule] weightCalc=WeightCalculation;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//{RuleWeightDefinition} 'rule' rule=[language::TGGRule] weightCalc=WeightCalculation
@@ -164,7 +165,9 @@ public class WeightDefinitionGrammarAccess extends AbstractGrammarElementFinder 
 		private final RuleCall cCalcXBlockExpressionParserRuleCall_2_0 = (RuleCall)cCalcAssignment_2.eContents().get(0);
 		
 		//DefaultCalculation xbase::XExpression:
-		//	{DefaultCalculation} 'default' calc=XBlockExpression;
+		//	{DefaultCalculation}
+		//	'default'
+		//	calc=XBlockExpression;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//{DefaultCalculation} 'default' calc=XBlockExpression
@@ -382,7 +385,8 @@ public class WeightDefinitionGrammarAccess extends AbstractGrammarElementFinder 
 	}
 	
 	//RuleWeightDefinition xbase::XExpression:
-	//	{RuleWeightDefinition} 'rule' rule=[language::TGGRule] weightCalc=WeightCalculation;
+	//	{RuleWeightDefinition}
+	//	'rule' rule=[language::TGGRule] weightCalc=WeightCalculation;
 	public RuleWeightDefinitionElements getRuleWeightDefinitionAccess() {
 		return pRuleWeightDefinition;
 	}
@@ -402,7 +406,9 @@ public class WeightDefinitionGrammarAccess extends AbstractGrammarElementFinder 
 	}
 	
 	//DefaultCalculation xbase::XExpression:
-	//	{DefaultCalculation} 'default' calc=XBlockExpression;
+	//	{DefaultCalculation}
+	//	'default'
+	//	calc=XBlockExpression;
 	public DefaultCalculationElements getDefaultCalculationAccess() {
 		return pDefaultCalculation;
 	}

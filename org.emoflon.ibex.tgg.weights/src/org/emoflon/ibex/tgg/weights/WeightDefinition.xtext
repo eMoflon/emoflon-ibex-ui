@@ -23,7 +23,8 @@ Import:
 ;
 
 RuleWeightDefinition returns xbase::XExpression:
-	{RuleWeightDefinition} 'rule' rule = [language::TGGRule]
+	{RuleWeightDefinition}
+	'rule' rule = [language::TGGRule]
 	weightCalc = WeightCalculation
 	;
 	
@@ -32,7 +33,9 @@ WeightCalculation returns xbase::XExpression:
 ;
 
 DefaultCalculation returns xbase::XExpression:
-	{DefaultCalculation} 'default' calc = XBlockExpression
+	{DefaultCalculation}
+	'default'
+	calc = XBlockExpression
 ;
 
 HelperFuntion returns xbase::XExpression:
