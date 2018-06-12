@@ -3,6 +3,7 @@
  */
 package org.emoflon.ibex.tgg.weights.validation
 
+import com.google.inject.Inject
 import language.TGG
 import language.TGGRule
 import language.TGGRuleCorr
@@ -11,13 +12,16 @@ import org.eclipse.emf.ecore.resource.ContentHandler
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.util.EcoreUtil
+import org.eclipse.xtext.common.types.JvmTypeReference
+import org.eclipse.xtext.common.types.JvmUnknownTypeReference
+import org.eclipse.xtext.common.types.util.TypeReferences
 import org.eclipse.xtext.validation.Check
+import org.emoflon.ibex.tgg.weights.weightDefinition.HelperFuncParameter
+import org.emoflon.ibex.tgg.weights.weightDefinition.HelperFunction
 import org.emoflon.ibex.tgg.weights.weightDefinition.Import
 import org.emoflon.ibex.tgg.weights.weightDefinition.RuleWeightDefinition
 import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile
 import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionPackage
-import org.emoflon.ibex.tgg.weights.weightDefinition.HelperFunction
-import org.emoflon.ibex.tgg.weights.weightDefinition.HelperFuncParameter
 
 /**
  * This class contains custom validation rules. 
@@ -25,6 +29,8 @@ import org.emoflon.ibex.tgg.weights.weightDefinition.HelperFuncParameter
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
+	
+	@Inject TypeReferences ref;
 
 	@Check
 	def checkRuleUniqueness(RuleWeightDefinition ruleWeightDefinition) {
@@ -43,14 +49,15 @@ class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
 		for (node : ruleWeightDefinition.rule.nodes.filter[!(it instanceof TGGRuleCorr)]) {
 			val typename = node.type.name
 			val packageName = node.type.EPackage.name
-			var Class<?> ref = null
+			var JvmTypeReference ref = null
 			try {
-				ref = Class.forName(packageName + "." + typename)
+				ref = this.ref.getTypeForName(packageName + "." + typename, ruleWeightDefinition)
+//				ref = Class.forName(packageName + "." + typename)
 			} catch (Exception e) {
 //				System.err.println(e)
 			}
 
-			if (ref === null) {
+			if (ref === null || ref instanceof JvmUnknownTypeReference) {
 				warning(
 					'''Could not resolve type "«packageName + "." + typename»" of node "«node.name»"''',
 					ruleWeightDefinition,
