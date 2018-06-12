@@ -88,13 +88,13 @@ public interface WeightDefinitionPackage extends EPackage
   int WEIGHT_DEFINITION_FILE__WEIGTH_DEFINITIONS = 1;
 
   /**
-   * The feature id for the '<em><b>Default</b></em>' containment reference.
+   * The feature id for the '<em><b>Default Calc</b></em>' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int WEIGHT_DEFINITION_FILE__DEFAULT = 2;
+  int WEIGHT_DEFINITION_FILE__DEFAULT_CALC = 2;
 
   /**
    * The feature id for the '<em><b>Helper Funtions</b></em>' containment reference list.
@@ -361,15 +361,15 @@ public interface WeightDefinitionPackage extends EPackage
   EReference getWeightDefinitionFile_WeigthDefinitions();
 
   /**
-   * Returns the meta object for the containment reference '{@link org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile#getDefault <em>Default</em>}'.
+   * Returns the meta object for the containment reference list '{@link org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile#getDefaultCalc <em>Default Calc</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Default</em>'.
-   * @see org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile#getDefault()
+   * @return the meta object for the containment reference list '<em>Default Calc</em>'.
+   * @see org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile#getDefaultCalc()
    * @see #getWeightDefinitionFile()
    * @generated
    */
-  EReference getWeightDefinitionFile_Default();
+  EReference getWeightDefinitionFile_DefaultCalc();
 
   /**
    * Returns the meta object for the containment reference list '{@link org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile#getHelperFuntions <em>Helper Funtions</em>}'.
@@ -613,12 +613,12 @@ public interface WeightDefinitionPackage extends EPackage
     EReference WEIGHT_DEFINITION_FILE__WEIGTH_DEFINITIONS = eINSTANCE.getWeightDefinitionFile_WeigthDefinitions();
 
     /**
-     * The meta object literal for the '<em><b>Default</b></em>' containment reference feature.
+     * The meta object literal for the '<em><b>Default Calc</b></em>' containment reference list feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference WEIGHT_DEFINITION_FILE__DEFAULT = eINSTANCE.getWeightDefinitionFile_Default();
+    EReference WEIGHT_DEFINITION_FILE__DEFAULT_CALC = eINSTANCE.getWeightDefinitionFile_DefaultCalc();
 
     /**
      * The meta object literal for the '<em><b>Helper Funtions</b></em>' containment reference list feature.

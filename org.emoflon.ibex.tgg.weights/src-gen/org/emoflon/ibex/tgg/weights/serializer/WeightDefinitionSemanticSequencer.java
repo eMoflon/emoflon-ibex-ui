@@ -461,7 +461,7 @@ public class WeightDefinitionSemanticSequencer extends XbaseSemanticSequencer {
 	 *     WeightDefinitionFile returns WeightDefinitionFile
 	 *
 	 * Constraint:
-	 *     (imports=Import weigthDefinitions+=RuleWeightDefinition* default=DefaultCalculation? helperFuntions+=HelperFuntion*)
+	 *     (imports=Import (weigthDefinitions+=RuleWeightDefinition | defaultCalc+=DefaultCalculation | helperFuntions+=HelperFuntion)*)
 	 */
 	protected void sequence_WeightDefinitionFile(ISerializationContext context, WeightDefinitionFile semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

@@ -202,25 +202,25 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleWeightDefinitionFile"
-	// InternalWeightDefinition.g:71:1: ruleWeightDefinitionFile returns [EObject current=null] : ( ( (lv_imports_0_0= ruleImport ) ) ( (lv_weigthDefinitions_1_0= ruleRuleWeightDefinition ) )* ( (lv_default_2_0= ruleDefaultCalculation ) )? ( (lv_helperFuntions_3_0= ruleHelperFuntion ) )* ) ;
+	// InternalWeightDefinition.g:71:1: ruleWeightDefinitionFile returns [EObject current=null] : ( ( (lv_imports_0_0= ruleImport ) ) ( ( (lv_weigthDefinitions_1_0= ruleRuleWeightDefinition ) ) | ( (lv_defaultCalc_2_0= ruleDefaultCalculation ) ) | ( (lv_helperFuntions_3_0= ruleHelperFuntion ) ) )* ) ;
 	public final EObject ruleWeightDefinitionFile() throws RecognitionException {
 		EObject current = null;
 
 
 		EObject lv_imports_0_0 =null;
 		EObject lv_weigthDefinitions_1_0 =null;
-		EObject lv_default_2_0 =null;
+		EObject lv_defaultCalc_2_0 =null;
 		EObject lv_helperFuntions_3_0 =null;
 
 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:77:2: ( ( ( (lv_imports_0_0= ruleImport ) ) ( (lv_weigthDefinitions_1_0= ruleRuleWeightDefinition ) )* ( (lv_default_2_0= ruleDefaultCalculation ) )? ( (lv_helperFuntions_3_0= ruleHelperFuntion ) )* ) )
-			// InternalWeightDefinition.g:78:2: ( ( (lv_imports_0_0= ruleImport ) ) ( (lv_weigthDefinitions_1_0= ruleRuleWeightDefinition ) )* ( (lv_default_2_0= ruleDefaultCalculation ) )? ( (lv_helperFuntions_3_0= ruleHelperFuntion ) )* )
+			// InternalWeightDefinition.g:77:2: ( ( ( (lv_imports_0_0= ruleImport ) ) ( ( (lv_weigthDefinitions_1_0= ruleRuleWeightDefinition ) ) | ( (lv_defaultCalc_2_0= ruleDefaultCalculation ) ) | ( (lv_helperFuntions_3_0= ruleHelperFuntion ) ) )* ) )
+			// InternalWeightDefinition.g:78:2: ( ( (lv_imports_0_0= ruleImport ) ) ( ( (lv_weigthDefinitions_1_0= ruleRuleWeightDefinition ) ) | ( (lv_defaultCalc_2_0= ruleDefaultCalculation ) ) | ( (lv_helperFuntions_3_0= ruleHelperFuntion ) ) )* )
 			{
-			// InternalWeightDefinition.g:78:2: ( ( (lv_imports_0_0= ruleImport ) ) ( (lv_weigthDefinitions_1_0= ruleRuleWeightDefinition ) )* ( (lv_default_2_0= ruleDefaultCalculation ) )? ( (lv_helperFuntions_3_0= ruleHelperFuntion ) )* )
-			// InternalWeightDefinition.g:79:3: ( (lv_imports_0_0= ruleImport ) ) ( (lv_weigthDefinitions_1_0= ruleRuleWeightDefinition ) )* ( (lv_default_2_0= ruleDefaultCalculation ) )? ( (lv_helperFuntions_3_0= ruleHelperFuntion ) )*
+			// InternalWeightDefinition.g:78:2: ( ( (lv_imports_0_0= ruleImport ) ) ( ( (lv_weigthDefinitions_1_0= ruleRuleWeightDefinition ) ) | ( (lv_defaultCalc_2_0= ruleDefaultCalculation ) ) | ( (lv_helperFuntions_3_0= ruleHelperFuntion ) ) )* )
+			// InternalWeightDefinition.g:79:3: ( (lv_imports_0_0= ruleImport ) ) ( ( (lv_weigthDefinitions_1_0= ruleRuleWeightDefinition ) ) | ( (lv_defaultCalc_2_0= ruleDefaultCalculation ) ) | ( (lv_helperFuntions_3_0= ruleHelperFuntion ) ) )*
 			{
 			// InternalWeightDefinition.g:79:3: ( (lv_imports_0_0= ruleImport ) )
 			// InternalWeightDefinition.g:80:4: (lv_imports_0_0= ruleImport )
@@ -250,40 +250,123 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			// InternalWeightDefinition.g:98:3: ( (lv_weigthDefinitions_1_0= ruleRuleWeightDefinition ) )*
+			// InternalWeightDefinition.g:98:3: ( ( (lv_weigthDefinitions_1_0= ruleRuleWeightDefinition ) ) | ( (lv_defaultCalc_2_0= ruleDefaultCalculation ) ) | ( (lv_helperFuntions_3_0= ruleHelperFuntion ) ) )*
 			loop1:
 			while (true) {
-				int alt1=2;
-				int LA1_0 = input.LA(1);
-				if ( (LA1_0==73) ) {
+				int alt1=4;
+				switch ( input.LA(1) ) {
+				case 73:
+					{
 					alt1=1;
+					}
+					break;
+				case 58:
+					{
+					alt1=2;
+					}
+					break;
+				case 66:
+					{
+					alt1=3;
+					}
+					break;
 				}
-
 				switch (alt1) {
 				case 1 :
-					// InternalWeightDefinition.g:99:4: (lv_weigthDefinitions_1_0= ruleRuleWeightDefinition )
+					// InternalWeightDefinition.g:99:4: ( (lv_weigthDefinitions_1_0= ruleRuleWeightDefinition ) )
 					{
-					// InternalWeightDefinition.g:99:4: (lv_weigthDefinitions_1_0= ruleRuleWeightDefinition )
-					// InternalWeightDefinition.g:100:5: lv_weigthDefinitions_1_0= ruleRuleWeightDefinition
+					// InternalWeightDefinition.g:99:4: ( (lv_weigthDefinitions_1_0= ruleRuleWeightDefinition ) )
+					// InternalWeightDefinition.g:100:5: (lv_weigthDefinitions_1_0= ruleRuleWeightDefinition )
+					{
+					// InternalWeightDefinition.g:100:5: (lv_weigthDefinitions_1_0= ruleRuleWeightDefinition )
+					// InternalWeightDefinition.g:101:6: lv_weigthDefinitions_1_0= ruleRuleWeightDefinition
 					{
 					if ( state.backtracking==0 ) {
-										newCompositeNode(grammarAccess.getWeightDefinitionFileAccess().getWeigthDefinitionsRuleWeightDefinitionParserRuleCall_1_0());
-									}
+											newCompositeNode(grammarAccess.getWeightDefinitionFileAccess().getWeigthDefinitionsRuleWeightDefinitionParserRuleCall_1_0_0());
+										}
 					pushFollow(FOLLOW_3);
 					lv_weigthDefinitions_1_0=ruleRuleWeightDefinition();
 					state._fsp--;
 					if (state.failed) return current;
 					if ( state.backtracking==0 ) {
-										if (current==null) {
-											current = createModelElementForParent(grammarAccess.getWeightDefinitionFileRule());
+											if (current==null) {
+												current = createModelElementForParent(grammarAccess.getWeightDefinitionFileRule());
+											}
+											add(
+												current,
+												"weigthDefinitions",
+												lv_weigthDefinitions_1_0,
+												"org.emoflon.ibex.tgg.weights.WeightDefinition.RuleWeightDefinition");
+											afterParserOrEnumRuleCall();
 										}
-										add(
-											current,
-											"weigthDefinitions",
-											lv_weigthDefinitions_1_0,
-											"org.emoflon.ibex.tgg.weights.WeightDefinition.RuleWeightDefinition");
-										afterParserOrEnumRuleCall();
-									}
+					}
+
+					}
+
+					}
+					break;
+				case 2 :
+					// InternalWeightDefinition.g:119:4: ( (lv_defaultCalc_2_0= ruleDefaultCalculation ) )
+					{
+					// InternalWeightDefinition.g:119:4: ( (lv_defaultCalc_2_0= ruleDefaultCalculation ) )
+					// InternalWeightDefinition.g:120:5: (lv_defaultCalc_2_0= ruleDefaultCalculation )
+					{
+					// InternalWeightDefinition.g:120:5: (lv_defaultCalc_2_0= ruleDefaultCalculation )
+					// InternalWeightDefinition.g:121:6: lv_defaultCalc_2_0= ruleDefaultCalculation
+					{
+					if ( state.backtracking==0 ) {
+											newCompositeNode(grammarAccess.getWeightDefinitionFileAccess().getDefaultCalcDefaultCalculationParserRuleCall_1_1_0());
+										}
+					pushFollow(FOLLOW_3);
+					lv_defaultCalc_2_0=ruleDefaultCalculation();
+					state._fsp--;
+					if (state.failed) return current;
+					if ( state.backtracking==0 ) {
+											if (current==null) {
+												current = createModelElementForParent(grammarAccess.getWeightDefinitionFileRule());
+											}
+											add(
+												current,
+												"defaultCalc",
+												lv_defaultCalc_2_0,
+												"org.emoflon.ibex.tgg.weights.WeightDefinition.DefaultCalculation");
+											afterParserOrEnumRuleCall();
+										}
+					}
+
+					}
+
+					}
+					break;
+				case 3 :
+					// InternalWeightDefinition.g:139:4: ( (lv_helperFuntions_3_0= ruleHelperFuntion ) )
+					{
+					// InternalWeightDefinition.g:139:4: ( (lv_helperFuntions_3_0= ruleHelperFuntion ) )
+					// InternalWeightDefinition.g:140:5: (lv_helperFuntions_3_0= ruleHelperFuntion )
+					{
+					// InternalWeightDefinition.g:140:5: (lv_helperFuntions_3_0= ruleHelperFuntion )
+					// InternalWeightDefinition.g:141:6: lv_helperFuntions_3_0= ruleHelperFuntion
+					{
+					if ( state.backtracking==0 ) {
+											newCompositeNode(grammarAccess.getWeightDefinitionFileAccess().getHelperFuntionsHelperFuntionParserRuleCall_1_2_0());
+										}
+					pushFollow(FOLLOW_3);
+					lv_helperFuntions_3_0=ruleHelperFuntion();
+					state._fsp--;
+					if (state.failed) return current;
+					if ( state.backtracking==0 ) {
+											if (current==null) {
+												current = createModelElementForParent(grammarAccess.getWeightDefinitionFileRule());
+											}
+											add(
+												current,
+												"helperFuntions",
+												lv_helperFuntions_3_0,
+												"org.emoflon.ibex.tgg.weights.WeightDefinition.HelperFuntion");
+											afterParserOrEnumRuleCall();
+										}
+					}
+
 					}
 
 					}
@@ -291,88 +374,6 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 				default :
 					break loop1;
-				}
-			}
-
-			// InternalWeightDefinition.g:117:3: ( (lv_default_2_0= ruleDefaultCalculation ) )?
-			int alt2=2;
-			int LA2_0 = input.LA(1);
-			if ( (LA2_0==58) ) {
-				alt2=1;
-			}
-			switch (alt2) {
-				case 1 :
-					// InternalWeightDefinition.g:118:4: (lv_default_2_0= ruleDefaultCalculation )
-					{
-					// InternalWeightDefinition.g:118:4: (lv_default_2_0= ruleDefaultCalculation )
-					// InternalWeightDefinition.g:119:5: lv_default_2_0= ruleDefaultCalculation
-					{
-					if ( state.backtracking==0 ) {
-										newCompositeNode(grammarAccess.getWeightDefinitionFileAccess().getDefaultDefaultCalculationParserRuleCall_2_0());
-									}
-					pushFollow(FOLLOW_4);
-					lv_default_2_0=ruleDefaultCalculation();
-					state._fsp--;
-					if (state.failed) return current;
-					if ( state.backtracking==0 ) {
-										if (current==null) {
-											current = createModelElementForParent(grammarAccess.getWeightDefinitionFileRule());
-										}
-										set(
-											current,
-											"default",
-											lv_default_2_0,
-											"org.emoflon.ibex.tgg.weights.WeightDefinition.DefaultCalculation");
-										afterParserOrEnumRuleCall();
-									}
-					}
-
-					}
-					break;
-
-			}
-
-			// InternalWeightDefinition.g:136:3: ( (lv_helperFuntions_3_0= ruleHelperFuntion ) )*
-			loop3:
-			while (true) {
-				int alt3=2;
-				int LA3_0 = input.LA(1);
-				if ( (LA3_0==66) ) {
-					alt3=1;
-				}
-
-				switch (alt3) {
-				case 1 :
-					// InternalWeightDefinition.g:137:4: (lv_helperFuntions_3_0= ruleHelperFuntion )
-					{
-					// InternalWeightDefinition.g:137:4: (lv_helperFuntions_3_0= ruleHelperFuntion )
-					// InternalWeightDefinition.g:138:5: lv_helperFuntions_3_0= ruleHelperFuntion
-					{
-					if ( state.backtracking==0 ) {
-										newCompositeNode(grammarAccess.getWeightDefinitionFileAccess().getHelperFuntionsHelperFuntionParserRuleCall_3_0());
-									}
-					pushFollow(FOLLOW_4);
-					lv_helperFuntions_3_0=ruleHelperFuntion();
-					state._fsp--;
-					if (state.failed) return current;
-					if ( state.backtracking==0 ) {
-										if (current==null) {
-											current = createModelElementForParent(grammarAccess.getWeightDefinitionFileRule());
-										}
-										add(
-											current,
-											"helperFuntions",
-											lv_helperFuntions_3_0,
-											"org.emoflon.ibex.tgg.weights.WeightDefinition.HelperFuntion");
-										afterParserOrEnumRuleCall();
-									}
-					}
-
-					}
-					break;
-
-				default :
-					break loop3;
 				}
 			}
 
@@ -400,7 +401,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleImport"
-	// InternalWeightDefinition.g:159:1: entryRuleImport returns [EObject current=null] :iv_ruleImport= ruleImport EOF ;
+	// InternalWeightDefinition.g:163:1: entryRuleImport returns [EObject current=null] :iv_ruleImport= ruleImport EOF ;
 	public final EObject entryRuleImport() throws RecognitionException {
 		EObject current = null;
 
@@ -408,8 +409,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleImport =null;
 
 		try {
-			// InternalWeightDefinition.g:159:47: (iv_ruleImport= ruleImport EOF )
-			// InternalWeightDefinition.g:160:2: iv_ruleImport= ruleImport EOF
+			// InternalWeightDefinition.g:163:47: (iv_ruleImport= ruleImport EOF )
+			// InternalWeightDefinition.g:164:2: iv_ruleImport= ruleImport EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getImportRule()); }
 			pushFollow(FOLLOW_1);
@@ -437,7 +438,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleImport"
-	// InternalWeightDefinition.g:166:1: ruleImport returns [EObject current=null] : (otherlv_0= 'import' ( (lv_importURI_1_0= RULE_STRING ) ) ) ;
+	// InternalWeightDefinition.g:170:1: ruleImport returns [EObject current=null] : (otherlv_0= 'import' ( (lv_importURI_1_0= RULE_STRING ) ) ) ;
 	public final EObject ruleImport() throws RecognitionException {
 		EObject current = null;
 
@@ -449,21 +450,21 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:172:2: ( (otherlv_0= 'import' ( (lv_importURI_1_0= RULE_STRING ) ) ) )
-			// InternalWeightDefinition.g:173:2: (otherlv_0= 'import' ( (lv_importURI_1_0= RULE_STRING ) ) )
+			// InternalWeightDefinition.g:176:2: ( (otherlv_0= 'import' ( (lv_importURI_1_0= RULE_STRING ) ) ) )
+			// InternalWeightDefinition.g:177:2: (otherlv_0= 'import' ( (lv_importURI_1_0= RULE_STRING ) ) )
 			{
-			// InternalWeightDefinition.g:173:2: (otherlv_0= 'import' ( (lv_importURI_1_0= RULE_STRING ) ) )
-			// InternalWeightDefinition.g:174:3: otherlv_0= 'import' ( (lv_importURI_1_0= RULE_STRING ) )
+			// InternalWeightDefinition.g:177:2: (otherlv_0= 'import' ( (lv_importURI_1_0= RULE_STRING ) ) )
+			// InternalWeightDefinition.g:178:3: otherlv_0= 'import' ( (lv_importURI_1_0= RULE_STRING ) )
 			{
-			otherlv_0=(Token)match(input,68,FOLLOW_5); if (state.failed) return current;
+			otherlv_0=(Token)match(input,68,FOLLOW_4); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_0, grammarAccess.getImportAccess().getImportKeyword_0());
 					}
-			// InternalWeightDefinition.g:178:3: ( (lv_importURI_1_0= RULE_STRING ) )
-			// InternalWeightDefinition.g:179:4: (lv_importURI_1_0= RULE_STRING )
+			// InternalWeightDefinition.g:182:3: ( (lv_importURI_1_0= RULE_STRING ) )
+			// InternalWeightDefinition.g:183:4: (lv_importURI_1_0= RULE_STRING )
 			{
-			// InternalWeightDefinition.g:179:4: (lv_importURI_1_0= RULE_STRING )
-			// InternalWeightDefinition.g:180:5: lv_importURI_1_0= RULE_STRING
+			// InternalWeightDefinition.g:183:4: (lv_importURI_1_0= RULE_STRING )
+			// InternalWeightDefinition.g:184:5: lv_importURI_1_0= RULE_STRING
 			{
 			lv_importURI_1_0=(Token)match(input,RULE_STRING,FOLLOW_2); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
@@ -507,7 +508,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleRuleWeightDefinition"
-	// InternalWeightDefinition.g:200:1: entryRuleRuleWeightDefinition returns [EObject current=null] :iv_ruleRuleWeightDefinition= ruleRuleWeightDefinition EOF ;
+	// InternalWeightDefinition.g:204:1: entryRuleRuleWeightDefinition returns [EObject current=null] :iv_ruleRuleWeightDefinition= ruleRuleWeightDefinition EOF ;
 	public final EObject entryRuleRuleWeightDefinition() throws RecognitionException {
 		EObject current = null;
 
@@ -515,8 +516,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleRuleWeightDefinition =null;
 
 		try {
-			// InternalWeightDefinition.g:200:61: (iv_ruleRuleWeightDefinition= ruleRuleWeightDefinition EOF )
-			// InternalWeightDefinition.g:201:2: iv_ruleRuleWeightDefinition= ruleRuleWeightDefinition EOF
+			// InternalWeightDefinition.g:204:61: (iv_ruleRuleWeightDefinition= ruleRuleWeightDefinition EOF )
+			// InternalWeightDefinition.g:205:2: iv_ruleRuleWeightDefinition= ruleRuleWeightDefinition EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getRuleWeightDefinitionRule()); }
 			pushFollow(FOLLOW_1);
@@ -544,7 +545,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleRuleWeightDefinition"
-	// InternalWeightDefinition.g:207:1: ruleRuleWeightDefinition returns [EObject current=null] : ( () otherlv_1= 'rule' ( (otherlv_2= RULE_ID ) ) ( (lv_weightCalc_3_0= ruleWeightCalculation ) ) ) ;
+	// InternalWeightDefinition.g:211:1: ruleRuleWeightDefinition returns [EObject current=null] : ( () otherlv_1= 'rule' ( (otherlv_2= RULE_ID ) ) ( (lv_weightCalc_3_0= ruleWeightCalculation ) ) ) ;
 	public final EObject ruleRuleWeightDefinition() throws RecognitionException {
 		EObject current = null;
 
@@ -557,14 +558,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:213:2: ( ( () otherlv_1= 'rule' ( (otherlv_2= RULE_ID ) ) ( (lv_weightCalc_3_0= ruleWeightCalculation ) ) ) )
-			// InternalWeightDefinition.g:214:2: ( () otherlv_1= 'rule' ( (otherlv_2= RULE_ID ) ) ( (lv_weightCalc_3_0= ruleWeightCalculation ) ) )
+			// InternalWeightDefinition.g:217:2: ( ( () otherlv_1= 'rule' ( (otherlv_2= RULE_ID ) ) ( (lv_weightCalc_3_0= ruleWeightCalculation ) ) ) )
+			// InternalWeightDefinition.g:218:2: ( () otherlv_1= 'rule' ( (otherlv_2= RULE_ID ) ) ( (lv_weightCalc_3_0= ruleWeightCalculation ) ) )
 			{
-			// InternalWeightDefinition.g:214:2: ( () otherlv_1= 'rule' ( (otherlv_2= RULE_ID ) ) ( (lv_weightCalc_3_0= ruleWeightCalculation ) ) )
-			// InternalWeightDefinition.g:215:3: () otherlv_1= 'rule' ( (otherlv_2= RULE_ID ) ) ( (lv_weightCalc_3_0= ruleWeightCalculation ) )
+			// InternalWeightDefinition.g:218:2: ( () otherlv_1= 'rule' ( (otherlv_2= RULE_ID ) ) ( (lv_weightCalc_3_0= ruleWeightCalculation ) ) )
+			// InternalWeightDefinition.g:219:3: () otherlv_1= 'rule' ( (otherlv_2= RULE_ID ) ) ( (lv_weightCalc_3_0= ruleWeightCalculation ) )
 			{
-			// InternalWeightDefinition.g:215:3: ()
-			// InternalWeightDefinition.g:216:4: 
+			// InternalWeightDefinition.g:219:3: ()
+			// InternalWeightDefinition.g:220:4: 
 			{
 			if ( state.backtracking==0 ) {
 							current = forceCreateModelElement(
@@ -573,22 +574,22 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						}
 			}
 
-			otherlv_1=(Token)match(input,73,FOLLOW_6); if (state.failed) return current;
+			otherlv_1=(Token)match(input,73,FOLLOW_5); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_1, grammarAccess.getRuleWeightDefinitionAccess().getRuleKeyword_1());
 					}
-			// InternalWeightDefinition.g:226:3: ( (otherlv_2= RULE_ID ) )
-			// InternalWeightDefinition.g:227:4: (otherlv_2= RULE_ID )
+			// InternalWeightDefinition.g:230:3: ( (otherlv_2= RULE_ID ) )
+			// InternalWeightDefinition.g:231:4: (otherlv_2= RULE_ID )
 			{
-			// InternalWeightDefinition.g:227:4: (otherlv_2= RULE_ID )
-			// InternalWeightDefinition.g:228:5: otherlv_2= RULE_ID
+			// InternalWeightDefinition.g:231:4: (otherlv_2= RULE_ID )
+			// InternalWeightDefinition.g:232:5: otherlv_2= RULE_ID
 			{
 			if ( state.backtracking==0 ) {
 								if (current==null) {
 									current = createModelElement(grammarAccess.getRuleWeightDefinitionRule());
 								}
 							}
-			otherlv_2=(Token)match(input,RULE_ID,FOLLOW_7); if (state.failed) return current;
+			otherlv_2=(Token)match(input,RULE_ID,FOLLOW_6); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 								newLeafNode(otherlv_2, grammarAccess.getRuleWeightDefinitionAccess().getRuleTGGRuleCrossReference_2_0());
 							}
@@ -596,11 +597,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			// InternalWeightDefinition.g:239:3: ( (lv_weightCalc_3_0= ruleWeightCalculation ) )
-			// InternalWeightDefinition.g:240:4: (lv_weightCalc_3_0= ruleWeightCalculation )
+			// InternalWeightDefinition.g:243:3: ( (lv_weightCalc_3_0= ruleWeightCalculation ) )
+			// InternalWeightDefinition.g:244:4: (lv_weightCalc_3_0= ruleWeightCalculation )
 			{
-			// InternalWeightDefinition.g:240:4: (lv_weightCalc_3_0= ruleWeightCalculation )
-			// InternalWeightDefinition.g:241:5: lv_weightCalc_3_0= ruleWeightCalculation
+			// InternalWeightDefinition.g:244:4: (lv_weightCalc_3_0= ruleWeightCalculation )
+			// InternalWeightDefinition.g:245:5: lv_weightCalc_3_0= ruleWeightCalculation
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getRuleWeightDefinitionAccess().getWeightCalcWeightCalculationParserRuleCall_3_0());
@@ -648,7 +649,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleWeightCalculation"
-	// InternalWeightDefinition.g:262:1: entryRuleWeightCalculation returns [EObject current=null] :iv_ruleWeightCalculation= ruleWeightCalculation EOF ;
+	// InternalWeightDefinition.g:266:1: entryRuleWeightCalculation returns [EObject current=null] :iv_ruleWeightCalculation= ruleWeightCalculation EOF ;
 	public final EObject entryRuleWeightCalculation() throws RecognitionException {
 		EObject current = null;
 
@@ -656,8 +657,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleWeightCalculation =null;
 
 		try {
-			// InternalWeightDefinition.g:262:58: (iv_ruleWeightCalculation= ruleWeightCalculation EOF )
-			// InternalWeightDefinition.g:263:2: iv_ruleWeightCalculation= ruleWeightCalculation EOF
+			// InternalWeightDefinition.g:266:58: (iv_ruleWeightCalculation= ruleWeightCalculation EOF )
+			// InternalWeightDefinition.g:267:2: iv_ruleWeightCalculation= ruleWeightCalculation EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getWeightCalculationRule()); }
 			pushFollow(FOLLOW_1);
@@ -685,7 +686,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleWeightCalculation"
-	// InternalWeightDefinition.g:269:1: ruleWeightCalculation returns [EObject current=null] : ( () ( (lv_calc_1_0= ruleXBlockExpression ) ) ) ;
+	// InternalWeightDefinition.g:273:1: ruleWeightCalculation returns [EObject current=null] : ( () ( (lv_calc_1_0= ruleXBlockExpression ) ) ) ;
 	public final EObject ruleWeightCalculation() throws RecognitionException {
 		EObject current = null;
 
@@ -696,14 +697,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:275:2: ( ( () ( (lv_calc_1_0= ruleXBlockExpression ) ) ) )
-			// InternalWeightDefinition.g:276:2: ( () ( (lv_calc_1_0= ruleXBlockExpression ) ) )
+			// InternalWeightDefinition.g:279:2: ( ( () ( (lv_calc_1_0= ruleXBlockExpression ) ) ) )
+			// InternalWeightDefinition.g:280:2: ( () ( (lv_calc_1_0= ruleXBlockExpression ) ) )
 			{
-			// InternalWeightDefinition.g:276:2: ( () ( (lv_calc_1_0= ruleXBlockExpression ) ) )
-			// InternalWeightDefinition.g:277:3: () ( (lv_calc_1_0= ruleXBlockExpression ) )
+			// InternalWeightDefinition.g:280:2: ( () ( (lv_calc_1_0= ruleXBlockExpression ) ) )
+			// InternalWeightDefinition.g:281:3: () ( (lv_calc_1_0= ruleXBlockExpression ) )
 			{
-			// InternalWeightDefinition.g:277:3: ()
-			// InternalWeightDefinition.g:278:4: 
+			// InternalWeightDefinition.g:281:3: ()
+			// InternalWeightDefinition.g:282:4: 
 			{
 			if ( state.backtracking==0 ) {
 							current = forceCreateModelElement(
@@ -712,11 +713,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						}
 			}
 
-			// InternalWeightDefinition.g:284:3: ( (lv_calc_1_0= ruleXBlockExpression ) )
-			// InternalWeightDefinition.g:285:4: (lv_calc_1_0= ruleXBlockExpression )
+			// InternalWeightDefinition.g:288:3: ( (lv_calc_1_0= ruleXBlockExpression ) )
+			// InternalWeightDefinition.g:289:4: (lv_calc_1_0= ruleXBlockExpression )
 			{
-			// InternalWeightDefinition.g:285:4: (lv_calc_1_0= ruleXBlockExpression )
-			// InternalWeightDefinition.g:286:5: lv_calc_1_0= ruleXBlockExpression
+			// InternalWeightDefinition.g:289:4: (lv_calc_1_0= ruleXBlockExpression )
+			// InternalWeightDefinition.g:290:5: lv_calc_1_0= ruleXBlockExpression
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getWeightCalculationAccess().getCalcXBlockExpressionParserRuleCall_1_0());
@@ -764,7 +765,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleDefaultCalculation"
-	// InternalWeightDefinition.g:307:1: entryRuleDefaultCalculation returns [EObject current=null] :iv_ruleDefaultCalculation= ruleDefaultCalculation EOF ;
+	// InternalWeightDefinition.g:311:1: entryRuleDefaultCalculation returns [EObject current=null] :iv_ruleDefaultCalculation= ruleDefaultCalculation EOF ;
 	public final EObject entryRuleDefaultCalculation() throws RecognitionException {
 		EObject current = null;
 
@@ -772,8 +773,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleDefaultCalculation =null;
 
 		try {
-			// InternalWeightDefinition.g:307:59: (iv_ruleDefaultCalculation= ruleDefaultCalculation EOF )
-			// InternalWeightDefinition.g:308:2: iv_ruleDefaultCalculation= ruleDefaultCalculation EOF
+			// InternalWeightDefinition.g:311:59: (iv_ruleDefaultCalculation= ruleDefaultCalculation EOF )
+			// InternalWeightDefinition.g:312:2: iv_ruleDefaultCalculation= ruleDefaultCalculation EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getDefaultCalculationRule()); }
 			pushFollow(FOLLOW_1);
@@ -801,7 +802,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleDefaultCalculation"
-	// InternalWeightDefinition.g:314:1: ruleDefaultCalculation returns [EObject current=null] : ( () otherlv_1= 'default' ( (lv_calc_2_0= ruleXBlockExpression ) ) ) ;
+	// InternalWeightDefinition.g:318:1: ruleDefaultCalculation returns [EObject current=null] : ( () otherlv_1= 'default' ( (lv_calc_2_0= ruleXBlockExpression ) ) ) ;
 	public final EObject ruleDefaultCalculation() throws RecognitionException {
 		EObject current = null;
 
@@ -813,14 +814,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:320:2: ( ( () otherlv_1= 'default' ( (lv_calc_2_0= ruleXBlockExpression ) ) ) )
-			// InternalWeightDefinition.g:321:2: ( () otherlv_1= 'default' ( (lv_calc_2_0= ruleXBlockExpression ) ) )
+			// InternalWeightDefinition.g:324:2: ( ( () otherlv_1= 'default' ( (lv_calc_2_0= ruleXBlockExpression ) ) ) )
+			// InternalWeightDefinition.g:325:2: ( () otherlv_1= 'default' ( (lv_calc_2_0= ruleXBlockExpression ) ) )
 			{
-			// InternalWeightDefinition.g:321:2: ( () otherlv_1= 'default' ( (lv_calc_2_0= ruleXBlockExpression ) ) )
-			// InternalWeightDefinition.g:322:3: () otherlv_1= 'default' ( (lv_calc_2_0= ruleXBlockExpression ) )
+			// InternalWeightDefinition.g:325:2: ( () otherlv_1= 'default' ( (lv_calc_2_0= ruleXBlockExpression ) ) )
+			// InternalWeightDefinition.g:326:3: () otherlv_1= 'default' ( (lv_calc_2_0= ruleXBlockExpression ) )
 			{
-			// InternalWeightDefinition.g:322:3: ()
-			// InternalWeightDefinition.g:323:4: 
+			// InternalWeightDefinition.g:326:3: ()
+			// InternalWeightDefinition.g:327:4: 
 			{
 			if ( state.backtracking==0 ) {
 							current = forceCreateModelElement(
@@ -829,15 +830,15 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						}
 			}
 
-			otherlv_1=(Token)match(input,58,FOLLOW_7); if (state.failed) return current;
+			otherlv_1=(Token)match(input,58,FOLLOW_6); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_1, grammarAccess.getDefaultCalculationAccess().getDefaultKeyword_1());
 					}
-			// InternalWeightDefinition.g:333:3: ( (lv_calc_2_0= ruleXBlockExpression ) )
-			// InternalWeightDefinition.g:334:4: (lv_calc_2_0= ruleXBlockExpression )
+			// InternalWeightDefinition.g:337:3: ( (lv_calc_2_0= ruleXBlockExpression ) )
+			// InternalWeightDefinition.g:338:4: (lv_calc_2_0= ruleXBlockExpression )
 			{
-			// InternalWeightDefinition.g:334:4: (lv_calc_2_0= ruleXBlockExpression )
-			// InternalWeightDefinition.g:335:5: lv_calc_2_0= ruleXBlockExpression
+			// InternalWeightDefinition.g:338:4: (lv_calc_2_0= ruleXBlockExpression )
+			// InternalWeightDefinition.g:339:5: lv_calc_2_0= ruleXBlockExpression
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getDefaultCalculationAccess().getCalcXBlockExpressionParserRuleCall_2_0());
@@ -885,7 +886,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleHelperFuntion"
-	// InternalWeightDefinition.g:356:1: entryRuleHelperFuntion returns [EObject current=null] :iv_ruleHelperFuntion= ruleHelperFuntion EOF ;
+	// InternalWeightDefinition.g:360:1: entryRuleHelperFuntion returns [EObject current=null] :iv_ruleHelperFuntion= ruleHelperFuntion EOF ;
 	public final EObject entryRuleHelperFuntion() throws RecognitionException {
 		EObject current = null;
 
@@ -893,8 +894,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleHelperFuntion =null;
 
 		try {
-			// InternalWeightDefinition.g:356:54: (iv_ruleHelperFuntion= ruleHelperFuntion EOF )
-			// InternalWeightDefinition.g:357:2: iv_ruleHelperFuntion= ruleHelperFuntion EOF
+			// InternalWeightDefinition.g:360:54: (iv_ruleHelperFuntion= ruleHelperFuntion EOF )
+			// InternalWeightDefinition.g:361:2: iv_ruleHelperFuntion= ruleHelperFuntion EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getHelperFuntionRule()); }
 			pushFollow(FOLLOW_1);
@@ -922,7 +923,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleHelperFuntion"
-	// InternalWeightDefinition.g:363:1: ruleHelperFuntion returns [EObject current=null] : ( () otherlv_1= 'function' ( (lv_returnType_2_0= ruleJvmTypeReference ) ) ( (lv_name_3_0= ruleValidID ) ) otherlv_4= '(' ( ( (lv_params_5_0= ruleHelperFuncParameter ) ) (otherlv_6= ',' ( (lv_params_7_0= ruleHelperFuncParameter ) ) )* )? otherlv_8= ')' ( (lv_body_9_0= ruleXBlockExpression ) ) ) ;
+	// InternalWeightDefinition.g:367:1: ruleHelperFuntion returns [EObject current=null] : ( () otherlv_1= 'function' ( (lv_returnType_2_0= ruleJvmTypeReference ) ) ( (lv_name_3_0= ruleValidID ) ) otherlv_4= '(' ( ( (lv_params_5_0= ruleHelperFuncParameter ) ) (otherlv_6= ',' ( (lv_params_7_0= ruleHelperFuncParameter ) ) )* )? otherlv_8= ')' ( (lv_body_9_0= ruleXBlockExpression ) ) ) ;
 	public final EObject ruleHelperFuntion() throws RecognitionException {
 		EObject current = null;
 
@@ -941,14 +942,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:369:2: ( ( () otherlv_1= 'function' ( (lv_returnType_2_0= ruleJvmTypeReference ) ) ( (lv_name_3_0= ruleValidID ) ) otherlv_4= '(' ( ( (lv_params_5_0= ruleHelperFuncParameter ) ) (otherlv_6= ',' ( (lv_params_7_0= ruleHelperFuncParameter ) ) )* )? otherlv_8= ')' ( (lv_body_9_0= ruleXBlockExpression ) ) ) )
-			// InternalWeightDefinition.g:370:2: ( () otherlv_1= 'function' ( (lv_returnType_2_0= ruleJvmTypeReference ) ) ( (lv_name_3_0= ruleValidID ) ) otherlv_4= '(' ( ( (lv_params_5_0= ruleHelperFuncParameter ) ) (otherlv_6= ',' ( (lv_params_7_0= ruleHelperFuncParameter ) ) )* )? otherlv_8= ')' ( (lv_body_9_0= ruleXBlockExpression ) ) )
+			// InternalWeightDefinition.g:373:2: ( ( () otherlv_1= 'function' ( (lv_returnType_2_0= ruleJvmTypeReference ) ) ( (lv_name_3_0= ruleValidID ) ) otherlv_4= '(' ( ( (lv_params_5_0= ruleHelperFuncParameter ) ) (otherlv_6= ',' ( (lv_params_7_0= ruleHelperFuncParameter ) ) )* )? otherlv_8= ')' ( (lv_body_9_0= ruleXBlockExpression ) ) ) )
+			// InternalWeightDefinition.g:374:2: ( () otherlv_1= 'function' ( (lv_returnType_2_0= ruleJvmTypeReference ) ) ( (lv_name_3_0= ruleValidID ) ) otherlv_4= '(' ( ( (lv_params_5_0= ruleHelperFuncParameter ) ) (otherlv_6= ',' ( (lv_params_7_0= ruleHelperFuncParameter ) ) )* )? otherlv_8= ')' ( (lv_body_9_0= ruleXBlockExpression ) ) )
 			{
-			// InternalWeightDefinition.g:370:2: ( () otherlv_1= 'function' ( (lv_returnType_2_0= ruleJvmTypeReference ) ) ( (lv_name_3_0= ruleValidID ) ) otherlv_4= '(' ( ( (lv_params_5_0= ruleHelperFuncParameter ) ) (otherlv_6= ',' ( (lv_params_7_0= ruleHelperFuncParameter ) ) )* )? otherlv_8= ')' ( (lv_body_9_0= ruleXBlockExpression ) ) )
-			// InternalWeightDefinition.g:371:3: () otherlv_1= 'function' ( (lv_returnType_2_0= ruleJvmTypeReference ) ) ( (lv_name_3_0= ruleValidID ) ) otherlv_4= '(' ( ( (lv_params_5_0= ruleHelperFuncParameter ) ) (otherlv_6= ',' ( (lv_params_7_0= ruleHelperFuncParameter ) ) )* )? otherlv_8= ')' ( (lv_body_9_0= ruleXBlockExpression ) )
+			// InternalWeightDefinition.g:374:2: ( () otherlv_1= 'function' ( (lv_returnType_2_0= ruleJvmTypeReference ) ) ( (lv_name_3_0= ruleValidID ) ) otherlv_4= '(' ( ( (lv_params_5_0= ruleHelperFuncParameter ) ) (otherlv_6= ',' ( (lv_params_7_0= ruleHelperFuncParameter ) ) )* )? otherlv_8= ')' ( (lv_body_9_0= ruleXBlockExpression ) ) )
+			// InternalWeightDefinition.g:375:3: () otherlv_1= 'function' ( (lv_returnType_2_0= ruleJvmTypeReference ) ) ( (lv_name_3_0= ruleValidID ) ) otherlv_4= '(' ( ( (lv_params_5_0= ruleHelperFuncParameter ) ) (otherlv_6= ',' ( (lv_params_7_0= ruleHelperFuncParameter ) ) )* )? otherlv_8= ')' ( (lv_body_9_0= ruleXBlockExpression ) )
 			{
-			// InternalWeightDefinition.g:371:3: ()
-			// InternalWeightDefinition.g:372:4: 
+			// InternalWeightDefinition.g:375:3: ()
+			// InternalWeightDefinition.g:376:4: 
 			{
 			if ( state.backtracking==0 ) {
 							current = forceCreateModelElement(
@@ -957,20 +958,20 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						}
 			}
 
-			otherlv_1=(Token)match(input,66,FOLLOW_8); if (state.failed) return current;
+			otherlv_1=(Token)match(input,66,FOLLOW_7); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_1, grammarAccess.getHelperFuntionAccess().getFunctionKeyword_1());
 					}
-			// InternalWeightDefinition.g:382:3: ( (lv_returnType_2_0= ruleJvmTypeReference ) )
-			// InternalWeightDefinition.g:383:4: (lv_returnType_2_0= ruleJvmTypeReference )
+			// InternalWeightDefinition.g:386:3: ( (lv_returnType_2_0= ruleJvmTypeReference ) )
+			// InternalWeightDefinition.g:387:4: (lv_returnType_2_0= ruleJvmTypeReference )
 			{
-			// InternalWeightDefinition.g:383:4: (lv_returnType_2_0= ruleJvmTypeReference )
-			// InternalWeightDefinition.g:384:5: lv_returnType_2_0= ruleJvmTypeReference
+			// InternalWeightDefinition.g:387:4: (lv_returnType_2_0= ruleJvmTypeReference )
+			// InternalWeightDefinition.g:388:5: lv_returnType_2_0= ruleJvmTypeReference
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getHelperFuntionAccess().getReturnTypeJvmTypeReferenceParserRuleCall_2_0());
 							}
-			pushFollow(FOLLOW_6);
+			pushFollow(FOLLOW_5);
 			lv_returnType_2_0=ruleJvmTypeReference();
 			state._fsp--;
 			if (state.failed) return current;
@@ -989,16 +990,16 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			// InternalWeightDefinition.g:401:3: ( (lv_name_3_0= ruleValidID ) )
-			// InternalWeightDefinition.g:402:4: (lv_name_3_0= ruleValidID )
+			// InternalWeightDefinition.g:405:3: ( (lv_name_3_0= ruleValidID ) )
+			// InternalWeightDefinition.g:406:4: (lv_name_3_0= ruleValidID )
 			{
-			// InternalWeightDefinition.g:402:4: (lv_name_3_0= ruleValidID )
-			// InternalWeightDefinition.g:403:5: lv_name_3_0= ruleValidID
+			// InternalWeightDefinition.g:406:4: (lv_name_3_0= ruleValidID )
+			// InternalWeightDefinition.g:407:5: lv_name_3_0= ruleValidID
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getHelperFuntionAccess().getNameValidIDParserRuleCall_3_0());
 							}
-			pushFollow(FOLLOW_9);
+			pushFollow(FOLLOW_8);
 			lv_name_3_0=ruleValidID();
 			state._fsp--;
 			if (state.failed) return current;
@@ -1017,30 +1018,30 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			otherlv_4=(Token)match(input,21,FOLLOW_10); if (state.failed) return current;
+			otherlv_4=(Token)match(input,21,FOLLOW_9); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_4, grammarAccess.getHelperFuntionAccess().getLeftParenthesisKeyword_4());
 					}
-			// InternalWeightDefinition.g:424:3: ( ( (lv_params_5_0= ruleHelperFuncParameter ) ) (otherlv_6= ',' ( (lv_params_7_0= ruleHelperFuncParameter ) ) )* )?
-			int alt5=2;
-			int LA5_0 = input.LA(1);
-			if ( (LA5_0==RULE_ID||LA5_0==21||LA5_0==47) ) {
-				alt5=1;
+			// InternalWeightDefinition.g:428:3: ( ( (lv_params_5_0= ruleHelperFuncParameter ) ) (otherlv_6= ',' ( (lv_params_7_0= ruleHelperFuncParameter ) ) )* )?
+			int alt3=2;
+			int LA3_0 = input.LA(1);
+			if ( (LA3_0==RULE_ID||LA3_0==21||LA3_0==47) ) {
+				alt3=1;
 			}
-			switch (alt5) {
+			switch (alt3) {
 				case 1 :
-					// InternalWeightDefinition.g:425:4: ( (lv_params_5_0= ruleHelperFuncParameter ) ) (otherlv_6= ',' ( (lv_params_7_0= ruleHelperFuncParameter ) ) )*
+					// InternalWeightDefinition.g:429:4: ( (lv_params_5_0= ruleHelperFuncParameter ) ) (otherlv_6= ',' ( (lv_params_7_0= ruleHelperFuncParameter ) ) )*
 					{
-					// InternalWeightDefinition.g:425:4: ( (lv_params_5_0= ruleHelperFuncParameter ) )
-					// InternalWeightDefinition.g:426:5: (lv_params_5_0= ruleHelperFuncParameter )
+					// InternalWeightDefinition.g:429:4: ( (lv_params_5_0= ruleHelperFuncParameter ) )
+					// InternalWeightDefinition.g:430:5: (lv_params_5_0= ruleHelperFuncParameter )
 					{
-					// InternalWeightDefinition.g:426:5: (lv_params_5_0= ruleHelperFuncParameter )
-					// InternalWeightDefinition.g:427:6: lv_params_5_0= ruleHelperFuncParameter
+					// InternalWeightDefinition.g:430:5: (lv_params_5_0= ruleHelperFuncParameter )
+					// InternalWeightDefinition.g:431:6: lv_params_5_0= ruleHelperFuncParameter
 					{
 					if ( state.backtracking==0 ) {
 											newCompositeNode(grammarAccess.getHelperFuntionAccess().getParamsHelperFuncParameterParserRuleCall_5_0_0());
 										}
-					pushFollow(FOLLOW_11);
+					pushFollow(FOLLOW_10);
 					lv_params_5_0=ruleHelperFuncParameter();
 					state._fsp--;
 					if (state.failed) return current;
@@ -1059,33 +1060,33 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:444:4: (otherlv_6= ',' ( (lv_params_7_0= ruleHelperFuncParameter ) ) )*
-					loop4:
+					// InternalWeightDefinition.g:448:4: (otherlv_6= ',' ( (lv_params_7_0= ruleHelperFuncParameter ) ) )*
+					loop2:
 					while (true) {
-						int alt4=2;
-						int LA4_0 = input.LA(1);
-						if ( (LA4_0==29) ) {
-							alt4=1;
+						int alt2=2;
+						int LA2_0 = input.LA(1);
+						if ( (LA2_0==29) ) {
+							alt2=1;
 						}
 
-						switch (alt4) {
+						switch (alt2) {
 						case 1 :
-							// InternalWeightDefinition.g:445:5: otherlv_6= ',' ( (lv_params_7_0= ruleHelperFuncParameter ) )
+							// InternalWeightDefinition.g:449:5: otherlv_6= ',' ( (lv_params_7_0= ruleHelperFuncParameter ) )
 							{
-							otherlv_6=(Token)match(input,29,FOLLOW_8); if (state.failed) return current;
+							otherlv_6=(Token)match(input,29,FOLLOW_7); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
 												newLeafNode(otherlv_6, grammarAccess.getHelperFuntionAccess().getCommaKeyword_5_1_0());
 											}
-							// InternalWeightDefinition.g:449:5: ( (lv_params_7_0= ruleHelperFuncParameter ) )
-							// InternalWeightDefinition.g:450:6: (lv_params_7_0= ruleHelperFuncParameter )
+							// InternalWeightDefinition.g:453:5: ( (lv_params_7_0= ruleHelperFuncParameter ) )
+							// InternalWeightDefinition.g:454:6: (lv_params_7_0= ruleHelperFuncParameter )
 							{
-							// InternalWeightDefinition.g:450:6: (lv_params_7_0= ruleHelperFuncParameter )
-							// InternalWeightDefinition.g:451:7: lv_params_7_0= ruleHelperFuncParameter
+							// InternalWeightDefinition.g:454:6: (lv_params_7_0= ruleHelperFuncParameter )
+							// InternalWeightDefinition.g:455:7: lv_params_7_0= ruleHelperFuncParameter
 							{
 							if ( state.backtracking==0 ) {
 														newCompositeNode(grammarAccess.getHelperFuntionAccess().getParamsHelperFuncParameterParserRuleCall_5_1_1_0());
 													}
-							pushFollow(FOLLOW_11);
+							pushFollow(FOLLOW_10);
 							lv_params_7_0=ruleHelperFuncParameter();
 							state._fsp--;
 							if (state.failed) return current;
@@ -1108,7 +1109,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 							break;
 
 						default :
-							break loop4;
+							break loop2;
 						}
 					}
 
@@ -1117,15 +1118,15 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			otherlv_8=(Token)match(input,22,FOLLOW_7); if (state.failed) return current;
+			otherlv_8=(Token)match(input,22,FOLLOW_6); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_8, grammarAccess.getHelperFuntionAccess().getRightParenthesisKeyword_6());
 					}
-			// InternalWeightDefinition.g:474:3: ( (lv_body_9_0= ruleXBlockExpression ) )
-			// InternalWeightDefinition.g:475:4: (lv_body_9_0= ruleXBlockExpression )
+			// InternalWeightDefinition.g:478:3: ( (lv_body_9_0= ruleXBlockExpression ) )
+			// InternalWeightDefinition.g:479:4: (lv_body_9_0= ruleXBlockExpression )
 			{
-			// InternalWeightDefinition.g:475:4: (lv_body_9_0= ruleXBlockExpression )
-			// InternalWeightDefinition.g:476:5: lv_body_9_0= ruleXBlockExpression
+			// InternalWeightDefinition.g:479:4: (lv_body_9_0= ruleXBlockExpression )
+			// InternalWeightDefinition.g:480:5: lv_body_9_0= ruleXBlockExpression
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getHelperFuntionAccess().getBodyXBlockExpressionParserRuleCall_7_0());
@@ -1173,7 +1174,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleHelperFuncParameter"
-	// InternalWeightDefinition.g:497:1: entryRuleHelperFuncParameter returns [EObject current=null] :iv_ruleHelperFuncParameter= ruleHelperFuncParameter EOF ;
+	// InternalWeightDefinition.g:501:1: entryRuleHelperFuncParameter returns [EObject current=null] :iv_ruleHelperFuncParameter= ruleHelperFuncParameter EOF ;
 	public final EObject entryRuleHelperFuncParameter() throws RecognitionException {
 		EObject current = null;
 
@@ -1181,8 +1182,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleHelperFuncParameter =null;
 
 		try {
-			// InternalWeightDefinition.g:497:60: (iv_ruleHelperFuncParameter= ruleHelperFuncParameter EOF )
-			// InternalWeightDefinition.g:498:2: iv_ruleHelperFuncParameter= ruleHelperFuncParameter EOF
+			// InternalWeightDefinition.g:501:60: (iv_ruleHelperFuncParameter= ruleHelperFuncParameter EOF )
+			// InternalWeightDefinition.g:502:2: iv_ruleHelperFuncParameter= ruleHelperFuncParameter EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getHelperFuncParameterRule()); }
 			pushFollow(FOLLOW_1);
@@ -1210,7 +1211,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleHelperFuncParameter"
-	// InternalWeightDefinition.g:504:1: ruleHelperFuncParameter returns [EObject current=null] : ( ( (lv_parameterType_0_0= ruleJvmTypeReference ) ) ( (lv_name_1_0= ruleValidID ) ) ) ;
+	// InternalWeightDefinition.g:508:1: ruleHelperFuncParameter returns [EObject current=null] : ( ( (lv_parameterType_0_0= ruleJvmTypeReference ) ) ( (lv_name_1_0= ruleValidID ) ) ) ;
 	public final EObject ruleHelperFuncParameter() throws RecognitionException {
 		EObject current = null;
 
@@ -1222,22 +1223,22 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:510:2: ( ( ( (lv_parameterType_0_0= ruleJvmTypeReference ) ) ( (lv_name_1_0= ruleValidID ) ) ) )
-			// InternalWeightDefinition.g:511:2: ( ( (lv_parameterType_0_0= ruleJvmTypeReference ) ) ( (lv_name_1_0= ruleValidID ) ) )
+			// InternalWeightDefinition.g:514:2: ( ( ( (lv_parameterType_0_0= ruleJvmTypeReference ) ) ( (lv_name_1_0= ruleValidID ) ) ) )
+			// InternalWeightDefinition.g:515:2: ( ( (lv_parameterType_0_0= ruleJvmTypeReference ) ) ( (lv_name_1_0= ruleValidID ) ) )
 			{
-			// InternalWeightDefinition.g:511:2: ( ( (lv_parameterType_0_0= ruleJvmTypeReference ) ) ( (lv_name_1_0= ruleValidID ) ) )
-			// InternalWeightDefinition.g:512:3: ( (lv_parameterType_0_0= ruleJvmTypeReference ) ) ( (lv_name_1_0= ruleValidID ) )
+			// InternalWeightDefinition.g:515:2: ( ( (lv_parameterType_0_0= ruleJvmTypeReference ) ) ( (lv_name_1_0= ruleValidID ) ) )
+			// InternalWeightDefinition.g:516:3: ( (lv_parameterType_0_0= ruleJvmTypeReference ) ) ( (lv_name_1_0= ruleValidID ) )
 			{
-			// InternalWeightDefinition.g:512:3: ( (lv_parameterType_0_0= ruleJvmTypeReference ) )
-			// InternalWeightDefinition.g:513:4: (lv_parameterType_0_0= ruleJvmTypeReference )
+			// InternalWeightDefinition.g:516:3: ( (lv_parameterType_0_0= ruleJvmTypeReference ) )
+			// InternalWeightDefinition.g:517:4: (lv_parameterType_0_0= ruleJvmTypeReference )
 			{
-			// InternalWeightDefinition.g:513:4: (lv_parameterType_0_0= ruleJvmTypeReference )
-			// InternalWeightDefinition.g:514:5: lv_parameterType_0_0= ruleJvmTypeReference
+			// InternalWeightDefinition.g:517:4: (lv_parameterType_0_0= ruleJvmTypeReference )
+			// InternalWeightDefinition.g:518:5: lv_parameterType_0_0= ruleJvmTypeReference
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getHelperFuncParameterAccess().getParameterTypeJvmTypeReferenceParserRuleCall_0_0());
 							}
-			pushFollow(FOLLOW_6);
+			pushFollow(FOLLOW_5);
 			lv_parameterType_0_0=ruleJvmTypeReference();
 			state._fsp--;
 			if (state.failed) return current;
@@ -1256,11 +1257,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			// InternalWeightDefinition.g:531:3: ( (lv_name_1_0= ruleValidID ) )
-			// InternalWeightDefinition.g:532:4: (lv_name_1_0= ruleValidID )
+			// InternalWeightDefinition.g:535:3: ( (lv_name_1_0= ruleValidID ) )
+			// InternalWeightDefinition.g:536:4: (lv_name_1_0= ruleValidID )
 			{
-			// InternalWeightDefinition.g:532:4: (lv_name_1_0= ruleValidID )
-			// InternalWeightDefinition.g:533:5: lv_name_1_0= ruleValidID
+			// InternalWeightDefinition.g:536:4: (lv_name_1_0= ruleValidID )
+			// InternalWeightDefinition.g:537:5: lv_name_1_0= ruleValidID
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getHelperFuncParameterAccess().getNameValidIDParserRuleCall_1_0());
@@ -1308,7 +1309,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXExpression"
-	// InternalWeightDefinition.g:554:1: entryRuleXExpression returns [EObject current=null] :iv_ruleXExpression= ruleXExpression EOF ;
+	// InternalWeightDefinition.g:558:1: entryRuleXExpression returns [EObject current=null] :iv_ruleXExpression= ruleXExpression EOF ;
 	public final EObject entryRuleXExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -1316,8 +1317,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXExpression =null;
 
 		try {
-			// InternalWeightDefinition.g:554:52: (iv_ruleXExpression= ruleXExpression EOF )
-			// InternalWeightDefinition.g:555:2: iv_ruleXExpression= ruleXExpression EOF
+			// InternalWeightDefinition.g:558:52: (iv_ruleXExpression= ruleXExpression EOF )
+			// InternalWeightDefinition.g:559:2: iv_ruleXExpression= ruleXExpression EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXExpressionRule()); }
 			pushFollow(FOLLOW_1);
@@ -1345,7 +1346,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXExpression"
-	// InternalWeightDefinition.g:561:1: ruleXExpression returns [EObject current=null] :this_XAssignment_0= ruleXAssignment ;
+	// InternalWeightDefinition.g:565:1: ruleXExpression returns [EObject current=null] :this_XAssignment_0= ruleXAssignment ;
 	public final EObject ruleXExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -1356,8 +1357,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:567:2: (this_XAssignment_0= ruleXAssignment )
-			// InternalWeightDefinition.g:568:2: this_XAssignment_0= ruleXAssignment
+			// InternalWeightDefinition.g:571:2: (this_XAssignment_0= ruleXAssignment )
+			// InternalWeightDefinition.g:572:2: this_XAssignment_0= ruleXAssignment
 			{
 			if ( state.backtracking==0 ) {
 					newCompositeNode(grammarAccess.getXExpressionAccess().getXAssignmentParserRuleCall());
@@ -1392,7 +1393,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXAssignment"
-	// InternalWeightDefinition.g:579:1: entryRuleXAssignment returns [EObject current=null] :iv_ruleXAssignment= ruleXAssignment EOF ;
+	// InternalWeightDefinition.g:583:1: entryRuleXAssignment returns [EObject current=null] :iv_ruleXAssignment= ruleXAssignment EOF ;
 	public final EObject entryRuleXAssignment() throws RecognitionException {
 		EObject current = null;
 
@@ -1400,8 +1401,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXAssignment =null;
 
 		try {
-			// InternalWeightDefinition.g:579:52: (iv_ruleXAssignment= ruleXAssignment EOF )
-			// InternalWeightDefinition.g:580:2: iv_ruleXAssignment= ruleXAssignment EOF
+			// InternalWeightDefinition.g:583:52: (iv_ruleXAssignment= ruleXAssignment EOF )
+			// InternalWeightDefinition.g:584:2: iv_ruleXAssignment= ruleXAssignment EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXAssignmentRule()); }
 			pushFollow(FOLLOW_1);
@@ -1429,7 +1430,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXAssignment"
-	// InternalWeightDefinition.g:586:1: ruleXAssignment returns [EObject current=null] : ( ( () ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ( (lv_value_3_0= ruleXAssignment ) ) ) | (this_XOrExpression_4= ruleXOrExpression ( ( ( ( () ( ( ruleOpMultiAssign ) ) ) )=> ( () ( ( ruleOpMultiAssign ) ) ) ) ( (lv_rightOperand_7_0= ruleXAssignment ) ) )? ) ) ;
+	// InternalWeightDefinition.g:590:1: ruleXAssignment returns [EObject current=null] : ( ( () ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ( (lv_value_3_0= ruleXAssignment ) ) ) | (this_XOrExpression_4= ruleXOrExpression ( ( ( ( () ( ( ruleOpMultiAssign ) ) ) )=> ( () ( ( ruleOpMultiAssign ) ) ) ) ( (lv_rightOperand_7_0= ruleXAssignment ) ) )? ) ) ;
 	public final EObject ruleXAssignment() throws RecognitionException {
 		EObject current = null;
 
@@ -1442,20 +1443,20 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:592:2: ( ( ( () ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ( (lv_value_3_0= ruleXAssignment ) ) ) | (this_XOrExpression_4= ruleXOrExpression ( ( ( ( () ( ( ruleOpMultiAssign ) ) ) )=> ( () ( ( ruleOpMultiAssign ) ) ) ) ( (lv_rightOperand_7_0= ruleXAssignment ) ) )? ) ) )
-			// InternalWeightDefinition.g:593:2: ( ( () ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ( (lv_value_3_0= ruleXAssignment ) ) ) | (this_XOrExpression_4= ruleXOrExpression ( ( ( ( () ( ( ruleOpMultiAssign ) ) ) )=> ( () ( ( ruleOpMultiAssign ) ) ) ) ( (lv_rightOperand_7_0= ruleXAssignment ) ) )? ) )
+			// InternalWeightDefinition.g:596:2: ( ( ( () ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ( (lv_value_3_0= ruleXAssignment ) ) ) | (this_XOrExpression_4= ruleXOrExpression ( ( ( ( () ( ( ruleOpMultiAssign ) ) ) )=> ( () ( ( ruleOpMultiAssign ) ) ) ) ( (lv_rightOperand_7_0= ruleXAssignment ) ) )? ) ) )
+			// InternalWeightDefinition.g:597:2: ( ( () ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ( (lv_value_3_0= ruleXAssignment ) ) ) | (this_XOrExpression_4= ruleXOrExpression ( ( ( ( () ( ( ruleOpMultiAssign ) ) ) )=> ( () ( ( ruleOpMultiAssign ) ) ) ) ( (lv_rightOperand_7_0= ruleXAssignment ) ) )? ) )
 			{
-			// InternalWeightDefinition.g:593:2: ( ( () ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ( (lv_value_3_0= ruleXAssignment ) ) ) | (this_XOrExpression_4= ruleXOrExpression ( ( ( ( () ( ( ruleOpMultiAssign ) ) ) )=> ( () ( ( ruleOpMultiAssign ) ) ) ) ( (lv_rightOperand_7_0= ruleXAssignment ) ) )? ) )
-			int alt7=2;
+			// InternalWeightDefinition.g:597:2: ( ( () ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ( (lv_value_3_0= ruleXAssignment ) ) ) | (this_XOrExpression_4= ruleXOrExpression ( ( ( ( () ( ( ruleOpMultiAssign ) ) ) )=> ( () ( ( ruleOpMultiAssign ) ) ) ) ( (lv_rightOperand_7_0= ruleXAssignment ) ) )? ) )
+			int alt5=2;
 			switch ( input.LA(1) ) {
 			case RULE_ID:
 				{
-				int LA7_1 = input.LA(2);
-				if ( (LA7_1==44) ) {
-					alt7=1;
+				int LA5_1 = input.LA(2);
+				if ( (LA5_1==44) ) {
+					alt5=1;
 				}
-				else if ( (LA7_1==EOF||(LA7_1 >= RULE_DECIMAL && LA7_1 <= RULE_INT)||LA7_1==RULE_STRING||(LA7_1 >= 13 && LA7_1 <= 19)||(LA7_1 >= 21 && LA7_1 <= 43)||(LA7_1 >= 45 && LA7_1 <= 49)||(LA7_1 >= 51 && LA7_1 <= 65)||(LA7_1 >= 67 && LA7_1 <= 72)||(LA7_1 >= 74 && LA7_1 <= 85)||(LA7_1 >= 87 && LA7_1 <= 88)) ) {
-					alt7=2;
+				else if ( (LA5_1==EOF||(LA5_1 >= RULE_DECIMAL && LA5_1 <= RULE_INT)||LA5_1==RULE_STRING||(LA5_1 >= 13 && LA5_1 <= 19)||(LA5_1 >= 21 && LA5_1 <= 43)||(LA5_1 >= 45 && LA5_1 <= 49)||(LA5_1 >= 51 && LA5_1 <= 65)||(LA5_1 >= 67 && LA5_1 <= 72)||(LA5_1 >= 74 && LA5_1 <= 85)||(LA5_1 >= 87 && LA5_1 <= 88)) ) {
+					alt5=2;
 				}
 
 				else {
@@ -1464,7 +1465,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					try {
 						input.consume();
 						NoViableAltException nvae =
-							new NoViableAltException("", 7, 1, input);
+							new NoViableAltException("", 5, 1, input);
 						throw nvae;
 					} finally {
 						input.rewind(nvaeMark);
@@ -1475,12 +1476,12 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 				break;
 			case 61:
 				{
-				int LA7_2 = input.LA(2);
-				if ( (LA7_2==44) ) {
-					alt7=1;
+				int LA5_2 = input.LA(2);
+				if ( (LA5_2==44) ) {
+					alt5=1;
 				}
-				else if ( (LA7_2==EOF||(LA7_2 >= RULE_DECIMAL && LA7_2 <= RULE_INT)||LA7_2==RULE_STRING||(LA7_2 >= 13 && LA7_2 <= 19)||(LA7_2 >= 21 && LA7_2 <= 43)||(LA7_2 >= 45 && LA7_2 <= 49)||(LA7_2 >= 51 && LA7_2 <= 65)||(LA7_2 >= 67 && LA7_2 <= 72)||(LA7_2 >= 74 && LA7_2 <= 85)||(LA7_2 >= 87 && LA7_2 <= 88)) ) {
-					alt7=2;
+				else if ( (LA5_2==EOF||(LA5_2 >= RULE_DECIMAL && LA5_2 <= RULE_INT)||LA5_2==RULE_STRING||(LA5_2 >= 13 && LA5_2 <= 19)||(LA5_2 >= 21 && LA5_2 <= 43)||(LA5_2 >= 45 && LA5_2 <= 49)||(LA5_2 >= 51 && LA5_2 <= 65)||(LA5_2 >= 67 && LA5_2 <= 72)||(LA5_2 >= 74 && LA5_2 <= 85)||(LA5_2 >= 87 && LA5_2 <= 88)) ) {
+					alt5=2;
 				}
 
 				else {
@@ -1489,7 +1490,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					try {
 						input.consume();
 						NoViableAltException nvae =
-							new NoViableAltException("", 7, 2, input);
+							new NoViableAltException("", 5, 2, input);
 						throw nvae;
 					} finally {
 						input.rewind(nvaeMark);
@@ -1500,12 +1501,12 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 				break;
 			case 74:
 				{
-				int LA7_3 = input.LA(2);
-				if ( (LA7_3==44) ) {
-					alt7=1;
+				int LA5_3 = input.LA(2);
+				if ( (LA5_3==44) ) {
+					alt5=1;
 				}
-				else if ( (LA7_3==EOF||(LA7_3 >= RULE_DECIMAL && LA7_3 <= RULE_INT)||LA7_3==RULE_STRING||(LA7_3 >= 13 && LA7_3 <= 19)||(LA7_3 >= 21 && LA7_3 <= 43)||(LA7_3 >= 45 && LA7_3 <= 49)||(LA7_3 >= 51 && LA7_3 <= 65)||(LA7_3 >= 67 && LA7_3 <= 72)||(LA7_3 >= 74 && LA7_3 <= 85)||(LA7_3 >= 87 && LA7_3 <= 88)) ) {
-					alt7=2;
+				else if ( (LA5_3==EOF||(LA5_3 >= RULE_DECIMAL && LA5_3 <= RULE_INT)||LA5_3==RULE_STRING||(LA5_3 >= 13 && LA5_3 <= 19)||(LA5_3 >= 21 && LA5_3 <= 43)||(LA5_3 >= 45 && LA5_3 <= 49)||(LA5_3 >= 51 && LA5_3 <= 65)||(LA5_3 >= 67 && LA5_3 <= 72)||(LA5_3 >= 74 && LA5_3 <= 85)||(LA5_3 >= 87 && LA5_3 <= 88)) ) {
+					alt5=2;
 				}
 
 				else {
@@ -1514,7 +1515,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					try {
 						input.consume();
 						NoViableAltException nvae =
-							new NoViableAltException("", 7, 3, input);
+							new NoViableAltException("", 5, 3, input);
 						throw nvae;
 					} finally {
 						input.rewind(nvaeMark);
@@ -1525,12 +1526,12 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 				break;
 			case 68:
 				{
-				int LA7_4 = input.LA(2);
-				if ( (LA7_4==44) ) {
-					alt7=1;
+				int LA5_4 = input.LA(2);
+				if ( (LA5_4==44) ) {
+					alt5=1;
 				}
-				else if ( (LA7_4==EOF||(LA7_4 >= RULE_DECIMAL && LA7_4 <= RULE_INT)||LA7_4==RULE_STRING||(LA7_4 >= 13 && LA7_4 <= 19)||(LA7_4 >= 21 && LA7_4 <= 43)||(LA7_4 >= 45 && LA7_4 <= 49)||(LA7_4 >= 51 && LA7_4 <= 65)||(LA7_4 >= 67 && LA7_4 <= 72)||(LA7_4 >= 74 && LA7_4 <= 85)||(LA7_4 >= 87 && LA7_4 <= 88)) ) {
-					alt7=2;
+				else if ( (LA5_4==EOF||(LA5_4 >= RULE_DECIMAL && LA5_4 <= RULE_INT)||LA5_4==RULE_STRING||(LA5_4 >= 13 && LA5_4 <= 19)||(LA5_4 >= 21 && LA5_4 <= 43)||(LA5_4 >= 45 && LA5_4 <= 49)||(LA5_4 >= 51 && LA5_4 <= 65)||(LA5_4 >= 67 && LA5_4 <= 72)||(LA5_4 >= 74 && LA5_4 <= 85)||(LA5_4 >= 87 && LA5_4 <= 88)) ) {
+					alt5=2;
 				}
 
 				else {
@@ -1539,7 +1540,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					try {
 						input.consume();
 						NoViableAltException nvae =
-							new NoViableAltException("", 7, 4, input);
+							new NoViableAltException("", 5, 4, input);
 						throw nvae;
 					} finally {
 						input.rewind(nvaeMark);
@@ -1550,12 +1551,12 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 				break;
 			case 62:
 				{
-				int LA7_5 = input.LA(2);
-				if ( (LA7_5==44) ) {
-					alt7=1;
+				int LA5_5 = input.LA(2);
+				if ( (LA5_5==44) ) {
+					alt5=1;
 				}
-				else if ( (LA7_5==EOF||(LA7_5 >= RULE_DECIMAL && LA7_5 <= RULE_INT)||LA7_5==RULE_STRING||(LA7_5 >= 13 && LA7_5 <= 19)||(LA7_5 >= 21 && LA7_5 <= 43)||(LA7_5 >= 45 && LA7_5 <= 49)||(LA7_5 >= 51 && LA7_5 <= 65)||(LA7_5 >= 67 && LA7_5 <= 72)||(LA7_5 >= 74 && LA7_5 <= 85)||(LA7_5 >= 87 && LA7_5 <= 88)) ) {
-					alt7=2;
+				else if ( (LA5_5==EOF||(LA5_5 >= RULE_DECIMAL && LA5_5 <= RULE_INT)||LA5_5==RULE_STRING||(LA5_5 >= 13 && LA5_5 <= 19)||(LA5_5 >= 21 && LA5_5 <= 43)||(LA5_5 >= 45 && LA5_5 <= 49)||(LA5_5 >= 51 && LA5_5 <= 65)||(LA5_5 >= 67 && LA5_5 <= 72)||(LA5_5 >= 74 && LA5_5 <= 85)||(LA5_5 >= 87 && LA5_5 <= 88)) ) {
+					alt5=2;
 				}
 
 				else {
@@ -1564,7 +1565,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					try {
 						input.consume();
 						NoViableAltException nvae =
-							new NoViableAltException("", 7, 5, input);
+							new NoViableAltException("", 5, 5, input);
 						throw nvae;
 					} finally {
 						input.rewind(nvaeMark);
@@ -1601,24 +1602,24 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			case 84:
 			case 85:
 				{
-				alt7=2;
+				alt5=2;
 				}
 				break;
 			default:
 				if (state.backtracking>0) {state.failed=true; return current;}
 				NoViableAltException nvae =
-					new NoViableAltException("", 7, 0, input);
+					new NoViableAltException("", 5, 0, input);
 				throw nvae;
 			}
-			switch (alt7) {
+			switch (alt5) {
 				case 1 :
-					// InternalWeightDefinition.g:594:3: ( () ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ( (lv_value_3_0= ruleXAssignment ) ) )
+					// InternalWeightDefinition.g:598:3: ( () ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ( (lv_value_3_0= ruleXAssignment ) ) )
 					{
-					// InternalWeightDefinition.g:594:3: ( () ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ( (lv_value_3_0= ruleXAssignment ) ) )
-					// InternalWeightDefinition.g:595:4: () ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ( (lv_value_3_0= ruleXAssignment ) )
+					// InternalWeightDefinition.g:598:3: ( () ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ( (lv_value_3_0= ruleXAssignment ) ) )
+					// InternalWeightDefinition.g:599:4: () ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ( (lv_value_3_0= ruleXAssignment ) )
 					{
-					// InternalWeightDefinition.g:595:4: ()
-					// InternalWeightDefinition.g:596:5: 
+					// InternalWeightDefinition.g:599:4: ()
+					// InternalWeightDefinition.g:600:5: 
 					{
 					if ( state.backtracking==0 ) {
 										current = forceCreateModelElement(
@@ -1627,11 +1628,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 									}
 					}
 
-					// InternalWeightDefinition.g:602:4: ( ( ruleFeatureCallID ) )
-					// InternalWeightDefinition.g:603:5: ( ruleFeatureCallID )
+					// InternalWeightDefinition.g:606:4: ( ( ruleFeatureCallID ) )
+					// InternalWeightDefinition.g:607:5: ( ruleFeatureCallID )
 					{
-					// InternalWeightDefinition.g:603:5: ( ruleFeatureCallID )
-					// InternalWeightDefinition.g:604:6: ruleFeatureCallID
+					// InternalWeightDefinition.g:607:5: ( ruleFeatureCallID )
+					// InternalWeightDefinition.g:608:6: ruleFeatureCallID
 					{
 					if ( state.backtracking==0 ) {
 											if (current==null) {
@@ -1641,7 +1642,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					if ( state.backtracking==0 ) {
 											newCompositeNode(grammarAccess.getXAssignmentAccess().getFeatureJvmIdentifiableElementCrossReference_0_1_0());
 										}
-					pushFollow(FOLLOW_12);
+					pushFollow(FOLLOW_11);
 					ruleFeatureCallID();
 					state._fsp--;
 					if (state.failed) return current;
@@ -1655,18 +1656,18 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					if ( state.backtracking==0 ) {
 									newCompositeNode(grammarAccess.getXAssignmentAccess().getOpSingleAssignParserRuleCall_0_2());
 								}
-					pushFollow(FOLLOW_13);
+					pushFollow(FOLLOW_12);
 					ruleOpSingleAssign();
 					state._fsp--;
 					if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 									afterParserOrEnumRuleCall();
 								}
-					// InternalWeightDefinition.g:625:4: ( (lv_value_3_0= ruleXAssignment ) )
-					// InternalWeightDefinition.g:626:5: (lv_value_3_0= ruleXAssignment )
+					// InternalWeightDefinition.g:629:4: ( (lv_value_3_0= ruleXAssignment ) )
+					// InternalWeightDefinition.g:630:5: (lv_value_3_0= ruleXAssignment )
 					{
-					// InternalWeightDefinition.g:626:5: (lv_value_3_0= ruleXAssignment )
-					// InternalWeightDefinition.g:627:6: lv_value_3_0= ruleXAssignment
+					// InternalWeightDefinition.g:630:5: (lv_value_3_0= ruleXAssignment )
+					// InternalWeightDefinition.g:631:6: lv_value_3_0= ruleXAssignment
 					{
 					if ( state.backtracking==0 ) {
 											newCompositeNode(grammarAccess.getXAssignmentAccess().getValueXAssignmentParserRuleCall_0_3_0());
@@ -1695,15 +1696,15 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:646:3: (this_XOrExpression_4= ruleXOrExpression ( ( ( ( () ( ( ruleOpMultiAssign ) ) ) )=> ( () ( ( ruleOpMultiAssign ) ) ) ) ( (lv_rightOperand_7_0= ruleXAssignment ) ) )? )
+					// InternalWeightDefinition.g:650:3: (this_XOrExpression_4= ruleXOrExpression ( ( ( ( () ( ( ruleOpMultiAssign ) ) ) )=> ( () ( ( ruleOpMultiAssign ) ) ) ) ( (lv_rightOperand_7_0= ruleXAssignment ) ) )? )
 					{
-					// InternalWeightDefinition.g:646:3: (this_XOrExpression_4= ruleXOrExpression ( ( ( ( () ( ( ruleOpMultiAssign ) ) ) )=> ( () ( ( ruleOpMultiAssign ) ) ) ) ( (lv_rightOperand_7_0= ruleXAssignment ) ) )? )
-					// InternalWeightDefinition.g:647:4: this_XOrExpression_4= ruleXOrExpression ( ( ( ( () ( ( ruleOpMultiAssign ) ) ) )=> ( () ( ( ruleOpMultiAssign ) ) ) ) ( (lv_rightOperand_7_0= ruleXAssignment ) ) )?
+					// InternalWeightDefinition.g:650:3: (this_XOrExpression_4= ruleXOrExpression ( ( ( ( () ( ( ruleOpMultiAssign ) ) ) )=> ( () ( ( ruleOpMultiAssign ) ) ) ) ( (lv_rightOperand_7_0= ruleXAssignment ) ) )? )
+					// InternalWeightDefinition.g:651:4: this_XOrExpression_4= ruleXOrExpression ( ( ( ( () ( ( ruleOpMultiAssign ) ) ) )=> ( () ( ( ruleOpMultiAssign ) ) ) ) ( (lv_rightOperand_7_0= ruleXAssignment ) ) )?
 					{
 					if ( state.backtracking==0 ) {
 									newCompositeNode(grammarAccess.getXAssignmentAccess().getXOrExpressionParserRuleCall_1_0());
 								}
-					pushFollow(FOLLOW_14);
+					pushFollow(FOLLOW_13);
 					this_XOrExpression_4=ruleXOrExpression();
 					state._fsp--;
 					if (state.failed) return current;
@@ -1711,78 +1712,78 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 									current = this_XOrExpression_4;
 									afterParserOrEnumRuleCall();
 								}
-					// InternalWeightDefinition.g:655:4: ( ( ( ( () ( ( ruleOpMultiAssign ) ) ) )=> ( () ( ( ruleOpMultiAssign ) ) ) ) ( (lv_rightOperand_7_0= ruleXAssignment ) ) )?
-					int alt6=2;
+					// InternalWeightDefinition.g:659:4: ( ( ( ( () ( ( ruleOpMultiAssign ) ) ) )=> ( () ( ( ruleOpMultiAssign ) ) ) ) ( (lv_rightOperand_7_0= ruleXAssignment ) ) )?
+					int alt4=2;
 					switch ( input.LA(1) ) {
 						case 28:
 							{
-							int LA6_1 = input.LA(2);
+							int LA4_1 = input.LA(2);
 							if ( (synpred1_InternalWeightDefinition()) ) {
-								alt6=1;
+								alt4=1;
 							}
 							}
 							break;
 						case 32:
 							{
-							int LA6_2 = input.LA(2);
+							int LA4_2 = input.LA(2);
 							if ( (synpred1_InternalWeightDefinition()) ) {
-								alt6=1;
+								alt4=1;
 							}
 							}
 							break;
 						case 25:
 							{
-							int LA6_3 = input.LA(2);
+							int LA4_3 = input.LA(2);
 							if ( (synpred1_InternalWeightDefinition()) ) {
-								alt6=1;
+								alt4=1;
 							}
 							}
 							break;
 						case 38:
 							{
-							int LA6_4 = input.LA(2);
+							int LA4_4 = input.LA(2);
 							if ( (synpred1_InternalWeightDefinition()) ) {
-								alt6=1;
+								alt4=1;
 							}
 							}
 							break;
 						case 18:
 							{
-							int LA6_5 = input.LA(2);
+							int LA4_5 = input.LA(2);
 							if ( (synpred1_InternalWeightDefinition()) ) {
-								alt6=1;
+								alt4=1;
 							}
 							}
 							break;
 						case 42:
 							{
-							int LA6_6 = input.LA(2);
+							int LA4_6 = input.LA(2);
 							if ( (synpred1_InternalWeightDefinition()) ) {
-								alt6=1;
+								alt4=1;
 							}
 							}
 							break;
 						case 48:
 							{
-							int LA6_7 = input.LA(2);
+							int LA4_7 = input.LA(2);
 							if ( (synpred1_InternalWeightDefinition()) ) {
-								alt6=1;
+								alt4=1;
 							}
 							}
 							break;
 					}
-					switch (alt6) {
+					switch (alt4) {
 						case 1 :
-							// InternalWeightDefinition.g:656:5: ( ( ( () ( ( ruleOpMultiAssign ) ) ) )=> ( () ( ( ruleOpMultiAssign ) ) ) ) ( (lv_rightOperand_7_0= ruleXAssignment ) )
+							// InternalWeightDefinition.g:660:5: ( ( ( () ( ( ruleOpMultiAssign ) ) ) )=> ( () ( ( ruleOpMultiAssign ) ) ) ) ( (lv_rightOperand_7_0= ruleXAssignment ) )
 							{
-							// InternalWeightDefinition.g:656:5: ( ( ( () ( ( ruleOpMultiAssign ) ) ) )=> ( () ( ( ruleOpMultiAssign ) ) ) )
-							// InternalWeightDefinition.g:657:6: ( ( () ( ( ruleOpMultiAssign ) ) ) )=> ( () ( ( ruleOpMultiAssign ) ) )
+							// InternalWeightDefinition.g:660:5: ( ( ( () ( ( ruleOpMultiAssign ) ) ) )=> ( () ( ( ruleOpMultiAssign ) ) ) )
+							// InternalWeightDefinition.g:661:6: ( ( () ( ( ruleOpMultiAssign ) ) ) )=> ( () ( ( ruleOpMultiAssign ) ) )
 							{
-							// InternalWeightDefinition.g:667:6: ( () ( ( ruleOpMultiAssign ) ) )
-							// InternalWeightDefinition.g:668:7: () ( ( ruleOpMultiAssign ) )
+							// InternalWeightDefinition.g:671:6: ( () ( ( ruleOpMultiAssign ) ) )
+							// InternalWeightDefinition.g:672:7: () ( ( ruleOpMultiAssign ) )
 							{
-							// InternalWeightDefinition.g:668:7: ()
-							// InternalWeightDefinition.g:669:8: 
+							// InternalWeightDefinition.g:672:7: ()
+							// InternalWeightDefinition.g:673:8: 
 							{
 							if ( state.backtracking==0 ) {
 															current = forceCreateModelElementAndSet(
@@ -1791,11 +1792,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 														}
 							}
 
-							// InternalWeightDefinition.g:675:7: ( ( ruleOpMultiAssign ) )
-							// InternalWeightDefinition.g:676:8: ( ruleOpMultiAssign )
+							// InternalWeightDefinition.g:679:7: ( ( ruleOpMultiAssign ) )
+							// InternalWeightDefinition.g:680:8: ( ruleOpMultiAssign )
 							{
-							// InternalWeightDefinition.g:676:8: ( ruleOpMultiAssign )
-							// InternalWeightDefinition.g:677:9: ruleOpMultiAssign
+							// InternalWeightDefinition.g:680:8: ( ruleOpMultiAssign )
+							// InternalWeightDefinition.g:681:9: ruleOpMultiAssign
 							{
 							if ( state.backtracking==0 ) {
 																if (current==null) {
@@ -1805,7 +1806,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 							if ( state.backtracking==0 ) {
 																newCompositeNode(grammarAccess.getXAssignmentAccess().getFeatureJvmIdentifiableElementCrossReference_1_1_0_0_1_0());
 															}
-							pushFollow(FOLLOW_13);
+							pushFollow(FOLLOW_12);
 							ruleOpMultiAssign();
 							state._fsp--;
 							if (state.failed) return current;
@@ -1820,11 +1821,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 							}
 
-							// InternalWeightDefinition.g:693:5: ( (lv_rightOperand_7_0= ruleXAssignment ) )
-							// InternalWeightDefinition.g:694:6: (lv_rightOperand_7_0= ruleXAssignment )
+							// InternalWeightDefinition.g:697:5: ( (lv_rightOperand_7_0= ruleXAssignment ) )
+							// InternalWeightDefinition.g:698:6: (lv_rightOperand_7_0= ruleXAssignment )
 							{
-							// InternalWeightDefinition.g:694:6: (lv_rightOperand_7_0= ruleXAssignment )
-							// InternalWeightDefinition.g:695:7: lv_rightOperand_7_0= ruleXAssignment
+							// InternalWeightDefinition.g:698:6: (lv_rightOperand_7_0= ruleXAssignment )
+							// InternalWeightDefinition.g:699:7: lv_rightOperand_7_0= ruleXAssignment
 							{
 							if ( state.backtracking==0 ) {
 														newCompositeNode(grammarAccess.getXAssignmentAccess().getRightOperandXAssignmentParserRuleCall_1_1_1_0());
@@ -1882,7 +1883,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleOpSingleAssign"
-	// InternalWeightDefinition.g:718:1: entryRuleOpSingleAssign returns [String current=null] :iv_ruleOpSingleAssign= ruleOpSingleAssign EOF ;
+	// InternalWeightDefinition.g:722:1: entryRuleOpSingleAssign returns [String current=null] :iv_ruleOpSingleAssign= ruleOpSingleAssign EOF ;
 	public final String entryRuleOpSingleAssign() throws RecognitionException {
 		String current = null;
 
@@ -1890,8 +1891,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		AntlrDatatypeRuleToken iv_ruleOpSingleAssign =null;
 
 		try {
-			// InternalWeightDefinition.g:718:54: (iv_ruleOpSingleAssign= ruleOpSingleAssign EOF )
-			// InternalWeightDefinition.g:719:2: iv_ruleOpSingleAssign= ruleOpSingleAssign EOF
+			// InternalWeightDefinition.g:722:54: (iv_ruleOpSingleAssign= ruleOpSingleAssign EOF )
+			// InternalWeightDefinition.g:723:2: iv_ruleOpSingleAssign= ruleOpSingleAssign EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getOpSingleAssignRule()); }
 			pushFollow(FOLLOW_1);
@@ -1919,7 +1920,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleOpSingleAssign"
-	// InternalWeightDefinition.g:725:1: ruleOpSingleAssign returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : kw= '=' ;
+	// InternalWeightDefinition.g:729:1: ruleOpSingleAssign returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : kw= '=' ;
 	public final AntlrDatatypeRuleToken ruleOpSingleAssign() throws RecognitionException {
 		AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -1930,8 +1931,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:731:2: (kw= '=' )
-			// InternalWeightDefinition.g:732:2: kw= '='
+			// InternalWeightDefinition.g:735:2: (kw= '=' )
+			// InternalWeightDefinition.g:736:2: kw= '='
 			{
 			kw=(Token)match(input,44,FOLLOW_2); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
@@ -1960,7 +1961,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleOpMultiAssign"
-	// InternalWeightDefinition.g:740:1: entryRuleOpMultiAssign returns [String current=null] :iv_ruleOpMultiAssign= ruleOpMultiAssign EOF ;
+	// InternalWeightDefinition.g:744:1: entryRuleOpMultiAssign returns [String current=null] :iv_ruleOpMultiAssign= ruleOpMultiAssign EOF ;
 	public final String entryRuleOpMultiAssign() throws RecognitionException {
 		String current = null;
 
@@ -1968,8 +1969,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		AntlrDatatypeRuleToken iv_ruleOpMultiAssign =null;
 
 		try {
-			// InternalWeightDefinition.g:740:53: (iv_ruleOpMultiAssign= ruleOpMultiAssign EOF )
-			// InternalWeightDefinition.g:741:2: iv_ruleOpMultiAssign= ruleOpMultiAssign EOF
+			// InternalWeightDefinition.g:744:53: (iv_ruleOpMultiAssign= ruleOpMultiAssign EOF )
+			// InternalWeightDefinition.g:745:2: iv_ruleOpMultiAssign= ruleOpMultiAssign EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getOpMultiAssignRule()); }
 			pushFollow(FOLLOW_1);
@@ -1997,7 +1998,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleOpMultiAssign"
-	// InternalWeightDefinition.g:747:1: ruleOpMultiAssign returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (kw= '+=' |kw= '-=' |kw= '*=' |kw= '/=' |kw= '%=' | (kw= '<' kw= '<' kw= '=' ) | (kw= '>' (kw= '>' )? kw= '>=' ) ) ;
+	// InternalWeightDefinition.g:751:1: ruleOpMultiAssign returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (kw= '+=' |kw= '-=' |kw= '*=' |kw= '/=' |kw= '%=' | (kw= '<' kw= '<' kw= '=' ) | (kw= '>' (kw= '>' )? kw= '>=' ) ) ;
 	public final AntlrDatatypeRuleToken ruleOpMultiAssign() throws RecognitionException {
 		AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -2008,56 +2009,56 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:753:2: ( (kw= '+=' |kw= '-=' |kw= '*=' |kw= '/=' |kw= '%=' | (kw= '<' kw= '<' kw= '=' ) | (kw= '>' (kw= '>' )? kw= '>=' ) ) )
-			// InternalWeightDefinition.g:754:2: (kw= '+=' |kw= '-=' |kw= '*=' |kw= '/=' |kw= '%=' | (kw= '<' kw= '<' kw= '=' ) | (kw= '>' (kw= '>' )? kw= '>=' ) )
+			// InternalWeightDefinition.g:757:2: ( (kw= '+=' |kw= '-=' |kw= '*=' |kw= '/=' |kw= '%=' | (kw= '<' kw= '<' kw= '=' ) | (kw= '>' (kw= '>' )? kw= '>=' ) ) )
+			// InternalWeightDefinition.g:758:2: (kw= '+=' |kw= '-=' |kw= '*=' |kw= '/=' |kw= '%=' | (kw= '<' kw= '<' kw= '=' ) | (kw= '>' (kw= '>' )? kw= '>=' ) )
 			{
-			// InternalWeightDefinition.g:754:2: (kw= '+=' |kw= '-=' |kw= '*=' |kw= '/=' |kw= '%=' | (kw= '<' kw= '<' kw= '=' ) | (kw= '>' (kw= '>' )? kw= '>=' ) )
-			int alt9=7;
+			// InternalWeightDefinition.g:758:2: (kw= '+=' |kw= '-=' |kw= '*=' |kw= '/=' |kw= '%=' | (kw= '<' kw= '<' kw= '=' ) | (kw= '>' (kw= '>' )? kw= '>=' ) )
+			int alt7=7;
 			switch ( input.LA(1) ) {
 			case 28:
 				{
-				alt9=1;
+				alt7=1;
 				}
 				break;
 			case 32:
 				{
-				alt9=2;
+				alt7=2;
 				}
 				break;
 			case 25:
 				{
-				alt9=3;
+				alt7=3;
 				}
 				break;
 			case 38:
 				{
-				alt9=4;
+				alt7=4;
 				}
 				break;
 			case 18:
 				{
-				alt9=5;
+				alt7=5;
 				}
 				break;
 			case 42:
 				{
-				alt9=6;
+				alt7=6;
 				}
 				break;
 			case 48:
 				{
-				alt9=7;
+				alt7=7;
 				}
 				break;
 			default:
 				if (state.backtracking>0) {state.failed=true; return current;}
 				NoViableAltException nvae =
-					new NoViableAltException("", 9, 0, input);
+					new NoViableAltException("", 7, 0, input);
 				throw nvae;
 			}
-			switch (alt9) {
+			switch (alt7) {
 				case 1 :
-					// InternalWeightDefinition.g:755:3: kw= '+='
+					// InternalWeightDefinition.g:759:3: kw= '+='
 					{
 					kw=(Token)match(input,28,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -2067,7 +2068,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:761:3: kw= '-='
+					// InternalWeightDefinition.g:765:3: kw= '-='
 					{
 					kw=(Token)match(input,32,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -2077,7 +2078,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 3 :
-					// InternalWeightDefinition.g:767:3: kw= '*='
+					// InternalWeightDefinition.g:771:3: kw= '*='
 					{
 					kw=(Token)match(input,25,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -2087,7 +2088,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 4 :
-					// InternalWeightDefinition.g:773:3: kw= '/='
+					// InternalWeightDefinition.g:777:3: kw= '/='
 					{
 					kw=(Token)match(input,38,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -2097,7 +2098,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 5 :
-					// InternalWeightDefinition.g:779:3: kw= '%='
+					// InternalWeightDefinition.g:783:3: kw= '%='
 					{
 					kw=(Token)match(input,18,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -2107,17 +2108,17 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 6 :
-					// InternalWeightDefinition.g:785:3: (kw= '<' kw= '<' kw= '=' )
+					// InternalWeightDefinition.g:789:3: (kw= '<' kw= '<' kw= '=' )
 					{
-					// InternalWeightDefinition.g:785:3: (kw= '<' kw= '<' kw= '=' )
-					// InternalWeightDefinition.g:786:4: kw= '<' kw= '<' kw= '='
+					// InternalWeightDefinition.g:789:3: (kw= '<' kw= '<' kw= '=' )
+					// InternalWeightDefinition.g:790:4: kw= '<' kw= '<' kw= '='
 					{
-					kw=(Token)match(input,42,FOLLOW_15); if (state.failed) return current;
+					kw=(Token)match(input,42,FOLLOW_14); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 									current.merge(kw);
 									newLeafNode(kw, grammarAccess.getOpMultiAssignAccess().getLessThanSignKeyword_5_0());
 								}
-					kw=(Token)match(input,42,FOLLOW_12); if (state.failed) return current;
+					kw=(Token)match(input,42,FOLLOW_11); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 									current.merge(kw);
 									newLeafNode(kw, grammarAccess.getOpMultiAssignAccess().getLessThanSignKeyword_5_1());
@@ -2132,27 +2133,27 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 7 :
-					// InternalWeightDefinition.g:803:3: (kw= '>' (kw= '>' )? kw= '>=' )
+					// InternalWeightDefinition.g:807:3: (kw= '>' (kw= '>' )? kw= '>=' )
 					{
-					// InternalWeightDefinition.g:803:3: (kw= '>' (kw= '>' )? kw= '>=' )
-					// InternalWeightDefinition.g:804:4: kw= '>' (kw= '>' )? kw= '>='
+					// InternalWeightDefinition.g:807:3: (kw= '>' (kw= '>' )? kw= '>=' )
+					// InternalWeightDefinition.g:808:4: kw= '>' (kw= '>' )? kw= '>='
 					{
-					kw=(Token)match(input,48,FOLLOW_16); if (state.failed) return current;
+					kw=(Token)match(input,48,FOLLOW_15); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 									current.merge(kw);
 									newLeafNode(kw, grammarAccess.getOpMultiAssignAccess().getGreaterThanSignKeyword_6_0());
 								}
-					// InternalWeightDefinition.g:809:4: (kw= '>' )?
-					int alt8=2;
-					int LA8_0 = input.LA(1);
-					if ( (LA8_0==48) ) {
-						alt8=1;
+					// InternalWeightDefinition.g:813:4: (kw= '>' )?
+					int alt6=2;
+					int LA6_0 = input.LA(1);
+					if ( (LA6_0==48) ) {
+						alt6=1;
 					}
-					switch (alt8) {
+					switch (alt6) {
 						case 1 :
-							// InternalWeightDefinition.g:810:5: kw= '>'
+							// InternalWeightDefinition.g:814:5: kw= '>'
 							{
-							kw=(Token)match(input,48,FOLLOW_17); if (state.failed) return current;
+							kw=(Token)match(input,48,FOLLOW_16); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
 												current.merge(kw);
 												newLeafNode(kw, grammarAccess.getOpMultiAssignAccess().getGreaterThanSignKeyword_6_1());
@@ -2196,7 +2197,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXOrExpression"
-	// InternalWeightDefinition.g:826:1: entryRuleXOrExpression returns [EObject current=null] :iv_ruleXOrExpression= ruleXOrExpression EOF ;
+	// InternalWeightDefinition.g:830:1: entryRuleXOrExpression returns [EObject current=null] :iv_ruleXOrExpression= ruleXOrExpression EOF ;
 	public final EObject entryRuleXOrExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -2204,8 +2205,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXOrExpression =null;
 
 		try {
-			// InternalWeightDefinition.g:826:54: (iv_ruleXOrExpression= ruleXOrExpression EOF )
-			// InternalWeightDefinition.g:827:2: iv_ruleXOrExpression= ruleXOrExpression EOF
+			// InternalWeightDefinition.g:830:54: (iv_ruleXOrExpression= ruleXOrExpression EOF )
+			// InternalWeightDefinition.g:831:2: iv_ruleXOrExpression= ruleXOrExpression EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXOrExpressionRule()); }
 			pushFollow(FOLLOW_1);
@@ -2233,7 +2234,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXOrExpression"
-	// InternalWeightDefinition.g:833:1: ruleXOrExpression returns [EObject current=null] : (this_XAndExpression_0= ruleXAndExpression ( ( ( ( () ( ( ruleOpOr ) ) ) )=> ( () ( ( ruleOpOr ) ) ) ) ( (lv_rightOperand_3_0= ruleXAndExpression ) ) )* ) ;
+	// InternalWeightDefinition.g:837:1: ruleXOrExpression returns [EObject current=null] : (this_XAndExpression_0= ruleXAndExpression ( ( ( ( () ( ( ruleOpOr ) ) ) )=> ( () ( ( ruleOpOr ) ) ) ) ( (lv_rightOperand_3_0= ruleXAndExpression ) ) )* ) ;
 	public final EObject ruleXOrExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -2245,16 +2246,16 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:839:2: ( (this_XAndExpression_0= ruleXAndExpression ( ( ( ( () ( ( ruleOpOr ) ) ) )=> ( () ( ( ruleOpOr ) ) ) ) ( (lv_rightOperand_3_0= ruleXAndExpression ) ) )* ) )
-			// InternalWeightDefinition.g:840:2: (this_XAndExpression_0= ruleXAndExpression ( ( ( ( () ( ( ruleOpOr ) ) ) )=> ( () ( ( ruleOpOr ) ) ) ) ( (lv_rightOperand_3_0= ruleXAndExpression ) ) )* )
+			// InternalWeightDefinition.g:843:2: ( (this_XAndExpression_0= ruleXAndExpression ( ( ( ( () ( ( ruleOpOr ) ) ) )=> ( () ( ( ruleOpOr ) ) ) ) ( (lv_rightOperand_3_0= ruleXAndExpression ) ) )* ) )
+			// InternalWeightDefinition.g:844:2: (this_XAndExpression_0= ruleXAndExpression ( ( ( ( () ( ( ruleOpOr ) ) ) )=> ( () ( ( ruleOpOr ) ) ) ) ( (lv_rightOperand_3_0= ruleXAndExpression ) ) )* )
 			{
-			// InternalWeightDefinition.g:840:2: (this_XAndExpression_0= ruleXAndExpression ( ( ( ( () ( ( ruleOpOr ) ) ) )=> ( () ( ( ruleOpOr ) ) ) ) ( (lv_rightOperand_3_0= ruleXAndExpression ) ) )* )
-			// InternalWeightDefinition.g:841:3: this_XAndExpression_0= ruleXAndExpression ( ( ( ( () ( ( ruleOpOr ) ) ) )=> ( () ( ( ruleOpOr ) ) ) ) ( (lv_rightOperand_3_0= ruleXAndExpression ) ) )*
+			// InternalWeightDefinition.g:844:2: (this_XAndExpression_0= ruleXAndExpression ( ( ( ( () ( ( ruleOpOr ) ) ) )=> ( () ( ( ruleOpOr ) ) ) ) ( (lv_rightOperand_3_0= ruleXAndExpression ) ) )* )
+			// InternalWeightDefinition.g:845:3: this_XAndExpression_0= ruleXAndExpression ( ( ( ( () ( ( ruleOpOr ) ) ) )=> ( () ( ( ruleOpOr ) ) ) ) ( (lv_rightOperand_3_0= ruleXAndExpression ) ) )*
 			{
 			if ( state.backtracking==0 ) {
 						newCompositeNode(grammarAccess.getXOrExpressionAccess().getXAndExpressionParserRuleCall_0());
 					}
-			pushFollow(FOLLOW_18);
+			pushFollow(FOLLOW_17);
 			this_XAndExpression_0=ruleXAndExpression();
 			state._fsp--;
 			if (state.failed) return current;
@@ -2262,31 +2263,31 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						current = this_XAndExpression_0;
 						afterParserOrEnumRuleCall();
 					}
-			// InternalWeightDefinition.g:849:3: ( ( ( ( () ( ( ruleOpOr ) ) ) )=> ( () ( ( ruleOpOr ) ) ) ) ( (lv_rightOperand_3_0= ruleXAndExpression ) ) )*
-			loop10:
+			// InternalWeightDefinition.g:853:3: ( ( ( ( () ( ( ruleOpOr ) ) ) )=> ( () ( ( ruleOpOr ) ) ) ) ( (lv_rightOperand_3_0= ruleXAndExpression ) ) )*
+			loop8:
 			while (true) {
-				int alt10=2;
-				int LA10_0 = input.LA(1);
-				if ( (LA10_0==87) ) {
-					int LA10_2 = input.LA(2);
+				int alt8=2;
+				int LA8_0 = input.LA(1);
+				if ( (LA8_0==87) ) {
+					int LA8_2 = input.LA(2);
 					if ( (synpred2_InternalWeightDefinition()) ) {
-						alt10=1;
+						alt8=1;
 					}
 
 				}
 
-				switch (alt10) {
+				switch (alt8) {
 				case 1 :
-					// InternalWeightDefinition.g:850:4: ( ( ( () ( ( ruleOpOr ) ) ) )=> ( () ( ( ruleOpOr ) ) ) ) ( (lv_rightOperand_3_0= ruleXAndExpression ) )
+					// InternalWeightDefinition.g:854:4: ( ( ( () ( ( ruleOpOr ) ) ) )=> ( () ( ( ruleOpOr ) ) ) ) ( (lv_rightOperand_3_0= ruleXAndExpression ) )
 					{
-					// InternalWeightDefinition.g:850:4: ( ( ( () ( ( ruleOpOr ) ) ) )=> ( () ( ( ruleOpOr ) ) ) )
-					// InternalWeightDefinition.g:851:5: ( ( () ( ( ruleOpOr ) ) ) )=> ( () ( ( ruleOpOr ) ) )
+					// InternalWeightDefinition.g:854:4: ( ( ( () ( ( ruleOpOr ) ) ) )=> ( () ( ( ruleOpOr ) ) ) )
+					// InternalWeightDefinition.g:855:5: ( ( () ( ( ruleOpOr ) ) ) )=> ( () ( ( ruleOpOr ) ) )
 					{
-					// InternalWeightDefinition.g:861:5: ( () ( ( ruleOpOr ) ) )
-					// InternalWeightDefinition.g:862:6: () ( ( ruleOpOr ) )
+					// InternalWeightDefinition.g:865:5: ( () ( ( ruleOpOr ) ) )
+					// InternalWeightDefinition.g:866:6: () ( ( ruleOpOr ) )
 					{
-					// InternalWeightDefinition.g:862:6: ()
-					// InternalWeightDefinition.g:863:7: 
+					// InternalWeightDefinition.g:866:6: ()
+					// InternalWeightDefinition.g:867:7: 
 					{
 					if ( state.backtracking==0 ) {
 												current = forceCreateModelElementAndSet(
@@ -2295,11 +2296,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 											}
 					}
 
-					// InternalWeightDefinition.g:869:6: ( ( ruleOpOr ) )
-					// InternalWeightDefinition.g:870:7: ( ruleOpOr )
+					// InternalWeightDefinition.g:873:6: ( ( ruleOpOr ) )
+					// InternalWeightDefinition.g:874:7: ( ruleOpOr )
 					{
-					// InternalWeightDefinition.g:870:7: ( ruleOpOr )
-					// InternalWeightDefinition.g:871:8: ruleOpOr
+					// InternalWeightDefinition.g:874:7: ( ruleOpOr )
+					// InternalWeightDefinition.g:875:8: ruleOpOr
 					{
 					if ( state.backtracking==0 ) {
 													if (current==null) {
@@ -2309,7 +2310,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					if ( state.backtracking==0 ) {
 													newCompositeNode(grammarAccess.getXOrExpressionAccess().getFeatureJvmIdentifiableElementCrossReference_1_0_0_1_0());
 												}
-					pushFollow(FOLLOW_13);
+					pushFollow(FOLLOW_12);
 					ruleOpOr();
 					state._fsp--;
 					if (state.failed) return current;
@@ -2324,16 +2325,16 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:887:4: ( (lv_rightOperand_3_0= ruleXAndExpression ) )
-					// InternalWeightDefinition.g:888:5: (lv_rightOperand_3_0= ruleXAndExpression )
+					// InternalWeightDefinition.g:891:4: ( (lv_rightOperand_3_0= ruleXAndExpression ) )
+					// InternalWeightDefinition.g:892:5: (lv_rightOperand_3_0= ruleXAndExpression )
 					{
-					// InternalWeightDefinition.g:888:5: (lv_rightOperand_3_0= ruleXAndExpression )
-					// InternalWeightDefinition.g:889:6: lv_rightOperand_3_0= ruleXAndExpression
+					// InternalWeightDefinition.g:892:5: (lv_rightOperand_3_0= ruleXAndExpression )
+					// InternalWeightDefinition.g:893:6: lv_rightOperand_3_0= ruleXAndExpression
 					{
 					if ( state.backtracking==0 ) {
 											newCompositeNode(grammarAccess.getXOrExpressionAccess().getRightOperandXAndExpressionParserRuleCall_1_1_0());
 										}
-					pushFollow(FOLLOW_18);
+					pushFollow(FOLLOW_17);
 					lv_rightOperand_3_0=ruleXAndExpression();
 					state._fsp--;
 					if (state.failed) return current;
@@ -2346,6 +2347,567 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 												"rightOperand",
 												lv_rightOperand_3_0,
 												"org.eclipse.xtext.xbase.Xbase.XAndExpression");
+											afterParserOrEnumRuleCall();
+										}
+					}
+
+					}
+
+					}
+					break;
+
+				default :
+					break loop8;
+				}
+			}
+
+			}
+
+			}
+
+			if ( state.backtracking==0 ) {
+				leaveRule();
+			}
+		}
+
+		    catch (RecognitionException re) {
+		        recover(input,re);
+		        appendSkippedTokens();
+		    }
+
+		finally {
+			// do for sure before leaving
+		}
+		return current;
+	}
+	// $ANTLR end "ruleXOrExpression"
+
+
+
+	// $ANTLR start "entryRuleOpOr"
+	// InternalWeightDefinition.g:915:1: entryRuleOpOr returns [String current=null] :iv_ruleOpOr= ruleOpOr EOF ;
+	public final String entryRuleOpOr() throws RecognitionException {
+		String current = null;
+
+
+		AntlrDatatypeRuleToken iv_ruleOpOr =null;
+
+		try {
+			// InternalWeightDefinition.g:915:44: (iv_ruleOpOr= ruleOpOr EOF )
+			// InternalWeightDefinition.g:916:2: iv_ruleOpOr= ruleOpOr EOF
+			{
+			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getOpOrRule()); }
+			pushFollow(FOLLOW_1);
+			iv_ruleOpOr=ruleOpOr();
+			state._fsp--;
+			if (state.failed) return current;
+			if ( state.backtracking==0 ) { current =iv_ruleOpOr.getText(); }
+			match(input,EOF,FOLLOW_2); if (state.failed) return current;
+			}
+
+		}
+
+		    catch (RecognitionException re) {
+		        recover(input,re);
+		        appendSkippedTokens();
+		    }
+
+		finally {
+			// do for sure before leaving
+		}
+		return current;
+	}
+	// $ANTLR end "entryRuleOpOr"
+
+
+
+	// $ANTLR start "ruleOpOr"
+	// InternalWeightDefinition.g:922:1: ruleOpOr returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : kw= '||' ;
+	public final AntlrDatatypeRuleToken ruleOpOr() throws RecognitionException {
+		AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
+
+
+		Token kw=null;
+
+
+			enterRule();
+
+		try {
+			// InternalWeightDefinition.g:928:2: (kw= '||' )
+			// InternalWeightDefinition.g:929:2: kw= '||'
+			{
+			kw=(Token)match(input,87,FOLLOW_2); if (state.failed) return current;
+			if ( state.backtracking==0 ) {
+					current.merge(kw);
+					newLeafNode(kw, grammarAccess.getOpOrAccess().getVerticalLineVerticalLineKeyword());
+				}
+			}
+
+			if ( state.backtracking==0 ) {
+				leaveRule();
+			}
+		}
+
+		    catch (RecognitionException re) {
+		        recover(input,re);
+		        appendSkippedTokens();
+		    }
+
+		finally {
+			// do for sure before leaving
+		}
+		return current;
+	}
+	// $ANTLR end "ruleOpOr"
+
+
+
+	// $ANTLR start "entryRuleXAndExpression"
+	// InternalWeightDefinition.g:937:1: entryRuleXAndExpression returns [EObject current=null] :iv_ruleXAndExpression= ruleXAndExpression EOF ;
+	public final EObject entryRuleXAndExpression() throws RecognitionException {
+		EObject current = null;
+
+
+		EObject iv_ruleXAndExpression =null;
+
+		try {
+			// InternalWeightDefinition.g:937:55: (iv_ruleXAndExpression= ruleXAndExpression EOF )
+			// InternalWeightDefinition.g:938:2: iv_ruleXAndExpression= ruleXAndExpression EOF
+			{
+			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXAndExpressionRule()); }
+			pushFollow(FOLLOW_1);
+			iv_ruleXAndExpression=ruleXAndExpression();
+			state._fsp--;
+			if (state.failed) return current;
+			if ( state.backtracking==0 ) { current =iv_ruleXAndExpression; }
+			match(input,EOF,FOLLOW_2); if (state.failed) return current;
+			}
+
+		}
+
+		    catch (RecognitionException re) {
+		        recover(input,re);
+		        appendSkippedTokens();
+		    }
+
+		finally {
+			// do for sure before leaving
+		}
+		return current;
+	}
+	// $ANTLR end "entryRuleXAndExpression"
+
+
+
+	// $ANTLR start "ruleXAndExpression"
+	// InternalWeightDefinition.g:944:1: ruleXAndExpression returns [EObject current=null] : (this_XEqualityExpression_0= ruleXEqualityExpression ( ( ( ( () ( ( ruleOpAnd ) ) ) )=> ( () ( ( ruleOpAnd ) ) ) ) ( (lv_rightOperand_3_0= ruleXEqualityExpression ) ) )* ) ;
+	public final EObject ruleXAndExpression() throws RecognitionException {
+		EObject current = null;
+
+
+		EObject this_XEqualityExpression_0 =null;
+		EObject lv_rightOperand_3_0 =null;
+
+
+			enterRule();
+
+		try {
+			// InternalWeightDefinition.g:950:2: ( (this_XEqualityExpression_0= ruleXEqualityExpression ( ( ( ( () ( ( ruleOpAnd ) ) ) )=> ( () ( ( ruleOpAnd ) ) ) ) ( (lv_rightOperand_3_0= ruleXEqualityExpression ) ) )* ) )
+			// InternalWeightDefinition.g:951:2: (this_XEqualityExpression_0= ruleXEqualityExpression ( ( ( ( () ( ( ruleOpAnd ) ) ) )=> ( () ( ( ruleOpAnd ) ) ) ) ( (lv_rightOperand_3_0= ruleXEqualityExpression ) ) )* )
+			{
+			// InternalWeightDefinition.g:951:2: (this_XEqualityExpression_0= ruleXEqualityExpression ( ( ( ( () ( ( ruleOpAnd ) ) ) )=> ( () ( ( ruleOpAnd ) ) ) ) ( (lv_rightOperand_3_0= ruleXEqualityExpression ) ) )* )
+			// InternalWeightDefinition.g:952:3: this_XEqualityExpression_0= ruleXEqualityExpression ( ( ( ( () ( ( ruleOpAnd ) ) ) )=> ( () ( ( ruleOpAnd ) ) ) ) ( (lv_rightOperand_3_0= ruleXEqualityExpression ) ) )*
+			{
+			if ( state.backtracking==0 ) {
+						newCompositeNode(grammarAccess.getXAndExpressionAccess().getXEqualityExpressionParserRuleCall_0());
+					}
+			pushFollow(FOLLOW_18);
+			this_XEqualityExpression_0=ruleXEqualityExpression();
+			state._fsp--;
+			if (state.failed) return current;
+			if ( state.backtracking==0 ) {
+						current = this_XEqualityExpression_0;
+						afterParserOrEnumRuleCall();
+					}
+			// InternalWeightDefinition.g:960:3: ( ( ( ( () ( ( ruleOpAnd ) ) ) )=> ( () ( ( ruleOpAnd ) ) ) ) ( (lv_rightOperand_3_0= ruleXEqualityExpression ) ) )*
+			loop9:
+			while (true) {
+				int alt9=2;
+				int LA9_0 = input.LA(1);
+				if ( (LA9_0==19) ) {
+					int LA9_2 = input.LA(2);
+					if ( (synpred3_InternalWeightDefinition()) ) {
+						alt9=1;
+					}
+
+				}
+
+				switch (alt9) {
+				case 1 :
+					// InternalWeightDefinition.g:961:4: ( ( ( () ( ( ruleOpAnd ) ) ) )=> ( () ( ( ruleOpAnd ) ) ) ) ( (lv_rightOperand_3_0= ruleXEqualityExpression ) )
+					{
+					// InternalWeightDefinition.g:961:4: ( ( ( () ( ( ruleOpAnd ) ) ) )=> ( () ( ( ruleOpAnd ) ) ) )
+					// InternalWeightDefinition.g:962:5: ( ( () ( ( ruleOpAnd ) ) ) )=> ( () ( ( ruleOpAnd ) ) )
+					{
+					// InternalWeightDefinition.g:972:5: ( () ( ( ruleOpAnd ) ) )
+					// InternalWeightDefinition.g:973:6: () ( ( ruleOpAnd ) )
+					{
+					// InternalWeightDefinition.g:973:6: ()
+					// InternalWeightDefinition.g:974:7: 
+					{
+					if ( state.backtracking==0 ) {
+												current = forceCreateModelElementAndSet(
+													grammarAccess.getXAndExpressionAccess().getXBinaryOperationLeftOperandAction_1_0_0_0(),
+													current);
+											}
+					}
+
+					// InternalWeightDefinition.g:980:6: ( ( ruleOpAnd ) )
+					// InternalWeightDefinition.g:981:7: ( ruleOpAnd )
+					{
+					// InternalWeightDefinition.g:981:7: ( ruleOpAnd )
+					// InternalWeightDefinition.g:982:8: ruleOpAnd
+					{
+					if ( state.backtracking==0 ) {
+													if (current==null) {
+														current = createModelElement(grammarAccess.getXAndExpressionRule());
+													}
+												}
+					if ( state.backtracking==0 ) {
+													newCompositeNode(grammarAccess.getXAndExpressionAccess().getFeatureJvmIdentifiableElementCrossReference_1_0_0_1_0());
+												}
+					pushFollow(FOLLOW_12);
+					ruleOpAnd();
+					state._fsp--;
+					if (state.failed) return current;
+					if ( state.backtracking==0 ) {
+													afterParserOrEnumRuleCall();
+												}
+					}
+
+					}
+
+					}
+
+					}
+
+					// InternalWeightDefinition.g:998:4: ( (lv_rightOperand_3_0= ruleXEqualityExpression ) )
+					// InternalWeightDefinition.g:999:5: (lv_rightOperand_3_0= ruleXEqualityExpression )
+					{
+					// InternalWeightDefinition.g:999:5: (lv_rightOperand_3_0= ruleXEqualityExpression )
+					// InternalWeightDefinition.g:1000:6: lv_rightOperand_3_0= ruleXEqualityExpression
+					{
+					if ( state.backtracking==0 ) {
+											newCompositeNode(grammarAccess.getXAndExpressionAccess().getRightOperandXEqualityExpressionParserRuleCall_1_1_0());
+										}
+					pushFollow(FOLLOW_18);
+					lv_rightOperand_3_0=ruleXEqualityExpression();
+					state._fsp--;
+					if (state.failed) return current;
+					if ( state.backtracking==0 ) {
+											if (current==null) {
+												current = createModelElementForParent(grammarAccess.getXAndExpressionRule());
+											}
+											set(
+												current,
+												"rightOperand",
+												lv_rightOperand_3_0,
+												"org.eclipse.xtext.xbase.Xbase.XEqualityExpression");
+											afterParserOrEnumRuleCall();
+										}
+					}
+
+					}
+
+					}
+					break;
+
+				default :
+					break loop9;
+				}
+			}
+
+			}
+
+			}
+
+			if ( state.backtracking==0 ) {
+				leaveRule();
+			}
+		}
+
+		    catch (RecognitionException re) {
+		        recover(input,re);
+		        appendSkippedTokens();
+		    }
+
+		finally {
+			// do for sure before leaving
+		}
+		return current;
+	}
+	// $ANTLR end "ruleXAndExpression"
+
+
+
+	// $ANTLR start "entryRuleOpAnd"
+	// InternalWeightDefinition.g:1022:1: entryRuleOpAnd returns [String current=null] :iv_ruleOpAnd= ruleOpAnd EOF ;
+	public final String entryRuleOpAnd() throws RecognitionException {
+		String current = null;
+
+
+		AntlrDatatypeRuleToken iv_ruleOpAnd =null;
+
+		try {
+			// InternalWeightDefinition.g:1022:45: (iv_ruleOpAnd= ruleOpAnd EOF )
+			// InternalWeightDefinition.g:1023:2: iv_ruleOpAnd= ruleOpAnd EOF
+			{
+			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getOpAndRule()); }
+			pushFollow(FOLLOW_1);
+			iv_ruleOpAnd=ruleOpAnd();
+			state._fsp--;
+			if (state.failed) return current;
+			if ( state.backtracking==0 ) { current =iv_ruleOpAnd.getText(); }
+			match(input,EOF,FOLLOW_2); if (state.failed) return current;
+			}
+
+		}
+
+		    catch (RecognitionException re) {
+		        recover(input,re);
+		        appendSkippedTokens();
+		    }
+
+		finally {
+			// do for sure before leaving
+		}
+		return current;
+	}
+	// $ANTLR end "entryRuleOpAnd"
+
+
+
+	// $ANTLR start "ruleOpAnd"
+	// InternalWeightDefinition.g:1029:1: ruleOpAnd returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : kw= '&&' ;
+	public final AntlrDatatypeRuleToken ruleOpAnd() throws RecognitionException {
+		AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
+
+
+		Token kw=null;
+
+
+			enterRule();
+
+		try {
+			// InternalWeightDefinition.g:1035:2: (kw= '&&' )
+			// InternalWeightDefinition.g:1036:2: kw= '&&'
+			{
+			kw=(Token)match(input,19,FOLLOW_2); if (state.failed) return current;
+			if ( state.backtracking==0 ) {
+					current.merge(kw);
+					newLeafNode(kw, grammarAccess.getOpAndAccess().getAmpersandAmpersandKeyword());
+				}
+			}
+
+			if ( state.backtracking==0 ) {
+				leaveRule();
+			}
+		}
+
+		    catch (RecognitionException re) {
+		        recover(input,re);
+		        appendSkippedTokens();
+		    }
+
+		finally {
+			// do for sure before leaving
+		}
+		return current;
+	}
+	// $ANTLR end "ruleOpAnd"
+
+
+
+	// $ANTLR start "entryRuleXEqualityExpression"
+	// InternalWeightDefinition.g:1044:1: entryRuleXEqualityExpression returns [EObject current=null] :iv_ruleXEqualityExpression= ruleXEqualityExpression EOF ;
+	public final EObject entryRuleXEqualityExpression() throws RecognitionException {
+		EObject current = null;
+
+
+		EObject iv_ruleXEqualityExpression =null;
+
+		try {
+			// InternalWeightDefinition.g:1044:60: (iv_ruleXEqualityExpression= ruleXEqualityExpression EOF )
+			// InternalWeightDefinition.g:1045:2: iv_ruleXEqualityExpression= ruleXEqualityExpression EOF
+			{
+			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXEqualityExpressionRule()); }
+			pushFollow(FOLLOW_1);
+			iv_ruleXEqualityExpression=ruleXEqualityExpression();
+			state._fsp--;
+			if (state.failed) return current;
+			if ( state.backtracking==0 ) { current =iv_ruleXEqualityExpression; }
+			match(input,EOF,FOLLOW_2); if (state.failed) return current;
+			}
+
+		}
+
+		    catch (RecognitionException re) {
+		        recover(input,re);
+		        appendSkippedTokens();
+		    }
+
+		finally {
+			// do for sure before leaving
+		}
+		return current;
+	}
+	// $ANTLR end "entryRuleXEqualityExpression"
+
+
+
+	// $ANTLR start "ruleXEqualityExpression"
+	// InternalWeightDefinition.g:1051:1: ruleXEqualityExpression returns [EObject current=null] : (this_XRelationalExpression_0= ruleXRelationalExpression ( ( ( ( () ( ( ruleOpEquality ) ) ) )=> ( () ( ( ruleOpEquality ) ) ) ) ( (lv_rightOperand_3_0= ruleXRelationalExpression ) ) )* ) ;
+	public final EObject ruleXEqualityExpression() throws RecognitionException {
+		EObject current = null;
+
+
+		EObject this_XRelationalExpression_0 =null;
+		EObject lv_rightOperand_3_0 =null;
+
+
+			enterRule();
+
+		try {
+			// InternalWeightDefinition.g:1057:2: ( (this_XRelationalExpression_0= ruleXRelationalExpression ( ( ( ( () ( ( ruleOpEquality ) ) ) )=> ( () ( ( ruleOpEquality ) ) ) ) ( (lv_rightOperand_3_0= ruleXRelationalExpression ) ) )* ) )
+			// InternalWeightDefinition.g:1058:2: (this_XRelationalExpression_0= ruleXRelationalExpression ( ( ( ( () ( ( ruleOpEquality ) ) ) )=> ( () ( ( ruleOpEquality ) ) ) ) ( (lv_rightOperand_3_0= ruleXRelationalExpression ) ) )* )
+			{
+			// InternalWeightDefinition.g:1058:2: (this_XRelationalExpression_0= ruleXRelationalExpression ( ( ( ( () ( ( ruleOpEquality ) ) ) )=> ( () ( ( ruleOpEquality ) ) ) ) ( (lv_rightOperand_3_0= ruleXRelationalExpression ) ) )* )
+			// InternalWeightDefinition.g:1059:3: this_XRelationalExpression_0= ruleXRelationalExpression ( ( ( ( () ( ( ruleOpEquality ) ) ) )=> ( () ( ( ruleOpEquality ) ) ) ) ( (lv_rightOperand_3_0= ruleXRelationalExpression ) ) )*
+			{
+			if ( state.backtracking==0 ) {
+						newCompositeNode(grammarAccess.getXEqualityExpressionAccess().getXRelationalExpressionParserRuleCall_0());
+					}
+			pushFollow(FOLLOW_19);
+			this_XRelationalExpression_0=ruleXRelationalExpression();
+			state._fsp--;
+			if (state.failed) return current;
+			if ( state.backtracking==0 ) {
+						current = this_XRelationalExpression_0;
+						afterParserOrEnumRuleCall();
+					}
+			// InternalWeightDefinition.g:1067:3: ( ( ( ( () ( ( ruleOpEquality ) ) ) )=> ( () ( ( ruleOpEquality ) ) ) ) ( (lv_rightOperand_3_0= ruleXRelationalExpression ) ) )*
+			loop10:
+			while (true) {
+				int alt10=2;
+				switch ( input.LA(1) ) {
+				case 45:
+					{
+					int LA10_2 = input.LA(2);
+					if ( (synpred4_InternalWeightDefinition()) ) {
+						alt10=1;
+					}
+
+					}
+					break;
+				case 14:
+					{
+					int LA10_3 = input.LA(2);
+					if ( (synpred4_InternalWeightDefinition()) ) {
+						alt10=1;
+					}
+
+					}
+					break;
+				case 46:
+					{
+					int LA10_4 = input.LA(2);
+					if ( (synpred4_InternalWeightDefinition()) ) {
+						alt10=1;
+					}
+
+					}
+					break;
+				case 15:
+					{
+					int LA10_5 = input.LA(2);
+					if ( (synpred4_InternalWeightDefinition()) ) {
+						alt10=1;
+					}
+
+					}
+					break;
+				}
+				switch (alt10) {
+				case 1 :
+					// InternalWeightDefinition.g:1068:4: ( ( ( () ( ( ruleOpEquality ) ) ) )=> ( () ( ( ruleOpEquality ) ) ) ) ( (lv_rightOperand_3_0= ruleXRelationalExpression ) )
+					{
+					// InternalWeightDefinition.g:1068:4: ( ( ( () ( ( ruleOpEquality ) ) ) )=> ( () ( ( ruleOpEquality ) ) ) )
+					// InternalWeightDefinition.g:1069:5: ( ( () ( ( ruleOpEquality ) ) ) )=> ( () ( ( ruleOpEquality ) ) )
+					{
+					// InternalWeightDefinition.g:1079:5: ( () ( ( ruleOpEquality ) ) )
+					// InternalWeightDefinition.g:1080:6: () ( ( ruleOpEquality ) )
+					{
+					// InternalWeightDefinition.g:1080:6: ()
+					// InternalWeightDefinition.g:1081:7: 
+					{
+					if ( state.backtracking==0 ) {
+												current = forceCreateModelElementAndSet(
+													grammarAccess.getXEqualityExpressionAccess().getXBinaryOperationLeftOperandAction_1_0_0_0(),
+													current);
+											}
+					}
+
+					// InternalWeightDefinition.g:1087:6: ( ( ruleOpEquality ) )
+					// InternalWeightDefinition.g:1088:7: ( ruleOpEquality )
+					{
+					// InternalWeightDefinition.g:1088:7: ( ruleOpEquality )
+					// InternalWeightDefinition.g:1089:8: ruleOpEquality
+					{
+					if ( state.backtracking==0 ) {
+													if (current==null) {
+														current = createModelElement(grammarAccess.getXEqualityExpressionRule());
+													}
+												}
+					if ( state.backtracking==0 ) {
+													newCompositeNode(grammarAccess.getXEqualityExpressionAccess().getFeatureJvmIdentifiableElementCrossReference_1_0_0_1_0());
+												}
+					pushFollow(FOLLOW_12);
+					ruleOpEquality();
+					state._fsp--;
+					if (state.failed) return current;
+					if ( state.backtracking==0 ) {
+													afterParserOrEnumRuleCall();
+												}
+					}
+
+					}
+
+					}
+
+					}
+
+					// InternalWeightDefinition.g:1105:4: ( (lv_rightOperand_3_0= ruleXRelationalExpression ) )
+					// InternalWeightDefinition.g:1106:5: (lv_rightOperand_3_0= ruleXRelationalExpression )
+					{
+					// InternalWeightDefinition.g:1106:5: (lv_rightOperand_3_0= ruleXRelationalExpression )
+					// InternalWeightDefinition.g:1107:6: lv_rightOperand_3_0= ruleXRelationalExpression
+					{
+					if ( state.backtracking==0 ) {
+											newCompositeNode(grammarAccess.getXEqualityExpressionAccess().getRightOperandXRelationalExpressionParserRuleCall_1_1_0());
+										}
+					pushFollow(FOLLOW_19);
+					lv_rightOperand_3_0=ruleXRelationalExpression();
+					state._fsp--;
+					if (state.failed) return current;
+					if ( state.backtracking==0 ) {
+											if (current==null) {
+												current = createModelElementForParent(grammarAccess.getXEqualityExpressionRule());
+											}
+											set(
+												current,
+												"rightOperand",
+												lv_rightOperand_3_0,
+												"org.eclipse.xtext.xbase.Xbase.XRelationalExpression");
 											afterParserOrEnumRuleCall();
 										}
 					}
@@ -2379,573 +2941,12 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		}
 		return current;
 	}
-	// $ANTLR end "ruleXOrExpression"
-
-
-
-	// $ANTLR start "entryRuleOpOr"
-	// InternalWeightDefinition.g:911:1: entryRuleOpOr returns [String current=null] :iv_ruleOpOr= ruleOpOr EOF ;
-	public final String entryRuleOpOr() throws RecognitionException {
-		String current = null;
-
-
-		AntlrDatatypeRuleToken iv_ruleOpOr =null;
-
-		try {
-			// InternalWeightDefinition.g:911:44: (iv_ruleOpOr= ruleOpOr EOF )
-			// InternalWeightDefinition.g:912:2: iv_ruleOpOr= ruleOpOr EOF
-			{
-			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getOpOrRule()); }
-			pushFollow(FOLLOW_1);
-			iv_ruleOpOr=ruleOpOr();
-			state._fsp--;
-			if (state.failed) return current;
-			if ( state.backtracking==0 ) { current =iv_ruleOpOr.getText(); }
-			match(input,EOF,FOLLOW_2); if (state.failed) return current;
-			}
-
-		}
-
-		    catch (RecognitionException re) {
-		        recover(input,re);
-		        appendSkippedTokens();
-		    }
-
-		finally {
-			// do for sure before leaving
-		}
-		return current;
-	}
-	// $ANTLR end "entryRuleOpOr"
-
-
-
-	// $ANTLR start "ruleOpOr"
-	// InternalWeightDefinition.g:918:1: ruleOpOr returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : kw= '||' ;
-	public final AntlrDatatypeRuleToken ruleOpOr() throws RecognitionException {
-		AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
-
-
-		Token kw=null;
-
-
-			enterRule();
-
-		try {
-			// InternalWeightDefinition.g:924:2: (kw= '||' )
-			// InternalWeightDefinition.g:925:2: kw= '||'
-			{
-			kw=(Token)match(input,87,FOLLOW_2); if (state.failed) return current;
-			if ( state.backtracking==0 ) {
-					current.merge(kw);
-					newLeafNode(kw, grammarAccess.getOpOrAccess().getVerticalLineVerticalLineKeyword());
-				}
-			}
-
-			if ( state.backtracking==0 ) {
-				leaveRule();
-			}
-		}
-
-		    catch (RecognitionException re) {
-		        recover(input,re);
-		        appendSkippedTokens();
-		    }
-
-		finally {
-			// do for sure before leaving
-		}
-		return current;
-	}
-	// $ANTLR end "ruleOpOr"
-
-
-
-	// $ANTLR start "entryRuleXAndExpression"
-	// InternalWeightDefinition.g:933:1: entryRuleXAndExpression returns [EObject current=null] :iv_ruleXAndExpression= ruleXAndExpression EOF ;
-	public final EObject entryRuleXAndExpression() throws RecognitionException {
-		EObject current = null;
-
-
-		EObject iv_ruleXAndExpression =null;
-
-		try {
-			// InternalWeightDefinition.g:933:55: (iv_ruleXAndExpression= ruleXAndExpression EOF )
-			// InternalWeightDefinition.g:934:2: iv_ruleXAndExpression= ruleXAndExpression EOF
-			{
-			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXAndExpressionRule()); }
-			pushFollow(FOLLOW_1);
-			iv_ruleXAndExpression=ruleXAndExpression();
-			state._fsp--;
-			if (state.failed) return current;
-			if ( state.backtracking==0 ) { current =iv_ruleXAndExpression; }
-			match(input,EOF,FOLLOW_2); if (state.failed) return current;
-			}
-
-		}
-
-		    catch (RecognitionException re) {
-		        recover(input,re);
-		        appendSkippedTokens();
-		    }
-
-		finally {
-			// do for sure before leaving
-		}
-		return current;
-	}
-	// $ANTLR end "entryRuleXAndExpression"
-
-
-
-	// $ANTLR start "ruleXAndExpression"
-	// InternalWeightDefinition.g:940:1: ruleXAndExpression returns [EObject current=null] : (this_XEqualityExpression_0= ruleXEqualityExpression ( ( ( ( () ( ( ruleOpAnd ) ) ) )=> ( () ( ( ruleOpAnd ) ) ) ) ( (lv_rightOperand_3_0= ruleXEqualityExpression ) ) )* ) ;
-	public final EObject ruleXAndExpression() throws RecognitionException {
-		EObject current = null;
-
-
-		EObject this_XEqualityExpression_0 =null;
-		EObject lv_rightOperand_3_0 =null;
-
-
-			enterRule();
-
-		try {
-			// InternalWeightDefinition.g:946:2: ( (this_XEqualityExpression_0= ruleXEqualityExpression ( ( ( ( () ( ( ruleOpAnd ) ) ) )=> ( () ( ( ruleOpAnd ) ) ) ) ( (lv_rightOperand_3_0= ruleXEqualityExpression ) ) )* ) )
-			// InternalWeightDefinition.g:947:2: (this_XEqualityExpression_0= ruleXEqualityExpression ( ( ( ( () ( ( ruleOpAnd ) ) ) )=> ( () ( ( ruleOpAnd ) ) ) ) ( (lv_rightOperand_3_0= ruleXEqualityExpression ) ) )* )
-			{
-			// InternalWeightDefinition.g:947:2: (this_XEqualityExpression_0= ruleXEqualityExpression ( ( ( ( () ( ( ruleOpAnd ) ) ) )=> ( () ( ( ruleOpAnd ) ) ) ) ( (lv_rightOperand_3_0= ruleXEqualityExpression ) ) )* )
-			// InternalWeightDefinition.g:948:3: this_XEqualityExpression_0= ruleXEqualityExpression ( ( ( ( () ( ( ruleOpAnd ) ) ) )=> ( () ( ( ruleOpAnd ) ) ) ) ( (lv_rightOperand_3_0= ruleXEqualityExpression ) ) )*
-			{
-			if ( state.backtracking==0 ) {
-						newCompositeNode(grammarAccess.getXAndExpressionAccess().getXEqualityExpressionParserRuleCall_0());
-					}
-			pushFollow(FOLLOW_19);
-			this_XEqualityExpression_0=ruleXEqualityExpression();
-			state._fsp--;
-			if (state.failed) return current;
-			if ( state.backtracking==0 ) {
-						current = this_XEqualityExpression_0;
-						afterParserOrEnumRuleCall();
-					}
-			// InternalWeightDefinition.g:956:3: ( ( ( ( () ( ( ruleOpAnd ) ) ) )=> ( () ( ( ruleOpAnd ) ) ) ) ( (lv_rightOperand_3_0= ruleXEqualityExpression ) ) )*
-			loop11:
-			while (true) {
-				int alt11=2;
-				int LA11_0 = input.LA(1);
-				if ( (LA11_0==19) ) {
-					int LA11_2 = input.LA(2);
-					if ( (synpred3_InternalWeightDefinition()) ) {
-						alt11=1;
-					}
-
-				}
-
-				switch (alt11) {
-				case 1 :
-					// InternalWeightDefinition.g:957:4: ( ( ( () ( ( ruleOpAnd ) ) ) )=> ( () ( ( ruleOpAnd ) ) ) ) ( (lv_rightOperand_3_0= ruleXEqualityExpression ) )
-					{
-					// InternalWeightDefinition.g:957:4: ( ( ( () ( ( ruleOpAnd ) ) ) )=> ( () ( ( ruleOpAnd ) ) ) )
-					// InternalWeightDefinition.g:958:5: ( ( () ( ( ruleOpAnd ) ) ) )=> ( () ( ( ruleOpAnd ) ) )
-					{
-					// InternalWeightDefinition.g:968:5: ( () ( ( ruleOpAnd ) ) )
-					// InternalWeightDefinition.g:969:6: () ( ( ruleOpAnd ) )
-					{
-					// InternalWeightDefinition.g:969:6: ()
-					// InternalWeightDefinition.g:970:7: 
-					{
-					if ( state.backtracking==0 ) {
-												current = forceCreateModelElementAndSet(
-													grammarAccess.getXAndExpressionAccess().getXBinaryOperationLeftOperandAction_1_0_0_0(),
-													current);
-											}
-					}
-
-					// InternalWeightDefinition.g:976:6: ( ( ruleOpAnd ) )
-					// InternalWeightDefinition.g:977:7: ( ruleOpAnd )
-					{
-					// InternalWeightDefinition.g:977:7: ( ruleOpAnd )
-					// InternalWeightDefinition.g:978:8: ruleOpAnd
-					{
-					if ( state.backtracking==0 ) {
-													if (current==null) {
-														current = createModelElement(grammarAccess.getXAndExpressionRule());
-													}
-												}
-					if ( state.backtracking==0 ) {
-													newCompositeNode(grammarAccess.getXAndExpressionAccess().getFeatureJvmIdentifiableElementCrossReference_1_0_0_1_0());
-												}
-					pushFollow(FOLLOW_13);
-					ruleOpAnd();
-					state._fsp--;
-					if (state.failed) return current;
-					if ( state.backtracking==0 ) {
-													afterParserOrEnumRuleCall();
-												}
-					}
-
-					}
-
-					}
-
-					}
-
-					// InternalWeightDefinition.g:994:4: ( (lv_rightOperand_3_0= ruleXEqualityExpression ) )
-					// InternalWeightDefinition.g:995:5: (lv_rightOperand_3_0= ruleXEqualityExpression )
-					{
-					// InternalWeightDefinition.g:995:5: (lv_rightOperand_3_0= ruleXEqualityExpression )
-					// InternalWeightDefinition.g:996:6: lv_rightOperand_3_0= ruleXEqualityExpression
-					{
-					if ( state.backtracking==0 ) {
-											newCompositeNode(grammarAccess.getXAndExpressionAccess().getRightOperandXEqualityExpressionParserRuleCall_1_1_0());
-										}
-					pushFollow(FOLLOW_19);
-					lv_rightOperand_3_0=ruleXEqualityExpression();
-					state._fsp--;
-					if (state.failed) return current;
-					if ( state.backtracking==0 ) {
-											if (current==null) {
-												current = createModelElementForParent(grammarAccess.getXAndExpressionRule());
-											}
-											set(
-												current,
-												"rightOperand",
-												lv_rightOperand_3_0,
-												"org.eclipse.xtext.xbase.Xbase.XEqualityExpression");
-											afterParserOrEnumRuleCall();
-										}
-					}
-
-					}
-
-					}
-					break;
-
-				default :
-					break loop11;
-				}
-			}
-
-			}
-
-			}
-
-			if ( state.backtracking==0 ) {
-				leaveRule();
-			}
-		}
-
-		    catch (RecognitionException re) {
-		        recover(input,re);
-		        appendSkippedTokens();
-		    }
-
-		finally {
-			// do for sure before leaving
-		}
-		return current;
-	}
-	// $ANTLR end "ruleXAndExpression"
-
-
-
-	// $ANTLR start "entryRuleOpAnd"
-	// InternalWeightDefinition.g:1018:1: entryRuleOpAnd returns [String current=null] :iv_ruleOpAnd= ruleOpAnd EOF ;
-	public final String entryRuleOpAnd() throws RecognitionException {
-		String current = null;
-
-
-		AntlrDatatypeRuleToken iv_ruleOpAnd =null;
-
-		try {
-			// InternalWeightDefinition.g:1018:45: (iv_ruleOpAnd= ruleOpAnd EOF )
-			// InternalWeightDefinition.g:1019:2: iv_ruleOpAnd= ruleOpAnd EOF
-			{
-			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getOpAndRule()); }
-			pushFollow(FOLLOW_1);
-			iv_ruleOpAnd=ruleOpAnd();
-			state._fsp--;
-			if (state.failed) return current;
-			if ( state.backtracking==0 ) { current =iv_ruleOpAnd.getText(); }
-			match(input,EOF,FOLLOW_2); if (state.failed) return current;
-			}
-
-		}
-
-		    catch (RecognitionException re) {
-		        recover(input,re);
-		        appendSkippedTokens();
-		    }
-
-		finally {
-			// do for sure before leaving
-		}
-		return current;
-	}
-	// $ANTLR end "entryRuleOpAnd"
-
-
-
-	// $ANTLR start "ruleOpAnd"
-	// InternalWeightDefinition.g:1025:1: ruleOpAnd returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : kw= '&&' ;
-	public final AntlrDatatypeRuleToken ruleOpAnd() throws RecognitionException {
-		AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
-
-
-		Token kw=null;
-
-
-			enterRule();
-
-		try {
-			// InternalWeightDefinition.g:1031:2: (kw= '&&' )
-			// InternalWeightDefinition.g:1032:2: kw= '&&'
-			{
-			kw=(Token)match(input,19,FOLLOW_2); if (state.failed) return current;
-			if ( state.backtracking==0 ) {
-					current.merge(kw);
-					newLeafNode(kw, grammarAccess.getOpAndAccess().getAmpersandAmpersandKeyword());
-				}
-			}
-
-			if ( state.backtracking==0 ) {
-				leaveRule();
-			}
-		}
-
-		    catch (RecognitionException re) {
-		        recover(input,re);
-		        appendSkippedTokens();
-		    }
-
-		finally {
-			// do for sure before leaving
-		}
-		return current;
-	}
-	// $ANTLR end "ruleOpAnd"
-
-
-
-	// $ANTLR start "entryRuleXEqualityExpression"
-	// InternalWeightDefinition.g:1040:1: entryRuleXEqualityExpression returns [EObject current=null] :iv_ruleXEqualityExpression= ruleXEqualityExpression EOF ;
-	public final EObject entryRuleXEqualityExpression() throws RecognitionException {
-		EObject current = null;
-
-
-		EObject iv_ruleXEqualityExpression =null;
-
-		try {
-			// InternalWeightDefinition.g:1040:60: (iv_ruleXEqualityExpression= ruleXEqualityExpression EOF )
-			// InternalWeightDefinition.g:1041:2: iv_ruleXEqualityExpression= ruleXEqualityExpression EOF
-			{
-			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXEqualityExpressionRule()); }
-			pushFollow(FOLLOW_1);
-			iv_ruleXEqualityExpression=ruleXEqualityExpression();
-			state._fsp--;
-			if (state.failed) return current;
-			if ( state.backtracking==0 ) { current =iv_ruleXEqualityExpression; }
-			match(input,EOF,FOLLOW_2); if (state.failed) return current;
-			}
-
-		}
-
-		    catch (RecognitionException re) {
-		        recover(input,re);
-		        appendSkippedTokens();
-		    }
-
-		finally {
-			// do for sure before leaving
-		}
-		return current;
-	}
-	// $ANTLR end "entryRuleXEqualityExpression"
-
-
-
-	// $ANTLR start "ruleXEqualityExpression"
-	// InternalWeightDefinition.g:1047:1: ruleXEqualityExpression returns [EObject current=null] : (this_XRelationalExpression_0= ruleXRelationalExpression ( ( ( ( () ( ( ruleOpEquality ) ) ) )=> ( () ( ( ruleOpEquality ) ) ) ) ( (lv_rightOperand_3_0= ruleXRelationalExpression ) ) )* ) ;
-	public final EObject ruleXEqualityExpression() throws RecognitionException {
-		EObject current = null;
-
-
-		EObject this_XRelationalExpression_0 =null;
-		EObject lv_rightOperand_3_0 =null;
-
-
-			enterRule();
-
-		try {
-			// InternalWeightDefinition.g:1053:2: ( (this_XRelationalExpression_0= ruleXRelationalExpression ( ( ( ( () ( ( ruleOpEquality ) ) ) )=> ( () ( ( ruleOpEquality ) ) ) ) ( (lv_rightOperand_3_0= ruleXRelationalExpression ) ) )* ) )
-			// InternalWeightDefinition.g:1054:2: (this_XRelationalExpression_0= ruleXRelationalExpression ( ( ( ( () ( ( ruleOpEquality ) ) ) )=> ( () ( ( ruleOpEquality ) ) ) ) ( (lv_rightOperand_3_0= ruleXRelationalExpression ) ) )* )
-			{
-			// InternalWeightDefinition.g:1054:2: (this_XRelationalExpression_0= ruleXRelationalExpression ( ( ( ( () ( ( ruleOpEquality ) ) ) )=> ( () ( ( ruleOpEquality ) ) ) ) ( (lv_rightOperand_3_0= ruleXRelationalExpression ) ) )* )
-			// InternalWeightDefinition.g:1055:3: this_XRelationalExpression_0= ruleXRelationalExpression ( ( ( ( () ( ( ruleOpEquality ) ) ) )=> ( () ( ( ruleOpEquality ) ) ) ) ( (lv_rightOperand_3_0= ruleXRelationalExpression ) ) )*
-			{
-			if ( state.backtracking==0 ) {
-						newCompositeNode(grammarAccess.getXEqualityExpressionAccess().getXRelationalExpressionParserRuleCall_0());
-					}
-			pushFollow(FOLLOW_20);
-			this_XRelationalExpression_0=ruleXRelationalExpression();
-			state._fsp--;
-			if (state.failed) return current;
-			if ( state.backtracking==0 ) {
-						current = this_XRelationalExpression_0;
-						afterParserOrEnumRuleCall();
-					}
-			// InternalWeightDefinition.g:1063:3: ( ( ( ( () ( ( ruleOpEquality ) ) ) )=> ( () ( ( ruleOpEquality ) ) ) ) ( (lv_rightOperand_3_0= ruleXRelationalExpression ) ) )*
-			loop12:
-			while (true) {
-				int alt12=2;
-				switch ( input.LA(1) ) {
-				case 45:
-					{
-					int LA12_2 = input.LA(2);
-					if ( (synpred4_InternalWeightDefinition()) ) {
-						alt12=1;
-					}
-
-					}
-					break;
-				case 14:
-					{
-					int LA12_3 = input.LA(2);
-					if ( (synpred4_InternalWeightDefinition()) ) {
-						alt12=1;
-					}
-
-					}
-					break;
-				case 46:
-					{
-					int LA12_4 = input.LA(2);
-					if ( (synpred4_InternalWeightDefinition()) ) {
-						alt12=1;
-					}
-
-					}
-					break;
-				case 15:
-					{
-					int LA12_5 = input.LA(2);
-					if ( (synpred4_InternalWeightDefinition()) ) {
-						alt12=1;
-					}
-
-					}
-					break;
-				}
-				switch (alt12) {
-				case 1 :
-					// InternalWeightDefinition.g:1064:4: ( ( ( () ( ( ruleOpEquality ) ) ) )=> ( () ( ( ruleOpEquality ) ) ) ) ( (lv_rightOperand_3_0= ruleXRelationalExpression ) )
-					{
-					// InternalWeightDefinition.g:1064:4: ( ( ( () ( ( ruleOpEquality ) ) ) )=> ( () ( ( ruleOpEquality ) ) ) )
-					// InternalWeightDefinition.g:1065:5: ( ( () ( ( ruleOpEquality ) ) ) )=> ( () ( ( ruleOpEquality ) ) )
-					{
-					// InternalWeightDefinition.g:1075:5: ( () ( ( ruleOpEquality ) ) )
-					// InternalWeightDefinition.g:1076:6: () ( ( ruleOpEquality ) )
-					{
-					// InternalWeightDefinition.g:1076:6: ()
-					// InternalWeightDefinition.g:1077:7: 
-					{
-					if ( state.backtracking==0 ) {
-												current = forceCreateModelElementAndSet(
-													grammarAccess.getXEqualityExpressionAccess().getXBinaryOperationLeftOperandAction_1_0_0_0(),
-													current);
-											}
-					}
-
-					// InternalWeightDefinition.g:1083:6: ( ( ruleOpEquality ) )
-					// InternalWeightDefinition.g:1084:7: ( ruleOpEquality )
-					{
-					// InternalWeightDefinition.g:1084:7: ( ruleOpEquality )
-					// InternalWeightDefinition.g:1085:8: ruleOpEquality
-					{
-					if ( state.backtracking==0 ) {
-													if (current==null) {
-														current = createModelElement(grammarAccess.getXEqualityExpressionRule());
-													}
-												}
-					if ( state.backtracking==0 ) {
-													newCompositeNode(grammarAccess.getXEqualityExpressionAccess().getFeatureJvmIdentifiableElementCrossReference_1_0_0_1_0());
-												}
-					pushFollow(FOLLOW_13);
-					ruleOpEquality();
-					state._fsp--;
-					if (state.failed) return current;
-					if ( state.backtracking==0 ) {
-													afterParserOrEnumRuleCall();
-												}
-					}
-
-					}
-
-					}
-
-					}
-
-					// InternalWeightDefinition.g:1101:4: ( (lv_rightOperand_3_0= ruleXRelationalExpression ) )
-					// InternalWeightDefinition.g:1102:5: (lv_rightOperand_3_0= ruleXRelationalExpression )
-					{
-					// InternalWeightDefinition.g:1102:5: (lv_rightOperand_3_0= ruleXRelationalExpression )
-					// InternalWeightDefinition.g:1103:6: lv_rightOperand_3_0= ruleXRelationalExpression
-					{
-					if ( state.backtracking==0 ) {
-											newCompositeNode(grammarAccess.getXEqualityExpressionAccess().getRightOperandXRelationalExpressionParserRuleCall_1_1_0());
-										}
-					pushFollow(FOLLOW_20);
-					lv_rightOperand_3_0=ruleXRelationalExpression();
-					state._fsp--;
-					if (state.failed) return current;
-					if ( state.backtracking==0 ) {
-											if (current==null) {
-												current = createModelElementForParent(grammarAccess.getXEqualityExpressionRule());
-											}
-											set(
-												current,
-												"rightOperand",
-												lv_rightOperand_3_0,
-												"org.eclipse.xtext.xbase.Xbase.XRelationalExpression");
-											afterParserOrEnumRuleCall();
-										}
-					}
-
-					}
-
-					}
-					break;
-
-				default :
-					break loop12;
-				}
-			}
-
-			}
-
-			}
-
-			if ( state.backtracking==0 ) {
-				leaveRule();
-			}
-		}
-
-		    catch (RecognitionException re) {
-		        recover(input,re);
-		        appendSkippedTokens();
-		    }
-
-		finally {
-			// do for sure before leaving
-		}
-		return current;
-	}
 	// $ANTLR end "ruleXEqualityExpression"
 
 
 
 	// $ANTLR start "entryRuleOpEquality"
-	// InternalWeightDefinition.g:1125:1: entryRuleOpEquality returns [String current=null] :iv_ruleOpEquality= ruleOpEquality EOF ;
+	// InternalWeightDefinition.g:1129:1: entryRuleOpEquality returns [String current=null] :iv_ruleOpEquality= ruleOpEquality EOF ;
 	public final String entryRuleOpEquality() throws RecognitionException {
 		String current = null;
 
@@ -2953,8 +2954,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		AntlrDatatypeRuleToken iv_ruleOpEquality =null;
 
 		try {
-			// InternalWeightDefinition.g:1125:50: (iv_ruleOpEquality= ruleOpEquality EOF )
-			// InternalWeightDefinition.g:1126:2: iv_ruleOpEquality= ruleOpEquality EOF
+			// InternalWeightDefinition.g:1129:50: (iv_ruleOpEquality= ruleOpEquality EOF )
+			// InternalWeightDefinition.g:1130:2: iv_ruleOpEquality= ruleOpEquality EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getOpEqualityRule()); }
 			pushFollow(FOLLOW_1);
@@ -2982,7 +2983,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleOpEquality"
-	// InternalWeightDefinition.g:1132:1: ruleOpEquality returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (kw= '==' |kw= '!=' |kw= '===' |kw= '!==' ) ;
+	// InternalWeightDefinition.g:1136:1: ruleOpEquality returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (kw= '==' |kw= '!=' |kw= '===' |kw= '!==' ) ;
 	public final AntlrDatatypeRuleToken ruleOpEquality() throws RecognitionException {
 		AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -2993,41 +2994,41 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:1138:2: ( (kw= '==' |kw= '!=' |kw= '===' |kw= '!==' ) )
-			// InternalWeightDefinition.g:1139:2: (kw= '==' |kw= '!=' |kw= '===' |kw= '!==' )
+			// InternalWeightDefinition.g:1142:2: ( (kw= '==' |kw= '!=' |kw= '===' |kw= '!==' ) )
+			// InternalWeightDefinition.g:1143:2: (kw= '==' |kw= '!=' |kw= '===' |kw= '!==' )
 			{
-			// InternalWeightDefinition.g:1139:2: (kw= '==' |kw= '!=' |kw= '===' |kw= '!==' )
-			int alt13=4;
+			// InternalWeightDefinition.g:1143:2: (kw= '==' |kw= '!=' |kw= '===' |kw= '!==' )
+			int alt11=4;
 			switch ( input.LA(1) ) {
 			case 45:
 				{
-				alt13=1;
+				alt11=1;
 				}
 				break;
 			case 14:
 				{
-				alt13=2;
+				alt11=2;
 				}
 				break;
 			case 46:
 				{
-				alt13=3;
+				alt11=3;
 				}
 				break;
 			case 15:
 				{
-				alt13=4;
+				alt11=4;
 				}
 				break;
 			default:
 				if (state.backtracking>0) {state.failed=true; return current;}
 				NoViableAltException nvae =
-					new NoViableAltException("", 13, 0, input);
+					new NoViableAltException("", 11, 0, input);
 				throw nvae;
 			}
-			switch (alt13) {
+			switch (alt11) {
 				case 1 :
-					// InternalWeightDefinition.g:1140:3: kw= '=='
+					// InternalWeightDefinition.g:1144:3: kw= '=='
 					{
 					kw=(Token)match(input,45,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -3037,7 +3038,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:1146:3: kw= '!='
+					// InternalWeightDefinition.g:1150:3: kw= '!='
 					{
 					kw=(Token)match(input,14,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -3047,7 +3048,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 3 :
-					// InternalWeightDefinition.g:1152:3: kw= '==='
+					// InternalWeightDefinition.g:1156:3: kw= '==='
 					{
 					kw=(Token)match(input,46,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -3057,7 +3058,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 4 :
-					// InternalWeightDefinition.g:1158:3: kw= '!=='
+					// InternalWeightDefinition.g:1162:3: kw= '!=='
 					{
 					kw=(Token)match(input,15,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -3091,7 +3092,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXRelationalExpression"
-	// InternalWeightDefinition.g:1167:1: entryRuleXRelationalExpression returns [EObject current=null] :iv_ruleXRelationalExpression= ruleXRelationalExpression EOF ;
+	// InternalWeightDefinition.g:1171:1: entryRuleXRelationalExpression returns [EObject current=null] :iv_ruleXRelationalExpression= ruleXRelationalExpression EOF ;
 	public final EObject entryRuleXRelationalExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -3099,8 +3100,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXRelationalExpression =null;
 
 		try {
-			// InternalWeightDefinition.g:1167:62: (iv_ruleXRelationalExpression= ruleXRelationalExpression EOF )
-			// InternalWeightDefinition.g:1168:2: iv_ruleXRelationalExpression= ruleXRelationalExpression EOF
+			// InternalWeightDefinition.g:1171:62: (iv_ruleXRelationalExpression= ruleXRelationalExpression EOF )
+			// InternalWeightDefinition.g:1172:2: iv_ruleXRelationalExpression= ruleXRelationalExpression EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXRelationalExpressionRule()); }
 			pushFollow(FOLLOW_1);
@@ -3128,7 +3129,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXRelationalExpression"
-	// InternalWeightDefinition.g:1174:1: ruleXRelationalExpression returns [EObject current=null] : (this_XOtherOperatorExpression_0= ruleXOtherOperatorExpression ( ( ( ( ( () 'instanceof' ) )=> ( () otherlv_2= 'instanceof' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) ) ) | ( ( ( ( () ( ( ruleOpCompare ) ) ) )=> ( () ( ( ruleOpCompare ) ) ) ) ( (lv_rightOperand_6_0= ruleXOtherOperatorExpression ) ) ) )* ) ;
+	// InternalWeightDefinition.g:1178:1: ruleXRelationalExpression returns [EObject current=null] : (this_XOtherOperatorExpression_0= ruleXOtherOperatorExpression ( ( ( ( ( () 'instanceof' ) )=> ( () otherlv_2= 'instanceof' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) ) ) | ( ( ( ( () ( ( ruleOpCompare ) ) ) )=> ( () ( ( ruleOpCompare ) ) ) ) ( (lv_rightOperand_6_0= ruleXOtherOperatorExpression ) ) ) )* ) ;
 	public final EObject ruleXRelationalExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -3142,16 +3143,16 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:1180:2: ( (this_XOtherOperatorExpression_0= ruleXOtherOperatorExpression ( ( ( ( ( () 'instanceof' ) )=> ( () otherlv_2= 'instanceof' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) ) ) | ( ( ( ( () ( ( ruleOpCompare ) ) ) )=> ( () ( ( ruleOpCompare ) ) ) ) ( (lv_rightOperand_6_0= ruleXOtherOperatorExpression ) ) ) )* ) )
-			// InternalWeightDefinition.g:1181:2: (this_XOtherOperatorExpression_0= ruleXOtherOperatorExpression ( ( ( ( ( () 'instanceof' ) )=> ( () otherlv_2= 'instanceof' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) ) ) | ( ( ( ( () ( ( ruleOpCompare ) ) ) )=> ( () ( ( ruleOpCompare ) ) ) ) ( (lv_rightOperand_6_0= ruleXOtherOperatorExpression ) ) ) )* )
+			// InternalWeightDefinition.g:1184:2: ( (this_XOtherOperatorExpression_0= ruleXOtherOperatorExpression ( ( ( ( ( () 'instanceof' ) )=> ( () otherlv_2= 'instanceof' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) ) ) | ( ( ( ( () ( ( ruleOpCompare ) ) ) )=> ( () ( ( ruleOpCompare ) ) ) ) ( (lv_rightOperand_6_0= ruleXOtherOperatorExpression ) ) ) )* ) )
+			// InternalWeightDefinition.g:1185:2: (this_XOtherOperatorExpression_0= ruleXOtherOperatorExpression ( ( ( ( ( () 'instanceof' ) )=> ( () otherlv_2= 'instanceof' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) ) ) | ( ( ( ( () ( ( ruleOpCompare ) ) ) )=> ( () ( ( ruleOpCompare ) ) ) ) ( (lv_rightOperand_6_0= ruleXOtherOperatorExpression ) ) ) )* )
 			{
-			// InternalWeightDefinition.g:1181:2: (this_XOtherOperatorExpression_0= ruleXOtherOperatorExpression ( ( ( ( ( () 'instanceof' ) )=> ( () otherlv_2= 'instanceof' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) ) ) | ( ( ( ( () ( ( ruleOpCompare ) ) ) )=> ( () ( ( ruleOpCompare ) ) ) ) ( (lv_rightOperand_6_0= ruleXOtherOperatorExpression ) ) ) )* )
-			// InternalWeightDefinition.g:1182:3: this_XOtherOperatorExpression_0= ruleXOtherOperatorExpression ( ( ( ( ( () 'instanceof' ) )=> ( () otherlv_2= 'instanceof' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) ) ) | ( ( ( ( () ( ( ruleOpCompare ) ) ) )=> ( () ( ( ruleOpCompare ) ) ) ) ( (lv_rightOperand_6_0= ruleXOtherOperatorExpression ) ) ) )*
+			// InternalWeightDefinition.g:1185:2: (this_XOtherOperatorExpression_0= ruleXOtherOperatorExpression ( ( ( ( ( () 'instanceof' ) )=> ( () otherlv_2= 'instanceof' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) ) ) | ( ( ( ( () ( ( ruleOpCompare ) ) ) )=> ( () ( ( ruleOpCompare ) ) ) ) ( (lv_rightOperand_6_0= ruleXOtherOperatorExpression ) ) ) )* )
+			// InternalWeightDefinition.g:1186:3: this_XOtherOperatorExpression_0= ruleXOtherOperatorExpression ( ( ( ( ( () 'instanceof' ) )=> ( () otherlv_2= 'instanceof' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) ) ) | ( ( ( ( () ( ( ruleOpCompare ) ) ) )=> ( () ( ( ruleOpCompare ) ) ) ) ( (lv_rightOperand_6_0= ruleXOtherOperatorExpression ) ) ) )*
 			{
 			if ( state.backtracking==0 ) {
 						newCompositeNode(grammarAccess.getXRelationalExpressionAccess().getXOtherOperatorExpressionParserRuleCall_0());
 					}
-			pushFollow(FOLLOW_21);
+			pushFollow(FOLLOW_20);
 			this_XOtherOperatorExpression_0=ruleXOtherOperatorExpression();
 			state._fsp--;
 			if (state.failed) return current;
@@ -3159,63 +3160,63 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						current = this_XOtherOperatorExpression_0;
 						afterParserOrEnumRuleCall();
 					}
-			// InternalWeightDefinition.g:1190:3: ( ( ( ( ( () 'instanceof' ) )=> ( () otherlv_2= 'instanceof' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) ) ) | ( ( ( ( () ( ( ruleOpCompare ) ) ) )=> ( () ( ( ruleOpCompare ) ) ) ) ( (lv_rightOperand_6_0= ruleXOtherOperatorExpression ) ) ) )*
-			loop14:
+			// InternalWeightDefinition.g:1194:3: ( ( ( ( ( () 'instanceof' ) )=> ( () otherlv_2= 'instanceof' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) ) ) | ( ( ( ( () ( ( ruleOpCompare ) ) ) )=> ( () ( ( ruleOpCompare ) ) ) ) ( (lv_rightOperand_6_0= ruleXOtherOperatorExpression ) ) ) )*
+			loop12:
 			while (true) {
-				int alt14=3;
+				int alt12=3;
 				switch ( input.LA(1) ) {
 				case 42:
 					{
-					int LA14_2 = input.LA(2);
+					int LA12_2 = input.LA(2);
 					if ( (synpred6_InternalWeightDefinition()) ) {
-						alt14=2;
+						alt12=2;
 					}
 
 					}
 					break;
 				case 48:
 					{
-					int LA14_3 = input.LA(2);
+					int LA12_3 = input.LA(2);
 					if ( (synpred6_InternalWeightDefinition()) ) {
-						alt14=2;
+						alt12=2;
 					}
 
 					}
 					break;
 				case 69:
 					{
-					int LA14_4 = input.LA(2);
+					int LA12_4 = input.LA(2);
 					if ( (synpred5_InternalWeightDefinition()) ) {
-						alt14=1;
+						alt12=1;
 					}
 
 					}
 					break;
 				case 49:
 					{
-					int LA14_5 = input.LA(2);
+					int LA12_5 = input.LA(2);
 					if ( (synpred6_InternalWeightDefinition()) ) {
-						alt14=2;
+						alt12=2;
 					}
 
 					}
 					break;
 				}
-				switch (alt14) {
+				switch (alt12) {
 				case 1 :
-					// InternalWeightDefinition.g:1191:4: ( ( ( ( () 'instanceof' ) )=> ( () otherlv_2= 'instanceof' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) ) )
+					// InternalWeightDefinition.g:1195:4: ( ( ( ( () 'instanceof' ) )=> ( () otherlv_2= 'instanceof' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) ) )
 					{
-					// InternalWeightDefinition.g:1191:4: ( ( ( ( () 'instanceof' ) )=> ( () otherlv_2= 'instanceof' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) ) )
-					// InternalWeightDefinition.g:1192:5: ( ( ( () 'instanceof' ) )=> ( () otherlv_2= 'instanceof' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) )
+					// InternalWeightDefinition.g:1195:4: ( ( ( ( () 'instanceof' ) )=> ( () otherlv_2= 'instanceof' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) ) )
+					// InternalWeightDefinition.g:1196:5: ( ( ( () 'instanceof' ) )=> ( () otherlv_2= 'instanceof' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) )
 					{
-					// InternalWeightDefinition.g:1192:5: ( ( ( () 'instanceof' ) )=> ( () otherlv_2= 'instanceof' ) )
-					// InternalWeightDefinition.g:1193:6: ( ( () 'instanceof' ) )=> ( () otherlv_2= 'instanceof' )
+					// InternalWeightDefinition.g:1196:5: ( ( ( () 'instanceof' ) )=> ( () otherlv_2= 'instanceof' ) )
+					// InternalWeightDefinition.g:1197:6: ( ( () 'instanceof' ) )=> ( () otherlv_2= 'instanceof' )
 					{
-					// InternalWeightDefinition.g:1199:6: ( () otherlv_2= 'instanceof' )
-					// InternalWeightDefinition.g:1200:7: () otherlv_2= 'instanceof'
+					// InternalWeightDefinition.g:1203:6: ( () otherlv_2= 'instanceof' )
+					// InternalWeightDefinition.g:1204:7: () otherlv_2= 'instanceof'
 					{
-					// InternalWeightDefinition.g:1200:7: ()
-					// InternalWeightDefinition.g:1201:8: 
+					// InternalWeightDefinition.g:1204:7: ()
+					// InternalWeightDefinition.g:1205:8: 
 					{
 					if ( state.backtracking==0 ) {
 													current = forceCreateModelElementAndSet(
@@ -3224,7 +3225,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 												}
 					}
 
-					otherlv_2=(Token)match(input,69,FOLLOW_8); if (state.failed) return current;
+					otherlv_2=(Token)match(input,69,FOLLOW_7); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 												newLeafNode(otherlv_2, grammarAccess.getXRelationalExpressionAccess().getInstanceofKeyword_1_0_0_0_1());
 											}
@@ -3232,16 +3233,16 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:1213:5: ( (lv_type_3_0= ruleJvmTypeReference ) )
-					// InternalWeightDefinition.g:1214:6: (lv_type_3_0= ruleJvmTypeReference )
+					// InternalWeightDefinition.g:1217:5: ( (lv_type_3_0= ruleJvmTypeReference ) )
+					// InternalWeightDefinition.g:1218:6: (lv_type_3_0= ruleJvmTypeReference )
 					{
-					// InternalWeightDefinition.g:1214:6: (lv_type_3_0= ruleJvmTypeReference )
-					// InternalWeightDefinition.g:1215:7: lv_type_3_0= ruleJvmTypeReference
+					// InternalWeightDefinition.g:1218:6: (lv_type_3_0= ruleJvmTypeReference )
+					// InternalWeightDefinition.g:1219:7: lv_type_3_0= ruleJvmTypeReference
 					{
 					if ( state.backtracking==0 ) {
 												newCompositeNode(grammarAccess.getXRelationalExpressionAccess().getTypeJvmTypeReferenceParserRuleCall_1_0_1_0());
 											}
-					pushFollow(FOLLOW_21);
+					pushFollow(FOLLOW_20);
 					lv_type_3_0=ruleJvmTypeReference();
 					state._fsp--;
 					if (state.failed) return current;
@@ -3265,19 +3266,19 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:1234:4: ( ( ( ( () ( ( ruleOpCompare ) ) ) )=> ( () ( ( ruleOpCompare ) ) ) ) ( (lv_rightOperand_6_0= ruleXOtherOperatorExpression ) ) )
+					// InternalWeightDefinition.g:1238:4: ( ( ( ( () ( ( ruleOpCompare ) ) ) )=> ( () ( ( ruleOpCompare ) ) ) ) ( (lv_rightOperand_6_0= ruleXOtherOperatorExpression ) ) )
 					{
-					// InternalWeightDefinition.g:1234:4: ( ( ( ( () ( ( ruleOpCompare ) ) ) )=> ( () ( ( ruleOpCompare ) ) ) ) ( (lv_rightOperand_6_0= ruleXOtherOperatorExpression ) ) )
-					// InternalWeightDefinition.g:1235:5: ( ( ( () ( ( ruleOpCompare ) ) ) )=> ( () ( ( ruleOpCompare ) ) ) ) ( (lv_rightOperand_6_0= ruleXOtherOperatorExpression ) )
+					// InternalWeightDefinition.g:1238:4: ( ( ( ( () ( ( ruleOpCompare ) ) ) )=> ( () ( ( ruleOpCompare ) ) ) ) ( (lv_rightOperand_6_0= ruleXOtherOperatorExpression ) ) )
+					// InternalWeightDefinition.g:1239:5: ( ( ( () ( ( ruleOpCompare ) ) ) )=> ( () ( ( ruleOpCompare ) ) ) ) ( (lv_rightOperand_6_0= ruleXOtherOperatorExpression ) )
 					{
-					// InternalWeightDefinition.g:1235:5: ( ( ( () ( ( ruleOpCompare ) ) ) )=> ( () ( ( ruleOpCompare ) ) ) )
-					// InternalWeightDefinition.g:1236:6: ( ( () ( ( ruleOpCompare ) ) ) )=> ( () ( ( ruleOpCompare ) ) )
+					// InternalWeightDefinition.g:1239:5: ( ( ( () ( ( ruleOpCompare ) ) ) )=> ( () ( ( ruleOpCompare ) ) ) )
+					// InternalWeightDefinition.g:1240:6: ( ( () ( ( ruleOpCompare ) ) ) )=> ( () ( ( ruleOpCompare ) ) )
 					{
-					// InternalWeightDefinition.g:1246:6: ( () ( ( ruleOpCompare ) ) )
-					// InternalWeightDefinition.g:1247:7: () ( ( ruleOpCompare ) )
+					// InternalWeightDefinition.g:1250:6: ( () ( ( ruleOpCompare ) ) )
+					// InternalWeightDefinition.g:1251:7: () ( ( ruleOpCompare ) )
 					{
-					// InternalWeightDefinition.g:1247:7: ()
-					// InternalWeightDefinition.g:1248:8: 
+					// InternalWeightDefinition.g:1251:7: ()
+					// InternalWeightDefinition.g:1252:8: 
 					{
 					if ( state.backtracking==0 ) {
 													current = forceCreateModelElementAndSet(
@@ -3286,11 +3287,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 												}
 					}
 
-					// InternalWeightDefinition.g:1254:7: ( ( ruleOpCompare ) )
-					// InternalWeightDefinition.g:1255:8: ( ruleOpCompare )
+					// InternalWeightDefinition.g:1258:7: ( ( ruleOpCompare ) )
+					// InternalWeightDefinition.g:1259:8: ( ruleOpCompare )
 					{
-					// InternalWeightDefinition.g:1255:8: ( ruleOpCompare )
-					// InternalWeightDefinition.g:1256:9: ruleOpCompare
+					// InternalWeightDefinition.g:1259:8: ( ruleOpCompare )
+					// InternalWeightDefinition.g:1260:9: ruleOpCompare
 					{
 					if ( state.backtracking==0 ) {
 														if (current==null) {
@@ -3300,7 +3301,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					if ( state.backtracking==0 ) {
 														newCompositeNode(grammarAccess.getXRelationalExpressionAccess().getFeatureJvmIdentifiableElementCrossReference_1_1_0_0_1_0());
 													}
-					pushFollow(FOLLOW_13);
+					pushFollow(FOLLOW_12);
 					ruleOpCompare();
 					state._fsp--;
 					if (state.failed) return current;
@@ -3315,16 +3316,16 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:1272:5: ( (lv_rightOperand_6_0= ruleXOtherOperatorExpression ) )
-					// InternalWeightDefinition.g:1273:6: (lv_rightOperand_6_0= ruleXOtherOperatorExpression )
+					// InternalWeightDefinition.g:1276:5: ( (lv_rightOperand_6_0= ruleXOtherOperatorExpression ) )
+					// InternalWeightDefinition.g:1277:6: (lv_rightOperand_6_0= ruleXOtherOperatorExpression )
 					{
-					// InternalWeightDefinition.g:1273:6: (lv_rightOperand_6_0= ruleXOtherOperatorExpression )
-					// InternalWeightDefinition.g:1274:7: lv_rightOperand_6_0= ruleXOtherOperatorExpression
+					// InternalWeightDefinition.g:1277:6: (lv_rightOperand_6_0= ruleXOtherOperatorExpression )
+					// InternalWeightDefinition.g:1278:7: lv_rightOperand_6_0= ruleXOtherOperatorExpression
 					{
 					if ( state.backtracking==0 ) {
 												newCompositeNode(grammarAccess.getXRelationalExpressionAccess().getRightOperandXOtherOperatorExpressionParserRuleCall_1_1_1_0());
 											}
-					pushFollow(FOLLOW_21);
+					pushFollow(FOLLOW_20);
 					lv_rightOperand_6_0=ruleXOtherOperatorExpression();
 					state._fsp--;
 					if (state.failed) return current;
@@ -3349,7 +3350,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					break;
 
 				default :
-					break loop14;
+					break loop12;
 				}
 			}
 
@@ -3377,7 +3378,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleOpCompare"
-	// InternalWeightDefinition.g:1297:1: entryRuleOpCompare returns [String current=null] :iv_ruleOpCompare= ruleOpCompare EOF ;
+	// InternalWeightDefinition.g:1301:1: entryRuleOpCompare returns [String current=null] :iv_ruleOpCompare= ruleOpCompare EOF ;
 	public final String entryRuleOpCompare() throws RecognitionException {
 		String current = null;
 
@@ -3385,8 +3386,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		AntlrDatatypeRuleToken iv_ruleOpCompare =null;
 
 		try {
-			// InternalWeightDefinition.g:1297:49: (iv_ruleOpCompare= ruleOpCompare EOF )
-			// InternalWeightDefinition.g:1298:2: iv_ruleOpCompare= ruleOpCompare EOF
+			// InternalWeightDefinition.g:1301:49: (iv_ruleOpCompare= ruleOpCompare EOF )
+			// InternalWeightDefinition.g:1302:2: iv_ruleOpCompare= ruleOpCompare EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getOpCompareRule()); }
 			pushFollow(FOLLOW_1);
@@ -3414,7 +3415,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleOpCompare"
-	// InternalWeightDefinition.g:1304:1: ruleOpCompare returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (kw= '>=' | (kw= '<' kw= '=' ) |kw= '>' |kw= '<' ) ;
+	// InternalWeightDefinition.g:1308:1: ruleOpCompare returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (kw= '>=' | (kw= '<' kw= '=' ) |kw= '>' |kw= '<' ) ;
 	public final AntlrDatatypeRuleToken ruleOpCompare() throws RecognitionException {
 		AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -3425,25 +3426,25 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:1310:2: ( (kw= '>=' | (kw= '<' kw= '=' ) |kw= '>' |kw= '<' ) )
-			// InternalWeightDefinition.g:1311:2: (kw= '>=' | (kw= '<' kw= '=' ) |kw= '>' |kw= '<' )
+			// InternalWeightDefinition.g:1314:2: ( (kw= '>=' | (kw= '<' kw= '=' ) |kw= '>' |kw= '<' ) )
+			// InternalWeightDefinition.g:1315:2: (kw= '>=' | (kw= '<' kw= '=' ) |kw= '>' |kw= '<' )
 			{
-			// InternalWeightDefinition.g:1311:2: (kw= '>=' | (kw= '<' kw= '=' ) |kw= '>' |kw= '<' )
-			int alt15=4;
+			// InternalWeightDefinition.g:1315:2: (kw= '>=' | (kw= '<' kw= '=' ) |kw= '>' |kw= '<' )
+			int alt13=4;
 			switch ( input.LA(1) ) {
 			case 49:
 				{
-				alt15=1;
+				alt13=1;
 				}
 				break;
 			case 42:
 				{
-				int LA15_2 = input.LA(2);
-				if ( (LA15_2==44) ) {
-					alt15=2;
+				int LA13_2 = input.LA(2);
+				if ( (LA13_2==44) ) {
+					alt13=2;
 				}
-				else if ( (LA15_2==EOF||(LA15_2 >= RULE_DECIMAL && LA15_2 <= RULE_INT)||LA15_2==RULE_STRING||LA15_2==13||LA15_2==16||LA15_2==21||LA15_2==26||LA15_2==30||LA15_2==42||LA15_2==53||LA15_2==59||(LA15_2 >= 61 && LA15_2 <= 63)||LA15_2==65||(LA15_2 >= 67 && LA15_2 <= 68)||(LA15_2 >= 70 && LA15_2 <= 72)||(LA15_2 >= 74 && LA15_2 <= 81)||(LA15_2 >= 84 && LA15_2 <= 85)) ) {
-					alt15=4;
+				else if ( (LA13_2==EOF||(LA13_2 >= RULE_DECIMAL && LA13_2 <= RULE_INT)||LA13_2==RULE_STRING||LA13_2==13||LA13_2==16||LA13_2==21||LA13_2==26||LA13_2==30||LA13_2==42||LA13_2==53||LA13_2==59||(LA13_2 >= 61 && LA13_2 <= 63)||LA13_2==65||(LA13_2 >= 67 && LA13_2 <= 68)||(LA13_2 >= 70 && LA13_2 <= 72)||(LA13_2 >= 74 && LA13_2 <= 81)||(LA13_2 >= 84 && LA13_2 <= 85)) ) {
+					alt13=4;
 				}
 
 				else {
@@ -3452,7 +3453,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					try {
 						input.consume();
 						NoViableAltException nvae =
-							new NoViableAltException("", 15, 2, input);
+							new NoViableAltException("", 13, 2, input);
 						throw nvae;
 					} finally {
 						input.rewind(nvaeMark);
@@ -3463,18 +3464,18 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 				break;
 			case 48:
 				{
-				alt15=3;
+				alt13=3;
 				}
 				break;
 			default:
 				if (state.backtracking>0) {state.failed=true; return current;}
 				NoViableAltException nvae =
-					new NoViableAltException("", 15, 0, input);
+					new NoViableAltException("", 13, 0, input);
 				throw nvae;
 			}
-			switch (alt15) {
+			switch (alt13) {
 				case 1 :
-					// InternalWeightDefinition.g:1312:3: kw= '>='
+					// InternalWeightDefinition.g:1316:3: kw= '>='
 					{
 					kw=(Token)match(input,49,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -3484,12 +3485,12 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:1318:3: (kw= '<' kw= '=' )
+					// InternalWeightDefinition.g:1322:3: (kw= '<' kw= '=' )
 					{
-					// InternalWeightDefinition.g:1318:3: (kw= '<' kw= '=' )
-					// InternalWeightDefinition.g:1319:4: kw= '<' kw= '='
+					// InternalWeightDefinition.g:1322:3: (kw= '<' kw= '=' )
+					// InternalWeightDefinition.g:1323:4: kw= '<' kw= '='
 					{
-					kw=(Token)match(input,42,FOLLOW_12); if (state.failed) return current;
+					kw=(Token)match(input,42,FOLLOW_11); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 									current.merge(kw);
 									newLeafNode(kw, grammarAccess.getOpCompareAccess().getLessThanSignKeyword_1_0());
@@ -3504,7 +3505,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 3 :
-					// InternalWeightDefinition.g:1331:3: kw= '>'
+					// InternalWeightDefinition.g:1335:3: kw= '>'
 					{
 					kw=(Token)match(input,48,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -3514,7 +3515,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 4 :
-					// InternalWeightDefinition.g:1337:3: kw= '<'
+					// InternalWeightDefinition.g:1341:3: kw= '<'
 					{
 					kw=(Token)match(input,42,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -3548,7 +3549,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXOtherOperatorExpression"
-	// InternalWeightDefinition.g:1346:1: entryRuleXOtherOperatorExpression returns [EObject current=null] :iv_ruleXOtherOperatorExpression= ruleXOtherOperatorExpression EOF ;
+	// InternalWeightDefinition.g:1350:1: entryRuleXOtherOperatorExpression returns [EObject current=null] :iv_ruleXOtherOperatorExpression= ruleXOtherOperatorExpression EOF ;
 	public final EObject entryRuleXOtherOperatorExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -3556,8 +3557,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXOtherOperatorExpression =null;
 
 		try {
-			// InternalWeightDefinition.g:1346:65: (iv_ruleXOtherOperatorExpression= ruleXOtherOperatorExpression EOF )
-			// InternalWeightDefinition.g:1347:2: iv_ruleXOtherOperatorExpression= ruleXOtherOperatorExpression EOF
+			// InternalWeightDefinition.g:1350:65: (iv_ruleXOtherOperatorExpression= ruleXOtherOperatorExpression EOF )
+			// InternalWeightDefinition.g:1351:2: iv_ruleXOtherOperatorExpression= ruleXOtherOperatorExpression EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXOtherOperatorExpressionRule()); }
 			pushFollow(FOLLOW_1);
@@ -3585,7 +3586,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXOtherOperatorExpression"
-	// InternalWeightDefinition.g:1353:1: ruleXOtherOperatorExpression returns [EObject current=null] : (this_XAdditiveExpression_0= ruleXAdditiveExpression ( ( ( ( () ( ( ruleOpOther ) ) ) )=> ( () ( ( ruleOpOther ) ) ) ) ( (lv_rightOperand_3_0= ruleXAdditiveExpression ) ) )* ) ;
+	// InternalWeightDefinition.g:1357:1: ruleXOtherOperatorExpression returns [EObject current=null] : (this_XAdditiveExpression_0= ruleXAdditiveExpression ( ( ( ( () ( ( ruleOpOther ) ) ) )=> ( () ( ( ruleOpOther ) ) ) ) ( (lv_rightOperand_3_0= ruleXAdditiveExpression ) ) )* ) ;
 	public final EObject ruleXOtherOperatorExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -3597,16 +3598,16 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:1359:2: ( (this_XAdditiveExpression_0= ruleXAdditiveExpression ( ( ( ( () ( ( ruleOpOther ) ) ) )=> ( () ( ( ruleOpOther ) ) ) ) ( (lv_rightOperand_3_0= ruleXAdditiveExpression ) ) )* ) )
-			// InternalWeightDefinition.g:1360:2: (this_XAdditiveExpression_0= ruleXAdditiveExpression ( ( ( ( () ( ( ruleOpOther ) ) ) )=> ( () ( ( ruleOpOther ) ) ) ) ( (lv_rightOperand_3_0= ruleXAdditiveExpression ) ) )* )
+			// InternalWeightDefinition.g:1363:2: ( (this_XAdditiveExpression_0= ruleXAdditiveExpression ( ( ( ( () ( ( ruleOpOther ) ) ) )=> ( () ( ( ruleOpOther ) ) ) ) ( (lv_rightOperand_3_0= ruleXAdditiveExpression ) ) )* ) )
+			// InternalWeightDefinition.g:1364:2: (this_XAdditiveExpression_0= ruleXAdditiveExpression ( ( ( ( () ( ( ruleOpOther ) ) ) )=> ( () ( ( ruleOpOther ) ) ) ) ( (lv_rightOperand_3_0= ruleXAdditiveExpression ) ) )* )
 			{
-			// InternalWeightDefinition.g:1360:2: (this_XAdditiveExpression_0= ruleXAdditiveExpression ( ( ( ( () ( ( ruleOpOther ) ) ) )=> ( () ( ( ruleOpOther ) ) ) ) ( (lv_rightOperand_3_0= ruleXAdditiveExpression ) ) )* )
-			// InternalWeightDefinition.g:1361:3: this_XAdditiveExpression_0= ruleXAdditiveExpression ( ( ( ( () ( ( ruleOpOther ) ) ) )=> ( () ( ( ruleOpOther ) ) ) ) ( (lv_rightOperand_3_0= ruleXAdditiveExpression ) ) )*
+			// InternalWeightDefinition.g:1364:2: (this_XAdditiveExpression_0= ruleXAdditiveExpression ( ( ( ( () ( ( ruleOpOther ) ) ) )=> ( () ( ( ruleOpOther ) ) ) ) ( (lv_rightOperand_3_0= ruleXAdditiveExpression ) ) )* )
+			// InternalWeightDefinition.g:1365:3: this_XAdditiveExpression_0= ruleXAdditiveExpression ( ( ( ( () ( ( ruleOpOther ) ) ) )=> ( () ( ( ruleOpOther ) ) ) ) ( (lv_rightOperand_3_0= ruleXAdditiveExpression ) ) )*
 			{
 			if ( state.backtracking==0 ) {
 						newCompositeNode(grammarAccess.getXOtherOperatorExpressionAccess().getXAdditiveExpressionParserRuleCall_0());
 					}
-			pushFollow(FOLLOW_22);
+			pushFollow(FOLLOW_21);
 			this_XAdditiveExpression_0=ruleXAdditiveExpression();
 			state._fsp--;
 			if (state.failed) return current;
@@ -3614,96 +3615,96 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						current = this_XAdditiveExpression_0;
 						afterParserOrEnumRuleCall();
 					}
-			// InternalWeightDefinition.g:1369:3: ( ( ( ( () ( ( ruleOpOther ) ) ) )=> ( () ( ( ruleOpOther ) ) ) ) ( (lv_rightOperand_3_0= ruleXAdditiveExpression ) ) )*
-			loop16:
+			// InternalWeightDefinition.g:1373:3: ( ( ( ( () ( ( ruleOpOther ) ) ) )=> ( () ( ( ruleOpOther ) ) ) ) ( (lv_rightOperand_3_0= ruleXAdditiveExpression ) ) )*
+			loop14:
 			while (true) {
-				int alt16=2;
+				int alt14=2;
 				switch ( input.LA(1) ) {
 				case 42:
 					{
-					int LA16_2 = input.LA(2);
+					int LA14_2 = input.LA(2);
 					if ( (synpred7_InternalWeightDefinition()) ) {
-						alt16=1;
+						alt14=1;
 					}
 
 					}
 					break;
 				case 48:
 					{
-					int LA16_3 = input.LA(2);
+					int LA14_3 = input.LA(2);
 					if ( (synpred7_InternalWeightDefinition()) ) {
-						alt16=1;
+						alt14=1;
 					}
 
 					}
 					break;
 				case 33:
 					{
-					int LA16_4 = input.LA(2);
+					int LA14_4 = input.LA(2);
 					if ( (synpred7_InternalWeightDefinition()) ) {
-						alt16=1;
+						alt14=1;
 					}
 
 					}
 					break;
 				case 36:
 					{
-					int LA16_5 = input.LA(2);
+					int LA14_5 = input.LA(2);
 					if ( (synpred7_InternalWeightDefinition()) ) {
-						alt16=1;
+						alt14=1;
 					}
 
 					}
 					break;
 				case 35:
 					{
-					int LA16_6 = input.LA(2);
+					int LA14_6 = input.LA(2);
 					if ( (synpred7_InternalWeightDefinition()) ) {
-						alt16=1;
+						alt14=1;
 					}
 
 					}
 					break;
 				case 47:
 					{
-					int LA16_7 = input.LA(2);
+					int LA14_7 = input.LA(2);
 					if ( (synpred7_InternalWeightDefinition()) ) {
-						alt16=1;
+						alt14=1;
 					}
 
 					}
 					break;
 				case 43:
 					{
-					int LA16_8 = input.LA(2);
+					int LA14_8 = input.LA(2);
 					if ( (synpred7_InternalWeightDefinition()) ) {
-						alt16=1;
+						alt14=1;
 					}
 
 					}
 					break;
 				case 52:
 					{
-					int LA16_9 = input.LA(2);
+					int LA14_9 = input.LA(2);
 					if ( (synpred7_InternalWeightDefinition()) ) {
-						alt16=1;
+						alt14=1;
 					}
 
 					}
 					break;
 				}
-				switch (alt16) {
+				switch (alt14) {
 				case 1 :
-					// InternalWeightDefinition.g:1370:4: ( ( ( () ( ( ruleOpOther ) ) ) )=> ( () ( ( ruleOpOther ) ) ) ) ( (lv_rightOperand_3_0= ruleXAdditiveExpression ) )
+					// InternalWeightDefinition.g:1374:4: ( ( ( () ( ( ruleOpOther ) ) ) )=> ( () ( ( ruleOpOther ) ) ) ) ( (lv_rightOperand_3_0= ruleXAdditiveExpression ) )
 					{
-					// InternalWeightDefinition.g:1370:4: ( ( ( () ( ( ruleOpOther ) ) ) )=> ( () ( ( ruleOpOther ) ) ) )
-					// InternalWeightDefinition.g:1371:5: ( ( () ( ( ruleOpOther ) ) ) )=> ( () ( ( ruleOpOther ) ) )
+					// InternalWeightDefinition.g:1374:4: ( ( ( () ( ( ruleOpOther ) ) ) )=> ( () ( ( ruleOpOther ) ) ) )
+					// InternalWeightDefinition.g:1375:5: ( ( () ( ( ruleOpOther ) ) ) )=> ( () ( ( ruleOpOther ) ) )
 					{
-					// InternalWeightDefinition.g:1381:5: ( () ( ( ruleOpOther ) ) )
-					// InternalWeightDefinition.g:1382:6: () ( ( ruleOpOther ) )
+					// InternalWeightDefinition.g:1385:5: ( () ( ( ruleOpOther ) ) )
+					// InternalWeightDefinition.g:1386:6: () ( ( ruleOpOther ) )
 					{
-					// InternalWeightDefinition.g:1382:6: ()
-					// InternalWeightDefinition.g:1383:7: 
+					// InternalWeightDefinition.g:1386:6: ()
+					// InternalWeightDefinition.g:1387:7: 
 					{
 					if ( state.backtracking==0 ) {
 												current = forceCreateModelElementAndSet(
@@ -3712,11 +3713,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 											}
 					}
 
-					// InternalWeightDefinition.g:1389:6: ( ( ruleOpOther ) )
-					// InternalWeightDefinition.g:1390:7: ( ruleOpOther )
+					// InternalWeightDefinition.g:1393:6: ( ( ruleOpOther ) )
+					// InternalWeightDefinition.g:1394:7: ( ruleOpOther )
 					{
-					// InternalWeightDefinition.g:1390:7: ( ruleOpOther )
-					// InternalWeightDefinition.g:1391:8: ruleOpOther
+					// InternalWeightDefinition.g:1394:7: ( ruleOpOther )
+					// InternalWeightDefinition.g:1395:8: ruleOpOther
 					{
 					if ( state.backtracking==0 ) {
 													if (current==null) {
@@ -3726,7 +3727,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					if ( state.backtracking==0 ) {
 													newCompositeNode(grammarAccess.getXOtherOperatorExpressionAccess().getFeatureJvmIdentifiableElementCrossReference_1_0_0_1_0());
 												}
-					pushFollow(FOLLOW_13);
+					pushFollow(FOLLOW_12);
 					ruleOpOther();
 					state._fsp--;
 					if (state.failed) return current;
@@ -3741,16 +3742,16 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:1407:4: ( (lv_rightOperand_3_0= ruleXAdditiveExpression ) )
-					// InternalWeightDefinition.g:1408:5: (lv_rightOperand_3_0= ruleXAdditiveExpression )
+					// InternalWeightDefinition.g:1411:4: ( (lv_rightOperand_3_0= ruleXAdditiveExpression ) )
+					// InternalWeightDefinition.g:1412:5: (lv_rightOperand_3_0= ruleXAdditiveExpression )
 					{
-					// InternalWeightDefinition.g:1408:5: (lv_rightOperand_3_0= ruleXAdditiveExpression )
-					// InternalWeightDefinition.g:1409:6: lv_rightOperand_3_0= ruleXAdditiveExpression
+					// InternalWeightDefinition.g:1412:5: (lv_rightOperand_3_0= ruleXAdditiveExpression )
+					// InternalWeightDefinition.g:1413:6: lv_rightOperand_3_0= ruleXAdditiveExpression
 					{
 					if ( state.backtracking==0 ) {
 											newCompositeNode(grammarAccess.getXOtherOperatorExpressionAccess().getRightOperandXAdditiveExpressionParserRuleCall_1_1_0());
 										}
-					pushFollow(FOLLOW_22);
+					pushFollow(FOLLOW_21);
 					lv_rightOperand_3_0=ruleXAdditiveExpression();
 					state._fsp--;
 					if (state.failed) return current;
@@ -3773,7 +3774,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					break;
 
 				default :
-					break loop16;
+					break loop14;
 				}
 			}
 
@@ -3801,7 +3802,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleOpOther"
-	// InternalWeightDefinition.g:1431:1: entryRuleOpOther returns [String current=null] :iv_ruleOpOther= ruleOpOther EOF ;
+	// InternalWeightDefinition.g:1435:1: entryRuleOpOther returns [String current=null] :iv_ruleOpOther= ruleOpOther EOF ;
 	public final String entryRuleOpOther() throws RecognitionException {
 		String current = null;
 
@@ -3809,8 +3810,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		AntlrDatatypeRuleToken iv_ruleOpOther =null;
 
 		try {
-			// InternalWeightDefinition.g:1431:47: (iv_ruleOpOther= ruleOpOther EOF )
-			// InternalWeightDefinition.g:1432:2: iv_ruleOpOther= ruleOpOther EOF
+			// InternalWeightDefinition.g:1435:47: (iv_ruleOpOther= ruleOpOther EOF )
+			// InternalWeightDefinition.g:1436:2: iv_ruleOpOther= ruleOpOther EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getOpOtherRule()); }
 			pushFollow(FOLLOW_1);
@@ -3838,7 +3839,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleOpOther"
-	// InternalWeightDefinition.g:1438:1: ruleOpOther returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (kw= '->' |kw= '..<' | (kw= '>' kw= '..' ) |kw= '..' |kw= '=>' | (kw= '>' ( ( ( ( '>' '>' ) )=> (kw= '>' kw= '>' ) ) |kw= '>' ) ) | (kw= '<' ( ( ( ( '<' '<' ) )=> (kw= '<' kw= '<' ) ) |kw= '<' |kw= '=>' ) ) |kw= '<>' |kw= '?:' ) ;
+	// InternalWeightDefinition.g:1442:1: ruleOpOther returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (kw= '->' |kw= '..<' | (kw= '>' kw= '..' ) |kw= '..' |kw= '=>' | (kw= '>' ( ( ( ( '>' '>' ) )=> (kw= '>' kw= '>' ) ) |kw= '>' ) ) | (kw= '<' ( ( ( ( '<' '<' ) )=> (kw= '<' kw= '<' ) ) |kw= '<' |kw= '=>' ) ) |kw= '<>' |kw= '?:' ) ;
 	public final AntlrDatatypeRuleToken ruleOpOther() throws RecognitionException {
 		AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -3849,30 +3850,30 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:1444:2: ( (kw= '->' |kw= '..<' | (kw= '>' kw= '..' ) |kw= '..' |kw= '=>' | (kw= '>' ( ( ( ( '>' '>' ) )=> (kw= '>' kw= '>' ) ) |kw= '>' ) ) | (kw= '<' ( ( ( ( '<' '<' ) )=> (kw= '<' kw= '<' ) ) |kw= '<' |kw= '=>' ) ) |kw= '<>' |kw= '?:' ) )
-			// InternalWeightDefinition.g:1445:2: (kw= '->' |kw= '..<' | (kw= '>' kw= '..' ) |kw= '..' |kw= '=>' | (kw= '>' ( ( ( ( '>' '>' ) )=> (kw= '>' kw= '>' ) ) |kw= '>' ) ) | (kw= '<' ( ( ( ( '<' '<' ) )=> (kw= '<' kw= '<' ) ) |kw= '<' |kw= '=>' ) ) |kw= '<>' |kw= '?:' )
+			// InternalWeightDefinition.g:1448:2: ( (kw= '->' |kw= '..<' | (kw= '>' kw= '..' ) |kw= '..' |kw= '=>' | (kw= '>' ( ( ( ( '>' '>' ) )=> (kw= '>' kw= '>' ) ) |kw= '>' ) ) | (kw= '<' ( ( ( ( '<' '<' ) )=> (kw= '<' kw= '<' ) ) |kw= '<' |kw= '=>' ) ) |kw= '<>' |kw= '?:' ) )
+			// InternalWeightDefinition.g:1449:2: (kw= '->' |kw= '..<' | (kw= '>' kw= '..' ) |kw= '..' |kw= '=>' | (kw= '>' ( ( ( ( '>' '>' ) )=> (kw= '>' kw= '>' ) ) |kw= '>' ) ) | (kw= '<' ( ( ( ( '<' '<' ) )=> (kw= '<' kw= '<' ) ) |kw= '<' |kw= '=>' ) ) |kw= '<>' |kw= '?:' )
 			{
-			// InternalWeightDefinition.g:1445:2: (kw= '->' |kw= '..<' | (kw= '>' kw= '..' ) |kw= '..' |kw= '=>' | (kw= '>' ( ( ( ( '>' '>' ) )=> (kw= '>' kw= '>' ) ) |kw= '>' ) ) | (kw= '<' ( ( ( ( '<' '<' ) )=> (kw= '<' kw= '<' ) ) |kw= '<' |kw= '=>' ) ) |kw= '<>' |kw= '?:' )
-			int alt19=9;
+			// InternalWeightDefinition.g:1449:2: (kw= '->' |kw= '..<' | (kw= '>' kw= '..' ) |kw= '..' |kw= '=>' | (kw= '>' ( ( ( ( '>' '>' ) )=> (kw= '>' kw= '>' ) ) |kw= '>' ) ) | (kw= '<' ( ( ( ( '<' '<' ) )=> (kw= '<' kw= '<' ) ) |kw= '<' |kw= '=>' ) ) |kw= '<>' |kw= '?:' )
+			int alt17=9;
 			switch ( input.LA(1) ) {
 			case 33:
 				{
-				alt19=1;
+				alt17=1;
 				}
 				break;
 			case 36:
 				{
-				alt19=2;
+				alt17=2;
 				}
 				break;
 			case 48:
 				{
-				int LA19_3 = input.LA(2);
-				if ( (LA19_3==35) ) {
-					alt19=3;
+				int LA17_3 = input.LA(2);
+				if ( (LA17_3==35) ) {
+					alt17=3;
 				}
-				else if ( (LA19_3==48) ) {
-					alt19=6;
+				else if ( (LA17_3==48) ) {
+					alt17=6;
 				}
 
 				else {
@@ -3881,7 +3882,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					try {
 						input.consume();
 						NoViableAltException nvae =
-							new NoViableAltException("", 19, 3, input);
+							new NoViableAltException("", 17, 3, input);
 						throw nvae;
 					} finally {
 						input.rewind(nvaeMark);
@@ -3892,38 +3893,38 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 				break;
 			case 35:
 				{
-				alt19=4;
+				alt17=4;
 				}
 				break;
 			case 47:
 				{
-				alt19=5;
+				alt17=5;
 				}
 				break;
 			case 42:
 				{
-				alt19=7;
+				alt17=7;
 				}
 				break;
 			case 43:
 				{
-				alt19=8;
+				alt17=8;
 				}
 				break;
 			case 52:
 				{
-				alt19=9;
+				alt17=9;
 				}
 				break;
 			default:
 				if (state.backtracking>0) {state.failed=true; return current;}
 				NoViableAltException nvae =
-					new NoViableAltException("", 19, 0, input);
+					new NoViableAltException("", 17, 0, input);
 				throw nvae;
 			}
-			switch (alt19) {
+			switch (alt17) {
 				case 1 :
-					// InternalWeightDefinition.g:1446:3: kw= '->'
+					// InternalWeightDefinition.g:1450:3: kw= '->'
 					{
 					kw=(Token)match(input,33,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -3933,7 +3934,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:1452:3: kw= '..<'
+					// InternalWeightDefinition.g:1456:3: kw= '..<'
 					{
 					kw=(Token)match(input,36,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -3943,12 +3944,12 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 3 :
-					// InternalWeightDefinition.g:1458:3: (kw= '>' kw= '..' )
+					// InternalWeightDefinition.g:1462:3: (kw= '>' kw= '..' )
 					{
-					// InternalWeightDefinition.g:1458:3: (kw= '>' kw= '..' )
-					// InternalWeightDefinition.g:1459:4: kw= '>' kw= '..'
+					// InternalWeightDefinition.g:1462:3: (kw= '>' kw= '..' )
+					// InternalWeightDefinition.g:1463:4: kw= '>' kw= '..'
 					{
-					kw=(Token)match(input,48,FOLLOW_23); if (state.failed) return current;
+					kw=(Token)match(input,48,FOLLOW_22); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 									current.merge(kw);
 									newLeafNode(kw, grammarAccess.getOpOtherAccess().getGreaterThanSignKeyword_2_0());
@@ -3963,7 +3964,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 4 :
-					// InternalWeightDefinition.g:1471:3: kw= '..'
+					// InternalWeightDefinition.g:1475:3: kw= '..'
 					{
 					kw=(Token)match(input,35,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -3973,7 +3974,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 5 :
-					// InternalWeightDefinition.g:1477:3: kw= '=>'
+					// InternalWeightDefinition.g:1481:3: kw= '=>'
 					{
 					kw=(Token)match(input,47,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -3983,26 +3984,26 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 6 :
-					// InternalWeightDefinition.g:1483:3: (kw= '>' ( ( ( ( '>' '>' ) )=> (kw= '>' kw= '>' ) ) |kw= '>' ) )
+					// InternalWeightDefinition.g:1487:3: (kw= '>' ( ( ( ( '>' '>' ) )=> (kw= '>' kw= '>' ) ) |kw= '>' ) )
 					{
-					// InternalWeightDefinition.g:1483:3: (kw= '>' ( ( ( ( '>' '>' ) )=> (kw= '>' kw= '>' ) ) |kw= '>' ) )
-					// InternalWeightDefinition.g:1484:4: kw= '>' ( ( ( ( '>' '>' ) )=> (kw= '>' kw= '>' ) ) |kw= '>' )
+					// InternalWeightDefinition.g:1487:3: (kw= '>' ( ( ( ( '>' '>' ) )=> (kw= '>' kw= '>' ) ) |kw= '>' ) )
+					// InternalWeightDefinition.g:1488:4: kw= '>' ( ( ( ( '>' '>' ) )=> (kw= '>' kw= '>' ) ) |kw= '>' )
 					{
-					kw=(Token)match(input,48,FOLLOW_24); if (state.failed) return current;
+					kw=(Token)match(input,48,FOLLOW_23); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 									current.merge(kw);
 									newLeafNode(kw, grammarAccess.getOpOtherAccess().getGreaterThanSignKeyword_5_0());
 								}
-					// InternalWeightDefinition.g:1489:4: ( ( ( ( '>' '>' ) )=> (kw= '>' kw= '>' ) ) |kw= '>' )
-					int alt17=2;
-					int LA17_0 = input.LA(1);
-					if ( (LA17_0==48) ) {
-						int LA17_1 = input.LA(2);
-						if ( (LA17_1==48) && (synpred8_InternalWeightDefinition())) {
-							alt17=1;
+					// InternalWeightDefinition.g:1493:4: ( ( ( ( '>' '>' ) )=> (kw= '>' kw= '>' ) ) |kw= '>' )
+					int alt15=2;
+					int LA15_0 = input.LA(1);
+					if ( (LA15_0==48) ) {
+						int LA15_1 = input.LA(2);
+						if ( (LA15_1==48) && (synpred8_InternalWeightDefinition())) {
+							alt15=1;
 						}
-						else if ( (LA17_1==EOF||(LA17_1 >= RULE_DECIMAL && LA17_1 <= RULE_INT)||LA17_1==RULE_STRING||LA17_1==13||LA17_1==16||LA17_1==21||LA17_1==26||LA17_1==30||LA17_1==42||LA17_1==53||LA17_1==59||(LA17_1 >= 61 && LA17_1 <= 63)||LA17_1==65||(LA17_1 >= 67 && LA17_1 <= 68)||(LA17_1 >= 70 && LA17_1 <= 72)||(LA17_1 >= 74 && LA17_1 <= 81)||(LA17_1 >= 84 && LA17_1 <= 85)) ) {
-							alt17=2;
+						else if ( (LA15_1==EOF||(LA15_1 >= RULE_DECIMAL && LA15_1 <= RULE_INT)||LA15_1==RULE_STRING||LA15_1==13||LA15_1==16||LA15_1==21||LA15_1==26||LA15_1==30||LA15_1==42||LA15_1==53||LA15_1==59||(LA15_1 >= 61 && LA15_1 <= 63)||LA15_1==65||(LA15_1 >= 67 && LA15_1 <= 68)||(LA15_1 >= 70 && LA15_1 <= 72)||(LA15_1 >= 74 && LA15_1 <= 81)||(LA15_1 >= 84 && LA15_1 <= 85)) ) {
+							alt15=2;
 						}
 
 						else {
@@ -4011,7 +4012,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 							try {
 								input.consume();
 								NoViableAltException nvae =
-									new NoViableAltException("", 17, 1, input);
+									new NoViableAltException("", 15, 1, input);
 								throw nvae;
 							} finally {
 								input.rewind(nvaeMark);
@@ -4023,21 +4024,21 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					else {
 						if (state.backtracking>0) {state.failed=true; return current;}
 						NoViableAltException nvae =
-							new NoViableAltException("", 17, 0, input);
+							new NoViableAltException("", 15, 0, input);
 						throw nvae;
 					}
 
-					switch (alt17) {
+					switch (alt15) {
 						case 1 :
-							// InternalWeightDefinition.g:1490:5: ( ( ( '>' '>' ) )=> (kw= '>' kw= '>' ) )
+							// InternalWeightDefinition.g:1494:5: ( ( ( '>' '>' ) )=> (kw= '>' kw= '>' ) )
 							{
-							// InternalWeightDefinition.g:1490:5: ( ( ( '>' '>' ) )=> (kw= '>' kw= '>' ) )
-							// InternalWeightDefinition.g:1491:6: ( ( '>' '>' ) )=> (kw= '>' kw= '>' )
+							// InternalWeightDefinition.g:1494:5: ( ( ( '>' '>' ) )=> (kw= '>' kw= '>' ) )
+							// InternalWeightDefinition.g:1495:6: ( ( '>' '>' ) )=> (kw= '>' kw= '>' )
 							{
-							// InternalWeightDefinition.g:1496:6: (kw= '>' kw= '>' )
-							// InternalWeightDefinition.g:1497:7: kw= '>' kw= '>'
+							// InternalWeightDefinition.g:1500:6: (kw= '>' kw= '>' )
+							// InternalWeightDefinition.g:1501:7: kw= '>' kw= '>'
 							{
-							kw=(Token)match(input,48,FOLLOW_24); if (state.failed) return current;
+							kw=(Token)match(input,48,FOLLOW_23); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
 														current.merge(kw);
 														newLeafNode(kw, grammarAccess.getOpOtherAccess().getGreaterThanSignKeyword_5_1_0_0_0());
@@ -4054,7 +4055,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 							}
 							break;
 						case 2 :
-							// InternalWeightDefinition.g:1510:5: kw= '>'
+							// InternalWeightDefinition.g:1514:5: kw= '>'
 							{
 							kw=(Token)match(input,48,FOLLOW_2); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
@@ -4071,51 +4072,51 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 7 :
-					// InternalWeightDefinition.g:1518:3: (kw= '<' ( ( ( ( '<' '<' ) )=> (kw= '<' kw= '<' ) ) |kw= '<' |kw= '=>' ) )
+					// InternalWeightDefinition.g:1522:3: (kw= '<' ( ( ( ( '<' '<' ) )=> (kw= '<' kw= '<' ) ) |kw= '<' |kw= '=>' ) )
 					{
-					// InternalWeightDefinition.g:1518:3: (kw= '<' ( ( ( ( '<' '<' ) )=> (kw= '<' kw= '<' ) ) |kw= '<' |kw= '=>' ) )
-					// InternalWeightDefinition.g:1519:4: kw= '<' ( ( ( ( '<' '<' ) )=> (kw= '<' kw= '<' ) ) |kw= '<' |kw= '=>' )
+					// InternalWeightDefinition.g:1522:3: (kw= '<' ( ( ( ( '<' '<' ) )=> (kw= '<' kw= '<' ) ) |kw= '<' |kw= '=>' ) )
+					// InternalWeightDefinition.g:1523:4: kw= '<' ( ( ( ( '<' '<' ) )=> (kw= '<' kw= '<' ) ) |kw= '<' |kw= '=>' )
 					{
-					kw=(Token)match(input,42,FOLLOW_25); if (state.failed) return current;
+					kw=(Token)match(input,42,FOLLOW_24); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 									current.merge(kw);
 									newLeafNode(kw, grammarAccess.getOpOtherAccess().getLessThanSignKeyword_6_0());
 								}
-					// InternalWeightDefinition.g:1524:4: ( ( ( ( '<' '<' ) )=> (kw= '<' kw= '<' ) ) |kw= '<' |kw= '=>' )
-					int alt18=3;
-					int LA18_0 = input.LA(1);
-					if ( (LA18_0==42) ) {
-						int LA18_1 = input.LA(2);
+					// InternalWeightDefinition.g:1528:4: ( ( ( ( '<' '<' ) )=> (kw= '<' kw= '<' ) ) |kw= '<' |kw= '=>' )
+					int alt16=3;
+					int LA16_0 = input.LA(1);
+					if ( (LA16_0==42) ) {
+						int LA16_1 = input.LA(2);
 						if ( (synpred9_InternalWeightDefinition()) ) {
-							alt18=1;
+							alt16=1;
 						}
 						else if ( (true) ) {
-							alt18=2;
+							alt16=2;
 						}
 
 					}
-					else if ( (LA18_0==47) ) {
-						alt18=3;
+					else if ( (LA16_0==47) ) {
+						alt16=3;
 					}
 
 					else {
 						if (state.backtracking>0) {state.failed=true; return current;}
 						NoViableAltException nvae =
-							new NoViableAltException("", 18, 0, input);
+							new NoViableAltException("", 16, 0, input);
 						throw nvae;
 					}
 
-					switch (alt18) {
+					switch (alt16) {
 						case 1 :
-							// InternalWeightDefinition.g:1525:5: ( ( ( '<' '<' ) )=> (kw= '<' kw= '<' ) )
+							// InternalWeightDefinition.g:1529:5: ( ( ( '<' '<' ) )=> (kw= '<' kw= '<' ) )
 							{
-							// InternalWeightDefinition.g:1525:5: ( ( ( '<' '<' ) )=> (kw= '<' kw= '<' ) )
-							// InternalWeightDefinition.g:1526:6: ( ( '<' '<' ) )=> (kw= '<' kw= '<' )
+							// InternalWeightDefinition.g:1529:5: ( ( ( '<' '<' ) )=> (kw= '<' kw= '<' ) )
+							// InternalWeightDefinition.g:1530:6: ( ( '<' '<' ) )=> (kw= '<' kw= '<' )
 							{
-							// InternalWeightDefinition.g:1531:6: (kw= '<' kw= '<' )
-							// InternalWeightDefinition.g:1532:7: kw= '<' kw= '<'
+							// InternalWeightDefinition.g:1535:6: (kw= '<' kw= '<' )
+							// InternalWeightDefinition.g:1536:7: kw= '<' kw= '<'
 							{
-							kw=(Token)match(input,42,FOLLOW_15); if (state.failed) return current;
+							kw=(Token)match(input,42,FOLLOW_14); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
 														current.merge(kw);
 														newLeafNode(kw, grammarAccess.getOpOtherAccess().getLessThanSignKeyword_6_1_0_0_0());
@@ -4132,7 +4133,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 							}
 							break;
 						case 2 :
-							// InternalWeightDefinition.g:1545:5: kw= '<'
+							// InternalWeightDefinition.g:1549:5: kw= '<'
 							{
 							kw=(Token)match(input,42,FOLLOW_2); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
@@ -4142,7 +4143,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 							}
 							break;
 						case 3 :
-							// InternalWeightDefinition.g:1551:5: kw= '=>'
+							// InternalWeightDefinition.g:1555:5: kw= '=>'
 							{
 							kw=(Token)match(input,47,FOLLOW_2); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
@@ -4159,7 +4160,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 8 :
-					// InternalWeightDefinition.g:1559:3: kw= '<>'
+					// InternalWeightDefinition.g:1563:3: kw= '<>'
 					{
 					kw=(Token)match(input,43,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -4169,7 +4170,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 9 :
-					// InternalWeightDefinition.g:1565:3: kw= '?:'
+					// InternalWeightDefinition.g:1569:3: kw= '?:'
 					{
 					kw=(Token)match(input,52,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -4203,7 +4204,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXAdditiveExpression"
-	// InternalWeightDefinition.g:1574:1: entryRuleXAdditiveExpression returns [EObject current=null] :iv_ruleXAdditiveExpression= ruleXAdditiveExpression EOF ;
+	// InternalWeightDefinition.g:1578:1: entryRuleXAdditiveExpression returns [EObject current=null] :iv_ruleXAdditiveExpression= ruleXAdditiveExpression EOF ;
 	public final EObject entryRuleXAdditiveExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -4211,8 +4212,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXAdditiveExpression =null;
 
 		try {
-			// InternalWeightDefinition.g:1574:60: (iv_ruleXAdditiveExpression= ruleXAdditiveExpression EOF )
-			// InternalWeightDefinition.g:1575:2: iv_ruleXAdditiveExpression= ruleXAdditiveExpression EOF
+			// InternalWeightDefinition.g:1578:60: (iv_ruleXAdditiveExpression= ruleXAdditiveExpression EOF )
+			// InternalWeightDefinition.g:1579:2: iv_ruleXAdditiveExpression= ruleXAdditiveExpression EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXAdditiveExpressionRule()); }
 			pushFollow(FOLLOW_1);
@@ -4240,7 +4241,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXAdditiveExpression"
-	// InternalWeightDefinition.g:1581:1: ruleXAdditiveExpression returns [EObject current=null] : (this_XMultiplicativeExpression_0= ruleXMultiplicativeExpression ( ( ( ( () ( ( ruleOpAdd ) ) ) )=> ( () ( ( ruleOpAdd ) ) ) ) ( (lv_rightOperand_3_0= ruleXMultiplicativeExpression ) ) )* ) ;
+	// InternalWeightDefinition.g:1585:1: ruleXAdditiveExpression returns [EObject current=null] : (this_XMultiplicativeExpression_0= ruleXMultiplicativeExpression ( ( ( ( () ( ( ruleOpAdd ) ) ) )=> ( () ( ( ruleOpAdd ) ) ) ) ( (lv_rightOperand_3_0= ruleXMultiplicativeExpression ) ) )* ) ;
 	public final EObject ruleXAdditiveExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -4252,16 +4253,16 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:1587:2: ( (this_XMultiplicativeExpression_0= ruleXMultiplicativeExpression ( ( ( ( () ( ( ruleOpAdd ) ) ) )=> ( () ( ( ruleOpAdd ) ) ) ) ( (lv_rightOperand_3_0= ruleXMultiplicativeExpression ) ) )* ) )
-			// InternalWeightDefinition.g:1588:2: (this_XMultiplicativeExpression_0= ruleXMultiplicativeExpression ( ( ( ( () ( ( ruleOpAdd ) ) ) )=> ( () ( ( ruleOpAdd ) ) ) ) ( (lv_rightOperand_3_0= ruleXMultiplicativeExpression ) ) )* )
+			// InternalWeightDefinition.g:1591:2: ( (this_XMultiplicativeExpression_0= ruleXMultiplicativeExpression ( ( ( ( () ( ( ruleOpAdd ) ) ) )=> ( () ( ( ruleOpAdd ) ) ) ) ( (lv_rightOperand_3_0= ruleXMultiplicativeExpression ) ) )* ) )
+			// InternalWeightDefinition.g:1592:2: (this_XMultiplicativeExpression_0= ruleXMultiplicativeExpression ( ( ( ( () ( ( ruleOpAdd ) ) ) )=> ( () ( ( ruleOpAdd ) ) ) ) ( (lv_rightOperand_3_0= ruleXMultiplicativeExpression ) ) )* )
 			{
-			// InternalWeightDefinition.g:1588:2: (this_XMultiplicativeExpression_0= ruleXMultiplicativeExpression ( ( ( ( () ( ( ruleOpAdd ) ) ) )=> ( () ( ( ruleOpAdd ) ) ) ) ( (lv_rightOperand_3_0= ruleXMultiplicativeExpression ) ) )* )
-			// InternalWeightDefinition.g:1589:3: this_XMultiplicativeExpression_0= ruleXMultiplicativeExpression ( ( ( ( () ( ( ruleOpAdd ) ) ) )=> ( () ( ( ruleOpAdd ) ) ) ) ( (lv_rightOperand_3_0= ruleXMultiplicativeExpression ) ) )*
+			// InternalWeightDefinition.g:1592:2: (this_XMultiplicativeExpression_0= ruleXMultiplicativeExpression ( ( ( ( () ( ( ruleOpAdd ) ) ) )=> ( () ( ( ruleOpAdd ) ) ) ) ( (lv_rightOperand_3_0= ruleXMultiplicativeExpression ) ) )* )
+			// InternalWeightDefinition.g:1593:3: this_XMultiplicativeExpression_0= ruleXMultiplicativeExpression ( ( ( ( () ( ( ruleOpAdd ) ) ) )=> ( () ( ( ruleOpAdd ) ) ) ) ( (lv_rightOperand_3_0= ruleXMultiplicativeExpression ) ) )*
 			{
 			if ( state.backtracking==0 ) {
 						newCompositeNode(grammarAccess.getXAdditiveExpressionAccess().getXMultiplicativeExpressionParserRuleCall_0());
 					}
-			pushFollow(FOLLOW_26);
+			pushFollow(FOLLOW_25);
 			this_XMultiplicativeExpression_0=ruleXMultiplicativeExpression();
 			state._fsp--;
 			if (state.failed) return current;
@@ -4269,38 +4270,38 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						current = this_XMultiplicativeExpression_0;
 						afterParserOrEnumRuleCall();
 					}
-			// InternalWeightDefinition.g:1597:3: ( ( ( ( () ( ( ruleOpAdd ) ) ) )=> ( () ( ( ruleOpAdd ) ) ) ) ( (lv_rightOperand_3_0= ruleXMultiplicativeExpression ) ) )*
-			loop20:
+			// InternalWeightDefinition.g:1601:3: ( ( ( ( () ( ( ruleOpAdd ) ) ) )=> ( () ( ( ruleOpAdd ) ) ) ) ( (lv_rightOperand_3_0= ruleXMultiplicativeExpression ) ) )*
+			loop18:
 			while (true) {
-				int alt20=2;
-				int LA20_0 = input.LA(1);
-				if ( (LA20_0==26) ) {
-					int LA20_2 = input.LA(2);
+				int alt18=2;
+				int LA18_0 = input.LA(1);
+				if ( (LA18_0==26) ) {
+					int LA18_2 = input.LA(2);
 					if ( (synpred10_InternalWeightDefinition()) ) {
-						alt20=1;
+						alt18=1;
 					}
 
 				}
-				else if ( (LA20_0==30) ) {
-					int LA20_3 = input.LA(2);
+				else if ( (LA18_0==30) ) {
+					int LA18_3 = input.LA(2);
 					if ( (synpred10_InternalWeightDefinition()) ) {
-						alt20=1;
+						alt18=1;
 					}
 
 				}
 
-				switch (alt20) {
+				switch (alt18) {
 				case 1 :
-					// InternalWeightDefinition.g:1598:4: ( ( ( () ( ( ruleOpAdd ) ) ) )=> ( () ( ( ruleOpAdd ) ) ) ) ( (lv_rightOperand_3_0= ruleXMultiplicativeExpression ) )
+					// InternalWeightDefinition.g:1602:4: ( ( ( () ( ( ruleOpAdd ) ) ) )=> ( () ( ( ruleOpAdd ) ) ) ) ( (lv_rightOperand_3_0= ruleXMultiplicativeExpression ) )
 					{
-					// InternalWeightDefinition.g:1598:4: ( ( ( () ( ( ruleOpAdd ) ) ) )=> ( () ( ( ruleOpAdd ) ) ) )
-					// InternalWeightDefinition.g:1599:5: ( ( () ( ( ruleOpAdd ) ) ) )=> ( () ( ( ruleOpAdd ) ) )
+					// InternalWeightDefinition.g:1602:4: ( ( ( () ( ( ruleOpAdd ) ) ) )=> ( () ( ( ruleOpAdd ) ) ) )
+					// InternalWeightDefinition.g:1603:5: ( ( () ( ( ruleOpAdd ) ) ) )=> ( () ( ( ruleOpAdd ) ) )
 					{
-					// InternalWeightDefinition.g:1609:5: ( () ( ( ruleOpAdd ) ) )
-					// InternalWeightDefinition.g:1610:6: () ( ( ruleOpAdd ) )
+					// InternalWeightDefinition.g:1613:5: ( () ( ( ruleOpAdd ) ) )
+					// InternalWeightDefinition.g:1614:6: () ( ( ruleOpAdd ) )
 					{
-					// InternalWeightDefinition.g:1610:6: ()
-					// InternalWeightDefinition.g:1611:7: 
+					// InternalWeightDefinition.g:1614:6: ()
+					// InternalWeightDefinition.g:1615:7: 
 					{
 					if ( state.backtracking==0 ) {
 												current = forceCreateModelElementAndSet(
@@ -4309,11 +4310,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 											}
 					}
 
-					// InternalWeightDefinition.g:1617:6: ( ( ruleOpAdd ) )
-					// InternalWeightDefinition.g:1618:7: ( ruleOpAdd )
+					// InternalWeightDefinition.g:1621:6: ( ( ruleOpAdd ) )
+					// InternalWeightDefinition.g:1622:7: ( ruleOpAdd )
 					{
-					// InternalWeightDefinition.g:1618:7: ( ruleOpAdd )
-					// InternalWeightDefinition.g:1619:8: ruleOpAdd
+					// InternalWeightDefinition.g:1622:7: ( ruleOpAdd )
+					// InternalWeightDefinition.g:1623:8: ruleOpAdd
 					{
 					if ( state.backtracking==0 ) {
 													if (current==null) {
@@ -4323,7 +4324,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					if ( state.backtracking==0 ) {
 													newCompositeNode(grammarAccess.getXAdditiveExpressionAccess().getFeatureJvmIdentifiableElementCrossReference_1_0_0_1_0());
 												}
-					pushFollow(FOLLOW_13);
+					pushFollow(FOLLOW_12);
 					ruleOpAdd();
 					state._fsp--;
 					if (state.failed) return current;
@@ -4338,16 +4339,16 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:1635:4: ( (lv_rightOperand_3_0= ruleXMultiplicativeExpression ) )
-					// InternalWeightDefinition.g:1636:5: (lv_rightOperand_3_0= ruleXMultiplicativeExpression )
+					// InternalWeightDefinition.g:1639:4: ( (lv_rightOperand_3_0= ruleXMultiplicativeExpression ) )
+					// InternalWeightDefinition.g:1640:5: (lv_rightOperand_3_0= ruleXMultiplicativeExpression )
 					{
-					// InternalWeightDefinition.g:1636:5: (lv_rightOperand_3_0= ruleXMultiplicativeExpression )
-					// InternalWeightDefinition.g:1637:6: lv_rightOperand_3_0= ruleXMultiplicativeExpression
+					// InternalWeightDefinition.g:1640:5: (lv_rightOperand_3_0= ruleXMultiplicativeExpression )
+					// InternalWeightDefinition.g:1641:6: lv_rightOperand_3_0= ruleXMultiplicativeExpression
 					{
 					if ( state.backtracking==0 ) {
 											newCompositeNode(grammarAccess.getXAdditiveExpressionAccess().getRightOperandXMultiplicativeExpressionParserRuleCall_1_1_0());
 										}
-					pushFollow(FOLLOW_26);
+					pushFollow(FOLLOW_25);
 					lv_rightOperand_3_0=ruleXMultiplicativeExpression();
 					state._fsp--;
 					if (state.failed) return current;
@@ -4370,7 +4371,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					break;
 
 				default :
-					break loop20;
+					break loop18;
 				}
 			}
 
@@ -4398,7 +4399,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleOpAdd"
-	// InternalWeightDefinition.g:1659:1: entryRuleOpAdd returns [String current=null] :iv_ruleOpAdd= ruleOpAdd EOF ;
+	// InternalWeightDefinition.g:1663:1: entryRuleOpAdd returns [String current=null] :iv_ruleOpAdd= ruleOpAdd EOF ;
 	public final String entryRuleOpAdd() throws RecognitionException {
 		String current = null;
 
@@ -4406,8 +4407,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		AntlrDatatypeRuleToken iv_ruleOpAdd =null;
 
 		try {
-			// InternalWeightDefinition.g:1659:45: (iv_ruleOpAdd= ruleOpAdd EOF )
-			// InternalWeightDefinition.g:1660:2: iv_ruleOpAdd= ruleOpAdd EOF
+			// InternalWeightDefinition.g:1663:45: (iv_ruleOpAdd= ruleOpAdd EOF )
+			// InternalWeightDefinition.g:1664:2: iv_ruleOpAdd= ruleOpAdd EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getOpAddRule()); }
 			pushFollow(FOLLOW_1);
@@ -4435,7 +4436,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleOpAdd"
-	// InternalWeightDefinition.g:1666:1: ruleOpAdd returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (kw= '+' |kw= '-' ) ;
+	// InternalWeightDefinition.g:1670:1: ruleOpAdd returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (kw= '+' |kw= '-' ) ;
 	public final AntlrDatatypeRuleToken ruleOpAdd() throws RecognitionException {
 		AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -4446,29 +4447,29 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:1672:2: ( (kw= '+' |kw= '-' ) )
-			// InternalWeightDefinition.g:1673:2: (kw= '+' |kw= '-' )
+			// InternalWeightDefinition.g:1676:2: ( (kw= '+' |kw= '-' ) )
+			// InternalWeightDefinition.g:1677:2: (kw= '+' |kw= '-' )
 			{
-			// InternalWeightDefinition.g:1673:2: (kw= '+' |kw= '-' )
-			int alt21=2;
-			int LA21_0 = input.LA(1);
-			if ( (LA21_0==26) ) {
-				alt21=1;
+			// InternalWeightDefinition.g:1677:2: (kw= '+' |kw= '-' )
+			int alt19=2;
+			int LA19_0 = input.LA(1);
+			if ( (LA19_0==26) ) {
+				alt19=1;
 			}
-			else if ( (LA21_0==30) ) {
-				alt21=2;
+			else if ( (LA19_0==30) ) {
+				alt19=2;
 			}
 
 			else {
 				if (state.backtracking>0) {state.failed=true; return current;}
 				NoViableAltException nvae =
-					new NoViableAltException("", 21, 0, input);
+					new NoViableAltException("", 19, 0, input);
 				throw nvae;
 			}
 
-			switch (alt21) {
+			switch (alt19) {
 				case 1 :
-					// InternalWeightDefinition.g:1674:3: kw= '+'
+					// InternalWeightDefinition.g:1678:3: kw= '+'
 					{
 					kw=(Token)match(input,26,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -4478,7 +4479,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:1680:3: kw= '-'
+					// InternalWeightDefinition.g:1684:3: kw= '-'
 					{
 					kw=(Token)match(input,30,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -4512,7 +4513,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXMultiplicativeExpression"
-	// InternalWeightDefinition.g:1689:1: entryRuleXMultiplicativeExpression returns [EObject current=null] :iv_ruleXMultiplicativeExpression= ruleXMultiplicativeExpression EOF ;
+	// InternalWeightDefinition.g:1693:1: entryRuleXMultiplicativeExpression returns [EObject current=null] :iv_ruleXMultiplicativeExpression= ruleXMultiplicativeExpression EOF ;
 	public final EObject entryRuleXMultiplicativeExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -4520,8 +4521,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXMultiplicativeExpression =null;
 
 		try {
-			// InternalWeightDefinition.g:1689:66: (iv_ruleXMultiplicativeExpression= ruleXMultiplicativeExpression EOF )
-			// InternalWeightDefinition.g:1690:2: iv_ruleXMultiplicativeExpression= ruleXMultiplicativeExpression EOF
+			// InternalWeightDefinition.g:1693:66: (iv_ruleXMultiplicativeExpression= ruleXMultiplicativeExpression EOF )
+			// InternalWeightDefinition.g:1694:2: iv_ruleXMultiplicativeExpression= ruleXMultiplicativeExpression EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXMultiplicativeExpressionRule()); }
 			pushFollow(FOLLOW_1);
@@ -4549,7 +4550,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXMultiplicativeExpression"
-	// InternalWeightDefinition.g:1696:1: ruleXMultiplicativeExpression returns [EObject current=null] : (this_XUnaryOperation_0= ruleXUnaryOperation ( ( ( ( () ( ( ruleOpMulti ) ) ) )=> ( () ( ( ruleOpMulti ) ) ) ) ( (lv_rightOperand_3_0= ruleXUnaryOperation ) ) )* ) ;
+	// InternalWeightDefinition.g:1700:1: ruleXMultiplicativeExpression returns [EObject current=null] : (this_XUnaryOperation_0= ruleXUnaryOperation ( ( ( ( () ( ( ruleOpMulti ) ) ) )=> ( () ( ( ruleOpMulti ) ) ) ) ( (lv_rightOperand_3_0= ruleXUnaryOperation ) ) )* ) ;
 	public final EObject ruleXMultiplicativeExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -4561,16 +4562,16 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:1702:2: ( (this_XUnaryOperation_0= ruleXUnaryOperation ( ( ( ( () ( ( ruleOpMulti ) ) ) )=> ( () ( ( ruleOpMulti ) ) ) ) ( (lv_rightOperand_3_0= ruleXUnaryOperation ) ) )* ) )
-			// InternalWeightDefinition.g:1703:2: (this_XUnaryOperation_0= ruleXUnaryOperation ( ( ( ( () ( ( ruleOpMulti ) ) ) )=> ( () ( ( ruleOpMulti ) ) ) ) ( (lv_rightOperand_3_0= ruleXUnaryOperation ) ) )* )
+			// InternalWeightDefinition.g:1706:2: ( (this_XUnaryOperation_0= ruleXUnaryOperation ( ( ( ( () ( ( ruleOpMulti ) ) ) )=> ( () ( ( ruleOpMulti ) ) ) ) ( (lv_rightOperand_3_0= ruleXUnaryOperation ) ) )* ) )
+			// InternalWeightDefinition.g:1707:2: (this_XUnaryOperation_0= ruleXUnaryOperation ( ( ( ( () ( ( ruleOpMulti ) ) ) )=> ( () ( ( ruleOpMulti ) ) ) ) ( (lv_rightOperand_3_0= ruleXUnaryOperation ) ) )* )
 			{
-			// InternalWeightDefinition.g:1703:2: (this_XUnaryOperation_0= ruleXUnaryOperation ( ( ( ( () ( ( ruleOpMulti ) ) ) )=> ( () ( ( ruleOpMulti ) ) ) ) ( (lv_rightOperand_3_0= ruleXUnaryOperation ) ) )* )
-			// InternalWeightDefinition.g:1704:3: this_XUnaryOperation_0= ruleXUnaryOperation ( ( ( ( () ( ( ruleOpMulti ) ) ) )=> ( () ( ( ruleOpMulti ) ) ) ) ( (lv_rightOperand_3_0= ruleXUnaryOperation ) ) )*
+			// InternalWeightDefinition.g:1707:2: (this_XUnaryOperation_0= ruleXUnaryOperation ( ( ( ( () ( ( ruleOpMulti ) ) ) )=> ( () ( ( ruleOpMulti ) ) ) ) ( (lv_rightOperand_3_0= ruleXUnaryOperation ) ) )* )
+			// InternalWeightDefinition.g:1708:3: this_XUnaryOperation_0= ruleXUnaryOperation ( ( ( ( () ( ( ruleOpMulti ) ) ) )=> ( () ( ( ruleOpMulti ) ) ) ) ( (lv_rightOperand_3_0= ruleXUnaryOperation ) ) )*
 			{
 			if ( state.backtracking==0 ) {
 						newCompositeNode(grammarAccess.getXMultiplicativeExpressionAccess().getXUnaryOperationParserRuleCall_0());
 					}
-			pushFollow(FOLLOW_27);
+			pushFollow(FOLLOW_26);
 			this_XUnaryOperation_0=ruleXUnaryOperation();
 			state._fsp--;
 			if (state.failed) return current;
@@ -4578,60 +4579,60 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						current = this_XUnaryOperation_0;
 						afterParserOrEnumRuleCall();
 					}
-			// InternalWeightDefinition.g:1712:3: ( ( ( ( () ( ( ruleOpMulti ) ) ) )=> ( () ( ( ruleOpMulti ) ) ) ) ( (lv_rightOperand_3_0= ruleXUnaryOperation ) ) )*
-			loop22:
+			// InternalWeightDefinition.g:1716:3: ( ( ( ( () ( ( ruleOpMulti ) ) ) )=> ( () ( ( ruleOpMulti ) ) ) ) ( (lv_rightOperand_3_0= ruleXUnaryOperation ) ) )*
+			loop20:
 			while (true) {
-				int alt22=2;
+				int alt20=2;
 				switch ( input.LA(1) ) {
 				case 23:
 					{
-					int LA22_2 = input.LA(2);
+					int LA20_2 = input.LA(2);
 					if ( (synpred11_InternalWeightDefinition()) ) {
-						alt22=1;
+						alt20=1;
 					}
 
 					}
 					break;
 				case 24:
 					{
-					int LA22_3 = input.LA(2);
+					int LA20_3 = input.LA(2);
 					if ( (synpred11_InternalWeightDefinition()) ) {
-						alt22=1;
+						alt20=1;
 					}
 
 					}
 					break;
 				case 37:
 					{
-					int LA22_4 = input.LA(2);
+					int LA20_4 = input.LA(2);
 					if ( (synpred11_InternalWeightDefinition()) ) {
-						alt22=1;
+						alt20=1;
 					}
 
 					}
 					break;
 				case 17:
 					{
-					int LA22_5 = input.LA(2);
+					int LA20_5 = input.LA(2);
 					if ( (synpred11_InternalWeightDefinition()) ) {
-						alt22=1;
+						alt20=1;
 					}
 
 					}
 					break;
 				}
-				switch (alt22) {
+				switch (alt20) {
 				case 1 :
-					// InternalWeightDefinition.g:1713:4: ( ( ( () ( ( ruleOpMulti ) ) ) )=> ( () ( ( ruleOpMulti ) ) ) ) ( (lv_rightOperand_3_0= ruleXUnaryOperation ) )
+					// InternalWeightDefinition.g:1717:4: ( ( ( () ( ( ruleOpMulti ) ) ) )=> ( () ( ( ruleOpMulti ) ) ) ) ( (lv_rightOperand_3_0= ruleXUnaryOperation ) )
 					{
-					// InternalWeightDefinition.g:1713:4: ( ( ( () ( ( ruleOpMulti ) ) ) )=> ( () ( ( ruleOpMulti ) ) ) )
-					// InternalWeightDefinition.g:1714:5: ( ( () ( ( ruleOpMulti ) ) ) )=> ( () ( ( ruleOpMulti ) ) )
+					// InternalWeightDefinition.g:1717:4: ( ( ( () ( ( ruleOpMulti ) ) ) )=> ( () ( ( ruleOpMulti ) ) ) )
+					// InternalWeightDefinition.g:1718:5: ( ( () ( ( ruleOpMulti ) ) ) )=> ( () ( ( ruleOpMulti ) ) )
 					{
-					// InternalWeightDefinition.g:1724:5: ( () ( ( ruleOpMulti ) ) )
-					// InternalWeightDefinition.g:1725:6: () ( ( ruleOpMulti ) )
+					// InternalWeightDefinition.g:1728:5: ( () ( ( ruleOpMulti ) ) )
+					// InternalWeightDefinition.g:1729:6: () ( ( ruleOpMulti ) )
 					{
-					// InternalWeightDefinition.g:1725:6: ()
-					// InternalWeightDefinition.g:1726:7: 
+					// InternalWeightDefinition.g:1729:6: ()
+					// InternalWeightDefinition.g:1730:7: 
 					{
 					if ( state.backtracking==0 ) {
 												current = forceCreateModelElementAndSet(
@@ -4640,11 +4641,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 											}
 					}
 
-					// InternalWeightDefinition.g:1732:6: ( ( ruleOpMulti ) )
-					// InternalWeightDefinition.g:1733:7: ( ruleOpMulti )
+					// InternalWeightDefinition.g:1736:6: ( ( ruleOpMulti ) )
+					// InternalWeightDefinition.g:1737:7: ( ruleOpMulti )
 					{
-					// InternalWeightDefinition.g:1733:7: ( ruleOpMulti )
-					// InternalWeightDefinition.g:1734:8: ruleOpMulti
+					// InternalWeightDefinition.g:1737:7: ( ruleOpMulti )
+					// InternalWeightDefinition.g:1738:8: ruleOpMulti
 					{
 					if ( state.backtracking==0 ) {
 													if (current==null) {
@@ -4654,7 +4655,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					if ( state.backtracking==0 ) {
 													newCompositeNode(grammarAccess.getXMultiplicativeExpressionAccess().getFeatureJvmIdentifiableElementCrossReference_1_0_0_1_0());
 												}
-					pushFollow(FOLLOW_13);
+					pushFollow(FOLLOW_12);
 					ruleOpMulti();
 					state._fsp--;
 					if (state.failed) return current;
@@ -4669,16 +4670,16 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:1750:4: ( (lv_rightOperand_3_0= ruleXUnaryOperation ) )
-					// InternalWeightDefinition.g:1751:5: (lv_rightOperand_3_0= ruleXUnaryOperation )
+					// InternalWeightDefinition.g:1754:4: ( (lv_rightOperand_3_0= ruleXUnaryOperation ) )
+					// InternalWeightDefinition.g:1755:5: (lv_rightOperand_3_0= ruleXUnaryOperation )
 					{
-					// InternalWeightDefinition.g:1751:5: (lv_rightOperand_3_0= ruleXUnaryOperation )
-					// InternalWeightDefinition.g:1752:6: lv_rightOperand_3_0= ruleXUnaryOperation
+					// InternalWeightDefinition.g:1755:5: (lv_rightOperand_3_0= ruleXUnaryOperation )
+					// InternalWeightDefinition.g:1756:6: lv_rightOperand_3_0= ruleXUnaryOperation
 					{
 					if ( state.backtracking==0 ) {
 											newCompositeNode(grammarAccess.getXMultiplicativeExpressionAccess().getRightOperandXUnaryOperationParserRuleCall_1_1_0());
 										}
-					pushFollow(FOLLOW_27);
+					pushFollow(FOLLOW_26);
 					lv_rightOperand_3_0=ruleXUnaryOperation();
 					state._fsp--;
 					if (state.failed) return current;
@@ -4701,7 +4702,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					break;
 
 				default :
-					break loop22;
+					break loop20;
 				}
 			}
 
@@ -4729,7 +4730,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleOpMulti"
-	// InternalWeightDefinition.g:1774:1: entryRuleOpMulti returns [String current=null] :iv_ruleOpMulti= ruleOpMulti EOF ;
+	// InternalWeightDefinition.g:1778:1: entryRuleOpMulti returns [String current=null] :iv_ruleOpMulti= ruleOpMulti EOF ;
 	public final String entryRuleOpMulti() throws RecognitionException {
 		String current = null;
 
@@ -4737,8 +4738,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		AntlrDatatypeRuleToken iv_ruleOpMulti =null;
 
 		try {
-			// InternalWeightDefinition.g:1774:47: (iv_ruleOpMulti= ruleOpMulti EOF )
-			// InternalWeightDefinition.g:1775:2: iv_ruleOpMulti= ruleOpMulti EOF
+			// InternalWeightDefinition.g:1778:47: (iv_ruleOpMulti= ruleOpMulti EOF )
+			// InternalWeightDefinition.g:1779:2: iv_ruleOpMulti= ruleOpMulti EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getOpMultiRule()); }
 			pushFollow(FOLLOW_1);
@@ -4766,7 +4767,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleOpMulti"
-	// InternalWeightDefinition.g:1781:1: ruleOpMulti returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (kw= '*' |kw= '**' |kw= '/' |kw= '%' ) ;
+	// InternalWeightDefinition.g:1785:1: ruleOpMulti returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (kw= '*' |kw= '**' |kw= '/' |kw= '%' ) ;
 	public final AntlrDatatypeRuleToken ruleOpMulti() throws RecognitionException {
 		AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -4777,41 +4778,41 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:1787:2: ( (kw= '*' |kw= '**' |kw= '/' |kw= '%' ) )
-			// InternalWeightDefinition.g:1788:2: (kw= '*' |kw= '**' |kw= '/' |kw= '%' )
+			// InternalWeightDefinition.g:1791:2: ( (kw= '*' |kw= '**' |kw= '/' |kw= '%' ) )
+			// InternalWeightDefinition.g:1792:2: (kw= '*' |kw= '**' |kw= '/' |kw= '%' )
 			{
-			// InternalWeightDefinition.g:1788:2: (kw= '*' |kw= '**' |kw= '/' |kw= '%' )
-			int alt23=4;
+			// InternalWeightDefinition.g:1792:2: (kw= '*' |kw= '**' |kw= '/' |kw= '%' )
+			int alt21=4;
 			switch ( input.LA(1) ) {
 			case 23:
 				{
-				alt23=1;
+				alt21=1;
 				}
 				break;
 			case 24:
 				{
-				alt23=2;
+				alt21=2;
 				}
 				break;
 			case 37:
 				{
-				alt23=3;
+				alt21=3;
 				}
 				break;
 			case 17:
 				{
-				alt23=4;
+				alt21=4;
 				}
 				break;
 			default:
 				if (state.backtracking>0) {state.failed=true; return current;}
 				NoViableAltException nvae =
-					new NoViableAltException("", 23, 0, input);
+					new NoViableAltException("", 21, 0, input);
 				throw nvae;
 			}
-			switch (alt23) {
+			switch (alt21) {
 				case 1 :
-					// InternalWeightDefinition.g:1789:3: kw= '*'
+					// InternalWeightDefinition.g:1793:3: kw= '*'
 					{
 					kw=(Token)match(input,23,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -4821,7 +4822,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:1795:3: kw= '**'
+					// InternalWeightDefinition.g:1799:3: kw= '**'
 					{
 					kw=(Token)match(input,24,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -4831,7 +4832,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 3 :
-					// InternalWeightDefinition.g:1801:3: kw= '/'
+					// InternalWeightDefinition.g:1805:3: kw= '/'
 					{
 					kw=(Token)match(input,37,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -4841,7 +4842,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 4 :
-					// InternalWeightDefinition.g:1807:3: kw= '%'
+					// InternalWeightDefinition.g:1811:3: kw= '%'
 					{
 					kw=(Token)match(input,17,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -4875,7 +4876,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXUnaryOperation"
-	// InternalWeightDefinition.g:1816:1: entryRuleXUnaryOperation returns [EObject current=null] :iv_ruleXUnaryOperation= ruleXUnaryOperation EOF ;
+	// InternalWeightDefinition.g:1820:1: entryRuleXUnaryOperation returns [EObject current=null] :iv_ruleXUnaryOperation= ruleXUnaryOperation EOF ;
 	public final EObject entryRuleXUnaryOperation() throws RecognitionException {
 		EObject current = null;
 
@@ -4883,8 +4884,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXUnaryOperation =null;
 
 		try {
-			// InternalWeightDefinition.g:1816:56: (iv_ruleXUnaryOperation= ruleXUnaryOperation EOF )
-			// InternalWeightDefinition.g:1817:2: iv_ruleXUnaryOperation= ruleXUnaryOperation EOF
+			// InternalWeightDefinition.g:1820:56: (iv_ruleXUnaryOperation= ruleXUnaryOperation EOF )
+			// InternalWeightDefinition.g:1821:2: iv_ruleXUnaryOperation= ruleXUnaryOperation EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXUnaryOperationRule()); }
 			pushFollow(FOLLOW_1);
@@ -4912,7 +4913,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXUnaryOperation"
-	// InternalWeightDefinition.g:1823:1: ruleXUnaryOperation returns [EObject current=null] : ( ( () ( ( ruleOpUnary ) ) ( (lv_operand_2_0= ruleXUnaryOperation ) ) ) |this_XCastedExpression_3= ruleXCastedExpression ) ;
+	// InternalWeightDefinition.g:1827:1: ruleXUnaryOperation returns [EObject current=null] : ( ( () ( ( ruleOpUnary ) ) ( (lv_operand_2_0= ruleXUnaryOperation ) ) ) |this_XCastedExpression_3= ruleXCastedExpression ) ;
 	public final EObject ruleXUnaryOperation() throws RecognitionException {
 		EObject current = null;
 
@@ -4924,35 +4925,35 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:1829:2: ( ( ( () ( ( ruleOpUnary ) ) ( (lv_operand_2_0= ruleXUnaryOperation ) ) ) |this_XCastedExpression_3= ruleXCastedExpression ) )
-			// InternalWeightDefinition.g:1830:2: ( ( () ( ( ruleOpUnary ) ) ( (lv_operand_2_0= ruleXUnaryOperation ) ) ) |this_XCastedExpression_3= ruleXCastedExpression )
+			// InternalWeightDefinition.g:1833:2: ( ( ( () ( ( ruleOpUnary ) ) ( (lv_operand_2_0= ruleXUnaryOperation ) ) ) |this_XCastedExpression_3= ruleXCastedExpression ) )
+			// InternalWeightDefinition.g:1834:2: ( ( () ( ( ruleOpUnary ) ) ( (lv_operand_2_0= ruleXUnaryOperation ) ) ) |this_XCastedExpression_3= ruleXCastedExpression )
 			{
-			// InternalWeightDefinition.g:1830:2: ( ( () ( ( ruleOpUnary ) ) ( (lv_operand_2_0= ruleXUnaryOperation ) ) ) |this_XCastedExpression_3= ruleXCastedExpression )
-			int alt24=2;
-			int LA24_0 = input.LA(1);
-			if ( (LA24_0==13||LA24_0==26||LA24_0==30) ) {
-				alt24=1;
+			// InternalWeightDefinition.g:1834:2: ( ( () ( ( ruleOpUnary ) ) ( (lv_operand_2_0= ruleXUnaryOperation ) ) ) |this_XCastedExpression_3= ruleXCastedExpression )
+			int alt22=2;
+			int LA22_0 = input.LA(1);
+			if ( (LA22_0==13||LA22_0==26||LA22_0==30) ) {
+				alt22=1;
 			}
-			else if ( ((LA24_0 >= RULE_DECIMAL && LA24_0 <= RULE_INT)||LA24_0==RULE_STRING||LA24_0==16||LA24_0==21||LA24_0==42||LA24_0==53||LA24_0==59||(LA24_0 >= 61 && LA24_0 <= 63)||LA24_0==65||(LA24_0 >= 67 && LA24_0 <= 68)||(LA24_0 >= 70 && LA24_0 <= 72)||(LA24_0 >= 74 && LA24_0 <= 81)||(LA24_0 >= 84 && LA24_0 <= 85)) ) {
-				alt24=2;
+			else if ( ((LA22_0 >= RULE_DECIMAL && LA22_0 <= RULE_INT)||LA22_0==RULE_STRING||LA22_0==16||LA22_0==21||LA22_0==42||LA22_0==53||LA22_0==59||(LA22_0 >= 61 && LA22_0 <= 63)||LA22_0==65||(LA22_0 >= 67 && LA22_0 <= 68)||(LA22_0 >= 70 && LA22_0 <= 72)||(LA22_0 >= 74 && LA22_0 <= 81)||(LA22_0 >= 84 && LA22_0 <= 85)) ) {
+				alt22=2;
 			}
 
 			else {
 				if (state.backtracking>0) {state.failed=true; return current;}
 				NoViableAltException nvae =
-					new NoViableAltException("", 24, 0, input);
+					new NoViableAltException("", 22, 0, input);
 				throw nvae;
 			}
 
-			switch (alt24) {
+			switch (alt22) {
 				case 1 :
-					// InternalWeightDefinition.g:1831:3: ( () ( ( ruleOpUnary ) ) ( (lv_operand_2_0= ruleXUnaryOperation ) ) )
+					// InternalWeightDefinition.g:1835:3: ( () ( ( ruleOpUnary ) ) ( (lv_operand_2_0= ruleXUnaryOperation ) ) )
 					{
-					// InternalWeightDefinition.g:1831:3: ( () ( ( ruleOpUnary ) ) ( (lv_operand_2_0= ruleXUnaryOperation ) ) )
-					// InternalWeightDefinition.g:1832:4: () ( ( ruleOpUnary ) ) ( (lv_operand_2_0= ruleXUnaryOperation ) )
+					// InternalWeightDefinition.g:1835:3: ( () ( ( ruleOpUnary ) ) ( (lv_operand_2_0= ruleXUnaryOperation ) ) )
+					// InternalWeightDefinition.g:1836:4: () ( ( ruleOpUnary ) ) ( (lv_operand_2_0= ruleXUnaryOperation ) )
 					{
-					// InternalWeightDefinition.g:1832:4: ()
-					// InternalWeightDefinition.g:1833:5: 
+					// InternalWeightDefinition.g:1836:4: ()
+					// InternalWeightDefinition.g:1837:5: 
 					{
 					if ( state.backtracking==0 ) {
 										current = forceCreateModelElement(
@@ -4961,11 +4962,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 									}
 					}
 
-					// InternalWeightDefinition.g:1839:4: ( ( ruleOpUnary ) )
-					// InternalWeightDefinition.g:1840:5: ( ruleOpUnary )
+					// InternalWeightDefinition.g:1843:4: ( ( ruleOpUnary ) )
+					// InternalWeightDefinition.g:1844:5: ( ruleOpUnary )
 					{
-					// InternalWeightDefinition.g:1840:5: ( ruleOpUnary )
-					// InternalWeightDefinition.g:1841:6: ruleOpUnary
+					// InternalWeightDefinition.g:1844:5: ( ruleOpUnary )
+					// InternalWeightDefinition.g:1845:6: ruleOpUnary
 					{
 					if ( state.backtracking==0 ) {
 											if (current==null) {
@@ -4975,7 +4976,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					if ( state.backtracking==0 ) {
 											newCompositeNode(grammarAccess.getXUnaryOperationAccess().getFeatureJvmIdentifiableElementCrossReference_0_1_0());
 										}
-					pushFollow(FOLLOW_13);
+					pushFollow(FOLLOW_12);
 					ruleOpUnary();
 					state._fsp--;
 					if (state.failed) return current;
@@ -4986,11 +4987,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:1855:4: ( (lv_operand_2_0= ruleXUnaryOperation ) )
-					// InternalWeightDefinition.g:1856:5: (lv_operand_2_0= ruleXUnaryOperation )
+					// InternalWeightDefinition.g:1859:4: ( (lv_operand_2_0= ruleXUnaryOperation ) )
+					// InternalWeightDefinition.g:1860:5: (lv_operand_2_0= ruleXUnaryOperation )
 					{
-					// InternalWeightDefinition.g:1856:5: (lv_operand_2_0= ruleXUnaryOperation )
-					// InternalWeightDefinition.g:1857:6: lv_operand_2_0= ruleXUnaryOperation
+					// InternalWeightDefinition.g:1860:5: (lv_operand_2_0= ruleXUnaryOperation )
+					// InternalWeightDefinition.g:1861:6: lv_operand_2_0= ruleXUnaryOperation
 					{
 					if ( state.backtracking==0 ) {
 											newCompositeNode(grammarAccess.getXUnaryOperationAccess().getOperandXUnaryOperationParserRuleCall_0_2_0());
@@ -5019,7 +5020,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:1876:3: this_XCastedExpression_3= ruleXCastedExpression
+					// InternalWeightDefinition.g:1880:3: this_XCastedExpression_3= ruleXCastedExpression
 					{
 					if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXUnaryOperationAccess().getXCastedExpressionParserRuleCall_1());
@@ -5059,7 +5060,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleOpUnary"
-	// InternalWeightDefinition.g:1888:1: entryRuleOpUnary returns [String current=null] :iv_ruleOpUnary= ruleOpUnary EOF ;
+	// InternalWeightDefinition.g:1892:1: entryRuleOpUnary returns [String current=null] :iv_ruleOpUnary= ruleOpUnary EOF ;
 	public final String entryRuleOpUnary() throws RecognitionException {
 		String current = null;
 
@@ -5067,8 +5068,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		AntlrDatatypeRuleToken iv_ruleOpUnary =null;
 
 		try {
-			// InternalWeightDefinition.g:1888:47: (iv_ruleOpUnary= ruleOpUnary EOF )
-			// InternalWeightDefinition.g:1889:2: iv_ruleOpUnary= ruleOpUnary EOF
+			// InternalWeightDefinition.g:1892:47: (iv_ruleOpUnary= ruleOpUnary EOF )
+			// InternalWeightDefinition.g:1893:2: iv_ruleOpUnary= ruleOpUnary EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getOpUnaryRule()); }
 			pushFollow(FOLLOW_1);
@@ -5096,7 +5097,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleOpUnary"
-	// InternalWeightDefinition.g:1895:1: ruleOpUnary returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (kw= '!' |kw= '-' |kw= '+' ) ;
+	// InternalWeightDefinition.g:1899:1: ruleOpUnary returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (kw= '!' |kw= '-' |kw= '+' ) ;
 	public final AntlrDatatypeRuleToken ruleOpUnary() throws RecognitionException {
 		AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -5107,36 +5108,36 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:1901:2: ( (kw= '!' |kw= '-' |kw= '+' ) )
-			// InternalWeightDefinition.g:1902:2: (kw= '!' |kw= '-' |kw= '+' )
+			// InternalWeightDefinition.g:1905:2: ( (kw= '!' |kw= '-' |kw= '+' ) )
+			// InternalWeightDefinition.g:1906:2: (kw= '!' |kw= '-' |kw= '+' )
 			{
-			// InternalWeightDefinition.g:1902:2: (kw= '!' |kw= '-' |kw= '+' )
-			int alt25=3;
+			// InternalWeightDefinition.g:1906:2: (kw= '!' |kw= '-' |kw= '+' )
+			int alt23=3;
 			switch ( input.LA(1) ) {
 			case 13:
 				{
-				alt25=1;
+				alt23=1;
 				}
 				break;
 			case 30:
 				{
-				alt25=2;
+				alt23=2;
 				}
 				break;
 			case 26:
 				{
-				alt25=3;
+				alt23=3;
 				}
 				break;
 			default:
 				if (state.backtracking>0) {state.failed=true; return current;}
 				NoViableAltException nvae =
-					new NoViableAltException("", 25, 0, input);
+					new NoViableAltException("", 23, 0, input);
 				throw nvae;
 			}
-			switch (alt25) {
+			switch (alt23) {
 				case 1 :
-					// InternalWeightDefinition.g:1903:3: kw= '!'
+					// InternalWeightDefinition.g:1907:3: kw= '!'
 					{
 					kw=(Token)match(input,13,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -5146,7 +5147,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:1909:3: kw= '-'
+					// InternalWeightDefinition.g:1913:3: kw= '-'
 					{
 					kw=(Token)match(input,30,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -5156,7 +5157,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 3 :
-					// InternalWeightDefinition.g:1915:3: kw= '+'
+					// InternalWeightDefinition.g:1919:3: kw= '+'
 					{
 					kw=(Token)match(input,26,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -5190,7 +5191,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXCastedExpression"
-	// InternalWeightDefinition.g:1924:1: entryRuleXCastedExpression returns [EObject current=null] :iv_ruleXCastedExpression= ruleXCastedExpression EOF ;
+	// InternalWeightDefinition.g:1928:1: entryRuleXCastedExpression returns [EObject current=null] :iv_ruleXCastedExpression= ruleXCastedExpression EOF ;
 	public final EObject entryRuleXCastedExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -5198,8 +5199,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXCastedExpression =null;
 
 		try {
-			// InternalWeightDefinition.g:1924:58: (iv_ruleXCastedExpression= ruleXCastedExpression EOF )
-			// InternalWeightDefinition.g:1925:2: iv_ruleXCastedExpression= ruleXCastedExpression EOF
+			// InternalWeightDefinition.g:1928:58: (iv_ruleXCastedExpression= ruleXCastedExpression EOF )
+			// InternalWeightDefinition.g:1929:2: iv_ruleXCastedExpression= ruleXCastedExpression EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXCastedExpressionRule()); }
 			pushFollow(FOLLOW_1);
@@ -5227,7 +5228,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXCastedExpression"
-	// InternalWeightDefinition.g:1931:1: ruleXCastedExpression returns [EObject current=null] : (this_XPostfixOperation_0= ruleXPostfixOperation ( ( ( ( () 'as' ) )=> ( () otherlv_2= 'as' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) ) )* ) ;
+	// InternalWeightDefinition.g:1935:1: ruleXCastedExpression returns [EObject current=null] : (this_XPostfixOperation_0= ruleXPostfixOperation ( ( ( ( () 'as' ) )=> ( () otherlv_2= 'as' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) ) )* ) ;
 	public final EObject ruleXCastedExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -5240,16 +5241,16 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:1937:2: ( (this_XPostfixOperation_0= ruleXPostfixOperation ( ( ( ( () 'as' ) )=> ( () otherlv_2= 'as' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) ) )* ) )
-			// InternalWeightDefinition.g:1938:2: (this_XPostfixOperation_0= ruleXPostfixOperation ( ( ( ( () 'as' ) )=> ( () otherlv_2= 'as' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) ) )* )
+			// InternalWeightDefinition.g:1941:2: ( (this_XPostfixOperation_0= ruleXPostfixOperation ( ( ( ( () 'as' ) )=> ( () otherlv_2= 'as' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) ) )* ) )
+			// InternalWeightDefinition.g:1942:2: (this_XPostfixOperation_0= ruleXPostfixOperation ( ( ( ( () 'as' ) )=> ( () otherlv_2= 'as' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) ) )* )
 			{
-			// InternalWeightDefinition.g:1938:2: (this_XPostfixOperation_0= ruleXPostfixOperation ( ( ( ( () 'as' ) )=> ( () otherlv_2= 'as' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) ) )* )
-			// InternalWeightDefinition.g:1939:3: this_XPostfixOperation_0= ruleXPostfixOperation ( ( ( ( () 'as' ) )=> ( () otherlv_2= 'as' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) ) )*
+			// InternalWeightDefinition.g:1942:2: (this_XPostfixOperation_0= ruleXPostfixOperation ( ( ( ( () 'as' ) )=> ( () otherlv_2= 'as' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) ) )* )
+			// InternalWeightDefinition.g:1943:3: this_XPostfixOperation_0= ruleXPostfixOperation ( ( ( ( () 'as' ) )=> ( () otherlv_2= 'as' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) ) )*
 			{
 			if ( state.backtracking==0 ) {
 						newCompositeNode(grammarAccess.getXCastedExpressionAccess().getXPostfixOperationParserRuleCall_0());
 					}
-			pushFollow(FOLLOW_28);
+			pushFollow(FOLLOW_27);
 			this_XPostfixOperation_0=ruleXPostfixOperation();
 			state._fsp--;
 			if (state.failed) return current;
@@ -5257,31 +5258,31 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						current = this_XPostfixOperation_0;
 						afterParserOrEnumRuleCall();
 					}
-			// InternalWeightDefinition.g:1947:3: ( ( ( ( () 'as' ) )=> ( () otherlv_2= 'as' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) ) )*
-			loop26:
+			// InternalWeightDefinition.g:1951:3: ( ( ( ( () 'as' ) )=> ( () otherlv_2= 'as' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) ) )*
+			loop24:
 			while (true) {
-				int alt26=2;
-				int LA26_0 = input.LA(1);
-				if ( (LA26_0==55) ) {
-					int LA26_2 = input.LA(2);
+				int alt24=2;
+				int LA24_0 = input.LA(1);
+				if ( (LA24_0==55) ) {
+					int LA24_2 = input.LA(2);
 					if ( (synpred12_InternalWeightDefinition()) ) {
-						alt26=1;
+						alt24=1;
 					}
 
 				}
 
-				switch (alt26) {
+				switch (alt24) {
 				case 1 :
-					// InternalWeightDefinition.g:1948:4: ( ( ( () 'as' ) )=> ( () otherlv_2= 'as' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) )
+					// InternalWeightDefinition.g:1952:4: ( ( ( () 'as' ) )=> ( () otherlv_2= 'as' ) ) ( (lv_type_3_0= ruleJvmTypeReference ) )
 					{
-					// InternalWeightDefinition.g:1948:4: ( ( ( () 'as' ) )=> ( () otherlv_2= 'as' ) )
-					// InternalWeightDefinition.g:1949:5: ( ( () 'as' ) )=> ( () otherlv_2= 'as' )
+					// InternalWeightDefinition.g:1952:4: ( ( ( () 'as' ) )=> ( () otherlv_2= 'as' ) )
+					// InternalWeightDefinition.g:1953:5: ( ( () 'as' ) )=> ( () otherlv_2= 'as' )
 					{
-					// InternalWeightDefinition.g:1955:5: ( () otherlv_2= 'as' )
-					// InternalWeightDefinition.g:1956:6: () otherlv_2= 'as'
+					// InternalWeightDefinition.g:1959:5: ( () otherlv_2= 'as' )
+					// InternalWeightDefinition.g:1960:6: () otherlv_2= 'as'
 					{
-					// InternalWeightDefinition.g:1956:6: ()
-					// InternalWeightDefinition.g:1957:7: 
+					// InternalWeightDefinition.g:1960:6: ()
+					// InternalWeightDefinition.g:1961:7: 
 					{
 					if ( state.backtracking==0 ) {
 												current = forceCreateModelElementAndSet(
@@ -5290,7 +5291,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 											}
 					}
 
-					otherlv_2=(Token)match(input,55,FOLLOW_8); if (state.failed) return current;
+					otherlv_2=(Token)match(input,55,FOLLOW_7); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 											newLeafNode(otherlv_2, grammarAccess.getXCastedExpressionAccess().getAsKeyword_1_0_0_1());
 										}
@@ -5298,16 +5299,16 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:1969:4: ( (lv_type_3_0= ruleJvmTypeReference ) )
-					// InternalWeightDefinition.g:1970:5: (lv_type_3_0= ruleJvmTypeReference )
+					// InternalWeightDefinition.g:1973:4: ( (lv_type_3_0= ruleJvmTypeReference ) )
+					// InternalWeightDefinition.g:1974:5: (lv_type_3_0= ruleJvmTypeReference )
 					{
-					// InternalWeightDefinition.g:1970:5: (lv_type_3_0= ruleJvmTypeReference )
-					// InternalWeightDefinition.g:1971:6: lv_type_3_0= ruleJvmTypeReference
+					// InternalWeightDefinition.g:1974:5: (lv_type_3_0= ruleJvmTypeReference )
+					// InternalWeightDefinition.g:1975:6: lv_type_3_0= ruleJvmTypeReference
 					{
 					if ( state.backtracking==0 ) {
 											newCompositeNode(grammarAccess.getXCastedExpressionAccess().getTypeJvmTypeReferenceParserRuleCall_1_1_0());
 										}
-					pushFollow(FOLLOW_28);
+					pushFollow(FOLLOW_27);
 					lv_type_3_0=ruleJvmTypeReference();
 					state._fsp--;
 					if (state.failed) return current;
@@ -5330,7 +5331,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					break;
 
 				default :
-					break loop26;
+					break loop24;
 				}
 			}
 
@@ -5358,7 +5359,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXPostfixOperation"
-	// InternalWeightDefinition.g:1993:1: entryRuleXPostfixOperation returns [EObject current=null] :iv_ruleXPostfixOperation= ruleXPostfixOperation EOF ;
+	// InternalWeightDefinition.g:1997:1: entryRuleXPostfixOperation returns [EObject current=null] :iv_ruleXPostfixOperation= ruleXPostfixOperation EOF ;
 	public final EObject entryRuleXPostfixOperation() throws RecognitionException {
 		EObject current = null;
 
@@ -5366,8 +5367,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXPostfixOperation =null;
 
 		try {
-			// InternalWeightDefinition.g:1993:58: (iv_ruleXPostfixOperation= ruleXPostfixOperation EOF )
-			// InternalWeightDefinition.g:1994:2: iv_ruleXPostfixOperation= ruleXPostfixOperation EOF
+			// InternalWeightDefinition.g:1997:58: (iv_ruleXPostfixOperation= ruleXPostfixOperation EOF )
+			// InternalWeightDefinition.g:1998:2: iv_ruleXPostfixOperation= ruleXPostfixOperation EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXPostfixOperationRule()); }
 			pushFollow(FOLLOW_1);
@@ -5395,7 +5396,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXPostfixOperation"
-	// InternalWeightDefinition.g:2000:1: ruleXPostfixOperation returns [EObject current=null] : (this_XMemberFeatureCall_0= ruleXMemberFeatureCall ( ( ( () ( ( ruleOpPostfix ) ) ) )=> ( () ( ( ruleOpPostfix ) ) ) )? ) ;
+	// InternalWeightDefinition.g:2004:1: ruleXPostfixOperation returns [EObject current=null] : (this_XMemberFeatureCall_0= ruleXMemberFeatureCall ( ( ( () ( ( ruleOpPostfix ) ) ) )=> ( () ( ( ruleOpPostfix ) ) ) )? ) ;
 	public final EObject ruleXPostfixOperation() throws RecognitionException {
 		EObject current = null;
 
@@ -5406,16 +5407,16 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:2006:2: ( (this_XMemberFeatureCall_0= ruleXMemberFeatureCall ( ( ( () ( ( ruleOpPostfix ) ) ) )=> ( () ( ( ruleOpPostfix ) ) ) )? ) )
-			// InternalWeightDefinition.g:2007:2: (this_XMemberFeatureCall_0= ruleXMemberFeatureCall ( ( ( () ( ( ruleOpPostfix ) ) ) )=> ( () ( ( ruleOpPostfix ) ) ) )? )
+			// InternalWeightDefinition.g:2010:2: ( (this_XMemberFeatureCall_0= ruleXMemberFeatureCall ( ( ( () ( ( ruleOpPostfix ) ) ) )=> ( () ( ( ruleOpPostfix ) ) ) )? ) )
+			// InternalWeightDefinition.g:2011:2: (this_XMemberFeatureCall_0= ruleXMemberFeatureCall ( ( ( () ( ( ruleOpPostfix ) ) ) )=> ( () ( ( ruleOpPostfix ) ) ) )? )
 			{
-			// InternalWeightDefinition.g:2007:2: (this_XMemberFeatureCall_0= ruleXMemberFeatureCall ( ( ( () ( ( ruleOpPostfix ) ) ) )=> ( () ( ( ruleOpPostfix ) ) ) )? )
-			// InternalWeightDefinition.g:2008:3: this_XMemberFeatureCall_0= ruleXMemberFeatureCall ( ( ( () ( ( ruleOpPostfix ) ) ) )=> ( () ( ( ruleOpPostfix ) ) ) )?
+			// InternalWeightDefinition.g:2011:2: (this_XMemberFeatureCall_0= ruleXMemberFeatureCall ( ( ( () ( ( ruleOpPostfix ) ) ) )=> ( () ( ( ruleOpPostfix ) ) ) )? )
+			// InternalWeightDefinition.g:2012:3: this_XMemberFeatureCall_0= ruleXMemberFeatureCall ( ( ( () ( ( ruleOpPostfix ) ) ) )=> ( () ( ( ruleOpPostfix ) ) ) )?
 			{
 			if ( state.backtracking==0 ) {
 						newCompositeNode(grammarAccess.getXPostfixOperationAccess().getXMemberFeatureCallParserRuleCall_0());
 					}
-			pushFollow(FOLLOW_29);
+			pushFollow(FOLLOW_28);
 			this_XMemberFeatureCall_0=ruleXMemberFeatureCall();
 			state._fsp--;
 			if (state.failed) return current;
@@ -5423,30 +5424,30 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						current = this_XMemberFeatureCall_0;
 						afterParserOrEnumRuleCall();
 					}
-			// InternalWeightDefinition.g:2016:3: ( ( ( () ( ( ruleOpPostfix ) ) ) )=> ( () ( ( ruleOpPostfix ) ) ) )?
-			int alt27=2;
-			int LA27_0 = input.LA(1);
-			if ( (LA27_0==27) ) {
-				int LA27_1 = input.LA(2);
+			// InternalWeightDefinition.g:2020:3: ( ( ( () ( ( ruleOpPostfix ) ) ) )=> ( () ( ( ruleOpPostfix ) ) ) )?
+			int alt25=2;
+			int LA25_0 = input.LA(1);
+			if ( (LA25_0==27) ) {
+				int LA25_1 = input.LA(2);
 				if ( (synpred13_InternalWeightDefinition()) ) {
-					alt27=1;
+					alt25=1;
 				}
 			}
-			else if ( (LA27_0==31) ) {
-				int LA27_2 = input.LA(2);
+			else if ( (LA25_0==31) ) {
+				int LA25_2 = input.LA(2);
 				if ( (synpred13_InternalWeightDefinition()) ) {
-					alt27=1;
+					alt25=1;
 				}
 			}
-			switch (alt27) {
+			switch (alt25) {
 				case 1 :
-					// InternalWeightDefinition.g:2017:4: ( ( () ( ( ruleOpPostfix ) ) ) )=> ( () ( ( ruleOpPostfix ) ) )
+					// InternalWeightDefinition.g:2021:4: ( ( () ( ( ruleOpPostfix ) ) ) )=> ( () ( ( ruleOpPostfix ) ) )
 					{
-					// InternalWeightDefinition.g:2027:4: ( () ( ( ruleOpPostfix ) ) )
-					// InternalWeightDefinition.g:2028:5: () ( ( ruleOpPostfix ) )
+					// InternalWeightDefinition.g:2031:4: ( () ( ( ruleOpPostfix ) ) )
+					// InternalWeightDefinition.g:2032:5: () ( ( ruleOpPostfix ) )
 					{
-					// InternalWeightDefinition.g:2028:5: ()
-					// InternalWeightDefinition.g:2029:6: 
+					// InternalWeightDefinition.g:2032:5: ()
+					// InternalWeightDefinition.g:2033:6: 
 					{
 					if ( state.backtracking==0 ) {
 											current = forceCreateModelElementAndSet(
@@ -5455,11 +5456,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 										}
 					}
 
-					// InternalWeightDefinition.g:2035:5: ( ( ruleOpPostfix ) )
-					// InternalWeightDefinition.g:2036:6: ( ruleOpPostfix )
+					// InternalWeightDefinition.g:2039:5: ( ( ruleOpPostfix ) )
+					// InternalWeightDefinition.g:2040:6: ( ruleOpPostfix )
 					{
-					// InternalWeightDefinition.g:2036:6: ( ruleOpPostfix )
-					// InternalWeightDefinition.g:2037:7: ruleOpPostfix
+					// InternalWeightDefinition.g:2040:6: ( ruleOpPostfix )
+					// InternalWeightDefinition.g:2041:7: ruleOpPostfix
 					{
 					if ( state.backtracking==0 ) {
 												if (current==null) {
@@ -5511,7 +5512,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleOpPostfix"
-	// InternalWeightDefinition.g:2057:1: entryRuleOpPostfix returns [String current=null] :iv_ruleOpPostfix= ruleOpPostfix EOF ;
+	// InternalWeightDefinition.g:2061:1: entryRuleOpPostfix returns [String current=null] :iv_ruleOpPostfix= ruleOpPostfix EOF ;
 	public final String entryRuleOpPostfix() throws RecognitionException {
 		String current = null;
 
@@ -5519,8 +5520,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		AntlrDatatypeRuleToken iv_ruleOpPostfix =null;
 
 		try {
-			// InternalWeightDefinition.g:2057:49: (iv_ruleOpPostfix= ruleOpPostfix EOF )
-			// InternalWeightDefinition.g:2058:2: iv_ruleOpPostfix= ruleOpPostfix EOF
+			// InternalWeightDefinition.g:2061:49: (iv_ruleOpPostfix= ruleOpPostfix EOF )
+			// InternalWeightDefinition.g:2062:2: iv_ruleOpPostfix= ruleOpPostfix EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getOpPostfixRule()); }
 			pushFollow(FOLLOW_1);
@@ -5548,7 +5549,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleOpPostfix"
-	// InternalWeightDefinition.g:2064:1: ruleOpPostfix returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (kw= '++' |kw= '--' ) ;
+	// InternalWeightDefinition.g:2068:1: ruleOpPostfix returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (kw= '++' |kw= '--' ) ;
 	public final AntlrDatatypeRuleToken ruleOpPostfix() throws RecognitionException {
 		AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -5559,29 +5560,29 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:2070:2: ( (kw= '++' |kw= '--' ) )
-			// InternalWeightDefinition.g:2071:2: (kw= '++' |kw= '--' )
+			// InternalWeightDefinition.g:2074:2: ( (kw= '++' |kw= '--' ) )
+			// InternalWeightDefinition.g:2075:2: (kw= '++' |kw= '--' )
 			{
-			// InternalWeightDefinition.g:2071:2: (kw= '++' |kw= '--' )
-			int alt28=2;
-			int LA28_0 = input.LA(1);
-			if ( (LA28_0==27) ) {
-				alt28=1;
+			// InternalWeightDefinition.g:2075:2: (kw= '++' |kw= '--' )
+			int alt26=2;
+			int LA26_0 = input.LA(1);
+			if ( (LA26_0==27) ) {
+				alt26=1;
 			}
-			else if ( (LA28_0==31) ) {
-				alt28=2;
+			else if ( (LA26_0==31) ) {
+				alt26=2;
 			}
 
 			else {
 				if (state.backtracking>0) {state.failed=true; return current;}
 				NoViableAltException nvae =
-					new NoViableAltException("", 28, 0, input);
+					new NoViableAltException("", 26, 0, input);
 				throw nvae;
 			}
 
-			switch (alt28) {
+			switch (alt26) {
 				case 1 :
-					// InternalWeightDefinition.g:2072:3: kw= '++'
+					// InternalWeightDefinition.g:2076:3: kw= '++'
 					{
 					kw=(Token)match(input,27,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -5591,7 +5592,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:2078:3: kw= '--'
+					// InternalWeightDefinition.g:2082:3: kw= '--'
 					{
 					kw=(Token)match(input,31,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -5625,7 +5626,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXMemberFeatureCall"
-	// InternalWeightDefinition.g:2087:1: entryRuleXMemberFeatureCall returns [EObject current=null] :iv_ruleXMemberFeatureCall= ruleXMemberFeatureCall EOF ;
+	// InternalWeightDefinition.g:2091:1: entryRuleXMemberFeatureCall returns [EObject current=null] :iv_ruleXMemberFeatureCall= ruleXMemberFeatureCall EOF ;
 	public final EObject entryRuleXMemberFeatureCall() throws RecognitionException {
 		EObject current = null;
 
@@ -5633,8 +5634,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXMemberFeatureCall =null;
 
 		try {
-			// InternalWeightDefinition.g:2087:59: (iv_ruleXMemberFeatureCall= ruleXMemberFeatureCall EOF )
-			// InternalWeightDefinition.g:2088:2: iv_ruleXMemberFeatureCall= ruleXMemberFeatureCall EOF
+			// InternalWeightDefinition.g:2091:59: (iv_ruleXMemberFeatureCall= ruleXMemberFeatureCall EOF )
+			// InternalWeightDefinition.g:2092:2: iv_ruleXMemberFeatureCall= ruleXMemberFeatureCall EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXMemberFeatureCallRule()); }
 			pushFollow(FOLLOW_1);
@@ -5662,7 +5663,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXMemberFeatureCall"
-	// InternalWeightDefinition.g:2094:1: ruleXMemberFeatureCall returns [EObject current=null] : (this_XPrimaryExpression_0= ruleXPrimaryExpression ( ( ( ( ( () ( '.' | ( ( '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) )=> ( () (otherlv_2= '.' | ( (lv_explicitStatic_3_0= '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) ) ( (lv_value_6_0= ruleXAssignment ) ) ) | ( ( ( ( () ( '.' | ( ( '?.' ) ) | ( ( '::' ) ) ) ) )=> ( () (otherlv_8= '.' | ( (lv_nullSafe_9_0= '?.' ) ) | ( (lv_explicitStatic_10_0= '::' ) ) ) ) ) (otherlv_11= '<' ( (lv_typeArguments_12_0= ruleJvmArgumentTypeReference ) ) (otherlv_13= ',' ( (lv_typeArguments_14_0= ruleJvmArgumentTypeReference ) ) )* otherlv_15= '>' )? ( ( ruleIdOrSuper ) ) ( ( ( ( '(' ) )=> (lv_explicitOperationCall_17_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure ) ) | ( ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )* ) )? otherlv_22= ')' )? ( ( ( () '[' ) )=> (lv_memberCallArguments_23_0= ruleXClosure ) )? ) )* ) ;
+	// InternalWeightDefinition.g:2098:1: ruleXMemberFeatureCall returns [EObject current=null] : (this_XPrimaryExpression_0= ruleXPrimaryExpression ( ( ( ( ( () ( '.' | ( ( '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) )=> ( () (otherlv_2= '.' | ( (lv_explicitStatic_3_0= '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) ) ( (lv_value_6_0= ruleXAssignment ) ) ) | ( ( ( ( () ( '.' | ( ( '?.' ) ) | ( ( '::' ) ) ) ) )=> ( () (otherlv_8= '.' | ( (lv_nullSafe_9_0= '?.' ) ) | ( (lv_explicitStatic_10_0= '::' ) ) ) ) ) (otherlv_11= '<' ( (lv_typeArguments_12_0= ruleJvmArgumentTypeReference ) ) (otherlv_13= ',' ( (lv_typeArguments_14_0= ruleJvmArgumentTypeReference ) ) )* otherlv_15= '>' )? ( ( ruleIdOrSuper ) ) ( ( ( ( '(' ) )=> (lv_explicitOperationCall_17_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure ) ) | ( ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )* ) )? otherlv_22= ')' )? ( ( ( () '[' ) )=> (lv_memberCallArguments_23_0= ruleXClosure ) )? ) )* ) ;
 	public final EObject ruleXMemberFeatureCall() throws RecognitionException {
 		EObject current = null;
 
@@ -5691,16 +5692,16 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:2100:2: ( (this_XPrimaryExpression_0= ruleXPrimaryExpression ( ( ( ( ( () ( '.' | ( ( '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) )=> ( () (otherlv_2= '.' | ( (lv_explicitStatic_3_0= '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) ) ( (lv_value_6_0= ruleXAssignment ) ) ) | ( ( ( ( () ( '.' | ( ( '?.' ) ) | ( ( '::' ) ) ) ) )=> ( () (otherlv_8= '.' | ( (lv_nullSafe_9_0= '?.' ) ) | ( (lv_explicitStatic_10_0= '::' ) ) ) ) ) (otherlv_11= '<' ( (lv_typeArguments_12_0= ruleJvmArgumentTypeReference ) ) (otherlv_13= ',' ( (lv_typeArguments_14_0= ruleJvmArgumentTypeReference ) ) )* otherlv_15= '>' )? ( ( ruleIdOrSuper ) ) ( ( ( ( '(' ) )=> (lv_explicitOperationCall_17_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure ) ) | ( ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )* ) )? otherlv_22= ')' )? ( ( ( () '[' ) )=> (lv_memberCallArguments_23_0= ruleXClosure ) )? ) )* ) )
-			// InternalWeightDefinition.g:2101:2: (this_XPrimaryExpression_0= ruleXPrimaryExpression ( ( ( ( ( () ( '.' | ( ( '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) )=> ( () (otherlv_2= '.' | ( (lv_explicitStatic_3_0= '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) ) ( (lv_value_6_0= ruleXAssignment ) ) ) | ( ( ( ( () ( '.' | ( ( '?.' ) ) | ( ( '::' ) ) ) ) )=> ( () (otherlv_8= '.' | ( (lv_nullSafe_9_0= '?.' ) ) | ( (lv_explicitStatic_10_0= '::' ) ) ) ) ) (otherlv_11= '<' ( (lv_typeArguments_12_0= ruleJvmArgumentTypeReference ) ) (otherlv_13= ',' ( (lv_typeArguments_14_0= ruleJvmArgumentTypeReference ) ) )* otherlv_15= '>' )? ( ( ruleIdOrSuper ) ) ( ( ( ( '(' ) )=> (lv_explicitOperationCall_17_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure ) ) | ( ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )* ) )? otherlv_22= ')' )? ( ( ( () '[' ) )=> (lv_memberCallArguments_23_0= ruleXClosure ) )? ) )* )
+			// InternalWeightDefinition.g:2104:2: ( (this_XPrimaryExpression_0= ruleXPrimaryExpression ( ( ( ( ( () ( '.' | ( ( '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) )=> ( () (otherlv_2= '.' | ( (lv_explicitStatic_3_0= '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) ) ( (lv_value_6_0= ruleXAssignment ) ) ) | ( ( ( ( () ( '.' | ( ( '?.' ) ) | ( ( '::' ) ) ) ) )=> ( () (otherlv_8= '.' | ( (lv_nullSafe_9_0= '?.' ) ) | ( (lv_explicitStatic_10_0= '::' ) ) ) ) ) (otherlv_11= '<' ( (lv_typeArguments_12_0= ruleJvmArgumentTypeReference ) ) (otherlv_13= ',' ( (lv_typeArguments_14_0= ruleJvmArgumentTypeReference ) ) )* otherlv_15= '>' )? ( ( ruleIdOrSuper ) ) ( ( ( ( '(' ) )=> (lv_explicitOperationCall_17_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure ) ) | ( ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )* ) )? otherlv_22= ')' )? ( ( ( () '[' ) )=> (lv_memberCallArguments_23_0= ruleXClosure ) )? ) )* ) )
+			// InternalWeightDefinition.g:2105:2: (this_XPrimaryExpression_0= ruleXPrimaryExpression ( ( ( ( ( () ( '.' | ( ( '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) )=> ( () (otherlv_2= '.' | ( (lv_explicitStatic_3_0= '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) ) ( (lv_value_6_0= ruleXAssignment ) ) ) | ( ( ( ( () ( '.' | ( ( '?.' ) ) | ( ( '::' ) ) ) ) )=> ( () (otherlv_8= '.' | ( (lv_nullSafe_9_0= '?.' ) ) | ( (lv_explicitStatic_10_0= '::' ) ) ) ) ) (otherlv_11= '<' ( (lv_typeArguments_12_0= ruleJvmArgumentTypeReference ) ) (otherlv_13= ',' ( (lv_typeArguments_14_0= ruleJvmArgumentTypeReference ) ) )* otherlv_15= '>' )? ( ( ruleIdOrSuper ) ) ( ( ( ( '(' ) )=> (lv_explicitOperationCall_17_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure ) ) | ( ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )* ) )? otherlv_22= ')' )? ( ( ( () '[' ) )=> (lv_memberCallArguments_23_0= ruleXClosure ) )? ) )* )
 			{
-			// InternalWeightDefinition.g:2101:2: (this_XPrimaryExpression_0= ruleXPrimaryExpression ( ( ( ( ( () ( '.' | ( ( '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) )=> ( () (otherlv_2= '.' | ( (lv_explicitStatic_3_0= '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) ) ( (lv_value_6_0= ruleXAssignment ) ) ) | ( ( ( ( () ( '.' | ( ( '?.' ) ) | ( ( '::' ) ) ) ) )=> ( () (otherlv_8= '.' | ( (lv_nullSafe_9_0= '?.' ) ) | ( (lv_explicitStatic_10_0= '::' ) ) ) ) ) (otherlv_11= '<' ( (lv_typeArguments_12_0= ruleJvmArgumentTypeReference ) ) (otherlv_13= ',' ( (lv_typeArguments_14_0= ruleJvmArgumentTypeReference ) ) )* otherlv_15= '>' )? ( ( ruleIdOrSuper ) ) ( ( ( ( '(' ) )=> (lv_explicitOperationCall_17_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure ) ) | ( ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )* ) )? otherlv_22= ')' )? ( ( ( () '[' ) )=> (lv_memberCallArguments_23_0= ruleXClosure ) )? ) )* )
-			// InternalWeightDefinition.g:2102:3: this_XPrimaryExpression_0= ruleXPrimaryExpression ( ( ( ( ( () ( '.' | ( ( '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) )=> ( () (otherlv_2= '.' | ( (lv_explicitStatic_3_0= '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) ) ( (lv_value_6_0= ruleXAssignment ) ) ) | ( ( ( ( () ( '.' | ( ( '?.' ) ) | ( ( '::' ) ) ) ) )=> ( () (otherlv_8= '.' | ( (lv_nullSafe_9_0= '?.' ) ) | ( (lv_explicitStatic_10_0= '::' ) ) ) ) ) (otherlv_11= '<' ( (lv_typeArguments_12_0= ruleJvmArgumentTypeReference ) ) (otherlv_13= ',' ( (lv_typeArguments_14_0= ruleJvmArgumentTypeReference ) ) )* otherlv_15= '>' )? ( ( ruleIdOrSuper ) ) ( ( ( ( '(' ) )=> (lv_explicitOperationCall_17_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure ) ) | ( ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )* ) )? otherlv_22= ')' )? ( ( ( () '[' ) )=> (lv_memberCallArguments_23_0= ruleXClosure ) )? ) )*
+			// InternalWeightDefinition.g:2105:2: (this_XPrimaryExpression_0= ruleXPrimaryExpression ( ( ( ( ( () ( '.' | ( ( '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) )=> ( () (otherlv_2= '.' | ( (lv_explicitStatic_3_0= '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) ) ( (lv_value_6_0= ruleXAssignment ) ) ) | ( ( ( ( () ( '.' | ( ( '?.' ) ) | ( ( '::' ) ) ) ) )=> ( () (otherlv_8= '.' | ( (lv_nullSafe_9_0= '?.' ) ) | ( (lv_explicitStatic_10_0= '::' ) ) ) ) ) (otherlv_11= '<' ( (lv_typeArguments_12_0= ruleJvmArgumentTypeReference ) ) (otherlv_13= ',' ( (lv_typeArguments_14_0= ruleJvmArgumentTypeReference ) ) )* otherlv_15= '>' )? ( ( ruleIdOrSuper ) ) ( ( ( ( '(' ) )=> (lv_explicitOperationCall_17_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure ) ) | ( ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )* ) )? otherlv_22= ')' )? ( ( ( () '[' ) )=> (lv_memberCallArguments_23_0= ruleXClosure ) )? ) )* )
+			// InternalWeightDefinition.g:2106:3: this_XPrimaryExpression_0= ruleXPrimaryExpression ( ( ( ( ( () ( '.' | ( ( '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) )=> ( () (otherlv_2= '.' | ( (lv_explicitStatic_3_0= '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) ) ( (lv_value_6_0= ruleXAssignment ) ) ) | ( ( ( ( () ( '.' | ( ( '?.' ) ) | ( ( '::' ) ) ) ) )=> ( () (otherlv_8= '.' | ( (lv_nullSafe_9_0= '?.' ) ) | ( (lv_explicitStatic_10_0= '::' ) ) ) ) ) (otherlv_11= '<' ( (lv_typeArguments_12_0= ruleJvmArgumentTypeReference ) ) (otherlv_13= ',' ( (lv_typeArguments_14_0= ruleJvmArgumentTypeReference ) ) )* otherlv_15= '>' )? ( ( ruleIdOrSuper ) ) ( ( ( ( '(' ) )=> (lv_explicitOperationCall_17_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure ) ) | ( ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )* ) )? otherlv_22= ')' )? ( ( ( () '[' ) )=> (lv_memberCallArguments_23_0= ruleXClosure ) )? ) )*
 			{
 			if ( state.backtracking==0 ) {
 						newCompositeNode(grammarAccess.getXMemberFeatureCallAccess().getXPrimaryExpressionParserRuleCall_0());
 					}
-			pushFollow(FOLLOW_30);
+			pushFollow(FOLLOW_29);
 			this_XPrimaryExpression_0=ruleXPrimaryExpression();
 			state._fsp--;
 			if (state.failed) return current;
@@ -5708,60 +5709,60 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						current = this_XPrimaryExpression_0;
 						afterParserOrEnumRuleCall();
 					}
-			// InternalWeightDefinition.g:2110:3: ( ( ( ( ( () ( '.' | ( ( '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) )=> ( () (otherlv_2= '.' | ( (lv_explicitStatic_3_0= '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) ) ( (lv_value_6_0= ruleXAssignment ) ) ) | ( ( ( ( () ( '.' | ( ( '?.' ) ) | ( ( '::' ) ) ) ) )=> ( () (otherlv_8= '.' | ( (lv_nullSafe_9_0= '?.' ) ) | ( (lv_explicitStatic_10_0= '::' ) ) ) ) ) (otherlv_11= '<' ( (lv_typeArguments_12_0= ruleJvmArgumentTypeReference ) ) (otherlv_13= ',' ( (lv_typeArguments_14_0= ruleJvmArgumentTypeReference ) ) )* otherlv_15= '>' )? ( ( ruleIdOrSuper ) ) ( ( ( ( '(' ) )=> (lv_explicitOperationCall_17_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure ) ) | ( ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )* ) )? otherlv_22= ')' )? ( ( ( () '[' ) )=> (lv_memberCallArguments_23_0= ruleXClosure ) )? ) )*
-			loop37:
+			// InternalWeightDefinition.g:2114:3: ( ( ( ( ( () ( '.' | ( ( '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) )=> ( () (otherlv_2= '.' | ( (lv_explicitStatic_3_0= '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) ) ( (lv_value_6_0= ruleXAssignment ) ) ) | ( ( ( ( () ( '.' | ( ( '?.' ) ) | ( ( '::' ) ) ) ) )=> ( () (otherlv_8= '.' | ( (lv_nullSafe_9_0= '?.' ) ) | ( (lv_explicitStatic_10_0= '::' ) ) ) ) ) (otherlv_11= '<' ( (lv_typeArguments_12_0= ruleJvmArgumentTypeReference ) ) (otherlv_13= ',' ( (lv_typeArguments_14_0= ruleJvmArgumentTypeReference ) ) )* otherlv_15= '>' )? ( ( ruleIdOrSuper ) ) ( ( ( ( '(' ) )=> (lv_explicitOperationCall_17_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure ) ) | ( ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )* ) )? otherlv_22= ')' )? ( ( ( () '[' ) )=> (lv_memberCallArguments_23_0= ruleXClosure ) )? ) )*
+			loop35:
 			while (true) {
-				int alt37=3;
+				int alt35=3;
 				switch ( input.LA(1) ) {
 				case 34:
 					{
-					int LA37_2 = input.LA(2);
+					int LA35_2 = input.LA(2);
 					if ( (synpred14_InternalWeightDefinition()) ) {
-						alt37=1;
+						alt35=1;
 					}
 					else if ( (synpred15_InternalWeightDefinition()) ) {
-						alt37=2;
+						alt35=2;
 					}
 
 					}
 					break;
 				case 40:
 					{
-					int LA37_3 = input.LA(2);
+					int LA35_3 = input.LA(2);
 					if ( (synpred14_InternalWeightDefinition()) ) {
-						alt37=1;
+						alt35=1;
 					}
 					else if ( (synpred15_InternalWeightDefinition()) ) {
-						alt37=2;
+						alt35=2;
 					}
 
 					}
 					break;
 				case 51:
 					{
-					int LA37_4 = input.LA(2);
+					int LA35_4 = input.LA(2);
 					if ( (synpred15_InternalWeightDefinition()) ) {
-						alt37=2;
+						alt35=2;
 					}
 
 					}
 					break;
 				}
-				switch (alt37) {
+				switch (alt35) {
 				case 1 :
-					// InternalWeightDefinition.g:2111:4: ( ( ( ( () ( '.' | ( ( '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) )=> ( () (otherlv_2= '.' | ( (lv_explicitStatic_3_0= '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) ) ( (lv_value_6_0= ruleXAssignment ) ) )
+					// InternalWeightDefinition.g:2115:4: ( ( ( ( () ( '.' | ( ( '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) )=> ( () (otherlv_2= '.' | ( (lv_explicitStatic_3_0= '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) ) ( (lv_value_6_0= ruleXAssignment ) ) )
 					{
-					// InternalWeightDefinition.g:2111:4: ( ( ( ( () ( '.' | ( ( '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) )=> ( () (otherlv_2= '.' | ( (lv_explicitStatic_3_0= '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) ) ( (lv_value_6_0= ruleXAssignment ) ) )
-					// InternalWeightDefinition.g:2112:5: ( ( ( () ( '.' | ( ( '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) )=> ( () (otherlv_2= '.' | ( (lv_explicitStatic_3_0= '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) ) ( (lv_value_6_0= ruleXAssignment ) )
+					// InternalWeightDefinition.g:2115:4: ( ( ( ( () ( '.' | ( ( '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) )=> ( () (otherlv_2= '.' | ( (lv_explicitStatic_3_0= '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) ) ( (lv_value_6_0= ruleXAssignment ) ) )
+					// InternalWeightDefinition.g:2116:5: ( ( ( () ( '.' | ( ( '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) )=> ( () (otherlv_2= '.' | ( (lv_explicitStatic_3_0= '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) ) ( (lv_value_6_0= ruleXAssignment ) )
 					{
-					// InternalWeightDefinition.g:2112:5: ( ( ( () ( '.' | ( ( '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) )=> ( () (otherlv_2= '.' | ( (lv_explicitStatic_3_0= '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) )
-					// InternalWeightDefinition.g:2113:6: ( ( () ( '.' | ( ( '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) )=> ( () (otherlv_2= '.' | ( (lv_explicitStatic_3_0= '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign )
+					// InternalWeightDefinition.g:2116:5: ( ( ( () ( '.' | ( ( '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) )=> ( () (otherlv_2= '.' | ( (lv_explicitStatic_3_0= '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) )
+					// InternalWeightDefinition.g:2117:6: ( ( () ( '.' | ( ( '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) )=> ( () (otherlv_2= '.' | ( (lv_explicitStatic_3_0= '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign )
 					{
-					// InternalWeightDefinition.g:2133:6: ( () (otherlv_2= '.' | ( (lv_explicitStatic_3_0= '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign )
-					// InternalWeightDefinition.g:2134:7: () (otherlv_2= '.' | ( (lv_explicitStatic_3_0= '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign
+					// InternalWeightDefinition.g:2137:6: ( () (otherlv_2= '.' | ( (lv_explicitStatic_3_0= '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign )
+					// InternalWeightDefinition.g:2138:7: () (otherlv_2= '.' | ( (lv_explicitStatic_3_0= '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign
 					{
-					// InternalWeightDefinition.g:2134:7: ()
-					// InternalWeightDefinition.g:2135:8: 
+					// InternalWeightDefinition.g:2138:7: ()
+					// InternalWeightDefinition.g:2139:8: 
 					{
 					if ( state.backtracking==0 ) {
 													current = forceCreateModelElementAndSet(
@@ -5770,43 +5771,43 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 												}
 					}
 
-					// InternalWeightDefinition.g:2141:7: (otherlv_2= '.' | ( (lv_explicitStatic_3_0= '::' ) ) )
-					int alt29=2;
-					int LA29_0 = input.LA(1);
-					if ( (LA29_0==34) ) {
-						alt29=1;
+					// InternalWeightDefinition.g:2145:7: (otherlv_2= '.' | ( (lv_explicitStatic_3_0= '::' ) ) )
+					int alt27=2;
+					int LA27_0 = input.LA(1);
+					if ( (LA27_0==34) ) {
+						alt27=1;
 					}
-					else if ( (LA29_0==40) ) {
-						alt29=2;
+					else if ( (LA27_0==40) ) {
+						alt27=2;
 					}
 
 					else {
 						if (state.backtracking>0) {state.failed=true; return current;}
 						NoViableAltException nvae =
-							new NoViableAltException("", 29, 0, input);
+							new NoViableAltException("", 27, 0, input);
 						throw nvae;
 					}
 
-					switch (alt29) {
+					switch (alt27) {
 						case 1 :
-							// InternalWeightDefinition.g:2142:8: otherlv_2= '.'
+							// InternalWeightDefinition.g:2146:8: otherlv_2= '.'
 							{
-							otherlv_2=(Token)match(input,34,FOLLOW_31); if (state.failed) return current;
+							otherlv_2=(Token)match(input,34,FOLLOW_30); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
 															newLeafNode(otherlv_2, grammarAccess.getXMemberFeatureCallAccess().getFullStopKeyword_1_0_0_0_1_0());
 														}
 							}
 							break;
 						case 2 :
-							// InternalWeightDefinition.g:2147:8: ( (lv_explicitStatic_3_0= '::' ) )
+							// InternalWeightDefinition.g:2151:8: ( (lv_explicitStatic_3_0= '::' ) )
 							{
-							// InternalWeightDefinition.g:2147:8: ( (lv_explicitStatic_3_0= '::' ) )
-							// InternalWeightDefinition.g:2148:9: (lv_explicitStatic_3_0= '::' )
+							// InternalWeightDefinition.g:2151:8: ( (lv_explicitStatic_3_0= '::' ) )
+							// InternalWeightDefinition.g:2152:9: (lv_explicitStatic_3_0= '::' )
 							{
-							// InternalWeightDefinition.g:2148:9: (lv_explicitStatic_3_0= '::' )
-							// InternalWeightDefinition.g:2149:10: lv_explicitStatic_3_0= '::'
+							// InternalWeightDefinition.g:2152:9: (lv_explicitStatic_3_0= '::' )
+							// InternalWeightDefinition.g:2153:10: lv_explicitStatic_3_0= '::'
 							{
-							lv_explicitStatic_3_0=(Token)match(input,40,FOLLOW_31); if (state.failed) return current;
+							lv_explicitStatic_3_0=(Token)match(input,40,FOLLOW_30); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
 																	newLeafNode(lv_explicitStatic_3_0, grammarAccess.getXMemberFeatureCallAccess().getExplicitStaticColonColonKeyword_1_0_0_0_1_1_0());
 																}
@@ -5825,11 +5826,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:2162:7: ( ( ruleFeatureCallID ) )
-					// InternalWeightDefinition.g:2163:8: ( ruleFeatureCallID )
+					// InternalWeightDefinition.g:2166:7: ( ( ruleFeatureCallID ) )
+					// InternalWeightDefinition.g:2167:8: ( ruleFeatureCallID )
 					{
-					// InternalWeightDefinition.g:2163:8: ( ruleFeatureCallID )
-					// InternalWeightDefinition.g:2164:9: ruleFeatureCallID
+					// InternalWeightDefinition.g:2167:8: ( ruleFeatureCallID )
+					// InternalWeightDefinition.g:2168:9: ruleFeatureCallID
 					{
 					if ( state.backtracking==0 ) {
 														if (current==null) {
@@ -5839,7 +5840,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					if ( state.backtracking==0 ) {
 														newCompositeNode(grammarAccess.getXMemberFeatureCallAccess().getFeatureJvmIdentifiableElementCrossReference_1_0_0_0_2_0());
 													}
-					pushFollow(FOLLOW_12);
+					pushFollow(FOLLOW_11);
 					ruleFeatureCallID();
 					state._fsp--;
 					if (state.failed) return current;
@@ -5853,7 +5854,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					if ( state.backtracking==0 ) {
 												newCompositeNode(grammarAccess.getXMemberFeatureCallAccess().getOpSingleAssignParserRuleCall_1_0_0_0_3());
 											}
-					pushFollow(FOLLOW_13);
+					pushFollow(FOLLOW_12);
 					ruleOpSingleAssign();
 					state._fsp--;
 					if (state.failed) return current;
@@ -5864,16 +5865,16 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:2187:5: ( (lv_value_6_0= ruleXAssignment ) )
-					// InternalWeightDefinition.g:2188:6: (lv_value_6_0= ruleXAssignment )
+					// InternalWeightDefinition.g:2191:5: ( (lv_value_6_0= ruleXAssignment ) )
+					// InternalWeightDefinition.g:2192:6: (lv_value_6_0= ruleXAssignment )
 					{
-					// InternalWeightDefinition.g:2188:6: (lv_value_6_0= ruleXAssignment )
-					// InternalWeightDefinition.g:2189:7: lv_value_6_0= ruleXAssignment
+					// InternalWeightDefinition.g:2192:6: (lv_value_6_0= ruleXAssignment )
+					// InternalWeightDefinition.g:2193:7: lv_value_6_0= ruleXAssignment
 					{
 					if ( state.backtracking==0 ) {
 												newCompositeNode(grammarAccess.getXMemberFeatureCallAccess().getValueXAssignmentParserRuleCall_1_0_1_0());
 											}
-					pushFollow(FOLLOW_30);
+					pushFollow(FOLLOW_29);
 					lv_value_6_0=ruleXAssignment();
 					state._fsp--;
 					if (state.failed) return current;
@@ -5897,19 +5898,19 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:2208:4: ( ( ( ( () ( '.' | ( ( '?.' ) ) | ( ( '::' ) ) ) ) )=> ( () (otherlv_8= '.' | ( (lv_nullSafe_9_0= '?.' ) ) | ( (lv_explicitStatic_10_0= '::' ) ) ) ) ) (otherlv_11= '<' ( (lv_typeArguments_12_0= ruleJvmArgumentTypeReference ) ) (otherlv_13= ',' ( (lv_typeArguments_14_0= ruleJvmArgumentTypeReference ) ) )* otherlv_15= '>' )? ( ( ruleIdOrSuper ) ) ( ( ( ( '(' ) )=> (lv_explicitOperationCall_17_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure ) ) | ( ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )* ) )? otherlv_22= ')' )? ( ( ( () '[' ) )=> (lv_memberCallArguments_23_0= ruleXClosure ) )? )
+					// InternalWeightDefinition.g:2212:4: ( ( ( ( () ( '.' | ( ( '?.' ) ) | ( ( '::' ) ) ) ) )=> ( () (otherlv_8= '.' | ( (lv_nullSafe_9_0= '?.' ) ) | ( (lv_explicitStatic_10_0= '::' ) ) ) ) ) (otherlv_11= '<' ( (lv_typeArguments_12_0= ruleJvmArgumentTypeReference ) ) (otherlv_13= ',' ( (lv_typeArguments_14_0= ruleJvmArgumentTypeReference ) ) )* otherlv_15= '>' )? ( ( ruleIdOrSuper ) ) ( ( ( ( '(' ) )=> (lv_explicitOperationCall_17_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure ) ) | ( ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )* ) )? otherlv_22= ')' )? ( ( ( () '[' ) )=> (lv_memberCallArguments_23_0= ruleXClosure ) )? )
 					{
-					// InternalWeightDefinition.g:2208:4: ( ( ( ( () ( '.' | ( ( '?.' ) ) | ( ( '::' ) ) ) ) )=> ( () (otherlv_8= '.' | ( (lv_nullSafe_9_0= '?.' ) ) | ( (lv_explicitStatic_10_0= '::' ) ) ) ) ) (otherlv_11= '<' ( (lv_typeArguments_12_0= ruleJvmArgumentTypeReference ) ) (otherlv_13= ',' ( (lv_typeArguments_14_0= ruleJvmArgumentTypeReference ) ) )* otherlv_15= '>' )? ( ( ruleIdOrSuper ) ) ( ( ( ( '(' ) )=> (lv_explicitOperationCall_17_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure ) ) | ( ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )* ) )? otherlv_22= ')' )? ( ( ( () '[' ) )=> (lv_memberCallArguments_23_0= ruleXClosure ) )? )
-					// InternalWeightDefinition.g:2209:5: ( ( ( () ( '.' | ( ( '?.' ) ) | ( ( '::' ) ) ) ) )=> ( () (otherlv_8= '.' | ( (lv_nullSafe_9_0= '?.' ) ) | ( (lv_explicitStatic_10_0= '::' ) ) ) ) ) (otherlv_11= '<' ( (lv_typeArguments_12_0= ruleJvmArgumentTypeReference ) ) (otherlv_13= ',' ( (lv_typeArguments_14_0= ruleJvmArgumentTypeReference ) ) )* otherlv_15= '>' )? ( ( ruleIdOrSuper ) ) ( ( ( ( '(' ) )=> (lv_explicitOperationCall_17_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure ) ) | ( ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )* ) )? otherlv_22= ')' )? ( ( ( () '[' ) )=> (lv_memberCallArguments_23_0= ruleXClosure ) )?
+					// InternalWeightDefinition.g:2212:4: ( ( ( ( () ( '.' | ( ( '?.' ) ) | ( ( '::' ) ) ) ) )=> ( () (otherlv_8= '.' | ( (lv_nullSafe_9_0= '?.' ) ) | ( (lv_explicitStatic_10_0= '::' ) ) ) ) ) (otherlv_11= '<' ( (lv_typeArguments_12_0= ruleJvmArgumentTypeReference ) ) (otherlv_13= ',' ( (lv_typeArguments_14_0= ruleJvmArgumentTypeReference ) ) )* otherlv_15= '>' )? ( ( ruleIdOrSuper ) ) ( ( ( ( '(' ) )=> (lv_explicitOperationCall_17_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure ) ) | ( ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )* ) )? otherlv_22= ')' )? ( ( ( () '[' ) )=> (lv_memberCallArguments_23_0= ruleXClosure ) )? )
+					// InternalWeightDefinition.g:2213:5: ( ( ( () ( '.' | ( ( '?.' ) ) | ( ( '::' ) ) ) ) )=> ( () (otherlv_8= '.' | ( (lv_nullSafe_9_0= '?.' ) ) | ( (lv_explicitStatic_10_0= '::' ) ) ) ) ) (otherlv_11= '<' ( (lv_typeArguments_12_0= ruleJvmArgumentTypeReference ) ) (otherlv_13= ',' ( (lv_typeArguments_14_0= ruleJvmArgumentTypeReference ) ) )* otherlv_15= '>' )? ( ( ruleIdOrSuper ) ) ( ( ( ( '(' ) )=> (lv_explicitOperationCall_17_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure ) ) | ( ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )* ) )? otherlv_22= ')' )? ( ( ( () '[' ) )=> (lv_memberCallArguments_23_0= ruleXClosure ) )?
 					{
-					// InternalWeightDefinition.g:2209:5: ( ( ( () ( '.' | ( ( '?.' ) ) | ( ( '::' ) ) ) ) )=> ( () (otherlv_8= '.' | ( (lv_nullSafe_9_0= '?.' ) ) | ( (lv_explicitStatic_10_0= '::' ) ) ) ) )
-					// InternalWeightDefinition.g:2210:6: ( ( () ( '.' | ( ( '?.' ) ) | ( ( '::' ) ) ) ) )=> ( () (otherlv_8= '.' | ( (lv_nullSafe_9_0= '?.' ) ) | ( (lv_explicitStatic_10_0= '::' ) ) ) )
+					// InternalWeightDefinition.g:2213:5: ( ( ( () ( '.' | ( ( '?.' ) ) | ( ( '::' ) ) ) ) )=> ( () (otherlv_8= '.' | ( (lv_nullSafe_9_0= '?.' ) ) | ( (lv_explicitStatic_10_0= '::' ) ) ) ) )
+					// InternalWeightDefinition.g:2214:6: ( ( () ( '.' | ( ( '?.' ) ) | ( ( '::' ) ) ) ) )=> ( () (otherlv_8= '.' | ( (lv_nullSafe_9_0= '?.' ) ) | ( (lv_explicitStatic_10_0= '::' ) ) ) )
 					{
-					// InternalWeightDefinition.g:2230:6: ( () (otherlv_8= '.' | ( (lv_nullSafe_9_0= '?.' ) ) | ( (lv_explicitStatic_10_0= '::' ) ) ) )
-					// InternalWeightDefinition.g:2231:7: () (otherlv_8= '.' | ( (lv_nullSafe_9_0= '?.' ) ) | ( (lv_explicitStatic_10_0= '::' ) ) )
+					// InternalWeightDefinition.g:2234:6: ( () (otherlv_8= '.' | ( (lv_nullSafe_9_0= '?.' ) ) | ( (lv_explicitStatic_10_0= '::' ) ) ) )
+					// InternalWeightDefinition.g:2235:7: () (otherlv_8= '.' | ( (lv_nullSafe_9_0= '?.' ) ) | ( (lv_explicitStatic_10_0= '::' ) ) )
 					{
-					// InternalWeightDefinition.g:2231:7: ()
-					// InternalWeightDefinition.g:2232:8: 
+					// InternalWeightDefinition.g:2235:7: ()
+					// InternalWeightDefinition.g:2236:8: 
 					{
 					if ( state.backtracking==0 ) {
 													current = forceCreateModelElementAndSet(
@@ -5918,50 +5919,50 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 												}
 					}
 
-					// InternalWeightDefinition.g:2238:7: (otherlv_8= '.' | ( (lv_nullSafe_9_0= '?.' ) ) | ( (lv_explicitStatic_10_0= '::' ) ) )
-					int alt30=3;
+					// InternalWeightDefinition.g:2242:7: (otherlv_8= '.' | ( (lv_nullSafe_9_0= '?.' ) ) | ( (lv_explicitStatic_10_0= '::' ) ) )
+					int alt28=3;
 					switch ( input.LA(1) ) {
 					case 34:
 						{
-						alt30=1;
+						alt28=1;
 						}
 						break;
 					case 51:
 						{
-						alt30=2;
+						alt28=2;
 						}
 						break;
 					case 40:
 						{
-						alt30=3;
+						alt28=3;
 						}
 						break;
 					default:
 						if (state.backtracking>0) {state.failed=true; return current;}
 						NoViableAltException nvae =
-							new NoViableAltException("", 30, 0, input);
+							new NoViableAltException("", 28, 0, input);
 						throw nvae;
 					}
-					switch (alt30) {
+					switch (alt28) {
 						case 1 :
-							// InternalWeightDefinition.g:2239:8: otherlv_8= '.'
+							// InternalWeightDefinition.g:2243:8: otherlv_8= '.'
 							{
-							otherlv_8=(Token)match(input,34,FOLLOW_32); if (state.failed) return current;
+							otherlv_8=(Token)match(input,34,FOLLOW_31); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
 															newLeafNode(otherlv_8, grammarAccess.getXMemberFeatureCallAccess().getFullStopKeyword_1_1_0_0_1_0());
 														}
 							}
 							break;
 						case 2 :
-							// InternalWeightDefinition.g:2244:8: ( (lv_nullSafe_9_0= '?.' ) )
+							// InternalWeightDefinition.g:2248:8: ( (lv_nullSafe_9_0= '?.' ) )
 							{
-							// InternalWeightDefinition.g:2244:8: ( (lv_nullSafe_9_0= '?.' ) )
-							// InternalWeightDefinition.g:2245:9: (lv_nullSafe_9_0= '?.' )
+							// InternalWeightDefinition.g:2248:8: ( (lv_nullSafe_9_0= '?.' ) )
+							// InternalWeightDefinition.g:2249:9: (lv_nullSafe_9_0= '?.' )
 							{
-							// InternalWeightDefinition.g:2245:9: (lv_nullSafe_9_0= '?.' )
-							// InternalWeightDefinition.g:2246:10: lv_nullSafe_9_0= '?.'
+							// InternalWeightDefinition.g:2249:9: (lv_nullSafe_9_0= '?.' )
+							// InternalWeightDefinition.g:2250:10: lv_nullSafe_9_0= '?.'
 							{
-							lv_nullSafe_9_0=(Token)match(input,51,FOLLOW_32); if (state.failed) return current;
+							lv_nullSafe_9_0=(Token)match(input,51,FOLLOW_31); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
 																	newLeafNode(lv_nullSafe_9_0, grammarAccess.getXMemberFeatureCallAccess().getNullSafeQuestionMarkFullStopKeyword_1_1_0_0_1_1_0());
 																}
@@ -5978,15 +5979,15 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 							}
 							break;
 						case 3 :
-							// InternalWeightDefinition.g:2259:8: ( (lv_explicitStatic_10_0= '::' ) )
+							// InternalWeightDefinition.g:2263:8: ( (lv_explicitStatic_10_0= '::' ) )
 							{
-							// InternalWeightDefinition.g:2259:8: ( (lv_explicitStatic_10_0= '::' ) )
-							// InternalWeightDefinition.g:2260:9: (lv_explicitStatic_10_0= '::' )
+							// InternalWeightDefinition.g:2263:8: ( (lv_explicitStatic_10_0= '::' ) )
+							// InternalWeightDefinition.g:2264:9: (lv_explicitStatic_10_0= '::' )
 							{
-							// InternalWeightDefinition.g:2260:9: (lv_explicitStatic_10_0= '::' )
-							// InternalWeightDefinition.g:2261:10: lv_explicitStatic_10_0= '::'
+							// InternalWeightDefinition.g:2264:9: (lv_explicitStatic_10_0= '::' )
+							// InternalWeightDefinition.g:2265:10: lv_explicitStatic_10_0= '::'
 							{
-							lv_explicitStatic_10_0=(Token)match(input,40,FOLLOW_32); if (state.failed) return current;
+							lv_explicitStatic_10_0=(Token)match(input,40,FOLLOW_31); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
 																	newLeafNode(lv_explicitStatic_10_0, grammarAccess.getXMemberFeatureCallAccess().getExplicitStaticColonColonKeyword_1_1_0_0_1_2_0());
 																}
@@ -6009,30 +6010,30 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:2276:5: (otherlv_11= '<' ( (lv_typeArguments_12_0= ruleJvmArgumentTypeReference ) ) (otherlv_13= ',' ( (lv_typeArguments_14_0= ruleJvmArgumentTypeReference ) ) )* otherlv_15= '>' )?
-					int alt32=2;
-					int LA32_0 = input.LA(1);
-					if ( (LA32_0==42) ) {
-						alt32=1;
+					// InternalWeightDefinition.g:2280:5: (otherlv_11= '<' ( (lv_typeArguments_12_0= ruleJvmArgumentTypeReference ) ) (otherlv_13= ',' ( (lv_typeArguments_14_0= ruleJvmArgumentTypeReference ) ) )* otherlv_15= '>' )?
+					int alt30=2;
+					int LA30_0 = input.LA(1);
+					if ( (LA30_0==42) ) {
+						alt30=1;
 					}
-					switch (alt32) {
+					switch (alt30) {
 						case 1 :
-							// InternalWeightDefinition.g:2277:6: otherlv_11= '<' ( (lv_typeArguments_12_0= ruleJvmArgumentTypeReference ) ) (otherlv_13= ',' ( (lv_typeArguments_14_0= ruleJvmArgumentTypeReference ) ) )* otherlv_15= '>'
+							// InternalWeightDefinition.g:2281:6: otherlv_11= '<' ( (lv_typeArguments_12_0= ruleJvmArgumentTypeReference ) ) (otherlv_13= ',' ( (lv_typeArguments_14_0= ruleJvmArgumentTypeReference ) ) )* otherlv_15= '>'
 							{
-							otherlv_11=(Token)match(input,42,FOLLOW_33); if (state.failed) return current;
+							otherlv_11=(Token)match(input,42,FOLLOW_32); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
 													newLeafNode(otherlv_11, grammarAccess.getXMemberFeatureCallAccess().getLessThanSignKeyword_1_1_1_0());
 												}
-							// InternalWeightDefinition.g:2281:6: ( (lv_typeArguments_12_0= ruleJvmArgumentTypeReference ) )
-							// InternalWeightDefinition.g:2282:7: (lv_typeArguments_12_0= ruleJvmArgumentTypeReference )
+							// InternalWeightDefinition.g:2285:6: ( (lv_typeArguments_12_0= ruleJvmArgumentTypeReference ) )
+							// InternalWeightDefinition.g:2286:7: (lv_typeArguments_12_0= ruleJvmArgumentTypeReference )
 							{
-							// InternalWeightDefinition.g:2282:7: (lv_typeArguments_12_0= ruleJvmArgumentTypeReference )
-							// InternalWeightDefinition.g:2283:8: lv_typeArguments_12_0= ruleJvmArgumentTypeReference
+							// InternalWeightDefinition.g:2286:7: (lv_typeArguments_12_0= ruleJvmArgumentTypeReference )
+							// InternalWeightDefinition.g:2287:8: lv_typeArguments_12_0= ruleJvmArgumentTypeReference
 							{
 							if ( state.backtracking==0 ) {
 															newCompositeNode(grammarAccess.getXMemberFeatureCallAccess().getTypeArgumentsJvmArgumentTypeReferenceParserRuleCall_1_1_1_1_0());
 														}
-							pushFollow(FOLLOW_34);
+							pushFollow(FOLLOW_33);
 							lv_typeArguments_12_0=ruleJvmArgumentTypeReference();
 							state._fsp--;
 							if (state.failed) return current;
@@ -6051,33 +6052,33 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 							}
 
-							// InternalWeightDefinition.g:2300:6: (otherlv_13= ',' ( (lv_typeArguments_14_0= ruleJvmArgumentTypeReference ) ) )*
-							loop31:
+							// InternalWeightDefinition.g:2304:6: (otherlv_13= ',' ( (lv_typeArguments_14_0= ruleJvmArgumentTypeReference ) ) )*
+							loop29:
 							while (true) {
-								int alt31=2;
-								int LA31_0 = input.LA(1);
-								if ( (LA31_0==29) ) {
-									alt31=1;
+								int alt29=2;
+								int LA29_0 = input.LA(1);
+								if ( (LA29_0==29) ) {
+									alt29=1;
 								}
 
-								switch (alt31) {
+								switch (alt29) {
 								case 1 :
-									// InternalWeightDefinition.g:2301:7: otherlv_13= ',' ( (lv_typeArguments_14_0= ruleJvmArgumentTypeReference ) )
+									// InternalWeightDefinition.g:2305:7: otherlv_13= ',' ( (lv_typeArguments_14_0= ruleJvmArgumentTypeReference ) )
 									{
-									otherlv_13=(Token)match(input,29,FOLLOW_33); if (state.failed) return current;
+									otherlv_13=(Token)match(input,29,FOLLOW_32); if (state.failed) return current;
 									if ( state.backtracking==0 ) {
 																newLeafNode(otherlv_13, grammarAccess.getXMemberFeatureCallAccess().getCommaKeyword_1_1_1_2_0());
 															}
-									// InternalWeightDefinition.g:2305:7: ( (lv_typeArguments_14_0= ruleJvmArgumentTypeReference ) )
-									// InternalWeightDefinition.g:2306:8: (lv_typeArguments_14_0= ruleJvmArgumentTypeReference )
+									// InternalWeightDefinition.g:2309:7: ( (lv_typeArguments_14_0= ruleJvmArgumentTypeReference ) )
+									// InternalWeightDefinition.g:2310:8: (lv_typeArguments_14_0= ruleJvmArgumentTypeReference )
 									{
-									// InternalWeightDefinition.g:2306:8: (lv_typeArguments_14_0= ruleJvmArgumentTypeReference )
-									// InternalWeightDefinition.g:2307:9: lv_typeArguments_14_0= ruleJvmArgumentTypeReference
+									// InternalWeightDefinition.g:2310:8: (lv_typeArguments_14_0= ruleJvmArgumentTypeReference )
+									// InternalWeightDefinition.g:2311:9: lv_typeArguments_14_0= ruleJvmArgumentTypeReference
 									{
 									if ( state.backtracking==0 ) {
 																		newCompositeNode(grammarAccess.getXMemberFeatureCallAccess().getTypeArgumentsJvmArgumentTypeReferenceParserRuleCall_1_1_1_2_1_0());
 																	}
-									pushFollow(FOLLOW_34);
+									pushFollow(FOLLOW_33);
 									lv_typeArguments_14_0=ruleJvmArgumentTypeReference();
 									state._fsp--;
 									if (state.failed) return current;
@@ -6100,11 +6101,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 									break;
 
 								default :
-									break loop31;
+									break loop29;
 								}
 							}
 
-							otherlv_15=(Token)match(input,48,FOLLOW_35); if (state.failed) return current;
+							otherlv_15=(Token)match(input,48,FOLLOW_34); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
 													newLeafNode(otherlv_15, grammarAccess.getXMemberFeatureCallAccess().getGreaterThanSignKeyword_1_1_1_3());
 												}
@@ -6113,11 +6114,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:2330:5: ( ( ruleIdOrSuper ) )
-					// InternalWeightDefinition.g:2331:6: ( ruleIdOrSuper )
+					// InternalWeightDefinition.g:2334:5: ( ( ruleIdOrSuper ) )
+					// InternalWeightDefinition.g:2335:6: ( ruleIdOrSuper )
 					{
-					// InternalWeightDefinition.g:2331:6: ( ruleIdOrSuper )
-					// InternalWeightDefinition.g:2332:7: ruleIdOrSuper
+					// InternalWeightDefinition.g:2335:6: ( ruleIdOrSuper )
+					// InternalWeightDefinition.g:2336:7: ruleIdOrSuper
 					{
 					if ( state.backtracking==0 ) {
 												if (current==null) {
@@ -6127,7 +6128,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					if ( state.backtracking==0 ) {
 												newCompositeNode(grammarAccess.getXMemberFeatureCallAccess().getFeatureJvmIdentifiableElementCrossReference_1_1_2_0());
 											}
-					pushFollow(FOLLOW_36);
+					pushFollow(FOLLOW_35);
 					ruleIdOrSuper();
 					state._fsp--;
 					if (state.failed) return current;
@@ -6138,20 +6139,20 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:2346:5: ( ( ( ( '(' ) )=> (lv_explicitOperationCall_17_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure ) ) | ( ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )* ) )? otherlv_22= ')' )?
-					int alt35=2;
-					alt35 = dfa35.predict(input);
-					switch (alt35) {
+					// InternalWeightDefinition.g:2350:5: ( ( ( ( '(' ) )=> (lv_explicitOperationCall_17_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure ) ) | ( ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )* ) )? otherlv_22= ')' )?
+					int alt33=2;
+					alt33 = dfa33.predict(input);
+					switch (alt33) {
 						case 1 :
-							// InternalWeightDefinition.g:2347:6: ( ( ( '(' ) )=> (lv_explicitOperationCall_17_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure ) ) | ( ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )* ) )? otherlv_22= ')'
+							// InternalWeightDefinition.g:2351:6: ( ( ( '(' ) )=> (lv_explicitOperationCall_17_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure ) ) | ( ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )* ) )? otherlv_22= ')'
 							{
-							// InternalWeightDefinition.g:2347:6: ( ( ( '(' ) )=> (lv_explicitOperationCall_17_0= '(' ) )
-							// InternalWeightDefinition.g:2348:7: ( ( '(' ) )=> (lv_explicitOperationCall_17_0= '(' )
+							// InternalWeightDefinition.g:2351:6: ( ( ( '(' ) )=> (lv_explicitOperationCall_17_0= '(' ) )
+							// InternalWeightDefinition.g:2352:7: ( ( '(' ) )=> (lv_explicitOperationCall_17_0= '(' )
 							{
-							// InternalWeightDefinition.g:2352:7: (lv_explicitOperationCall_17_0= '(' )
-							// InternalWeightDefinition.g:2353:8: lv_explicitOperationCall_17_0= '('
+							// InternalWeightDefinition.g:2356:7: (lv_explicitOperationCall_17_0= '(' )
+							// InternalWeightDefinition.g:2357:8: lv_explicitOperationCall_17_0= '('
 							{
-							lv_explicitOperationCall_17_0=(Token)match(input,21,FOLLOW_37); if (state.failed) return current;
+							lv_explicitOperationCall_17_0=(Token)match(input,21,FOLLOW_36); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
 															newLeafNode(lv_explicitOperationCall_17_0, grammarAccess.getXMemberFeatureCallAccess().getExplicitOperationCallLeftParenthesisKeyword_1_1_3_0_0());
 														}
@@ -6165,50 +6166,50 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 							}
 
-							// InternalWeightDefinition.g:2365:6: ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure ) ) | ( ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )* ) )?
-							int alt34=3;
-							int LA34_0 = input.LA(1);
-							if ( (LA34_0==RULE_ID) ) {
-								int LA34_1 = input.LA(2);
+							// InternalWeightDefinition.g:2369:6: ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure ) ) | ( ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )* ) )?
+							int alt32=3;
+							int LA32_0 = input.LA(1);
+							if ( (LA32_0==RULE_ID) ) {
+								int LA32_1 = input.LA(2);
 								if ( (synpred17_InternalWeightDefinition()) ) {
-									alt34=1;
+									alt32=1;
 								}
 								else if ( (true) ) {
-									alt34=2;
+									alt32=2;
 								}
 							}
-							else if ( (LA34_0==21) ) {
-								int LA34_2 = input.LA(2);
+							else if ( (LA32_0==21) ) {
+								int LA32_2 = input.LA(2);
 								if ( (synpred17_InternalWeightDefinition()) ) {
-									alt34=1;
+									alt32=1;
 								}
 								else if ( (true) ) {
-									alt34=2;
+									alt32=2;
 								}
 							}
-							else if ( (LA34_0==47) && (synpred17_InternalWeightDefinition())) {
-								alt34=1;
+							else if ( (LA32_0==47) && (synpred17_InternalWeightDefinition())) {
+								alt32=1;
 							}
-							else if ( (LA34_0==86) && (synpred17_InternalWeightDefinition())) {
-								alt34=1;
+							else if ( (LA32_0==86) && (synpred17_InternalWeightDefinition())) {
+								alt32=1;
 							}
-							else if ( ((LA34_0 >= RULE_DECIMAL && LA34_0 <= RULE_HEX)||LA34_0==RULE_INT||LA34_0==RULE_STRING||LA34_0==13||LA34_0==16||LA34_0==26||LA34_0==30||LA34_0==42||LA34_0==53||LA34_0==59||(LA34_0 >= 61 && LA34_0 <= 63)||LA34_0==65||(LA34_0 >= 67 && LA34_0 <= 68)||(LA34_0 >= 70 && LA34_0 <= 72)||(LA34_0 >= 74 && LA34_0 <= 81)||(LA34_0 >= 84 && LA34_0 <= 85)) ) {
-								alt34=2;
+							else if ( ((LA32_0 >= RULE_DECIMAL && LA32_0 <= RULE_HEX)||LA32_0==RULE_INT||LA32_0==RULE_STRING||LA32_0==13||LA32_0==16||LA32_0==26||LA32_0==30||LA32_0==42||LA32_0==53||LA32_0==59||(LA32_0 >= 61 && LA32_0 <= 63)||LA32_0==65||(LA32_0 >= 67 && LA32_0 <= 68)||(LA32_0 >= 70 && LA32_0 <= 72)||(LA32_0 >= 74 && LA32_0 <= 81)||(LA32_0 >= 84 && LA32_0 <= 85)) ) {
+								alt32=2;
 							}
-							switch (alt34) {
+							switch (alt32) {
 								case 1 :
-									// InternalWeightDefinition.g:2366:7: ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure ) )
+									// InternalWeightDefinition.g:2370:7: ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure ) )
 									{
-									// InternalWeightDefinition.g:2366:7: ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure ) )
-									// InternalWeightDefinition.g:2367:8: ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure )
+									// InternalWeightDefinition.g:2370:7: ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure ) )
+									// InternalWeightDefinition.g:2371:8: ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure )
 									{
-									// InternalWeightDefinition.g:2392:8: (lv_memberCallArguments_18_0= ruleXShortClosure )
-									// InternalWeightDefinition.g:2393:9: lv_memberCallArguments_18_0= ruleXShortClosure
+									// InternalWeightDefinition.g:2396:8: (lv_memberCallArguments_18_0= ruleXShortClosure )
+									// InternalWeightDefinition.g:2397:9: lv_memberCallArguments_18_0= ruleXShortClosure
 									{
 									if ( state.backtracking==0 ) {
 																		newCompositeNode(grammarAccess.getXMemberFeatureCallAccess().getMemberCallArgumentsXShortClosureParserRuleCall_1_1_3_1_0_0());
 																	}
-									pushFollow(FOLLOW_38);
+									pushFollow(FOLLOW_37);
 									lv_memberCallArguments_18_0=ruleXShortClosure();
 									state._fsp--;
 									if (state.failed) return current;
@@ -6230,21 +6231,21 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 									}
 									break;
 								case 2 :
-									// InternalWeightDefinition.g:2411:7: ( ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )* )
+									// InternalWeightDefinition.g:2415:7: ( ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )* )
 									{
-									// InternalWeightDefinition.g:2411:7: ( ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )* )
-									// InternalWeightDefinition.g:2412:8: ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )*
+									// InternalWeightDefinition.g:2415:7: ( ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )* )
+									// InternalWeightDefinition.g:2416:8: ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )*
 									{
-									// InternalWeightDefinition.g:2412:8: ( (lv_memberCallArguments_19_0= ruleXExpression ) )
-									// InternalWeightDefinition.g:2413:9: (lv_memberCallArguments_19_0= ruleXExpression )
+									// InternalWeightDefinition.g:2416:8: ( (lv_memberCallArguments_19_0= ruleXExpression ) )
+									// InternalWeightDefinition.g:2417:9: (lv_memberCallArguments_19_0= ruleXExpression )
 									{
-									// InternalWeightDefinition.g:2413:9: (lv_memberCallArguments_19_0= ruleXExpression )
-									// InternalWeightDefinition.g:2414:10: lv_memberCallArguments_19_0= ruleXExpression
+									// InternalWeightDefinition.g:2417:9: (lv_memberCallArguments_19_0= ruleXExpression )
+									// InternalWeightDefinition.g:2418:10: lv_memberCallArguments_19_0= ruleXExpression
 									{
 									if ( state.backtracking==0 ) {
 																			newCompositeNode(grammarAccess.getXMemberFeatureCallAccess().getMemberCallArgumentsXExpressionParserRuleCall_1_1_3_1_1_0_0());
 																		}
-									pushFollow(FOLLOW_11);
+									pushFollow(FOLLOW_10);
 									lv_memberCallArguments_19_0=ruleXExpression();
 									state._fsp--;
 									if (state.failed) return current;
@@ -6263,33 +6264,33 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 									}
 
-									// InternalWeightDefinition.g:2431:8: (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )*
-									loop33:
+									// InternalWeightDefinition.g:2435:8: (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )*
+									loop31:
 									while (true) {
-										int alt33=2;
-										int LA33_0 = input.LA(1);
-										if ( (LA33_0==29) ) {
-											alt33=1;
+										int alt31=2;
+										int LA31_0 = input.LA(1);
+										if ( (LA31_0==29) ) {
+											alt31=1;
 										}
 
-										switch (alt33) {
+										switch (alt31) {
 										case 1 :
-											// InternalWeightDefinition.g:2432:9: otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) )
+											// InternalWeightDefinition.g:2436:9: otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) )
 											{
-											otherlv_20=(Token)match(input,29,FOLLOW_13); if (state.failed) return current;
+											otherlv_20=(Token)match(input,29,FOLLOW_12); if (state.failed) return current;
 											if ( state.backtracking==0 ) {
 																				newLeafNode(otherlv_20, grammarAccess.getXMemberFeatureCallAccess().getCommaKeyword_1_1_3_1_1_1_0());
 																			}
-											// InternalWeightDefinition.g:2436:9: ( (lv_memberCallArguments_21_0= ruleXExpression ) )
-											// InternalWeightDefinition.g:2437:10: (lv_memberCallArguments_21_0= ruleXExpression )
+											// InternalWeightDefinition.g:2440:9: ( (lv_memberCallArguments_21_0= ruleXExpression ) )
+											// InternalWeightDefinition.g:2441:10: (lv_memberCallArguments_21_0= ruleXExpression )
 											{
-											// InternalWeightDefinition.g:2437:10: (lv_memberCallArguments_21_0= ruleXExpression )
-											// InternalWeightDefinition.g:2438:11: lv_memberCallArguments_21_0= ruleXExpression
+											// InternalWeightDefinition.g:2441:10: (lv_memberCallArguments_21_0= ruleXExpression )
+											// InternalWeightDefinition.g:2442:11: lv_memberCallArguments_21_0= ruleXExpression
 											{
 											if ( state.backtracking==0 ) {
 																						newCompositeNode(grammarAccess.getXMemberFeatureCallAccess().getMemberCallArgumentsXExpressionParserRuleCall_1_1_3_1_1_1_1_0());
 																					}
-											pushFollow(FOLLOW_11);
+											pushFollow(FOLLOW_10);
 											lv_memberCallArguments_21_0=ruleXExpression();
 											state._fsp--;
 											if (state.failed) return current;
@@ -6312,7 +6313,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 											break;
 
 										default :
-											break loop33;
+											break loop31;
 										}
 									}
 
@@ -6323,7 +6324,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 							}
 
-							otherlv_22=(Token)match(input,22,FOLLOW_39); if (state.failed) return current;
+							otherlv_22=(Token)match(input,22,FOLLOW_38); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
 													newLeafNode(otherlv_22, grammarAccess.getXMemberFeatureCallAccess().getRightParenthesisKeyword_1_1_3_2());
 												}
@@ -6332,20 +6333,20 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:2463:5: ( ( ( () '[' ) )=> (lv_memberCallArguments_23_0= ruleXClosure ) )?
-					int alt36=2;
-					alt36 = dfa36.predict(input);
-					switch (alt36) {
+					// InternalWeightDefinition.g:2467:5: ( ( ( () '[' ) )=> (lv_memberCallArguments_23_0= ruleXClosure ) )?
+					int alt34=2;
+					alt34 = dfa34.predict(input);
+					switch (alt34) {
 						case 1 :
-							// InternalWeightDefinition.g:2464:6: ( ( () '[' ) )=> (lv_memberCallArguments_23_0= ruleXClosure )
+							// InternalWeightDefinition.g:2468:6: ( ( () '[' ) )=> (lv_memberCallArguments_23_0= ruleXClosure )
 							{
-							// InternalWeightDefinition.g:2470:6: (lv_memberCallArguments_23_0= ruleXClosure )
-							// InternalWeightDefinition.g:2471:7: lv_memberCallArguments_23_0= ruleXClosure
+							// InternalWeightDefinition.g:2474:6: (lv_memberCallArguments_23_0= ruleXClosure )
+							// InternalWeightDefinition.g:2475:7: lv_memberCallArguments_23_0= ruleXClosure
 							{
 							if ( state.backtracking==0 ) {
 														newCompositeNode(grammarAccess.getXMemberFeatureCallAccess().getMemberCallArgumentsXClosureParserRuleCall_1_1_4_0());
 													}
-							pushFollow(FOLLOW_30);
+							pushFollow(FOLLOW_29);
 							lv_memberCallArguments_23_0=ruleXClosure();
 							state._fsp--;
 							if (state.failed) return current;
@@ -6373,7 +6374,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					break;
 
 				default :
-					break loop37;
+					break loop35;
 				}
 			}
 
@@ -6401,7 +6402,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXPrimaryExpression"
-	// InternalWeightDefinition.g:2494:1: entryRuleXPrimaryExpression returns [EObject current=null] :iv_ruleXPrimaryExpression= ruleXPrimaryExpression EOF ;
+	// InternalWeightDefinition.g:2498:1: entryRuleXPrimaryExpression returns [EObject current=null] :iv_ruleXPrimaryExpression= ruleXPrimaryExpression EOF ;
 	public final EObject entryRuleXPrimaryExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -6409,8 +6410,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXPrimaryExpression =null;
 
 		try {
-			// InternalWeightDefinition.g:2494:59: (iv_ruleXPrimaryExpression= ruleXPrimaryExpression EOF )
-			// InternalWeightDefinition.g:2495:2: iv_ruleXPrimaryExpression= ruleXPrimaryExpression EOF
+			// InternalWeightDefinition.g:2498:59: (iv_ruleXPrimaryExpression= ruleXPrimaryExpression EOF )
+			// InternalWeightDefinition.g:2499:2: iv_ruleXPrimaryExpression= ruleXPrimaryExpression EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXPrimaryExpressionRule()); }
 			pushFollow(FOLLOW_1);
@@ -6438,7 +6439,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXPrimaryExpression"
-	// InternalWeightDefinition.g:2501:1: ruleXPrimaryExpression returns [EObject current=null] : (this_XConstructorCall_0= ruleXConstructorCall |this_XBlockExpression_1= ruleXBlockExpression |this_XSwitchExpression_2= ruleXSwitchExpression | ( ( ( () 'synchronized' '(' ) )=>this_XSynchronizedExpression_3= ruleXSynchronizedExpression ) |this_XFeatureCall_4= ruleXFeatureCall |this_XLiteral_5= ruleXLiteral |this_XIfExpression_6= ruleXIfExpression | ( ( ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=>this_XForLoopExpression_7= ruleXForLoopExpression ) |this_XBasicForLoopExpression_8= ruleXBasicForLoopExpression |this_XWhileExpression_9= ruleXWhileExpression |this_XDoWhileExpression_10= ruleXDoWhileExpression |this_XThrowExpression_11= ruleXThrowExpression |this_XReturnExpression_12= ruleXReturnExpression |this_XTryCatchFinallyExpression_13= ruleXTryCatchFinallyExpression |this_XParenthesizedExpression_14= ruleXParenthesizedExpression ) ;
+	// InternalWeightDefinition.g:2505:1: ruleXPrimaryExpression returns [EObject current=null] : (this_XConstructorCall_0= ruleXConstructorCall |this_XBlockExpression_1= ruleXBlockExpression |this_XSwitchExpression_2= ruleXSwitchExpression | ( ( ( () 'synchronized' '(' ) )=>this_XSynchronizedExpression_3= ruleXSynchronizedExpression ) |this_XFeatureCall_4= ruleXFeatureCall |this_XLiteral_5= ruleXLiteral |this_XIfExpression_6= ruleXIfExpression | ( ( ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=>this_XForLoopExpression_7= ruleXForLoopExpression ) |this_XBasicForLoopExpression_8= ruleXBasicForLoopExpression |this_XWhileExpression_9= ruleXWhileExpression |this_XDoWhileExpression_10= ruleXDoWhileExpression |this_XThrowExpression_11= ruleXThrowExpression |this_XReturnExpression_12= ruleXReturnExpression |this_XTryCatchFinallyExpression_13= ruleXTryCatchFinallyExpression |this_XParenthesizedExpression_14= ruleXParenthesizedExpression ) ;
 	public final EObject ruleXPrimaryExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -6463,72 +6464,72 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:2507:2: ( (this_XConstructorCall_0= ruleXConstructorCall |this_XBlockExpression_1= ruleXBlockExpression |this_XSwitchExpression_2= ruleXSwitchExpression | ( ( ( () 'synchronized' '(' ) )=>this_XSynchronizedExpression_3= ruleXSynchronizedExpression ) |this_XFeatureCall_4= ruleXFeatureCall |this_XLiteral_5= ruleXLiteral |this_XIfExpression_6= ruleXIfExpression | ( ( ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=>this_XForLoopExpression_7= ruleXForLoopExpression ) |this_XBasicForLoopExpression_8= ruleXBasicForLoopExpression |this_XWhileExpression_9= ruleXWhileExpression |this_XDoWhileExpression_10= ruleXDoWhileExpression |this_XThrowExpression_11= ruleXThrowExpression |this_XReturnExpression_12= ruleXReturnExpression |this_XTryCatchFinallyExpression_13= ruleXTryCatchFinallyExpression |this_XParenthesizedExpression_14= ruleXParenthesizedExpression ) )
-			// InternalWeightDefinition.g:2508:2: (this_XConstructorCall_0= ruleXConstructorCall |this_XBlockExpression_1= ruleXBlockExpression |this_XSwitchExpression_2= ruleXSwitchExpression | ( ( ( () 'synchronized' '(' ) )=>this_XSynchronizedExpression_3= ruleXSynchronizedExpression ) |this_XFeatureCall_4= ruleXFeatureCall |this_XLiteral_5= ruleXLiteral |this_XIfExpression_6= ruleXIfExpression | ( ( ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=>this_XForLoopExpression_7= ruleXForLoopExpression ) |this_XBasicForLoopExpression_8= ruleXBasicForLoopExpression |this_XWhileExpression_9= ruleXWhileExpression |this_XDoWhileExpression_10= ruleXDoWhileExpression |this_XThrowExpression_11= ruleXThrowExpression |this_XReturnExpression_12= ruleXReturnExpression |this_XTryCatchFinallyExpression_13= ruleXTryCatchFinallyExpression |this_XParenthesizedExpression_14= ruleXParenthesizedExpression )
+			// InternalWeightDefinition.g:2511:2: ( (this_XConstructorCall_0= ruleXConstructorCall |this_XBlockExpression_1= ruleXBlockExpression |this_XSwitchExpression_2= ruleXSwitchExpression | ( ( ( () 'synchronized' '(' ) )=>this_XSynchronizedExpression_3= ruleXSynchronizedExpression ) |this_XFeatureCall_4= ruleXFeatureCall |this_XLiteral_5= ruleXLiteral |this_XIfExpression_6= ruleXIfExpression | ( ( ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=>this_XForLoopExpression_7= ruleXForLoopExpression ) |this_XBasicForLoopExpression_8= ruleXBasicForLoopExpression |this_XWhileExpression_9= ruleXWhileExpression |this_XDoWhileExpression_10= ruleXDoWhileExpression |this_XThrowExpression_11= ruleXThrowExpression |this_XReturnExpression_12= ruleXReturnExpression |this_XTryCatchFinallyExpression_13= ruleXTryCatchFinallyExpression |this_XParenthesizedExpression_14= ruleXParenthesizedExpression ) )
+			// InternalWeightDefinition.g:2512:2: (this_XConstructorCall_0= ruleXConstructorCall |this_XBlockExpression_1= ruleXBlockExpression |this_XSwitchExpression_2= ruleXSwitchExpression | ( ( ( () 'synchronized' '(' ) )=>this_XSynchronizedExpression_3= ruleXSynchronizedExpression ) |this_XFeatureCall_4= ruleXFeatureCall |this_XLiteral_5= ruleXLiteral |this_XIfExpression_6= ruleXIfExpression | ( ( ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=>this_XForLoopExpression_7= ruleXForLoopExpression ) |this_XBasicForLoopExpression_8= ruleXBasicForLoopExpression |this_XWhileExpression_9= ruleXWhileExpression |this_XDoWhileExpression_10= ruleXDoWhileExpression |this_XThrowExpression_11= ruleXThrowExpression |this_XReturnExpression_12= ruleXReturnExpression |this_XTryCatchFinallyExpression_13= ruleXTryCatchFinallyExpression |this_XParenthesizedExpression_14= ruleXParenthesizedExpression )
 			{
-			// InternalWeightDefinition.g:2508:2: (this_XConstructorCall_0= ruleXConstructorCall |this_XBlockExpression_1= ruleXBlockExpression |this_XSwitchExpression_2= ruleXSwitchExpression | ( ( ( () 'synchronized' '(' ) )=>this_XSynchronizedExpression_3= ruleXSynchronizedExpression ) |this_XFeatureCall_4= ruleXFeatureCall |this_XLiteral_5= ruleXLiteral |this_XIfExpression_6= ruleXIfExpression | ( ( ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=>this_XForLoopExpression_7= ruleXForLoopExpression ) |this_XBasicForLoopExpression_8= ruleXBasicForLoopExpression |this_XWhileExpression_9= ruleXWhileExpression |this_XDoWhileExpression_10= ruleXDoWhileExpression |this_XThrowExpression_11= ruleXThrowExpression |this_XReturnExpression_12= ruleXReturnExpression |this_XTryCatchFinallyExpression_13= ruleXTryCatchFinallyExpression |this_XParenthesizedExpression_14= ruleXParenthesizedExpression )
-			int alt38=15;
-			int LA38_0 = input.LA(1);
-			if ( (LA38_0==70) ) {
-				alt38=1;
+			// InternalWeightDefinition.g:2512:2: (this_XConstructorCall_0= ruleXConstructorCall |this_XBlockExpression_1= ruleXBlockExpression |this_XSwitchExpression_2= ruleXSwitchExpression | ( ( ( () 'synchronized' '(' ) )=>this_XSynchronizedExpression_3= ruleXSynchronizedExpression ) |this_XFeatureCall_4= ruleXFeatureCall |this_XLiteral_5= ruleXLiteral |this_XIfExpression_6= ruleXIfExpression | ( ( ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=>this_XForLoopExpression_7= ruleXForLoopExpression ) |this_XBasicForLoopExpression_8= ruleXBasicForLoopExpression |this_XWhileExpression_9= ruleXWhileExpression |this_XDoWhileExpression_10= ruleXDoWhileExpression |this_XThrowExpression_11= ruleXThrowExpression |this_XReturnExpression_12= ruleXReturnExpression |this_XTryCatchFinallyExpression_13= ruleXTryCatchFinallyExpression |this_XParenthesizedExpression_14= ruleXParenthesizedExpression )
+			int alt36=15;
+			int LA36_0 = input.LA(1);
+			if ( (LA36_0==70) ) {
+				alt36=1;
 			}
-			else if ( (LA38_0==85) ) {
-				alt38=2;
+			else if ( (LA36_0==85) ) {
+				alt36=2;
 			}
-			else if ( (LA38_0==76) ) {
-				alt38=3;
+			else if ( (LA36_0==76) ) {
+				alt36=3;
 			}
-			else if ( (LA38_0==77) && (synpred19_InternalWeightDefinition())) {
-				alt38=4;
+			else if ( (LA36_0==77) && (synpred19_InternalWeightDefinition())) {
+				alt36=4;
 			}
-			else if ( (LA38_0==RULE_ID||LA38_0==42||(LA38_0 >= 61 && LA38_0 <= 62)||LA38_0==68||(LA38_0 >= 74 && LA38_0 <= 75)) ) {
-				alt38=5;
+			else if ( (LA36_0==RULE_ID||LA36_0==42||(LA36_0 >= 61 && LA36_0 <= 62)||LA36_0==68||(LA36_0 >= 74 && LA36_0 <= 75)) ) {
+				alt36=5;
 			}
-			else if ( ((LA38_0 >= RULE_DECIMAL && LA38_0 <= RULE_HEX)||LA38_0==RULE_INT||LA38_0==RULE_STRING||LA38_0==16||LA38_0==53||LA38_0==63||LA38_0==71||LA38_0==79||LA38_0==81) ) {
-				alt38=6;
+			else if ( ((LA36_0 >= RULE_DECIMAL && LA36_0 <= RULE_HEX)||LA36_0==RULE_INT||LA36_0==RULE_STRING||LA36_0==16||LA36_0==53||LA36_0==63||LA36_0==71||LA36_0==79||LA36_0==81) ) {
+				alt36=6;
 			}
-			else if ( (LA38_0==67) ) {
-				alt38=7;
+			else if ( (LA36_0==67) ) {
+				alt36=7;
 			}
-			else if ( (LA38_0==65) ) {
-				int LA38_23 = input.LA(2);
+			else if ( (LA36_0==65) ) {
+				int LA36_23 = input.LA(2);
 				if ( (synpred20_InternalWeightDefinition()) ) {
-					alt38=8;
+					alt36=8;
 				}
 				else if ( (true) ) {
-					alt38=9;
+					alt36=9;
 				}
 
 			}
-			else if ( (LA38_0==84) ) {
-				alt38=10;
+			else if ( (LA36_0==84) ) {
+				alt36=10;
 			}
-			else if ( (LA38_0==59) ) {
-				alt38=11;
+			else if ( (LA36_0==59) ) {
+				alt36=11;
 			}
-			else if ( (LA38_0==78) ) {
-				alt38=12;
+			else if ( (LA36_0==78) ) {
+				alt36=12;
 			}
-			else if ( (LA38_0==72) ) {
-				alt38=13;
+			else if ( (LA36_0==72) ) {
+				alt36=13;
 			}
-			else if ( (LA38_0==80) ) {
-				alt38=14;
+			else if ( (LA36_0==80) ) {
+				alt36=14;
 			}
-			else if ( (LA38_0==21) ) {
-				alt38=15;
+			else if ( (LA36_0==21) ) {
+				alt36=15;
 			}
 
 			else {
 				if (state.backtracking>0) {state.failed=true; return current;}
 				NoViableAltException nvae =
-					new NoViableAltException("", 38, 0, input);
+					new NoViableAltException("", 36, 0, input);
 				throw nvae;
 			}
 
-			switch (alt38) {
+			switch (alt36) {
 				case 1 :
-					// InternalWeightDefinition.g:2509:3: this_XConstructorCall_0= ruleXConstructorCall
+					// InternalWeightDefinition.g:2513:3: this_XConstructorCall_0= ruleXConstructorCall
 					{
 					if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXPrimaryExpressionAccess().getXConstructorCallParserRuleCall_0());
@@ -6544,7 +6545,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:2518:3: this_XBlockExpression_1= ruleXBlockExpression
+					// InternalWeightDefinition.g:2522:3: this_XBlockExpression_1= ruleXBlockExpression
 					{
 					if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXPrimaryExpressionAccess().getXBlockExpressionParserRuleCall_1());
@@ -6560,7 +6561,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 3 :
-					// InternalWeightDefinition.g:2527:3: this_XSwitchExpression_2= ruleXSwitchExpression
+					// InternalWeightDefinition.g:2531:3: this_XSwitchExpression_2= ruleXSwitchExpression
 					{
 					if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXPrimaryExpressionAccess().getXSwitchExpressionParserRuleCall_2());
@@ -6576,10 +6577,10 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 4 :
-					// InternalWeightDefinition.g:2536:3: ( ( ( () 'synchronized' '(' ) )=>this_XSynchronizedExpression_3= ruleXSynchronizedExpression )
+					// InternalWeightDefinition.g:2540:3: ( ( ( () 'synchronized' '(' ) )=>this_XSynchronizedExpression_3= ruleXSynchronizedExpression )
 					{
-					// InternalWeightDefinition.g:2536:3: ( ( ( () 'synchronized' '(' ) )=>this_XSynchronizedExpression_3= ruleXSynchronizedExpression )
-					// InternalWeightDefinition.g:2537:4: ( ( () 'synchronized' '(' ) )=>this_XSynchronizedExpression_3= ruleXSynchronizedExpression
+					// InternalWeightDefinition.g:2540:3: ( ( ( () 'synchronized' '(' ) )=>this_XSynchronizedExpression_3= ruleXSynchronizedExpression )
+					// InternalWeightDefinition.g:2541:4: ( ( () 'synchronized' '(' ) )=>this_XSynchronizedExpression_3= ruleXSynchronizedExpression
 					{
 					if ( state.backtracking==0 ) {
 									newCompositeNode(grammarAccess.getXPrimaryExpressionAccess().getXSynchronizedExpressionParserRuleCall_3());
@@ -6597,7 +6598,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 5 :
-					// InternalWeightDefinition.g:2554:3: this_XFeatureCall_4= ruleXFeatureCall
+					// InternalWeightDefinition.g:2558:3: this_XFeatureCall_4= ruleXFeatureCall
 					{
 					if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXPrimaryExpressionAccess().getXFeatureCallParserRuleCall_4());
@@ -6613,7 +6614,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 6 :
-					// InternalWeightDefinition.g:2563:3: this_XLiteral_5= ruleXLiteral
+					// InternalWeightDefinition.g:2567:3: this_XLiteral_5= ruleXLiteral
 					{
 					if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXPrimaryExpressionAccess().getXLiteralParserRuleCall_5());
@@ -6629,7 +6630,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 7 :
-					// InternalWeightDefinition.g:2572:3: this_XIfExpression_6= ruleXIfExpression
+					// InternalWeightDefinition.g:2576:3: this_XIfExpression_6= ruleXIfExpression
 					{
 					if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXPrimaryExpressionAccess().getXIfExpressionParserRuleCall_6());
@@ -6645,10 +6646,10 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 8 :
-					// InternalWeightDefinition.g:2581:3: ( ( ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=>this_XForLoopExpression_7= ruleXForLoopExpression )
+					// InternalWeightDefinition.g:2585:3: ( ( ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=>this_XForLoopExpression_7= ruleXForLoopExpression )
 					{
-					// InternalWeightDefinition.g:2581:3: ( ( ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=>this_XForLoopExpression_7= ruleXForLoopExpression )
-					// InternalWeightDefinition.g:2582:4: ( ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=>this_XForLoopExpression_7= ruleXForLoopExpression
+					// InternalWeightDefinition.g:2585:3: ( ( ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=>this_XForLoopExpression_7= ruleXForLoopExpression )
+					// InternalWeightDefinition.g:2586:4: ( ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=>this_XForLoopExpression_7= ruleXForLoopExpression
 					{
 					if ( state.backtracking==0 ) {
 									newCompositeNode(grammarAccess.getXPrimaryExpressionAccess().getXForLoopExpressionParserRuleCall_7());
@@ -6666,7 +6667,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 9 :
-					// InternalWeightDefinition.g:2605:3: this_XBasicForLoopExpression_8= ruleXBasicForLoopExpression
+					// InternalWeightDefinition.g:2609:3: this_XBasicForLoopExpression_8= ruleXBasicForLoopExpression
 					{
 					if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXPrimaryExpressionAccess().getXBasicForLoopExpressionParserRuleCall_8());
@@ -6682,7 +6683,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 10 :
-					// InternalWeightDefinition.g:2614:3: this_XWhileExpression_9= ruleXWhileExpression
+					// InternalWeightDefinition.g:2618:3: this_XWhileExpression_9= ruleXWhileExpression
 					{
 					if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXPrimaryExpressionAccess().getXWhileExpressionParserRuleCall_9());
@@ -6698,7 +6699,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 11 :
-					// InternalWeightDefinition.g:2623:3: this_XDoWhileExpression_10= ruleXDoWhileExpression
+					// InternalWeightDefinition.g:2627:3: this_XDoWhileExpression_10= ruleXDoWhileExpression
 					{
 					if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXPrimaryExpressionAccess().getXDoWhileExpressionParserRuleCall_10());
@@ -6714,7 +6715,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 12 :
-					// InternalWeightDefinition.g:2632:3: this_XThrowExpression_11= ruleXThrowExpression
+					// InternalWeightDefinition.g:2636:3: this_XThrowExpression_11= ruleXThrowExpression
 					{
 					if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXPrimaryExpressionAccess().getXThrowExpressionParserRuleCall_11());
@@ -6730,7 +6731,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 13 :
-					// InternalWeightDefinition.g:2641:3: this_XReturnExpression_12= ruleXReturnExpression
+					// InternalWeightDefinition.g:2645:3: this_XReturnExpression_12= ruleXReturnExpression
 					{
 					if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXPrimaryExpressionAccess().getXReturnExpressionParserRuleCall_12());
@@ -6746,7 +6747,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 14 :
-					// InternalWeightDefinition.g:2650:3: this_XTryCatchFinallyExpression_13= ruleXTryCatchFinallyExpression
+					// InternalWeightDefinition.g:2654:3: this_XTryCatchFinallyExpression_13= ruleXTryCatchFinallyExpression
 					{
 					if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXPrimaryExpressionAccess().getXTryCatchFinallyExpressionParserRuleCall_13());
@@ -6762,7 +6763,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 15 :
-					// InternalWeightDefinition.g:2659:3: this_XParenthesizedExpression_14= ruleXParenthesizedExpression
+					// InternalWeightDefinition.g:2663:3: this_XParenthesizedExpression_14= ruleXParenthesizedExpression
 					{
 					if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXPrimaryExpressionAccess().getXParenthesizedExpressionParserRuleCall_14());
@@ -6802,7 +6803,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXLiteral"
-	// InternalWeightDefinition.g:2671:1: entryRuleXLiteral returns [EObject current=null] :iv_ruleXLiteral= ruleXLiteral EOF ;
+	// InternalWeightDefinition.g:2675:1: entryRuleXLiteral returns [EObject current=null] :iv_ruleXLiteral= ruleXLiteral EOF ;
 	public final EObject entryRuleXLiteral() throws RecognitionException {
 		EObject current = null;
 
@@ -6810,8 +6811,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXLiteral =null;
 
 		try {
-			// InternalWeightDefinition.g:2671:49: (iv_ruleXLiteral= ruleXLiteral EOF )
-			// InternalWeightDefinition.g:2672:2: iv_ruleXLiteral= ruleXLiteral EOF
+			// InternalWeightDefinition.g:2675:49: (iv_ruleXLiteral= ruleXLiteral EOF )
+			// InternalWeightDefinition.g:2676:2: iv_ruleXLiteral= ruleXLiteral EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXLiteralRule()); }
 			pushFollow(FOLLOW_1);
@@ -6839,7 +6840,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXLiteral"
-	// InternalWeightDefinition.g:2678:1: ruleXLiteral returns [EObject current=null] : (this_XCollectionLiteral_0= ruleXCollectionLiteral | ( ( ( () '[' ) )=>this_XClosure_1= ruleXClosure ) |this_XBooleanLiteral_2= ruleXBooleanLiteral |this_XNumberLiteral_3= ruleXNumberLiteral |this_XNullLiteral_4= ruleXNullLiteral |this_XStringLiteral_5= ruleXStringLiteral |this_XTypeLiteral_6= ruleXTypeLiteral ) ;
+	// InternalWeightDefinition.g:2682:1: ruleXLiteral returns [EObject current=null] : (this_XCollectionLiteral_0= ruleXCollectionLiteral | ( ( ( () '[' ) )=>this_XClosure_1= ruleXClosure ) |this_XBooleanLiteral_2= ruleXBooleanLiteral |this_XNumberLiteral_3= ruleXNumberLiteral |this_XNullLiteral_4= ruleXNullLiteral |this_XStringLiteral_5= ruleXStringLiteral |this_XTypeLiteral_6= ruleXTypeLiteral ) ;
 	public final EObject ruleXLiteral() throws RecognitionException {
 		EObject current = null;
 
@@ -6856,44 +6857,44 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:2684:2: ( (this_XCollectionLiteral_0= ruleXCollectionLiteral | ( ( ( () '[' ) )=>this_XClosure_1= ruleXClosure ) |this_XBooleanLiteral_2= ruleXBooleanLiteral |this_XNumberLiteral_3= ruleXNumberLiteral |this_XNullLiteral_4= ruleXNullLiteral |this_XStringLiteral_5= ruleXStringLiteral |this_XTypeLiteral_6= ruleXTypeLiteral ) )
-			// InternalWeightDefinition.g:2685:2: (this_XCollectionLiteral_0= ruleXCollectionLiteral | ( ( ( () '[' ) )=>this_XClosure_1= ruleXClosure ) |this_XBooleanLiteral_2= ruleXBooleanLiteral |this_XNumberLiteral_3= ruleXNumberLiteral |this_XNullLiteral_4= ruleXNullLiteral |this_XStringLiteral_5= ruleXStringLiteral |this_XTypeLiteral_6= ruleXTypeLiteral )
+			// InternalWeightDefinition.g:2688:2: ( (this_XCollectionLiteral_0= ruleXCollectionLiteral | ( ( ( () '[' ) )=>this_XClosure_1= ruleXClosure ) |this_XBooleanLiteral_2= ruleXBooleanLiteral |this_XNumberLiteral_3= ruleXNumberLiteral |this_XNullLiteral_4= ruleXNullLiteral |this_XStringLiteral_5= ruleXStringLiteral |this_XTypeLiteral_6= ruleXTypeLiteral ) )
+			// InternalWeightDefinition.g:2689:2: (this_XCollectionLiteral_0= ruleXCollectionLiteral | ( ( ( () '[' ) )=>this_XClosure_1= ruleXClosure ) |this_XBooleanLiteral_2= ruleXBooleanLiteral |this_XNumberLiteral_3= ruleXNumberLiteral |this_XNullLiteral_4= ruleXNullLiteral |this_XStringLiteral_5= ruleXStringLiteral |this_XTypeLiteral_6= ruleXTypeLiteral )
 			{
-			// InternalWeightDefinition.g:2685:2: (this_XCollectionLiteral_0= ruleXCollectionLiteral | ( ( ( () '[' ) )=>this_XClosure_1= ruleXClosure ) |this_XBooleanLiteral_2= ruleXBooleanLiteral |this_XNumberLiteral_3= ruleXNumberLiteral |this_XNullLiteral_4= ruleXNullLiteral |this_XStringLiteral_5= ruleXStringLiteral |this_XTypeLiteral_6= ruleXTypeLiteral )
-			int alt39=7;
-			int LA39_0 = input.LA(1);
-			if ( (LA39_0==16) ) {
-				alt39=1;
+			// InternalWeightDefinition.g:2689:2: (this_XCollectionLiteral_0= ruleXCollectionLiteral | ( ( ( () '[' ) )=>this_XClosure_1= ruleXClosure ) |this_XBooleanLiteral_2= ruleXBooleanLiteral |this_XNumberLiteral_3= ruleXNumberLiteral |this_XNullLiteral_4= ruleXNullLiteral |this_XStringLiteral_5= ruleXStringLiteral |this_XTypeLiteral_6= ruleXTypeLiteral )
+			int alt37=7;
+			int LA37_0 = input.LA(1);
+			if ( (LA37_0==16) ) {
+				alt37=1;
 			}
-			else if ( (LA39_0==53) && (synpred21_InternalWeightDefinition())) {
-				alt39=2;
+			else if ( (LA37_0==53) && (synpred21_InternalWeightDefinition())) {
+				alt37=2;
 			}
-			else if ( (LA39_0==63||LA39_0==79) ) {
-				alt39=3;
+			else if ( (LA37_0==63||LA37_0==79) ) {
+				alt37=3;
 			}
-			else if ( ((LA39_0 >= RULE_DECIMAL && LA39_0 <= RULE_HEX)||LA39_0==RULE_INT) ) {
-				alt39=4;
+			else if ( ((LA37_0 >= RULE_DECIMAL && LA37_0 <= RULE_HEX)||LA37_0==RULE_INT) ) {
+				alt37=4;
 			}
-			else if ( (LA39_0==71) ) {
-				alt39=5;
+			else if ( (LA37_0==71) ) {
+				alt37=5;
 			}
-			else if ( (LA39_0==RULE_STRING) ) {
-				alt39=6;
+			else if ( (LA37_0==RULE_STRING) ) {
+				alt37=6;
 			}
-			else if ( (LA39_0==81) ) {
-				alt39=7;
+			else if ( (LA37_0==81) ) {
+				alt37=7;
 			}
 
 			else {
 				if (state.backtracking>0) {state.failed=true; return current;}
 				NoViableAltException nvae =
-					new NoViableAltException("", 39, 0, input);
+					new NoViableAltException("", 37, 0, input);
 				throw nvae;
 			}
 
-			switch (alt39) {
+			switch (alt37) {
 				case 1 :
-					// InternalWeightDefinition.g:2686:3: this_XCollectionLiteral_0= ruleXCollectionLiteral
+					// InternalWeightDefinition.g:2690:3: this_XCollectionLiteral_0= ruleXCollectionLiteral
 					{
 					if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXLiteralAccess().getXCollectionLiteralParserRuleCall_0());
@@ -6909,10 +6910,10 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:2695:3: ( ( ( () '[' ) )=>this_XClosure_1= ruleXClosure )
+					// InternalWeightDefinition.g:2699:3: ( ( ( () '[' ) )=>this_XClosure_1= ruleXClosure )
 					{
-					// InternalWeightDefinition.g:2695:3: ( ( ( () '[' ) )=>this_XClosure_1= ruleXClosure )
-					// InternalWeightDefinition.g:2696:4: ( ( () '[' ) )=>this_XClosure_1= ruleXClosure
+					// InternalWeightDefinition.g:2699:3: ( ( ( () '[' ) )=>this_XClosure_1= ruleXClosure )
+					// InternalWeightDefinition.g:2700:4: ( ( () '[' ) )=>this_XClosure_1= ruleXClosure
 					{
 					if ( state.backtracking==0 ) {
 									newCompositeNode(grammarAccess.getXLiteralAccess().getXClosureParserRuleCall_1());
@@ -6930,7 +6931,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 3 :
-					// InternalWeightDefinition.g:2712:3: this_XBooleanLiteral_2= ruleXBooleanLiteral
+					// InternalWeightDefinition.g:2716:3: this_XBooleanLiteral_2= ruleXBooleanLiteral
 					{
 					if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXLiteralAccess().getXBooleanLiteralParserRuleCall_2());
@@ -6946,7 +6947,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 4 :
-					// InternalWeightDefinition.g:2721:3: this_XNumberLiteral_3= ruleXNumberLiteral
+					// InternalWeightDefinition.g:2725:3: this_XNumberLiteral_3= ruleXNumberLiteral
 					{
 					if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXLiteralAccess().getXNumberLiteralParserRuleCall_3());
@@ -6962,7 +6963,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 5 :
-					// InternalWeightDefinition.g:2730:3: this_XNullLiteral_4= ruleXNullLiteral
+					// InternalWeightDefinition.g:2734:3: this_XNullLiteral_4= ruleXNullLiteral
 					{
 					if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXLiteralAccess().getXNullLiteralParserRuleCall_4());
@@ -6978,7 +6979,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 6 :
-					// InternalWeightDefinition.g:2739:3: this_XStringLiteral_5= ruleXStringLiteral
+					// InternalWeightDefinition.g:2743:3: this_XStringLiteral_5= ruleXStringLiteral
 					{
 					if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXLiteralAccess().getXStringLiteralParserRuleCall_5());
@@ -6994,7 +6995,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 7 :
-					// InternalWeightDefinition.g:2748:3: this_XTypeLiteral_6= ruleXTypeLiteral
+					// InternalWeightDefinition.g:2752:3: this_XTypeLiteral_6= ruleXTypeLiteral
 					{
 					if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXLiteralAccess().getXTypeLiteralParserRuleCall_6());
@@ -7034,7 +7035,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXCollectionLiteral"
-	// InternalWeightDefinition.g:2760:1: entryRuleXCollectionLiteral returns [EObject current=null] :iv_ruleXCollectionLiteral= ruleXCollectionLiteral EOF ;
+	// InternalWeightDefinition.g:2764:1: entryRuleXCollectionLiteral returns [EObject current=null] :iv_ruleXCollectionLiteral= ruleXCollectionLiteral EOF ;
 	public final EObject entryRuleXCollectionLiteral() throws RecognitionException {
 		EObject current = null;
 
@@ -7042,8 +7043,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXCollectionLiteral =null;
 
 		try {
-			// InternalWeightDefinition.g:2760:59: (iv_ruleXCollectionLiteral= ruleXCollectionLiteral EOF )
-			// InternalWeightDefinition.g:2761:2: iv_ruleXCollectionLiteral= ruleXCollectionLiteral EOF
+			// InternalWeightDefinition.g:2764:59: (iv_ruleXCollectionLiteral= ruleXCollectionLiteral EOF )
+			// InternalWeightDefinition.g:2765:2: iv_ruleXCollectionLiteral= ruleXCollectionLiteral EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXCollectionLiteralRule()); }
 			pushFollow(FOLLOW_1);
@@ -7071,7 +7072,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXCollectionLiteral"
-	// InternalWeightDefinition.g:2767:1: ruleXCollectionLiteral returns [EObject current=null] : (this_XSetLiteral_0= ruleXSetLiteral |this_XListLiteral_1= ruleXListLiteral ) ;
+	// InternalWeightDefinition.g:2771:1: ruleXCollectionLiteral returns [EObject current=null] : (this_XSetLiteral_0= ruleXSetLiteral |this_XListLiteral_1= ruleXListLiteral ) ;
 	public final EObject ruleXCollectionLiteral() throws RecognitionException {
 		EObject current = null;
 
@@ -7083,19 +7084,19 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:2773:2: ( (this_XSetLiteral_0= ruleXSetLiteral |this_XListLiteral_1= ruleXListLiteral ) )
-			// InternalWeightDefinition.g:2774:2: (this_XSetLiteral_0= ruleXSetLiteral |this_XListLiteral_1= ruleXListLiteral )
+			// InternalWeightDefinition.g:2777:2: ( (this_XSetLiteral_0= ruleXSetLiteral |this_XListLiteral_1= ruleXListLiteral ) )
+			// InternalWeightDefinition.g:2778:2: (this_XSetLiteral_0= ruleXSetLiteral |this_XListLiteral_1= ruleXListLiteral )
 			{
-			// InternalWeightDefinition.g:2774:2: (this_XSetLiteral_0= ruleXSetLiteral |this_XListLiteral_1= ruleXListLiteral )
-			int alt40=2;
-			int LA40_0 = input.LA(1);
-			if ( (LA40_0==16) ) {
-				int LA40_1 = input.LA(2);
-				if ( (LA40_1==85) ) {
-					alt40=1;
+			// InternalWeightDefinition.g:2778:2: (this_XSetLiteral_0= ruleXSetLiteral |this_XListLiteral_1= ruleXListLiteral )
+			int alt38=2;
+			int LA38_0 = input.LA(1);
+			if ( (LA38_0==16) ) {
+				int LA38_1 = input.LA(2);
+				if ( (LA38_1==85) ) {
+					alt38=1;
 				}
-				else if ( (LA40_1==53) ) {
-					alt40=2;
+				else if ( (LA38_1==53) ) {
+					alt38=2;
 				}
 
 				else {
@@ -7104,7 +7105,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					try {
 						input.consume();
 						NoViableAltException nvae =
-							new NoViableAltException("", 40, 1, input);
+							new NoViableAltException("", 38, 1, input);
 						throw nvae;
 					} finally {
 						input.rewind(nvaeMark);
@@ -7116,13 +7117,13 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			else {
 				if (state.backtracking>0) {state.failed=true; return current;}
 				NoViableAltException nvae =
-					new NoViableAltException("", 40, 0, input);
+					new NoViableAltException("", 38, 0, input);
 				throw nvae;
 			}
 
-			switch (alt40) {
+			switch (alt38) {
 				case 1 :
-					// InternalWeightDefinition.g:2775:3: this_XSetLiteral_0= ruleXSetLiteral
+					// InternalWeightDefinition.g:2779:3: this_XSetLiteral_0= ruleXSetLiteral
 					{
 					if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXCollectionLiteralAccess().getXSetLiteralParserRuleCall_0());
@@ -7138,7 +7139,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:2784:3: this_XListLiteral_1= ruleXListLiteral
+					// InternalWeightDefinition.g:2788:3: this_XListLiteral_1= ruleXListLiteral
 					{
 					if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXCollectionLiteralAccess().getXListLiteralParserRuleCall_1());
@@ -7178,7 +7179,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXSetLiteral"
-	// InternalWeightDefinition.g:2796:1: entryRuleXSetLiteral returns [EObject current=null] :iv_ruleXSetLiteral= ruleXSetLiteral EOF ;
+	// InternalWeightDefinition.g:2800:1: entryRuleXSetLiteral returns [EObject current=null] :iv_ruleXSetLiteral= ruleXSetLiteral EOF ;
 	public final EObject entryRuleXSetLiteral() throws RecognitionException {
 		EObject current = null;
 
@@ -7186,8 +7187,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXSetLiteral =null;
 
 		try {
-			// InternalWeightDefinition.g:2796:52: (iv_ruleXSetLiteral= ruleXSetLiteral EOF )
-			// InternalWeightDefinition.g:2797:2: iv_ruleXSetLiteral= ruleXSetLiteral EOF
+			// InternalWeightDefinition.g:2800:52: (iv_ruleXSetLiteral= ruleXSetLiteral EOF )
+			// InternalWeightDefinition.g:2801:2: iv_ruleXSetLiteral= ruleXSetLiteral EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXSetLiteralRule()); }
 			pushFollow(FOLLOW_1);
@@ -7215,7 +7216,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXSetLiteral"
-	// InternalWeightDefinition.g:2803:1: ruleXSetLiteral returns [EObject current=null] : ( () otherlv_1= '#' otherlv_2= '{' ( ( (lv_elements_3_0= ruleXExpression ) ) (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )* )? otherlv_6= '}' ) ;
+	// InternalWeightDefinition.g:2807:1: ruleXSetLiteral returns [EObject current=null] : ( () otherlv_1= '#' otherlv_2= '{' ( ( (lv_elements_3_0= ruleXExpression ) ) (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )* )? otherlv_6= '}' ) ;
 	public final EObject ruleXSetLiteral() throws RecognitionException {
 		EObject current = null;
 
@@ -7231,14 +7232,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:2809:2: ( ( () otherlv_1= '#' otherlv_2= '{' ( ( (lv_elements_3_0= ruleXExpression ) ) (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )* )? otherlv_6= '}' ) )
-			// InternalWeightDefinition.g:2810:2: ( () otherlv_1= '#' otherlv_2= '{' ( ( (lv_elements_3_0= ruleXExpression ) ) (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )* )? otherlv_6= '}' )
+			// InternalWeightDefinition.g:2813:2: ( ( () otherlv_1= '#' otherlv_2= '{' ( ( (lv_elements_3_0= ruleXExpression ) ) (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )* )? otherlv_6= '}' ) )
+			// InternalWeightDefinition.g:2814:2: ( () otherlv_1= '#' otherlv_2= '{' ( ( (lv_elements_3_0= ruleXExpression ) ) (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )* )? otherlv_6= '}' )
 			{
-			// InternalWeightDefinition.g:2810:2: ( () otherlv_1= '#' otherlv_2= '{' ( ( (lv_elements_3_0= ruleXExpression ) ) (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )* )? otherlv_6= '}' )
-			// InternalWeightDefinition.g:2811:3: () otherlv_1= '#' otherlv_2= '{' ( ( (lv_elements_3_0= ruleXExpression ) ) (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )* )? otherlv_6= '}'
+			// InternalWeightDefinition.g:2814:2: ( () otherlv_1= '#' otherlv_2= '{' ( ( (lv_elements_3_0= ruleXExpression ) ) (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )* )? otherlv_6= '}' )
+			// InternalWeightDefinition.g:2815:3: () otherlv_1= '#' otherlv_2= '{' ( ( (lv_elements_3_0= ruleXExpression ) ) (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )* )? otherlv_6= '}'
 			{
-			// InternalWeightDefinition.g:2811:3: ()
-			// InternalWeightDefinition.g:2812:4: 
+			// InternalWeightDefinition.g:2815:3: ()
+			// InternalWeightDefinition.g:2816:4: 
 			{
 			if ( state.backtracking==0 ) {
 							current = forceCreateModelElement(
@@ -7247,34 +7248,34 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						}
 			}
 
-			otherlv_1=(Token)match(input,16,FOLLOW_7); if (state.failed) return current;
+			otherlv_1=(Token)match(input,16,FOLLOW_6); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_1, grammarAccess.getXSetLiteralAccess().getNumberSignKeyword_1());
 					}
-			otherlv_2=(Token)match(input,85,FOLLOW_40); if (state.failed) return current;
+			otherlv_2=(Token)match(input,85,FOLLOW_39); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_2, grammarAccess.getXSetLiteralAccess().getLeftCurlyBracketKeyword_2());
 					}
-			// InternalWeightDefinition.g:2826:3: ( ( (lv_elements_3_0= ruleXExpression ) ) (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )* )?
-			int alt42=2;
-			int LA42_0 = input.LA(1);
-			if ( ((LA42_0 >= RULE_DECIMAL && LA42_0 <= RULE_INT)||LA42_0==RULE_STRING||LA42_0==13||LA42_0==16||LA42_0==21||LA42_0==26||LA42_0==30||LA42_0==42||LA42_0==53||LA42_0==59||(LA42_0 >= 61 && LA42_0 <= 63)||LA42_0==65||(LA42_0 >= 67 && LA42_0 <= 68)||(LA42_0 >= 70 && LA42_0 <= 72)||(LA42_0 >= 74 && LA42_0 <= 81)||(LA42_0 >= 84 && LA42_0 <= 85)) ) {
-				alt42=1;
+			// InternalWeightDefinition.g:2830:3: ( ( (lv_elements_3_0= ruleXExpression ) ) (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )* )?
+			int alt40=2;
+			int LA40_0 = input.LA(1);
+			if ( ((LA40_0 >= RULE_DECIMAL && LA40_0 <= RULE_INT)||LA40_0==RULE_STRING||LA40_0==13||LA40_0==16||LA40_0==21||LA40_0==26||LA40_0==30||LA40_0==42||LA40_0==53||LA40_0==59||(LA40_0 >= 61 && LA40_0 <= 63)||LA40_0==65||(LA40_0 >= 67 && LA40_0 <= 68)||(LA40_0 >= 70 && LA40_0 <= 72)||(LA40_0 >= 74 && LA40_0 <= 81)||(LA40_0 >= 84 && LA40_0 <= 85)) ) {
+				alt40=1;
 			}
-			switch (alt42) {
+			switch (alt40) {
 				case 1 :
-					// InternalWeightDefinition.g:2827:4: ( (lv_elements_3_0= ruleXExpression ) ) (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )*
+					// InternalWeightDefinition.g:2831:4: ( (lv_elements_3_0= ruleXExpression ) ) (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )*
 					{
-					// InternalWeightDefinition.g:2827:4: ( (lv_elements_3_0= ruleXExpression ) )
-					// InternalWeightDefinition.g:2828:5: (lv_elements_3_0= ruleXExpression )
+					// InternalWeightDefinition.g:2831:4: ( (lv_elements_3_0= ruleXExpression ) )
+					// InternalWeightDefinition.g:2832:5: (lv_elements_3_0= ruleXExpression )
 					{
-					// InternalWeightDefinition.g:2828:5: (lv_elements_3_0= ruleXExpression )
-					// InternalWeightDefinition.g:2829:6: lv_elements_3_0= ruleXExpression
+					// InternalWeightDefinition.g:2832:5: (lv_elements_3_0= ruleXExpression )
+					// InternalWeightDefinition.g:2833:6: lv_elements_3_0= ruleXExpression
 					{
 					if ( state.backtracking==0 ) {
 											newCompositeNode(grammarAccess.getXSetLiteralAccess().getElementsXExpressionParserRuleCall_3_0_0());
 										}
-					pushFollow(FOLLOW_41);
+					pushFollow(FOLLOW_40);
 					lv_elements_3_0=ruleXExpression();
 					state._fsp--;
 					if (state.failed) return current;
@@ -7293,33 +7294,33 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:2846:4: (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )*
-					loop41:
+					// InternalWeightDefinition.g:2850:4: (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )*
+					loop39:
 					while (true) {
-						int alt41=2;
-						int LA41_0 = input.LA(1);
-						if ( (LA41_0==29) ) {
-							alt41=1;
+						int alt39=2;
+						int LA39_0 = input.LA(1);
+						if ( (LA39_0==29) ) {
+							alt39=1;
 						}
 
-						switch (alt41) {
+						switch (alt39) {
 						case 1 :
-							// InternalWeightDefinition.g:2847:5: otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) )
+							// InternalWeightDefinition.g:2851:5: otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) )
 							{
-							otherlv_4=(Token)match(input,29,FOLLOW_13); if (state.failed) return current;
+							otherlv_4=(Token)match(input,29,FOLLOW_12); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
 												newLeafNode(otherlv_4, grammarAccess.getXSetLiteralAccess().getCommaKeyword_3_1_0());
 											}
-							// InternalWeightDefinition.g:2851:5: ( (lv_elements_5_0= ruleXExpression ) )
-							// InternalWeightDefinition.g:2852:6: (lv_elements_5_0= ruleXExpression )
+							// InternalWeightDefinition.g:2855:5: ( (lv_elements_5_0= ruleXExpression ) )
+							// InternalWeightDefinition.g:2856:6: (lv_elements_5_0= ruleXExpression )
 							{
-							// InternalWeightDefinition.g:2852:6: (lv_elements_5_0= ruleXExpression )
-							// InternalWeightDefinition.g:2853:7: lv_elements_5_0= ruleXExpression
+							// InternalWeightDefinition.g:2856:6: (lv_elements_5_0= ruleXExpression )
+							// InternalWeightDefinition.g:2857:7: lv_elements_5_0= ruleXExpression
 							{
 							if ( state.backtracking==0 ) {
 														newCompositeNode(grammarAccess.getXSetLiteralAccess().getElementsXExpressionParserRuleCall_3_1_1_0());
 													}
-							pushFollow(FOLLOW_41);
+							pushFollow(FOLLOW_40);
 							lv_elements_5_0=ruleXExpression();
 							state._fsp--;
 							if (state.failed) return current;
@@ -7342,7 +7343,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 							break;
 
 						default :
-							break loop41;
+							break loop39;
 						}
 					}
 
@@ -7379,7 +7380,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXListLiteral"
-	// InternalWeightDefinition.g:2880:1: entryRuleXListLiteral returns [EObject current=null] :iv_ruleXListLiteral= ruleXListLiteral EOF ;
+	// InternalWeightDefinition.g:2884:1: entryRuleXListLiteral returns [EObject current=null] :iv_ruleXListLiteral= ruleXListLiteral EOF ;
 	public final EObject entryRuleXListLiteral() throws RecognitionException {
 		EObject current = null;
 
@@ -7387,8 +7388,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXListLiteral =null;
 
 		try {
-			// InternalWeightDefinition.g:2880:53: (iv_ruleXListLiteral= ruleXListLiteral EOF )
-			// InternalWeightDefinition.g:2881:2: iv_ruleXListLiteral= ruleXListLiteral EOF
+			// InternalWeightDefinition.g:2884:53: (iv_ruleXListLiteral= ruleXListLiteral EOF )
+			// InternalWeightDefinition.g:2885:2: iv_ruleXListLiteral= ruleXListLiteral EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXListLiteralRule()); }
 			pushFollow(FOLLOW_1);
@@ -7416,7 +7417,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXListLiteral"
-	// InternalWeightDefinition.g:2887:1: ruleXListLiteral returns [EObject current=null] : ( () otherlv_1= '#' otherlv_2= '[' ( ( (lv_elements_3_0= ruleXExpression ) ) (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )* )? otherlv_6= ']' ) ;
+	// InternalWeightDefinition.g:2891:1: ruleXListLiteral returns [EObject current=null] : ( () otherlv_1= '#' otherlv_2= '[' ( ( (lv_elements_3_0= ruleXExpression ) ) (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )* )? otherlv_6= ']' ) ;
 	public final EObject ruleXListLiteral() throws RecognitionException {
 		EObject current = null;
 
@@ -7432,14 +7433,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:2893:2: ( ( () otherlv_1= '#' otherlv_2= '[' ( ( (lv_elements_3_0= ruleXExpression ) ) (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )* )? otherlv_6= ']' ) )
-			// InternalWeightDefinition.g:2894:2: ( () otherlv_1= '#' otherlv_2= '[' ( ( (lv_elements_3_0= ruleXExpression ) ) (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )* )? otherlv_6= ']' )
+			// InternalWeightDefinition.g:2897:2: ( ( () otherlv_1= '#' otherlv_2= '[' ( ( (lv_elements_3_0= ruleXExpression ) ) (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )* )? otherlv_6= ']' ) )
+			// InternalWeightDefinition.g:2898:2: ( () otherlv_1= '#' otherlv_2= '[' ( ( (lv_elements_3_0= ruleXExpression ) ) (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )* )? otherlv_6= ']' )
 			{
-			// InternalWeightDefinition.g:2894:2: ( () otherlv_1= '#' otherlv_2= '[' ( ( (lv_elements_3_0= ruleXExpression ) ) (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )* )? otherlv_6= ']' )
-			// InternalWeightDefinition.g:2895:3: () otherlv_1= '#' otherlv_2= '[' ( ( (lv_elements_3_0= ruleXExpression ) ) (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )* )? otherlv_6= ']'
+			// InternalWeightDefinition.g:2898:2: ( () otherlv_1= '#' otherlv_2= '[' ( ( (lv_elements_3_0= ruleXExpression ) ) (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )* )? otherlv_6= ']' )
+			// InternalWeightDefinition.g:2899:3: () otherlv_1= '#' otherlv_2= '[' ( ( (lv_elements_3_0= ruleXExpression ) ) (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )* )? otherlv_6= ']'
 			{
-			// InternalWeightDefinition.g:2895:3: ()
-			// InternalWeightDefinition.g:2896:4: 
+			// InternalWeightDefinition.g:2899:3: ()
+			// InternalWeightDefinition.g:2900:4: 
 			{
 			if ( state.backtracking==0 ) {
 							current = forceCreateModelElement(
@@ -7448,34 +7449,34 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						}
 			}
 
-			otherlv_1=(Token)match(input,16,FOLLOW_42); if (state.failed) return current;
+			otherlv_1=(Token)match(input,16,FOLLOW_41); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_1, grammarAccess.getXListLiteralAccess().getNumberSignKeyword_1());
 					}
-			otherlv_2=(Token)match(input,53,FOLLOW_43); if (state.failed) return current;
+			otherlv_2=(Token)match(input,53,FOLLOW_42); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_2, grammarAccess.getXListLiteralAccess().getLeftSquareBracketKeyword_2());
 					}
-			// InternalWeightDefinition.g:2910:3: ( ( (lv_elements_3_0= ruleXExpression ) ) (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )* )?
-			int alt44=2;
-			int LA44_0 = input.LA(1);
-			if ( ((LA44_0 >= RULE_DECIMAL && LA44_0 <= RULE_INT)||LA44_0==RULE_STRING||LA44_0==13||LA44_0==16||LA44_0==21||LA44_0==26||LA44_0==30||LA44_0==42||LA44_0==53||LA44_0==59||(LA44_0 >= 61 && LA44_0 <= 63)||LA44_0==65||(LA44_0 >= 67 && LA44_0 <= 68)||(LA44_0 >= 70 && LA44_0 <= 72)||(LA44_0 >= 74 && LA44_0 <= 81)||(LA44_0 >= 84 && LA44_0 <= 85)) ) {
-				alt44=1;
+			// InternalWeightDefinition.g:2914:3: ( ( (lv_elements_3_0= ruleXExpression ) ) (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )* )?
+			int alt42=2;
+			int LA42_0 = input.LA(1);
+			if ( ((LA42_0 >= RULE_DECIMAL && LA42_0 <= RULE_INT)||LA42_0==RULE_STRING||LA42_0==13||LA42_0==16||LA42_0==21||LA42_0==26||LA42_0==30||LA42_0==42||LA42_0==53||LA42_0==59||(LA42_0 >= 61 && LA42_0 <= 63)||LA42_0==65||(LA42_0 >= 67 && LA42_0 <= 68)||(LA42_0 >= 70 && LA42_0 <= 72)||(LA42_0 >= 74 && LA42_0 <= 81)||(LA42_0 >= 84 && LA42_0 <= 85)) ) {
+				alt42=1;
 			}
-			switch (alt44) {
+			switch (alt42) {
 				case 1 :
-					// InternalWeightDefinition.g:2911:4: ( (lv_elements_3_0= ruleXExpression ) ) (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )*
+					// InternalWeightDefinition.g:2915:4: ( (lv_elements_3_0= ruleXExpression ) ) (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )*
 					{
-					// InternalWeightDefinition.g:2911:4: ( (lv_elements_3_0= ruleXExpression ) )
-					// InternalWeightDefinition.g:2912:5: (lv_elements_3_0= ruleXExpression )
+					// InternalWeightDefinition.g:2915:4: ( (lv_elements_3_0= ruleXExpression ) )
+					// InternalWeightDefinition.g:2916:5: (lv_elements_3_0= ruleXExpression )
 					{
-					// InternalWeightDefinition.g:2912:5: (lv_elements_3_0= ruleXExpression )
-					// InternalWeightDefinition.g:2913:6: lv_elements_3_0= ruleXExpression
+					// InternalWeightDefinition.g:2916:5: (lv_elements_3_0= ruleXExpression )
+					// InternalWeightDefinition.g:2917:6: lv_elements_3_0= ruleXExpression
 					{
 					if ( state.backtracking==0 ) {
 											newCompositeNode(grammarAccess.getXListLiteralAccess().getElementsXExpressionParserRuleCall_3_0_0());
 										}
-					pushFollow(FOLLOW_44);
+					pushFollow(FOLLOW_43);
 					lv_elements_3_0=ruleXExpression();
 					state._fsp--;
 					if (state.failed) return current;
@@ -7494,33 +7495,33 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:2930:4: (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )*
-					loop43:
+					// InternalWeightDefinition.g:2934:4: (otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) ) )*
+					loop41:
 					while (true) {
-						int alt43=2;
-						int LA43_0 = input.LA(1);
-						if ( (LA43_0==29) ) {
-							alt43=1;
+						int alt41=2;
+						int LA41_0 = input.LA(1);
+						if ( (LA41_0==29) ) {
+							alt41=1;
 						}
 
-						switch (alt43) {
+						switch (alt41) {
 						case 1 :
-							// InternalWeightDefinition.g:2931:5: otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) )
+							// InternalWeightDefinition.g:2935:5: otherlv_4= ',' ( (lv_elements_5_0= ruleXExpression ) )
 							{
-							otherlv_4=(Token)match(input,29,FOLLOW_13); if (state.failed) return current;
+							otherlv_4=(Token)match(input,29,FOLLOW_12); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
 												newLeafNode(otherlv_4, grammarAccess.getXListLiteralAccess().getCommaKeyword_3_1_0());
 											}
-							// InternalWeightDefinition.g:2935:5: ( (lv_elements_5_0= ruleXExpression ) )
-							// InternalWeightDefinition.g:2936:6: (lv_elements_5_0= ruleXExpression )
+							// InternalWeightDefinition.g:2939:5: ( (lv_elements_5_0= ruleXExpression ) )
+							// InternalWeightDefinition.g:2940:6: (lv_elements_5_0= ruleXExpression )
 							{
-							// InternalWeightDefinition.g:2936:6: (lv_elements_5_0= ruleXExpression )
-							// InternalWeightDefinition.g:2937:7: lv_elements_5_0= ruleXExpression
+							// InternalWeightDefinition.g:2940:6: (lv_elements_5_0= ruleXExpression )
+							// InternalWeightDefinition.g:2941:7: lv_elements_5_0= ruleXExpression
 							{
 							if ( state.backtracking==0 ) {
 														newCompositeNode(grammarAccess.getXListLiteralAccess().getElementsXExpressionParserRuleCall_3_1_1_0());
 													}
-							pushFollow(FOLLOW_44);
+							pushFollow(FOLLOW_43);
 							lv_elements_5_0=ruleXExpression();
 							state._fsp--;
 							if (state.failed) return current;
@@ -7543,7 +7544,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 							break;
 
 						default :
-							break loop43;
+							break loop41;
 						}
 					}
 
@@ -7580,7 +7581,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXClosure"
-	// InternalWeightDefinition.g:2964:1: entryRuleXClosure returns [EObject current=null] :iv_ruleXClosure= ruleXClosure EOF ;
+	// InternalWeightDefinition.g:2968:1: entryRuleXClosure returns [EObject current=null] :iv_ruleXClosure= ruleXClosure EOF ;
 	public final EObject entryRuleXClosure() throws RecognitionException {
 		EObject current = null;
 
@@ -7588,8 +7589,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXClosure =null;
 
 		try {
-			// InternalWeightDefinition.g:2964:49: (iv_ruleXClosure= ruleXClosure EOF )
-			// InternalWeightDefinition.g:2965:2: iv_ruleXClosure= ruleXClosure EOF
+			// InternalWeightDefinition.g:2968:49: (iv_ruleXClosure= ruleXClosure EOF )
+			// InternalWeightDefinition.g:2969:2: iv_ruleXClosure= ruleXClosure EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXClosureRule()); }
 			pushFollow(FOLLOW_1);
@@ -7617,7 +7618,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXClosure"
-	// InternalWeightDefinition.g:2971:1: ruleXClosure returns [EObject current=null] : ( ( ( ( () '[' ) )=> ( () otherlv_1= '[' ) ) ( ( ( ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> ( ( ( (lv_declaredFormalParameters_2_0= ruleJvmFormalParameter ) ) (otherlv_3= ',' ( (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_5_0= '|' ) ) ) )? ( (lv_expression_6_0= ruleXExpressionInClosure ) ) otherlv_7= ']' ) ;
+	// InternalWeightDefinition.g:2975:1: ruleXClosure returns [EObject current=null] : ( ( ( ( () '[' ) )=> ( () otherlv_1= '[' ) ) ( ( ( ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> ( ( ( (lv_declaredFormalParameters_2_0= ruleJvmFormalParameter ) ) (otherlv_3= ',' ( (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_5_0= '|' ) ) ) )? ( (lv_expression_6_0= ruleXExpressionInClosure ) ) otherlv_7= ']' ) ;
 	public final EObject ruleXClosure() throws RecognitionException {
 		EObject current = null;
 
@@ -7634,20 +7635,20 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:2977:2: ( ( ( ( ( () '[' ) )=> ( () otherlv_1= '[' ) ) ( ( ( ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> ( ( ( (lv_declaredFormalParameters_2_0= ruleJvmFormalParameter ) ) (otherlv_3= ',' ( (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_5_0= '|' ) ) ) )? ( (lv_expression_6_0= ruleXExpressionInClosure ) ) otherlv_7= ']' ) )
-			// InternalWeightDefinition.g:2978:2: ( ( ( ( () '[' ) )=> ( () otherlv_1= '[' ) ) ( ( ( ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> ( ( ( (lv_declaredFormalParameters_2_0= ruleJvmFormalParameter ) ) (otherlv_3= ',' ( (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_5_0= '|' ) ) ) )? ( (lv_expression_6_0= ruleXExpressionInClosure ) ) otherlv_7= ']' )
+			// InternalWeightDefinition.g:2981:2: ( ( ( ( ( () '[' ) )=> ( () otherlv_1= '[' ) ) ( ( ( ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> ( ( ( (lv_declaredFormalParameters_2_0= ruleJvmFormalParameter ) ) (otherlv_3= ',' ( (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_5_0= '|' ) ) ) )? ( (lv_expression_6_0= ruleXExpressionInClosure ) ) otherlv_7= ']' ) )
+			// InternalWeightDefinition.g:2982:2: ( ( ( ( () '[' ) )=> ( () otherlv_1= '[' ) ) ( ( ( ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> ( ( ( (lv_declaredFormalParameters_2_0= ruleJvmFormalParameter ) ) (otherlv_3= ',' ( (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_5_0= '|' ) ) ) )? ( (lv_expression_6_0= ruleXExpressionInClosure ) ) otherlv_7= ']' )
 			{
-			// InternalWeightDefinition.g:2978:2: ( ( ( ( () '[' ) )=> ( () otherlv_1= '[' ) ) ( ( ( ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> ( ( ( (lv_declaredFormalParameters_2_0= ruleJvmFormalParameter ) ) (otherlv_3= ',' ( (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_5_0= '|' ) ) ) )? ( (lv_expression_6_0= ruleXExpressionInClosure ) ) otherlv_7= ']' )
-			// InternalWeightDefinition.g:2979:3: ( ( ( () '[' ) )=> ( () otherlv_1= '[' ) ) ( ( ( ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> ( ( ( (lv_declaredFormalParameters_2_0= ruleJvmFormalParameter ) ) (otherlv_3= ',' ( (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_5_0= '|' ) ) ) )? ( (lv_expression_6_0= ruleXExpressionInClosure ) ) otherlv_7= ']'
+			// InternalWeightDefinition.g:2982:2: ( ( ( ( () '[' ) )=> ( () otherlv_1= '[' ) ) ( ( ( ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> ( ( ( (lv_declaredFormalParameters_2_0= ruleJvmFormalParameter ) ) (otherlv_3= ',' ( (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_5_0= '|' ) ) ) )? ( (lv_expression_6_0= ruleXExpressionInClosure ) ) otherlv_7= ']' )
+			// InternalWeightDefinition.g:2983:3: ( ( ( () '[' ) )=> ( () otherlv_1= '[' ) ) ( ( ( ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> ( ( ( (lv_declaredFormalParameters_2_0= ruleJvmFormalParameter ) ) (otherlv_3= ',' ( (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_5_0= '|' ) ) ) )? ( (lv_expression_6_0= ruleXExpressionInClosure ) ) otherlv_7= ']'
 			{
-			// InternalWeightDefinition.g:2979:3: ( ( ( () '[' ) )=> ( () otherlv_1= '[' ) )
-			// InternalWeightDefinition.g:2980:4: ( ( () '[' ) )=> ( () otherlv_1= '[' )
+			// InternalWeightDefinition.g:2983:3: ( ( ( () '[' ) )=> ( () otherlv_1= '[' ) )
+			// InternalWeightDefinition.g:2984:4: ( ( () '[' ) )=> ( () otherlv_1= '[' )
 			{
-			// InternalWeightDefinition.g:2986:4: ( () otherlv_1= '[' )
-			// InternalWeightDefinition.g:2987:5: () otherlv_1= '['
+			// InternalWeightDefinition.g:2990:4: ( () otherlv_1= '[' )
+			// InternalWeightDefinition.g:2991:5: () otherlv_1= '['
 			{
-			// InternalWeightDefinition.g:2987:5: ()
-			// InternalWeightDefinition.g:2988:6: 
+			// InternalWeightDefinition.g:2991:5: ()
+			// InternalWeightDefinition.g:2992:6: 
 			{
 			if ( state.backtracking==0 ) {
 									current = forceCreateModelElement(
@@ -7656,7 +7657,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 								}
 			}
 
-			otherlv_1=(Token)match(input,53,FOLLOW_45); if (state.failed) return current;
+			otherlv_1=(Token)match(input,53,FOLLOW_44); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 								newLeafNode(otherlv_1, grammarAccess.getXClosureAccess().getLeftSquareBracketKeyword_0_0_1());
 							}
@@ -7664,54 +7665,54 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			// InternalWeightDefinition.g:3000:3: ( ( ( ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> ( ( ( (lv_declaredFormalParameters_2_0= ruleJvmFormalParameter ) ) (otherlv_3= ',' ( (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_5_0= '|' ) ) ) )?
-			int alt47=2;
-			int LA47_0 = input.LA(1);
-			if ( (LA47_0==RULE_ID) ) {
-				int LA47_1 = input.LA(2);
+			// InternalWeightDefinition.g:3004:3: ( ( ( ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> ( ( ( (lv_declaredFormalParameters_2_0= ruleJvmFormalParameter ) ) (otherlv_3= ',' ( (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_5_0= '|' ) ) ) )?
+			int alt45=2;
+			int LA45_0 = input.LA(1);
+			if ( (LA45_0==RULE_ID) ) {
+				int LA45_1 = input.LA(2);
 				if ( (synpred23_InternalWeightDefinition()) ) {
-					alt47=1;
+					alt45=1;
 				}
 			}
-			else if ( (LA47_0==21) ) {
-				int LA47_2 = input.LA(2);
+			else if ( (LA45_0==21) ) {
+				int LA45_2 = input.LA(2);
 				if ( (synpred23_InternalWeightDefinition()) ) {
-					alt47=1;
+					alt45=1;
 				}
 			}
-			else if ( (LA47_0==47) && (synpred23_InternalWeightDefinition())) {
-				alt47=1;
+			else if ( (LA45_0==47) && (synpred23_InternalWeightDefinition())) {
+				alt45=1;
 			}
-			else if ( (LA47_0==86) && (synpred23_InternalWeightDefinition())) {
-				alt47=1;
+			else if ( (LA45_0==86) && (synpred23_InternalWeightDefinition())) {
+				alt45=1;
 			}
-			switch (alt47) {
+			switch (alt45) {
 				case 1 :
-					// InternalWeightDefinition.g:3001:4: ( ( ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> ( ( ( (lv_declaredFormalParameters_2_0= ruleJvmFormalParameter ) ) (otherlv_3= ',' ( (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_5_0= '|' ) ) )
+					// InternalWeightDefinition.g:3005:4: ( ( ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> ( ( ( (lv_declaredFormalParameters_2_0= ruleJvmFormalParameter ) ) (otherlv_3= ',' ( (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_5_0= '|' ) ) )
 					{
-					// InternalWeightDefinition.g:3024:4: ( ( ( (lv_declaredFormalParameters_2_0= ruleJvmFormalParameter ) ) (otherlv_3= ',' ( (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_5_0= '|' ) ) )
-					// InternalWeightDefinition.g:3025:5: ( ( (lv_declaredFormalParameters_2_0= ruleJvmFormalParameter ) ) (otherlv_3= ',' ( (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_5_0= '|' ) )
+					// InternalWeightDefinition.g:3028:4: ( ( ( (lv_declaredFormalParameters_2_0= ruleJvmFormalParameter ) ) (otherlv_3= ',' ( (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_5_0= '|' ) ) )
+					// InternalWeightDefinition.g:3029:5: ( ( (lv_declaredFormalParameters_2_0= ruleJvmFormalParameter ) ) (otherlv_3= ',' ( (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_5_0= '|' ) )
 					{
-					// InternalWeightDefinition.g:3025:5: ( ( (lv_declaredFormalParameters_2_0= ruleJvmFormalParameter ) ) (otherlv_3= ',' ( (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter ) ) )* )?
-					int alt46=2;
-					int LA46_0 = input.LA(1);
-					if ( (LA46_0==RULE_ID||LA46_0==21||LA46_0==47) ) {
-						alt46=1;
+					// InternalWeightDefinition.g:3029:5: ( ( (lv_declaredFormalParameters_2_0= ruleJvmFormalParameter ) ) (otherlv_3= ',' ( (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter ) ) )* )?
+					int alt44=2;
+					int LA44_0 = input.LA(1);
+					if ( (LA44_0==RULE_ID||LA44_0==21||LA44_0==47) ) {
+						alt44=1;
 					}
-					switch (alt46) {
+					switch (alt44) {
 						case 1 :
-							// InternalWeightDefinition.g:3026:6: ( (lv_declaredFormalParameters_2_0= ruleJvmFormalParameter ) ) (otherlv_3= ',' ( (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter ) ) )*
+							// InternalWeightDefinition.g:3030:6: ( (lv_declaredFormalParameters_2_0= ruleJvmFormalParameter ) ) (otherlv_3= ',' ( (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter ) ) )*
 							{
-							// InternalWeightDefinition.g:3026:6: ( (lv_declaredFormalParameters_2_0= ruleJvmFormalParameter ) )
-							// InternalWeightDefinition.g:3027:7: (lv_declaredFormalParameters_2_0= ruleJvmFormalParameter )
+							// InternalWeightDefinition.g:3030:6: ( (lv_declaredFormalParameters_2_0= ruleJvmFormalParameter ) )
+							// InternalWeightDefinition.g:3031:7: (lv_declaredFormalParameters_2_0= ruleJvmFormalParameter )
 							{
-							// InternalWeightDefinition.g:3027:7: (lv_declaredFormalParameters_2_0= ruleJvmFormalParameter )
-							// InternalWeightDefinition.g:3028:8: lv_declaredFormalParameters_2_0= ruleJvmFormalParameter
+							// InternalWeightDefinition.g:3031:7: (lv_declaredFormalParameters_2_0= ruleJvmFormalParameter )
+							// InternalWeightDefinition.g:3032:8: lv_declaredFormalParameters_2_0= ruleJvmFormalParameter
 							{
 							if ( state.backtracking==0 ) {
 															newCompositeNode(grammarAccess.getXClosureAccess().getDeclaredFormalParametersJvmFormalParameterParserRuleCall_1_0_0_0_0());
 														}
-							pushFollow(FOLLOW_46);
+							pushFollow(FOLLOW_45);
 							lv_declaredFormalParameters_2_0=ruleJvmFormalParameter();
 							state._fsp--;
 							if (state.failed) return current;
@@ -7730,33 +7731,33 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 							}
 
-							// InternalWeightDefinition.g:3045:6: (otherlv_3= ',' ( (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter ) ) )*
-							loop45:
+							// InternalWeightDefinition.g:3049:6: (otherlv_3= ',' ( (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter ) ) )*
+							loop43:
 							while (true) {
-								int alt45=2;
-								int LA45_0 = input.LA(1);
-								if ( (LA45_0==29) ) {
-									alt45=1;
+								int alt43=2;
+								int LA43_0 = input.LA(1);
+								if ( (LA43_0==29) ) {
+									alt43=1;
 								}
 
-								switch (alt45) {
+								switch (alt43) {
 								case 1 :
-									// InternalWeightDefinition.g:3046:7: otherlv_3= ',' ( (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter ) )
+									// InternalWeightDefinition.g:3050:7: otherlv_3= ',' ( (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter ) )
 									{
-									otherlv_3=(Token)match(input,29,FOLLOW_8); if (state.failed) return current;
+									otherlv_3=(Token)match(input,29,FOLLOW_7); if (state.failed) return current;
 									if ( state.backtracking==0 ) {
 																newLeafNode(otherlv_3, grammarAccess.getXClosureAccess().getCommaKeyword_1_0_0_1_0());
 															}
-									// InternalWeightDefinition.g:3050:7: ( (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter ) )
-									// InternalWeightDefinition.g:3051:8: (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter )
+									// InternalWeightDefinition.g:3054:7: ( (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter ) )
+									// InternalWeightDefinition.g:3055:8: (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter )
 									{
-									// InternalWeightDefinition.g:3051:8: (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter )
-									// InternalWeightDefinition.g:3052:9: lv_declaredFormalParameters_4_0= ruleJvmFormalParameter
+									// InternalWeightDefinition.g:3055:8: (lv_declaredFormalParameters_4_0= ruleJvmFormalParameter )
+									// InternalWeightDefinition.g:3056:9: lv_declaredFormalParameters_4_0= ruleJvmFormalParameter
 									{
 									if ( state.backtracking==0 ) {
 																		newCompositeNode(grammarAccess.getXClosureAccess().getDeclaredFormalParametersJvmFormalParameterParserRuleCall_1_0_0_1_1_0());
 																	}
-									pushFollow(FOLLOW_46);
+									pushFollow(FOLLOW_45);
 									lv_declaredFormalParameters_4_0=ruleJvmFormalParameter();
 									state._fsp--;
 									if (state.failed) return current;
@@ -7779,7 +7780,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 									break;
 
 								default :
-									break loop45;
+									break loop43;
 								}
 							}
 
@@ -7788,13 +7789,13 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:3071:5: ( (lv_explicitSyntax_5_0= '|' ) )
-					// InternalWeightDefinition.g:3072:6: (lv_explicitSyntax_5_0= '|' )
+					// InternalWeightDefinition.g:3075:5: ( (lv_explicitSyntax_5_0= '|' ) )
+					// InternalWeightDefinition.g:3076:6: (lv_explicitSyntax_5_0= '|' )
 					{
-					// InternalWeightDefinition.g:3072:6: (lv_explicitSyntax_5_0= '|' )
-					// InternalWeightDefinition.g:3073:7: lv_explicitSyntax_5_0= '|'
+					// InternalWeightDefinition.g:3076:6: (lv_explicitSyntax_5_0= '|' )
+					// InternalWeightDefinition.g:3077:7: lv_explicitSyntax_5_0= '|'
 					{
-					lv_explicitSyntax_5_0=(Token)match(input,86,FOLLOW_47); if (state.failed) return current;
+					lv_explicitSyntax_5_0=(Token)match(input,86,FOLLOW_46); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 												newLeafNode(lv_explicitSyntax_5_0, grammarAccess.getXClosureAccess().getExplicitSyntaxVerticalLineKeyword_1_0_1_0());
 											}
@@ -7815,16 +7816,16 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			// InternalWeightDefinition.g:3087:3: ( (lv_expression_6_0= ruleXExpressionInClosure ) )
-			// InternalWeightDefinition.g:3088:4: (lv_expression_6_0= ruleXExpressionInClosure )
+			// InternalWeightDefinition.g:3091:3: ( (lv_expression_6_0= ruleXExpressionInClosure ) )
+			// InternalWeightDefinition.g:3092:4: (lv_expression_6_0= ruleXExpressionInClosure )
 			{
-			// InternalWeightDefinition.g:3088:4: (lv_expression_6_0= ruleXExpressionInClosure )
-			// InternalWeightDefinition.g:3089:5: lv_expression_6_0= ruleXExpressionInClosure
+			// InternalWeightDefinition.g:3092:4: (lv_expression_6_0= ruleXExpressionInClosure )
+			// InternalWeightDefinition.g:3093:5: lv_expression_6_0= ruleXExpressionInClosure
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXClosureAccess().getExpressionXExpressionInClosureParserRuleCall_2_0());
 							}
-			pushFollow(FOLLOW_48);
+			pushFollow(FOLLOW_47);
 			lv_expression_6_0=ruleXExpressionInClosure();
 			state._fsp--;
 			if (state.failed) return current;
@@ -7871,7 +7872,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXExpressionInClosure"
-	// InternalWeightDefinition.g:3114:1: entryRuleXExpressionInClosure returns [EObject current=null] :iv_ruleXExpressionInClosure= ruleXExpressionInClosure EOF ;
+	// InternalWeightDefinition.g:3118:1: entryRuleXExpressionInClosure returns [EObject current=null] :iv_ruleXExpressionInClosure= ruleXExpressionInClosure EOF ;
 	public final EObject entryRuleXExpressionInClosure() throws RecognitionException {
 		EObject current = null;
 
@@ -7879,8 +7880,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXExpressionInClosure =null;
 
 		try {
-			// InternalWeightDefinition.g:3114:61: (iv_ruleXExpressionInClosure= ruleXExpressionInClosure EOF )
-			// InternalWeightDefinition.g:3115:2: iv_ruleXExpressionInClosure= ruleXExpressionInClosure EOF
+			// InternalWeightDefinition.g:3118:61: (iv_ruleXExpressionInClosure= ruleXExpressionInClosure EOF )
+			// InternalWeightDefinition.g:3119:2: iv_ruleXExpressionInClosure= ruleXExpressionInClosure EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXExpressionInClosureRule()); }
 			pushFollow(FOLLOW_1);
@@ -7908,7 +7909,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXExpressionInClosure"
-	// InternalWeightDefinition.g:3121:1: ruleXExpressionInClosure returns [EObject current=null] : ( () ( ( (lv_expressions_1_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_2= ';' )? )* ) ;
+	// InternalWeightDefinition.g:3125:1: ruleXExpressionInClosure returns [EObject current=null] : ( () ( ( (lv_expressions_1_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_2= ';' )? )* ) ;
 	public final EObject ruleXExpressionInClosure() throws RecognitionException {
 		EObject current = null;
 
@@ -7920,14 +7921,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:3127:2: ( ( () ( ( (lv_expressions_1_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_2= ';' )? )* ) )
-			// InternalWeightDefinition.g:3128:2: ( () ( ( (lv_expressions_1_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_2= ';' )? )* )
+			// InternalWeightDefinition.g:3131:2: ( ( () ( ( (lv_expressions_1_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_2= ';' )? )* ) )
+			// InternalWeightDefinition.g:3132:2: ( () ( ( (lv_expressions_1_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_2= ';' )? )* )
 			{
-			// InternalWeightDefinition.g:3128:2: ( () ( ( (lv_expressions_1_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_2= ';' )? )* )
-			// InternalWeightDefinition.g:3129:3: () ( ( (lv_expressions_1_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_2= ';' )? )*
+			// InternalWeightDefinition.g:3132:2: ( () ( ( (lv_expressions_1_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_2= ';' )? )* )
+			// InternalWeightDefinition.g:3133:3: () ( ( (lv_expressions_1_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_2= ';' )? )*
 			{
-			// InternalWeightDefinition.g:3129:3: ()
-			// InternalWeightDefinition.g:3130:4: 
+			// InternalWeightDefinition.g:3133:3: ()
+			// InternalWeightDefinition.g:3134:4: 
 			{
 			if ( state.backtracking==0 ) {
 							current = forceCreateModelElement(
@@ -7936,29 +7937,29 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						}
 			}
 
-			// InternalWeightDefinition.g:3136:3: ( ( (lv_expressions_1_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_2= ';' )? )*
-			loop49:
+			// InternalWeightDefinition.g:3140:3: ( ( (lv_expressions_1_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_2= ';' )? )*
+			loop47:
 			while (true) {
-				int alt49=2;
-				int LA49_0 = input.LA(1);
-				if ( ((LA49_0 >= RULE_DECIMAL && LA49_0 <= RULE_INT)||LA49_0==RULE_STRING||LA49_0==13||LA49_0==16||LA49_0==21||LA49_0==26||LA49_0==30||LA49_0==42||LA49_0==53||LA49_0==59||(LA49_0 >= 61 && LA49_0 <= 63)||LA49_0==65||(LA49_0 >= 67 && LA49_0 <= 68)||(LA49_0 >= 70 && LA49_0 <= 72)||(LA49_0 >= 74 && LA49_0 <= 85)) ) {
-					alt49=1;
+				int alt47=2;
+				int LA47_0 = input.LA(1);
+				if ( ((LA47_0 >= RULE_DECIMAL && LA47_0 <= RULE_INT)||LA47_0==RULE_STRING||LA47_0==13||LA47_0==16||LA47_0==21||LA47_0==26||LA47_0==30||LA47_0==42||LA47_0==53||LA47_0==59||(LA47_0 >= 61 && LA47_0 <= 63)||LA47_0==65||(LA47_0 >= 67 && LA47_0 <= 68)||(LA47_0 >= 70 && LA47_0 <= 72)||(LA47_0 >= 74 && LA47_0 <= 85)) ) {
+					alt47=1;
 				}
 
-				switch (alt49) {
+				switch (alt47) {
 				case 1 :
-					// InternalWeightDefinition.g:3137:4: ( (lv_expressions_1_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_2= ';' )?
+					// InternalWeightDefinition.g:3141:4: ( (lv_expressions_1_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_2= ';' )?
 					{
-					// InternalWeightDefinition.g:3137:4: ( (lv_expressions_1_0= ruleXExpressionOrVarDeclaration ) )
-					// InternalWeightDefinition.g:3138:5: (lv_expressions_1_0= ruleXExpressionOrVarDeclaration )
+					// InternalWeightDefinition.g:3141:4: ( (lv_expressions_1_0= ruleXExpressionOrVarDeclaration ) )
+					// InternalWeightDefinition.g:3142:5: (lv_expressions_1_0= ruleXExpressionOrVarDeclaration )
 					{
-					// InternalWeightDefinition.g:3138:5: (lv_expressions_1_0= ruleXExpressionOrVarDeclaration )
-					// InternalWeightDefinition.g:3139:6: lv_expressions_1_0= ruleXExpressionOrVarDeclaration
+					// InternalWeightDefinition.g:3142:5: (lv_expressions_1_0= ruleXExpressionOrVarDeclaration )
+					// InternalWeightDefinition.g:3143:6: lv_expressions_1_0= ruleXExpressionOrVarDeclaration
 					{
 					if ( state.backtracking==0 ) {
 											newCompositeNode(grammarAccess.getXExpressionInClosureAccess().getExpressionsXExpressionOrVarDeclarationParserRuleCall_1_0_0());
 										}
-					pushFollow(FOLLOW_49);
+					pushFollow(FOLLOW_48);
 					lv_expressions_1_0=ruleXExpressionOrVarDeclaration();
 					state._fsp--;
 					if (state.failed) return current;
@@ -7977,17 +7978,17 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:3156:4: (otherlv_2= ';' )?
-					int alt48=2;
-					int LA48_0 = input.LA(1);
-					if ( (LA48_0==41) ) {
-						alt48=1;
+					// InternalWeightDefinition.g:3160:4: (otherlv_2= ';' )?
+					int alt46=2;
+					int LA46_0 = input.LA(1);
+					if ( (LA46_0==41) ) {
+						alt46=1;
 					}
-					switch (alt48) {
+					switch (alt46) {
 						case 1 :
-							// InternalWeightDefinition.g:3157:5: otherlv_2= ';'
+							// InternalWeightDefinition.g:3161:5: otherlv_2= ';'
 							{
-							otherlv_2=(Token)match(input,41,FOLLOW_50); if (state.failed) return current;
+							otherlv_2=(Token)match(input,41,FOLLOW_49); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
 												newLeafNode(otherlv_2, grammarAccess.getXExpressionInClosureAccess().getSemicolonKeyword_1_1());
 											}
@@ -8000,7 +8001,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					break;
 
 				default :
-					break loop49;
+					break loop47;
 				}
 			}
 
@@ -8028,7 +8029,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXShortClosure"
-	// InternalWeightDefinition.g:3167:1: entryRuleXShortClosure returns [EObject current=null] :iv_ruleXShortClosure= ruleXShortClosure EOF ;
+	// InternalWeightDefinition.g:3171:1: entryRuleXShortClosure returns [EObject current=null] :iv_ruleXShortClosure= ruleXShortClosure EOF ;
 	public final EObject entryRuleXShortClosure() throws RecognitionException {
 		EObject current = null;
 
@@ -8036,8 +8037,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXShortClosure =null;
 
 		try {
-			// InternalWeightDefinition.g:3167:54: (iv_ruleXShortClosure= ruleXShortClosure EOF )
-			// InternalWeightDefinition.g:3168:2: iv_ruleXShortClosure= ruleXShortClosure EOF
+			// InternalWeightDefinition.g:3171:54: (iv_ruleXShortClosure= ruleXShortClosure EOF )
+			// InternalWeightDefinition.g:3172:2: iv_ruleXShortClosure= ruleXShortClosure EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXShortClosureRule()); }
 			pushFollow(FOLLOW_1);
@@ -8065,7 +8066,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXShortClosure"
-	// InternalWeightDefinition.g:3174:1: ruleXShortClosure returns [EObject current=null] : ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> ( () ( ( (lv_declaredFormalParameters_1_0= ruleJvmFormalParameter ) ) (otherlv_2= ',' ( (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_4_0= '|' ) ) ) ) ( (lv_expression_5_0= ruleXExpression ) ) ) ;
+	// InternalWeightDefinition.g:3178:1: ruleXShortClosure returns [EObject current=null] : ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> ( () ( ( (lv_declaredFormalParameters_1_0= ruleJvmFormalParameter ) ) (otherlv_2= ',' ( (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_4_0= '|' ) ) ) ) ( (lv_expression_5_0= ruleXExpression ) ) ) ;
 	public final EObject ruleXShortClosure() throws RecognitionException {
 		EObject current = null;
 
@@ -8080,20 +8081,20 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:3180:2: ( ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> ( () ( ( (lv_declaredFormalParameters_1_0= ruleJvmFormalParameter ) ) (otherlv_2= ',' ( (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_4_0= '|' ) ) ) ) ( (lv_expression_5_0= ruleXExpression ) ) ) )
-			// InternalWeightDefinition.g:3181:2: ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> ( () ( ( (lv_declaredFormalParameters_1_0= ruleJvmFormalParameter ) ) (otherlv_2= ',' ( (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_4_0= '|' ) ) ) ) ( (lv_expression_5_0= ruleXExpression ) ) )
+			// InternalWeightDefinition.g:3184:2: ( ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> ( () ( ( (lv_declaredFormalParameters_1_0= ruleJvmFormalParameter ) ) (otherlv_2= ',' ( (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_4_0= '|' ) ) ) ) ( (lv_expression_5_0= ruleXExpression ) ) ) )
+			// InternalWeightDefinition.g:3185:2: ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> ( () ( ( (lv_declaredFormalParameters_1_0= ruleJvmFormalParameter ) ) (otherlv_2= ',' ( (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_4_0= '|' ) ) ) ) ( (lv_expression_5_0= ruleXExpression ) ) )
 			{
-			// InternalWeightDefinition.g:3181:2: ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> ( () ( ( (lv_declaredFormalParameters_1_0= ruleJvmFormalParameter ) ) (otherlv_2= ',' ( (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_4_0= '|' ) ) ) ) ( (lv_expression_5_0= ruleXExpression ) ) )
-			// InternalWeightDefinition.g:3182:3: ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> ( () ( ( (lv_declaredFormalParameters_1_0= ruleJvmFormalParameter ) ) (otherlv_2= ',' ( (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_4_0= '|' ) ) ) ) ( (lv_expression_5_0= ruleXExpression ) )
+			// InternalWeightDefinition.g:3185:2: ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> ( () ( ( (lv_declaredFormalParameters_1_0= ruleJvmFormalParameter ) ) (otherlv_2= ',' ( (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_4_0= '|' ) ) ) ) ( (lv_expression_5_0= ruleXExpression ) ) )
+			// InternalWeightDefinition.g:3186:3: ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> ( () ( ( (lv_declaredFormalParameters_1_0= ruleJvmFormalParameter ) ) (otherlv_2= ',' ( (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_4_0= '|' ) ) ) ) ( (lv_expression_5_0= ruleXExpression ) )
 			{
-			// InternalWeightDefinition.g:3182:3: ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> ( () ( ( (lv_declaredFormalParameters_1_0= ruleJvmFormalParameter ) ) (otherlv_2= ',' ( (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_4_0= '|' ) ) ) )
-			// InternalWeightDefinition.g:3183:4: ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> ( () ( ( (lv_declaredFormalParameters_1_0= ruleJvmFormalParameter ) ) (otherlv_2= ',' ( (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_4_0= '|' ) ) )
+			// InternalWeightDefinition.g:3186:3: ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> ( () ( ( (lv_declaredFormalParameters_1_0= ruleJvmFormalParameter ) ) (otherlv_2= ',' ( (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_4_0= '|' ) ) ) )
+			// InternalWeightDefinition.g:3187:4: ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> ( () ( ( (lv_declaredFormalParameters_1_0= ruleJvmFormalParameter ) ) (otherlv_2= ',' ( (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_4_0= '|' ) ) )
 			{
-			// InternalWeightDefinition.g:3208:4: ( () ( ( (lv_declaredFormalParameters_1_0= ruleJvmFormalParameter ) ) (otherlv_2= ',' ( (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_4_0= '|' ) ) )
-			// InternalWeightDefinition.g:3209:5: () ( ( (lv_declaredFormalParameters_1_0= ruleJvmFormalParameter ) ) (otherlv_2= ',' ( (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_4_0= '|' ) )
+			// InternalWeightDefinition.g:3212:4: ( () ( ( (lv_declaredFormalParameters_1_0= ruleJvmFormalParameter ) ) (otherlv_2= ',' ( (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_4_0= '|' ) ) )
+			// InternalWeightDefinition.g:3213:5: () ( ( (lv_declaredFormalParameters_1_0= ruleJvmFormalParameter ) ) (otherlv_2= ',' ( (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter ) ) )* )? ( (lv_explicitSyntax_4_0= '|' ) )
 			{
-			// InternalWeightDefinition.g:3209:5: ()
-			// InternalWeightDefinition.g:3210:6: 
+			// InternalWeightDefinition.g:3213:5: ()
+			// InternalWeightDefinition.g:3214:6: 
 			{
 			if ( state.backtracking==0 ) {
 									current = forceCreateModelElement(
@@ -8102,26 +8103,26 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 								}
 			}
 
-			// InternalWeightDefinition.g:3216:5: ( ( (lv_declaredFormalParameters_1_0= ruleJvmFormalParameter ) ) (otherlv_2= ',' ( (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter ) ) )* )?
-			int alt51=2;
-			int LA51_0 = input.LA(1);
-			if ( (LA51_0==RULE_ID||LA51_0==21||LA51_0==47) ) {
-				alt51=1;
+			// InternalWeightDefinition.g:3220:5: ( ( (lv_declaredFormalParameters_1_0= ruleJvmFormalParameter ) ) (otherlv_2= ',' ( (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter ) ) )* )?
+			int alt49=2;
+			int LA49_0 = input.LA(1);
+			if ( (LA49_0==RULE_ID||LA49_0==21||LA49_0==47) ) {
+				alt49=1;
 			}
-			switch (alt51) {
+			switch (alt49) {
 				case 1 :
-					// InternalWeightDefinition.g:3217:6: ( (lv_declaredFormalParameters_1_0= ruleJvmFormalParameter ) ) (otherlv_2= ',' ( (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter ) ) )*
+					// InternalWeightDefinition.g:3221:6: ( (lv_declaredFormalParameters_1_0= ruleJvmFormalParameter ) ) (otherlv_2= ',' ( (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter ) ) )*
 					{
-					// InternalWeightDefinition.g:3217:6: ( (lv_declaredFormalParameters_1_0= ruleJvmFormalParameter ) )
-					// InternalWeightDefinition.g:3218:7: (lv_declaredFormalParameters_1_0= ruleJvmFormalParameter )
+					// InternalWeightDefinition.g:3221:6: ( (lv_declaredFormalParameters_1_0= ruleJvmFormalParameter ) )
+					// InternalWeightDefinition.g:3222:7: (lv_declaredFormalParameters_1_0= ruleJvmFormalParameter )
 					{
-					// InternalWeightDefinition.g:3218:7: (lv_declaredFormalParameters_1_0= ruleJvmFormalParameter )
-					// InternalWeightDefinition.g:3219:8: lv_declaredFormalParameters_1_0= ruleJvmFormalParameter
+					// InternalWeightDefinition.g:3222:7: (lv_declaredFormalParameters_1_0= ruleJvmFormalParameter )
+					// InternalWeightDefinition.g:3223:8: lv_declaredFormalParameters_1_0= ruleJvmFormalParameter
 					{
 					if ( state.backtracking==0 ) {
 													newCompositeNode(grammarAccess.getXShortClosureAccess().getDeclaredFormalParametersJvmFormalParameterParserRuleCall_0_0_1_0_0());
 												}
-					pushFollow(FOLLOW_46);
+					pushFollow(FOLLOW_45);
 					lv_declaredFormalParameters_1_0=ruleJvmFormalParameter();
 					state._fsp--;
 					if (state.failed) return current;
@@ -8140,33 +8141,33 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:3236:6: (otherlv_2= ',' ( (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter ) ) )*
-					loop50:
+					// InternalWeightDefinition.g:3240:6: (otherlv_2= ',' ( (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter ) ) )*
+					loop48:
 					while (true) {
-						int alt50=2;
-						int LA50_0 = input.LA(1);
-						if ( (LA50_0==29) ) {
-							alt50=1;
+						int alt48=2;
+						int LA48_0 = input.LA(1);
+						if ( (LA48_0==29) ) {
+							alt48=1;
 						}
 
-						switch (alt50) {
+						switch (alt48) {
 						case 1 :
-							// InternalWeightDefinition.g:3237:7: otherlv_2= ',' ( (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter ) )
+							// InternalWeightDefinition.g:3241:7: otherlv_2= ',' ( (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter ) )
 							{
-							otherlv_2=(Token)match(input,29,FOLLOW_8); if (state.failed) return current;
+							otherlv_2=(Token)match(input,29,FOLLOW_7); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
 														newLeafNode(otherlv_2, grammarAccess.getXShortClosureAccess().getCommaKeyword_0_0_1_1_0());
 													}
-							// InternalWeightDefinition.g:3241:7: ( (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter ) )
-							// InternalWeightDefinition.g:3242:8: (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter )
+							// InternalWeightDefinition.g:3245:7: ( (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter ) )
+							// InternalWeightDefinition.g:3246:8: (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter )
 							{
-							// InternalWeightDefinition.g:3242:8: (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter )
-							// InternalWeightDefinition.g:3243:9: lv_declaredFormalParameters_3_0= ruleJvmFormalParameter
+							// InternalWeightDefinition.g:3246:8: (lv_declaredFormalParameters_3_0= ruleJvmFormalParameter )
+							// InternalWeightDefinition.g:3247:9: lv_declaredFormalParameters_3_0= ruleJvmFormalParameter
 							{
 							if ( state.backtracking==0 ) {
 																newCompositeNode(grammarAccess.getXShortClosureAccess().getDeclaredFormalParametersJvmFormalParameterParserRuleCall_0_0_1_1_1_0());
 															}
-							pushFollow(FOLLOW_46);
+							pushFollow(FOLLOW_45);
 							lv_declaredFormalParameters_3_0=ruleJvmFormalParameter();
 							state._fsp--;
 							if (state.failed) return current;
@@ -8189,7 +8190,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 							break;
 
 						default :
-							break loop50;
+							break loop48;
 						}
 					}
 
@@ -8198,13 +8199,13 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			// InternalWeightDefinition.g:3262:5: ( (lv_explicitSyntax_4_0= '|' ) )
-			// InternalWeightDefinition.g:3263:6: (lv_explicitSyntax_4_0= '|' )
+			// InternalWeightDefinition.g:3266:5: ( (lv_explicitSyntax_4_0= '|' ) )
+			// InternalWeightDefinition.g:3267:6: (lv_explicitSyntax_4_0= '|' )
 			{
-			// InternalWeightDefinition.g:3263:6: (lv_explicitSyntax_4_0= '|' )
-			// InternalWeightDefinition.g:3264:7: lv_explicitSyntax_4_0= '|'
+			// InternalWeightDefinition.g:3267:6: (lv_explicitSyntax_4_0= '|' )
+			// InternalWeightDefinition.g:3268:7: lv_explicitSyntax_4_0= '|'
 			{
-			lv_explicitSyntax_4_0=(Token)match(input,86,FOLLOW_13); if (state.failed) return current;
+			lv_explicitSyntax_4_0=(Token)match(input,86,FOLLOW_12); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 										newLeafNode(lv_explicitSyntax_4_0, grammarAccess.getXShortClosureAccess().getExplicitSyntaxVerticalLineKeyword_0_0_2_0());
 									}
@@ -8222,11 +8223,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			// InternalWeightDefinition.g:3278:3: ( (lv_expression_5_0= ruleXExpression ) )
-			// InternalWeightDefinition.g:3279:4: (lv_expression_5_0= ruleXExpression )
+			// InternalWeightDefinition.g:3282:3: ( (lv_expression_5_0= ruleXExpression ) )
+			// InternalWeightDefinition.g:3283:4: (lv_expression_5_0= ruleXExpression )
 			{
-			// InternalWeightDefinition.g:3279:4: (lv_expression_5_0= ruleXExpression )
-			// InternalWeightDefinition.g:3280:5: lv_expression_5_0= ruleXExpression
+			// InternalWeightDefinition.g:3283:4: (lv_expression_5_0= ruleXExpression )
+			// InternalWeightDefinition.g:3284:5: lv_expression_5_0= ruleXExpression
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXShortClosureAccess().getExpressionXExpressionParserRuleCall_1_0());
@@ -8274,7 +8275,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXParenthesizedExpression"
-	// InternalWeightDefinition.g:3301:1: entryRuleXParenthesizedExpression returns [EObject current=null] :iv_ruleXParenthesizedExpression= ruleXParenthesizedExpression EOF ;
+	// InternalWeightDefinition.g:3305:1: entryRuleXParenthesizedExpression returns [EObject current=null] :iv_ruleXParenthesizedExpression= ruleXParenthesizedExpression EOF ;
 	public final EObject entryRuleXParenthesizedExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -8282,8 +8283,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXParenthesizedExpression =null;
 
 		try {
-			// InternalWeightDefinition.g:3301:65: (iv_ruleXParenthesizedExpression= ruleXParenthesizedExpression EOF )
-			// InternalWeightDefinition.g:3302:2: iv_ruleXParenthesizedExpression= ruleXParenthesizedExpression EOF
+			// InternalWeightDefinition.g:3305:65: (iv_ruleXParenthesizedExpression= ruleXParenthesizedExpression EOF )
+			// InternalWeightDefinition.g:3306:2: iv_ruleXParenthesizedExpression= ruleXParenthesizedExpression EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXParenthesizedExpressionRule()); }
 			pushFollow(FOLLOW_1);
@@ -8311,7 +8312,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXParenthesizedExpression"
-	// InternalWeightDefinition.g:3308:1: ruleXParenthesizedExpression returns [EObject current=null] : (otherlv_0= '(' this_XExpression_1= ruleXExpression otherlv_2= ')' ) ;
+	// InternalWeightDefinition.g:3312:1: ruleXParenthesizedExpression returns [EObject current=null] : (otherlv_0= '(' this_XExpression_1= ruleXExpression otherlv_2= ')' ) ;
 	public final EObject ruleXParenthesizedExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -8324,20 +8325,20 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:3314:2: ( (otherlv_0= '(' this_XExpression_1= ruleXExpression otherlv_2= ')' ) )
-			// InternalWeightDefinition.g:3315:2: (otherlv_0= '(' this_XExpression_1= ruleXExpression otherlv_2= ')' )
+			// InternalWeightDefinition.g:3318:2: ( (otherlv_0= '(' this_XExpression_1= ruleXExpression otherlv_2= ')' ) )
+			// InternalWeightDefinition.g:3319:2: (otherlv_0= '(' this_XExpression_1= ruleXExpression otherlv_2= ')' )
 			{
-			// InternalWeightDefinition.g:3315:2: (otherlv_0= '(' this_XExpression_1= ruleXExpression otherlv_2= ')' )
-			// InternalWeightDefinition.g:3316:3: otherlv_0= '(' this_XExpression_1= ruleXExpression otherlv_2= ')'
+			// InternalWeightDefinition.g:3319:2: (otherlv_0= '(' this_XExpression_1= ruleXExpression otherlv_2= ')' )
+			// InternalWeightDefinition.g:3320:3: otherlv_0= '(' this_XExpression_1= ruleXExpression otherlv_2= ')'
 			{
-			otherlv_0=(Token)match(input,21,FOLLOW_13); if (state.failed) return current;
+			otherlv_0=(Token)match(input,21,FOLLOW_12); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_0, grammarAccess.getXParenthesizedExpressionAccess().getLeftParenthesisKeyword_0());
 					}
 			if ( state.backtracking==0 ) {
 						newCompositeNode(grammarAccess.getXParenthesizedExpressionAccess().getXExpressionParserRuleCall_1());
 					}
-			pushFollow(FOLLOW_38);
+			pushFollow(FOLLOW_37);
 			this_XExpression_1=ruleXExpression();
 			state._fsp--;
 			if (state.failed) return current;
@@ -8373,7 +8374,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXIfExpression"
-	// InternalWeightDefinition.g:3336:1: entryRuleXIfExpression returns [EObject current=null] :iv_ruleXIfExpression= ruleXIfExpression EOF ;
+	// InternalWeightDefinition.g:3340:1: entryRuleXIfExpression returns [EObject current=null] :iv_ruleXIfExpression= ruleXIfExpression EOF ;
 	public final EObject entryRuleXIfExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -8381,8 +8382,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXIfExpression =null;
 
 		try {
-			// InternalWeightDefinition.g:3336:54: (iv_ruleXIfExpression= ruleXIfExpression EOF )
-			// InternalWeightDefinition.g:3337:2: iv_ruleXIfExpression= ruleXIfExpression EOF
+			// InternalWeightDefinition.g:3340:54: (iv_ruleXIfExpression= ruleXIfExpression EOF )
+			// InternalWeightDefinition.g:3341:2: iv_ruleXIfExpression= ruleXIfExpression EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXIfExpressionRule()); }
 			pushFollow(FOLLOW_1);
@@ -8410,7 +8411,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXIfExpression"
-	// InternalWeightDefinition.g:3343:1: ruleXIfExpression returns [EObject current=null] : ( () otherlv_1= 'if' otherlv_2= '(' ( (lv_if_3_0= ruleXExpression ) ) otherlv_4= ')' ( (lv_then_5_0= ruleXExpression ) ) ( ( ( 'else' )=>otherlv_6= 'else' ) ( (lv_else_7_0= ruleXExpression ) ) )? ) ;
+	// InternalWeightDefinition.g:3347:1: ruleXIfExpression returns [EObject current=null] : ( () otherlv_1= 'if' otherlv_2= '(' ( (lv_if_3_0= ruleXExpression ) ) otherlv_4= ')' ( (lv_then_5_0= ruleXExpression ) ) ( ( ( 'else' )=>otherlv_6= 'else' ) ( (lv_else_7_0= ruleXExpression ) ) )? ) ;
 	public final EObject ruleXIfExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -8427,14 +8428,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:3349:2: ( ( () otherlv_1= 'if' otherlv_2= '(' ( (lv_if_3_0= ruleXExpression ) ) otherlv_4= ')' ( (lv_then_5_0= ruleXExpression ) ) ( ( ( 'else' )=>otherlv_6= 'else' ) ( (lv_else_7_0= ruleXExpression ) ) )? ) )
-			// InternalWeightDefinition.g:3350:2: ( () otherlv_1= 'if' otherlv_2= '(' ( (lv_if_3_0= ruleXExpression ) ) otherlv_4= ')' ( (lv_then_5_0= ruleXExpression ) ) ( ( ( 'else' )=>otherlv_6= 'else' ) ( (lv_else_7_0= ruleXExpression ) ) )? )
+			// InternalWeightDefinition.g:3353:2: ( ( () otherlv_1= 'if' otherlv_2= '(' ( (lv_if_3_0= ruleXExpression ) ) otherlv_4= ')' ( (lv_then_5_0= ruleXExpression ) ) ( ( ( 'else' )=>otherlv_6= 'else' ) ( (lv_else_7_0= ruleXExpression ) ) )? ) )
+			// InternalWeightDefinition.g:3354:2: ( () otherlv_1= 'if' otherlv_2= '(' ( (lv_if_3_0= ruleXExpression ) ) otherlv_4= ')' ( (lv_then_5_0= ruleXExpression ) ) ( ( ( 'else' )=>otherlv_6= 'else' ) ( (lv_else_7_0= ruleXExpression ) ) )? )
 			{
-			// InternalWeightDefinition.g:3350:2: ( () otherlv_1= 'if' otherlv_2= '(' ( (lv_if_3_0= ruleXExpression ) ) otherlv_4= ')' ( (lv_then_5_0= ruleXExpression ) ) ( ( ( 'else' )=>otherlv_6= 'else' ) ( (lv_else_7_0= ruleXExpression ) ) )? )
-			// InternalWeightDefinition.g:3351:3: () otherlv_1= 'if' otherlv_2= '(' ( (lv_if_3_0= ruleXExpression ) ) otherlv_4= ')' ( (lv_then_5_0= ruleXExpression ) ) ( ( ( 'else' )=>otherlv_6= 'else' ) ( (lv_else_7_0= ruleXExpression ) ) )?
+			// InternalWeightDefinition.g:3354:2: ( () otherlv_1= 'if' otherlv_2= '(' ( (lv_if_3_0= ruleXExpression ) ) otherlv_4= ')' ( (lv_then_5_0= ruleXExpression ) ) ( ( ( 'else' )=>otherlv_6= 'else' ) ( (lv_else_7_0= ruleXExpression ) ) )? )
+			// InternalWeightDefinition.g:3355:3: () otherlv_1= 'if' otherlv_2= '(' ( (lv_if_3_0= ruleXExpression ) ) otherlv_4= ')' ( (lv_then_5_0= ruleXExpression ) ) ( ( ( 'else' )=>otherlv_6= 'else' ) ( (lv_else_7_0= ruleXExpression ) ) )?
 			{
-			// InternalWeightDefinition.g:3351:3: ()
-			// InternalWeightDefinition.g:3352:4: 
+			// InternalWeightDefinition.g:3355:3: ()
+			// InternalWeightDefinition.g:3356:4: 
 			{
 			if ( state.backtracking==0 ) {
 							current = forceCreateModelElement(
@@ -8443,24 +8444,24 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						}
 			}
 
-			otherlv_1=(Token)match(input,67,FOLLOW_9); if (state.failed) return current;
+			otherlv_1=(Token)match(input,67,FOLLOW_8); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_1, grammarAccess.getXIfExpressionAccess().getIfKeyword_1());
 					}
-			otherlv_2=(Token)match(input,21,FOLLOW_13); if (state.failed) return current;
+			otherlv_2=(Token)match(input,21,FOLLOW_12); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_2, grammarAccess.getXIfExpressionAccess().getLeftParenthesisKeyword_2());
 					}
-			// InternalWeightDefinition.g:3366:3: ( (lv_if_3_0= ruleXExpression ) )
-			// InternalWeightDefinition.g:3367:4: (lv_if_3_0= ruleXExpression )
+			// InternalWeightDefinition.g:3370:3: ( (lv_if_3_0= ruleXExpression ) )
+			// InternalWeightDefinition.g:3371:4: (lv_if_3_0= ruleXExpression )
 			{
-			// InternalWeightDefinition.g:3367:4: (lv_if_3_0= ruleXExpression )
-			// InternalWeightDefinition.g:3368:5: lv_if_3_0= ruleXExpression
+			// InternalWeightDefinition.g:3371:4: (lv_if_3_0= ruleXExpression )
+			// InternalWeightDefinition.g:3372:5: lv_if_3_0= ruleXExpression
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXIfExpressionAccess().getIfXExpressionParserRuleCall_3_0());
 							}
-			pushFollow(FOLLOW_38);
+			pushFollow(FOLLOW_37);
 			lv_if_3_0=ruleXExpression();
 			state._fsp--;
 			if (state.failed) return current;
@@ -8479,20 +8480,20 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			otherlv_4=(Token)match(input,22,FOLLOW_13); if (state.failed) return current;
+			otherlv_4=(Token)match(input,22,FOLLOW_12); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_4, grammarAccess.getXIfExpressionAccess().getRightParenthesisKeyword_4());
 					}
-			// InternalWeightDefinition.g:3389:3: ( (lv_then_5_0= ruleXExpression ) )
-			// InternalWeightDefinition.g:3390:4: (lv_then_5_0= ruleXExpression )
+			// InternalWeightDefinition.g:3393:3: ( (lv_then_5_0= ruleXExpression ) )
+			// InternalWeightDefinition.g:3394:4: (lv_then_5_0= ruleXExpression )
 			{
-			// InternalWeightDefinition.g:3390:4: (lv_then_5_0= ruleXExpression )
-			// InternalWeightDefinition.g:3391:5: lv_then_5_0= ruleXExpression
+			// InternalWeightDefinition.g:3394:4: (lv_then_5_0= ruleXExpression )
+			// InternalWeightDefinition.g:3395:5: lv_then_5_0= ruleXExpression
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXIfExpressionAccess().getThenXExpressionParserRuleCall_5_0());
 							}
-			pushFollow(FOLLOW_51);
+			pushFollow(FOLLOW_50);
 			lv_then_5_0=ruleXExpression();
 			state._fsp--;
 			if (state.failed) return current;
@@ -8511,33 +8512,33 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			// InternalWeightDefinition.g:3408:3: ( ( ( 'else' )=>otherlv_6= 'else' ) ( (lv_else_7_0= ruleXExpression ) ) )?
-			int alt52=2;
-			int LA52_0 = input.LA(1);
-			if ( (LA52_0==60) ) {
-				int LA52_1 = input.LA(2);
+			// InternalWeightDefinition.g:3412:3: ( ( ( 'else' )=>otherlv_6= 'else' ) ( (lv_else_7_0= ruleXExpression ) ) )?
+			int alt50=2;
+			int LA50_0 = input.LA(1);
+			if ( (LA50_0==60) ) {
+				int LA50_1 = input.LA(2);
 				if ( (synpred25_InternalWeightDefinition()) ) {
-					alt52=1;
+					alt50=1;
 				}
 			}
-			switch (alt52) {
+			switch (alt50) {
 				case 1 :
-					// InternalWeightDefinition.g:3409:4: ( ( 'else' )=>otherlv_6= 'else' ) ( (lv_else_7_0= ruleXExpression ) )
+					// InternalWeightDefinition.g:3413:4: ( ( 'else' )=>otherlv_6= 'else' ) ( (lv_else_7_0= ruleXExpression ) )
 					{
-					// InternalWeightDefinition.g:3409:4: ( ( 'else' )=>otherlv_6= 'else' )
-					// InternalWeightDefinition.g:3410:5: ( 'else' )=>otherlv_6= 'else'
+					// InternalWeightDefinition.g:3413:4: ( ( 'else' )=>otherlv_6= 'else' )
+					// InternalWeightDefinition.g:3414:5: ( 'else' )=>otherlv_6= 'else'
 					{
-					otherlv_6=(Token)match(input,60,FOLLOW_13); if (state.failed) return current;
+					otherlv_6=(Token)match(input,60,FOLLOW_12); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 										newLeafNode(otherlv_6, grammarAccess.getXIfExpressionAccess().getElseKeyword_6_0());
 									}
 					}
 
-					// InternalWeightDefinition.g:3416:4: ( (lv_else_7_0= ruleXExpression ) )
-					// InternalWeightDefinition.g:3417:5: (lv_else_7_0= ruleXExpression )
+					// InternalWeightDefinition.g:3420:4: ( (lv_else_7_0= ruleXExpression ) )
+					// InternalWeightDefinition.g:3421:5: (lv_else_7_0= ruleXExpression )
 					{
-					// InternalWeightDefinition.g:3417:5: (lv_else_7_0= ruleXExpression )
-					// InternalWeightDefinition.g:3418:6: lv_else_7_0= ruleXExpression
+					// InternalWeightDefinition.g:3421:5: (lv_else_7_0= ruleXExpression )
+					// InternalWeightDefinition.g:3422:6: lv_else_7_0= ruleXExpression
 					{
 					if ( state.backtracking==0 ) {
 											newCompositeNode(grammarAccess.getXIfExpressionAccess().getElseXExpressionParserRuleCall_6_1_0());
@@ -8590,7 +8591,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXSwitchExpression"
-	// InternalWeightDefinition.g:3440:1: entryRuleXSwitchExpression returns [EObject current=null] :iv_ruleXSwitchExpression= ruleXSwitchExpression EOF ;
+	// InternalWeightDefinition.g:3444:1: entryRuleXSwitchExpression returns [EObject current=null] :iv_ruleXSwitchExpression= ruleXSwitchExpression EOF ;
 	public final EObject entryRuleXSwitchExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -8598,8 +8599,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXSwitchExpression =null;
 
 		try {
-			// InternalWeightDefinition.g:3440:58: (iv_ruleXSwitchExpression= ruleXSwitchExpression EOF )
-			// InternalWeightDefinition.g:3441:2: iv_ruleXSwitchExpression= ruleXSwitchExpression EOF
+			// InternalWeightDefinition.g:3444:58: (iv_ruleXSwitchExpression= ruleXSwitchExpression EOF )
+			// InternalWeightDefinition.g:3445:2: iv_ruleXSwitchExpression= ruleXSwitchExpression EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXSwitchExpressionRule()); }
 			pushFollow(FOLLOW_1);
@@ -8627,7 +8628,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXSwitchExpression"
-	// InternalWeightDefinition.g:3447:1: ruleXSwitchExpression returns [EObject current=null] : ( () otherlv_1= 'switch' ( ( ( ( ( '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> (otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) ) ( (lv_switch_5_0= ruleXExpression ) ) otherlv_6= ')' ) | ( ( ( ( ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( ( (lv_declaredParam_7_0= ruleJvmFormalParameter ) ) otherlv_8= ':' ) )? ( (lv_switch_9_0= ruleXExpression ) ) ) ) otherlv_10= '{' ( (lv_cases_11_0= ruleXCasePart ) )* (otherlv_12= 'default' otherlv_13= ':' ( (lv_default_14_0= ruleXExpression ) ) )? otherlv_15= '}' ) ;
+	// InternalWeightDefinition.g:3451:1: ruleXSwitchExpression returns [EObject current=null] : ( () otherlv_1= 'switch' ( ( ( ( ( '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> (otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) ) ( (lv_switch_5_0= ruleXExpression ) ) otherlv_6= ')' ) | ( ( ( ( ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( ( (lv_declaredParam_7_0= ruleJvmFormalParameter ) ) otherlv_8= ':' ) )? ( (lv_switch_9_0= ruleXExpression ) ) ) ) otherlv_10= '{' ( (lv_cases_11_0= ruleXCasePart ) )* (otherlv_12= 'default' otherlv_13= ':' ( (lv_default_14_0= ruleXExpression ) ) )? otherlv_15= '}' ) ;
 	public final EObject ruleXSwitchExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -8652,14 +8653,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:3453:2: ( ( () otherlv_1= 'switch' ( ( ( ( ( '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> (otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) ) ( (lv_switch_5_0= ruleXExpression ) ) otherlv_6= ')' ) | ( ( ( ( ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( ( (lv_declaredParam_7_0= ruleJvmFormalParameter ) ) otherlv_8= ':' ) )? ( (lv_switch_9_0= ruleXExpression ) ) ) ) otherlv_10= '{' ( (lv_cases_11_0= ruleXCasePart ) )* (otherlv_12= 'default' otherlv_13= ':' ( (lv_default_14_0= ruleXExpression ) ) )? otherlv_15= '}' ) )
-			// InternalWeightDefinition.g:3454:2: ( () otherlv_1= 'switch' ( ( ( ( ( '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> (otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) ) ( (lv_switch_5_0= ruleXExpression ) ) otherlv_6= ')' ) | ( ( ( ( ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( ( (lv_declaredParam_7_0= ruleJvmFormalParameter ) ) otherlv_8= ':' ) )? ( (lv_switch_9_0= ruleXExpression ) ) ) ) otherlv_10= '{' ( (lv_cases_11_0= ruleXCasePart ) )* (otherlv_12= 'default' otherlv_13= ':' ( (lv_default_14_0= ruleXExpression ) ) )? otherlv_15= '}' )
+			// InternalWeightDefinition.g:3457:2: ( ( () otherlv_1= 'switch' ( ( ( ( ( '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> (otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) ) ( (lv_switch_5_0= ruleXExpression ) ) otherlv_6= ')' ) | ( ( ( ( ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( ( (lv_declaredParam_7_0= ruleJvmFormalParameter ) ) otherlv_8= ':' ) )? ( (lv_switch_9_0= ruleXExpression ) ) ) ) otherlv_10= '{' ( (lv_cases_11_0= ruleXCasePart ) )* (otherlv_12= 'default' otherlv_13= ':' ( (lv_default_14_0= ruleXExpression ) ) )? otherlv_15= '}' ) )
+			// InternalWeightDefinition.g:3458:2: ( () otherlv_1= 'switch' ( ( ( ( ( '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> (otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) ) ( (lv_switch_5_0= ruleXExpression ) ) otherlv_6= ')' ) | ( ( ( ( ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( ( (lv_declaredParam_7_0= ruleJvmFormalParameter ) ) otherlv_8= ':' ) )? ( (lv_switch_9_0= ruleXExpression ) ) ) ) otherlv_10= '{' ( (lv_cases_11_0= ruleXCasePart ) )* (otherlv_12= 'default' otherlv_13= ':' ( (lv_default_14_0= ruleXExpression ) ) )? otherlv_15= '}' )
 			{
-			// InternalWeightDefinition.g:3454:2: ( () otherlv_1= 'switch' ( ( ( ( ( '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> (otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) ) ( (lv_switch_5_0= ruleXExpression ) ) otherlv_6= ')' ) | ( ( ( ( ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( ( (lv_declaredParam_7_0= ruleJvmFormalParameter ) ) otherlv_8= ':' ) )? ( (lv_switch_9_0= ruleXExpression ) ) ) ) otherlv_10= '{' ( (lv_cases_11_0= ruleXCasePart ) )* (otherlv_12= 'default' otherlv_13= ':' ( (lv_default_14_0= ruleXExpression ) ) )? otherlv_15= '}' )
-			// InternalWeightDefinition.g:3455:3: () otherlv_1= 'switch' ( ( ( ( ( '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> (otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) ) ( (lv_switch_5_0= ruleXExpression ) ) otherlv_6= ')' ) | ( ( ( ( ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( ( (lv_declaredParam_7_0= ruleJvmFormalParameter ) ) otherlv_8= ':' ) )? ( (lv_switch_9_0= ruleXExpression ) ) ) ) otherlv_10= '{' ( (lv_cases_11_0= ruleXCasePart ) )* (otherlv_12= 'default' otherlv_13= ':' ( (lv_default_14_0= ruleXExpression ) ) )? otherlv_15= '}'
+			// InternalWeightDefinition.g:3458:2: ( () otherlv_1= 'switch' ( ( ( ( ( '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> (otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) ) ( (lv_switch_5_0= ruleXExpression ) ) otherlv_6= ')' ) | ( ( ( ( ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( ( (lv_declaredParam_7_0= ruleJvmFormalParameter ) ) otherlv_8= ':' ) )? ( (lv_switch_9_0= ruleXExpression ) ) ) ) otherlv_10= '{' ( (lv_cases_11_0= ruleXCasePart ) )* (otherlv_12= 'default' otherlv_13= ':' ( (lv_default_14_0= ruleXExpression ) ) )? otherlv_15= '}' )
+			// InternalWeightDefinition.g:3459:3: () otherlv_1= 'switch' ( ( ( ( ( '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> (otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) ) ( (lv_switch_5_0= ruleXExpression ) ) otherlv_6= ')' ) | ( ( ( ( ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( ( (lv_declaredParam_7_0= ruleJvmFormalParameter ) ) otherlv_8= ':' ) )? ( (lv_switch_9_0= ruleXExpression ) ) ) ) otherlv_10= '{' ( (lv_cases_11_0= ruleXCasePart ) )* (otherlv_12= 'default' otherlv_13= ':' ( (lv_default_14_0= ruleXExpression ) ) )? otherlv_15= '}'
 			{
-			// InternalWeightDefinition.g:3455:3: ()
-			// InternalWeightDefinition.g:3456:4: 
+			// InternalWeightDefinition.g:3459:3: ()
+			// InternalWeightDefinition.g:3460:4: 
 			{
 			if ( state.backtracking==0 ) {
 							current = forceCreateModelElement(
@@ -8668,61 +8669,61 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						}
 			}
 
-			otherlv_1=(Token)match(input,76,FOLLOW_52); if (state.failed) return current;
+			otherlv_1=(Token)match(input,76,FOLLOW_51); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_1, grammarAccess.getXSwitchExpressionAccess().getSwitchKeyword_1());
 					}
-			// InternalWeightDefinition.g:3466:3: ( ( ( ( ( '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> (otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) ) ( (lv_switch_5_0= ruleXExpression ) ) otherlv_6= ')' ) | ( ( ( ( ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( ( (lv_declaredParam_7_0= ruleJvmFormalParameter ) ) otherlv_8= ':' ) )? ( (lv_switch_9_0= ruleXExpression ) ) ) )
-			int alt54=2;
-			int LA54_0 = input.LA(1);
-			if ( (LA54_0==21) ) {
-				int LA54_1 = input.LA(2);
+			// InternalWeightDefinition.g:3470:3: ( ( ( ( ( '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> (otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) ) ( (lv_switch_5_0= ruleXExpression ) ) otherlv_6= ')' ) | ( ( ( ( ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( ( (lv_declaredParam_7_0= ruleJvmFormalParameter ) ) otherlv_8= ':' ) )? ( (lv_switch_9_0= ruleXExpression ) ) ) )
+			int alt52=2;
+			int LA52_0 = input.LA(1);
+			if ( (LA52_0==21) ) {
+				int LA52_1 = input.LA(2);
 				if ( (synpred26_InternalWeightDefinition()) ) {
-					alt54=1;
+					alt52=1;
 				}
 				else if ( (true) ) {
-					alt54=2;
+					alt52=2;
 				}
 
 			}
-			else if ( ((LA54_0 >= RULE_DECIMAL && LA54_0 <= RULE_INT)||LA54_0==RULE_STRING||LA54_0==13||LA54_0==16||LA54_0==26||LA54_0==30||LA54_0==42||LA54_0==47||LA54_0==53||LA54_0==59||(LA54_0 >= 61 && LA54_0 <= 63)||LA54_0==65||(LA54_0 >= 67 && LA54_0 <= 68)||(LA54_0 >= 70 && LA54_0 <= 72)||(LA54_0 >= 74 && LA54_0 <= 81)||(LA54_0 >= 84 && LA54_0 <= 85)) ) {
-				alt54=2;
+			else if ( ((LA52_0 >= RULE_DECIMAL && LA52_0 <= RULE_INT)||LA52_0==RULE_STRING||LA52_0==13||LA52_0==16||LA52_0==26||LA52_0==30||LA52_0==42||LA52_0==47||LA52_0==53||LA52_0==59||(LA52_0 >= 61 && LA52_0 <= 63)||LA52_0==65||(LA52_0 >= 67 && LA52_0 <= 68)||(LA52_0 >= 70 && LA52_0 <= 72)||(LA52_0 >= 74 && LA52_0 <= 81)||(LA52_0 >= 84 && LA52_0 <= 85)) ) {
+				alt52=2;
 			}
 
 			else {
 				if (state.backtracking>0) {state.failed=true; return current;}
 				NoViableAltException nvae =
-					new NoViableAltException("", 54, 0, input);
+					new NoViableAltException("", 52, 0, input);
 				throw nvae;
 			}
 
-			switch (alt54) {
+			switch (alt52) {
 				case 1 :
-					// InternalWeightDefinition.g:3467:4: ( ( ( ( '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> (otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) ) ( (lv_switch_5_0= ruleXExpression ) ) otherlv_6= ')' )
+					// InternalWeightDefinition.g:3471:4: ( ( ( ( '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> (otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) ) ( (lv_switch_5_0= ruleXExpression ) ) otherlv_6= ')' )
 					{
-					// InternalWeightDefinition.g:3467:4: ( ( ( ( '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> (otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) ) ( (lv_switch_5_0= ruleXExpression ) ) otherlv_6= ')' )
-					// InternalWeightDefinition.g:3468:5: ( ( ( '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> (otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) ) ( (lv_switch_5_0= ruleXExpression ) ) otherlv_6= ')'
+					// InternalWeightDefinition.g:3471:4: ( ( ( ( '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> (otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) ) ( (lv_switch_5_0= ruleXExpression ) ) otherlv_6= ')' )
+					// InternalWeightDefinition.g:3472:5: ( ( ( '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> (otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) ) ( (lv_switch_5_0= ruleXExpression ) ) otherlv_6= ')'
 					{
-					// InternalWeightDefinition.g:3468:5: ( ( ( '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> (otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) )
-					// InternalWeightDefinition.g:3469:6: ( ( '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> (otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' )
+					// InternalWeightDefinition.g:3472:5: ( ( ( '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> (otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) )
+					// InternalWeightDefinition.g:3473:6: ( ( '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> (otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' )
 					{
-					// InternalWeightDefinition.g:3479:6: (otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' )
-					// InternalWeightDefinition.g:3480:7: otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':'
+					// InternalWeightDefinition.g:3483:6: (otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' )
+					// InternalWeightDefinition.g:3484:7: otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':'
 					{
-					otherlv_2=(Token)match(input,21,FOLLOW_8); if (state.failed) return current;
+					otherlv_2=(Token)match(input,21,FOLLOW_7); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 												newLeafNode(otherlv_2, grammarAccess.getXSwitchExpressionAccess().getLeftParenthesisKeyword_2_0_0_0_0());
 											}
-					// InternalWeightDefinition.g:3484:7: ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) )
-					// InternalWeightDefinition.g:3485:8: (lv_declaredParam_3_0= ruleJvmFormalParameter )
+					// InternalWeightDefinition.g:3488:7: ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) )
+					// InternalWeightDefinition.g:3489:8: (lv_declaredParam_3_0= ruleJvmFormalParameter )
 					{
-					// InternalWeightDefinition.g:3485:8: (lv_declaredParam_3_0= ruleJvmFormalParameter )
-					// InternalWeightDefinition.g:3486:9: lv_declaredParam_3_0= ruleJvmFormalParameter
+					// InternalWeightDefinition.g:3489:8: (lv_declaredParam_3_0= ruleJvmFormalParameter )
+					// InternalWeightDefinition.g:3490:9: lv_declaredParam_3_0= ruleJvmFormalParameter
 					{
 					if ( state.backtracking==0 ) {
 														newCompositeNode(grammarAccess.getXSwitchExpressionAccess().getDeclaredParamJvmFormalParameterParserRuleCall_2_0_0_0_1_0());
 													}
-					pushFollow(FOLLOW_53);
+					pushFollow(FOLLOW_52);
 					lv_declaredParam_3_0=ruleJvmFormalParameter();
 					state._fsp--;
 					if (state.failed) return current;
@@ -8741,7 +8742,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					otherlv_4=(Token)match(input,39,FOLLOW_13); if (state.failed) return current;
+					otherlv_4=(Token)match(input,39,FOLLOW_12); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 												newLeafNode(otherlv_4, grammarAccess.getXSwitchExpressionAccess().getColonKeyword_2_0_0_0_2());
 											}
@@ -8749,16 +8750,16 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:3509:5: ( (lv_switch_5_0= ruleXExpression ) )
-					// InternalWeightDefinition.g:3510:6: (lv_switch_5_0= ruleXExpression )
+					// InternalWeightDefinition.g:3513:5: ( (lv_switch_5_0= ruleXExpression ) )
+					// InternalWeightDefinition.g:3514:6: (lv_switch_5_0= ruleXExpression )
 					{
-					// InternalWeightDefinition.g:3510:6: (lv_switch_5_0= ruleXExpression )
-					// InternalWeightDefinition.g:3511:7: lv_switch_5_0= ruleXExpression
+					// InternalWeightDefinition.g:3514:6: (lv_switch_5_0= ruleXExpression )
+					// InternalWeightDefinition.g:3515:7: lv_switch_5_0= ruleXExpression
 					{
 					if ( state.backtracking==0 ) {
 												newCompositeNode(grammarAccess.getXSwitchExpressionAccess().getSwitchXExpressionParserRuleCall_2_0_1_0());
 											}
-					pushFollow(FOLLOW_38);
+					pushFollow(FOLLOW_37);
 					lv_switch_5_0=ruleXExpression();
 					state._fsp--;
 					if (state.failed) return current;
@@ -8777,7 +8778,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					otherlv_6=(Token)match(input,22,FOLLOW_7); if (state.failed) return current;
+					otherlv_6=(Token)match(input,22,FOLLOW_6); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 										newLeafNode(otherlv_6, grammarAccess.getXSwitchExpressionAccess().getRightParenthesisKeyword_2_0_2());
 									}
@@ -8786,46 +8787,46 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:3534:4: ( ( ( ( ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( ( (lv_declaredParam_7_0= ruleJvmFormalParameter ) ) otherlv_8= ':' ) )? ( (lv_switch_9_0= ruleXExpression ) ) )
+					// InternalWeightDefinition.g:3538:4: ( ( ( ( ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( ( (lv_declaredParam_7_0= ruleJvmFormalParameter ) ) otherlv_8= ':' ) )? ( (lv_switch_9_0= ruleXExpression ) ) )
 					{
-					// InternalWeightDefinition.g:3534:4: ( ( ( ( ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( ( (lv_declaredParam_7_0= ruleJvmFormalParameter ) ) otherlv_8= ':' ) )? ( (lv_switch_9_0= ruleXExpression ) ) )
-					// InternalWeightDefinition.g:3535:5: ( ( ( ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( ( (lv_declaredParam_7_0= ruleJvmFormalParameter ) ) otherlv_8= ':' ) )? ( (lv_switch_9_0= ruleXExpression ) )
+					// InternalWeightDefinition.g:3538:4: ( ( ( ( ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( ( (lv_declaredParam_7_0= ruleJvmFormalParameter ) ) otherlv_8= ':' ) )? ( (lv_switch_9_0= ruleXExpression ) ) )
+					// InternalWeightDefinition.g:3539:5: ( ( ( ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( ( (lv_declaredParam_7_0= ruleJvmFormalParameter ) ) otherlv_8= ':' ) )? ( (lv_switch_9_0= ruleXExpression ) )
 					{
-					// InternalWeightDefinition.g:3535:5: ( ( ( ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( ( (lv_declaredParam_7_0= ruleJvmFormalParameter ) ) otherlv_8= ':' ) )?
-					int alt53=2;
-					int LA53_0 = input.LA(1);
-					if ( (LA53_0==RULE_ID) ) {
-						int LA53_1 = input.LA(2);
+					// InternalWeightDefinition.g:3539:5: ( ( ( ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( ( (lv_declaredParam_7_0= ruleJvmFormalParameter ) ) otherlv_8= ':' ) )?
+					int alt51=2;
+					int LA51_0 = input.LA(1);
+					if ( (LA51_0==RULE_ID) ) {
+						int LA51_1 = input.LA(2);
 						if ( (synpred27_InternalWeightDefinition()) ) {
-							alt53=1;
+							alt51=1;
 						}
 					}
-					else if ( (LA53_0==21) ) {
-						int LA53_2 = input.LA(2);
+					else if ( (LA51_0==21) ) {
+						int LA51_2 = input.LA(2);
 						if ( (synpred27_InternalWeightDefinition()) ) {
-							alt53=1;
+							alt51=1;
 						}
 					}
-					else if ( (LA53_0==47) && (synpred27_InternalWeightDefinition())) {
-						alt53=1;
+					else if ( (LA51_0==47) && (synpred27_InternalWeightDefinition())) {
+						alt51=1;
 					}
-					switch (alt53) {
+					switch (alt51) {
 						case 1 :
-							// InternalWeightDefinition.g:3536:6: ( ( ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( ( (lv_declaredParam_7_0= ruleJvmFormalParameter ) ) otherlv_8= ':' )
+							// InternalWeightDefinition.g:3540:6: ( ( ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( ( (lv_declaredParam_7_0= ruleJvmFormalParameter ) ) otherlv_8= ':' )
 							{
-							// InternalWeightDefinition.g:3545:6: ( ( (lv_declaredParam_7_0= ruleJvmFormalParameter ) ) otherlv_8= ':' )
-							// InternalWeightDefinition.g:3546:7: ( (lv_declaredParam_7_0= ruleJvmFormalParameter ) ) otherlv_8= ':'
+							// InternalWeightDefinition.g:3549:6: ( ( (lv_declaredParam_7_0= ruleJvmFormalParameter ) ) otherlv_8= ':' )
+							// InternalWeightDefinition.g:3550:7: ( (lv_declaredParam_7_0= ruleJvmFormalParameter ) ) otherlv_8= ':'
 							{
-							// InternalWeightDefinition.g:3546:7: ( (lv_declaredParam_7_0= ruleJvmFormalParameter ) )
-							// InternalWeightDefinition.g:3547:8: (lv_declaredParam_7_0= ruleJvmFormalParameter )
+							// InternalWeightDefinition.g:3550:7: ( (lv_declaredParam_7_0= ruleJvmFormalParameter ) )
+							// InternalWeightDefinition.g:3551:8: (lv_declaredParam_7_0= ruleJvmFormalParameter )
 							{
-							// InternalWeightDefinition.g:3547:8: (lv_declaredParam_7_0= ruleJvmFormalParameter )
-							// InternalWeightDefinition.g:3548:9: lv_declaredParam_7_0= ruleJvmFormalParameter
+							// InternalWeightDefinition.g:3551:8: (lv_declaredParam_7_0= ruleJvmFormalParameter )
+							// InternalWeightDefinition.g:3552:9: lv_declaredParam_7_0= ruleJvmFormalParameter
 							{
 							if ( state.backtracking==0 ) {
 																newCompositeNode(grammarAccess.getXSwitchExpressionAccess().getDeclaredParamJvmFormalParameterParserRuleCall_2_1_0_0_0_0());
 															}
-							pushFollow(FOLLOW_53);
+							pushFollow(FOLLOW_52);
 							lv_declaredParam_7_0=ruleJvmFormalParameter();
 							state._fsp--;
 							if (state.failed) return current;
@@ -8844,7 +8845,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 							}
 
-							otherlv_8=(Token)match(input,39,FOLLOW_13); if (state.failed) return current;
+							otherlv_8=(Token)match(input,39,FOLLOW_12); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
 														newLeafNode(otherlv_8, grammarAccess.getXSwitchExpressionAccess().getColonKeyword_2_1_0_0_1());
 													}
@@ -8855,16 +8856,16 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:3571:5: ( (lv_switch_9_0= ruleXExpression ) )
-					// InternalWeightDefinition.g:3572:6: (lv_switch_9_0= ruleXExpression )
+					// InternalWeightDefinition.g:3575:5: ( (lv_switch_9_0= ruleXExpression ) )
+					// InternalWeightDefinition.g:3576:6: (lv_switch_9_0= ruleXExpression )
 					{
-					// InternalWeightDefinition.g:3572:6: (lv_switch_9_0= ruleXExpression )
-					// InternalWeightDefinition.g:3573:7: lv_switch_9_0= ruleXExpression
+					// InternalWeightDefinition.g:3576:6: (lv_switch_9_0= ruleXExpression )
+					// InternalWeightDefinition.g:3577:7: lv_switch_9_0= ruleXExpression
 					{
 					if ( state.backtracking==0 ) {
 												newCompositeNode(grammarAccess.getXSwitchExpressionAccess().getSwitchXExpressionParserRuleCall_2_1_1_0());
 											}
-					pushFollow(FOLLOW_7);
+					pushFollow(FOLLOW_6);
 					lv_switch_9_0=ruleXExpression();
 					state._fsp--;
 					if (state.failed) return current;
@@ -8890,30 +8891,30 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			otherlv_10=(Token)match(input,85,FOLLOW_54); if (state.failed) return current;
+			otherlv_10=(Token)match(input,85,FOLLOW_53); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_10, grammarAccess.getXSwitchExpressionAccess().getLeftCurlyBracketKeyword_3());
 					}
-			// InternalWeightDefinition.g:3596:3: ( (lv_cases_11_0= ruleXCasePart ) )*
-			loop55:
+			// InternalWeightDefinition.g:3600:3: ( (lv_cases_11_0= ruleXCasePart ) )*
+			loop53:
 			while (true) {
-				int alt55=2;
-				int LA55_0 = input.LA(1);
-				if ( (LA55_0==RULE_ID||LA55_0==21||LA55_0==29||LA55_0==39||LA55_0==47||LA55_0==56) ) {
-					alt55=1;
+				int alt53=2;
+				int LA53_0 = input.LA(1);
+				if ( (LA53_0==RULE_ID||LA53_0==21||LA53_0==29||LA53_0==39||LA53_0==47||LA53_0==56) ) {
+					alt53=1;
 				}
 
-				switch (alt55) {
+				switch (alt53) {
 				case 1 :
-					// InternalWeightDefinition.g:3597:4: (lv_cases_11_0= ruleXCasePart )
+					// InternalWeightDefinition.g:3601:4: (lv_cases_11_0= ruleXCasePart )
 					{
-					// InternalWeightDefinition.g:3597:4: (lv_cases_11_0= ruleXCasePart )
-					// InternalWeightDefinition.g:3598:5: lv_cases_11_0= ruleXCasePart
+					// InternalWeightDefinition.g:3601:4: (lv_cases_11_0= ruleXCasePart )
+					// InternalWeightDefinition.g:3602:5: lv_cases_11_0= ruleXCasePart
 					{
 					if ( state.backtracking==0 ) {
 										newCompositeNode(grammarAccess.getXSwitchExpressionAccess().getCasesXCasePartParserRuleCall_4_0());
 									}
-					pushFollow(FOLLOW_54);
+					pushFollow(FOLLOW_53);
 					lv_cases_11_0=ruleXCasePart();
 					state._fsp--;
 					if (state.failed) return current;
@@ -8934,38 +8935,38 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					break;
 
 				default :
-					break loop55;
+					break loop53;
 				}
 			}
 
-			// InternalWeightDefinition.g:3615:3: (otherlv_12= 'default' otherlv_13= ':' ( (lv_default_14_0= ruleXExpression ) ) )?
-			int alt56=2;
-			int LA56_0 = input.LA(1);
-			if ( (LA56_0==58) ) {
-				alt56=1;
+			// InternalWeightDefinition.g:3619:3: (otherlv_12= 'default' otherlv_13= ':' ( (lv_default_14_0= ruleXExpression ) ) )?
+			int alt54=2;
+			int LA54_0 = input.LA(1);
+			if ( (LA54_0==58) ) {
+				alt54=1;
 			}
-			switch (alt56) {
+			switch (alt54) {
 				case 1 :
-					// InternalWeightDefinition.g:3616:4: otherlv_12= 'default' otherlv_13= ':' ( (lv_default_14_0= ruleXExpression ) )
+					// InternalWeightDefinition.g:3620:4: otherlv_12= 'default' otherlv_13= ':' ( (lv_default_14_0= ruleXExpression ) )
 					{
-					otherlv_12=(Token)match(input,58,FOLLOW_53); if (state.failed) return current;
+					otherlv_12=(Token)match(input,58,FOLLOW_52); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 									newLeafNode(otherlv_12, grammarAccess.getXSwitchExpressionAccess().getDefaultKeyword_5_0());
 								}
-					otherlv_13=(Token)match(input,39,FOLLOW_13); if (state.failed) return current;
+					otherlv_13=(Token)match(input,39,FOLLOW_12); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 									newLeafNode(otherlv_13, grammarAccess.getXSwitchExpressionAccess().getColonKeyword_5_1());
 								}
-					// InternalWeightDefinition.g:3624:4: ( (lv_default_14_0= ruleXExpression ) )
-					// InternalWeightDefinition.g:3625:5: (lv_default_14_0= ruleXExpression )
+					// InternalWeightDefinition.g:3628:4: ( (lv_default_14_0= ruleXExpression ) )
+					// InternalWeightDefinition.g:3629:5: (lv_default_14_0= ruleXExpression )
 					{
-					// InternalWeightDefinition.g:3625:5: (lv_default_14_0= ruleXExpression )
-					// InternalWeightDefinition.g:3626:6: lv_default_14_0= ruleXExpression
+					// InternalWeightDefinition.g:3629:5: (lv_default_14_0= ruleXExpression )
+					// InternalWeightDefinition.g:3630:6: lv_default_14_0= ruleXExpression
 					{
 					if ( state.backtracking==0 ) {
 											newCompositeNode(grammarAccess.getXSwitchExpressionAccess().getDefaultXExpressionParserRuleCall_5_2_0());
 										}
-					pushFollow(FOLLOW_55);
+					pushFollow(FOLLOW_54);
 					lv_default_14_0=ruleXExpression();
 					state._fsp--;
 					if (state.failed) return current;
@@ -9017,7 +9018,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXCasePart"
-	// InternalWeightDefinition.g:3652:1: entryRuleXCasePart returns [EObject current=null] :iv_ruleXCasePart= ruleXCasePart EOF ;
+	// InternalWeightDefinition.g:3656:1: entryRuleXCasePart returns [EObject current=null] :iv_ruleXCasePart= ruleXCasePart EOF ;
 	public final EObject entryRuleXCasePart() throws RecognitionException {
 		EObject current = null;
 
@@ -9025,8 +9026,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXCasePart =null;
 
 		try {
-			// InternalWeightDefinition.g:3652:50: (iv_ruleXCasePart= ruleXCasePart EOF )
-			// InternalWeightDefinition.g:3653:2: iv_ruleXCasePart= ruleXCasePart EOF
+			// InternalWeightDefinition.g:3656:50: (iv_ruleXCasePart= ruleXCasePart EOF )
+			// InternalWeightDefinition.g:3657:2: iv_ruleXCasePart= ruleXCasePart EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXCasePartRule()); }
 			pushFollow(FOLLOW_1);
@@ -9054,7 +9055,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXCasePart"
-	// InternalWeightDefinition.g:3659:1: ruleXCasePart returns [EObject current=null] : ( () ( (lv_typeGuard_1_0= ruleJvmTypeReference ) )? (otherlv_2= 'case' ( (lv_case_3_0= ruleXExpression ) ) )? ( (otherlv_4= ':' ( (lv_then_5_0= ruleXExpression ) ) ) | ( (lv_fallThrough_6_0= ',' ) ) ) ) ;
+	// InternalWeightDefinition.g:3663:1: ruleXCasePart returns [EObject current=null] : ( () ( (lv_typeGuard_1_0= ruleJvmTypeReference ) )? (otherlv_2= 'case' ( (lv_case_3_0= ruleXExpression ) ) )? ( (otherlv_4= ':' ( (lv_then_5_0= ruleXExpression ) ) ) | ( (lv_fallThrough_6_0= ',' ) ) ) ) ;
 	public final EObject ruleXCasePart() throws RecognitionException {
 		EObject current = null;
 
@@ -9070,14 +9071,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:3665:2: ( ( () ( (lv_typeGuard_1_0= ruleJvmTypeReference ) )? (otherlv_2= 'case' ( (lv_case_3_0= ruleXExpression ) ) )? ( (otherlv_4= ':' ( (lv_then_5_0= ruleXExpression ) ) ) | ( (lv_fallThrough_6_0= ',' ) ) ) ) )
-			// InternalWeightDefinition.g:3666:2: ( () ( (lv_typeGuard_1_0= ruleJvmTypeReference ) )? (otherlv_2= 'case' ( (lv_case_3_0= ruleXExpression ) ) )? ( (otherlv_4= ':' ( (lv_then_5_0= ruleXExpression ) ) ) | ( (lv_fallThrough_6_0= ',' ) ) ) )
+			// InternalWeightDefinition.g:3669:2: ( ( () ( (lv_typeGuard_1_0= ruleJvmTypeReference ) )? (otherlv_2= 'case' ( (lv_case_3_0= ruleXExpression ) ) )? ( (otherlv_4= ':' ( (lv_then_5_0= ruleXExpression ) ) ) | ( (lv_fallThrough_6_0= ',' ) ) ) ) )
+			// InternalWeightDefinition.g:3670:2: ( () ( (lv_typeGuard_1_0= ruleJvmTypeReference ) )? (otherlv_2= 'case' ( (lv_case_3_0= ruleXExpression ) ) )? ( (otherlv_4= ':' ( (lv_then_5_0= ruleXExpression ) ) ) | ( (lv_fallThrough_6_0= ',' ) ) ) )
 			{
-			// InternalWeightDefinition.g:3666:2: ( () ( (lv_typeGuard_1_0= ruleJvmTypeReference ) )? (otherlv_2= 'case' ( (lv_case_3_0= ruleXExpression ) ) )? ( (otherlv_4= ':' ( (lv_then_5_0= ruleXExpression ) ) ) | ( (lv_fallThrough_6_0= ',' ) ) ) )
-			// InternalWeightDefinition.g:3667:3: () ( (lv_typeGuard_1_0= ruleJvmTypeReference ) )? (otherlv_2= 'case' ( (lv_case_3_0= ruleXExpression ) ) )? ( (otherlv_4= ':' ( (lv_then_5_0= ruleXExpression ) ) ) | ( (lv_fallThrough_6_0= ',' ) ) )
+			// InternalWeightDefinition.g:3670:2: ( () ( (lv_typeGuard_1_0= ruleJvmTypeReference ) )? (otherlv_2= 'case' ( (lv_case_3_0= ruleXExpression ) ) )? ( (otherlv_4= ':' ( (lv_then_5_0= ruleXExpression ) ) ) | ( (lv_fallThrough_6_0= ',' ) ) ) )
+			// InternalWeightDefinition.g:3671:3: () ( (lv_typeGuard_1_0= ruleJvmTypeReference ) )? (otherlv_2= 'case' ( (lv_case_3_0= ruleXExpression ) ) )? ( (otherlv_4= ':' ( (lv_then_5_0= ruleXExpression ) ) ) | ( (lv_fallThrough_6_0= ',' ) ) )
 			{
-			// InternalWeightDefinition.g:3667:3: ()
-			// InternalWeightDefinition.g:3668:4: 
+			// InternalWeightDefinition.g:3671:3: ()
+			// InternalWeightDefinition.g:3672:4: 
 			{
 			if ( state.backtracking==0 ) {
 							current = forceCreateModelElement(
@@ -9086,23 +9087,23 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						}
 			}
 
-			// InternalWeightDefinition.g:3674:3: ( (lv_typeGuard_1_0= ruleJvmTypeReference ) )?
-			int alt57=2;
-			int LA57_0 = input.LA(1);
-			if ( (LA57_0==RULE_ID||LA57_0==21||LA57_0==47) ) {
-				alt57=1;
+			// InternalWeightDefinition.g:3678:3: ( (lv_typeGuard_1_0= ruleJvmTypeReference ) )?
+			int alt55=2;
+			int LA55_0 = input.LA(1);
+			if ( (LA55_0==RULE_ID||LA55_0==21||LA55_0==47) ) {
+				alt55=1;
 			}
-			switch (alt57) {
+			switch (alt55) {
 				case 1 :
-					// InternalWeightDefinition.g:3675:4: (lv_typeGuard_1_0= ruleJvmTypeReference )
+					// InternalWeightDefinition.g:3679:4: (lv_typeGuard_1_0= ruleJvmTypeReference )
 					{
-					// InternalWeightDefinition.g:3675:4: (lv_typeGuard_1_0= ruleJvmTypeReference )
-					// InternalWeightDefinition.g:3676:5: lv_typeGuard_1_0= ruleJvmTypeReference
+					// InternalWeightDefinition.g:3679:4: (lv_typeGuard_1_0= ruleJvmTypeReference )
+					// InternalWeightDefinition.g:3680:5: lv_typeGuard_1_0= ruleJvmTypeReference
 					{
 					if ( state.backtracking==0 ) {
 										newCompositeNode(grammarAccess.getXCasePartAccess().getTypeGuardJvmTypeReferenceParserRuleCall_1_0());
 									}
-					pushFollow(FOLLOW_56);
+					pushFollow(FOLLOW_55);
 					lv_typeGuard_1_0=ruleJvmTypeReference();
 					state._fsp--;
 					if (state.failed) return current;
@@ -9124,30 +9125,30 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			// InternalWeightDefinition.g:3693:3: (otherlv_2= 'case' ( (lv_case_3_0= ruleXExpression ) ) )?
-			int alt58=2;
-			int LA58_0 = input.LA(1);
-			if ( (LA58_0==56) ) {
-				alt58=1;
+			// InternalWeightDefinition.g:3697:3: (otherlv_2= 'case' ( (lv_case_3_0= ruleXExpression ) ) )?
+			int alt56=2;
+			int LA56_0 = input.LA(1);
+			if ( (LA56_0==56) ) {
+				alt56=1;
 			}
-			switch (alt58) {
+			switch (alt56) {
 				case 1 :
-					// InternalWeightDefinition.g:3694:4: otherlv_2= 'case' ( (lv_case_3_0= ruleXExpression ) )
+					// InternalWeightDefinition.g:3698:4: otherlv_2= 'case' ( (lv_case_3_0= ruleXExpression ) )
 					{
-					otherlv_2=(Token)match(input,56,FOLLOW_13); if (state.failed) return current;
+					otherlv_2=(Token)match(input,56,FOLLOW_12); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 									newLeafNode(otherlv_2, grammarAccess.getXCasePartAccess().getCaseKeyword_2_0());
 								}
-					// InternalWeightDefinition.g:3698:4: ( (lv_case_3_0= ruleXExpression ) )
-					// InternalWeightDefinition.g:3699:5: (lv_case_3_0= ruleXExpression )
+					// InternalWeightDefinition.g:3702:4: ( (lv_case_3_0= ruleXExpression ) )
+					// InternalWeightDefinition.g:3703:5: (lv_case_3_0= ruleXExpression )
 					{
-					// InternalWeightDefinition.g:3699:5: (lv_case_3_0= ruleXExpression )
-					// InternalWeightDefinition.g:3700:6: lv_case_3_0= ruleXExpression
+					// InternalWeightDefinition.g:3703:5: (lv_case_3_0= ruleXExpression )
+					// InternalWeightDefinition.g:3704:6: lv_case_3_0= ruleXExpression
 					{
 					if ( state.backtracking==0 ) {
 											newCompositeNode(grammarAccess.getXCasePartAccess().getCaseXExpressionParserRuleCall_2_1_0());
 										}
-					pushFollow(FOLLOW_57);
+					pushFollow(FOLLOW_56);
 					lv_case_3_0=ruleXExpression();
 					state._fsp--;
 					if (state.failed) return current;
@@ -9171,39 +9172,39 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			// InternalWeightDefinition.g:3718:3: ( (otherlv_4= ':' ( (lv_then_5_0= ruleXExpression ) ) ) | ( (lv_fallThrough_6_0= ',' ) ) )
-			int alt59=2;
-			int LA59_0 = input.LA(1);
-			if ( (LA59_0==39) ) {
-				alt59=1;
+			// InternalWeightDefinition.g:3722:3: ( (otherlv_4= ':' ( (lv_then_5_0= ruleXExpression ) ) ) | ( (lv_fallThrough_6_0= ',' ) ) )
+			int alt57=2;
+			int LA57_0 = input.LA(1);
+			if ( (LA57_0==39) ) {
+				alt57=1;
 			}
-			else if ( (LA59_0==29) ) {
-				alt59=2;
+			else if ( (LA57_0==29) ) {
+				alt57=2;
 			}
 
 			else {
 				if (state.backtracking>0) {state.failed=true; return current;}
 				NoViableAltException nvae =
-					new NoViableAltException("", 59, 0, input);
+					new NoViableAltException("", 57, 0, input);
 				throw nvae;
 			}
 
-			switch (alt59) {
+			switch (alt57) {
 				case 1 :
-					// InternalWeightDefinition.g:3719:4: (otherlv_4= ':' ( (lv_then_5_0= ruleXExpression ) ) )
+					// InternalWeightDefinition.g:3723:4: (otherlv_4= ':' ( (lv_then_5_0= ruleXExpression ) ) )
 					{
-					// InternalWeightDefinition.g:3719:4: (otherlv_4= ':' ( (lv_then_5_0= ruleXExpression ) ) )
-					// InternalWeightDefinition.g:3720:5: otherlv_4= ':' ( (lv_then_5_0= ruleXExpression ) )
+					// InternalWeightDefinition.g:3723:4: (otherlv_4= ':' ( (lv_then_5_0= ruleXExpression ) ) )
+					// InternalWeightDefinition.g:3724:5: otherlv_4= ':' ( (lv_then_5_0= ruleXExpression ) )
 					{
-					otherlv_4=(Token)match(input,39,FOLLOW_13); if (state.failed) return current;
+					otherlv_4=(Token)match(input,39,FOLLOW_12); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 										newLeafNode(otherlv_4, grammarAccess.getXCasePartAccess().getColonKeyword_3_0_0());
 									}
-					// InternalWeightDefinition.g:3724:5: ( (lv_then_5_0= ruleXExpression ) )
-					// InternalWeightDefinition.g:3725:6: (lv_then_5_0= ruleXExpression )
+					// InternalWeightDefinition.g:3728:5: ( (lv_then_5_0= ruleXExpression ) )
+					// InternalWeightDefinition.g:3729:6: (lv_then_5_0= ruleXExpression )
 					{
-					// InternalWeightDefinition.g:3725:6: (lv_then_5_0= ruleXExpression )
-					// InternalWeightDefinition.g:3726:7: lv_then_5_0= ruleXExpression
+					// InternalWeightDefinition.g:3729:6: (lv_then_5_0= ruleXExpression )
+					// InternalWeightDefinition.g:3730:7: lv_then_5_0= ruleXExpression
 					{
 					if ( state.backtracking==0 ) {
 												newCompositeNode(grammarAccess.getXCasePartAccess().getThenXExpressionParserRuleCall_3_0_1_0());
@@ -9232,13 +9233,13 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:3745:4: ( (lv_fallThrough_6_0= ',' ) )
+					// InternalWeightDefinition.g:3749:4: ( (lv_fallThrough_6_0= ',' ) )
 					{
-					// InternalWeightDefinition.g:3745:4: ( (lv_fallThrough_6_0= ',' ) )
-					// InternalWeightDefinition.g:3746:5: (lv_fallThrough_6_0= ',' )
+					// InternalWeightDefinition.g:3749:4: ( (lv_fallThrough_6_0= ',' ) )
+					// InternalWeightDefinition.g:3750:5: (lv_fallThrough_6_0= ',' )
 					{
-					// InternalWeightDefinition.g:3746:5: (lv_fallThrough_6_0= ',' )
-					// InternalWeightDefinition.g:3747:6: lv_fallThrough_6_0= ','
+					// InternalWeightDefinition.g:3750:5: (lv_fallThrough_6_0= ',' )
+					// InternalWeightDefinition.g:3751:6: lv_fallThrough_6_0= ','
 					{
 					lv_fallThrough_6_0=(Token)match(input,29,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -9283,7 +9284,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXForLoopExpression"
-	// InternalWeightDefinition.g:3764:1: entryRuleXForLoopExpression returns [EObject current=null] :iv_ruleXForLoopExpression= ruleXForLoopExpression EOF ;
+	// InternalWeightDefinition.g:3768:1: entryRuleXForLoopExpression returns [EObject current=null] :iv_ruleXForLoopExpression= ruleXForLoopExpression EOF ;
 	public final EObject entryRuleXForLoopExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -9291,8 +9292,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXForLoopExpression =null;
 
 		try {
-			// InternalWeightDefinition.g:3764:59: (iv_ruleXForLoopExpression= ruleXForLoopExpression EOF )
-			// InternalWeightDefinition.g:3765:2: iv_ruleXForLoopExpression= ruleXForLoopExpression EOF
+			// InternalWeightDefinition.g:3768:59: (iv_ruleXForLoopExpression= ruleXForLoopExpression EOF )
+			// InternalWeightDefinition.g:3769:2: iv_ruleXForLoopExpression= ruleXForLoopExpression EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXForLoopExpressionRule()); }
 			pushFollow(FOLLOW_1);
@@ -9320,7 +9321,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXForLoopExpression"
-	// InternalWeightDefinition.g:3771:1: ruleXForLoopExpression returns [EObject current=null] : ( ( ( ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( () otherlv_1= 'for' otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) ) ( (lv_forExpression_5_0= ruleXExpression ) ) otherlv_6= ')' ( (lv_eachExpression_7_0= ruleXExpression ) ) ) ;
+	// InternalWeightDefinition.g:3775:1: ruleXForLoopExpression returns [EObject current=null] : ( ( ( ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( () otherlv_1= 'for' otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) ) ( (lv_forExpression_5_0= ruleXExpression ) ) otherlv_6= ')' ( (lv_eachExpression_7_0= ruleXExpression ) ) ) ;
 	public final EObject ruleXForLoopExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -9337,20 +9338,20 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:3777:2: ( ( ( ( ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( () otherlv_1= 'for' otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) ) ( (lv_forExpression_5_0= ruleXExpression ) ) otherlv_6= ')' ( (lv_eachExpression_7_0= ruleXExpression ) ) ) )
-			// InternalWeightDefinition.g:3778:2: ( ( ( ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( () otherlv_1= 'for' otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) ) ( (lv_forExpression_5_0= ruleXExpression ) ) otherlv_6= ')' ( (lv_eachExpression_7_0= ruleXExpression ) ) )
+			// InternalWeightDefinition.g:3781:2: ( ( ( ( ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( () otherlv_1= 'for' otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) ) ( (lv_forExpression_5_0= ruleXExpression ) ) otherlv_6= ')' ( (lv_eachExpression_7_0= ruleXExpression ) ) ) )
+			// InternalWeightDefinition.g:3782:2: ( ( ( ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( () otherlv_1= 'for' otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) ) ( (lv_forExpression_5_0= ruleXExpression ) ) otherlv_6= ')' ( (lv_eachExpression_7_0= ruleXExpression ) ) )
 			{
-			// InternalWeightDefinition.g:3778:2: ( ( ( ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( () otherlv_1= 'for' otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) ) ( (lv_forExpression_5_0= ruleXExpression ) ) otherlv_6= ')' ( (lv_eachExpression_7_0= ruleXExpression ) ) )
-			// InternalWeightDefinition.g:3779:3: ( ( ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( () otherlv_1= 'for' otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) ) ( (lv_forExpression_5_0= ruleXExpression ) ) otherlv_6= ')' ( (lv_eachExpression_7_0= ruleXExpression ) )
+			// InternalWeightDefinition.g:3782:2: ( ( ( ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( () otherlv_1= 'for' otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) ) ( (lv_forExpression_5_0= ruleXExpression ) ) otherlv_6= ')' ( (lv_eachExpression_7_0= ruleXExpression ) ) )
+			// InternalWeightDefinition.g:3783:3: ( ( ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( () otherlv_1= 'for' otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) ) ( (lv_forExpression_5_0= ruleXExpression ) ) otherlv_6= ')' ( (lv_eachExpression_7_0= ruleXExpression ) )
 			{
-			// InternalWeightDefinition.g:3779:3: ( ( ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( () otherlv_1= 'for' otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) )
-			// InternalWeightDefinition.g:3780:4: ( ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( () otherlv_1= 'for' otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' )
+			// InternalWeightDefinition.g:3783:3: ( ( ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( () otherlv_1= 'for' otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' ) )
+			// InternalWeightDefinition.g:3784:4: ( ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' ) )=> ( () otherlv_1= 'for' otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' )
 			{
-			// InternalWeightDefinition.g:3793:4: ( () otherlv_1= 'for' otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' )
-			// InternalWeightDefinition.g:3794:5: () otherlv_1= 'for' otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':'
+			// InternalWeightDefinition.g:3797:4: ( () otherlv_1= 'for' otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':' )
+			// InternalWeightDefinition.g:3798:5: () otherlv_1= 'for' otherlv_2= '(' ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) ) otherlv_4= ':'
 			{
-			// InternalWeightDefinition.g:3794:5: ()
-			// InternalWeightDefinition.g:3795:6: 
+			// InternalWeightDefinition.g:3798:5: ()
+			// InternalWeightDefinition.g:3799:6: 
 			{
 			if ( state.backtracking==0 ) {
 									current = forceCreateModelElement(
@@ -9359,24 +9360,24 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 								}
 			}
 
-			otherlv_1=(Token)match(input,65,FOLLOW_9); if (state.failed) return current;
+			otherlv_1=(Token)match(input,65,FOLLOW_8); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 								newLeafNode(otherlv_1, grammarAccess.getXForLoopExpressionAccess().getForKeyword_0_0_1());
 							}
-			otherlv_2=(Token)match(input,21,FOLLOW_8); if (state.failed) return current;
+			otherlv_2=(Token)match(input,21,FOLLOW_7); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 								newLeafNode(otherlv_2, grammarAccess.getXForLoopExpressionAccess().getLeftParenthesisKeyword_0_0_2());
 							}
-			// InternalWeightDefinition.g:3809:5: ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) )
-			// InternalWeightDefinition.g:3810:6: (lv_declaredParam_3_0= ruleJvmFormalParameter )
+			// InternalWeightDefinition.g:3813:5: ( (lv_declaredParam_3_0= ruleJvmFormalParameter ) )
+			// InternalWeightDefinition.g:3814:6: (lv_declaredParam_3_0= ruleJvmFormalParameter )
 			{
-			// InternalWeightDefinition.g:3810:6: (lv_declaredParam_3_0= ruleJvmFormalParameter )
-			// InternalWeightDefinition.g:3811:7: lv_declaredParam_3_0= ruleJvmFormalParameter
+			// InternalWeightDefinition.g:3814:6: (lv_declaredParam_3_0= ruleJvmFormalParameter )
+			// InternalWeightDefinition.g:3815:7: lv_declaredParam_3_0= ruleJvmFormalParameter
 			{
 			if ( state.backtracking==0 ) {
 										newCompositeNode(grammarAccess.getXForLoopExpressionAccess().getDeclaredParamJvmFormalParameterParserRuleCall_0_0_3_0());
 									}
-			pushFollow(FOLLOW_53);
+			pushFollow(FOLLOW_52);
 			lv_declaredParam_3_0=ruleJvmFormalParameter();
 			state._fsp--;
 			if (state.failed) return current;
@@ -9395,7 +9396,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			otherlv_4=(Token)match(input,39,FOLLOW_13); if (state.failed) return current;
+			otherlv_4=(Token)match(input,39,FOLLOW_12); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 								newLeafNode(otherlv_4, grammarAccess.getXForLoopExpressionAccess().getColonKeyword_0_0_4());
 							}
@@ -9403,16 +9404,16 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			// InternalWeightDefinition.g:3834:3: ( (lv_forExpression_5_0= ruleXExpression ) )
-			// InternalWeightDefinition.g:3835:4: (lv_forExpression_5_0= ruleXExpression )
+			// InternalWeightDefinition.g:3838:3: ( (lv_forExpression_5_0= ruleXExpression ) )
+			// InternalWeightDefinition.g:3839:4: (lv_forExpression_5_0= ruleXExpression )
 			{
-			// InternalWeightDefinition.g:3835:4: (lv_forExpression_5_0= ruleXExpression )
-			// InternalWeightDefinition.g:3836:5: lv_forExpression_5_0= ruleXExpression
+			// InternalWeightDefinition.g:3839:4: (lv_forExpression_5_0= ruleXExpression )
+			// InternalWeightDefinition.g:3840:5: lv_forExpression_5_0= ruleXExpression
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXForLoopExpressionAccess().getForExpressionXExpressionParserRuleCall_1_0());
 							}
-			pushFollow(FOLLOW_38);
+			pushFollow(FOLLOW_37);
 			lv_forExpression_5_0=ruleXExpression();
 			state._fsp--;
 			if (state.failed) return current;
@@ -9431,15 +9432,15 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			otherlv_6=(Token)match(input,22,FOLLOW_13); if (state.failed) return current;
+			otherlv_6=(Token)match(input,22,FOLLOW_12); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_6, grammarAccess.getXForLoopExpressionAccess().getRightParenthesisKeyword_2());
 					}
-			// InternalWeightDefinition.g:3857:3: ( (lv_eachExpression_7_0= ruleXExpression ) )
-			// InternalWeightDefinition.g:3858:4: (lv_eachExpression_7_0= ruleXExpression )
+			// InternalWeightDefinition.g:3861:3: ( (lv_eachExpression_7_0= ruleXExpression ) )
+			// InternalWeightDefinition.g:3862:4: (lv_eachExpression_7_0= ruleXExpression )
 			{
-			// InternalWeightDefinition.g:3858:4: (lv_eachExpression_7_0= ruleXExpression )
-			// InternalWeightDefinition.g:3859:5: lv_eachExpression_7_0= ruleXExpression
+			// InternalWeightDefinition.g:3862:4: (lv_eachExpression_7_0= ruleXExpression )
+			// InternalWeightDefinition.g:3863:5: lv_eachExpression_7_0= ruleXExpression
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXForLoopExpressionAccess().getEachExpressionXExpressionParserRuleCall_3_0());
@@ -9487,7 +9488,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXBasicForLoopExpression"
-	// InternalWeightDefinition.g:3880:1: entryRuleXBasicForLoopExpression returns [EObject current=null] :iv_ruleXBasicForLoopExpression= ruleXBasicForLoopExpression EOF ;
+	// InternalWeightDefinition.g:3884:1: entryRuleXBasicForLoopExpression returns [EObject current=null] :iv_ruleXBasicForLoopExpression= ruleXBasicForLoopExpression EOF ;
 	public final EObject entryRuleXBasicForLoopExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -9495,8 +9496,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXBasicForLoopExpression =null;
 
 		try {
-			// InternalWeightDefinition.g:3880:64: (iv_ruleXBasicForLoopExpression= ruleXBasicForLoopExpression EOF )
-			// InternalWeightDefinition.g:3881:2: iv_ruleXBasicForLoopExpression= ruleXBasicForLoopExpression EOF
+			// InternalWeightDefinition.g:3884:64: (iv_ruleXBasicForLoopExpression= ruleXBasicForLoopExpression EOF )
+			// InternalWeightDefinition.g:3885:2: iv_ruleXBasicForLoopExpression= ruleXBasicForLoopExpression EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXBasicForLoopExpressionRule()); }
 			pushFollow(FOLLOW_1);
@@ -9524,7 +9525,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXBasicForLoopExpression"
-	// InternalWeightDefinition.g:3887:1: ruleXBasicForLoopExpression returns [EObject current=null] : ( () otherlv_1= 'for' otherlv_2= '(' ( ( (lv_initExpressions_3_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_4= ',' ( (lv_initExpressions_5_0= ruleXExpressionOrVarDeclaration ) ) )* )? otherlv_6= ';' ( (lv_expression_7_0= ruleXExpression ) )? otherlv_8= ';' ( ( (lv_updateExpressions_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_updateExpressions_11_0= ruleXExpression ) ) )* )? otherlv_12= ')' ( (lv_eachExpression_13_0= ruleXExpression ) ) ) ;
+	// InternalWeightDefinition.g:3891:1: ruleXBasicForLoopExpression returns [EObject current=null] : ( () otherlv_1= 'for' otherlv_2= '(' ( ( (lv_initExpressions_3_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_4= ',' ( (lv_initExpressions_5_0= ruleXExpressionOrVarDeclaration ) ) )* )? otherlv_6= ';' ( (lv_expression_7_0= ruleXExpression ) )? otherlv_8= ';' ( ( (lv_updateExpressions_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_updateExpressions_11_0= ruleXExpression ) ) )* )? otherlv_12= ')' ( (lv_eachExpression_13_0= ruleXExpression ) ) ) ;
 	public final EObject ruleXBasicForLoopExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -9547,14 +9548,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:3893:2: ( ( () otherlv_1= 'for' otherlv_2= '(' ( ( (lv_initExpressions_3_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_4= ',' ( (lv_initExpressions_5_0= ruleXExpressionOrVarDeclaration ) ) )* )? otherlv_6= ';' ( (lv_expression_7_0= ruleXExpression ) )? otherlv_8= ';' ( ( (lv_updateExpressions_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_updateExpressions_11_0= ruleXExpression ) ) )* )? otherlv_12= ')' ( (lv_eachExpression_13_0= ruleXExpression ) ) ) )
-			// InternalWeightDefinition.g:3894:2: ( () otherlv_1= 'for' otherlv_2= '(' ( ( (lv_initExpressions_3_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_4= ',' ( (lv_initExpressions_5_0= ruleXExpressionOrVarDeclaration ) ) )* )? otherlv_6= ';' ( (lv_expression_7_0= ruleXExpression ) )? otherlv_8= ';' ( ( (lv_updateExpressions_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_updateExpressions_11_0= ruleXExpression ) ) )* )? otherlv_12= ')' ( (lv_eachExpression_13_0= ruleXExpression ) ) )
+			// InternalWeightDefinition.g:3897:2: ( ( () otherlv_1= 'for' otherlv_2= '(' ( ( (lv_initExpressions_3_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_4= ',' ( (lv_initExpressions_5_0= ruleXExpressionOrVarDeclaration ) ) )* )? otherlv_6= ';' ( (lv_expression_7_0= ruleXExpression ) )? otherlv_8= ';' ( ( (lv_updateExpressions_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_updateExpressions_11_0= ruleXExpression ) ) )* )? otherlv_12= ')' ( (lv_eachExpression_13_0= ruleXExpression ) ) ) )
+			// InternalWeightDefinition.g:3898:2: ( () otherlv_1= 'for' otherlv_2= '(' ( ( (lv_initExpressions_3_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_4= ',' ( (lv_initExpressions_5_0= ruleXExpressionOrVarDeclaration ) ) )* )? otherlv_6= ';' ( (lv_expression_7_0= ruleXExpression ) )? otherlv_8= ';' ( ( (lv_updateExpressions_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_updateExpressions_11_0= ruleXExpression ) ) )* )? otherlv_12= ')' ( (lv_eachExpression_13_0= ruleXExpression ) ) )
 			{
-			// InternalWeightDefinition.g:3894:2: ( () otherlv_1= 'for' otherlv_2= '(' ( ( (lv_initExpressions_3_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_4= ',' ( (lv_initExpressions_5_0= ruleXExpressionOrVarDeclaration ) ) )* )? otherlv_6= ';' ( (lv_expression_7_0= ruleXExpression ) )? otherlv_8= ';' ( ( (lv_updateExpressions_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_updateExpressions_11_0= ruleXExpression ) ) )* )? otherlv_12= ')' ( (lv_eachExpression_13_0= ruleXExpression ) ) )
-			// InternalWeightDefinition.g:3895:3: () otherlv_1= 'for' otherlv_2= '(' ( ( (lv_initExpressions_3_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_4= ',' ( (lv_initExpressions_5_0= ruleXExpressionOrVarDeclaration ) ) )* )? otherlv_6= ';' ( (lv_expression_7_0= ruleXExpression ) )? otherlv_8= ';' ( ( (lv_updateExpressions_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_updateExpressions_11_0= ruleXExpression ) ) )* )? otherlv_12= ')' ( (lv_eachExpression_13_0= ruleXExpression ) )
+			// InternalWeightDefinition.g:3898:2: ( () otherlv_1= 'for' otherlv_2= '(' ( ( (lv_initExpressions_3_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_4= ',' ( (lv_initExpressions_5_0= ruleXExpressionOrVarDeclaration ) ) )* )? otherlv_6= ';' ( (lv_expression_7_0= ruleXExpression ) )? otherlv_8= ';' ( ( (lv_updateExpressions_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_updateExpressions_11_0= ruleXExpression ) ) )* )? otherlv_12= ')' ( (lv_eachExpression_13_0= ruleXExpression ) ) )
+			// InternalWeightDefinition.g:3899:3: () otherlv_1= 'for' otherlv_2= '(' ( ( (lv_initExpressions_3_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_4= ',' ( (lv_initExpressions_5_0= ruleXExpressionOrVarDeclaration ) ) )* )? otherlv_6= ';' ( (lv_expression_7_0= ruleXExpression ) )? otherlv_8= ';' ( ( (lv_updateExpressions_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_updateExpressions_11_0= ruleXExpression ) ) )* )? otherlv_12= ')' ( (lv_eachExpression_13_0= ruleXExpression ) )
 			{
-			// InternalWeightDefinition.g:3895:3: ()
-			// InternalWeightDefinition.g:3896:4: 
+			// InternalWeightDefinition.g:3899:3: ()
+			// InternalWeightDefinition.g:3900:4: 
 			{
 			if ( state.backtracking==0 ) {
 							current = forceCreateModelElement(
@@ -9563,34 +9564,34 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						}
 			}
 
-			otherlv_1=(Token)match(input,65,FOLLOW_9); if (state.failed) return current;
+			otherlv_1=(Token)match(input,65,FOLLOW_8); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_1, grammarAccess.getXBasicForLoopExpressionAccess().getForKeyword_1());
 					}
-			otherlv_2=(Token)match(input,21,FOLLOW_58); if (state.failed) return current;
+			otherlv_2=(Token)match(input,21,FOLLOW_57); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_2, grammarAccess.getXBasicForLoopExpressionAccess().getLeftParenthesisKeyword_2());
 					}
-			// InternalWeightDefinition.g:3910:3: ( ( (lv_initExpressions_3_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_4= ',' ( (lv_initExpressions_5_0= ruleXExpressionOrVarDeclaration ) ) )* )?
-			int alt61=2;
-			int LA61_0 = input.LA(1);
-			if ( ((LA61_0 >= RULE_DECIMAL && LA61_0 <= RULE_INT)||LA61_0==RULE_STRING||LA61_0==13||LA61_0==16||LA61_0==21||LA61_0==26||LA61_0==30||LA61_0==42||LA61_0==53||LA61_0==59||(LA61_0 >= 61 && LA61_0 <= 63)||LA61_0==65||(LA61_0 >= 67 && LA61_0 <= 68)||(LA61_0 >= 70 && LA61_0 <= 72)||(LA61_0 >= 74 && LA61_0 <= 85)) ) {
-				alt61=1;
+			// InternalWeightDefinition.g:3914:3: ( ( (lv_initExpressions_3_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_4= ',' ( (lv_initExpressions_5_0= ruleXExpressionOrVarDeclaration ) ) )* )?
+			int alt59=2;
+			int LA59_0 = input.LA(1);
+			if ( ((LA59_0 >= RULE_DECIMAL && LA59_0 <= RULE_INT)||LA59_0==RULE_STRING||LA59_0==13||LA59_0==16||LA59_0==21||LA59_0==26||LA59_0==30||LA59_0==42||LA59_0==53||LA59_0==59||(LA59_0 >= 61 && LA59_0 <= 63)||LA59_0==65||(LA59_0 >= 67 && LA59_0 <= 68)||(LA59_0 >= 70 && LA59_0 <= 72)||(LA59_0 >= 74 && LA59_0 <= 85)) ) {
+				alt59=1;
 			}
-			switch (alt61) {
+			switch (alt59) {
 				case 1 :
-					// InternalWeightDefinition.g:3911:4: ( (lv_initExpressions_3_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_4= ',' ( (lv_initExpressions_5_0= ruleXExpressionOrVarDeclaration ) ) )*
+					// InternalWeightDefinition.g:3915:4: ( (lv_initExpressions_3_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_4= ',' ( (lv_initExpressions_5_0= ruleXExpressionOrVarDeclaration ) ) )*
 					{
-					// InternalWeightDefinition.g:3911:4: ( (lv_initExpressions_3_0= ruleXExpressionOrVarDeclaration ) )
-					// InternalWeightDefinition.g:3912:5: (lv_initExpressions_3_0= ruleXExpressionOrVarDeclaration )
+					// InternalWeightDefinition.g:3915:4: ( (lv_initExpressions_3_0= ruleXExpressionOrVarDeclaration ) )
+					// InternalWeightDefinition.g:3916:5: (lv_initExpressions_3_0= ruleXExpressionOrVarDeclaration )
 					{
-					// InternalWeightDefinition.g:3912:5: (lv_initExpressions_3_0= ruleXExpressionOrVarDeclaration )
-					// InternalWeightDefinition.g:3913:6: lv_initExpressions_3_0= ruleXExpressionOrVarDeclaration
+					// InternalWeightDefinition.g:3916:5: (lv_initExpressions_3_0= ruleXExpressionOrVarDeclaration )
+					// InternalWeightDefinition.g:3917:6: lv_initExpressions_3_0= ruleXExpressionOrVarDeclaration
 					{
 					if ( state.backtracking==0 ) {
 											newCompositeNode(grammarAccess.getXBasicForLoopExpressionAccess().getInitExpressionsXExpressionOrVarDeclarationParserRuleCall_3_0_0());
 										}
-					pushFollow(FOLLOW_59);
+					pushFollow(FOLLOW_58);
 					lv_initExpressions_3_0=ruleXExpressionOrVarDeclaration();
 					state._fsp--;
 					if (state.failed) return current;
@@ -9609,33 +9610,33 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:3930:4: (otherlv_4= ',' ( (lv_initExpressions_5_0= ruleXExpressionOrVarDeclaration ) ) )*
-					loop60:
+					// InternalWeightDefinition.g:3934:4: (otherlv_4= ',' ( (lv_initExpressions_5_0= ruleXExpressionOrVarDeclaration ) ) )*
+					loop58:
 					while (true) {
-						int alt60=2;
-						int LA60_0 = input.LA(1);
-						if ( (LA60_0==29) ) {
-							alt60=1;
+						int alt58=2;
+						int LA58_0 = input.LA(1);
+						if ( (LA58_0==29) ) {
+							alt58=1;
 						}
 
-						switch (alt60) {
+						switch (alt58) {
 						case 1 :
-							// InternalWeightDefinition.g:3931:5: otherlv_4= ',' ( (lv_initExpressions_5_0= ruleXExpressionOrVarDeclaration ) )
+							// InternalWeightDefinition.g:3935:5: otherlv_4= ',' ( (lv_initExpressions_5_0= ruleXExpressionOrVarDeclaration ) )
 							{
-							otherlv_4=(Token)match(input,29,FOLLOW_60); if (state.failed) return current;
+							otherlv_4=(Token)match(input,29,FOLLOW_59); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
 												newLeafNode(otherlv_4, grammarAccess.getXBasicForLoopExpressionAccess().getCommaKeyword_3_1_0());
 											}
-							// InternalWeightDefinition.g:3935:5: ( (lv_initExpressions_5_0= ruleXExpressionOrVarDeclaration ) )
-							// InternalWeightDefinition.g:3936:6: (lv_initExpressions_5_0= ruleXExpressionOrVarDeclaration )
+							// InternalWeightDefinition.g:3939:5: ( (lv_initExpressions_5_0= ruleXExpressionOrVarDeclaration ) )
+							// InternalWeightDefinition.g:3940:6: (lv_initExpressions_5_0= ruleXExpressionOrVarDeclaration )
 							{
-							// InternalWeightDefinition.g:3936:6: (lv_initExpressions_5_0= ruleXExpressionOrVarDeclaration )
-							// InternalWeightDefinition.g:3937:7: lv_initExpressions_5_0= ruleXExpressionOrVarDeclaration
+							// InternalWeightDefinition.g:3940:6: (lv_initExpressions_5_0= ruleXExpressionOrVarDeclaration )
+							// InternalWeightDefinition.g:3941:7: lv_initExpressions_5_0= ruleXExpressionOrVarDeclaration
 							{
 							if ( state.backtracking==0 ) {
 														newCompositeNode(grammarAccess.getXBasicForLoopExpressionAccess().getInitExpressionsXExpressionOrVarDeclarationParserRuleCall_3_1_1_0());
 													}
-							pushFollow(FOLLOW_59);
+							pushFollow(FOLLOW_58);
 							lv_initExpressions_5_0=ruleXExpressionOrVarDeclaration();
 							state._fsp--;
 							if (state.failed) return current;
@@ -9658,7 +9659,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 							break;
 
 						default :
-							break loop60;
+							break loop58;
 						}
 					}
 
@@ -9667,27 +9668,27 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			otherlv_6=(Token)match(input,41,FOLLOW_61); if (state.failed) return current;
+			otherlv_6=(Token)match(input,41,FOLLOW_60); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_6, grammarAccess.getXBasicForLoopExpressionAccess().getSemicolonKeyword_4());
 					}
-			// InternalWeightDefinition.g:3960:3: ( (lv_expression_7_0= ruleXExpression ) )?
-			int alt62=2;
-			int LA62_0 = input.LA(1);
-			if ( ((LA62_0 >= RULE_DECIMAL && LA62_0 <= RULE_INT)||LA62_0==RULE_STRING||LA62_0==13||LA62_0==16||LA62_0==21||LA62_0==26||LA62_0==30||LA62_0==42||LA62_0==53||LA62_0==59||(LA62_0 >= 61 && LA62_0 <= 63)||LA62_0==65||(LA62_0 >= 67 && LA62_0 <= 68)||(LA62_0 >= 70 && LA62_0 <= 72)||(LA62_0 >= 74 && LA62_0 <= 81)||(LA62_0 >= 84 && LA62_0 <= 85)) ) {
-				alt62=1;
+			// InternalWeightDefinition.g:3964:3: ( (lv_expression_7_0= ruleXExpression ) )?
+			int alt60=2;
+			int LA60_0 = input.LA(1);
+			if ( ((LA60_0 >= RULE_DECIMAL && LA60_0 <= RULE_INT)||LA60_0==RULE_STRING||LA60_0==13||LA60_0==16||LA60_0==21||LA60_0==26||LA60_0==30||LA60_0==42||LA60_0==53||LA60_0==59||(LA60_0 >= 61 && LA60_0 <= 63)||LA60_0==65||(LA60_0 >= 67 && LA60_0 <= 68)||(LA60_0 >= 70 && LA60_0 <= 72)||(LA60_0 >= 74 && LA60_0 <= 81)||(LA60_0 >= 84 && LA60_0 <= 85)) ) {
+				alt60=1;
 			}
-			switch (alt62) {
+			switch (alt60) {
 				case 1 :
-					// InternalWeightDefinition.g:3961:4: (lv_expression_7_0= ruleXExpression )
+					// InternalWeightDefinition.g:3965:4: (lv_expression_7_0= ruleXExpression )
 					{
-					// InternalWeightDefinition.g:3961:4: (lv_expression_7_0= ruleXExpression )
-					// InternalWeightDefinition.g:3962:5: lv_expression_7_0= ruleXExpression
+					// InternalWeightDefinition.g:3965:4: (lv_expression_7_0= ruleXExpression )
+					// InternalWeightDefinition.g:3966:5: lv_expression_7_0= ruleXExpression
 					{
 					if ( state.backtracking==0 ) {
 										newCompositeNode(grammarAccess.getXBasicForLoopExpressionAccess().getExpressionXExpressionParserRuleCall_5_0());
 									}
-					pushFollow(FOLLOW_62);
+					pushFollow(FOLLOW_61);
 					lv_expression_7_0=ruleXExpression();
 					state._fsp--;
 					if (state.failed) return current;
@@ -9709,30 +9710,30 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			otherlv_8=(Token)match(input,41,FOLLOW_63); if (state.failed) return current;
+			otherlv_8=(Token)match(input,41,FOLLOW_62); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_8, grammarAccess.getXBasicForLoopExpressionAccess().getSemicolonKeyword_6());
 					}
-			// InternalWeightDefinition.g:3983:3: ( ( (lv_updateExpressions_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_updateExpressions_11_0= ruleXExpression ) ) )* )?
-			int alt64=2;
-			int LA64_0 = input.LA(1);
-			if ( ((LA64_0 >= RULE_DECIMAL && LA64_0 <= RULE_INT)||LA64_0==RULE_STRING||LA64_0==13||LA64_0==16||LA64_0==21||LA64_0==26||LA64_0==30||LA64_0==42||LA64_0==53||LA64_0==59||(LA64_0 >= 61 && LA64_0 <= 63)||LA64_0==65||(LA64_0 >= 67 && LA64_0 <= 68)||(LA64_0 >= 70 && LA64_0 <= 72)||(LA64_0 >= 74 && LA64_0 <= 81)||(LA64_0 >= 84 && LA64_0 <= 85)) ) {
-				alt64=1;
+			// InternalWeightDefinition.g:3987:3: ( ( (lv_updateExpressions_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_updateExpressions_11_0= ruleXExpression ) ) )* )?
+			int alt62=2;
+			int LA62_0 = input.LA(1);
+			if ( ((LA62_0 >= RULE_DECIMAL && LA62_0 <= RULE_INT)||LA62_0==RULE_STRING||LA62_0==13||LA62_0==16||LA62_0==21||LA62_0==26||LA62_0==30||LA62_0==42||LA62_0==53||LA62_0==59||(LA62_0 >= 61 && LA62_0 <= 63)||LA62_0==65||(LA62_0 >= 67 && LA62_0 <= 68)||(LA62_0 >= 70 && LA62_0 <= 72)||(LA62_0 >= 74 && LA62_0 <= 81)||(LA62_0 >= 84 && LA62_0 <= 85)) ) {
+				alt62=1;
 			}
-			switch (alt64) {
+			switch (alt62) {
 				case 1 :
-					// InternalWeightDefinition.g:3984:4: ( (lv_updateExpressions_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_updateExpressions_11_0= ruleXExpression ) ) )*
+					// InternalWeightDefinition.g:3988:4: ( (lv_updateExpressions_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_updateExpressions_11_0= ruleXExpression ) ) )*
 					{
-					// InternalWeightDefinition.g:3984:4: ( (lv_updateExpressions_9_0= ruleXExpression ) )
-					// InternalWeightDefinition.g:3985:5: (lv_updateExpressions_9_0= ruleXExpression )
+					// InternalWeightDefinition.g:3988:4: ( (lv_updateExpressions_9_0= ruleXExpression ) )
+					// InternalWeightDefinition.g:3989:5: (lv_updateExpressions_9_0= ruleXExpression )
 					{
-					// InternalWeightDefinition.g:3985:5: (lv_updateExpressions_9_0= ruleXExpression )
-					// InternalWeightDefinition.g:3986:6: lv_updateExpressions_9_0= ruleXExpression
+					// InternalWeightDefinition.g:3989:5: (lv_updateExpressions_9_0= ruleXExpression )
+					// InternalWeightDefinition.g:3990:6: lv_updateExpressions_9_0= ruleXExpression
 					{
 					if ( state.backtracking==0 ) {
 											newCompositeNode(grammarAccess.getXBasicForLoopExpressionAccess().getUpdateExpressionsXExpressionParserRuleCall_7_0_0());
 										}
-					pushFollow(FOLLOW_11);
+					pushFollow(FOLLOW_10);
 					lv_updateExpressions_9_0=ruleXExpression();
 					state._fsp--;
 					if (state.failed) return current;
@@ -9751,33 +9752,33 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:4003:4: (otherlv_10= ',' ( (lv_updateExpressions_11_0= ruleXExpression ) ) )*
-					loop63:
+					// InternalWeightDefinition.g:4007:4: (otherlv_10= ',' ( (lv_updateExpressions_11_0= ruleXExpression ) ) )*
+					loop61:
 					while (true) {
-						int alt63=2;
-						int LA63_0 = input.LA(1);
-						if ( (LA63_0==29) ) {
-							alt63=1;
+						int alt61=2;
+						int LA61_0 = input.LA(1);
+						if ( (LA61_0==29) ) {
+							alt61=1;
 						}
 
-						switch (alt63) {
+						switch (alt61) {
 						case 1 :
-							// InternalWeightDefinition.g:4004:5: otherlv_10= ',' ( (lv_updateExpressions_11_0= ruleXExpression ) )
+							// InternalWeightDefinition.g:4008:5: otherlv_10= ',' ( (lv_updateExpressions_11_0= ruleXExpression ) )
 							{
-							otherlv_10=(Token)match(input,29,FOLLOW_13); if (state.failed) return current;
+							otherlv_10=(Token)match(input,29,FOLLOW_12); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
 												newLeafNode(otherlv_10, grammarAccess.getXBasicForLoopExpressionAccess().getCommaKeyword_7_1_0());
 											}
-							// InternalWeightDefinition.g:4008:5: ( (lv_updateExpressions_11_0= ruleXExpression ) )
-							// InternalWeightDefinition.g:4009:6: (lv_updateExpressions_11_0= ruleXExpression )
+							// InternalWeightDefinition.g:4012:5: ( (lv_updateExpressions_11_0= ruleXExpression ) )
+							// InternalWeightDefinition.g:4013:6: (lv_updateExpressions_11_0= ruleXExpression )
 							{
-							// InternalWeightDefinition.g:4009:6: (lv_updateExpressions_11_0= ruleXExpression )
-							// InternalWeightDefinition.g:4010:7: lv_updateExpressions_11_0= ruleXExpression
+							// InternalWeightDefinition.g:4013:6: (lv_updateExpressions_11_0= ruleXExpression )
+							// InternalWeightDefinition.g:4014:7: lv_updateExpressions_11_0= ruleXExpression
 							{
 							if ( state.backtracking==0 ) {
 														newCompositeNode(grammarAccess.getXBasicForLoopExpressionAccess().getUpdateExpressionsXExpressionParserRuleCall_7_1_1_0());
 													}
-							pushFollow(FOLLOW_11);
+							pushFollow(FOLLOW_10);
 							lv_updateExpressions_11_0=ruleXExpression();
 							state._fsp--;
 							if (state.failed) return current;
@@ -9800,7 +9801,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 							break;
 
 						default :
-							break loop63;
+							break loop61;
 						}
 					}
 
@@ -9809,15 +9810,15 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			otherlv_12=(Token)match(input,22,FOLLOW_13); if (state.failed) return current;
+			otherlv_12=(Token)match(input,22,FOLLOW_12); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_12, grammarAccess.getXBasicForLoopExpressionAccess().getRightParenthesisKeyword_8());
 					}
-			// InternalWeightDefinition.g:4033:3: ( (lv_eachExpression_13_0= ruleXExpression ) )
-			// InternalWeightDefinition.g:4034:4: (lv_eachExpression_13_0= ruleXExpression )
+			// InternalWeightDefinition.g:4037:3: ( (lv_eachExpression_13_0= ruleXExpression ) )
+			// InternalWeightDefinition.g:4038:4: (lv_eachExpression_13_0= ruleXExpression )
 			{
-			// InternalWeightDefinition.g:4034:4: (lv_eachExpression_13_0= ruleXExpression )
-			// InternalWeightDefinition.g:4035:5: lv_eachExpression_13_0= ruleXExpression
+			// InternalWeightDefinition.g:4038:4: (lv_eachExpression_13_0= ruleXExpression )
+			// InternalWeightDefinition.g:4039:5: lv_eachExpression_13_0= ruleXExpression
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXBasicForLoopExpressionAccess().getEachExpressionXExpressionParserRuleCall_9_0());
@@ -9865,7 +9866,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXWhileExpression"
-	// InternalWeightDefinition.g:4056:1: entryRuleXWhileExpression returns [EObject current=null] :iv_ruleXWhileExpression= ruleXWhileExpression EOF ;
+	// InternalWeightDefinition.g:4060:1: entryRuleXWhileExpression returns [EObject current=null] :iv_ruleXWhileExpression= ruleXWhileExpression EOF ;
 	public final EObject entryRuleXWhileExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -9873,8 +9874,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXWhileExpression =null;
 
 		try {
-			// InternalWeightDefinition.g:4056:57: (iv_ruleXWhileExpression= ruleXWhileExpression EOF )
-			// InternalWeightDefinition.g:4057:2: iv_ruleXWhileExpression= ruleXWhileExpression EOF
+			// InternalWeightDefinition.g:4060:57: (iv_ruleXWhileExpression= ruleXWhileExpression EOF )
+			// InternalWeightDefinition.g:4061:2: iv_ruleXWhileExpression= ruleXWhileExpression EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXWhileExpressionRule()); }
 			pushFollow(FOLLOW_1);
@@ -9902,7 +9903,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXWhileExpression"
-	// InternalWeightDefinition.g:4063:1: ruleXWhileExpression returns [EObject current=null] : ( () otherlv_1= 'while' otherlv_2= '(' ( (lv_predicate_3_0= ruleXExpression ) ) otherlv_4= ')' ( (lv_body_5_0= ruleXExpression ) ) ) ;
+	// InternalWeightDefinition.g:4067:1: ruleXWhileExpression returns [EObject current=null] : ( () otherlv_1= 'while' otherlv_2= '(' ( (lv_predicate_3_0= ruleXExpression ) ) otherlv_4= ')' ( (lv_body_5_0= ruleXExpression ) ) ) ;
 	public final EObject ruleXWhileExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -9917,14 +9918,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:4069:2: ( ( () otherlv_1= 'while' otherlv_2= '(' ( (lv_predicate_3_0= ruleXExpression ) ) otherlv_4= ')' ( (lv_body_5_0= ruleXExpression ) ) ) )
-			// InternalWeightDefinition.g:4070:2: ( () otherlv_1= 'while' otherlv_2= '(' ( (lv_predicate_3_0= ruleXExpression ) ) otherlv_4= ')' ( (lv_body_5_0= ruleXExpression ) ) )
+			// InternalWeightDefinition.g:4073:2: ( ( () otherlv_1= 'while' otherlv_2= '(' ( (lv_predicate_3_0= ruleXExpression ) ) otherlv_4= ')' ( (lv_body_5_0= ruleXExpression ) ) ) )
+			// InternalWeightDefinition.g:4074:2: ( () otherlv_1= 'while' otherlv_2= '(' ( (lv_predicate_3_0= ruleXExpression ) ) otherlv_4= ')' ( (lv_body_5_0= ruleXExpression ) ) )
 			{
-			// InternalWeightDefinition.g:4070:2: ( () otherlv_1= 'while' otherlv_2= '(' ( (lv_predicate_3_0= ruleXExpression ) ) otherlv_4= ')' ( (lv_body_5_0= ruleXExpression ) ) )
-			// InternalWeightDefinition.g:4071:3: () otherlv_1= 'while' otherlv_2= '(' ( (lv_predicate_3_0= ruleXExpression ) ) otherlv_4= ')' ( (lv_body_5_0= ruleXExpression ) )
+			// InternalWeightDefinition.g:4074:2: ( () otherlv_1= 'while' otherlv_2= '(' ( (lv_predicate_3_0= ruleXExpression ) ) otherlv_4= ')' ( (lv_body_5_0= ruleXExpression ) ) )
+			// InternalWeightDefinition.g:4075:3: () otherlv_1= 'while' otherlv_2= '(' ( (lv_predicate_3_0= ruleXExpression ) ) otherlv_4= ')' ( (lv_body_5_0= ruleXExpression ) )
 			{
-			// InternalWeightDefinition.g:4071:3: ()
-			// InternalWeightDefinition.g:4072:4: 
+			// InternalWeightDefinition.g:4075:3: ()
+			// InternalWeightDefinition.g:4076:4: 
 			{
 			if ( state.backtracking==0 ) {
 							current = forceCreateModelElement(
@@ -9933,24 +9934,24 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						}
 			}
 
-			otherlv_1=(Token)match(input,84,FOLLOW_9); if (state.failed) return current;
+			otherlv_1=(Token)match(input,84,FOLLOW_8); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_1, grammarAccess.getXWhileExpressionAccess().getWhileKeyword_1());
 					}
-			otherlv_2=(Token)match(input,21,FOLLOW_13); if (state.failed) return current;
+			otherlv_2=(Token)match(input,21,FOLLOW_12); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_2, grammarAccess.getXWhileExpressionAccess().getLeftParenthesisKeyword_2());
 					}
-			// InternalWeightDefinition.g:4086:3: ( (lv_predicate_3_0= ruleXExpression ) )
-			// InternalWeightDefinition.g:4087:4: (lv_predicate_3_0= ruleXExpression )
+			// InternalWeightDefinition.g:4090:3: ( (lv_predicate_3_0= ruleXExpression ) )
+			// InternalWeightDefinition.g:4091:4: (lv_predicate_3_0= ruleXExpression )
 			{
-			// InternalWeightDefinition.g:4087:4: (lv_predicate_3_0= ruleXExpression )
-			// InternalWeightDefinition.g:4088:5: lv_predicate_3_0= ruleXExpression
+			// InternalWeightDefinition.g:4091:4: (lv_predicate_3_0= ruleXExpression )
+			// InternalWeightDefinition.g:4092:5: lv_predicate_3_0= ruleXExpression
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXWhileExpressionAccess().getPredicateXExpressionParserRuleCall_3_0());
 							}
-			pushFollow(FOLLOW_38);
+			pushFollow(FOLLOW_37);
 			lv_predicate_3_0=ruleXExpression();
 			state._fsp--;
 			if (state.failed) return current;
@@ -9969,15 +9970,15 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			otherlv_4=(Token)match(input,22,FOLLOW_13); if (state.failed) return current;
+			otherlv_4=(Token)match(input,22,FOLLOW_12); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_4, grammarAccess.getXWhileExpressionAccess().getRightParenthesisKeyword_4());
 					}
-			// InternalWeightDefinition.g:4109:3: ( (lv_body_5_0= ruleXExpression ) )
-			// InternalWeightDefinition.g:4110:4: (lv_body_5_0= ruleXExpression )
+			// InternalWeightDefinition.g:4113:3: ( (lv_body_5_0= ruleXExpression ) )
+			// InternalWeightDefinition.g:4114:4: (lv_body_5_0= ruleXExpression )
 			{
-			// InternalWeightDefinition.g:4110:4: (lv_body_5_0= ruleXExpression )
-			// InternalWeightDefinition.g:4111:5: lv_body_5_0= ruleXExpression
+			// InternalWeightDefinition.g:4114:4: (lv_body_5_0= ruleXExpression )
+			// InternalWeightDefinition.g:4115:5: lv_body_5_0= ruleXExpression
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXWhileExpressionAccess().getBodyXExpressionParserRuleCall_5_0());
@@ -10025,7 +10026,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXDoWhileExpression"
-	// InternalWeightDefinition.g:4132:1: entryRuleXDoWhileExpression returns [EObject current=null] :iv_ruleXDoWhileExpression= ruleXDoWhileExpression EOF ;
+	// InternalWeightDefinition.g:4136:1: entryRuleXDoWhileExpression returns [EObject current=null] :iv_ruleXDoWhileExpression= ruleXDoWhileExpression EOF ;
 	public final EObject entryRuleXDoWhileExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -10033,8 +10034,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXDoWhileExpression =null;
 
 		try {
-			// InternalWeightDefinition.g:4132:59: (iv_ruleXDoWhileExpression= ruleXDoWhileExpression EOF )
-			// InternalWeightDefinition.g:4133:2: iv_ruleXDoWhileExpression= ruleXDoWhileExpression EOF
+			// InternalWeightDefinition.g:4136:59: (iv_ruleXDoWhileExpression= ruleXDoWhileExpression EOF )
+			// InternalWeightDefinition.g:4137:2: iv_ruleXDoWhileExpression= ruleXDoWhileExpression EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXDoWhileExpressionRule()); }
 			pushFollow(FOLLOW_1);
@@ -10062,7 +10063,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXDoWhileExpression"
-	// InternalWeightDefinition.g:4139:1: ruleXDoWhileExpression returns [EObject current=null] : ( () otherlv_1= 'do' ( (lv_body_2_0= ruleXExpression ) ) otherlv_3= 'while' otherlv_4= '(' ( (lv_predicate_5_0= ruleXExpression ) ) otherlv_6= ')' ) ;
+	// InternalWeightDefinition.g:4143:1: ruleXDoWhileExpression returns [EObject current=null] : ( () otherlv_1= 'do' ( (lv_body_2_0= ruleXExpression ) ) otherlv_3= 'while' otherlv_4= '(' ( (lv_predicate_5_0= ruleXExpression ) ) otherlv_6= ')' ) ;
 	public final EObject ruleXDoWhileExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -10078,14 +10079,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:4145:2: ( ( () otherlv_1= 'do' ( (lv_body_2_0= ruleXExpression ) ) otherlv_3= 'while' otherlv_4= '(' ( (lv_predicate_5_0= ruleXExpression ) ) otherlv_6= ')' ) )
-			// InternalWeightDefinition.g:4146:2: ( () otherlv_1= 'do' ( (lv_body_2_0= ruleXExpression ) ) otherlv_3= 'while' otherlv_4= '(' ( (lv_predicate_5_0= ruleXExpression ) ) otherlv_6= ')' )
+			// InternalWeightDefinition.g:4149:2: ( ( () otherlv_1= 'do' ( (lv_body_2_0= ruleXExpression ) ) otherlv_3= 'while' otherlv_4= '(' ( (lv_predicate_5_0= ruleXExpression ) ) otherlv_6= ')' ) )
+			// InternalWeightDefinition.g:4150:2: ( () otherlv_1= 'do' ( (lv_body_2_0= ruleXExpression ) ) otherlv_3= 'while' otherlv_4= '(' ( (lv_predicate_5_0= ruleXExpression ) ) otherlv_6= ')' )
 			{
-			// InternalWeightDefinition.g:4146:2: ( () otherlv_1= 'do' ( (lv_body_2_0= ruleXExpression ) ) otherlv_3= 'while' otherlv_4= '(' ( (lv_predicate_5_0= ruleXExpression ) ) otherlv_6= ')' )
-			// InternalWeightDefinition.g:4147:3: () otherlv_1= 'do' ( (lv_body_2_0= ruleXExpression ) ) otherlv_3= 'while' otherlv_4= '(' ( (lv_predicate_5_0= ruleXExpression ) ) otherlv_6= ')'
+			// InternalWeightDefinition.g:4150:2: ( () otherlv_1= 'do' ( (lv_body_2_0= ruleXExpression ) ) otherlv_3= 'while' otherlv_4= '(' ( (lv_predicate_5_0= ruleXExpression ) ) otherlv_6= ')' )
+			// InternalWeightDefinition.g:4151:3: () otherlv_1= 'do' ( (lv_body_2_0= ruleXExpression ) ) otherlv_3= 'while' otherlv_4= '(' ( (lv_predicate_5_0= ruleXExpression ) ) otherlv_6= ')'
 			{
-			// InternalWeightDefinition.g:4147:3: ()
-			// InternalWeightDefinition.g:4148:4: 
+			// InternalWeightDefinition.g:4151:3: ()
+			// InternalWeightDefinition.g:4152:4: 
 			{
 			if ( state.backtracking==0 ) {
 							current = forceCreateModelElement(
@@ -10094,20 +10095,20 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						}
 			}
 
-			otherlv_1=(Token)match(input,59,FOLLOW_13); if (state.failed) return current;
+			otherlv_1=(Token)match(input,59,FOLLOW_12); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_1, grammarAccess.getXDoWhileExpressionAccess().getDoKeyword_1());
 					}
-			// InternalWeightDefinition.g:4158:3: ( (lv_body_2_0= ruleXExpression ) )
-			// InternalWeightDefinition.g:4159:4: (lv_body_2_0= ruleXExpression )
+			// InternalWeightDefinition.g:4162:3: ( (lv_body_2_0= ruleXExpression ) )
+			// InternalWeightDefinition.g:4163:4: (lv_body_2_0= ruleXExpression )
 			{
-			// InternalWeightDefinition.g:4159:4: (lv_body_2_0= ruleXExpression )
-			// InternalWeightDefinition.g:4160:5: lv_body_2_0= ruleXExpression
+			// InternalWeightDefinition.g:4163:4: (lv_body_2_0= ruleXExpression )
+			// InternalWeightDefinition.g:4164:5: lv_body_2_0= ruleXExpression
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXDoWhileExpressionAccess().getBodyXExpressionParserRuleCall_2_0());
 							}
-			pushFollow(FOLLOW_64);
+			pushFollow(FOLLOW_63);
 			lv_body_2_0=ruleXExpression();
 			state._fsp--;
 			if (state.failed) return current;
@@ -10126,24 +10127,24 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			otherlv_3=(Token)match(input,84,FOLLOW_9); if (state.failed) return current;
+			otherlv_3=(Token)match(input,84,FOLLOW_8); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_3, grammarAccess.getXDoWhileExpressionAccess().getWhileKeyword_3());
 					}
-			otherlv_4=(Token)match(input,21,FOLLOW_13); if (state.failed) return current;
+			otherlv_4=(Token)match(input,21,FOLLOW_12); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_4, grammarAccess.getXDoWhileExpressionAccess().getLeftParenthesisKeyword_4());
 					}
-			// InternalWeightDefinition.g:4185:3: ( (lv_predicate_5_0= ruleXExpression ) )
-			// InternalWeightDefinition.g:4186:4: (lv_predicate_5_0= ruleXExpression )
+			// InternalWeightDefinition.g:4189:3: ( (lv_predicate_5_0= ruleXExpression ) )
+			// InternalWeightDefinition.g:4190:4: (lv_predicate_5_0= ruleXExpression )
 			{
-			// InternalWeightDefinition.g:4186:4: (lv_predicate_5_0= ruleXExpression )
-			// InternalWeightDefinition.g:4187:5: lv_predicate_5_0= ruleXExpression
+			// InternalWeightDefinition.g:4190:4: (lv_predicate_5_0= ruleXExpression )
+			// InternalWeightDefinition.g:4191:5: lv_predicate_5_0= ruleXExpression
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXDoWhileExpressionAccess().getPredicateXExpressionParserRuleCall_5_0());
 							}
-			pushFollow(FOLLOW_38);
+			pushFollow(FOLLOW_37);
 			lv_predicate_5_0=ruleXExpression();
 			state._fsp--;
 			if (state.failed) return current;
@@ -10190,7 +10191,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXBlockExpression"
-	// InternalWeightDefinition.g:4212:1: entryRuleXBlockExpression returns [EObject current=null] :iv_ruleXBlockExpression= ruleXBlockExpression EOF ;
+	// InternalWeightDefinition.g:4216:1: entryRuleXBlockExpression returns [EObject current=null] :iv_ruleXBlockExpression= ruleXBlockExpression EOF ;
 	public final EObject entryRuleXBlockExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -10198,8 +10199,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXBlockExpression =null;
 
 		try {
-			// InternalWeightDefinition.g:4212:57: (iv_ruleXBlockExpression= ruleXBlockExpression EOF )
-			// InternalWeightDefinition.g:4213:2: iv_ruleXBlockExpression= ruleXBlockExpression EOF
+			// InternalWeightDefinition.g:4216:57: (iv_ruleXBlockExpression= ruleXBlockExpression EOF )
+			// InternalWeightDefinition.g:4217:2: iv_ruleXBlockExpression= ruleXBlockExpression EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXBlockExpressionRule()); }
 			pushFollow(FOLLOW_1);
@@ -10227,7 +10228,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXBlockExpression"
-	// InternalWeightDefinition.g:4219:1: ruleXBlockExpression returns [EObject current=null] : ( () otherlv_1= '{' ( ( (lv_expressions_2_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_3= ';' )? )* otherlv_4= '}' ) ;
+	// InternalWeightDefinition.g:4223:1: ruleXBlockExpression returns [EObject current=null] : ( () otherlv_1= '{' ( ( (lv_expressions_2_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_3= ';' )? )* otherlv_4= '}' ) ;
 	public final EObject ruleXBlockExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -10241,14 +10242,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:4225:2: ( ( () otherlv_1= '{' ( ( (lv_expressions_2_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_3= ';' )? )* otherlv_4= '}' ) )
-			// InternalWeightDefinition.g:4226:2: ( () otherlv_1= '{' ( ( (lv_expressions_2_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_3= ';' )? )* otherlv_4= '}' )
+			// InternalWeightDefinition.g:4229:2: ( ( () otherlv_1= '{' ( ( (lv_expressions_2_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_3= ';' )? )* otherlv_4= '}' ) )
+			// InternalWeightDefinition.g:4230:2: ( () otherlv_1= '{' ( ( (lv_expressions_2_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_3= ';' )? )* otherlv_4= '}' )
 			{
-			// InternalWeightDefinition.g:4226:2: ( () otherlv_1= '{' ( ( (lv_expressions_2_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_3= ';' )? )* otherlv_4= '}' )
-			// InternalWeightDefinition.g:4227:3: () otherlv_1= '{' ( ( (lv_expressions_2_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_3= ';' )? )* otherlv_4= '}'
+			// InternalWeightDefinition.g:4230:2: ( () otherlv_1= '{' ( ( (lv_expressions_2_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_3= ';' )? )* otherlv_4= '}' )
+			// InternalWeightDefinition.g:4231:3: () otherlv_1= '{' ( ( (lv_expressions_2_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_3= ';' )? )* otherlv_4= '}'
 			{
-			// InternalWeightDefinition.g:4227:3: ()
-			// InternalWeightDefinition.g:4228:4: 
+			// InternalWeightDefinition.g:4231:3: ()
+			// InternalWeightDefinition.g:4232:4: 
 			{
 			if ( state.backtracking==0 ) {
 							current = forceCreateModelElement(
@@ -10257,33 +10258,33 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						}
 			}
 
-			otherlv_1=(Token)match(input,85,FOLLOW_65); if (state.failed) return current;
+			otherlv_1=(Token)match(input,85,FOLLOW_64); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_1, grammarAccess.getXBlockExpressionAccess().getLeftCurlyBracketKeyword_1());
 					}
-			// InternalWeightDefinition.g:4238:3: ( ( (lv_expressions_2_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_3= ';' )? )*
-			loop66:
+			// InternalWeightDefinition.g:4242:3: ( ( (lv_expressions_2_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_3= ';' )? )*
+			loop64:
 			while (true) {
-				int alt66=2;
-				int LA66_0 = input.LA(1);
-				if ( ((LA66_0 >= RULE_DECIMAL && LA66_0 <= RULE_INT)||LA66_0==RULE_STRING||LA66_0==13||LA66_0==16||LA66_0==21||LA66_0==26||LA66_0==30||LA66_0==42||LA66_0==53||LA66_0==59||(LA66_0 >= 61 && LA66_0 <= 63)||LA66_0==65||(LA66_0 >= 67 && LA66_0 <= 68)||(LA66_0 >= 70 && LA66_0 <= 72)||(LA66_0 >= 74 && LA66_0 <= 85)) ) {
-					alt66=1;
+				int alt64=2;
+				int LA64_0 = input.LA(1);
+				if ( ((LA64_0 >= RULE_DECIMAL && LA64_0 <= RULE_INT)||LA64_0==RULE_STRING||LA64_0==13||LA64_0==16||LA64_0==21||LA64_0==26||LA64_0==30||LA64_0==42||LA64_0==53||LA64_0==59||(LA64_0 >= 61 && LA64_0 <= 63)||LA64_0==65||(LA64_0 >= 67 && LA64_0 <= 68)||(LA64_0 >= 70 && LA64_0 <= 72)||(LA64_0 >= 74 && LA64_0 <= 85)) ) {
+					alt64=1;
 				}
 
-				switch (alt66) {
+				switch (alt64) {
 				case 1 :
-					// InternalWeightDefinition.g:4239:4: ( (lv_expressions_2_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_3= ';' )?
+					// InternalWeightDefinition.g:4243:4: ( (lv_expressions_2_0= ruleXExpressionOrVarDeclaration ) ) (otherlv_3= ';' )?
 					{
-					// InternalWeightDefinition.g:4239:4: ( (lv_expressions_2_0= ruleXExpressionOrVarDeclaration ) )
-					// InternalWeightDefinition.g:4240:5: (lv_expressions_2_0= ruleXExpressionOrVarDeclaration )
+					// InternalWeightDefinition.g:4243:4: ( (lv_expressions_2_0= ruleXExpressionOrVarDeclaration ) )
+					// InternalWeightDefinition.g:4244:5: (lv_expressions_2_0= ruleXExpressionOrVarDeclaration )
 					{
-					// InternalWeightDefinition.g:4240:5: (lv_expressions_2_0= ruleXExpressionOrVarDeclaration )
-					// InternalWeightDefinition.g:4241:6: lv_expressions_2_0= ruleXExpressionOrVarDeclaration
+					// InternalWeightDefinition.g:4244:5: (lv_expressions_2_0= ruleXExpressionOrVarDeclaration )
+					// InternalWeightDefinition.g:4245:6: lv_expressions_2_0= ruleXExpressionOrVarDeclaration
 					{
 					if ( state.backtracking==0 ) {
 											newCompositeNode(grammarAccess.getXBlockExpressionAccess().getExpressionsXExpressionOrVarDeclarationParserRuleCall_2_0_0());
 										}
-					pushFollow(FOLLOW_66);
+					pushFollow(FOLLOW_65);
 					lv_expressions_2_0=ruleXExpressionOrVarDeclaration();
 					state._fsp--;
 					if (state.failed) return current;
@@ -10302,17 +10303,17 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:4258:4: (otherlv_3= ';' )?
-					int alt65=2;
-					int LA65_0 = input.LA(1);
-					if ( (LA65_0==41) ) {
-						alt65=1;
+					// InternalWeightDefinition.g:4262:4: (otherlv_3= ';' )?
+					int alt63=2;
+					int LA63_0 = input.LA(1);
+					if ( (LA63_0==41) ) {
+						alt63=1;
 					}
-					switch (alt65) {
+					switch (alt63) {
 						case 1 :
-							// InternalWeightDefinition.g:4259:5: otherlv_3= ';'
+							// InternalWeightDefinition.g:4263:5: otherlv_3= ';'
 							{
-							otherlv_3=(Token)match(input,41,FOLLOW_65); if (state.failed) return current;
+							otherlv_3=(Token)match(input,41,FOLLOW_64); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
 												newLeafNode(otherlv_3, grammarAccess.getXBlockExpressionAccess().getSemicolonKeyword_2_1());
 											}
@@ -10325,7 +10326,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					break;
 
 				default :
-					break loop66;
+					break loop64;
 				}
 			}
 
@@ -10357,7 +10358,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXExpressionOrVarDeclaration"
-	// InternalWeightDefinition.g:4273:1: entryRuleXExpressionOrVarDeclaration returns [EObject current=null] :iv_ruleXExpressionOrVarDeclaration= ruleXExpressionOrVarDeclaration EOF ;
+	// InternalWeightDefinition.g:4277:1: entryRuleXExpressionOrVarDeclaration returns [EObject current=null] :iv_ruleXExpressionOrVarDeclaration= ruleXExpressionOrVarDeclaration EOF ;
 	public final EObject entryRuleXExpressionOrVarDeclaration() throws RecognitionException {
 		EObject current = null;
 
@@ -10365,8 +10366,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXExpressionOrVarDeclaration =null;
 
 		try {
-			// InternalWeightDefinition.g:4273:68: (iv_ruleXExpressionOrVarDeclaration= ruleXExpressionOrVarDeclaration EOF )
-			// InternalWeightDefinition.g:4274:2: iv_ruleXExpressionOrVarDeclaration= ruleXExpressionOrVarDeclaration EOF
+			// InternalWeightDefinition.g:4277:68: (iv_ruleXExpressionOrVarDeclaration= ruleXExpressionOrVarDeclaration EOF )
+			// InternalWeightDefinition.g:4278:2: iv_ruleXExpressionOrVarDeclaration= ruleXExpressionOrVarDeclaration EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXExpressionOrVarDeclarationRule()); }
 			pushFollow(FOLLOW_1);
@@ -10394,7 +10395,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXExpressionOrVarDeclaration"
-	// InternalWeightDefinition.g:4280:1: ruleXExpressionOrVarDeclaration returns [EObject current=null] : (this_XVariableDeclaration_0= ruleXVariableDeclaration |this_XExpression_1= ruleXExpression ) ;
+	// InternalWeightDefinition.g:4284:1: ruleXExpressionOrVarDeclaration returns [EObject current=null] : (this_XVariableDeclaration_0= ruleXVariableDeclaration |this_XExpression_1= ruleXExpression ) ;
 	public final EObject ruleXExpressionOrVarDeclaration() throws RecognitionException {
 		EObject current = null;
 
@@ -10406,29 +10407,29 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:4286:2: ( (this_XVariableDeclaration_0= ruleXVariableDeclaration |this_XExpression_1= ruleXExpression ) )
-			// InternalWeightDefinition.g:4287:2: (this_XVariableDeclaration_0= ruleXVariableDeclaration |this_XExpression_1= ruleXExpression )
+			// InternalWeightDefinition.g:4290:2: ( (this_XVariableDeclaration_0= ruleXVariableDeclaration |this_XExpression_1= ruleXExpression ) )
+			// InternalWeightDefinition.g:4291:2: (this_XVariableDeclaration_0= ruleXVariableDeclaration |this_XExpression_1= ruleXExpression )
 			{
-			// InternalWeightDefinition.g:4287:2: (this_XVariableDeclaration_0= ruleXVariableDeclaration |this_XExpression_1= ruleXExpression )
-			int alt67=2;
-			int LA67_0 = input.LA(1);
-			if ( ((LA67_0 >= 82 && LA67_0 <= 83)) ) {
-				alt67=1;
+			// InternalWeightDefinition.g:4291:2: (this_XVariableDeclaration_0= ruleXVariableDeclaration |this_XExpression_1= ruleXExpression )
+			int alt65=2;
+			int LA65_0 = input.LA(1);
+			if ( ((LA65_0 >= 82 && LA65_0 <= 83)) ) {
+				alt65=1;
 			}
-			else if ( ((LA67_0 >= RULE_DECIMAL && LA67_0 <= RULE_INT)||LA67_0==RULE_STRING||LA67_0==13||LA67_0==16||LA67_0==21||LA67_0==26||LA67_0==30||LA67_0==42||LA67_0==53||LA67_0==59||(LA67_0 >= 61 && LA67_0 <= 63)||LA67_0==65||(LA67_0 >= 67 && LA67_0 <= 68)||(LA67_0 >= 70 && LA67_0 <= 72)||(LA67_0 >= 74 && LA67_0 <= 81)||(LA67_0 >= 84 && LA67_0 <= 85)) ) {
-				alt67=2;
+			else if ( ((LA65_0 >= RULE_DECIMAL && LA65_0 <= RULE_INT)||LA65_0==RULE_STRING||LA65_0==13||LA65_0==16||LA65_0==21||LA65_0==26||LA65_0==30||LA65_0==42||LA65_0==53||LA65_0==59||(LA65_0 >= 61 && LA65_0 <= 63)||LA65_0==65||(LA65_0 >= 67 && LA65_0 <= 68)||(LA65_0 >= 70 && LA65_0 <= 72)||(LA65_0 >= 74 && LA65_0 <= 81)||(LA65_0 >= 84 && LA65_0 <= 85)) ) {
+				alt65=2;
 			}
 
 			else {
 				if (state.backtracking>0) {state.failed=true; return current;}
 				NoViableAltException nvae =
-					new NoViableAltException("", 67, 0, input);
+					new NoViableAltException("", 65, 0, input);
 				throw nvae;
 			}
 
-			switch (alt67) {
+			switch (alt65) {
 				case 1 :
-					// InternalWeightDefinition.g:4288:3: this_XVariableDeclaration_0= ruleXVariableDeclaration
+					// InternalWeightDefinition.g:4292:3: this_XVariableDeclaration_0= ruleXVariableDeclaration
 					{
 					if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXExpressionOrVarDeclarationAccess().getXVariableDeclarationParserRuleCall_0());
@@ -10444,7 +10445,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:4297:3: this_XExpression_1= ruleXExpression
+					// InternalWeightDefinition.g:4301:3: this_XExpression_1= ruleXExpression
 					{
 					if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXExpressionOrVarDeclarationAccess().getXExpressionParserRuleCall_1());
@@ -10484,7 +10485,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXVariableDeclaration"
-	// InternalWeightDefinition.g:4309:1: entryRuleXVariableDeclaration returns [EObject current=null] :iv_ruleXVariableDeclaration= ruleXVariableDeclaration EOF ;
+	// InternalWeightDefinition.g:4313:1: entryRuleXVariableDeclaration returns [EObject current=null] :iv_ruleXVariableDeclaration= ruleXVariableDeclaration EOF ;
 	public final EObject entryRuleXVariableDeclaration() throws RecognitionException {
 		EObject current = null;
 
@@ -10492,8 +10493,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXVariableDeclaration =null;
 
 		try {
-			// InternalWeightDefinition.g:4309:61: (iv_ruleXVariableDeclaration= ruleXVariableDeclaration EOF )
-			// InternalWeightDefinition.g:4310:2: iv_ruleXVariableDeclaration= ruleXVariableDeclaration EOF
+			// InternalWeightDefinition.g:4313:61: (iv_ruleXVariableDeclaration= ruleXVariableDeclaration EOF )
+			// InternalWeightDefinition.g:4314:2: iv_ruleXVariableDeclaration= ruleXVariableDeclaration EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXVariableDeclarationRule()); }
 			pushFollow(FOLLOW_1);
@@ -10521,7 +10522,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXVariableDeclaration"
-	// InternalWeightDefinition.g:4316:1: ruleXVariableDeclaration returns [EObject current=null] : ( () ( ( (lv_writeable_1_0= 'var' ) ) |otherlv_2= 'val' ) ( ( ( ( ( ( ruleJvmTypeReference ) ) ( ( ruleValidID ) ) ) )=> ( ( (lv_type_3_0= ruleJvmTypeReference ) ) ( (lv_name_4_0= ruleValidID ) ) ) ) | ( (lv_name_5_0= ruleValidID ) ) ) (otherlv_6= '=' ( (lv_right_7_0= ruleXExpression ) ) )? ) ;
+	// InternalWeightDefinition.g:4320:1: ruleXVariableDeclaration returns [EObject current=null] : ( () ( ( (lv_writeable_1_0= 'var' ) ) |otherlv_2= 'val' ) ( ( ( ( ( ( ruleJvmTypeReference ) ) ( ( ruleValidID ) ) ) )=> ( ( (lv_type_3_0= ruleJvmTypeReference ) ) ( (lv_name_4_0= ruleValidID ) ) ) ) | ( (lv_name_5_0= ruleValidID ) ) ) (otherlv_6= '=' ( (lv_right_7_0= ruleXExpression ) ) )? ) ;
 	public final EObject ruleXVariableDeclaration() throws RecognitionException {
 		EObject current = null;
 
@@ -10538,14 +10539,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:4322:2: ( ( () ( ( (lv_writeable_1_0= 'var' ) ) |otherlv_2= 'val' ) ( ( ( ( ( ( ruleJvmTypeReference ) ) ( ( ruleValidID ) ) ) )=> ( ( (lv_type_3_0= ruleJvmTypeReference ) ) ( (lv_name_4_0= ruleValidID ) ) ) ) | ( (lv_name_5_0= ruleValidID ) ) ) (otherlv_6= '=' ( (lv_right_7_0= ruleXExpression ) ) )? ) )
-			// InternalWeightDefinition.g:4323:2: ( () ( ( (lv_writeable_1_0= 'var' ) ) |otherlv_2= 'val' ) ( ( ( ( ( ( ruleJvmTypeReference ) ) ( ( ruleValidID ) ) ) )=> ( ( (lv_type_3_0= ruleJvmTypeReference ) ) ( (lv_name_4_0= ruleValidID ) ) ) ) | ( (lv_name_5_0= ruleValidID ) ) ) (otherlv_6= '=' ( (lv_right_7_0= ruleXExpression ) ) )? )
+			// InternalWeightDefinition.g:4326:2: ( ( () ( ( (lv_writeable_1_0= 'var' ) ) |otherlv_2= 'val' ) ( ( ( ( ( ( ruleJvmTypeReference ) ) ( ( ruleValidID ) ) ) )=> ( ( (lv_type_3_0= ruleJvmTypeReference ) ) ( (lv_name_4_0= ruleValidID ) ) ) ) | ( (lv_name_5_0= ruleValidID ) ) ) (otherlv_6= '=' ( (lv_right_7_0= ruleXExpression ) ) )? ) )
+			// InternalWeightDefinition.g:4327:2: ( () ( ( (lv_writeable_1_0= 'var' ) ) |otherlv_2= 'val' ) ( ( ( ( ( ( ruleJvmTypeReference ) ) ( ( ruleValidID ) ) ) )=> ( ( (lv_type_3_0= ruleJvmTypeReference ) ) ( (lv_name_4_0= ruleValidID ) ) ) ) | ( (lv_name_5_0= ruleValidID ) ) ) (otherlv_6= '=' ( (lv_right_7_0= ruleXExpression ) ) )? )
 			{
-			// InternalWeightDefinition.g:4323:2: ( () ( ( (lv_writeable_1_0= 'var' ) ) |otherlv_2= 'val' ) ( ( ( ( ( ( ruleJvmTypeReference ) ) ( ( ruleValidID ) ) ) )=> ( ( (lv_type_3_0= ruleJvmTypeReference ) ) ( (lv_name_4_0= ruleValidID ) ) ) ) | ( (lv_name_5_0= ruleValidID ) ) ) (otherlv_6= '=' ( (lv_right_7_0= ruleXExpression ) ) )? )
-			// InternalWeightDefinition.g:4324:3: () ( ( (lv_writeable_1_0= 'var' ) ) |otherlv_2= 'val' ) ( ( ( ( ( ( ruleJvmTypeReference ) ) ( ( ruleValidID ) ) ) )=> ( ( (lv_type_3_0= ruleJvmTypeReference ) ) ( (lv_name_4_0= ruleValidID ) ) ) ) | ( (lv_name_5_0= ruleValidID ) ) ) (otherlv_6= '=' ( (lv_right_7_0= ruleXExpression ) ) )?
+			// InternalWeightDefinition.g:4327:2: ( () ( ( (lv_writeable_1_0= 'var' ) ) |otherlv_2= 'val' ) ( ( ( ( ( ( ruleJvmTypeReference ) ) ( ( ruleValidID ) ) ) )=> ( ( (lv_type_3_0= ruleJvmTypeReference ) ) ( (lv_name_4_0= ruleValidID ) ) ) ) | ( (lv_name_5_0= ruleValidID ) ) ) (otherlv_6= '=' ( (lv_right_7_0= ruleXExpression ) ) )? )
+			// InternalWeightDefinition.g:4328:3: () ( ( (lv_writeable_1_0= 'var' ) ) |otherlv_2= 'val' ) ( ( ( ( ( ( ruleJvmTypeReference ) ) ( ( ruleValidID ) ) ) )=> ( ( (lv_type_3_0= ruleJvmTypeReference ) ) ( (lv_name_4_0= ruleValidID ) ) ) ) | ( (lv_name_5_0= ruleValidID ) ) ) (otherlv_6= '=' ( (lv_right_7_0= ruleXExpression ) ) )?
 			{
-			// InternalWeightDefinition.g:4324:3: ()
-			// InternalWeightDefinition.g:4325:4: 
+			// InternalWeightDefinition.g:4328:3: ()
+			// InternalWeightDefinition.g:4329:4: 
 			{
 			if ( state.backtracking==0 ) {
 							current = forceCreateModelElement(
@@ -10554,34 +10555,34 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						}
 			}
 
-			// InternalWeightDefinition.g:4331:3: ( ( (lv_writeable_1_0= 'var' ) ) |otherlv_2= 'val' )
-			int alt68=2;
-			int LA68_0 = input.LA(1);
-			if ( (LA68_0==83) ) {
-				alt68=1;
+			// InternalWeightDefinition.g:4335:3: ( ( (lv_writeable_1_0= 'var' ) ) |otherlv_2= 'val' )
+			int alt66=2;
+			int LA66_0 = input.LA(1);
+			if ( (LA66_0==83) ) {
+				alt66=1;
 			}
-			else if ( (LA68_0==82) ) {
-				alt68=2;
+			else if ( (LA66_0==82) ) {
+				alt66=2;
 			}
 
 			else {
 				if (state.backtracking>0) {state.failed=true; return current;}
 				NoViableAltException nvae =
-					new NoViableAltException("", 68, 0, input);
+					new NoViableAltException("", 66, 0, input);
 				throw nvae;
 			}
 
-			switch (alt68) {
+			switch (alt66) {
 				case 1 :
-					// InternalWeightDefinition.g:4332:4: ( (lv_writeable_1_0= 'var' ) )
+					// InternalWeightDefinition.g:4336:4: ( (lv_writeable_1_0= 'var' ) )
 					{
-					// InternalWeightDefinition.g:4332:4: ( (lv_writeable_1_0= 'var' ) )
-					// InternalWeightDefinition.g:4333:5: (lv_writeable_1_0= 'var' )
+					// InternalWeightDefinition.g:4336:4: ( (lv_writeable_1_0= 'var' ) )
+					// InternalWeightDefinition.g:4337:5: (lv_writeable_1_0= 'var' )
 					{
-					// InternalWeightDefinition.g:4333:5: (lv_writeable_1_0= 'var' )
-					// InternalWeightDefinition.g:4334:6: lv_writeable_1_0= 'var'
+					// InternalWeightDefinition.g:4337:5: (lv_writeable_1_0= 'var' )
+					// InternalWeightDefinition.g:4338:6: lv_writeable_1_0= 'var'
 					{
-					lv_writeable_1_0=(Token)match(input,83,FOLLOW_8); if (state.failed) return current;
+					lv_writeable_1_0=(Token)match(input,83,FOLLOW_7); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 											newLeafNode(lv_writeable_1_0, grammarAccess.getXVariableDeclarationAccess().getWriteableVarKeyword_1_0_0());
 										}
@@ -10598,9 +10599,9 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:4347:4: otherlv_2= 'val'
+					// InternalWeightDefinition.g:4351:4: otherlv_2= 'val'
 					{
-					otherlv_2=(Token)match(input,82,FOLLOW_8); if (state.failed) return current;
+					otherlv_2=(Token)match(input,82,FOLLOW_7); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 									newLeafNode(otherlv_2, grammarAccess.getXVariableDeclarationAccess().getValKeyword_1_1());
 								}
@@ -10609,46 +10610,46 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			// InternalWeightDefinition.g:4352:3: ( ( ( ( ( ( ruleJvmTypeReference ) ) ( ( ruleValidID ) ) ) )=> ( ( (lv_type_3_0= ruleJvmTypeReference ) ) ( (lv_name_4_0= ruleValidID ) ) ) ) | ( (lv_name_5_0= ruleValidID ) ) )
-			int alt69=2;
-			int LA69_0 = input.LA(1);
-			if ( (LA69_0==RULE_ID) ) {
-				int LA69_1 = input.LA(2);
+			// InternalWeightDefinition.g:4356:3: ( ( ( ( ( ( ruleJvmTypeReference ) ) ( ( ruleValidID ) ) ) )=> ( ( (lv_type_3_0= ruleJvmTypeReference ) ) ( (lv_name_4_0= ruleValidID ) ) ) ) | ( (lv_name_5_0= ruleValidID ) ) )
+			int alt67=2;
+			int LA67_0 = input.LA(1);
+			if ( (LA67_0==RULE_ID) ) {
+				int LA67_1 = input.LA(2);
 				if ( (synpred29_InternalWeightDefinition()) ) {
-					alt69=1;
+					alt67=1;
 				}
 				else if ( (true) ) {
-					alt69=2;
+					alt67=2;
 				}
 
 			}
-			else if ( (LA69_0==21) && (synpred29_InternalWeightDefinition())) {
-				alt69=1;
+			else if ( (LA67_0==21) && (synpred29_InternalWeightDefinition())) {
+				alt67=1;
 			}
-			else if ( (LA69_0==47) && (synpred29_InternalWeightDefinition())) {
-				alt69=1;
+			else if ( (LA67_0==47) && (synpred29_InternalWeightDefinition())) {
+				alt67=1;
 			}
 
-			switch (alt69) {
+			switch (alt67) {
 				case 1 :
-					// InternalWeightDefinition.g:4353:4: ( ( ( ( ( ruleJvmTypeReference ) ) ( ( ruleValidID ) ) ) )=> ( ( (lv_type_3_0= ruleJvmTypeReference ) ) ( (lv_name_4_0= ruleValidID ) ) ) )
+					// InternalWeightDefinition.g:4357:4: ( ( ( ( ( ruleJvmTypeReference ) ) ( ( ruleValidID ) ) ) )=> ( ( (lv_type_3_0= ruleJvmTypeReference ) ) ( (lv_name_4_0= ruleValidID ) ) ) )
 					{
-					// InternalWeightDefinition.g:4353:4: ( ( ( ( ( ruleJvmTypeReference ) ) ( ( ruleValidID ) ) ) )=> ( ( (lv_type_3_0= ruleJvmTypeReference ) ) ( (lv_name_4_0= ruleValidID ) ) ) )
-					// InternalWeightDefinition.g:4354:5: ( ( ( ( ruleJvmTypeReference ) ) ( ( ruleValidID ) ) ) )=> ( ( (lv_type_3_0= ruleJvmTypeReference ) ) ( (lv_name_4_0= ruleValidID ) ) )
+					// InternalWeightDefinition.g:4357:4: ( ( ( ( ( ruleJvmTypeReference ) ) ( ( ruleValidID ) ) ) )=> ( ( (lv_type_3_0= ruleJvmTypeReference ) ) ( (lv_name_4_0= ruleValidID ) ) ) )
+					// InternalWeightDefinition.g:4358:5: ( ( ( ( ruleJvmTypeReference ) ) ( ( ruleValidID ) ) ) )=> ( ( (lv_type_3_0= ruleJvmTypeReference ) ) ( (lv_name_4_0= ruleValidID ) ) )
 					{
-					// InternalWeightDefinition.g:4367:5: ( ( (lv_type_3_0= ruleJvmTypeReference ) ) ( (lv_name_4_0= ruleValidID ) ) )
-					// InternalWeightDefinition.g:4368:6: ( (lv_type_3_0= ruleJvmTypeReference ) ) ( (lv_name_4_0= ruleValidID ) )
+					// InternalWeightDefinition.g:4371:5: ( ( (lv_type_3_0= ruleJvmTypeReference ) ) ( (lv_name_4_0= ruleValidID ) ) )
+					// InternalWeightDefinition.g:4372:6: ( (lv_type_3_0= ruleJvmTypeReference ) ) ( (lv_name_4_0= ruleValidID ) )
 					{
-					// InternalWeightDefinition.g:4368:6: ( (lv_type_3_0= ruleJvmTypeReference ) )
-					// InternalWeightDefinition.g:4369:7: (lv_type_3_0= ruleJvmTypeReference )
+					// InternalWeightDefinition.g:4372:6: ( (lv_type_3_0= ruleJvmTypeReference ) )
+					// InternalWeightDefinition.g:4373:7: (lv_type_3_0= ruleJvmTypeReference )
 					{
-					// InternalWeightDefinition.g:4369:7: (lv_type_3_0= ruleJvmTypeReference )
-					// InternalWeightDefinition.g:4370:8: lv_type_3_0= ruleJvmTypeReference
+					// InternalWeightDefinition.g:4373:7: (lv_type_3_0= ruleJvmTypeReference )
+					// InternalWeightDefinition.g:4374:8: lv_type_3_0= ruleJvmTypeReference
 					{
 					if ( state.backtracking==0 ) {
 													newCompositeNode(grammarAccess.getXVariableDeclarationAccess().getTypeJvmTypeReferenceParserRuleCall_2_0_0_0_0());
 												}
-					pushFollow(FOLLOW_6);
+					pushFollow(FOLLOW_5);
 					lv_type_3_0=ruleJvmTypeReference();
 					state._fsp--;
 					if (state.failed) return current;
@@ -10667,16 +10668,16 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:4387:6: ( (lv_name_4_0= ruleValidID ) )
-					// InternalWeightDefinition.g:4388:7: (lv_name_4_0= ruleValidID )
+					// InternalWeightDefinition.g:4391:6: ( (lv_name_4_0= ruleValidID ) )
+					// InternalWeightDefinition.g:4392:7: (lv_name_4_0= ruleValidID )
 					{
-					// InternalWeightDefinition.g:4388:7: (lv_name_4_0= ruleValidID )
-					// InternalWeightDefinition.g:4389:8: lv_name_4_0= ruleValidID
+					// InternalWeightDefinition.g:4392:7: (lv_name_4_0= ruleValidID )
+					// InternalWeightDefinition.g:4393:8: lv_name_4_0= ruleValidID
 					{
 					if ( state.backtracking==0 ) {
 													newCompositeNode(grammarAccess.getXVariableDeclarationAccess().getNameValidIDParserRuleCall_2_0_0_1_0());
 												}
-					pushFollow(FOLLOW_67);
+					pushFollow(FOLLOW_66);
 					lv_name_4_0=ruleValidID();
 					state._fsp--;
 					if (state.failed) return current;
@@ -10702,18 +10703,18 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:4409:4: ( (lv_name_5_0= ruleValidID ) )
+					// InternalWeightDefinition.g:4413:4: ( (lv_name_5_0= ruleValidID ) )
 					{
-					// InternalWeightDefinition.g:4409:4: ( (lv_name_5_0= ruleValidID ) )
-					// InternalWeightDefinition.g:4410:5: (lv_name_5_0= ruleValidID )
+					// InternalWeightDefinition.g:4413:4: ( (lv_name_5_0= ruleValidID ) )
+					// InternalWeightDefinition.g:4414:5: (lv_name_5_0= ruleValidID )
 					{
-					// InternalWeightDefinition.g:4410:5: (lv_name_5_0= ruleValidID )
-					// InternalWeightDefinition.g:4411:6: lv_name_5_0= ruleValidID
+					// InternalWeightDefinition.g:4414:5: (lv_name_5_0= ruleValidID )
+					// InternalWeightDefinition.g:4415:6: lv_name_5_0= ruleValidID
 					{
 					if ( state.backtracking==0 ) {
 											newCompositeNode(grammarAccess.getXVariableDeclarationAccess().getNameValidIDParserRuleCall_2_1_0());
 										}
-					pushFollow(FOLLOW_67);
+					pushFollow(FOLLOW_66);
 					lv_name_5_0=ruleValidID();
 					state._fsp--;
 					if (state.failed) return current;
@@ -10737,25 +10738,25 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			// InternalWeightDefinition.g:4429:3: (otherlv_6= '=' ( (lv_right_7_0= ruleXExpression ) ) )?
-			int alt70=2;
-			int LA70_0 = input.LA(1);
-			if ( (LA70_0==44) ) {
-				alt70=1;
+			// InternalWeightDefinition.g:4433:3: (otherlv_6= '=' ( (lv_right_7_0= ruleXExpression ) ) )?
+			int alt68=2;
+			int LA68_0 = input.LA(1);
+			if ( (LA68_0==44) ) {
+				alt68=1;
 			}
-			switch (alt70) {
+			switch (alt68) {
 				case 1 :
-					// InternalWeightDefinition.g:4430:4: otherlv_6= '=' ( (lv_right_7_0= ruleXExpression ) )
+					// InternalWeightDefinition.g:4434:4: otherlv_6= '=' ( (lv_right_7_0= ruleXExpression ) )
 					{
-					otherlv_6=(Token)match(input,44,FOLLOW_13); if (state.failed) return current;
+					otherlv_6=(Token)match(input,44,FOLLOW_12); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 									newLeafNode(otherlv_6, grammarAccess.getXVariableDeclarationAccess().getEqualsSignKeyword_3_0());
 								}
-					// InternalWeightDefinition.g:4434:4: ( (lv_right_7_0= ruleXExpression ) )
-					// InternalWeightDefinition.g:4435:5: (lv_right_7_0= ruleXExpression )
+					// InternalWeightDefinition.g:4438:4: ( (lv_right_7_0= ruleXExpression ) )
+					// InternalWeightDefinition.g:4439:5: (lv_right_7_0= ruleXExpression )
 					{
-					// InternalWeightDefinition.g:4435:5: (lv_right_7_0= ruleXExpression )
-					// InternalWeightDefinition.g:4436:6: lv_right_7_0= ruleXExpression
+					// InternalWeightDefinition.g:4439:5: (lv_right_7_0= ruleXExpression )
+					// InternalWeightDefinition.g:4440:6: lv_right_7_0= ruleXExpression
 					{
 					if ( state.backtracking==0 ) {
 											newCompositeNode(grammarAccess.getXVariableDeclarationAccess().getRightXExpressionParserRuleCall_3_1_0());
@@ -10808,7 +10809,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleJvmFormalParameter"
-	// InternalWeightDefinition.g:4458:1: entryRuleJvmFormalParameter returns [EObject current=null] :iv_ruleJvmFormalParameter= ruleJvmFormalParameter EOF ;
+	// InternalWeightDefinition.g:4462:1: entryRuleJvmFormalParameter returns [EObject current=null] :iv_ruleJvmFormalParameter= ruleJvmFormalParameter EOF ;
 	public final EObject entryRuleJvmFormalParameter() throws RecognitionException {
 		EObject current = null;
 
@@ -10816,8 +10817,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleJvmFormalParameter =null;
 
 		try {
-			// InternalWeightDefinition.g:4458:59: (iv_ruleJvmFormalParameter= ruleJvmFormalParameter EOF )
-			// InternalWeightDefinition.g:4459:2: iv_ruleJvmFormalParameter= ruleJvmFormalParameter EOF
+			// InternalWeightDefinition.g:4462:59: (iv_ruleJvmFormalParameter= ruleJvmFormalParameter EOF )
+			// InternalWeightDefinition.g:4463:2: iv_ruleJvmFormalParameter= ruleJvmFormalParameter EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getJvmFormalParameterRule()); }
 			pushFollow(FOLLOW_1);
@@ -10845,7 +10846,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleJvmFormalParameter"
-	// InternalWeightDefinition.g:4465:1: ruleJvmFormalParameter returns [EObject current=null] : ( ( (lv_parameterType_0_0= ruleJvmTypeReference ) )? ( (lv_name_1_0= ruleValidID ) ) ) ;
+	// InternalWeightDefinition.g:4469:1: ruleJvmFormalParameter returns [EObject current=null] : ( ( (lv_parameterType_0_0= ruleJvmTypeReference ) )? ( (lv_name_1_0= ruleValidID ) ) ) ;
 	public final EObject ruleJvmFormalParameter() throws RecognitionException {
 		EObject current = null;
 
@@ -10857,35 +10858,35 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:4471:2: ( ( ( (lv_parameterType_0_0= ruleJvmTypeReference ) )? ( (lv_name_1_0= ruleValidID ) ) ) )
-			// InternalWeightDefinition.g:4472:2: ( ( (lv_parameterType_0_0= ruleJvmTypeReference ) )? ( (lv_name_1_0= ruleValidID ) ) )
+			// InternalWeightDefinition.g:4475:2: ( ( ( (lv_parameterType_0_0= ruleJvmTypeReference ) )? ( (lv_name_1_0= ruleValidID ) ) ) )
+			// InternalWeightDefinition.g:4476:2: ( ( (lv_parameterType_0_0= ruleJvmTypeReference ) )? ( (lv_name_1_0= ruleValidID ) ) )
 			{
-			// InternalWeightDefinition.g:4472:2: ( ( (lv_parameterType_0_0= ruleJvmTypeReference ) )? ( (lv_name_1_0= ruleValidID ) ) )
-			// InternalWeightDefinition.g:4473:3: ( (lv_parameterType_0_0= ruleJvmTypeReference ) )? ( (lv_name_1_0= ruleValidID ) )
+			// InternalWeightDefinition.g:4476:2: ( ( (lv_parameterType_0_0= ruleJvmTypeReference ) )? ( (lv_name_1_0= ruleValidID ) ) )
+			// InternalWeightDefinition.g:4477:3: ( (lv_parameterType_0_0= ruleJvmTypeReference ) )? ( (lv_name_1_0= ruleValidID ) )
 			{
-			// InternalWeightDefinition.g:4473:3: ( (lv_parameterType_0_0= ruleJvmTypeReference ) )?
-			int alt71=2;
-			int LA71_0 = input.LA(1);
-			if ( (LA71_0==RULE_ID) ) {
-				int LA71_1 = input.LA(2);
-				if ( (LA71_1==RULE_ID||LA71_1==34||LA71_1==42||LA71_1==53) ) {
-					alt71=1;
+			// InternalWeightDefinition.g:4477:3: ( (lv_parameterType_0_0= ruleJvmTypeReference ) )?
+			int alt69=2;
+			int LA69_0 = input.LA(1);
+			if ( (LA69_0==RULE_ID) ) {
+				int LA69_1 = input.LA(2);
+				if ( (LA69_1==RULE_ID||LA69_1==34||LA69_1==42||LA69_1==53) ) {
+					alt69=1;
 				}
 			}
-			else if ( (LA71_0==21||LA71_0==47) ) {
-				alt71=1;
+			else if ( (LA69_0==21||LA69_0==47) ) {
+				alt69=1;
 			}
-			switch (alt71) {
+			switch (alt69) {
 				case 1 :
-					// InternalWeightDefinition.g:4474:4: (lv_parameterType_0_0= ruleJvmTypeReference )
+					// InternalWeightDefinition.g:4478:4: (lv_parameterType_0_0= ruleJvmTypeReference )
 					{
-					// InternalWeightDefinition.g:4474:4: (lv_parameterType_0_0= ruleJvmTypeReference )
-					// InternalWeightDefinition.g:4475:5: lv_parameterType_0_0= ruleJvmTypeReference
+					// InternalWeightDefinition.g:4478:4: (lv_parameterType_0_0= ruleJvmTypeReference )
+					// InternalWeightDefinition.g:4479:5: lv_parameterType_0_0= ruleJvmTypeReference
 					{
 					if ( state.backtracking==0 ) {
 										newCompositeNode(grammarAccess.getJvmFormalParameterAccess().getParameterTypeJvmTypeReferenceParserRuleCall_0_0());
 									}
-					pushFollow(FOLLOW_6);
+					pushFollow(FOLLOW_5);
 					lv_parameterType_0_0=ruleJvmTypeReference();
 					state._fsp--;
 					if (state.failed) return current;
@@ -10907,11 +10908,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			// InternalWeightDefinition.g:4492:3: ( (lv_name_1_0= ruleValidID ) )
-			// InternalWeightDefinition.g:4493:4: (lv_name_1_0= ruleValidID )
+			// InternalWeightDefinition.g:4496:3: ( (lv_name_1_0= ruleValidID ) )
+			// InternalWeightDefinition.g:4497:4: (lv_name_1_0= ruleValidID )
 			{
-			// InternalWeightDefinition.g:4493:4: (lv_name_1_0= ruleValidID )
-			// InternalWeightDefinition.g:4494:5: lv_name_1_0= ruleValidID
+			// InternalWeightDefinition.g:4497:4: (lv_name_1_0= ruleValidID )
+			// InternalWeightDefinition.g:4498:5: lv_name_1_0= ruleValidID
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getJvmFormalParameterAccess().getNameValidIDParserRuleCall_1_0());
@@ -10959,7 +10960,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleFullJvmFormalParameter"
-	// InternalWeightDefinition.g:4515:1: entryRuleFullJvmFormalParameter returns [EObject current=null] :iv_ruleFullJvmFormalParameter= ruleFullJvmFormalParameter EOF ;
+	// InternalWeightDefinition.g:4519:1: entryRuleFullJvmFormalParameter returns [EObject current=null] :iv_ruleFullJvmFormalParameter= ruleFullJvmFormalParameter EOF ;
 	public final EObject entryRuleFullJvmFormalParameter() throws RecognitionException {
 		EObject current = null;
 
@@ -10967,8 +10968,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleFullJvmFormalParameter =null;
 
 		try {
-			// InternalWeightDefinition.g:4515:63: (iv_ruleFullJvmFormalParameter= ruleFullJvmFormalParameter EOF )
-			// InternalWeightDefinition.g:4516:2: iv_ruleFullJvmFormalParameter= ruleFullJvmFormalParameter EOF
+			// InternalWeightDefinition.g:4519:63: (iv_ruleFullJvmFormalParameter= ruleFullJvmFormalParameter EOF )
+			// InternalWeightDefinition.g:4520:2: iv_ruleFullJvmFormalParameter= ruleFullJvmFormalParameter EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getFullJvmFormalParameterRule()); }
 			pushFollow(FOLLOW_1);
@@ -10996,7 +10997,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleFullJvmFormalParameter"
-	// InternalWeightDefinition.g:4522:1: ruleFullJvmFormalParameter returns [EObject current=null] : ( ( (lv_parameterType_0_0= ruleJvmTypeReference ) ) ( (lv_name_1_0= ruleValidID ) ) ) ;
+	// InternalWeightDefinition.g:4526:1: ruleFullJvmFormalParameter returns [EObject current=null] : ( ( (lv_parameterType_0_0= ruleJvmTypeReference ) ) ( (lv_name_1_0= ruleValidID ) ) ) ;
 	public final EObject ruleFullJvmFormalParameter() throws RecognitionException {
 		EObject current = null;
 
@@ -11008,22 +11009,22 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:4528:2: ( ( ( (lv_parameterType_0_0= ruleJvmTypeReference ) ) ( (lv_name_1_0= ruleValidID ) ) ) )
-			// InternalWeightDefinition.g:4529:2: ( ( (lv_parameterType_0_0= ruleJvmTypeReference ) ) ( (lv_name_1_0= ruleValidID ) ) )
+			// InternalWeightDefinition.g:4532:2: ( ( ( (lv_parameterType_0_0= ruleJvmTypeReference ) ) ( (lv_name_1_0= ruleValidID ) ) ) )
+			// InternalWeightDefinition.g:4533:2: ( ( (lv_parameterType_0_0= ruleJvmTypeReference ) ) ( (lv_name_1_0= ruleValidID ) ) )
 			{
-			// InternalWeightDefinition.g:4529:2: ( ( (lv_parameterType_0_0= ruleJvmTypeReference ) ) ( (lv_name_1_0= ruleValidID ) ) )
-			// InternalWeightDefinition.g:4530:3: ( (lv_parameterType_0_0= ruleJvmTypeReference ) ) ( (lv_name_1_0= ruleValidID ) )
+			// InternalWeightDefinition.g:4533:2: ( ( (lv_parameterType_0_0= ruleJvmTypeReference ) ) ( (lv_name_1_0= ruleValidID ) ) )
+			// InternalWeightDefinition.g:4534:3: ( (lv_parameterType_0_0= ruleJvmTypeReference ) ) ( (lv_name_1_0= ruleValidID ) )
 			{
-			// InternalWeightDefinition.g:4530:3: ( (lv_parameterType_0_0= ruleJvmTypeReference ) )
-			// InternalWeightDefinition.g:4531:4: (lv_parameterType_0_0= ruleJvmTypeReference )
+			// InternalWeightDefinition.g:4534:3: ( (lv_parameterType_0_0= ruleJvmTypeReference ) )
+			// InternalWeightDefinition.g:4535:4: (lv_parameterType_0_0= ruleJvmTypeReference )
 			{
-			// InternalWeightDefinition.g:4531:4: (lv_parameterType_0_0= ruleJvmTypeReference )
-			// InternalWeightDefinition.g:4532:5: lv_parameterType_0_0= ruleJvmTypeReference
+			// InternalWeightDefinition.g:4535:4: (lv_parameterType_0_0= ruleJvmTypeReference )
+			// InternalWeightDefinition.g:4536:5: lv_parameterType_0_0= ruleJvmTypeReference
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getFullJvmFormalParameterAccess().getParameterTypeJvmTypeReferenceParserRuleCall_0_0());
 							}
-			pushFollow(FOLLOW_6);
+			pushFollow(FOLLOW_5);
 			lv_parameterType_0_0=ruleJvmTypeReference();
 			state._fsp--;
 			if (state.failed) return current;
@@ -11042,11 +11043,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			// InternalWeightDefinition.g:4549:3: ( (lv_name_1_0= ruleValidID ) )
-			// InternalWeightDefinition.g:4550:4: (lv_name_1_0= ruleValidID )
+			// InternalWeightDefinition.g:4553:3: ( (lv_name_1_0= ruleValidID ) )
+			// InternalWeightDefinition.g:4554:4: (lv_name_1_0= ruleValidID )
 			{
-			// InternalWeightDefinition.g:4550:4: (lv_name_1_0= ruleValidID )
-			// InternalWeightDefinition.g:4551:5: lv_name_1_0= ruleValidID
+			// InternalWeightDefinition.g:4554:4: (lv_name_1_0= ruleValidID )
+			// InternalWeightDefinition.g:4555:5: lv_name_1_0= ruleValidID
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getFullJvmFormalParameterAccess().getNameValidIDParserRuleCall_1_0());
@@ -11094,7 +11095,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXFeatureCall"
-	// InternalWeightDefinition.g:4572:1: entryRuleXFeatureCall returns [EObject current=null] :iv_ruleXFeatureCall= ruleXFeatureCall EOF ;
+	// InternalWeightDefinition.g:4576:1: entryRuleXFeatureCall returns [EObject current=null] :iv_ruleXFeatureCall= ruleXFeatureCall EOF ;
 	public final EObject entryRuleXFeatureCall() throws RecognitionException {
 		EObject current = null;
 
@@ -11102,8 +11103,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXFeatureCall =null;
 
 		try {
-			// InternalWeightDefinition.g:4572:53: (iv_ruleXFeatureCall= ruleXFeatureCall EOF )
-			// InternalWeightDefinition.g:4573:2: iv_ruleXFeatureCall= ruleXFeatureCall EOF
+			// InternalWeightDefinition.g:4576:53: (iv_ruleXFeatureCall= ruleXFeatureCall EOF )
+			// InternalWeightDefinition.g:4577:2: iv_ruleXFeatureCall= ruleXFeatureCall EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXFeatureCallRule()); }
 			pushFollow(FOLLOW_1);
@@ -11131,7 +11132,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXFeatureCall"
-	// InternalWeightDefinition.g:4579:1: ruleXFeatureCall returns [EObject current=null] : ( () (otherlv_1= '<' ( (lv_typeArguments_2_0= ruleJvmArgumentTypeReference ) ) (otherlv_3= ',' ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) )* otherlv_5= '>' )? ( ( ruleIdOrSuper ) ) ( ( ( ( '(' ) )=> (lv_explicitOperationCall_7_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_featureCallArguments_8_0= ruleXShortClosure ) ) | ( ( (lv_featureCallArguments_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_featureCallArguments_11_0= ruleXExpression ) ) )* ) )? otherlv_12= ')' )? ( ( ( () '[' ) )=> (lv_featureCallArguments_13_0= ruleXClosure ) )? ) ;
+	// InternalWeightDefinition.g:4583:1: ruleXFeatureCall returns [EObject current=null] : ( () (otherlv_1= '<' ( (lv_typeArguments_2_0= ruleJvmArgumentTypeReference ) ) (otherlv_3= ',' ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) )* otherlv_5= '>' )? ( ( ruleIdOrSuper ) ) ( ( ( ( '(' ) )=> (lv_explicitOperationCall_7_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_featureCallArguments_8_0= ruleXShortClosure ) ) | ( ( (lv_featureCallArguments_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_featureCallArguments_11_0= ruleXExpression ) ) )* ) )? otherlv_12= ')' )? ( ( ( () '[' ) )=> (lv_featureCallArguments_13_0= ruleXClosure ) )? ) ;
 	public final EObject ruleXFeatureCall() throws RecognitionException {
 		EObject current = null;
 
@@ -11153,14 +11154,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:4585:2: ( ( () (otherlv_1= '<' ( (lv_typeArguments_2_0= ruleJvmArgumentTypeReference ) ) (otherlv_3= ',' ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) )* otherlv_5= '>' )? ( ( ruleIdOrSuper ) ) ( ( ( ( '(' ) )=> (lv_explicitOperationCall_7_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_featureCallArguments_8_0= ruleXShortClosure ) ) | ( ( (lv_featureCallArguments_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_featureCallArguments_11_0= ruleXExpression ) ) )* ) )? otherlv_12= ')' )? ( ( ( () '[' ) )=> (lv_featureCallArguments_13_0= ruleXClosure ) )? ) )
-			// InternalWeightDefinition.g:4586:2: ( () (otherlv_1= '<' ( (lv_typeArguments_2_0= ruleJvmArgumentTypeReference ) ) (otherlv_3= ',' ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) )* otherlv_5= '>' )? ( ( ruleIdOrSuper ) ) ( ( ( ( '(' ) )=> (lv_explicitOperationCall_7_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_featureCallArguments_8_0= ruleXShortClosure ) ) | ( ( (lv_featureCallArguments_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_featureCallArguments_11_0= ruleXExpression ) ) )* ) )? otherlv_12= ')' )? ( ( ( () '[' ) )=> (lv_featureCallArguments_13_0= ruleXClosure ) )? )
+			// InternalWeightDefinition.g:4589:2: ( ( () (otherlv_1= '<' ( (lv_typeArguments_2_0= ruleJvmArgumentTypeReference ) ) (otherlv_3= ',' ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) )* otherlv_5= '>' )? ( ( ruleIdOrSuper ) ) ( ( ( ( '(' ) )=> (lv_explicitOperationCall_7_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_featureCallArguments_8_0= ruleXShortClosure ) ) | ( ( (lv_featureCallArguments_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_featureCallArguments_11_0= ruleXExpression ) ) )* ) )? otherlv_12= ')' )? ( ( ( () '[' ) )=> (lv_featureCallArguments_13_0= ruleXClosure ) )? ) )
+			// InternalWeightDefinition.g:4590:2: ( () (otherlv_1= '<' ( (lv_typeArguments_2_0= ruleJvmArgumentTypeReference ) ) (otherlv_3= ',' ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) )* otherlv_5= '>' )? ( ( ruleIdOrSuper ) ) ( ( ( ( '(' ) )=> (lv_explicitOperationCall_7_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_featureCallArguments_8_0= ruleXShortClosure ) ) | ( ( (lv_featureCallArguments_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_featureCallArguments_11_0= ruleXExpression ) ) )* ) )? otherlv_12= ')' )? ( ( ( () '[' ) )=> (lv_featureCallArguments_13_0= ruleXClosure ) )? )
 			{
-			// InternalWeightDefinition.g:4586:2: ( () (otherlv_1= '<' ( (lv_typeArguments_2_0= ruleJvmArgumentTypeReference ) ) (otherlv_3= ',' ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) )* otherlv_5= '>' )? ( ( ruleIdOrSuper ) ) ( ( ( ( '(' ) )=> (lv_explicitOperationCall_7_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_featureCallArguments_8_0= ruleXShortClosure ) ) | ( ( (lv_featureCallArguments_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_featureCallArguments_11_0= ruleXExpression ) ) )* ) )? otherlv_12= ')' )? ( ( ( () '[' ) )=> (lv_featureCallArguments_13_0= ruleXClosure ) )? )
-			// InternalWeightDefinition.g:4587:3: () (otherlv_1= '<' ( (lv_typeArguments_2_0= ruleJvmArgumentTypeReference ) ) (otherlv_3= ',' ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) )* otherlv_5= '>' )? ( ( ruleIdOrSuper ) ) ( ( ( ( '(' ) )=> (lv_explicitOperationCall_7_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_featureCallArguments_8_0= ruleXShortClosure ) ) | ( ( (lv_featureCallArguments_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_featureCallArguments_11_0= ruleXExpression ) ) )* ) )? otherlv_12= ')' )? ( ( ( () '[' ) )=> (lv_featureCallArguments_13_0= ruleXClosure ) )?
+			// InternalWeightDefinition.g:4590:2: ( () (otherlv_1= '<' ( (lv_typeArguments_2_0= ruleJvmArgumentTypeReference ) ) (otherlv_3= ',' ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) )* otherlv_5= '>' )? ( ( ruleIdOrSuper ) ) ( ( ( ( '(' ) )=> (lv_explicitOperationCall_7_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_featureCallArguments_8_0= ruleXShortClosure ) ) | ( ( (lv_featureCallArguments_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_featureCallArguments_11_0= ruleXExpression ) ) )* ) )? otherlv_12= ')' )? ( ( ( () '[' ) )=> (lv_featureCallArguments_13_0= ruleXClosure ) )? )
+			// InternalWeightDefinition.g:4591:3: () (otherlv_1= '<' ( (lv_typeArguments_2_0= ruleJvmArgumentTypeReference ) ) (otherlv_3= ',' ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) )* otherlv_5= '>' )? ( ( ruleIdOrSuper ) ) ( ( ( ( '(' ) )=> (lv_explicitOperationCall_7_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_featureCallArguments_8_0= ruleXShortClosure ) ) | ( ( (lv_featureCallArguments_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_featureCallArguments_11_0= ruleXExpression ) ) )* ) )? otherlv_12= ')' )? ( ( ( () '[' ) )=> (lv_featureCallArguments_13_0= ruleXClosure ) )?
 			{
-			// InternalWeightDefinition.g:4587:3: ()
-			// InternalWeightDefinition.g:4588:4: 
+			// InternalWeightDefinition.g:4591:3: ()
+			// InternalWeightDefinition.g:4592:4: 
 			{
 			if ( state.backtracking==0 ) {
 							current = forceCreateModelElement(
@@ -11169,30 +11170,30 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						}
 			}
 
-			// InternalWeightDefinition.g:4594:3: (otherlv_1= '<' ( (lv_typeArguments_2_0= ruleJvmArgumentTypeReference ) ) (otherlv_3= ',' ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) )* otherlv_5= '>' )?
-			int alt73=2;
-			int LA73_0 = input.LA(1);
-			if ( (LA73_0==42) ) {
-				alt73=1;
+			// InternalWeightDefinition.g:4598:3: (otherlv_1= '<' ( (lv_typeArguments_2_0= ruleJvmArgumentTypeReference ) ) (otherlv_3= ',' ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) )* otherlv_5= '>' )?
+			int alt71=2;
+			int LA71_0 = input.LA(1);
+			if ( (LA71_0==42) ) {
+				alt71=1;
 			}
-			switch (alt73) {
+			switch (alt71) {
 				case 1 :
-					// InternalWeightDefinition.g:4595:4: otherlv_1= '<' ( (lv_typeArguments_2_0= ruleJvmArgumentTypeReference ) ) (otherlv_3= ',' ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) )* otherlv_5= '>'
+					// InternalWeightDefinition.g:4599:4: otherlv_1= '<' ( (lv_typeArguments_2_0= ruleJvmArgumentTypeReference ) ) (otherlv_3= ',' ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) )* otherlv_5= '>'
 					{
-					otherlv_1=(Token)match(input,42,FOLLOW_33); if (state.failed) return current;
+					otherlv_1=(Token)match(input,42,FOLLOW_32); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 									newLeafNode(otherlv_1, grammarAccess.getXFeatureCallAccess().getLessThanSignKeyword_1_0());
 								}
-					// InternalWeightDefinition.g:4599:4: ( (lv_typeArguments_2_0= ruleJvmArgumentTypeReference ) )
-					// InternalWeightDefinition.g:4600:5: (lv_typeArguments_2_0= ruleJvmArgumentTypeReference )
+					// InternalWeightDefinition.g:4603:4: ( (lv_typeArguments_2_0= ruleJvmArgumentTypeReference ) )
+					// InternalWeightDefinition.g:4604:5: (lv_typeArguments_2_0= ruleJvmArgumentTypeReference )
 					{
-					// InternalWeightDefinition.g:4600:5: (lv_typeArguments_2_0= ruleJvmArgumentTypeReference )
-					// InternalWeightDefinition.g:4601:6: lv_typeArguments_2_0= ruleJvmArgumentTypeReference
+					// InternalWeightDefinition.g:4604:5: (lv_typeArguments_2_0= ruleJvmArgumentTypeReference )
+					// InternalWeightDefinition.g:4605:6: lv_typeArguments_2_0= ruleJvmArgumentTypeReference
 					{
 					if ( state.backtracking==0 ) {
 											newCompositeNode(grammarAccess.getXFeatureCallAccess().getTypeArgumentsJvmArgumentTypeReferenceParserRuleCall_1_1_0());
 										}
-					pushFollow(FOLLOW_34);
+					pushFollow(FOLLOW_33);
 					lv_typeArguments_2_0=ruleJvmArgumentTypeReference();
 					state._fsp--;
 					if (state.failed) return current;
@@ -11211,33 +11212,33 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:4618:4: (otherlv_3= ',' ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) )*
-					loop72:
+					// InternalWeightDefinition.g:4622:4: (otherlv_3= ',' ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) )*
+					loop70:
 					while (true) {
-						int alt72=2;
-						int LA72_0 = input.LA(1);
-						if ( (LA72_0==29) ) {
-							alt72=1;
+						int alt70=2;
+						int LA70_0 = input.LA(1);
+						if ( (LA70_0==29) ) {
+							alt70=1;
 						}
 
-						switch (alt72) {
+						switch (alt70) {
 						case 1 :
-							// InternalWeightDefinition.g:4619:5: otherlv_3= ',' ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) )
+							// InternalWeightDefinition.g:4623:5: otherlv_3= ',' ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) )
 							{
-							otherlv_3=(Token)match(input,29,FOLLOW_33); if (state.failed) return current;
+							otherlv_3=(Token)match(input,29,FOLLOW_32); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
 												newLeafNode(otherlv_3, grammarAccess.getXFeatureCallAccess().getCommaKeyword_1_2_0());
 											}
-							// InternalWeightDefinition.g:4623:5: ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) )
-							// InternalWeightDefinition.g:4624:6: (lv_typeArguments_4_0= ruleJvmArgumentTypeReference )
+							// InternalWeightDefinition.g:4627:5: ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) )
+							// InternalWeightDefinition.g:4628:6: (lv_typeArguments_4_0= ruleJvmArgumentTypeReference )
 							{
-							// InternalWeightDefinition.g:4624:6: (lv_typeArguments_4_0= ruleJvmArgumentTypeReference )
-							// InternalWeightDefinition.g:4625:7: lv_typeArguments_4_0= ruleJvmArgumentTypeReference
+							// InternalWeightDefinition.g:4628:6: (lv_typeArguments_4_0= ruleJvmArgumentTypeReference )
+							// InternalWeightDefinition.g:4629:7: lv_typeArguments_4_0= ruleJvmArgumentTypeReference
 							{
 							if ( state.backtracking==0 ) {
 														newCompositeNode(grammarAccess.getXFeatureCallAccess().getTypeArgumentsJvmArgumentTypeReferenceParserRuleCall_1_2_1_0());
 													}
-							pushFollow(FOLLOW_34);
+							pushFollow(FOLLOW_33);
 							lv_typeArguments_4_0=ruleJvmArgumentTypeReference();
 							state._fsp--;
 							if (state.failed) return current;
@@ -11260,11 +11261,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 							break;
 
 						default :
-							break loop72;
+							break loop70;
 						}
 					}
 
-					otherlv_5=(Token)match(input,48,FOLLOW_35); if (state.failed) return current;
+					otherlv_5=(Token)match(input,48,FOLLOW_34); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 									newLeafNode(otherlv_5, grammarAccess.getXFeatureCallAccess().getGreaterThanSignKeyword_1_3());
 								}
@@ -11273,11 +11274,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			// InternalWeightDefinition.g:4648:3: ( ( ruleIdOrSuper ) )
-			// InternalWeightDefinition.g:4649:4: ( ruleIdOrSuper )
+			// InternalWeightDefinition.g:4652:3: ( ( ruleIdOrSuper ) )
+			// InternalWeightDefinition.g:4653:4: ( ruleIdOrSuper )
 			{
-			// InternalWeightDefinition.g:4649:4: ( ruleIdOrSuper )
-			// InternalWeightDefinition.g:4650:5: ruleIdOrSuper
+			// InternalWeightDefinition.g:4653:4: ( ruleIdOrSuper )
+			// InternalWeightDefinition.g:4654:5: ruleIdOrSuper
 			{
 			if ( state.backtracking==0 ) {
 								if (current==null) {
@@ -11287,7 +11288,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXFeatureCallAccess().getFeatureJvmIdentifiableElementCrossReference_2_0());
 							}
-			pushFollow(FOLLOW_68);
+			pushFollow(FOLLOW_67);
 			ruleIdOrSuper();
 			state._fsp--;
 			if (state.failed) return current;
@@ -11298,20 +11299,20 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			// InternalWeightDefinition.g:4664:3: ( ( ( ( '(' ) )=> (lv_explicitOperationCall_7_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_featureCallArguments_8_0= ruleXShortClosure ) ) | ( ( (lv_featureCallArguments_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_featureCallArguments_11_0= ruleXExpression ) ) )* ) )? otherlv_12= ')' )?
-			int alt76=2;
-			alt76 = dfa76.predict(input);
-			switch (alt76) {
+			// InternalWeightDefinition.g:4668:3: ( ( ( ( '(' ) )=> (lv_explicitOperationCall_7_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_featureCallArguments_8_0= ruleXShortClosure ) ) | ( ( (lv_featureCallArguments_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_featureCallArguments_11_0= ruleXExpression ) ) )* ) )? otherlv_12= ')' )?
+			int alt74=2;
+			alt74 = dfa74.predict(input);
+			switch (alt74) {
 				case 1 :
-					// InternalWeightDefinition.g:4665:4: ( ( ( '(' ) )=> (lv_explicitOperationCall_7_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_featureCallArguments_8_0= ruleXShortClosure ) ) | ( ( (lv_featureCallArguments_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_featureCallArguments_11_0= ruleXExpression ) ) )* ) )? otherlv_12= ')'
+					// InternalWeightDefinition.g:4669:4: ( ( ( '(' ) )=> (lv_explicitOperationCall_7_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_featureCallArguments_8_0= ruleXShortClosure ) ) | ( ( (lv_featureCallArguments_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_featureCallArguments_11_0= ruleXExpression ) ) )* ) )? otherlv_12= ')'
 					{
-					// InternalWeightDefinition.g:4665:4: ( ( ( '(' ) )=> (lv_explicitOperationCall_7_0= '(' ) )
-					// InternalWeightDefinition.g:4666:5: ( ( '(' ) )=> (lv_explicitOperationCall_7_0= '(' )
+					// InternalWeightDefinition.g:4669:4: ( ( ( '(' ) )=> (lv_explicitOperationCall_7_0= '(' ) )
+					// InternalWeightDefinition.g:4670:5: ( ( '(' ) )=> (lv_explicitOperationCall_7_0= '(' )
 					{
-					// InternalWeightDefinition.g:4670:5: (lv_explicitOperationCall_7_0= '(' )
-					// InternalWeightDefinition.g:4671:6: lv_explicitOperationCall_7_0= '('
+					// InternalWeightDefinition.g:4674:5: (lv_explicitOperationCall_7_0= '(' )
+					// InternalWeightDefinition.g:4675:6: lv_explicitOperationCall_7_0= '('
 					{
-					lv_explicitOperationCall_7_0=(Token)match(input,21,FOLLOW_37); if (state.failed) return current;
+					lv_explicitOperationCall_7_0=(Token)match(input,21,FOLLOW_36); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 											newLeafNode(lv_explicitOperationCall_7_0, grammarAccess.getXFeatureCallAccess().getExplicitOperationCallLeftParenthesisKeyword_3_0_0());
 										}
@@ -11325,50 +11326,50 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:4683:4: ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_featureCallArguments_8_0= ruleXShortClosure ) ) | ( ( (lv_featureCallArguments_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_featureCallArguments_11_0= ruleXExpression ) ) )* ) )?
-					int alt75=3;
-					int LA75_0 = input.LA(1);
-					if ( (LA75_0==RULE_ID) ) {
-						int LA75_1 = input.LA(2);
+					// InternalWeightDefinition.g:4687:4: ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_featureCallArguments_8_0= ruleXShortClosure ) ) | ( ( (lv_featureCallArguments_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_featureCallArguments_11_0= ruleXExpression ) ) )* ) )?
+					int alt73=3;
+					int LA73_0 = input.LA(1);
+					if ( (LA73_0==RULE_ID) ) {
+						int LA73_1 = input.LA(2);
 						if ( (synpred31_InternalWeightDefinition()) ) {
-							alt75=1;
+							alt73=1;
 						}
 						else if ( (true) ) {
-							alt75=2;
+							alt73=2;
 						}
 					}
-					else if ( (LA75_0==21) ) {
-						int LA75_2 = input.LA(2);
+					else if ( (LA73_0==21) ) {
+						int LA73_2 = input.LA(2);
 						if ( (synpred31_InternalWeightDefinition()) ) {
-							alt75=1;
+							alt73=1;
 						}
 						else if ( (true) ) {
-							alt75=2;
+							alt73=2;
 						}
 					}
-					else if ( (LA75_0==47) && (synpred31_InternalWeightDefinition())) {
-						alt75=1;
+					else if ( (LA73_0==47) && (synpred31_InternalWeightDefinition())) {
+						alt73=1;
 					}
-					else if ( (LA75_0==86) && (synpred31_InternalWeightDefinition())) {
-						alt75=1;
+					else if ( (LA73_0==86) && (synpred31_InternalWeightDefinition())) {
+						alt73=1;
 					}
-					else if ( ((LA75_0 >= RULE_DECIMAL && LA75_0 <= RULE_HEX)||LA75_0==RULE_INT||LA75_0==RULE_STRING||LA75_0==13||LA75_0==16||LA75_0==26||LA75_0==30||LA75_0==42||LA75_0==53||LA75_0==59||(LA75_0 >= 61 && LA75_0 <= 63)||LA75_0==65||(LA75_0 >= 67 && LA75_0 <= 68)||(LA75_0 >= 70 && LA75_0 <= 72)||(LA75_0 >= 74 && LA75_0 <= 81)||(LA75_0 >= 84 && LA75_0 <= 85)) ) {
-						alt75=2;
+					else if ( ((LA73_0 >= RULE_DECIMAL && LA73_0 <= RULE_HEX)||LA73_0==RULE_INT||LA73_0==RULE_STRING||LA73_0==13||LA73_0==16||LA73_0==26||LA73_0==30||LA73_0==42||LA73_0==53||LA73_0==59||(LA73_0 >= 61 && LA73_0 <= 63)||LA73_0==65||(LA73_0 >= 67 && LA73_0 <= 68)||(LA73_0 >= 70 && LA73_0 <= 72)||(LA73_0 >= 74 && LA73_0 <= 81)||(LA73_0 >= 84 && LA73_0 <= 85)) ) {
+						alt73=2;
 					}
-					switch (alt75) {
+					switch (alt73) {
 						case 1 :
-							// InternalWeightDefinition.g:4684:5: ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_featureCallArguments_8_0= ruleXShortClosure ) )
+							// InternalWeightDefinition.g:4688:5: ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_featureCallArguments_8_0= ruleXShortClosure ) )
 							{
-							// InternalWeightDefinition.g:4684:5: ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_featureCallArguments_8_0= ruleXShortClosure ) )
-							// InternalWeightDefinition.g:4685:6: ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_featureCallArguments_8_0= ruleXShortClosure )
+							// InternalWeightDefinition.g:4688:5: ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_featureCallArguments_8_0= ruleXShortClosure ) )
+							// InternalWeightDefinition.g:4689:6: ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_featureCallArguments_8_0= ruleXShortClosure )
 							{
-							// InternalWeightDefinition.g:4710:6: (lv_featureCallArguments_8_0= ruleXShortClosure )
-							// InternalWeightDefinition.g:4711:7: lv_featureCallArguments_8_0= ruleXShortClosure
+							// InternalWeightDefinition.g:4714:6: (lv_featureCallArguments_8_0= ruleXShortClosure )
+							// InternalWeightDefinition.g:4715:7: lv_featureCallArguments_8_0= ruleXShortClosure
 							{
 							if ( state.backtracking==0 ) {
 														newCompositeNode(grammarAccess.getXFeatureCallAccess().getFeatureCallArgumentsXShortClosureParserRuleCall_3_1_0_0());
 													}
-							pushFollow(FOLLOW_38);
+							pushFollow(FOLLOW_37);
 							lv_featureCallArguments_8_0=ruleXShortClosure();
 							state._fsp--;
 							if (state.failed) return current;
@@ -11390,21 +11391,21 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 							}
 							break;
 						case 2 :
-							// InternalWeightDefinition.g:4729:5: ( ( (lv_featureCallArguments_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_featureCallArguments_11_0= ruleXExpression ) ) )* )
+							// InternalWeightDefinition.g:4733:5: ( ( (lv_featureCallArguments_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_featureCallArguments_11_0= ruleXExpression ) ) )* )
 							{
-							// InternalWeightDefinition.g:4729:5: ( ( (lv_featureCallArguments_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_featureCallArguments_11_0= ruleXExpression ) ) )* )
-							// InternalWeightDefinition.g:4730:6: ( (lv_featureCallArguments_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_featureCallArguments_11_0= ruleXExpression ) ) )*
+							// InternalWeightDefinition.g:4733:5: ( ( (lv_featureCallArguments_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_featureCallArguments_11_0= ruleXExpression ) ) )* )
+							// InternalWeightDefinition.g:4734:6: ( (lv_featureCallArguments_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_featureCallArguments_11_0= ruleXExpression ) ) )*
 							{
-							// InternalWeightDefinition.g:4730:6: ( (lv_featureCallArguments_9_0= ruleXExpression ) )
-							// InternalWeightDefinition.g:4731:7: (lv_featureCallArguments_9_0= ruleXExpression )
+							// InternalWeightDefinition.g:4734:6: ( (lv_featureCallArguments_9_0= ruleXExpression ) )
+							// InternalWeightDefinition.g:4735:7: (lv_featureCallArguments_9_0= ruleXExpression )
 							{
-							// InternalWeightDefinition.g:4731:7: (lv_featureCallArguments_9_0= ruleXExpression )
-							// InternalWeightDefinition.g:4732:8: lv_featureCallArguments_9_0= ruleXExpression
+							// InternalWeightDefinition.g:4735:7: (lv_featureCallArguments_9_0= ruleXExpression )
+							// InternalWeightDefinition.g:4736:8: lv_featureCallArguments_9_0= ruleXExpression
 							{
 							if ( state.backtracking==0 ) {
 															newCompositeNode(grammarAccess.getXFeatureCallAccess().getFeatureCallArgumentsXExpressionParserRuleCall_3_1_1_0_0());
 														}
-							pushFollow(FOLLOW_11);
+							pushFollow(FOLLOW_10);
 							lv_featureCallArguments_9_0=ruleXExpression();
 							state._fsp--;
 							if (state.failed) return current;
@@ -11423,33 +11424,33 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 							}
 
-							// InternalWeightDefinition.g:4749:6: (otherlv_10= ',' ( (lv_featureCallArguments_11_0= ruleXExpression ) ) )*
-							loop74:
+							// InternalWeightDefinition.g:4753:6: (otherlv_10= ',' ( (lv_featureCallArguments_11_0= ruleXExpression ) ) )*
+							loop72:
 							while (true) {
-								int alt74=2;
-								int LA74_0 = input.LA(1);
-								if ( (LA74_0==29) ) {
-									alt74=1;
+								int alt72=2;
+								int LA72_0 = input.LA(1);
+								if ( (LA72_0==29) ) {
+									alt72=1;
 								}
 
-								switch (alt74) {
+								switch (alt72) {
 								case 1 :
-									// InternalWeightDefinition.g:4750:7: otherlv_10= ',' ( (lv_featureCallArguments_11_0= ruleXExpression ) )
+									// InternalWeightDefinition.g:4754:7: otherlv_10= ',' ( (lv_featureCallArguments_11_0= ruleXExpression ) )
 									{
-									otherlv_10=(Token)match(input,29,FOLLOW_13); if (state.failed) return current;
+									otherlv_10=(Token)match(input,29,FOLLOW_12); if (state.failed) return current;
 									if ( state.backtracking==0 ) {
 																newLeafNode(otherlv_10, grammarAccess.getXFeatureCallAccess().getCommaKeyword_3_1_1_1_0());
 															}
-									// InternalWeightDefinition.g:4754:7: ( (lv_featureCallArguments_11_0= ruleXExpression ) )
-									// InternalWeightDefinition.g:4755:8: (lv_featureCallArguments_11_0= ruleXExpression )
+									// InternalWeightDefinition.g:4758:7: ( (lv_featureCallArguments_11_0= ruleXExpression ) )
+									// InternalWeightDefinition.g:4759:8: (lv_featureCallArguments_11_0= ruleXExpression )
 									{
-									// InternalWeightDefinition.g:4755:8: (lv_featureCallArguments_11_0= ruleXExpression )
-									// InternalWeightDefinition.g:4756:9: lv_featureCallArguments_11_0= ruleXExpression
+									// InternalWeightDefinition.g:4759:8: (lv_featureCallArguments_11_0= ruleXExpression )
+									// InternalWeightDefinition.g:4760:9: lv_featureCallArguments_11_0= ruleXExpression
 									{
 									if ( state.backtracking==0 ) {
 																		newCompositeNode(grammarAccess.getXFeatureCallAccess().getFeatureCallArgumentsXExpressionParserRuleCall_3_1_1_1_1_0());
 																	}
-									pushFollow(FOLLOW_11);
+									pushFollow(FOLLOW_10);
 									lv_featureCallArguments_11_0=ruleXExpression();
 									state._fsp--;
 									if (state.failed) return current;
@@ -11472,7 +11473,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 									break;
 
 								default :
-									break loop74;
+									break loop72;
 								}
 							}
 
@@ -11483,7 +11484,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					otherlv_12=(Token)match(input,22,FOLLOW_69); if (state.failed) return current;
+					otherlv_12=(Token)match(input,22,FOLLOW_68); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 									newLeafNode(otherlv_12, grammarAccess.getXFeatureCallAccess().getRightParenthesisKeyword_3_2());
 								}
@@ -11492,15 +11493,15 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			// InternalWeightDefinition.g:4781:3: ( ( ( () '[' ) )=> (lv_featureCallArguments_13_0= ruleXClosure ) )?
-			int alt77=2;
-			alt77 = dfa77.predict(input);
-			switch (alt77) {
+			// InternalWeightDefinition.g:4785:3: ( ( ( () '[' ) )=> (lv_featureCallArguments_13_0= ruleXClosure ) )?
+			int alt75=2;
+			alt75 = dfa75.predict(input);
+			switch (alt75) {
 				case 1 :
-					// InternalWeightDefinition.g:4782:4: ( ( () '[' ) )=> (lv_featureCallArguments_13_0= ruleXClosure )
+					// InternalWeightDefinition.g:4786:4: ( ( () '[' ) )=> (lv_featureCallArguments_13_0= ruleXClosure )
 					{
-					// InternalWeightDefinition.g:4788:4: (lv_featureCallArguments_13_0= ruleXClosure )
-					// InternalWeightDefinition.g:4789:5: lv_featureCallArguments_13_0= ruleXClosure
+					// InternalWeightDefinition.g:4792:4: (lv_featureCallArguments_13_0= ruleXClosure )
+					// InternalWeightDefinition.g:4793:5: lv_featureCallArguments_13_0= ruleXClosure
 					{
 					if ( state.backtracking==0 ) {
 										newCompositeNode(grammarAccess.getXFeatureCallAccess().getFeatureCallArgumentsXClosureParserRuleCall_4_0());
@@ -11551,7 +11552,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleFeatureCallID"
-	// InternalWeightDefinition.g:4810:1: entryRuleFeatureCallID returns [String current=null] :iv_ruleFeatureCallID= ruleFeatureCallID EOF ;
+	// InternalWeightDefinition.g:4814:1: entryRuleFeatureCallID returns [String current=null] :iv_ruleFeatureCallID= ruleFeatureCallID EOF ;
 	public final String entryRuleFeatureCallID() throws RecognitionException {
 		String current = null;
 
@@ -11559,8 +11560,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		AntlrDatatypeRuleToken iv_ruleFeatureCallID =null;
 
 		try {
-			// InternalWeightDefinition.g:4810:53: (iv_ruleFeatureCallID= ruleFeatureCallID EOF )
-			// InternalWeightDefinition.g:4811:2: iv_ruleFeatureCallID= ruleFeatureCallID EOF
+			// InternalWeightDefinition.g:4814:53: (iv_ruleFeatureCallID= ruleFeatureCallID EOF )
+			// InternalWeightDefinition.g:4815:2: iv_ruleFeatureCallID= ruleFeatureCallID EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getFeatureCallIDRule()); }
 			pushFollow(FOLLOW_1);
@@ -11588,7 +11589,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleFeatureCallID"
-	// InternalWeightDefinition.g:4817:1: ruleFeatureCallID returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_ValidID_0= ruleValidID |kw= 'extends' |kw= 'static' |kw= 'import' |kw= 'extension' ) ;
+	// InternalWeightDefinition.g:4821:1: ruleFeatureCallID returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_ValidID_0= ruleValidID |kw= 'extends' |kw= 'static' |kw= 'import' |kw= 'extension' ) ;
 	public final AntlrDatatypeRuleToken ruleFeatureCallID() throws RecognitionException {
 		AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -11600,46 +11601,46 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:4823:2: ( (this_ValidID_0= ruleValidID |kw= 'extends' |kw= 'static' |kw= 'import' |kw= 'extension' ) )
-			// InternalWeightDefinition.g:4824:2: (this_ValidID_0= ruleValidID |kw= 'extends' |kw= 'static' |kw= 'import' |kw= 'extension' )
+			// InternalWeightDefinition.g:4827:2: ( (this_ValidID_0= ruleValidID |kw= 'extends' |kw= 'static' |kw= 'import' |kw= 'extension' ) )
+			// InternalWeightDefinition.g:4828:2: (this_ValidID_0= ruleValidID |kw= 'extends' |kw= 'static' |kw= 'import' |kw= 'extension' )
 			{
-			// InternalWeightDefinition.g:4824:2: (this_ValidID_0= ruleValidID |kw= 'extends' |kw= 'static' |kw= 'import' |kw= 'extension' )
-			int alt78=5;
+			// InternalWeightDefinition.g:4828:2: (this_ValidID_0= ruleValidID |kw= 'extends' |kw= 'static' |kw= 'import' |kw= 'extension' )
+			int alt76=5;
 			switch ( input.LA(1) ) {
 			case RULE_ID:
 				{
-				alt78=1;
+				alt76=1;
 				}
 				break;
 			case 61:
 				{
-				alt78=2;
+				alt76=2;
 				}
 				break;
 			case 74:
 				{
-				alt78=3;
+				alt76=3;
 				}
 				break;
 			case 68:
 				{
-				alt78=4;
+				alt76=4;
 				}
 				break;
 			case 62:
 				{
-				alt78=5;
+				alt76=5;
 				}
 				break;
 			default:
 				if (state.backtracking>0) {state.failed=true; return current;}
 				NoViableAltException nvae =
-					new NoViableAltException("", 78, 0, input);
+					new NoViableAltException("", 76, 0, input);
 				throw nvae;
 			}
-			switch (alt78) {
+			switch (alt76) {
 				case 1 :
-					// InternalWeightDefinition.g:4825:3: this_ValidID_0= ruleValidID
+					// InternalWeightDefinition.g:4829:3: this_ValidID_0= ruleValidID
 					{
 					if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getFeatureCallIDAccess().getValidIDParserRuleCall_0());
@@ -11657,7 +11658,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:4836:3: kw= 'extends'
+					// InternalWeightDefinition.g:4840:3: kw= 'extends'
 					{
 					kw=(Token)match(input,61,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -11667,7 +11668,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 3 :
-					// InternalWeightDefinition.g:4842:3: kw= 'static'
+					// InternalWeightDefinition.g:4846:3: kw= 'static'
 					{
 					kw=(Token)match(input,74,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -11677,7 +11678,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 4 :
-					// InternalWeightDefinition.g:4848:3: kw= 'import'
+					// InternalWeightDefinition.g:4852:3: kw= 'import'
 					{
 					kw=(Token)match(input,68,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -11687,7 +11688,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 5 :
-					// InternalWeightDefinition.g:4854:3: kw= 'extension'
+					// InternalWeightDefinition.g:4858:3: kw= 'extension'
 					{
 					kw=(Token)match(input,62,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -11721,7 +11722,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleIdOrSuper"
-	// InternalWeightDefinition.g:4863:1: entryRuleIdOrSuper returns [String current=null] :iv_ruleIdOrSuper= ruleIdOrSuper EOF ;
+	// InternalWeightDefinition.g:4867:1: entryRuleIdOrSuper returns [String current=null] :iv_ruleIdOrSuper= ruleIdOrSuper EOF ;
 	public final String entryRuleIdOrSuper() throws RecognitionException {
 		String current = null;
 
@@ -11729,8 +11730,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		AntlrDatatypeRuleToken iv_ruleIdOrSuper =null;
 
 		try {
-			// InternalWeightDefinition.g:4863:49: (iv_ruleIdOrSuper= ruleIdOrSuper EOF )
-			// InternalWeightDefinition.g:4864:2: iv_ruleIdOrSuper= ruleIdOrSuper EOF
+			// InternalWeightDefinition.g:4867:49: (iv_ruleIdOrSuper= ruleIdOrSuper EOF )
+			// InternalWeightDefinition.g:4868:2: iv_ruleIdOrSuper= ruleIdOrSuper EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getIdOrSuperRule()); }
 			pushFollow(FOLLOW_1);
@@ -11758,7 +11759,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleIdOrSuper"
-	// InternalWeightDefinition.g:4870:1: ruleIdOrSuper returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_FeatureCallID_0= ruleFeatureCallID |kw= 'super' ) ;
+	// InternalWeightDefinition.g:4874:1: ruleIdOrSuper returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_FeatureCallID_0= ruleFeatureCallID |kw= 'super' ) ;
 	public final AntlrDatatypeRuleToken ruleIdOrSuper() throws RecognitionException {
 		AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -11770,29 +11771,29 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:4876:2: ( (this_FeatureCallID_0= ruleFeatureCallID |kw= 'super' ) )
-			// InternalWeightDefinition.g:4877:2: (this_FeatureCallID_0= ruleFeatureCallID |kw= 'super' )
+			// InternalWeightDefinition.g:4880:2: ( (this_FeatureCallID_0= ruleFeatureCallID |kw= 'super' ) )
+			// InternalWeightDefinition.g:4881:2: (this_FeatureCallID_0= ruleFeatureCallID |kw= 'super' )
 			{
-			// InternalWeightDefinition.g:4877:2: (this_FeatureCallID_0= ruleFeatureCallID |kw= 'super' )
-			int alt79=2;
-			int LA79_0 = input.LA(1);
-			if ( (LA79_0==RULE_ID||(LA79_0 >= 61 && LA79_0 <= 62)||LA79_0==68||LA79_0==74) ) {
-				alt79=1;
+			// InternalWeightDefinition.g:4881:2: (this_FeatureCallID_0= ruleFeatureCallID |kw= 'super' )
+			int alt77=2;
+			int LA77_0 = input.LA(1);
+			if ( (LA77_0==RULE_ID||(LA77_0 >= 61 && LA77_0 <= 62)||LA77_0==68||LA77_0==74) ) {
+				alt77=1;
 			}
-			else if ( (LA79_0==75) ) {
-				alt79=2;
+			else if ( (LA77_0==75) ) {
+				alt77=2;
 			}
 
 			else {
 				if (state.backtracking>0) {state.failed=true; return current;}
 				NoViableAltException nvae =
-					new NoViableAltException("", 79, 0, input);
+					new NoViableAltException("", 77, 0, input);
 				throw nvae;
 			}
 
-			switch (alt79) {
+			switch (alt77) {
 				case 1 :
-					// InternalWeightDefinition.g:4878:3: this_FeatureCallID_0= ruleFeatureCallID
+					// InternalWeightDefinition.g:4882:3: this_FeatureCallID_0= ruleFeatureCallID
 					{
 					if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getIdOrSuperAccess().getFeatureCallIDParserRuleCall_0());
@@ -11810,7 +11811,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:4889:3: kw= 'super'
+					// InternalWeightDefinition.g:4893:3: kw= 'super'
 					{
 					kw=(Token)match(input,75,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -11844,7 +11845,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXConstructorCall"
-	// InternalWeightDefinition.g:4898:1: entryRuleXConstructorCall returns [EObject current=null] :iv_ruleXConstructorCall= ruleXConstructorCall EOF ;
+	// InternalWeightDefinition.g:4902:1: entryRuleXConstructorCall returns [EObject current=null] :iv_ruleXConstructorCall= ruleXConstructorCall EOF ;
 	public final EObject entryRuleXConstructorCall() throws RecognitionException {
 		EObject current = null;
 
@@ -11852,8 +11853,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXConstructorCall =null;
 
 		try {
-			// InternalWeightDefinition.g:4898:57: (iv_ruleXConstructorCall= ruleXConstructorCall EOF )
-			// InternalWeightDefinition.g:4899:2: iv_ruleXConstructorCall= ruleXConstructorCall EOF
+			// InternalWeightDefinition.g:4902:57: (iv_ruleXConstructorCall= ruleXConstructorCall EOF )
+			// InternalWeightDefinition.g:4903:2: iv_ruleXConstructorCall= ruleXConstructorCall EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXConstructorCallRule()); }
 			pushFollow(FOLLOW_1);
@@ -11881,7 +11882,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXConstructorCall"
-	// InternalWeightDefinition.g:4905:1: ruleXConstructorCall returns [EObject current=null] : ( () otherlv_1= 'new' ( ( ruleQualifiedName ) ) ( ( ( '<' )=>otherlv_3= '<' ) ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) (otherlv_5= ',' ( (lv_typeArguments_6_0= ruleJvmArgumentTypeReference ) ) )* otherlv_7= '>' )? ( ( ( ( '(' ) )=> (lv_explicitConstructorCall_8_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_arguments_9_0= ruleXShortClosure ) ) | ( ( (lv_arguments_10_0= ruleXExpression ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleXExpression ) ) )* ) )? otherlv_13= ')' )? ( ( ( () '[' ) )=> (lv_arguments_14_0= ruleXClosure ) )? ) ;
+	// InternalWeightDefinition.g:4909:1: ruleXConstructorCall returns [EObject current=null] : ( () otherlv_1= 'new' ( ( ruleQualifiedName ) ) ( ( ( '<' )=>otherlv_3= '<' ) ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) (otherlv_5= ',' ( (lv_typeArguments_6_0= ruleJvmArgumentTypeReference ) ) )* otherlv_7= '>' )? ( ( ( ( '(' ) )=> (lv_explicitConstructorCall_8_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_arguments_9_0= ruleXShortClosure ) ) | ( ( (lv_arguments_10_0= ruleXExpression ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleXExpression ) ) )* ) )? otherlv_13= ')' )? ( ( ( () '[' ) )=> (lv_arguments_14_0= ruleXClosure ) )? ) ;
 	public final EObject ruleXConstructorCall() throws RecognitionException {
 		EObject current = null;
 
@@ -11904,14 +11905,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:4911:2: ( ( () otherlv_1= 'new' ( ( ruleQualifiedName ) ) ( ( ( '<' )=>otherlv_3= '<' ) ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) (otherlv_5= ',' ( (lv_typeArguments_6_0= ruleJvmArgumentTypeReference ) ) )* otherlv_7= '>' )? ( ( ( ( '(' ) )=> (lv_explicitConstructorCall_8_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_arguments_9_0= ruleXShortClosure ) ) | ( ( (lv_arguments_10_0= ruleXExpression ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleXExpression ) ) )* ) )? otherlv_13= ')' )? ( ( ( () '[' ) )=> (lv_arguments_14_0= ruleXClosure ) )? ) )
-			// InternalWeightDefinition.g:4912:2: ( () otherlv_1= 'new' ( ( ruleQualifiedName ) ) ( ( ( '<' )=>otherlv_3= '<' ) ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) (otherlv_5= ',' ( (lv_typeArguments_6_0= ruleJvmArgumentTypeReference ) ) )* otherlv_7= '>' )? ( ( ( ( '(' ) )=> (lv_explicitConstructorCall_8_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_arguments_9_0= ruleXShortClosure ) ) | ( ( (lv_arguments_10_0= ruleXExpression ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleXExpression ) ) )* ) )? otherlv_13= ')' )? ( ( ( () '[' ) )=> (lv_arguments_14_0= ruleXClosure ) )? )
+			// InternalWeightDefinition.g:4915:2: ( ( () otherlv_1= 'new' ( ( ruleQualifiedName ) ) ( ( ( '<' )=>otherlv_3= '<' ) ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) (otherlv_5= ',' ( (lv_typeArguments_6_0= ruleJvmArgumentTypeReference ) ) )* otherlv_7= '>' )? ( ( ( ( '(' ) )=> (lv_explicitConstructorCall_8_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_arguments_9_0= ruleXShortClosure ) ) | ( ( (lv_arguments_10_0= ruleXExpression ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleXExpression ) ) )* ) )? otherlv_13= ')' )? ( ( ( () '[' ) )=> (lv_arguments_14_0= ruleXClosure ) )? ) )
+			// InternalWeightDefinition.g:4916:2: ( () otherlv_1= 'new' ( ( ruleQualifiedName ) ) ( ( ( '<' )=>otherlv_3= '<' ) ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) (otherlv_5= ',' ( (lv_typeArguments_6_0= ruleJvmArgumentTypeReference ) ) )* otherlv_7= '>' )? ( ( ( ( '(' ) )=> (lv_explicitConstructorCall_8_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_arguments_9_0= ruleXShortClosure ) ) | ( ( (lv_arguments_10_0= ruleXExpression ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleXExpression ) ) )* ) )? otherlv_13= ')' )? ( ( ( () '[' ) )=> (lv_arguments_14_0= ruleXClosure ) )? )
 			{
-			// InternalWeightDefinition.g:4912:2: ( () otherlv_1= 'new' ( ( ruleQualifiedName ) ) ( ( ( '<' )=>otherlv_3= '<' ) ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) (otherlv_5= ',' ( (lv_typeArguments_6_0= ruleJvmArgumentTypeReference ) ) )* otherlv_7= '>' )? ( ( ( ( '(' ) )=> (lv_explicitConstructorCall_8_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_arguments_9_0= ruleXShortClosure ) ) | ( ( (lv_arguments_10_0= ruleXExpression ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleXExpression ) ) )* ) )? otherlv_13= ')' )? ( ( ( () '[' ) )=> (lv_arguments_14_0= ruleXClosure ) )? )
-			// InternalWeightDefinition.g:4913:3: () otherlv_1= 'new' ( ( ruleQualifiedName ) ) ( ( ( '<' )=>otherlv_3= '<' ) ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) (otherlv_5= ',' ( (lv_typeArguments_6_0= ruleJvmArgumentTypeReference ) ) )* otherlv_7= '>' )? ( ( ( ( '(' ) )=> (lv_explicitConstructorCall_8_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_arguments_9_0= ruleXShortClosure ) ) | ( ( (lv_arguments_10_0= ruleXExpression ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleXExpression ) ) )* ) )? otherlv_13= ')' )? ( ( ( () '[' ) )=> (lv_arguments_14_0= ruleXClosure ) )?
+			// InternalWeightDefinition.g:4916:2: ( () otherlv_1= 'new' ( ( ruleQualifiedName ) ) ( ( ( '<' )=>otherlv_3= '<' ) ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) (otherlv_5= ',' ( (lv_typeArguments_6_0= ruleJvmArgumentTypeReference ) ) )* otherlv_7= '>' )? ( ( ( ( '(' ) )=> (lv_explicitConstructorCall_8_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_arguments_9_0= ruleXShortClosure ) ) | ( ( (lv_arguments_10_0= ruleXExpression ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleXExpression ) ) )* ) )? otherlv_13= ')' )? ( ( ( () '[' ) )=> (lv_arguments_14_0= ruleXClosure ) )? )
+			// InternalWeightDefinition.g:4917:3: () otherlv_1= 'new' ( ( ruleQualifiedName ) ) ( ( ( '<' )=>otherlv_3= '<' ) ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) (otherlv_5= ',' ( (lv_typeArguments_6_0= ruleJvmArgumentTypeReference ) ) )* otherlv_7= '>' )? ( ( ( ( '(' ) )=> (lv_explicitConstructorCall_8_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_arguments_9_0= ruleXShortClosure ) ) | ( ( (lv_arguments_10_0= ruleXExpression ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleXExpression ) ) )* ) )? otherlv_13= ')' )? ( ( ( () '[' ) )=> (lv_arguments_14_0= ruleXClosure ) )?
 			{
-			// InternalWeightDefinition.g:4913:3: ()
-			// InternalWeightDefinition.g:4914:4: 
+			// InternalWeightDefinition.g:4917:3: ()
+			// InternalWeightDefinition.g:4918:4: 
 			{
 			if ( state.backtracking==0 ) {
 							current = forceCreateModelElement(
@@ -11920,15 +11921,15 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						}
 			}
 
-			otherlv_1=(Token)match(input,70,FOLLOW_6); if (state.failed) return current;
+			otherlv_1=(Token)match(input,70,FOLLOW_5); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_1, grammarAccess.getXConstructorCallAccess().getNewKeyword_1());
 					}
-			// InternalWeightDefinition.g:4924:3: ( ( ruleQualifiedName ) )
-			// InternalWeightDefinition.g:4925:4: ( ruleQualifiedName )
+			// InternalWeightDefinition.g:4928:3: ( ( ruleQualifiedName ) )
+			// InternalWeightDefinition.g:4929:4: ( ruleQualifiedName )
 			{
-			// InternalWeightDefinition.g:4925:4: ( ruleQualifiedName )
-			// InternalWeightDefinition.g:4926:5: ruleQualifiedName
+			// InternalWeightDefinition.g:4929:4: ( ruleQualifiedName )
+			// InternalWeightDefinition.g:4930:5: ruleQualifiedName
 			{
 			if ( state.backtracking==0 ) {
 								if (current==null) {
@@ -11938,7 +11939,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXConstructorCallAccess().getConstructorJvmConstructorCrossReference_2_0());
 							}
-			pushFollow(FOLLOW_70);
+			pushFollow(FOLLOW_69);
 			ruleQualifiedName();
 			state._fsp--;
 			if (state.failed) return current;
@@ -11949,32 +11950,32 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			// InternalWeightDefinition.g:4940:3: ( ( ( '<' )=>otherlv_3= '<' ) ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) (otherlv_5= ',' ( (lv_typeArguments_6_0= ruleJvmArgumentTypeReference ) ) )* otherlv_7= '>' )?
-			int alt81=2;
-			alt81 = dfa81.predict(input);
-			switch (alt81) {
+			// InternalWeightDefinition.g:4944:3: ( ( ( '<' )=>otherlv_3= '<' ) ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) (otherlv_5= ',' ( (lv_typeArguments_6_0= ruleJvmArgumentTypeReference ) ) )* otherlv_7= '>' )?
+			int alt79=2;
+			alt79 = dfa79.predict(input);
+			switch (alt79) {
 				case 1 :
-					// InternalWeightDefinition.g:4941:4: ( ( '<' )=>otherlv_3= '<' ) ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) (otherlv_5= ',' ( (lv_typeArguments_6_0= ruleJvmArgumentTypeReference ) ) )* otherlv_7= '>'
+					// InternalWeightDefinition.g:4945:4: ( ( '<' )=>otherlv_3= '<' ) ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) (otherlv_5= ',' ( (lv_typeArguments_6_0= ruleJvmArgumentTypeReference ) ) )* otherlv_7= '>'
 					{
-					// InternalWeightDefinition.g:4941:4: ( ( '<' )=>otherlv_3= '<' )
-					// InternalWeightDefinition.g:4942:5: ( '<' )=>otherlv_3= '<'
+					// InternalWeightDefinition.g:4945:4: ( ( '<' )=>otherlv_3= '<' )
+					// InternalWeightDefinition.g:4946:5: ( '<' )=>otherlv_3= '<'
 					{
-					otherlv_3=(Token)match(input,42,FOLLOW_33); if (state.failed) return current;
+					otherlv_3=(Token)match(input,42,FOLLOW_32); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 										newLeafNode(otherlv_3, grammarAccess.getXConstructorCallAccess().getLessThanSignKeyword_3_0());
 									}
 					}
 
-					// InternalWeightDefinition.g:4948:4: ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) )
-					// InternalWeightDefinition.g:4949:5: (lv_typeArguments_4_0= ruleJvmArgumentTypeReference )
+					// InternalWeightDefinition.g:4952:4: ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) )
+					// InternalWeightDefinition.g:4953:5: (lv_typeArguments_4_0= ruleJvmArgumentTypeReference )
 					{
-					// InternalWeightDefinition.g:4949:5: (lv_typeArguments_4_0= ruleJvmArgumentTypeReference )
-					// InternalWeightDefinition.g:4950:6: lv_typeArguments_4_0= ruleJvmArgumentTypeReference
+					// InternalWeightDefinition.g:4953:5: (lv_typeArguments_4_0= ruleJvmArgumentTypeReference )
+					// InternalWeightDefinition.g:4954:6: lv_typeArguments_4_0= ruleJvmArgumentTypeReference
 					{
 					if ( state.backtracking==0 ) {
 											newCompositeNode(grammarAccess.getXConstructorCallAccess().getTypeArgumentsJvmArgumentTypeReferenceParserRuleCall_3_1_0());
 										}
-					pushFollow(FOLLOW_34);
+					pushFollow(FOLLOW_33);
 					lv_typeArguments_4_0=ruleJvmArgumentTypeReference();
 					state._fsp--;
 					if (state.failed) return current;
@@ -11993,33 +11994,33 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:4967:4: (otherlv_5= ',' ( (lv_typeArguments_6_0= ruleJvmArgumentTypeReference ) ) )*
-					loop80:
+					// InternalWeightDefinition.g:4971:4: (otherlv_5= ',' ( (lv_typeArguments_6_0= ruleJvmArgumentTypeReference ) ) )*
+					loop78:
 					while (true) {
-						int alt80=2;
-						int LA80_0 = input.LA(1);
-						if ( (LA80_0==29) ) {
-							alt80=1;
+						int alt78=2;
+						int LA78_0 = input.LA(1);
+						if ( (LA78_0==29) ) {
+							alt78=1;
 						}
 
-						switch (alt80) {
+						switch (alt78) {
 						case 1 :
-							// InternalWeightDefinition.g:4968:5: otherlv_5= ',' ( (lv_typeArguments_6_0= ruleJvmArgumentTypeReference ) )
+							// InternalWeightDefinition.g:4972:5: otherlv_5= ',' ( (lv_typeArguments_6_0= ruleJvmArgumentTypeReference ) )
 							{
-							otherlv_5=(Token)match(input,29,FOLLOW_33); if (state.failed) return current;
+							otherlv_5=(Token)match(input,29,FOLLOW_32); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
 												newLeafNode(otherlv_5, grammarAccess.getXConstructorCallAccess().getCommaKeyword_3_2_0());
 											}
-							// InternalWeightDefinition.g:4972:5: ( (lv_typeArguments_6_0= ruleJvmArgumentTypeReference ) )
-							// InternalWeightDefinition.g:4973:6: (lv_typeArguments_6_0= ruleJvmArgumentTypeReference )
+							// InternalWeightDefinition.g:4976:5: ( (lv_typeArguments_6_0= ruleJvmArgumentTypeReference ) )
+							// InternalWeightDefinition.g:4977:6: (lv_typeArguments_6_0= ruleJvmArgumentTypeReference )
 							{
-							// InternalWeightDefinition.g:4973:6: (lv_typeArguments_6_0= ruleJvmArgumentTypeReference )
-							// InternalWeightDefinition.g:4974:7: lv_typeArguments_6_0= ruleJvmArgumentTypeReference
+							// InternalWeightDefinition.g:4977:6: (lv_typeArguments_6_0= ruleJvmArgumentTypeReference )
+							// InternalWeightDefinition.g:4978:7: lv_typeArguments_6_0= ruleJvmArgumentTypeReference
 							{
 							if ( state.backtracking==0 ) {
 														newCompositeNode(grammarAccess.getXConstructorCallAccess().getTypeArgumentsJvmArgumentTypeReferenceParserRuleCall_3_2_1_0());
 													}
-							pushFollow(FOLLOW_34);
+							pushFollow(FOLLOW_33);
 							lv_typeArguments_6_0=ruleJvmArgumentTypeReference();
 							state._fsp--;
 							if (state.failed) return current;
@@ -12042,11 +12043,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 							break;
 
 						default :
-							break loop80;
+							break loop78;
 						}
 					}
 
-					otherlv_7=(Token)match(input,48,FOLLOW_68); if (state.failed) return current;
+					otherlv_7=(Token)match(input,48,FOLLOW_67); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 									newLeafNode(otherlv_7, grammarAccess.getXConstructorCallAccess().getGreaterThanSignKeyword_3_3());
 								}
@@ -12055,20 +12056,20 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			// InternalWeightDefinition.g:4997:3: ( ( ( ( '(' ) )=> (lv_explicitConstructorCall_8_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_arguments_9_0= ruleXShortClosure ) ) | ( ( (lv_arguments_10_0= ruleXExpression ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleXExpression ) ) )* ) )? otherlv_13= ')' )?
-			int alt84=2;
-			alt84 = dfa84.predict(input);
-			switch (alt84) {
+			// InternalWeightDefinition.g:5001:3: ( ( ( ( '(' ) )=> (lv_explicitConstructorCall_8_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_arguments_9_0= ruleXShortClosure ) ) | ( ( (lv_arguments_10_0= ruleXExpression ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleXExpression ) ) )* ) )? otherlv_13= ')' )?
+			int alt82=2;
+			alt82 = dfa82.predict(input);
+			switch (alt82) {
 				case 1 :
-					// InternalWeightDefinition.g:4998:4: ( ( ( '(' ) )=> (lv_explicitConstructorCall_8_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_arguments_9_0= ruleXShortClosure ) ) | ( ( (lv_arguments_10_0= ruleXExpression ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleXExpression ) ) )* ) )? otherlv_13= ')'
+					// InternalWeightDefinition.g:5002:4: ( ( ( '(' ) )=> (lv_explicitConstructorCall_8_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_arguments_9_0= ruleXShortClosure ) ) | ( ( (lv_arguments_10_0= ruleXExpression ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleXExpression ) ) )* ) )? otherlv_13= ')'
 					{
-					// InternalWeightDefinition.g:4998:4: ( ( ( '(' ) )=> (lv_explicitConstructorCall_8_0= '(' ) )
-					// InternalWeightDefinition.g:4999:5: ( ( '(' ) )=> (lv_explicitConstructorCall_8_0= '(' )
+					// InternalWeightDefinition.g:5002:4: ( ( ( '(' ) )=> (lv_explicitConstructorCall_8_0= '(' ) )
+					// InternalWeightDefinition.g:5003:5: ( ( '(' ) )=> (lv_explicitConstructorCall_8_0= '(' )
 					{
-					// InternalWeightDefinition.g:5003:5: (lv_explicitConstructorCall_8_0= '(' )
-					// InternalWeightDefinition.g:5004:6: lv_explicitConstructorCall_8_0= '('
+					// InternalWeightDefinition.g:5007:5: (lv_explicitConstructorCall_8_0= '(' )
+					// InternalWeightDefinition.g:5008:6: lv_explicitConstructorCall_8_0= '('
 					{
-					lv_explicitConstructorCall_8_0=(Token)match(input,21,FOLLOW_37); if (state.failed) return current;
+					lv_explicitConstructorCall_8_0=(Token)match(input,21,FOLLOW_36); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 											newLeafNode(lv_explicitConstructorCall_8_0, grammarAccess.getXConstructorCallAccess().getExplicitConstructorCallLeftParenthesisKeyword_4_0_0());
 										}
@@ -12082,50 +12083,50 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:5016:4: ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_arguments_9_0= ruleXShortClosure ) ) | ( ( (lv_arguments_10_0= ruleXExpression ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleXExpression ) ) )* ) )?
-					int alt83=3;
-					int LA83_0 = input.LA(1);
-					if ( (LA83_0==RULE_ID) ) {
-						int LA83_1 = input.LA(2);
+					// InternalWeightDefinition.g:5020:4: ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_arguments_9_0= ruleXShortClosure ) ) | ( ( (lv_arguments_10_0= ruleXExpression ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleXExpression ) ) )* ) )?
+					int alt81=3;
+					int LA81_0 = input.LA(1);
+					if ( (LA81_0==RULE_ID) ) {
+						int LA81_1 = input.LA(2);
 						if ( (synpred35_InternalWeightDefinition()) ) {
-							alt83=1;
+							alt81=1;
 						}
 						else if ( (true) ) {
-							alt83=2;
+							alt81=2;
 						}
 					}
-					else if ( (LA83_0==21) ) {
-						int LA83_2 = input.LA(2);
+					else if ( (LA81_0==21) ) {
+						int LA81_2 = input.LA(2);
 						if ( (synpred35_InternalWeightDefinition()) ) {
-							alt83=1;
+							alt81=1;
 						}
 						else if ( (true) ) {
-							alt83=2;
+							alt81=2;
 						}
 					}
-					else if ( (LA83_0==47) && (synpred35_InternalWeightDefinition())) {
-						alt83=1;
+					else if ( (LA81_0==47) && (synpred35_InternalWeightDefinition())) {
+						alt81=1;
 					}
-					else if ( (LA83_0==86) && (synpred35_InternalWeightDefinition())) {
-						alt83=1;
+					else if ( (LA81_0==86) && (synpred35_InternalWeightDefinition())) {
+						alt81=1;
 					}
-					else if ( ((LA83_0 >= RULE_DECIMAL && LA83_0 <= RULE_HEX)||LA83_0==RULE_INT||LA83_0==RULE_STRING||LA83_0==13||LA83_0==16||LA83_0==26||LA83_0==30||LA83_0==42||LA83_0==53||LA83_0==59||(LA83_0 >= 61 && LA83_0 <= 63)||LA83_0==65||(LA83_0 >= 67 && LA83_0 <= 68)||(LA83_0 >= 70 && LA83_0 <= 72)||(LA83_0 >= 74 && LA83_0 <= 81)||(LA83_0 >= 84 && LA83_0 <= 85)) ) {
-						alt83=2;
+					else if ( ((LA81_0 >= RULE_DECIMAL && LA81_0 <= RULE_HEX)||LA81_0==RULE_INT||LA81_0==RULE_STRING||LA81_0==13||LA81_0==16||LA81_0==26||LA81_0==30||LA81_0==42||LA81_0==53||LA81_0==59||(LA81_0 >= 61 && LA81_0 <= 63)||LA81_0==65||(LA81_0 >= 67 && LA81_0 <= 68)||(LA81_0 >= 70 && LA81_0 <= 72)||(LA81_0 >= 74 && LA81_0 <= 81)||(LA81_0 >= 84 && LA81_0 <= 85)) ) {
+						alt81=2;
 					}
-					switch (alt83) {
+					switch (alt81) {
 						case 1 :
-							// InternalWeightDefinition.g:5017:5: ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_arguments_9_0= ruleXShortClosure ) )
+							// InternalWeightDefinition.g:5021:5: ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_arguments_9_0= ruleXShortClosure ) )
 							{
-							// InternalWeightDefinition.g:5017:5: ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_arguments_9_0= ruleXShortClosure ) )
-							// InternalWeightDefinition.g:5018:6: ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_arguments_9_0= ruleXShortClosure )
+							// InternalWeightDefinition.g:5021:5: ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_arguments_9_0= ruleXShortClosure ) )
+							// InternalWeightDefinition.g:5022:6: ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_arguments_9_0= ruleXShortClosure )
 							{
-							// InternalWeightDefinition.g:5043:6: (lv_arguments_9_0= ruleXShortClosure )
-							// InternalWeightDefinition.g:5044:7: lv_arguments_9_0= ruleXShortClosure
+							// InternalWeightDefinition.g:5047:6: (lv_arguments_9_0= ruleXShortClosure )
+							// InternalWeightDefinition.g:5048:7: lv_arguments_9_0= ruleXShortClosure
 							{
 							if ( state.backtracking==0 ) {
 														newCompositeNode(grammarAccess.getXConstructorCallAccess().getArgumentsXShortClosureParserRuleCall_4_1_0_0());
 													}
-							pushFollow(FOLLOW_38);
+							pushFollow(FOLLOW_37);
 							lv_arguments_9_0=ruleXShortClosure();
 							state._fsp--;
 							if (state.failed) return current;
@@ -12147,21 +12148,21 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 							}
 							break;
 						case 2 :
-							// InternalWeightDefinition.g:5062:5: ( ( (lv_arguments_10_0= ruleXExpression ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleXExpression ) ) )* )
+							// InternalWeightDefinition.g:5066:5: ( ( (lv_arguments_10_0= ruleXExpression ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleXExpression ) ) )* )
 							{
-							// InternalWeightDefinition.g:5062:5: ( ( (lv_arguments_10_0= ruleXExpression ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleXExpression ) ) )* )
-							// InternalWeightDefinition.g:5063:6: ( (lv_arguments_10_0= ruleXExpression ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleXExpression ) ) )*
+							// InternalWeightDefinition.g:5066:5: ( ( (lv_arguments_10_0= ruleXExpression ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleXExpression ) ) )* )
+							// InternalWeightDefinition.g:5067:6: ( (lv_arguments_10_0= ruleXExpression ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleXExpression ) ) )*
 							{
-							// InternalWeightDefinition.g:5063:6: ( (lv_arguments_10_0= ruleXExpression ) )
-							// InternalWeightDefinition.g:5064:7: (lv_arguments_10_0= ruleXExpression )
+							// InternalWeightDefinition.g:5067:6: ( (lv_arguments_10_0= ruleXExpression ) )
+							// InternalWeightDefinition.g:5068:7: (lv_arguments_10_0= ruleXExpression )
 							{
-							// InternalWeightDefinition.g:5064:7: (lv_arguments_10_0= ruleXExpression )
-							// InternalWeightDefinition.g:5065:8: lv_arguments_10_0= ruleXExpression
+							// InternalWeightDefinition.g:5068:7: (lv_arguments_10_0= ruleXExpression )
+							// InternalWeightDefinition.g:5069:8: lv_arguments_10_0= ruleXExpression
 							{
 							if ( state.backtracking==0 ) {
 															newCompositeNode(grammarAccess.getXConstructorCallAccess().getArgumentsXExpressionParserRuleCall_4_1_1_0_0());
 														}
-							pushFollow(FOLLOW_11);
+							pushFollow(FOLLOW_10);
 							lv_arguments_10_0=ruleXExpression();
 							state._fsp--;
 							if (state.failed) return current;
@@ -12180,33 +12181,33 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 							}
 
-							// InternalWeightDefinition.g:5082:6: (otherlv_11= ',' ( (lv_arguments_12_0= ruleXExpression ) ) )*
-							loop82:
+							// InternalWeightDefinition.g:5086:6: (otherlv_11= ',' ( (lv_arguments_12_0= ruleXExpression ) ) )*
+							loop80:
 							while (true) {
-								int alt82=2;
-								int LA82_0 = input.LA(1);
-								if ( (LA82_0==29) ) {
-									alt82=1;
+								int alt80=2;
+								int LA80_0 = input.LA(1);
+								if ( (LA80_0==29) ) {
+									alt80=1;
 								}
 
-								switch (alt82) {
+								switch (alt80) {
 								case 1 :
-									// InternalWeightDefinition.g:5083:7: otherlv_11= ',' ( (lv_arguments_12_0= ruleXExpression ) )
+									// InternalWeightDefinition.g:5087:7: otherlv_11= ',' ( (lv_arguments_12_0= ruleXExpression ) )
 									{
-									otherlv_11=(Token)match(input,29,FOLLOW_13); if (state.failed) return current;
+									otherlv_11=(Token)match(input,29,FOLLOW_12); if (state.failed) return current;
 									if ( state.backtracking==0 ) {
 																newLeafNode(otherlv_11, grammarAccess.getXConstructorCallAccess().getCommaKeyword_4_1_1_1_0());
 															}
-									// InternalWeightDefinition.g:5087:7: ( (lv_arguments_12_0= ruleXExpression ) )
-									// InternalWeightDefinition.g:5088:8: (lv_arguments_12_0= ruleXExpression )
+									// InternalWeightDefinition.g:5091:7: ( (lv_arguments_12_0= ruleXExpression ) )
+									// InternalWeightDefinition.g:5092:8: (lv_arguments_12_0= ruleXExpression )
 									{
-									// InternalWeightDefinition.g:5088:8: (lv_arguments_12_0= ruleXExpression )
-									// InternalWeightDefinition.g:5089:9: lv_arguments_12_0= ruleXExpression
+									// InternalWeightDefinition.g:5092:8: (lv_arguments_12_0= ruleXExpression )
+									// InternalWeightDefinition.g:5093:9: lv_arguments_12_0= ruleXExpression
 									{
 									if ( state.backtracking==0 ) {
 																		newCompositeNode(grammarAccess.getXConstructorCallAccess().getArgumentsXExpressionParserRuleCall_4_1_1_1_1_0());
 																	}
-									pushFollow(FOLLOW_11);
+									pushFollow(FOLLOW_10);
 									lv_arguments_12_0=ruleXExpression();
 									state._fsp--;
 									if (state.failed) return current;
@@ -12229,7 +12230,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 									break;
 
 								default :
-									break loop82;
+									break loop80;
 								}
 							}
 
@@ -12240,7 +12241,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					otherlv_13=(Token)match(input,22,FOLLOW_69); if (state.failed) return current;
+					otherlv_13=(Token)match(input,22,FOLLOW_68); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 									newLeafNode(otherlv_13, grammarAccess.getXConstructorCallAccess().getRightParenthesisKeyword_4_2());
 								}
@@ -12249,15 +12250,15 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			// InternalWeightDefinition.g:5114:3: ( ( ( () '[' ) )=> (lv_arguments_14_0= ruleXClosure ) )?
-			int alt85=2;
-			alt85 = dfa85.predict(input);
-			switch (alt85) {
+			// InternalWeightDefinition.g:5118:3: ( ( ( () '[' ) )=> (lv_arguments_14_0= ruleXClosure ) )?
+			int alt83=2;
+			alt83 = dfa83.predict(input);
+			switch (alt83) {
 				case 1 :
-					// InternalWeightDefinition.g:5115:4: ( ( () '[' ) )=> (lv_arguments_14_0= ruleXClosure )
+					// InternalWeightDefinition.g:5119:4: ( ( () '[' ) )=> (lv_arguments_14_0= ruleXClosure )
 					{
-					// InternalWeightDefinition.g:5121:4: (lv_arguments_14_0= ruleXClosure )
-					// InternalWeightDefinition.g:5122:5: lv_arguments_14_0= ruleXClosure
+					// InternalWeightDefinition.g:5125:4: (lv_arguments_14_0= ruleXClosure )
+					// InternalWeightDefinition.g:5126:5: lv_arguments_14_0= ruleXClosure
 					{
 					if ( state.backtracking==0 ) {
 										newCompositeNode(grammarAccess.getXConstructorCallAccess().getArgumentsXClosureParserRuleCall_5_0());
@@ -12308,7 +12309,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXBooleanLiteral"
-	// InternalWeightDefinition.g:5143:1: entryRuleXBooleanLiteral returns [EObject current=null] :iv_ruleXBooleanLiteral= ruleXBooleanLiteral EOF ;
+	// InternalWeightDefinition.g:5147:1: entryRuleXBooleanLiteral returns [EObject current=null] :iv_ruleXBooleanLiteral= ruleXBooleanLiteral EOF ;
 	public final EObject entryRuleXBooleanLiteral() throws RecognitionException {
 		EObject current = null;
 
@@ -12316,8 +12317,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXBooleanLiteral =null;
 
 		try {
-			// InternalWeightDefinition.g:5143:56: (iv_ruleXBooleanLiteral= ruleXBooleanLiteral EOF )
-			// InternalWeightDefinition.g:5144:2: iv_ruleXBooleanLiteral= ruleXBooleanLiteral EOF
+			// InternalWeightDefinition.g:5147:56: (iv_ruleXBooleanLiteral= ruleXBooleanLiteral EOF )
+			// InternalWeightDefinition.g:5148:2: iv_ruleXBooleanLiteral= ruleXBooleanLiteral EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXBooleanLiteralRule()); }
 			pushFollow(FOLLOW_1);
@@ -12345,7 +12346,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXBooleanLiteral"
-	// InternalWeightDefinition.g:5150:1: ruleXBooleanLiteral returns [EObject current=null] : ( () (otherlv_1= 'false' | ( (lv_isTrue_2_0= 'true' ) ) ) ) ;
+	// InternalWeightDefinition.g:5154:1: ruleXBooleanLiteral returns [EObject current=null] : ( () (otherlv_1= 'false' | ( (lv_isTrue_2_0= 'true' ) ) ) ) ;
 	public final EObject ruleXBooleanLiteral() throws RecognitionException {
 		EObject current = null;
 
@@ -12357,14 +12358,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:5156:2: ( ( () (otherlv_1= 'false' | ( (lv_isTrue_2_0= 'true' ) ) ) ) )
-			// InternalWeightDefinition.g:5157:2: ( () (otherlv_1= 'false' | ( (lv_isTrue_2_0= 'true' ) ) ) )
+			// InternalWeightDefinition.g:5160:2: ( ( () (otherlv_1= 'false' | ( (lv_isTrue_2_0= 'true' ) ) ) ) )
+			// InternalWeightDefinition.g:5161:2: ( () (otherlv_1= 'false' | ( (lv_isTrue_2_0= 'true' ) ) ) )
 			{
-			// InternalWeightDefinition.g:5157:2: ( () (otherlv_1= 'false' | ( (lv_isTrue_2_0= 'true' ) ) ) )
-			// InternalWeightDefinition.g:5158:3: () (otherlv_1= 'false' | ( (lv_isTrue_2_0= 'true' ) ) )
+			// InternalWeightDefinition.g:5161:2: ( () (otherlv_1= 'false' | ( (lv_isTrue_2_0= 'true' ) ) ) )
+			// InternalWeightDefinition.g:5162:3: () (otherlv_1= 'false' | ( (lv_isTrue_2_0= 'true' ) ) )
 			{
-			// InternalWeightDefinition.g:5158:3: ()
-			// InternalWeightDefinition.g:5159:4: 
+			// InternalWeightDefinition.g:5162:3: ()
+			// InternalWeightDefinition.g:5163:4: 
 			{
 			if ( state.backtracking==0 ) {
 							current = forceCreateModelElement(
@@ -12373,26 +12374,26 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						}
 			}
 
-			// InternalWeightDefinition.g:5165:3: (otherlv_1= 'false' | ( (lv_isTrue_2_0= 'true' ) ) )
-			int alt86=2;
-			int LA86_0 = input.LA(1);
-			if ( (LA86_0==63) ) {
-				alt86=1;
+			// InternalWeightDefinition.g:5169:3: (otherlv_1= 'false' | ( (lv_isTrue_2_0= 'true' ) ) )
+			int alt84=2;
+			int LA84_0 = input.LA(1);
+			if ( (LA84_0==63) ) {
+				alt84=1;
 			}
-			else if ( (LA86_0==79) ) {
-				alt86=2;
+			else if ( (LA84_0==79) ) {
+				alt84=2;
 			}
 
 			else {
 				if (state.backtracking>0) {state.failed=true; return current;}
 				NoViableAltException nvae =
-					new NoViableAltException("", 86, 0, input);
+					new NoViableAltException("", 84, 0, input);
 				throw nvae;
 			}
 
-			switch (alt86) {
+			switch (alt84) {
 				case 1 :
-					// InternalWeightDefinition.g:5166:4: otherlv_1= 'false'
+					// InternalWeightDefinition.g:5170:4: otherlv_1= 'false'
 					{
 					otherlv_1=(Token)match(input,63,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -12401,13 +12402,13 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:5171:4: ( (lv_isTrue_2_0= 'true' ) )
+					// InternalWeightDefinition.g:5175:4: ( (lv_isTrue_2_0= 'true' ) )
 					{
-					// InternalWeightDefinition.g:5171:4: ( (lv_isTrue_2_0= 'true' ) )
-					// InternalWeightDefinition.g:5172:5: (lv_isTrue_2_0= 'true' )
+					// InternalWeightDefinition.g:5175:4: ( (lv_isTrue_2_0= 'true' ) )
+					// InternalWeightDefinition.g:5176:5: (lv_isTrue_2_0= 'true' )
 					{
-					// InternalWeightDefinition.g:5172:5: (lv_isTrue_2_0= 'true' )
-					// InternalWeightDefinition.g:5173:6: lv_isTrue_2_0= 'true'
+					// InternalWeightDefinition.g:5176:5: (lv_isTrue_2_0= 'true' )
+					// InternalWeightDefinition.g:5177:6: lv_isTrue_2_0= 'true'
 					{
 					lv_isTrue_2_0=(Token)match(input,79,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -12452,7 +12453,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXNullLiteral"
-	// InternalWeightDefinition.g:5190:1: entryRuleXNullLiteral returns [EObject current=null] :iv_ruleXNullLiteral= ruleXNullLiteral EOF ;
+	// InternalWeightDefinition.g:5194:1: entryRuleXNullLiteral returns [EObject current=null] :iv_ruleXNullLiteral= ruleXNullLiteral EOF ;
 	public final EObject entryRuleXNullLiteral() throws RecognitionException {
 		EObject current = null;
 
@@ -12460,8 +12461,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXNullLiteral =null;
 
 		try {
-			// InternalWeightDefinition.g:5190:53: (iv_ruleXNullLiteral= ruleXNullLiteral EOF )
-			// InternalWeightDefinition.g:5191:2: iv_ruleXNullLiteral= ruleXNullLiteral EOF
+			// InternalWeightDefinition.g:5194:53: (iv_ruleXNullLiteral= ruleXNullLiteral EOF )
+			// InternalWeightDefinition.g:5195:2: iv_ruleXNullLiteral= ruleXNullLiteral EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXNullLiteralRule()); }
 			pushFollow(FOLLOW_1);
@@ -12489,7 +12490,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXNullLiteral"
-	// InternalWeightDefinition.g:5197:1: ruleXNullLiteral returns [EObject current=null] : ( () otherlv_1= 'null' ) ;
+	// InternalWeightDefinition.g:5201:1: ruleXNullLiteral returns [EObject current=null] : ( () otherlv_1= 'null' ) ;
 	public final EObject ruleXNullLiteral() throws RecognitionException {
 		EObject current = null;
 
@@ -12500,14 +12501,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:5203:2: ( ( () otherlv_1= 'null' ) )
-			// InternalWeightDefinition.g:5204:2: ( () otherlv_1= 'null' )
+			// InternalWeightDefinition.g:5207:2: ( ( () otherlv_1= 'null' ) )
+			// InternalWeightDefinition.g:5208:2: ( () otherlv_1= 'null' )
 			{
-			// InternalWeightDefinition.g:5204:2: ( () otherlv_1= 'null' )
-			// InternalWeightDefinition.g:5205:3: () otherlv_1= 'null'
+			// InternalWeightDefinition.g:5208:2: ( () otherlv_1= 'null' )
+			// InternalWeightDefinition.g:5209:3: () otherlv_1= 'null'
 			{
-			// InternalWeightDefinition.g:5205:3: ()
-			// InternalWeightDefinition.g:5206:4: 
+			// InternalWeightDefinition.g:5209:3: ()
+			// InternalWeightDefinition.g:5210:4: 
 			{
 			if ( state.backtracking==0 ) {
 							current = forceCreateModelElement(
@@ -12544,7 +12545,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXNumberLiteral"
-	// InternalWeightDefinition.g:5220:1: entryRuleXNumberLiteral returns [EObject current=null] :iv_ruleXNumberLiteral= ruleXNumberLiteral EOF ;
+	// InternalWeightDefinition.g:5224:1: entryRuleXNumberLiteral returns [EObject current=null] :iv_ruleXNumberLiteral= ruleXNumberLiteral EOF ;
 	public final EObject entryRuleXNumberLiteral() throws RecognitionException {
 		EObject current = null;
 
@@ -12552,8 +12553,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXNumberLiteral =null;
 
 		try {
-			// InternalWeightDefinition.g:5220:55: (iv_ruleXNumberLiteral= ruleXNumberLiteral EOF )
-			// InternalWeightDefinition.g:5221:2: iv_ruleXNumberLiteral= ruleXNumberLiteral EOF
+			// InternalWeightDefinition.g:5224:55: (iv_ruleXNumberLiteral= ruleXNumberLiteral EOF )
+			// InternalWeightDefinition.g:5225:2: iv_ruleXNumberLiteral= ruleXNumberLiteral EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXNumberLiteralRule()); }
 			pushFollow(FOLLOW_1);
@@ -12581,7 +12582,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXNumberLiteral"
-	// InternalWeightDefinition.g:5227:1: ruleXNumberLiteral returns [EObject current=null] : ( () ( (lv_value_1_0= ruleNumber ) ) ) ;
+	// InternalWeightDefinition.g:5231:1: ruleXNumberLiteral returns [EObject current=null] : ( () ( (lv_value_1_0= ruleNumber ) ) ) ;
 	public final EObject ruleXNumberLiteral() throws RecognitionException {
 		EObject current = null;
 
@@ -12592,14 +12593,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:5233:2: ( ( () ( (lv_value_1_0= ruleNumber ) ) ) )
-			// InternalWeightDefinition.g:5234:2: ( () ( (lv_value_1_0= ruleNumber ) ) )
+			// InternalWeightDefinition.g:5237:2: ( ( () ( (lv_value_1_0= ruleNumber ) ) ) )
+			// InternalWeightDefinition.g:5238:2: ( () ( (lv_value_1_0= ruleNumber ) ) )
 			{
-			// InternalWeightDefinition.g:5234:2: ( () ( (lv_value_1_0= ruleNumber ) ) )
-			// InternalWeightDefinition.g:5235:3: () ( (lv_value_1_0= ruleNumber ) )
+			// InternalWeightDefinition.g:5238:2: ( () ( (lv_value_1_0= ruleNumber ) ) )
+			// InternalWeightDefinition.g:5239:3: () ( (lv_value_1_0= ruleNumber ) )
 			{
-			// InternalWeightDefinition.g:5235:3: ()
-			// InternalWeightDefinition.g:5236:4: 
+			// InternalWeightDefinition.g:5239:3: ()
+			// InternalWeightDefinition.g:5240:4: 
 			{
 			if ( state.backtracking==0 ) {
 							current = forceCreateModelElement(
@@ -12608,11 +12609,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						}
 			}
 
-			// InternalWeightDefinition.g:5242:3: ( (lv_value_1_0= ruleNumber ) )
-			// InternalWeightDefinition.g:5243:4: (lv_value_1_0= ruleNumber )
+			// InternalWeightDefinition.g:5246:3: ( (lv_value_1_0= ruleNumber ) )
+			// InternalWeightDefinition.g:5247:4: (lv_value_1_0= ruleNumber )
 			{
-			// InternalWeightDefinition.g:5243:4: (lv_value_1_0= ruleNumber )
-			// InternalWeightDefinition.g:5244:5: lv_value_1_0= ruleNumber
+			// InternalWeightDefinition.g:5247:4: (lv_value_1_0= ruleNumber )
+			// InternalWeightDefinition.g:5248:5: lv_value_1_0= ruleNumber
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXNumberLiteralAccess().getValueNumberParserRuleCall_1_0());
@@ -12660,7 +12661,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXStringLiteral"
-	// InternalWeightDefinition.g:5265:1: entryRuleXStringLiteral returns [EObject current=null] :iv_ruleXStringLiteral= ruleXStringLiteral EOF ;
+	// InternalWeightDefinition.g:5269:1: entryRuleXStringLiteral returns [EObject current=null] :iv_ruleXStringLiteral= ruleXStringLiteral EOF ;
 	public final EObject entryRuleXStringLiteral() throws RecognitionException {
 		EObject current = null;
 
@@ -12668,8 +12669,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXStringLiteral =null;
 
 		try {
-			// InternalWeightDefinition.g:5265:55: (iv_ruleXStringLiteral= ruleXStringLiteral EOF )
-			// InternalWeightDefinition.g:5266:2: iv_ruleXStringLiteral= ruleXStringLiteral EOF
+			// InternalWeightDefinition.g:5269:55: (iv_ruleXStringLiteral= ruleXStringLiteral EOF )
+			// InternalWeightDefinition.g:5270:2: iv_ruleXStringLiteral= ruleXStringLiteral EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXStringLiteralRule()); }
 			pushFollow(FOLLOW_1);
@@ -12697,7 +12698,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXStringLiteral"
-	// InternalWeightDefinition.g:5272:1: ruleXStringLiteral returns [EObject current=null] : ( () ( (lv_value_1_0= RULE_STRING ) ) ) ;
+	// InternalWeightDefinition.g:5276:1: ruleXStringLiteral returns [EObject current=null] : ( () ( (lv_value_1_0= RULE_STRING ) ) ) ;
 	public final EObject ruleXStringLiteral() throws RecognitionException {
 		EObject current = null;
 
@@ -12708,14 +12709,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:5278:2: ( ( () ( (lv_value_1_0= RULE_STRING ) ) ) )
-			// InternalWeightDefinition.g:5279:2: ( () ( (lv_value_1_0= RULE_STRING ) ) )
+			// InternalWeightDefinition.g:5282:2: ( ( () ( (lv_value_1_0= RULE_STRING ) ) ) )
+			// InternalWeightDefinition.g:5283:2: ( () ( (lv_value_1_0= RULE_STRING ) ) )
 			{
-			// InternalWeightDefinition.g:5279:2: ( () ( (lv_value_1_0= RULE_STRING ) ) )
-			// InternalWeightDefinition.g:5280:3: () ( (lv_value_1_0= RULE_STRING ) )
+			// InternalWeightDefinition.g:5283:2: ( () ( (lv_value_1_0= RULE_STRING ) ) )
+			// InternalWeightDefinition.g:5284:3: () ( (lv_value_1_0= RULE_STRING ) )
 			{
-			// InternalWeightDefinition.g:5280:3: ()
-			// InternalWeightDefinition.g:5281:4: 
+			// InternalWeightDefinition.g:5284:3: ()
+			// InternalWeightDefinition.g:5285:4: 
 			{
 			if ( state.backtracking==0 ) {
 							current = forceCreateModelElement(
@@ -12724,11 +12725,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						}
 			}
 
-			// InternalWeightDefinition.g:5287:3: ( (lv_value_1_0= RULE_STRING ) )
-			// InternalWeightDefinition.g:5288:4: (lv_value_1_0= RULE_STRING )
+			// InternalWeightDefinition.g:5291:3: ( (lv_value_1_0= RULE_STRING ) )
+			// InternalWeightDefinition.g:5292:4: (lv_value_1_0= RULE_STRING )
 			{
-			// InternalWeightDefinition.g:5288:4: (lv_value_1_0= RULE_STRING )
-			// InternalWeightDefinition.g:5289:5: lv_value_1_0= RULE_STRING
+			// InternalWeightDefinition.g:5292:4: (lv_value_1_0= RULE_STRING )
+			// InternalWeightDefinition.g:5293:5: lv_value_1_0= RULE_STRING
 			{
 			lv_value_1_0=(Token)match(input,RULE_STRING,FOLLOW_2); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
@@ -12772,7 +12773,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXTypeLiteral"
-	// InternalWeightDefinition.g:5309:1: entryRuleXTypeLiteral returns [EObject current=null] :iv_ruleXTypeLiteral= ruleXTypeLiteral EOF ;
+	// InternalWeightDefinition.g:5313:1: entryRuleXTypeLiteral returns [EObject current=null] :iv_ruleXTypeLiteral= ruleXTypeLiteral EOF ;
 	public final EObject entryRuleXTypeLiteral() throws RecognitionException {
 		EObject current = null;
 
@@ -12780,8 +12781,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXTypeLiteral =null;
 
 		try {
-			// InternalWeightDefinition.g:5309:53: (iv_ruleXTypeLiteral= ruleXTypeLiteral EOF )
-			// InternalWeightDefinition.g:5310:2: iv_ruleXTypeLiteral= ruleXTypeLiteral EOF
+			// InternalWeightDefinition.g:5313:53: (iv_ruleXTypeLiteral= ruleXTypeLiteral EOF )
+			// InternalWeightDefinition.g:5314:2: iv_ruleXTypeLiteral= ruleXTypeLiteral EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXTypeLiteralRule()); }
 			pushFollow(FOLLOW_1);
@@ -12809,7 +12810,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXTypeLiteral"
-	// InternalWeightDefinition.g:5316:1: ruleXTypeLiteral returns [EObject current=null] : ( () otherlv_1= 'typeof' otherlv_2= '(' ( ( ruleQualifiedName ) ) ( (lv_arrayDimensions_4_0= ruleArrayBrackets ) )* otherlv_5= ')' ) ;
+	// InternalWeightDefinition.g:5320:1: ruleXTypeLiteral returns [EObject current=null] : ( () otherlv_1= 'typeof' otherlv_2= '(' ( ( ruleQualifiedName ) ) ( (lv_arrayDimensions_4_0= ruleArrayBrackets ) )* otherlv_5= ')' ) ;
 	public final EObject ruleXTypeLiteral() throws RecognitionException {
 		EObject current = null;
 
@@ -12823,14 +12824,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:5322:2: ( ( () otherlv_1= 'typeof' otherlv_2= '(' ( ( ruleQualifiedName ) ) ( (lv_arrayDimensions_4_0= ruleArrayBrackets ) )* otherlv_5= ')' ) )
-			// InternalWeightDefinition.g:5323:2: ( () otherlv_1= 'typeof' otherlv_2= '(' ( ( ruleQualifiedName ) ) ( (lv_arrayDimensions_4_0= ruleArrayBrackets ) )* otherlv_5= ')' )
+			// InternalWeightDefinition.g:5326:2: ( ( () otherlv_1= 'typeof' otherlv_2= '(' ( ( ruleQualifiedName ) ) ( (lv_arrayDimensions_4_0= ruleArrayBrackets ) )* otherlv_5= ')' ) )
+			// InternalWeightDefinition.g:5327:2: ( () otherlv_1= 'typeof' otherlv_2= '(' ( ( ruleQualifiedName ) ) ( (lv_arrayDimensions_4_0= ruleArrayBrackets ) )* otherlv_5= ')' )
 			{
-			// InternalWeightDefinition.g:5323:2: ( () otherlv_1= 'typeof' otherlv_2= '(' ( ( ruleQualifiedName ) ) ( (lv_arrayDimensions_4_0= ruleArrayBrackets ) )* otherlv_5= ')' )
-			// InternalWeightDefinition.g:5324:3: () otherlv_1= 'typeof' otherlv_2= '(' ( ( ruleQualifiedName ) ) ( (lv_arrayDimensions_4_0= ruleArrayBrackets ) )* otherlv_5= ')'
+			// InternalWeightDefinition.g:5327:2: ( () otherlv_1= 'typeof' otherlv_2= '(' ( ( ruleQualifiedName ) ) ( (lv_arrayDimensions_4_0= ruleArrayBrackets ) )* otherlv_5= ')' )
+			// InternalWeightDefinition.g:5328:3: () otherlv_1= 'typeof' otherlv_2= '(' ( ( ruleQualifiedName ) ) ( (lv_arrayDimensions_4_0= ruleArrayBrackets ) )* otherlv_5= ')'
 			{
-			// InternalWeightDefinition.g:5324:3: ()
-			// InternalWeightDefinition.g:5325:4: 
+			// InternalWeightDefinition.g:5328:3: ()
+			// InternalWeightDefinition.g:5329:4: 
 			{
 			if ( state.backtracking==0 ) {
 							current = forceCreateModelElement(
@@ -12839,19 +12840,19 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						}
 			}
 
-			otherlv_1=(Token)match(input,81,FOLLOW_9); if (state.failed) return current;
+			otherlv_1=(Token)match(input,81,FOLLOW_8); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_1, grammarAccess.getXTypeLiteralAccess().getTypeofKeyword_1());
 					}
-			otherlv_2=(Token)match(input,21,FOLLOW_6); if (state.failed) return current;
+			otherlv_2=(Token)match(input,21,FOLLOW_5); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_2, grammarAccess.getXTypeLiteralAccess().getLeftParenthesisKeyword_2());
 					}
-			// InternalWeightDefinition.g:5339:3: ( ( ruleQualifiedName ) )
-			// InternalWeightDefinition.g:5340:4: ( ruleQualifiedName )
+			// InternalWeightDefinition.g:5343:3: ( ( ruleQualifiedName ) )
+			// InternalWeightDefinition.g:5344:4: ( ruleQualifiedName )
 			{
-			// InternalWeightDefinition.g:5340:4: ( ruleQualifiedName )
-			// InternalWeightDefinition.g:5341:5: ruleQualifiedName
+			// InternalWeightDefinition.g:5344:4: ( ruleQualifiedName )
+			// InternalWeightDefinition.g:5345:5: ruleQualifiedName
 			{
 			if ( state.backtracking==0 ) {
 								if (current==null) {
@@ -12861,7 +12862,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXTypeLiteralAccess().getTypeJvmTypeCrossReference_3_0());
 							}
-			pushFollow(FOLLOW_71);
+			pushFollow(FOLLOW_70);
 			ruleQualifiedName();
 			state._fsp--;
 			if (state.failed) return current;
@@ -12872,26 +12873,26 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			// InternalWeightDefinition.g:5355:3: ( (lv_arrayDimensions_4_0= ruleArrayBrackets ) )*
-			loop87:
+			// InternalWeightDefinition.g:5359:3: ( (lv_arrayDimensions_4_0= ruleArrayBrackets ) )*
+			loop85:
 			while (true) {
-				int alt87=2;
-				int LA87_0 = input.LA(1);
-				if ( (LA87_0==53) ) {
-					alt87=1;
+				int alt85=2;
+				int LA85_0 = input.LA(1);
+				if ( (LA85_0==53) ) {
+					alt85=1;
 				}
 
-				switch (alt87) {
+				switch (alt85) {
 				case 1 :
-					// InternalWeightDefinition.g:5356:4: (lv_arrayDimensions_4_0= ruleArrayBrackets )
+					// InternalWeightDefinition.g:5360:4: (lv_arrayDimensions_4_0= ruleArrayBrackets )
 					{
-					// InternalWeightDefinition.g:5356:4: (lv_arrayDimensions_4_0= ruleArrayBrackets )
-					// InternalWeightDefinition.g:5357:5: lv_arrayDimensions_4_0= ruleArrayBrackets
+					// InternalWeightDefinition.g:5360:4: (lv_arrayDimensions_4_0= ruleArrayBrackets )
+					// InternalWeightDefinition.g:5361:5: lv_arrayDimensions_4_0= ruleArrayBrackets
 					{
 					if ( state.backtracking==0 ) {
 										newCompositeNode(grammarAccess.getXTypeLiteralAccess().getArrayDimensionsArrayBracketsParserRuleCall_4_0());
 									}
-					pushFollow(FOLLOW_71);
+					pushFollow(FOLLOW_70);
 					lv_arrayDimensions_4_0=ruleArrayBrackets();
 					state._fsp--;
 					if (state.failed) return current;
@@ -12912,7 +12913,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					break;
 
 				default :
-					break loop87;
+					break loop85;
 				}
 			}
 
@@ -12944,7 +12945,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXThrowExpression"
-	// InternalWeightDefinition.g:5382:1: entryRuleXThrowExpression returns [EObject current=null] :iv_ruleXThrowExpression= ruleXThrowExpression EOF ;
+	// InternalWeightDefinition.g:5386:1: entryRuleXThrowExpression returns [EObject current=null] :iv_ruleXThrowExpression= ruleXThrowExpression EOF ;
 	public final EObject entryRuleXThrowExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -12952,8 +12953,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXThrowExpression =null;
 
 		try {
-			// InternalWeightDefinition.g:5382:57: (iv_ruleXThrowExpression= ruleXThrowExpression EOF )
-			// InternalWeightDefinition.g:5383:2: iv_ruleXThrowExpression= ruleXThrowExpression EOF
+			// InternalWeightDefinition.g:5386:57: (iv_ruleXThrowExpression= ruleXThrowExpression EOF )
+			// InternalWeightDefinition.g:5387:2: iv_ruleXThrowExpression= ruleXThrowExpression EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXThrowExpressionRule()); }
 			pushFollow(FOLLOW_1);
@@ -12981,7 +12982,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXThrowExpression"
-	// InternalWeightDefinition.g:5389:1: ruleXThrowExpression returns [EObject current=null] : ( () otherlv_1= 'throw' ( (lv_expression_2_0= ruleXExpression ) ) ) ;
+	// InternalWeightDefinition.g:5393:1: ruleXThrowExpression returns [EObject current=null] : ( () otherlv_1= 'throw' ( (lv_expression_2_0= ruleXExpression ) ) ) ;
 	public final EObject ruleXThrowExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -12993,14 +12994,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:5395:2: ( ( () otherlv_1= 'throw' ( (lv_expression_2_0= ruleXExpression ) ) ) )
-			// InternalWeightDefinition.g:5396:2: ( () otherlv_1= 'throw' ( (lv_expression_2_0= ruleXExpression ) ) )
+			// InternalWeightDefinition.g:5399:2: ( ( () otherlv_1= 'throw' ( (lv_expression_2_0= ruleXExpression ) ) ) )
+			// InternalWeightDefinition.g:5400:2: ( () otherlv_1= 'throw' ( (lv_expression_2_0= ruleXExpression ) ) )
 			{
-			// InternalWeightDefinition.g:5396:2: ( () otherlv_1= 'throw' ( (lv_expression_2_0= ruleXExpression ) ) )
-			// InternalWeightDefinition.g:5397:3: () otherlv_1= 'throw' ( (lv_expression_2_0= ruleXExpression ) )
+			// InternalWeightDefinition.g:5400:2: ( () otherlv_1= 'throw' ( (lv_expression_2_0= ruleXExpression ) ) )
+			// InternalWeightDefinition.g:5401:3: () otherlv_1= 'throw' ( (lv_expression_2_0= ruleXExpression ) )
 			{
-			// InternalWeightDefinition.g:5397:3: ()
-			// InternalWeightDefinition.g:5398:4: 
+			// InternalWeightDefinition.g:5401:3: ()
+			// InternalWeightDefinition.g:5402:4: 
 			{
 			if ( state.backtracking==0 ) {
 							current = forceCreateModelElement(
@@ -13009,15 +13010,15 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						}
 			}
 
-			otherlv_1=(Token)match(input,78,FOLLOW_13); if (state.failed) return current;
+			otherlv_1=(Token)match(input,78,FOLLOW_12); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_1, grammarAccess.getXThrowExpressionAccess().getThrowKeyword_1());
 					}
-			// InternalWeightDefinition.g:5408:3: ( (lv_expression_2_0= ruleXExpression ) )
-			// InternalWeightDefinition.g:5409:4: (lv_expression_2_0= ruleXExpression )
+			// InternalWeightDefinition.g:5412:3: ( (lv_expression_2_0= ruleXExpression ) )
+			// InternalWeightDefinition.g:5413:4: (lv_expression_2_0= ruleXExpression )
 			{
-			// InternalWeightDefinition.g:5409:4: (lv_expression_2_0= ruleXExpression )
-			// InternalWeightDefinition.g:5410:5: lv_expression_2_0= ruleXExpression
+			// InternalWeightDefinition.g:5413:4: (lv_expression_2_0= ruleXExpression )
+			// InternalWeightDefinition.g:5414:5: lv_expression_2_0= ruleXExpression
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXThrowExpressionAccess().getExpressionXExpressionParserRuleCall_2_0());
@@ -13065,7 +13066,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXReturnExpression"
-	// InternalWeightDefinition.g:5431:1: entryRuleXReturnExpression returns [EObject current=null] :iv_ruleXReturnExpression= ruleXReturnExpression EOF ;
+	// InternalWeightDefinition.g:5435:1: entryRuleXReturnExpression returns [EObject current=null] :iv_ruleXReturnExpression= ruleXReturnExpression EOF ;
 	public final EObject entryRuleXReturnExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -13073,8 +13074,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXReturnExpression =null;
 
 		try {
-			// InternalWeightDefinition.g:5431:58: (iv_ruleXReturnExpression= ruleXReturnExpression EOF )
-			// InternalWeightDefinition.g:5432:2: iv_ruleXReturnExpression= ruleXReturnExpression EOF
+			// InternalWeightDefinition.g:5435:58: (iv_ruleXReturnExpression= ruleXReturnExpression EOF )
+			// InternalWeightDefinition.g:5436:2: iv_ruleXReturnExpression= ruleXReturnExpression EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXReturnExpressionRule()); }
 			pushFollow(FOLLOW_1);
@@ -13102,7 +13103,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXReturnExpression"
-	// InternalWeightDefinition.g:5438:1: ruleXReturnExpression returns [EObject current=null] : ( () otherlv_1= 'return' ( ( 'extends' | 'static' | 'import' | 'extension' | '!' | '-' | '+' | 'new' | '{' | 'switch' | 'synchronized' | '<' | 'super' | '#' | '[' | 'false' | 'true' | 'null' | 'typeof' | 'if' | 'for' | 'while' | 'do' | 'throw' | 'return' | 'try' | '(' | RULE_ID | RULE_HEX | RULE_INT | RULE_DECIMAL | RULE_STRING )=> (lv_expression_2_0= ruleXExpression ) )? ) ;
+	// InternalWeightDefinition.g:5442:1: ruleXReturnExpression returns [EObject current=null] : ( () otherlv_1= 'return' ( ( 'extends' | 'static' | 'import' | 'extension' | '!' | '-' | '+' | 'new' | '{' | 'switch' | 'synchronized' | '<' | 'super' | '#' | '[' | 'false' | 'true' | 'null' | 'typeof' | 'if' | 'for' | 'while' | 'do' | 'throw' | 'return' | 'try' | '(' | RULE_ID | RULE_HEX | RULE_INT | RULE_DECIMAL | RULE_STRING )=> (lv_expression_2_0= ruleXExpression ) )? ) ;
 	public final EObject ruleXReturnExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -13114,14 +13115,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:5444:2: ( ( () otherlv_1= 'return' ( ( 'extends' | 'static' | 'import' | 'extension' | '!' | '-' | '+' | 'new' | '{' | 'switch' | 'synchronized' | '<' | 'super' | '#' | '[' | 'false' | 'true' | 'null' | 'typeof' | 'if' | 'for' | 'while' | 'do' | 'throw' | 'return' | 'try' | '(' | RULE_ID | RULE_HEX | RULE_INT | RULE_DECIMAL | RULE_STRING )=> (lv_expression_2_0= ruleXExpression ) )? ) )
-			// InternalWeightDefinition.g:5445:2: ( () otherlv_1= 'return' ( ( 'extends' | 'static' | 'import' | 'extension' | '!' | '-' | '+' | 'new' | '{' | 'switch' | 'synchronized' | '<' | 'super' | '#' | '[' | 'false' | 'true' | 'null' | 'typeof' | 'if' | 'for' | 'while' | 'do' | 'throw' | 'return' | 'try' | '(' | RULE_ID | RULE_HEX | RULE_INT | RULE_DECIMAL | RULE_STRING )=> (lv_expression_2_0= ruleXExpression ) )? )
+			// InternalWeightDefinition.g:5448:2: ( ( () otherlv_1= 'return' ( ( 'extends' | 'static' | 'import' | 'extension' | '!' | '-' | '+' | 'new' | '{' | 'switch' | 'synchronized' | '<' | 'super' | '#' | '[' | 'false' | 'true' | 'null' | 'typeof' | 'if' | 'for' | 'while' | 'do' | 'throw' | 'return' | 'try' | '(' | RULE_ID | RULE_HEX | RULE_INT | RULE_DECIMAL | RULE_STRING )=> (lv_expression_2_0= ruleXExpression ) )? ) )
+			// InternalWeightDefinition.g:5449:2: ( () otherlv_1= 'return' ( ( 'extends' | 'static' | 'import' | 'extension' | '!' | '-' | '+' | 'new' | '{' | 'switch' | 'synchronized' | '<' | 'super' | '#' | '[' | 'false' | 'true' | 'null' | 'typeof' | 'if' | 'for' | 'while' | 'do' | 'throw' | 'return' | 'try' | '(' | RULE_ID | RULE_HEX | RULE_INT | RULE_DECIMAL | RULE_STRING )=> (lv_expression_2_0= ruleXExpression ) )? )
 			{
-			// InternalWeightDefinition.g:5445:2: ( () otherlv_1= 'return' ( ( 'extends' | 'static' | 'import' | 'extension' | '!' | '-' | '+' | 'new' | '{' | 'switch' | 'synchronized' | '<' | 'super' | '#' | '[' | 'false' | 'true' | 'null' | 'typeof' | 'if' | 'for' | 'while' | 'do' | 'throw' | 'return' | 'try' | '(' | RULE_ID | RULE_HEX | RULE_INT | RULE_DECIMAL | RULE_STRING )=> (lv_expression_2_0= ruleXExpression ) )? )
-			// InternalWeightDefinition.g:5446:3: () otherlv_1= 'return' ( ( 'extends' | 'static' | 'import' | 'extension' | '!' | '-' | '+' | 'new' | '{' | 'switch' | 'synchronized' | '<' | 'super' | '#' | '[' | 'false' | 'true' | 'null' | 'typeof' | 'if' | 'for' | 'while' | 'do' | 'throw' | 'return' | 'try' | '(' | RULE_ID | RULE_HEX | RULE_INT | RULE_DECIMAL | RULE_STRING )=> (lv_expression_2_0= ruleXExpression ) )?
+			// InternalWeightDefinition.g:5449:2: ( () otherlv_1= 'return' ( ( 'extends' | 'static' | 'import' | 'extension' | '!' | '-' | '+' | 'new' | '{' | 'switch' | 'synchronized' | '<' | 'super' | '#' | '[' | 'false' | 'true' | 'null' | 'typeof' | 'if' | 'for' | 'while' | 'do' | 'throw' | 'return' | 'try' | '(' | RULE_ID | RULE_HEX | RULE_INT | RULE_DECIMAL | RULE_STRING )=> (lv_expression_2_0= ruleXExpression ) )? )
+			// InternalWeightDefinition.g:5450:3: () otherlv_1= 'return' ( ( 'extends' | 'static' | 'import' | 'extension' | '!' | '-' | '+' | 'new' | '{' | 'switch' | 'synchronized' | '<' | 'super' | '#' | '[' | 'false' | 'true' | 'null' | 'typeof' | 'if' | 'for' | 'while' | 'do' | 'throw' | 'return' | 'try' | '(' | RULE_ID | RULE_HEX | RULE_INT | RULE_DECIMAL | RULE_STRING )=> (lv_expression_2_0= ruleXExpression ) )?
 			{
-			// InternalWeightDefinition.g:5446:3: ()
-			// InternalWeightDefinition.g:5447:4: 
+			// InternalWeightDefinition.g:5450:3: ()
+			// InternalWeightDefinition.g:5451:4: 
 			{
 			if ( state.backtracking==0 ) {
 							current = forceCreateModelElement(
@@ -13130,19 +13131,19 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						}
 			}
 
-			otherlv_1=(Token)match(input,72,FOLLOW_72); if (state.failed) return current;
+			otherlv_1=(Token)match(input,72,FOLLOW_71); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_1, grammarAccess.getXReturnExpressionAccess().getReturnKeyword_1());
 					}
-			// InternalWeightDefinition.g:5457:3: ( ( 'extends' | 'static' | 'import' | 'extension' | '!' | '-' | '+' | 'new' | '{' | 'switch' | 'synchronized' | '<' | 'super' | '#' | '[' | 'false' | 'true' | 'null' | 'typeof' | 'if' | 'for' | 'while' | 'do' | 'throw' | 'return' | 'try' | '(' | RULE_ID | RULE_HEX | RULE_INT | RULE_DECIMAL | RULE_STRING )=> (lv_expression_2_0= ruleXExpression ) )?
-			int alt88=2;
-			alt88 = dfa88.predict(input);
-			switch (alt88) {
+			// InternalWeightDefinition.g:5461:3: ( ( 'extends' | 'static' | 'import' | 'extension' | '!' | '-' | '+' | 'new' | '{' | 'switch' | 'synchronized' | '<' | 'super' | '#' | '[' | 'false' | 'true' | 'null' | 'typeof' | 'if' | 'for' | 'while' | 'do' | 'throw' | 'return' | 'try' | '(' | RULE_ID | RULE_HEX | RULE_INT | RULE_DECIMAL | RULE_STRING )=> (lv_expression_2_0= ruleXExpression ) )?
+			int alt86=2;
+			alt86 = dfa86.predict(input);
+			switch (alt86) {
 				case 1 :
-					// InternalWeightDefinition.g:5458:4: ( 'extends' | 'static' | 'import' | 'extension' | '!' | '-' | '+' | 'new' | '{' | 'switch' | 'synchronized' | '<' | 'super' | '#' | '[' | 'false' | 'true' | 'null' | 'typeof' | 'if' | 'for' | 'while' | 'do' | 'throw' | 'return' | 'try' | '(' | RULE_ID | RULE_HEX | RULE_INT | RULE_DECIMAL | RULE_STRING )=> (lv_expression_2_0= ruleXExpression )
+					// InternalWeightDefinition.g:5462:4: ( 'extends' | 'static' | 'import' | 'extension' | '!' | '-' | '+' | 'new' | '{' | 'switch' | 'synchronized' | '<' | 'super' | '#' | '[' | 'false' | 'true' | 'null' | 'typeof' | 'if' | 'for' | 'while' | 'do' | 'throw' | 'return' | 'try' | '(' | RULE_ID | RULE_HEX | RULE_INT | RULE_DECIMAL | RULE_STRING )=> (lv_expression_2_0= ruleXExpression )
 					{
-					// InternalWeightDefinition.g:5459:4: (lv_expression_2_0= ruleXExpression )
-					// InternalWeightDefinition.g:5460:5: lv_expression_2_0= ruleXExpression
+					// InternalWeightDefinition.g:5463:4: (lv_expression_2_0= ruleXExpression )
+					// InternalWeightDefinition.g:5464:5: lv_expression_2_0= ruleXExpression
 					{
 					if ( state.backtracking==0 ) {
 										newCompositeNode(grammarAccess.getXReturnExpressionAccess().getExpressionXExpressionParserRuleCall_2_0());
@@ -13193,7 +13194,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXTryCatchFinallyExpression"
-	// InternalWeightDefinition.g:5481:1: entryRuleXTryCatchFinallyExpression returns [EObject current=null] :iv_ruleXTryCatchFinallyExpression= ruleXTryCatchFinallyExpression EOF ;
+	// InternalWeightDefinition.g:5485:1: entryRuleXTryCatchFinallyExpression returns [EObject current=null] :iv_ruleXTryCatchFinallyExpression= ruleXTryCatchFinallyExpression EOF ;
 	public final EObject entryRuleXTryCatchFinallyExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -13201,8 +13202,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXTryCatchFinallyExpression =null;
 
 		try {
-			// InternalWeightDefinition.g:5481:67: (iv_ruleXTryCatchFinallyExpression= ruleXTryCatchFinallyExpression EOF )
-			// InternalWeightDefinition.g:5482:2: iv_ruleXTryCatchFinallyExpression= ruleXTryCatchFinallyExpression EOF
+			// InternalWeightDefinition.g:5485:67: (iv_ruleXTryCatchFinallyExpression= ruleXTryCatchFinallyExpression EOF )
+			// InternalWeightDefinition.g:5486:2: iv_ruleXTryCatchFinallyExpression= ruleXTryCatchFinallyExpression EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXTryCatchFinallyExpressionRule()); }
 			pushFollow(FOLLOW_1);
@@ -13230,7 +13231,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXTryCatchFinallyExpression"
-	// InternalWeightDefinition.g:5488:1: ruleXTryCatchFinallyExpression returns [EObject current=null] : ( () otherlv_1= 'try' ( (lv_expression_2_0= ruleXExpression ) ) ( ( ( ( 'catch' )=> (lv_catchClauses_3_0= ruleXCatchClause ) )+ ( ( ( 'finally' )=>otherlv_4= 'finally' ) ( (lv_finallyExpression_5_0= ruleXExpression ) ) )? ) | (otherlv_6= 'finally' ( (lv_finallyExpression_7_0= ruleXExpression ) ) ) ) ) ;
+	// InternalWeightDefinition.g:5492:1: ruleXTryCatchFinallyExpression returns [EObject current=null] : ( () otherlv_1= 'try' ( (lv_expression_2_0= ruleXExpression ) ) ( ( ( ( 'catch' )=> (lv_catchClauses_3_0= ruleXCatchClause ) )+ ( ( ( 'finally' )=>otherlv_4= 'finally' ) ( (lv_finallyExpression_5_0= ruleXExpression ) ) )? ) | (otherlv_6= 'finally' ( (lv_finallyExpression_7_0= ruleXExpression ) ) ) ) ) ;
 	public final EObject ruleXTryCatchFinallyExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -13247,14 +13248,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:5494:2: ( ( () otherlv_1= 'try' ( (lv_expression_2_0= ruleXExpression ) ) ( ( ( ( 'catch' )=> (lv_catchClauses_3_0= ruleXCatchClause ) )+ ( ( ( 'finally' )=>otherlv_4= 'finally' ) ( (lv_finallyExpression_5_0= ruleXExpression ) ) )? ) | (otherlv_6= 'finally' ( (lv_finallyExpression_7_0= ruleXExpression ) ) ) ) ) )
-			// InternalWeightDefinition.g:5495:2: ( () otherlv_1= 'try' ( (lv_expression_2_0= ruleXExpression ) ) ( ( ( ( 'catch' )=> (lv_catchClauses_3_0= ruleXCatchClause ) )+ ( ( ( 'finally' )=>otherlv_4= 'finally' ) ( (lv_finallyExpression_5_0= ruleXExpression ) ) )? ) | (otherlv_6= 'finally' ( (lv_finallyExpression_7_0= ruleXExpression ) ) ) ) )
+			// InternalWeightDefinition.g:5498:2: ( ( () otherlv_1= 'try' ( (lv_expression_2_0= ruleXExpression ) ) ( ( ( ( 'catch' )=> (lv_catchClauses_3_0= ruleXCatchClause ) )+ ( ( ( 'finally' )=>otherlv_4= 'finally' ) ( (lv_finallyExpression_5_0= ruleXExpression ) ) )? ) | (otherlv_6= 'finally' ( (lv_finallyExpression_7_0= ruleXExpression ) ) ) ) ) )
+			// InternalWeightDefinition.g:5499:2: ( () otherlv_1= 'try' ( (lv_expression_2_0= ruleXExpression ) ) ( ( ( ( 'catch' )=> (lv_catchClauses_3_0= ruleXCatchClause ) )+ ( ( ( 'finally' )=>otherlv_4= 'finally' ) ( (lv_finallyExpression_5_0= ruleXExpression ) ) )? ) | (otherlv_6= 'finally' ( (lv_finallyExpression_7_0= ruleXExpression ) ) ) ) )
 			{
-			// InternalWeightDefinition.g:5495:2: ( () otherlv_1= 'try' ( (lv_expression_2_0= ruleXExpression ) ) ( ( ( ( 'catch' )=> (lv_catchClauses_3_0= ruleXCatchClause ) )+ ( ( ( 'finally' )=>otherlv_4= 'finally' ) ( (lv_finallyExpression_5_0= ruleXExpression ) ) )? ) | (otherlv_6= 'finally' ( (lv_finallyExpression_7_0= ruleXExpression ) ) ) ) )
-			// InternalWeightDefinition.g:5496:3: () otherlv_1= 'try' ( (lv_expression_2_0= ruleXExpression ) ) ( ( ( ( 'catch' )=> (lv_catchClauses_3_0= ruleXCatchClause ) )+ ( ( ( 'finally' )=>otherlv_4= 'finally' ) ( (lv_finallyExpression_5_0= ruleXExpression ) ) )? ) | (otherlv_6= 'finally' ( (lv_finallyExpression_7_0= ruleXExpression ) ) ) )
+			// InternalWeightDefinition.g:5499:2: ( () otherlv_1= 'try' ( (lv_expression_2_0= ruleXExpression ) ) ( ( ( ( 'catch' )=> (lv_catchClauses_3_0= ruleXCatchClause ) )+ ( ( ( 'finally' )=>otherlv_4= 'finally' ) ( (lv_finallyExpression_5_0= ruleXExpression ) ) )? ) | (otherlv_6= 'finally' ( (lv_finallyExpression_7_0= ruleXExpression ) ) ) ) )
+			// InternalWeightDefinition.g:5500:3: () otherlv_1= 'try' ( (lv_expression_2_0= ruleXExpression ) ) ( ( ( ( 'catch' )=> (lv_catchClauses_3_0= ruleXCatchClause ) )+ ( ( ( 'finally' )=>otherlv_4= 'finally' ) ( (lv_finallyExpression_5_0= ruleXExpression ) ) )? ) | (otherlv_6= 'finally' ( (lv_finallyExpression_7_0= ruleXExpression ) ) ) )
 			{
-			// InternalWeightDefinition.g:5496:3: ()
-			// InternalWeightDefinition.g:5497:4: 
+			// InternalWeightDefinition.g:5500:3: ()
+			// InternalWeightDefinition.g:5501:4: 
 			{
 			if ( state.backtracking==0 ) {
 							current = forceCreateModelElement(
@@ -13263,20 +13264,20 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						}
 			}
 
-			otherlv_1=(Token)match(input,80,FOLLOW_13); if (state.failed) return current;
+			otherlv_1=(Token)match(input,80,FOLLOW_12); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_1, grammarAccess.getXTryCatchFinallyExpressionAccess().getTryKeyword_1());
 					}
-			// InternalWeightDefinition.g:5507:3: ( (lv_expression_2_0= ruleXExpression ) )
-			// InternalWeightDefinition.g:5508:4: (lv_expression_2_0= ruleXExpression )
+			// InternalWeightDefinition.g:5511:3: ( (lv_expression_2_0= ruleXExpression ) )
+			// InternalWeightDefinition.g:5512:4: (lv_expression_2_0= ruleXExpression )
 			{
-			// InternalWeightDefinition.g:5508:4: (lv_expression_2_0= ruleXExpression )
-			// InternalWeightDefinition.g:5509:5: lv_expression_2_0= ruleXExpression
+			// InternalWeightDefinition.g:5512:4: (lv_expression_2_0= ruleXExpression )
+			// InternalWeightDefinition.g:5513:5: lv_expression_2_0= ruleXExpression
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXTryCatchFinallyExpressionAccess().getExpressionXExpressionParserRuleCall_2_0());
 							}
-			pushFollow(FOLLOW_73);
+			pushFollow(FOLLOW_72);
 			lv_expression_2_0=ruleXExpression();
 			state._fsp--;
 			if (state.failed) return current;
@@ -13295,55 +13296,55 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			// InternalWeightDefinition.g:5526:3: ( ( ( ( 'catch' )=> (lv_catchClauses_3_0= ruleXCatchClause ) )+ ( ( ( 'finally' )=>otherlv_4= 'finally' ) ( (lv_finallyExpression_5_0= ruleXExpression ) ) )? ) | (otherlv_6= 'finally' ( (lv_finallyExpression_7_0= ruleXExpression ) ) ) )
-			int alt91=2;
-			int LA91_0 = input.LA(1);
-			if ( (LA91_0==57) ) {
-				alt91=1;
+			// InternalWeightDefinition.g:5530:3: ( ( ( ( 'catch' )=> (lv_catchClauses_3_0= ruleXCatchClause ) )+ ( ( ( 'finally' )=>otherlv_4= 'finally' ) ( (lv_finallyExpression_5_0= ruleXExpression ) ) )? ) | (otherlv_6= 'finally' ( (lv_finallyExpression_7_0= ruleXExpression ) ) ) )
+			int alt89=2;
+			int LA89_0 = input.LA(1);
+			if ( (LA89_0==57) ) {
+				alt89=1;
 			}
-			else if ( (LA91_0==64) ) {
-				alt91=2;
+			else if ( (LA89_0==64) ) {
+				alt89=2;
 			}
 
 			else {
 				if (state.backtracking>0) {state.failed=true; return current;}
 				NoViableAltException nvae =
-					new NoViableAltException("", 91, 0, input);
+					new NoViableAltException("", 89, 0, input);
 				throw nvae;
 			}
 
-			switch (alt91) {
+			switch (alt89) {
 				case 1 :
-					// InternalWeightDefinition.g:5527:4: ( ( ( 'catch' )=> (lv_catchClauses_3_0= ruleXCatchClause ) )+ ( ( ( 'finally' )=>otherlv_4= 'finally' ) ( (lv_finallyExpression_5_0= ruleXExpression ) ) )? )
+					// InternalWeightDefinition.g:5531:4: ( ( ( 'catch' )=> (lv_catchClauses_3_0= ruleXCatchClause ) )+ ( ( ( 'finally' )=>otherlv_4= 'finally' ) ( (lv_finallyExpression_5_0= ruleXExpression ) ) )? )
 					{
-					// InternalWeightDefinition.g:5527:4: ( ( ( 'catch' )=> (lv_catchClauses_3_0= ruleXCatchClause ) )+ ( ( ( 'finally' )=>otherlv_4= 'finally' ) ( (lv_finallyExpression_5_0= ruleXExpression ) ) )? )
-					// InternalWeightDefinition.g:5528:5: ( ( 'catch' )=> (lv_catchClauses_3_0= ruleXCatchClause ) )+ ( ( ( 'finally' )=>otherlv_4= 'finally' ) ( (lv_finallyExpression_5_0= ruleXExpression ) ) )?
+					// InternalWeightDefinition.g:5531:4: ( ( ( 'catch' )=> (lv_catchClauses_3_0= ruleXCatchClause ) )+ ( ( ( 'finally' )=>otherlv_4= 'finally' ) ( (lv_finallyExpression_5_0= ruleXExpression ) ) )? )
+					// InternalWeightDefinition.g:5532:5: ( ( 'catch' )=> (lv_catchClauses_3_0= ruleXCatchClause ) )+ ( ( ( 'finally' )=>otherlv_4= 'finally' ) ( (lv_finallyExpression_5_0= ruleXExpression ) ) )?
 					{
-					// InternalWeightDefinition.g:5528:5: ( ( 'catch' )=> (lv_catchClauses_3_0= ruleXCatchClause ) )+
-					int cnt89=0;
-					loop89:
+					// InternalWeightDefinition.g:5532:5: ( ( 'catch' )=> (lv_catchClauses_3_0= ruleXCatchClause ) )+
+					int cnt87=0;
+					loop87:
 					while (true) {
-						int alt89=2;
-						int LA89_0 = input.LA(1);
-						if ( (LA89_0==57) ) {
-							int LA89_2 = input.LA(2);
+						int alt87=2;
+						int LA87_0 = input.LA(1);
+						if ( (LA87_0==57) ) {
+							int LA87_2 = input.LA(2);
 							if ( (synpred38_InternalWeightDefinition()) ) {
-								alt89=1;
+								alt87=1;
 							}
 
 						}
 
-						switch (alt89) {
+						switch (alt87) {
 						case 1 :
-							// InternalWeightDefinition.g:5529:6: ( 'catch' )=> (lv_catchClauses_3_0= ruleXCatchClause )
+							// InternalWeightDefinition.g:5533:6: ( 'catch' )=> (lv_catchClauses_3_0= ruleXCatchClause )
 							{
-							// InternalWeightDefinition.g:5530:6: (lv_catchClauses_3_0= ruleXCatchClause )
-							// InternalWeightDefinition.g:5531:7: lv_catchClauses_3_0= ruleXCatchClause
+							// InternalWeightDefinition.g:5534:6: (lv_catchClauses_3_0= ruleXCatchClause )
+							// InternalWeightDefinition.g:5535:7: lv_catchClauses_3_0= ruleXCatchClause
 							{
 							if ( state.backtracking==0 ) {
 														newCompositeNode(grammarAccess.getXTryCatchFinallyExpressionAccess().getCatchClausesXCatchClauseParserRuleCall_3_0_0_0());
 													}
-							pushFollow(FOLLOW_74);
+							pushFollow(FOLLOW_73);
 							lv_catchClauses_3_0=ruleXCatchClause();
 							state._fsp--;
 							if (state.failed) return current;
@@ -13364,41 +13365,41 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 							break;
 
 						default :
-							if ( cnt89 >= 1 ) break loop89;
+							if ( cnt87 >= 1 ) break loop87;
 							if (state.backtracking>0) {state.failed=true; return current;}
-							EarlyExitException eee = new EarlyExitException(89, input);
+							EarlyExitException eee = new EarlyExitException(87, input);
 							throw eee;
 						}
-						cnt89++;
+						cnt87++;
 					}
 
-					// InternalWeightDefinition.g:5548:5: ( ( ( 'finally' )=>otherlv_4= 'finally' ) ( (lv_finallyExpression_5_0= ruleXExpression ) ) )?
-					int alt90=2;
-					int LA90_0 = input.LA(1);
-					if ( (LA90_0==64) ) {
-						int LA90_1 = input.LA(2);
+					// InternalWeightDefinition.g:5552:5: ( ( ( 'finally' )=>otherlv_4= 'finally' ) ( (lv_finallyExpression_5_0= ruleXExpression ) ) )?
+					int alt88=2;
+					int LA88_0 = input.LA(1);
+					if ( (LA88_0==64) ) {
+						int LA88_1 = input.LA(2);
 						if ( (synpred39_InternalWeightDefinition()) ) {
-							alt90=1;
+							alt88=1;
 						}
 					}
-					switch (alt90) {
+					switch (alt88) {
 						case 1 :
-							// InternalWeightDefinition.g:5549:6: ( ( 'finally' )=>otherlv_4= 'finally' ) ( (lv_finallyExpression_5_0= ruleXExpression ) )
+							// InternalWeightDefinition.g:5553:6: ( ( 'finally' )=>otherlv_4= 'finally' ) ( (lv_finallyExpression_5_0= ruleXExpression ) )
 							{
-							// InternalWeightDefinition.g:5549:6: ( ( 'finally' )=>otherlv_4= 'finally' )
-							// InternalWeightDefinition.g:5550:7: ( 'finally' )=>otherlv_4= 'finally'
+							// InternalWeightDefinition.g:5553:6: ( ( 'finally' )=>otherlv_4= 'finally' )
+							// InternalWeightDefinition.g:5554:7: ( 'finally' )=>otherlv_4= 'finally'
 							{
-							otherlv_4=(Token)match(input,64,FOLLOW_13); if (state.failed) return current;
+							otherlv_4=(Token)match(input,64,FOLLOW_12); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
 														newLeafNode(otherlv_4, grammarAccess.getXTryCatchFinallyExpressionAccess().getFinallyKeyword_3_0_1_0());
 													}
 							}
 
-							// InternalWeightDefinition.g:5556:6: ( (lv_finallyExpression_5_0= ruleXExpression ) )
-							// InternalWeightDefinition.g:5557:7: (lv_finallyExpression_5_0= ruleXExpression )
+							// InternalWeightDefinition.g:5560:6: ( (lv_finallyExpression_5_0= ruleXExpression ) )
+							// InternalWeightDefinition.g:5561:7: (lv_finallyExpression_5_0= ruleXExpression )
 							{
-							// InternalWeightDefinition.g:5557:7: (lv_finallyExpression_5_0= ruleXExpression )
-							// InternalWeightDefinition.g:5558:8: lv_finallyExpression_5_0= ruleXExpression
+							// InternalWeightDefinition.g:5561:7: (lv_finallyExpression_5_0= ruleXExpression )
+							// InternalWeightDefinition.g:5562:8: lv_finallyExpression_5_0= ruleXExpression
 							{
 							if ( state.backtracking==0 ) {
 															newCompositeNode(grammarAccess.getXTryCatchFinallyExpressionAccess().getFinallyExpressionXExpressionParserRuleCall_3_0_1_1_0());
@@ -13432,20 +13433,20 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:5578:4: (otherlv_6= 'finally' ( (lv_finallyExpression_7_0= ruleXExpression ) ) )
+					// InternalWeightDefinition.g:5582:4: (otherlv_6= 'finally' ( (lv_finallyExpression_7_0= ruleXExpression ) ) )
 					{
-					// InternalWeightDefinition.g:5578:4: (otherlv_6= 'finally' ( (lv_finallyExpression_7_0= ruleXExpression ) ) )
-					// InternalWeightDefinition.g:5579:5: otherlv_6= 'finally' ( (lv_finallyExpression_7_0= ruleXExpression ) )
+					// InternalWeightDefinition.g:5582:4: (otherlv_6= 'finally' ( (lv_finallyExpression_7_0= ruleXExpression ) ) )
+					// InternalWeightDefinition.g:5583:5: otherlv_6= 'finally' ( (lv_finallyExpression_7_0= ruleXExpression ) )
 					{
-					otherlv_6=(Token)match(input,64,FOLLOW_13); if (state.failed) return current;
+					otherlv_6=(Token)match(input,64,FOLLOW_12); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 										newLeafNode(otherlv_6, grammarAccess.getXTryCatchFinallyExpressionAccess().getFinallyKeyword_3_1_0());
 									}
-					// InternalWeightDefinition.g:5583:5: ( (lv_finallyExpression_7_0= ruleXExpression ) )
-					// InternalWeightDefinition.g:5584:6: (lv_finallyExpression_7_0= ruleXExpression )
+					// InternalWeightDefinition.g:5587:5: ( (lv_finallyExpression_7_0= ruleXExpression ) )
+					// InternalWeightDefinition.g:5588:6: (lv_finallyExpression_7_0= ruleXExpression )
 					{
-					// InternalWeightDefinition.g:5584:6: (lv_finallyExpression_7_0= ruleXExpression )
-					// InternalWeightDefinition.g:5585:7: lv_finallyExpression_7_0= ruleXExpression
+					// InternalWeightDefinition.g:5588:6: (lv_finallyExpression_7_0= ruleXExpression )
+					// InternalWeightDefinition.g:5589:7: lv_finallyExpression_7_0= ruleXExpression
 					{
 					if ( state.backtracking==0 ) {
 												newCompositeNode(grammarAccess.getXTryCatchFinallyExpressionAccess().getFinallyExpressionXExpressionParserRuleCall_3_1_1_0());
@@ -13500,7 +13501,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXSynchronizedExpression"
-	// InternalWeightDefinition.g:5608:1: entryRuleXSynchronizedExpression returns [EObject current=null] :iv_ruleXSynchronizedExpression= ruleXSynchronizedExpression EOF ;
+	// InternalWeightDefinition.g:5612:1: entryRuleXSynchronizedExpression returns [EObject current=null] :iv_ruleXSynchronizedExpression= ruleXSynchronizedExpression EOF ;
 	public final EObject entryRuleXSynchronizedExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -13508,8 +13509,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXSynchronizedExpression =null;
 
 		try {
-			// InternalWeightDefinition.g:5608:64: (iv_ruleXSynchronizedExpression= ruleXSynchronizedExpression EOF )
-			// InternalWeightDefinition.g:5609:2: iv_ruleXSynchronizedExpression= ruleXSynchronizedExpression EOF
+			// InternalWeightDefinition.g:5612:64: (iv_ruleXSynchronizedExpression= ruleXSynchronizedExpression EOF )
+			// InternalWeightDefinition.g:5613:2: iv_ruleXSynchronizedExpression= ruleXSynchronizedExpression EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXSynchronizedExpressionRule()); }
 			pushFollow(FOLLOW_1);
@@ -13537,7 +13538,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXSynchronizedExpression"
-	// InternalWeightDefinition.g:5615:1: ruleXSynchronizedExpression returns [EObject current=null] : ( ( ( ( () 'synchronized' '(' ) )=> ( () otherlv_1= 'synchronized' otherlv_2= '(' ) ) ( (lv_param_3_0= ruleXExpression ) ) otherlv_4= ')' ( (lv_expression_5_0= ruleXExpression ) ) ) ;
+	// InternalWeightDefinition.g:5619:1: ruleXSynchronizedExpression returns [EObject current=null] : ( ( ( ( () 'synchronized' '(' ) )=> ( () otherlv_1= 'synchronized' otherlv_2= '(' ) ) ( (lv_param_3_0= ruleXExpression ) ) otherlv_4= ')' ( (lv_expression_5_0= ruleXExpression ) ) ) ;
 	public final EObject ruleXSynchronizedExpression() throws RecognitionException {
 		EObject current = null;
 
@@ -13552,20 +13553,20 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:5621:2: ( ( ( ( ( () 'synchronized' '(' ) )=> ( () otherlv_1= 'synchronized' otherlv_2= '(' ) ) ( (lv_param_3_0= ruleXExpression ) ) otherlv_4= ')' ( (lv_expression_5_0= ruleXExpression ) ) ) )
-			// InternalWeightDefinition.g:5622:2: ( ( ( ( () 'synchronized' '(' ) )=> ( () otherlv_1= 'synchronized' otherlv_2= '(' ) ) ( (lv_param_3_0= ruleXExpression ) ) otherlv_4= ')' ( (lv_expression_5_0= ruleXExpression ) ) )
+			// InternalWeightDefinition.g:5625:2: ( ( ( ( ( () 'synchronized' '(' ) )=> ( () otherlv_1= 'synchronized' otherlv_2= '(' ) ) ( (lv_param_3_0= ruleXExpression ) ) otherlv_4= ')' ( (lv_expression_5_0= ruleXExpression ) ) ) )
+			// InternalWeightDefinition.g:5626:2: ( ( ( ( () 'synchronized' '(' ) )=> ( () otherlv_1= 'synchronized' otherlv_2= '(' ) ) ( (lv_param_3_0= ruleXExpression ) ) otherlv_4= ')' ( (lv_expression_5_0= ruleXExpression ) ) )
 			{
-			// InternalWeightDefinition.g:5622:2: ( ( ( ( () 'synchronized' '(' ) )=> ( () otherlv_1= 'synchronized' otherlv_2= '(' ) ) ( (lv_param_3_0= ruleXExpression ) ) otherlv_4= ')' ( (lv_expression_5_0= ruleXExpression ) ) )
-			// InternalWeightDefinition.g:5623:3: ( ( ( () 'synchronized' '(' ) )=> ( () otherlv_1= 'synchronized' otherlv_2= '(' ) ) ( (lv_param_3_0= ruleXExpression ) ) otherlv_4= ')' ( (lv_expression_5_0= ruleXExpression ) )
+			// InternalWeightDefinition.g:5626:2: ( ( ( ( () 'synchronized' '(' ) )=> ( () otherlv_1= 'synchronized' otherlv_2= '(' ) ) ( (lv_param_3_0= ruleXExpression ) ) otherlv_4= ')' ( (lv_expression_5_0= ruleXExpression ) ) )
+			// InternalWeightDefinition.g:5627:3: ( ( ( () 'synchronized' '(' ) )=> ( () otherlv_1= 'synchronized' otherlv_2= '(' ) ) ( (lv_param_3_0= ruleXExpression ) ) otherlv_4= ')' ( (lv_expression_5_0= ruleXExpression ) )
 			{
-			// InternalWeightDefinition.g:5623:3: ( ( ( () 'synchronized' '(' ) )=> ( () otherlv_1= 'synchronized' otherlv_2= '(' ) )
-			// InternalWeightDefinition.g:5624:4: ( ( () 'synchronized' '(' ) )=> ( () otherlv_1= 'synchronized' otherlv_2= '(' )
+			// InternalWeightDefinition.g:5627:3: ( ( ( () 'synchronized' '(' ) )=> ( () otherlv_1= 'synchronized' otherlv_2= '(' ) )
+			// InternalWeightDefinition.g:5628:4: ( ( () 'synchronized' '(' ) )=> ( () otherlv_1= 'synchronized' otherlv_2= '(' )
 			{
-			// InternalWeightDefinition.g:5631:4: ( () otherlv_1= 'synchronized' otherlv_2= '(' )
-			// InternalWeightDefinition.g:5632:5: () otherlv_1= 'synchronized' otherlv_2= '('
+			// InternalWeightDefinition.g:5635:4: ( () otherlv_1= 'synchronized' otherlv_2= '(' )
+			// InternalWeightDefinition.g:5636:5: () otherlv_1= 'synchronized' otherlv_2= '('
 			{
-			// InternalWeightDefinition.g:5632:5: ()
-			// InternalWeightDefinition.g:5633:6: 
+			// InternalWeightDefinition.g:5636:5: ()
+			// InternalWeightDefinition.g:5637:6: 
 			{
 			if ( state.backtracking==0 ) {
 									current = forceCreateModelElement(
@@ -13574,11 +13575,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 								}
 			}
 
-			otherlv_1=(Token)match(input,77,FOLLOW_9); if (state.failed) return current;
+			otherlv_1=(Token)match(input,77,FOLLOW_8); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 								newLeafNode(otherlv_1, grammarAccess.getXSynchronizedExpressionAccess().getSynchronizedKeyword_0_0_1());
 							}
-			otherlv_2=(Token)match(input,21,FOLLOW_13); if (state.failed) return current;
+			otherlv_2=(Token)match(input,21,FOLLOW_12); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 								newLeafNode(otherlv_2, grammarAccess.getXSynchronizedExpressionAccess().getLeftParenthesisKeyword_0_0_2());
 							}
@@ -13586,16 +13587,16 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			// InternalWeightDefinition.g:5649:3: ( (lv_param_3_0= ruleXExpression ) )
-			// InternalWeightDefinition.g:5650:4: (lv_param_3_0= ruleXExpression )
+			// InternalWeightDefinition.g:5653:3: ( (lv_param_3_0= ruleXExpression ) )
+			// InternalWeightDefinition.g:5654:4: (lv_param_3_0= ruleXExpression )
 			{
-			// InternalWeightDefinition.g:5650:4: (lv_param_3_0= ruleXExpression )
-			// InternalWeightDefinition.g:5651:5: lv_param_3_0= ruleXExpression
+			// InternalWeightDefinition.g:5654:4: (lv_param_3_0= ruleXExpression )
+			// InternalWeightDefinition.g:5655:5: lv_param_3_0= ruleXExpression
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXSynchronizedExpressionAccess().getParamXExpressionParserRuleCall_1_0());
 							}
-			pushFollow(FOLLOW_38);
+			pushFollow(FOLLOW_37);
 			lv_param_3_0=ruleXExpression();
 			state._fsp--;
 			if (state.failed) return current;
@@ -13614,15 +13615,15 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			otherlv_4=(Token)match(input,22,FOLLOW_13); if (state.failed) return current;
+			otherlv_4=(Token)match(input,22,FOLLOW_12); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_4, grammarAccess.getXSynchronizedExpressionAccess().getRightParenthesisKeyword_2());
 					}
-			// InternalWeightDefinition.g:5672:3: ( (lv_expression_5_0= ruleXExpression ) )
-			// InternalWeightDefinition.g:5673:4: (lv_expression_5_0= ruleXExpression )
+			// InternalWeightDefinition.g:5676:3: ( (lv_expression_5_0= ruleXExpression ) )
+			// InternalWeightDefinition.g:5677:4: (lv_expression_5_0= ruleXExpression )
 			{
-			// InternalWeightDefinition.g:5673:4: (lv_expression_5_0= ruleXExpression )
-			// InternalWeightDefinition.g:5674:5: lv_expression_5_0= ruleXExpression
+			// InternalWeightDefinition.g:5677:4: (lv_expression_5_0= ruleXExpression )
+			// InternalWeightDefinition.g:5678:5: lv_expression_5_0= ruleXExpression
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXSynchronizedExpressionAccess().getExpressionXExpressionParserRuleCall_3_0());
@@ -13670,7 +13671,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXCatchClause"
-	// InternalWeightDefinition.g:5695:1: entryRuleXCatchClause returns [EObject current=null] :iv_ruleXCatchClause= ruleXCatchClause EOF ;
+	// InternalWeightDefinition.g:5699:1: entryRuleXCatchClause returns [EObject current=null] :iv_ruleXCatchClause= ruleXCatchClause EOF ;
 	public final EObject entryRuleXCatchClause() throws RecognitionException {
 		EObject current = null;
 
@@ -13678,8 +13679,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXCatchClause =null;
 
 		try {
-			// InternalWeightDefinition.g:5695:53: (iv_ruleXCatchClause= ruleXCatchClause EOF )
-			// InternalWeightDefinition.g:5696:2: iv_ruleXCatchClause= ruleXCatchClause EOF
+			// InternalWeightDefinition.g:5699:53: (iv_ruleXCatchClause= ruleXCatchClause EOF )
+			// InternalWeightDefinition.g:5700:2: iv_ruleXCatchClause= ruleXCatchClause EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXCatchClauseRule()); }
 			pushFollow(FOLLOW_1);
@@ -13707,7 +13708,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXCatchClause"
-	// InternalWeightDefinition.g:5702:1: ruleXCatchClause returns [EObject current=null] : ( ( ( 'catch' )=>otherlv_0= 'catch' ) otherlv_1= '(' ( (lv_declaredParam_2_0= ruleFullJvmFormalParameter ) ) otherlv_3= ')' ( (lv_expression_4_0= ruleXExpression ) ) ) ;
+	// InternalWeightDefinition.g:5706:1: ruleXCatchClause returns [EObject current=null] : ( ( ( 'catch' )=>otherlv_0= 'catch' ) otherlv_1= '(' ( (lv_declaredParam_2_0= ruleFullJvmFormalParameter ) ) otherlv_3= ')' ( (lv_expression_4_0= ruleXExpression ) ) ) ;
 	public final EObject ruleXCatchClause() throws RecognitionException {
 		EObject current = null;
 
@@ -13722,35 +13723,35 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:5708:2: ( ( ( ( 'catch' )=>otherlv_0= 'catch' ) otherlv_1= '(' ( (lv_declaredParam_2_0= ruleFullJvmFormalParameter ) ) otherlv_3= ')' ( (lv_expression_4_0= ruleXExpression ) ) ) )
-			// InternalWeightDefinition.g:5709:2: ( ( ( 'catch' )=>otherlv_0= 'catch' ) otherlv_1= '(' ( (lv_declaredParam_2_0= ruleFullJvmFormalParameter ) ) otherlv_3= ')' ( (lv_expression_4_0= ruleXExpression ) ) )
+			// InternalWeightDefinition.g:5712:2: ( ( ( ( 'catch' )=>otherlv_0= 'catch' ) otherlv_1= '(' ( (lv_declaredParam_2_0= ruleFullJvmFormalParameter ) ) otherlv_3= ')' ( (lv_expression_4_0= ruleXExpression ) ) ) )
+			// InternalWeightDefinition.g:5713:2: ( ( ( 'catch' )=>otherlv_0= 'catch' ) otherlv_1= '(' ( (lv_declaredParam_2_0= ruleFullJvmFormalParameter ) ) otherlv_3= ')' ( (lv_expression_4_0= ruleXExpression ) ) )
 			{
-			// InternalWeightDefinition.g:5709:2: ( ( ( 'catch' )=>otherlv_0= 'catch' ) otherlv_1= '(' ( (lv_declaredParam_2_0= ruleFullJvmFormalParameter ) ) otherlv_3= ')' ( (lv_expression_4_0= ruleXExpression ) ) )
-			// InternalWeightDefinition.g:5710:3: ( ( 'catch' )=>otherlv_0= 'catch' ) otherlv_1= '(' ( (lv_declaredParam_2_0= ruleFullJvmFormalParameter ) ) otherlv_3= ')' ( (lv_expression_4_0= ruleXExpression ) )
+			// InternalWeightDefinition.g:5713:2: ( ( ( 'catch' )=>otherlv_0= 'catch' ) otherlv_1= '(' ( (lv_declaredParam_2_0= ruleFullJvmFormalParameter ) ) otherlv_3= ')' ( (lv_expression_4_0= ruleXExpression ) ) )
+			// InternalWeightDefinition.g:5714:3: ( ( 'catch' )=>otherlv_0= 'catch' ) otherlv_1= '(' ( (lv_declaredParam_2_0= ruleFullJvmFormalParameter ) ) otherlv_3= ')' ( (lv_expression_4_0= ruleXExpression ) )
 			{
-			// InternalWeightDefinition.g:5710:3: ( ( 'catch' )=>otherlv_0= 'catch' )
-			// InternalWeightDefinition.g:5711:4: ( 'catch' )=>otherlv_0= 'catch'
+			// InternalWeightDefinition.g:5714:3: ( ( 'catch' )=>otherlv_0= 'catch' )
+			// InternalWeightDefinition.g:5715:4: ( 'catch' )=>otherlv_0= 'catch'
 			{
-			otherlv_0=(Token)match(input,57,FOLLOW_9); if (state.failed) return current;
+			otherlv_0=(Token)match(input,57,FOLLOW_8); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 							newLeafNode(otherlv_0, grammarAccess.getXCatchClauseAccess().getCatchKeyword_0());
 						}
 			}
 
-			otherlv_1=(Token)match(input,21,FOLLOW_8); if (state.failed) return current;
+			otherlv_1=(Token)match(input,21,FOLLOW_7); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_1, grammarAccess.getXCatchClauseAccess().getLeftParenthesisKeyword_1());
 					}
-			// InternalWeightDefinition.g:5721:3: ( (lv_declaredParam_2_0= ruleFullJvmFormalParameter ) )
-			// InternalWeightDefinition.g:5722:4: (lv_declaredParam_2_0= ruleFullJvmFormalParameter )
+			// InternalWeightDefinition.g:5725:3: ( (lv_declaredParam_2_0= ruleFullJvmFormalParameter ) )
+			// InternalWeightDefinition.g:5726:4: (lv_declaredParam_2_0= ruleFullJvmFormalParameter )
 			{
-			// InternalWeightDefinition.g:5722:4: (lv_declaredParam_2_0= ruleFullJvmFormalParameter )
-			// InternalWeightDefinition.g:5723:5: lv_declaredParam_2_0= ruleFullJvmFormalParameter
+			// InternalWeightDefinition.g:5726:4: (lv_declaredParam_2_0= ruleFullJvmFormalParameter )
+			// InternalWeightDefinition.g:5727:5: lv_declaredParam_2_0= ruleFullJvmFormalParameter
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXCatchClauseAccess().getDeclaredParamFullJvmFormalParameterParserRuleCall_2_0());
 							}
-			pushFollow(FOLLOW_38);
+			pushFollow(FOLLOW_37);
 			lv_declaredParam_2_0=ruleFullJvmFormalParameter();
 			state._fsp--;
 			if (state.failed) return current;
@@ -13769,15 +13770,15 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			otherlv_3=(Token)match(input,22,FOLLOW_13); if (state.failed) return current;
+			otherlv_3=(Token)match(input,22,FOLLOW_12); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_3, grammarAccess.getXCatchClauseAccess().getRightParenthesisKeyword_3());
 					}
-			// InternalWeightDefinition.g:5744:3: ( (lv_expression_4_0= ruleXExpression ) )
-			// InternalWeightDefinition.g:5745:4: (lv_expression_4_0= ruleXExpression )
+			// InternalWeightDefinition.g:5748:3: ( (lv_expression_4_0= ruleXExpression ) )
+			// InternalWeightDefinition.g:5749:4: (lv_expression_4_0= ruleXExpression )
 			{
-			// InternalWeightDefinition.g:5745:4: (lv_expression_4_0= ruleXExpression )
-			// InternalWeightDefinition.g:5746:5: lv_expression_4_0= ruleXExpression
+			// InternalWeightDefinition.g:5749:4: (lv_expression_4_0= ruleXExpression )
+			// InternalWeightDefinition.g:5750:5: lv_expression_4_0= ruleXExpression
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXCatchClauseAccess().getExpressionXExpressionParserRuleCall_4_0());
@@ -13825,7 +13826,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleQualifiedName"
-	// InternalWeightDefinition.g:5767:1: entryRuleQualifiedName returns [String current=null] :iv_ruleQualifiedName= ruleQualifiedName EOF ;
+	// InternalWeightDefinition.g:5771:1: entryRuleQualifiedName returns [String current=null] :iv_ruleQualifiedName= ruleQualifiedName EOF ;
 	public final String entryRuleQualifiedName() throws RecognitionException {
 		String current = null;
 
@@ -13833,8 +13834,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		AntlrDatatypeRuleToken iv_ruleQualifiedName =null;
 
 		try {
-			// InternalWeightDefinition.g:5767:53: (iv_ruleQualifiedName= ruleQualifiedName EOF )
-			// InternalWeightDefinition.g:5768:2: iv_ruleQualifiedName= ruleQualifiedName EOF
+			// InternalWeightDefinition.g:5771:53: (iv_ruleQualifiedName= ruleQualifiedName EOF )
+			// InternalWeightDefinition.g:5772:2: iv_ruleQualifiedName= ruleQualifiedName EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getQualifiedNameRule()); }
 			pushFollow(FOLLOW_1);
@@ -13862,7 +13863,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleQualifiedName"
-	// InternalWeightDefinition.g:5774:1: ruleQualifiedName returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_ValidID_0= ruleValidID ( ( ( '.' )=>kw= '.' ) this_ValidID_2= ruleValidID )* ) ;
+	// InternalWeightDefinition.g:5778:1: ruleQualifiedName returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_ValidID_0= ruleValidID ( ( ( '.' )=>kw= '.' ) this_ValidID_2= ruleValidID )* ) ;
 	public final AntlrDatatypeRuleToken ruleQualifiedName() throws RecognitionException {
 		AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -13875,16 +13876,16 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:5780:2: ( (this_ValidID_0= ruleValidID ( ( ( '.' )=>kw= '.' ) this_ValidID_2= ruleValidID )* ) )
-			// InternalWeightDefinition.g:5781:2: (this_ValidID_0= ruleValidID ( ( ( '.' )=>kw= '.' ) this_ValidID_2= ruleValidID )* )
+			// InternalWeightDefinition.g:5784:2: ( (this_ValidID_0= ruleValidID ( ( ( '.' )=>kw= '.' ) this_ValidID_2= ruleValidID )* ) )
+			// InternalWeightDefinition.g:5785:2: (this_ValidID_0= ruleValidID ( ( ( '.' )=>kw= '.' ) this_ValidID_2= ruleValidID )* )
 			{
-			// InternalWeightDefinition.g:5781:2: (this_ValidID_0= ruleValidID ( ( ( '.' )=>kw= '.' ) this_ValidID_2= ruleValidID )* )
-			// InternalWeightDefinition.g:5782:3: this_ValidID_0= ruleValidID ( ( ( '.' )=>kw= '.' ) this_ValidID_2= ruleValidID )*
+			// InternalWeightDefinition.g:5785:2: (this_ValidID_0= ruleValidID ( ( ( '.' )=>kw= '.' ) this_ValidID_2= ruleValidID )* )
+			// InternalWeightDefinition.g:5786:3: this_ValidID_0= ruleValidID ( ( ( '.' )=>kw= '.' ) this_ValidID_2= ruleValidID )*
 			{
 			if ( state.backtracking==0 ) {
 						newCompositeNode(grammarAccess.getQualifiedNameAccess().getValidIDParserRuleCall_0());
 					}
-			pushFollow(FOLLOW_75);
+			pushFollow(FOLLOW_74);
 			this_ValidID_0=ruleValidID();
 			state._fsp--;
 			if (state.failed) return current;
@@ -13894,31 +13895,31 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			if ( state.backtracking==0 ) {
 						afterParserOrEnumRuleCall();
 					}
-			// InternalWeightDefinition.g:5792:3: ( ( ( '.' )=>kw= '.' ) this_ValidID_2= ruleValidID )*
-			loop92:
+			// InternalWeightDefinition.g:5796:3: ( ( ( '.' )=>kw= '.' ) this_ValidID_2= ruleValidID )*
+			loop90:
 			while (true) {
-				int alt92=2;
-				int LA92_0 = input.LA(1);
-				if ( (LA92_0==34) ) {
-					int LA92_2 = input.LA(2);
-					if ( (LA92_2==RULE_ID) ) {
-						int LA92_3 = input.LA(3);
+				int alt90=2;
+				int LA90_0 = input.LA(1);
+				if ( (LA90_0==34) ) {
+					int LA90_2 = input.LA(2);
+					if ( (LA90_2==RULE_ID) ) {
+						int LA90_3 = input.LA(3);
 						if ( (synpred42_InternalWeightDefinition()) ) {
-							alt92=1;
+							alt90=1;
 						}
 
 					}
 
 				}
 
-				switch (alt92) {
+				switch (alt90) {
 				case 1 :
-					// InternalWeightDefinition.g:5793:4: ( ( '.' )=>kw= '.' ) this_ValidID_2= ruleValidID
+					// InternalWeightDefinition.g:5797:4: ( ( '.' )=>kw= '.' ) this_ValidID_2= ruleValidID
 					{
-					// InternalWeightDefinition.g:5793:4: ( ( '.' )=>kw= '.' )
-					// InternalWeightDefinition.g:5794:5: ( '.' )=>kw= '.'
+					// InternalWeightDefinition.g:5797:4: ( ( '.' )=>kw= '.' )
+					// InternalWeightDefinition.g:5798:5: ( '.' )=>kw= '.'
 					{
-					kw=(Token)match(input,34,FOLLOW_6); if (state.failed) return current;
+					kw=(Token)match(input,34,FOLLOW_5); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 										current.merge(kw);
 										newLeafNode(kw, grammarAccess.getQualifiedNameAccess().getFullStopKeyword_1_0());
@@ -13928,7 +13929,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					if ( state.backtracking==0 ) {
 									newCompositeNode(grammarAccess.getQualifiedNameAccess().getValidIDParserRuleCall_1_1());
 								}
-					pushFollow(FOLLOW_75);
+					pushFollow(FOLLOW_74);
 					this_ValidID_2=ruleValidID();
 					state._fsp--;
 					if (state.failed) return current;
@@ -13942,7 +13943,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					break;
 
 				default :
-					break loop92;
+					break loop90;
 				}
 			}
 
@@ -13970,7 +13971,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleNumber"
-	// InternalWeightDefinition.g:5816:1: entryRuleNumber returns [String current=null] :iv_ruleNumber= ruleNumber EOF ;
+	// InternalWeightDefinition.g:5820:1: entryRuleNumber returns [String current=null] :iv_ruleNumber= ruleNumber EOF ;
 	public final String entryRuleNumber() throws RecognitionException {
 		String current = null;
 
@@ -13981,8 +13982,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			HiddenTokens myHiddenTokenState = ((XtextTokenStream)input).setHiddenTokens();
 
 		try {
-			// InternalWeightDefinition.g:5818:2: (iv_ruleNumber= ruleNumber EOF )
-			// InternalWeightDefinition.g:5819:2: iv_ruleNumber= ruleNumber EOF
+			// InternalWeightDefinition.g:5822:2: (iv_ruleNumber= ruleNumber EOF )
+			// InternalWeightDefinition.g:5823:2: iv_ruleNumber= ruleNumber EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getNumberRule()); }
 			pushFollow(FOLLOW_1);
@@ -14013,7 +14014,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleNumber"
-	// InternalWeightDefinition.g:5828:1: ruleNumber returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_HEX_0= RULE_HEX | ( (this_INT_1= RULE_INT |this_DECIMAL_2= RULE_DECIMAL ) (kw= '.' (this_INT_4= RULE_INT |this_DECIMAL_5= RULE_DECIMAL ) )? ) ) ;
+	// InternalWeightDefinition.g:5832:1: ruleNumber returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_HEX_0= RULE_HEX | ( (this_INT_1= RULE_INT |this_DECIMAL_2= RULE_DECIMAL ) (kw= '.' (this_INT_4= RULE_INT |this_DECIMAL_5= RULE_DECIMAL ) )? ) ) ;
 	public final AntlrDatatypeRuleToken ruleNumber() throws RecognitionException {
 		AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -14030,29 +14031,29 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			HiddenTokens myHiddenTokenState = ((XtextTokenStream)input).setHiddenTokens();
 
 		try {
-			// InternalWeightDefinition.g:5835:2: ( (this_HEX_0= RULE_HEX | ( (this_INT_1= RULE_INT |this_DECIMAL_2= RULE_DECIMAL ) (kw= '.' (this_INT_4= RULE_INT |this_DECIMAL_5= RULE_DECIMAL ) )? ) ) )
-			// InternalWeightDefinition.g:5836:2: (this_HEX_0= RULE_HEX | ( (this_INT_1= RULE_INT |this_DECIMAL_2= RULE_DECIMAL ) (kw= '.' (this_INT_4= RULE_INT |this_DECIMAL_5= RULE_DECIMAL ) )? ) )
+			// InternalWeightDefinition.g:5839:2: ( (this_HEX_0= RULE_HEX | ( (this_INT_1= RULE_INT |this_DECIMAL_2= RULE_DECIMAL ) (kw= '.' (this_INT_4= RULE_INT |this_DECIMAL_5= RULE_DECIMAL ) )? ) ) )
+			// InternalWeightDefinition.g:5840:2: (this_HEX_0= RULE_HEX | ( (this_INT_1= RULE_INT |this_DECIMAL_2= RULE_DECIMAL ) (kw= '.' (this_INT_4= RULE_INT |this_DECIMAL_5= RULE_DECIMAL ) )? ) )
 			{
-			// InternalWeightDefinition.g:5836:2: (this_HEX_0= RULE_HEX | ( (this_INT_1= RULE_INT |this_DECIMAL_2= RULE_DECIMAL ) (kw= '.' (this_INT_4= RULE_INT |this_DECIMAL_5= RULE_DECIMAL ) )? ) )
-			int alt96=2;
-			int LA96_0 = input.LA(1);
-			if ( (LA96_0==RULE_HEX) ) {
-				alt96=1;
+			// InternalWeightDefinition.g:5840:2: (this_HEX_0= RULE_HEX | ( (this_INT_1= RULE_INT |this_DECIMAL_2= RULE_DECIMAL ) (kw= '.' (this_INT_4= RULE_INT |this_DECIMAL_5= RULE_DECIMAL ) )? ) )
+			int alt94=2;
+			int LA94_0 = input.LA(1);
+			if ( (LA94_0==RULE_HEX) ) {
+				alt94=1;
 			}
-			else if ( (LA96_0==RULE_DECIMAL||LA96_0==RULE_INT) ) {
-				alt96=2;
+			else if ( (LA94_0==RULE_DECIMAL||LA94_0==RULE_INT) ) {
+				alt94=2;
 			}
 
 			else {
 				if (state.backtracking>0) {state.failed=true; return current;}
 				NoViableAltException nvae =
-					new NoViableAltException("", 96, 0, input);
+					new NoViableAltException("", 94, 0, input);
 				throw nvae;
 			}
 
-			switch (alt96) {
+			switch (alt94) {
 				case 1 :
-					// InternalWeightDefinition.g:5837:3: this_HEX_0= RULE_HEX
+					// InternalWeightDefinition.g:5841:3: this_HEX_0= RULE_HEX
 					{
 					this_HEX_0=(Token)match(input,RULE_HEX,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -14064,33 +14065,33 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:5845:3: ( (this_INT_1= RULE_INT |this_DECIMAL_2= RULE_DECIMAL ) (kw= '.' (this_INT_4= RULE_INT |this_DECIMAL_5= RULE_DECIMAL ) )? )
+					// InternalWeightDefinition.g:5849:3: ( (this_INT_1= RULE_INT |this_DECIMAL_2= RULE_DECIMAL ) (kw= '.' (this_INT_4= RULE_INT |this_DECIMAL_5= RULE_DECIMAL ) )? )
 					{
-					// InternalWeightDefinition.g:5845:3: ( (this_INT_1= RULE_INT |this_DECIMAL_2= RULE_DECIMAL ) (kw= '.' (this_INT_4= RULE_INT |this_DECIMAL_5= RULE_DECIMAL ) )? )
-					// InternalWeightDefinition.g:5846:4: (this_INT_1= RULE_INT |this_DECIMAL_2= RULE_DECIMAL ) (kw= '.' (this_INT_4= RULE_INT |this_DECIMAL_5= RULE_DECIMAL ) )?
+					// InternalWeightDefinition.g:5849:3: ( (this_INT_1= RULE_INT |this_DECIMAL_2= RULE_DECIMAL ) (kw= '.' (this_INT_4= RULE_INT |this_DECIMAL_5= RULE_DECIMAL ) )? )
+					// InternalWeightDefinition.g:5850:4: (this_INT_1= RULE_INT |this_DECIMAL_2= RULE_DECIMAL ) (kw= '.' (this_INT_4= RULE_INT |this_DECIMAL_5= RULE_DECIMAL ) )?
 					{
-					// InternalWeightDefinition.g:5846:4: (this_INT_1= RULE_INT |this_DECIMAL_2= RULE_DECIMAL )
-					int alt93=2;
-					int LA93_0 = input.LA(1);
-					if ( (LA93_0==RULE_INT) ) {
-						alt93=1;
+					// InternalWeightDefinition.g:5850:4: (this_INT_1= RULE_INT |this_DECIMAL_2= RULE_DECIMAL )
+					int alt91=2;
+					int LA91_0 = input.LA(1);
+					if ( (LA91_0==RULE_INT) ) {
+						alt91=1;
 					}
-					else if ( (LA93_0==RULE_DECIMAL) ) {
-						alt93=2;
+					else if ( (LA91_0==RULE_DECIMAL) ) {
+						alt91=2;
 					}
 
 					else {
 						if (state.backtracking>0) {state.failed=true; return current;}
 						NoViableAltException nvae =
-							new NoViableAltException("", 93, 0, input);
+							new NoViableAltException("", 91, 0, input);
 						throw nvae;
 					}
 
-					switch (alt93) {
+					switch (alt91) {
 						case 1 :
-							// InternalWeightDefinition.g:5847:5: this_INT_1= RULE_INT
+							// InternalWeightDefinition.g:5851:5: this_INT_1= RULE_INT
 							{
-							this_INT_1=(Token)match(input,RULE_INT,FOLLOW_75); if (state.failed) return current;
+							this_INT_1=(Token)match(input,RULE_INT,FOLLOW_74); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
 												current.merge(this_INT_1);
 											}
@@ -14100,9 +14101,9 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 							}
 							break;
 						case 2 :
-							// InternalWeightDefinition.g:5855:5: this_DECIMAL_2= RULE_DECIMAL
+							// InternalWeightDefinition.g:5859:5: this_DECIMAL_2= RULE_DECIMAL
 							{
-							this_DECIMAL_2=(Token)match(input,RULE_DECIMAL,FOLLOW_75); if (state.failed) return current;
+							this_DECIMAL_2=(Token)match(input,RULE_DECIMAL,FOLLOW_74); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
 												current.merge(this_DECIMAL_2);
 											}
@@ -14114,44 +14115,44 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:5863:4: (kw= '.' (this_INT_4= RULE_INT |this_DECIMAL_5= RULE_DECIMAL ) )?
-					int alt95=2;
-					int LA95_0 = input.LA(1);
-					if ( (LA95_0==34) ) {
-						int LA95_1 = input.LA(2);
-						if ( (LA95_1==RULE_DECIMAL||LA95_1==RULE_INT) ) {
-							alt95=1;
+					// InternalWeightDefinition.g:5867:4: (kw= '.' (this_INT_4= RULE_INT |this_DECIMAL_5= RULE_DECIMAL ) )?
+					int alt93=2;
+					int LA93_0 = input.LA(1);
+					if ( (LA93_0==34) ) {
+						int LA93_1 = input.LA(2);
+						if ( (LA93_1==RULE_DECIMAL||LA93_1==RULE_INT) ) {
+							alt93=1;
 						}
 					}
-					switch (alt95) {
+					switch (alt93) {
 						case 1 :
-							// InternalWeightDefinition.g:5864:5: kw= '.' (this_INT_4= RULE_INT |this_DECIMAL_5= RULE_DECIMAL )
+							// InternalWeightDefinition.g:5868:5: kw= '.' (this_INT_4= RULE_INT |this_DECIMAL_5= RULE_DECIMAL )
 							{
-							kw=(Token)match(input,34,FOLLOW_76); if (state.failed) return current;
+							kw=(Token)match(input,34,FOLLOW_75); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
 												current.merge(kw);
 												newLeafNode(kw, grammarAccess.getNumberAccess().getFullStopKeyword_1_1_0());
 											}
-							// InternalWeightDefinition.g:5869:5: (this_INT_4= RULE_INT |this_DECIMAL_5= RULE_DECIMAL )
-							int alt94=2;
-							int LA94_0 = input.LA(1);
-							if ( (LA94_0==RULE_INT) ) {
-								alt94=1;
+							// InternalWeightDefinition.g:5873:5: (this_INT_4= RULE_INT |this_DECIMAL_5= RULE_DECIMAL )
+							int alt92=2;
+							int LA92_0 = input.LA(1);
+							if ( (LA92_0==RULE_INT) ) {
+								alt92=1;
 							}
-							else if ( (LA94_0==RULE_DECIMAL) ) {
-								alt94=2;
+							else if ( (LA92_0==RULE_DECIMAL) ) {
+								alt92=2;
 							}
 
 							else {
 								if (state.backtracking>0) {state.failed=true; return current;}
 								NoViableAltException nvae =
-									new NoViableAltException("", 94, 0, input);
+									new NoViableAltException("", 92, 0, input);
 								throw nvae;
 							}
 
-							switch (alt94) {
+							switch (alt92) {
 								case 1 :
-									// InternalWeightDefinition.g:5870:6: this_INT_4= RULE_INT
+									// InternalWeightDefinition.g:5874:6: this_INT_4= RULE_INT
 									{
 									this_INT_4=(Token)match(input,RULE_INT,FOLLOW_2); if (state.failed) return current;
 									if ( state.backtracking==0 ) {
@@ -14163,7 +14164,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 									}
 									break;
 								case 2 :
-									// InternalWeightDefinition.g:5878:6: this_DECIMAL_5= RULE_DECIMAL
+									// InternalWeightDefinition.g:5882:6: this_DECIMAL_5= RULE_DECIMAL
 									{
 									this_DECIMAL_5=(Token)match(input,RULE_DECIMAL,FOLLOW_2); if (state.failed) return current;
 									if ( state.backtracking==0 ) {
@@ -14214,7 +14215,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleJvmTypeReference"
-	// InternalWeightDefinition.g:5895:1: entryRuleJvmTypeReference returns [EObject current=null] :iv_ruleJvmTypeReference= ruleJvmTypeReference EOF ;
+	// InternalWeightDefinition.g:5899:1: entryRuleJvmTypeReference returns [EObject current=null] :iv_ruleJvmTypeReference= ruleJvmTypeReference EOF ;
 	public final EObject entryRuleJvmTypeReference() throws RecognitionException {
 		EObject current = null;
 
@@ -14222,8 +14223,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleJvmTypeReference =null;
 
 		try {
-			// InternalWeightDefinition.g:5895:57: (iv_ruleJvmTypeReference= ruleJvmTypeReference EOF )
-			// InternalWeightDefinition.g:5896:2: iv_ruleJvmTypeReference= ruleJvmTypeReference EOF
+			// InternalWeightDefinition.g:5899:57: (iv_ruleJvmTypeReference= ruleJvmTypeReference EOF )
+			// InternalWeightDefinition.g:5900:2: iv_ruleJvmTypeReference= ruleJvmTypeReference EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getJvmTypeReferenceRule()); }
 			pushFollow(FOLLOW_1);
@@ -14251,7 +14252,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleJvmTypeReference"
-	// InternalWeightDefinition.g:5902:1: ruleJvmTypeReference returns [EObject current=null] : ( (this_JvmParameterizedTypeReference_0= ruleJvmParameterizedTypeReference ( ( ( () ruleArrayBrackets ) )=> ( () ruleArrayBrackets ) )* ) |this_XFunctionTypeRef_3= ruleXFunctionTypeRef ) ;
+	// InternalWeightDefinition.g:5906:1: ruleJvmTypeReference returns [EObject current=null] : ( (this_JvmParameterizedTypeReference_0= ruleJvmParameterizedTypeReference ( ( ( () ruleArrayBrackets ) )=> ( () ruleArrayBrackets ) )* ) |this_XFunctionTypeRef_3= ruleXFunctionTypeRef ) ;
 	public final EObject ruleJvmTypeReference() throws RecognitionException {
 		EObject current = null;
 
@@ -14263,37 +14264,37 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:5908:2: ( ( (this_JvmParameterizedTypeReference_0= ruleJvmParameterizedTypeReference ( ( ( () ruleArrayBrackets ) )=> ( () ruleArrayBrackets ) )* ) |this_XFunctionTypeRef_3= ruleXFunctionTypeRef ) )
-			// InternalWeightDefinition.g:5909:2: ( (this_JvmParameterizedTypeReference_0= ruleJvmParameterizedTypeReference ( ( ( () ruleArrayBrackets ) )=> ( () ruleArrayBrackets ) )* ) |this_XFunctionTypeRef_3= ruleXFunctionTypeRef )
+			// InternalWeightDefinition.g:5912:2: ( ( (this_JvmParameterizedTypeReference_0= ruleJvmParameterizedTypeReference ( ( ( () ruleArrayBrackets ) )=> ( () ruleArrayBrackets ) )* ) |this_XFunctionTypeRef_3= ruleXFunctionTypeRef ) )
+			// InternalWeightDefinition.g:5913:2: ( (this_JvmParameterizedTypeReference_0= ruleJvmParameterizedTypeReference ( ( ( () ruleArrayBrackets ) )=> ( () ruleArrayBrackets ) )* ) |this_XFunctionTypeRef_3= ruleXFunctionTypeRef )
 			{
-			// InternalWeightDefinition.g:5909:2: ( (this_JvmParameterizedTypeReference_0= ruleJvmParameterizedTypeReference ( ( ( () ruleArrayBrackets ) )=> ( () ruleArrayBrackets ) )* ) |this_XFunctionTypeRef_3= ruleXFunctionTypeRef )
-			int alt98=2;
-			int LA98_0 = input.LA(1);
-			if ( (LA98_0==RULE_ID) ) {
-				alt98=1;
+			// InternalWeightDefinition.g:5913:2: ( (this_JvmParameterizedTypeReference_0= ruleJvmParameterizedTypeReference ( ( ( () ruleArrayBrackets ) )=> ( () ruleArrayBrackets ) )* ) |this_XFunctionTypeRef_3= ruleXFunctionTypeRef )
+			int alt96=2;
+			int LA96_0 = input.LA(1);
+			if ( (LA96_0==RULE_ID) ) {
+				alt96=1;
 			}
-			else if ( (LA98_0==21||LA98_0==47) ) {
-				alt98=2;
+			else if ( (LA96_0==21||LA96_0==47) ) {
+				alt96=2;
 			}
 
 			else {
 				if (state.backtracking>0) {state.failed=true; return current;}
 				NoViableAltException nvae =
-					new NoViableAltException("", 98, 0, input);
+					new NoViableAltException("", 96, 0, input);
 				throw nvae;
 			}
 
-			switch (alt98) {
+			switch (alt96) {
 				case 1 :
-					// InternalWeightDefinition.g:5910:3: (this_JvmParameterizedTypeReference_0= ruleJvmParameterizedTypeReference ( ( ( () ruleArrayBrackets ) )=> ( () ruleArrayBrackets ) )* )
+					// InternalWeightDefinition.g:5914:3: (this_JvmParameterizedTypeReference_0= ruleJvmParameterizedTypeReference ( ( ( () ruleArrayBrackets ) )=> ( () ruleArrayBrackets ) )* )
 					{
-					// InternalWeightDefinition.g:5910:3: (this_JvmParameterizedTypeReference_0= ruleJvmParameterizedTypeReference ( ( ( () ruleArrayBrackets ) )=> ( () ruleArrayBrackets ) )* )
-					// InternalWeightDefinition.g:5911:4: this_JvmParameterizedTypeReference_0= ruleJvmParameterizedTypeReference ( ( ( () ruleArrayBrackets ) )=> ( () ruleArrayBrackets ) )*
+					// InternalWeightDefinition.g:5914:3: (this_JvmParameterizedTypeReference_0= ruleJvmParameterizedTypeReference ( ( ( () ruleArrayBrackets ) )=> ( () ruleArrayBrackets ) )* )
+					// InternalWeightDefinition.g:5915:4: this_JvmParameterizedTypeReference_0= ruleJvmParameterizedTypeReference ( ( ( () ruleArrayBrackets ) )=> ( () ruleArrayBrackets ) )*
 					{
 					if ( state.backtracking==0 ) {
 									newCompositeNode(grammarAccess.getJvmTypeReferenceAccess().getJvmParameterizedTypeReferenceParserRuleCall_0_0());
 								}
-					pushFollow(FOLLOW_69);
+					pushFollow(FOLLOW_68);
 					this_JvmParameterizedTypeReference_0=ruleJvmParameterizedTypeReference();
 					state._fsp--;
 					if (state.failed) return current;
@@ -14301,32 +14302,32 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 									current = this_JvmParameterizedTypeReference_0;
 									afterParserOrEnumRuleCall();
 								}
-					// InternalWeightDefinition.g:5919:4: ( ( ( () ruleArrayBrackets ) )=> ( () ruleArrayBrackets ) )*
-					loop97:
+					// InternalWeightDefinition.g:5923:4: ( ( ( () ruleArrayBrackets ) )=> ( () ruleArrayBrackets ) )*
+					loop95:
 					while (true) {
-						int alt97=2;
-						int LA97_0 = input.LA(1);
-						if ( (LA97_0==53) ) {
-							int LA97_2 = input.LA(2);
-							if ( (LA97_2==54) ) {
-								int LA97_3 = input.LA(3);
+						int alt95=2;
+						int LA95_0 = input.LA(1);
+						if ( (LA95_0==53) ) {
+							int LA95_2 = input.LA(2);
+							if ( (LA95_2==54) ) {
+								int LA95_3 = input.LA(3);
 								if ( (synpred43_InternalWeightDefinition()) ) {
-									alt97=1;
+									alt95=1;
 								}
 
 							}
 
 						}
 
-						switch (alt97) {
+						switch (alt95) {
 						case 1 :
-							// InternalWeightDefinition.g:5920:5: ( ( () ruleArrayBrackets ) )=> ( () ruleArrayBrackets )
+							// InternalWeightDefinition.g:5924:5: ( ( () ruleArrayBrackets ) )=> ( () ruleArrayBrackets )
 							{
-							// InternalWeightDefinition.g:5926:5: ( () ruleArrayBrackets )
-							// InternalWeightDefinition.g:5927:6: () ruleArrayBrackets
+							// InternalWeightDefinition.g:5930:5: ( () ruleArrayBrackets )
+							// InternalWeightDefinition.g:5931:6: () ruleArrayBrackets
 							{
-							// InternalWeightDefinition.g:5927:6: ()
-							// InternalWeightDefinition.g:5928:7: 
+							// InternalWeightDefinition.g:5931:6: ()
+							// InternalWeightDefinition.g:5932:7: 
 							{
 							if ( state.backtracking==0 ) {
 														current = forceCreateModelElementAndSet(
@@ -14338,7 +14339,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 							if ( state.backtracking==0 ) {
 													newCompositeNode(grammarAccess.getJvmTypeReferenceAccess().getArrayBracketsParserRuleCall_0_1_0_1());
 												}
-							pushFollow(FOLLOW_69);
+							pushFollow(FOLLOW_68);
 							ruleArrayBrackets();
 							state._fsp--;
 							if (state.failed) return current;
@@ -14351,7 +14352,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 							break;
 
 						default :
-							break loop97;
+							break loop95;
 						}
 					}
 
@@ -14360,7 +14361,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:5945:3: this_XFunctionTypeRef_3= ruleXFunctionTypeRef
+					// InternalWeightDefinition.g:5949:3: this_XFunctionTypeRef_3= ruleXFunctionTypeRef
 					{
 					if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getJvmTypeReferenceAccess().getXFunctionTypeRefParserRuleCall_1());
@@ -14400,7 +14401,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleArrayBrackets"
-	// InternalWeightDefinition.g:5957:1: entryRuleArrayBrackets returns [String current=null] :iv_ruleArrayBrackets= ruleArrayBrackets EOF ;
+	// InternalWeightDefinition.g:5961:1: entryRuleArrayBrackets returns [String current=null] :iv_ruleArrayBrackets= ruleArrayBrackets EOF ;
 	public final String entryRuleArrayBrackets() throws RecognitionException {
 		String current = null;
 
@@ -14408,8 +14409,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		AntlrDatatypeRuleToken iv_ruleArrayBrackets =null;
 
 		try {
-			// InternalWeightDefinition.g:5957:53: (iv_ruleArrayBrackets= ruleArrayBrackets EOF )
-			// InternalWeightDefinition.g:5958:2: iv_ruleArrayBrackets= ruleArrayBrackets EOF
+			// InternalWeightDefinition.g:5961:53: (iv_ruleArrayBrackets= ruleArrayBrackets EOF )
+			// InternalWeightDefinition.g:5962:2: iv_ruleArrayBrackets= ruleArrayBrackets EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getArrayBracketsRule()); }
 			pushFollow(FOLLOW_1);
@@ -14437,7 +14438,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleArrayBrackets"
-	// InternalWeightDefinition.g:5964:1: ruleArrayBrackets returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (kw= '[' kw= ']' ) ;
+	// InternalWeightDefinition.g:5968:1: ruleArrayBrackets returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (kw= '[' kw= ']' ) ;
 	public final AntlrDatatypeRuleToken ruleArrayBrackets() throws RecognitionException {
 		AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -14448,13 +14449,13 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:5970:2: ( (kw= '[' kw= ']' ) )
-			// InternalWeightDefinition.g:5971:2: (kw= '[' kw= ']' )
+			// InternalWeightDefinition.g:5974:2: ( (kw= '[' kw= ']' ) )
+			// InternalWeightDefinition.g:5975:2: (kw= '[' kw= ']' )
 			{
-			// InternalWeightDefinition.g:5971:2: (kw= '[' kw= ']' )
-			// InternalWeightDefinition.g:5972:3: kw= '[' kw= ']'
+			// InternalWeightDefinition.g:5975:2: (kw= '[' kw= ']' )
+			// InternalWeightDefinition.g:5976:3: kw= '[' kw= ']'
 			{
-			kw=(Token)match(input,53,FOLLOW_48); if (state.failed) return current;
+			kw=(Token)match(input,53,FOLLOW_47); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						current.merge(kw);
 						newLeafNode(kw, grammarAccess.getArrayBracketsAccess().getLeftSquareBracketKeyword_0());
@@ -14488,7 +14489,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXFunctionTypeRef"
-	// InternalWeightDefinition.g:5986:1: entryRuleXFunctionTypeRef returns [EObject current=null] :iv_ruleXFunctionTypeRef= ruleXFunctionTypeRef EOF ;
+	// InternalWeightDefinition.g:5990:1: entryRuleXFunctionTypeRef returns [EObject current=null] :iv_ruleXFunctionTypeRef= ruleXFunctionTypeRef EOF ;
 	public final EObject entryRuleXFunctionTypeRef() throws RecognitionException {
 		EObject current = null;
 
@@ -14496,8 +14497,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXFunctionTypeRef =null;
 
 		try {
-			// InternalWeightDefinition.g:5986:57: (iv_ruleXFunctionTypeRef= ruleXFunctionTypeRef EOF )
-			// InternalWeightDefinition.g:5987:2: iv_ruleXFunctionTypeRef= ruleXFunctionTypeRef EOF
+			// InternalWeightDefinition.g:5990:57: (iv_ruleXFunctionTypeRef= ruleXFunctionTypeRef EOF )
+			// InternalWeightDefinition.g:5991:2: iv_ruleXFunctionTypeRef= ruleXFunctionTypeRef EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXFunctionTypeRefRule()); }
 			pushFollow(FOLLOW_1);
@@ -14525,7 +14526,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXFunctionTypeRef"
-	// InternalWeightDefinition.g:5993:1: ruleXFunctionTypeRef returns [EObject current=null] : ( (otherlv_0= '(' ( ( (lv_paramTypes_1_0= ruleJvmTypeReference ) ) (otherlv_2= ',' ( (lv_paramTypes_3_0= ruleJvmTypeReference ) ) )* )? otherlv_4= ')' )? otherlv_5= '=>' ( (lv_returnType_6_0= ruleJvmTypeReference ) ) ) ;
+	// InternalWeightDefinition.g:5997:1: ruleXFunctionTypeRef returns [EObject current=null] : ( (otherlv_0= '(' ( ( (lv_paramTypes_1_0= ruleJvmTypeReference ) ) (otherlv_2= ',' ( (lv_paramTypes_3_0= ruleJvmTypeReference ) ) )* )? otherlv_4= ')' )? otherlv_5= '=>' ( (lv_returnType_6_0= ruleJvmTypeReference ) ) ) ;
 	public final EObject ruleXFunctionTypeRef() throws RecognitionException {
 		EObject current = null;
 
@@ -14542,46 +14543,46 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:5999:2: ( ( (otherlv_0= '(' ( ( (lv_paramTypes_1_0= ruleJvmTypeReference ) ) (otherlv_2= ',' ( (lv_paramTypes_3_0= ruleJvmTypeReference ) ) )* )? otherlv_4= ')' )? otherlv_5= '=>' ( (lv_returnType_6_0= ruleJvmTypeReference ) ) ) )
-			// InternalWeightDefinition.g:6000:2: ( (otherlv_0= '(' ( ( (lv_paramTypes_1_0= ruleJvmTypeReference ) ) (otherlv_2= ',' ( (lv_paramTypes_3_0= ruleJvmTypeReference ) ) )* )? otherlv_4= ')' )? otherlv_5= '=>' ( (lv_returnType_6_0= ruleJvmTypeReference ) ) )
+			// InternalWeightDefinition.g:6003:2: ( ( (otherlv_0= '(' ( ( (lv_paramTypes_1_0= ruleJvmTypeReference ) ) (otherlv_2= ',' ( (lv_paramTypes_3_0= ruleJvmTypeReference ) ) )* )? otherlv_4= ')' )? otherlv_5= '=>' ( (lv_returnType_6_0= ruleJvmTypeReference ) ) ) )
+			// InternalWeightDefinition.g:6004:2: ( (otherlv_0= '(' ( ( (lv_paramTypes_1_0= ruleJvmTypeReference ) ) (otherlv_2= ',' ( (lv_paramTypes_3_0= ruleJvmTypeReference ) ) )* )? otherlv_4= ')' )? otherlv_5= '=>' ( (lv_returnType_6_0= ruleJvmTypeReference ) ) )
 			{
-			// InternalWeightDefinition.g:6000:2: ( (otherlv_0= '(' ( ( (lv_paramTypes_1_0= ruleJvmTypeReference ) ) (otherlv_2= ',' ( (lv_paramTypes_3_0= ruleJvmTypeReference ) ) )* )? otherlv_4= ')' )? otherlv_5= '=>' ( (lv_returnType_6_0= ruleJvmTypeReference ) ) )
-			// InternalWeightDefinition.g:6001:3: (otherlv_0= '(' ( ( (lv_paramTypes_1_0= ruleJvmTypeReference ) ) (otherlv_2= ',' ( (lv_paramTypes_3_0= ruleJvmTypeReference ) ) )* )? otherlv_4= ')' )? otherlv_5= '=>' ( (lv_returnType_6_0= ruleJvmTypeReference ) )
+			// InternalWeightDefinition.g:6004:2: ( (otherlv_0= '(' ( ( (lv_paramTypes_1_0= ruleJvmTypeReference ) ) (otherlv_2= ',' ( (lv_paramTypes_3_0= ruleJvmTypeReference ) ) )* )? otherlv_4= ')' )? otherlv_5= '=>' ( (lv_returnType_6_0= ruleJvmTypeReference ) ) )
+			// InternalWeightDefinition.g:6005:3: (otherlv_0= '(' ( ( (lv_paramTypes_1_0= ruleJvmTypeReference ) ) (otherlv_2= ',' ( (lv_paramTypes_3_0= ruleJvmTypeReference ) ) )* )? otherlv_4= ')' )? otherlv_5= '=>' ( (lv_returnType_6_0= ruleJvmTypeReference ) )
 			{
-			// InternalWeightDefinition.g:6001:3: (otherlv_0= '(' ( ( (lv_paramTypes_1_0= ruleJvmTypeReference ) ) (otherlv_2= ',' ( (lv_paramTypes_3_0= ruleJvmTypeReference ) ) )* )? otherlv_4= ')' )?
-			int alt101=2;
-			int LA101_0 = input.LA(1);
-			if ( (LA101_0==21) ) {
-				alt101=1;
+			// InternalWeightDefinition.g:6005:3: (otherlv_0= '(' ( ( (lv_paramTypes_1_0= ruleJvmTypeReference ) ) (otherlv_2= ',' ( (lv_paramTypes_3_0= ruleJvmTypeReference ) ) )* )? otherlv_4= ')' )?
+			int alt99=2;
+			int LA99_0 = input.LA(1);
+			if ( (LA99_0==21) ) {
+				alt99=1;
 			}
-			switch (alt101) {
+			switch (alt99) {
 				case 1 :
-					// InternalWeightDefinition.g:6002:4: otherlv_0= '(' ( ( (lv_paramTypes_1_0= ruleJvmTypeReference ) ) (otherlv_2= ',' ( (lv_paramTypes_3_0= ruleJvmTypeReference ) ) )* )? otherlv_4= ')'
+					// InternalWeightDefinition.g:6006:4: otherlv_0= '(' ( ( (lv_paramTypes_1_0= ruleJvmTypeReference ) ) (otherlv_2= ',' ( (lv_paramTypes_3_0= ruleJvmTypeReference ) ) )* )? otherlv_4= ')'
 					{
-					otherlv_0=(Token)match(input,21,FOLLOW_10); if (state.failed) return current;
+					otherlv_0=(Token)match(input,21,FOLLOW_9); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 									newLeafNode(otherlv_0, grammarAccess.getXFunctionTypeRefAccess().getLeftParenthesisKeyword_0_0());
 								}
-					// InternalWeightDefinition.g:6006:4: ( ( (lv_paramTypes_1_0= ruleJvmTypeReference ) ) (otherlv_2= ',' ( (lv_paramTypes_3_0= ruleJvmTypeReference ) ) )* )?
-					int alt100=2;
-					int LA100_0 = input.LA(1);
-					if ( (LA100_0==RULE_ID||LA100_0==21||LA100_0==47) ) {
-						alt100=1;
+					// InternalWeightDefinition.g:6010:4: ( ( (lv_paramTypes_1_0= ruleJvmTypeReference ) ) (otherlv_2= ',' ( (lv_paramTypes_3_0= ruleJvmTypeReference ) ) )* )?
+					int alt98=2;
+					int LA98_0 = input.LA(1);
+					if ( (LA98_0==RULE_ID||LA98_0==21||LA98_0==47) ) {
+						alt98=1;
 					}
-					switch (alt100) {
+					switch (alt98) {
 						case 1 :
-							// InternalWeightDefinition.g:6007:5: ( (lv_paramTypes_1_0= ruleJvmTypeReference ) ) (otherlv_2= ',' ( (lv_paramTypes_3_0= ruleJvmTypeReference ) ) )*
+							// InternalWeightDefinition.g:6011:5: ( (lv_paramTypes_1_0= ruleJvmTypeReference ) ) (otherlv_2= ',' ( (lv_paramTypes_3_0= ruleJvmTypeReference ) ) )*
 							{
-							// InternalWeightDefinition.g:6007:5: ( (lv_paramTypes_1_0= ruleJvmTypeReference ) )
-							// InternalWeightDefinition.g:6008:6: (lv_paramTypes_1_0= ruleJvmTypeReference )
+							// InternalWeightDefinition.g:6011:5: ( (lv_paramTypes_1_0= ruleJvmTypeReference ) )
+							// InternalWeightDefinition.g:6012:6: (lv_paramTypes_1_0= ruleJvmTypeReference )
 							{
-							// InternalWeightDefinition.g:6008:6: (lv_paramTypes_1_0= ruleJvmTypeReference )
-							// InternalWeightDefinition.g:6009:7: lv_paramTypes_1_0= ruleJvmTypeReference
+							// InternalWeightDefinition.g:6012:6: (lv_paramTypes_1_0= ruleJvmTypeReference )
+							// InternalWeightDefinition.g:6013:7: lv_paramTypes_1_0= ruleJvmTypeReference
 							{
 							if ( state.backtracking==0 ) {
 														newCompositeNode(grammarAccess.getXFunctionTypeRefAccess().getParamTypesJvmTypeReferenceParserRuleCall_0_1_0_0());
 													}
-							pushFollow(FOLLOW_11);
+							pushFollow(FOLLOW_10);
 							lv_paramTypes_1_0=ruleJvmTypeReference();
 							state._fsp--;
 							if (state.failed) return current;
@@ -14600,33 +14601,33 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 							}
 
-							// InternalWeightDefinition.g:6026:5: (otherlv_2= ',' ( (lv_paramTypes_3_0= ruleJvmTypeReference ) ) )*
-							loop99:
+							// InternalWeightDefinition.g:6030:5: (otherlv_2= ',' ( (lv_paramTypes_3_0= ruleJvmTypeReference ) ) )*
+							loop97:
 							while (true) {
-								int alt99=2;
-								int LA99_0 = input.LA(1);
-								if ( (LA99_0==29) ) {
-									alt99=1;
+								int alt97=2;
+								int LA97_0 = input.LA(1);
+								if ( (LA97_0==29) ) {
+									alt97=1;
 								}
 
-								switch (alt99) {
+								switch (alt97) {
 								case 1 :
-									// InternalWeightDefinition.g:6027:6: otherlv_2= ',' ( (lv_paramTypes_3_0= ruleJvmTypeReference ) )
+									// InternalWeightDefinition.g:6031:6: otherlv_2= ',' ( (lv_paramTypes_3_0= ruleJvmTypeReference ) )
 									{
-									otherlv_2=(Token)match(input,29,FOLLOW_8); if (state.failed) return current;
+									otherlv_2=(Token)match(input,29,FOLLOW_7); if (state.failed) return current;
 									if ( state.backtracking==0 ) {
 															newLeafNode(otherlv_2, grammarAccess.getXFunctionTypeRefAccess().getCommaKeyword_0_1_1_0());
 														}
-									// InternalWeightDefinition.g:6031:6: ( (lv_paramTypes_3_0= ruleJvmTypeReference ) )
-									// InternalWeightDefinition.g:6032:7: (lv_paramTypes_3_0= ruleJvmTypeReference )
+									// InternalWeightDefinition.g:6035:6: ( (lv_paramTypes_3_0= ruleJvmTypeReference ) )
+									// InternalWeightDefinition.g:6036:7: (lv_paramTypes_3_0= ruleJvmTypeReference )
 									{
-									// InternalWeightDefinition.g:6032:7: (lv_paramTypes_3_0= ruleJvmTypeReference )
-									// InternalWeightDefinition.g:6033:8: lv_paramTypes_3_0= ruleJvmTypeReference
+									// InternalWeightDefinition.g:6036:7: (lv_paramTypes_3_0= ruleJvmTypeReference )
+									// InternalWeightDefinition.g:6037:8: lv_paramTypes_3_0= ruleJvmTypeReference
 									{
 									if ( state.backtracking==0 ) {
 																	newCompositeNode(grammarAccess.getXFunctionTypeRefAccess().getParamTypesJvmTypeReferenceParserRuleCall_0_1_1_1_0());
 																}
-									pushFollow(FOLLOW_11);
+									pushFollow(FOLLOW_10);
 									lv_paramTypes_3_0=ruleJvmTypeReference();
 									state._fsp--;
 									if (state.failed) return current;
@@ -14649,7 +14650,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 									break;
 
 								default :
-									break loop99;
+									break loop97;
 								}
 							}
 
@@ -14658,7 +14659,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					otherlv_4=(Token)match(input,22,FOLLOW_77); if (state.failed) return current;
+					otherlv_4=(Token)match(input,22,FOLLOW_76); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 									newLeafNode(otherlv_4, grammarAccess.getXFunctionTypeRefAccess().getRightParenthesisKeyword_0_2());
 								}
@@ -14667,15 +14668,15 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			otherlv_5=(Token)match(input,47,FOLLOW_8); if (state.failed) return current;
+			otherlv_5=(Token)match(input,47,FOLLOW_7); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_5, grammarAccess.getXFunctionTypeRefAccess().getEqualsSignGreaterThanSignKeyword_1());
 					}
-			// InternalWeightDefinition.g:6061:3: ( (lv_returnType_6_0= ruleJvmTypeReference ) )
-			// InternalWeightDefinition.g:6062:4: (lv_returnType_6_0= ruleJvmTypeReference )
+			// InternalWeightDefinition.g:6065:3: ( (lv_returnType_6_0= ruleJvmTypeReference ) )
+			// InternalWeightDefinition.g:6066:4: (lv_returnType_6_0= ruleJvmTypeReference )
 			{
-			// InternalWeightDefinition.g:6062:4: (lv_returnType_6_0= ruleJvmTypeReference )
-			// InternalWeightDefinition.g:6063:5: lv_returnType_6_0= ruleJvmTypeReference
+			// InternalWeightDefinition.g:6066:4: (lv_returnType_6_0= ruleJvmTypeReference )
+			// InternalWeightDefinition.g:6067:5: lv_returnType_6_0= ruleJvmTypeReference
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getXFunctionTypeRefAccess().getReturnTypeJvmTypeReferenceParserRuleCall_2_0());
@@ -14723,7 +14724,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleJvmParameterizedTypeReference"
-	// InternalWeightDefinition.g:6084:1: entryRuleJvmParameterizedTypeReference returns [EObject current=null] :iv_ruleJvmParameterizedTypeReference= ruleJvmParameterizedTypeReference EOF ;
+	// InternalWeightDefinition.g:6088:1: entryRuleJvmParameterizedTypeReference returns [EObject current=null] :iv_ruleJvmParameterizedTypeReference= ruleJvmParameterizedTypeReference EOF ;
 	public final EObject entryRuleJvmParameterizedTypeReference() throws RecognitionException {
 		EObject current = null;
 
@@ -14731,8 +14732,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleJvmParameterizedTypeReference =null;
 
 		try {
-			// InternalWeightDefinition.g:6084:70: (iv_ruleJvmParameterizedTypeReference= ruleJvmParameterizedTypeReference EOF )
-			// InternalWeightDefinition.g:6085:2: iv_ruleJvmParameterizedTypeReference= ruleJvmParameterizedTypeReference EOF
+			// InternalWeightDefinition.g:6088:70: (iv_ruleJvmParameterizedTypeReference= ruleJvmParameterizedTypeReference EOF )
+			// InternalWeightDefinition.g:6089:2: iv_ruleJvmParameterizedTypeReference= ruleJvmParameterizedTypeReference EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getJvmParameterizedTypeReferenceRule()); }
 			pushFollow(FOLLOW_1);
@@ -14760,7 +14761,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleJvmParameterizedTypeReference"
-	// InternalWeightDefinition.g:6091:1: ruleJvmParameterizedTypeReference returns [EObject current=null] : ( ( ( ruleQualifiedName ) ) ( ( ( '<' )=>otherlv_1= '<' ) ( (lv_arguments_2_0= ruleJvmArgumentTypeReference ) ) (otherlv_3= ',' ( (lv_arguments_4_0= ruleJvmArgumentTypeReference ) ) )* otherlv_5= '>' ( ( ( ( () '.' ) )=> ( () otherlv_7= '.' ) ) ( ( ruleValidID ) ) ( ( ( '<' )=>otherlv_9= '<' ) ( (lv_arguments_10_0= ruleJvmArgumentTypeReference ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) ) )* otherlv_13= '>' )? )* )? ) ;
+	// InternalWeightDefinition.g:6095:1: ruleJvmParameterizedTypeReference returns [EObject current=null] : ( ( ( ruleQualifiedName ) ) ( ( ( '<' )=>otherlv_1= '<' ) ( (lv_arguments_2_0= ruleJvmArgumentTypeReference ) ) (otherlv_3= ',' ( (lv_arguments_4_0= ruleJvmArgumentTypeReference ) ) )* otherlv_5= '>' ( ( ( ( () '.' ) )=> ( () otherlv_7= '.' ) ) ( ( ruleValidID ) ) ( ( ( '<' )=>otherlv_9= '<' ) ( (lv_arguments_10_0= ruleJvmArgumentTypeReference ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) ) )* otherlv_13= '>' )? )* )? ) ;
 	public final EObject ruleJvmParameterizedTypeReference() throws RecognitionException {
 		EObject current = null;
 
@@ -14781,17 +14782,17 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:6097:2: ( ( ( ( ruleQualifiedName ) ) ( ( ( '<' )=>otherlv_1= '<' ) ( (lv_arguments_2_0= ruleJvmArgumentTypeReference ) ) (otherlv_3= ',' ( (lv_arguments_4_0= ruleJvmArgumentTypeReference ) ) )* otherlv_5= '>' ( ( ( ( () '.' ) )=> ( () otherlv_7= '.' ) ) ( ( ruleValidID ) ) ( ( ( '<' )=>otherlv_9= '<' ) ( (lv_arguments_10_0= ruleJvmArgumentTypeReference ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) ) )* otherlv_13= '>' )? )* )? ) )
-			// InternalWeightDefinition.g:6098:2: ( ( ( ruleQualifiedName ) ) ( ( ( '<' )=>otherlv_1= '<' ) ( (lv_arguments_2_0= ruleJvmArgumentTypeReference ) ) (otherlv_3= ',' ( (lv_arguments_4_0= ruleJvmArgumentTypeReference ) ) )* otherlv_5= '>' ( ( ( ( () '.' ) )=> ( () otherlv_7= '.' ) ) ( ( ruleValidID ) ) ( ( ( '<' )=>otherlv_9= '<' ) ( (lv_arguments_10_0= ruleJvmArgumentTypeReference ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) ) )* otherlv_13= '>' )? )* )? )
+			// InternalWeightDefinition.g:6101:2: ( ( ( ( ruleQualifiedName ) ) ( ( ( '<' )=>otherlv_1= '<' ) ( (lv_arguments_2_0= ruleJvmArgumentTypeReference ) ) (otherlv_3= ',' ( (lv_arguments_4_0= ruleJvmArgumentTypeReference ) ) )* otherlv_5= '>' ( ( ( ( () '.' ) )=> ( () otherlv_7= '.' ) ) ( ( ruleValidID ) ) ( ( ( '<' )=>otherlv_9= '<' ) ( (lv_arguments_10_0= ruleJvmArgumentTypeReference ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) ) )* otherlv_13= '>' )? )* )? ) )
+			// InternalWeightDefinition.g:6102:2: ( ( ( ruleQualifiedName ) ) ( ( ( '<' )=>otherlv_1= '<' ) ( (lv_arguments_2_0= ruleJvmArgumentTypeReference ) ) (otherlv_3= ',' ( (lv_arguments_4_0= ruleJvmArgumentTypeReference ) ) )* otherlv_5= '>' ( ( ( ( () '.' ) )=> ( () otherlv_7= '.' ) ) ( ( ruleValidID ) ) ( ( ( '<' )=>otherlv_9= '<' ) ( (lv_arguments_10_0= ruleJvmArgumentTypeReference ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) ) )* otherlv_13= '>' )? )* )? )
 			{
-			// InternalWeightDefinition.g:6098:2: ( ( ( ruleQualifiedName ) ) ( ( ( '<' )=>otherlv_1= '<' ) ( (lv_arguments_2_0= ruleJvmArgumentTypeReference ) ) (otherlv_3= ',' ( (lv_arguments_4_0= ruleJvmArgumentTypeReference ) ) )* otherlv_5= '>' ( ( ( ( () '.' ) )=> ( () otherlv_7= '.' ) ) ( ( ruleValidID ) ) ( ( ( '<' )=>otherlv_9= '<' ) ( (lv_arguments_10_0= ruleJvmArgumentTypeReference ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) ) )* otherlv_13= '>' )? )* )? )
-			// InternalWeightDefinition.g:6099:3: ( ( ruleQualifiedName ) ) ( ( ( '<' )=>otherlv_1= '<' ) ( (lv_arguments_2_0= ruleJvmArgumentTypeReference ) ) (otherlv_3= ',' ( (lv_arguments_4_0= ruleJvmArgumentTypeReference ) ) )* otherlv_5= '>' ( ( ( ( () '.' ) )=> ( () otherlv_7= '.' ) ) ( ( ruleValidID ) ) ( ( ( '<' )=>otherlv_9= '<' ) ( (lv_arguments_10_0= ruleJvmArgumentTypeReference ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) ) )* otherlv_13= '>' )? )* )?
+			// InternalWeightDefinition.g:6102:2: ( ( ( ruleQualifiedName ) ) ( ( ( '<' )=>otherlv_1= '<' ) ( (lv_arguments_2_0= ruleJvmArgumentTypeReference ) ) (otherlv_3= ',' ( (lv_arguments_4_0= ruleJvmArgumentTypeReference ) ) )* otherlv_5= '>' ( ( ( ( () '.' ) )=> ( () otherlv_7= '.' ) ) ( ( ruleValidID ) ) ( ( ( '<' )=>otherlv_9= '<' ) ( (lv_arguments_10_0= ruleJvmArgumentTypeReference ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) ) )* otherlv_13= '>' )? )* )? )
+			// InternalWeightDefinition.g:6103:3: ( ( ruleQualifiedName ) ) ( ( ( '<' )=>otherlv_1= '<' ) ( (lv_arguments_2_0= ruleJvmArgumentTypeReference ) ) (otherlv_3= ',' ( (lv_arguments_4_0= ruleJvmArgumentTypeReference ) ) )* otherlv_5= '>' ( ( ( ( () '.' ) )=> ( () otherlv_7= '.' ) ) ( ( ruleValidID ) ) ( ( ( '<' )=>otherlv_9= '<' ) ( (lv_arguments_10_0= ruleJvmArgumentTypeReference ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) ) )* otherlv_13= '>' )? )* )?
 			{
-			// InternalWeightDefinition.g:6099:3: ( ( ruleQualifiedName ) )
-			// InternalWeightDefinition.g:6100:4: ( ruleQualifiedName )
+			// InternalWeightDefinition.g:6103:3: ( ( ruleQualifiedName ) )
+			// InternalWeightDefinition.g:6104:4: ( ruleQualifiedName )
 			{
-			// InternalWeightDefinition.g:6100:4: ( ruleQualifiedName )
-			// InternalWeightDefinition.g:6101:5: ruleQualifiedName
+			// InternalWeightDefinition.g:6104:4: ( ruleQualifiedName )
+			// InternalWeightDefinition.g:6105:5: ruleQualifiedName
 			{
 			if ( state.backtracking==0 ) {
 								if (current==null) {
@@ -14801,7 +14802,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getJvmParameterizedTypeReferenceAccess().getTypeJvmTypeCrossReference_0_0());
 							}
-			pushFollow(FOLLOW_78);
+			pushFollow(FOLLOW_77);
 			ruleQualifiedName();
 			state._fsp--;
 			if (state.failed) return current;
@@ -14812,32 +14813,32 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			// InternalWeightDefinition.g:6115:3: ( ( ( '<' )=>otherlv_1= '<' ) ( (lv_arguments_2_0= ruleJvmArgumentTypeReference ) ) (otherlv_3= ',' ( (lv_arguments_4_0= ruleJvmArgumentTypeReference ) ) )* otherlv_5= '>' ( ( ( ( () '.' ) )=> ( () otherlv_7= '.' ) ) ( ( ruleValidID ) ) ( ( ( '<' )=>otherlv_9= '<' ) ( (lv_arguments_10_0= ruleJvmArgumentTypeReference ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) ) )* otherlv_13= '>' )? )* )?
-			int alt106=2;
-			alt106 = dfa106.predict(input);
-			switch (alt106) {
+			// InternalWeightDefinition.g:6119:3: ( ( ( '<' )=>otherlv_1= '<' ) ( (lv_arguments_2_0= ruleJvmArgumentTypeReference ) ) (otherlv_3= ',' ( (lv_arguments_4_0= ruleJvmArgumentTypeReference ) ) )* otherlv_5= '>' ( ( ( ( () '.' ) )=> ( () otherlv_7= '.' ) ) ( ( ruleValidID ) ) ( ( ( '<' )=>otherlv_9= '<' ) ( (lv_arguments_10_0= ruleJvmArgumentTypeReference ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) ) )* otherlv_13= '>' )? )* )?
+			int alt104=2;
+			alt104 = dfa104.predict(input);
+			switch (alt104) {
 				case 1 :
-					// InternalWeightDefinition.g:6116:4: ( ( '<' )=>otherlv_1= '<' ) ( (lv_arguments_2_0= ruleJvmArgumentTypeReference ) ) (otherlv_3= ',' ( (lv_arguments_4_0= ruleJvmArgumentTypeReference ) ) )* otherlv_5= '>' ( ( ( ( () '.' ) )=> ( () otherlv_7= '.' ) ) ( ( ruleValidID ) ) ( ( ( '<' )=>otherlv_9= '<' ) ( (lv_arguments_10_0= ruleJvmArgumentTypeReference ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) ) )* otherlv_13= '>' )? )*
+					// InternalWeightDefinition.g:6120:4: ( ( '<' )=>otherlv_1= '<' ) ( (lv_arguments_2_0= ruleJvmArgumentTypeReference ) ) (otherlv_3= ',' ( (lv_arguments_4_0= ruleJvmArgumentTypeReference ) ) )* otherlv_5= '>' ( ( ( ( () '.' ) )=> ( () otherlv_7= '.' ) ) ( ( ruleValidID ) ) ( ( ( '<' )=>otherlv_9= '<' ) ( (lv_arguments_10_0= ruleJvmArgumentTypeReference ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) ) )* otherlv_13= '>' )? )*
 					{
-					// InternalWeightDefinition.g:6116:4: ( ( '<' )=>otherlv_1= '<' )
-					// InternalWeightDefinition.g:6117:5: ( '<' )=>otherlv_1= '<'
+					// InternalWeightDefinition.g:6120:4: ( ( '<' )=>otherlv_1= '<' )
+					// InternalWeightDefinition.g:6121:5: ( '<' )=>otherlv_1= '<'
 					{
-					otherlv_1=(Token)match(input,42,FOLLOW_33); if (state.failed) return current;
+					otherlv_1=(Token)match(input,42,FOLLOW_32); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 										newLeafNode(otherlv_1, grammarAccess.getJvmParameterizedTypeReferenceAccess().getLessThanSignKeyword_1_0());
 									}
 					}
 
-					// InternalWeightDefinition.g:6123:4: ( (lv_arguments_2_0= ruleJvmArgumentTypeReference ) )
-					// InternalWeightDefinition.g:6124:5: (lv_arguments_2_0= ruleJvmArgumentTypeReference )
+					// InternalWeightDefinition.g:6127:4: ( (lv_arguments_2_0= ruleJvmArgumentTypeReference ) )
+					// InternalWeightDefinition.g:6128:5: (lv_arguments_2_0= ruleJvmArgumentTypeReference )
 					{
-					// InternalWeightDefinition.g:6124:5: (lv_arguments_2_0= ruleJvmArgumentTypeReference )
-					// InternalWeightDefinition.g:6125:6: lv_arguments_2_0= ruleJvmArgumentTypeReference
+					// InternalWeightDefinition.g:6128:5: (lv_arguments_2_0= ruleJvmArgumentTypeReference )
+					// InternalWeightDefinition.g:6129:6: lv_arguments_2_0= ruleJvmArgumentTypeReference
 					{
 					if ( state.backtracking==0 ) {
 											newCompositeNode(grammarAccess.getJvmParameterizedTypeReferenceAccess().getArgumentsJvmArgumentTypeReferenceParserRuleCall_1_1_0());
 										}
-					pushFollow(FOLLOW_34);
+					pushFollow(FOLLOW_33);
 					lv_arguments_2_0=ruleJvmArgumentTypeReference();
 					state._fsp--;
 					if (state.failed) return current;
@@ -14856,33 +14857,33 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:6142:4: (otherlv_3= ',' ( (lv_arguments_4_0= ruleJvmArgumentTypeReference ) ) )*
-					loop102:
+					// InternalWeightDefinition.g:6146:4: (otherlv_3= ',' ( (lv_arguments_4_0= ruleJvmArgumentTypeReference ) ) )*
+					loop100:
 					while (true) {
-						int alt102=2;
-						int LA102_0 = input.LA(1);
-						if ( (LA102_0==29) ) {
-							alt102=1;
+						int alt100=2;
+						int LA100_0 = input.LA(1);
+						if ( (LA100_0==29) ) {
+							alt100=1;
 						}
 
-						switch (alt102) {
+						switch (alt100) {
 						case 1 :
-							// InternalWeightDefinition.g:6143:5: otherlv_3= ',' ( (lv_arguments_4_0= ruleJvmArgumentTypeReference ) )
+							// InternalWeightDefinition.g:6147:5: otherlv_3= ',' ( (lv_arguments_4_0= ruleJvmArgumentTypeReference ) )
 							{
-							otherlv_3=(Token)match(input,29,FOLLOW_33); if (state.failed) return current;
+							otherlv_3=(Token)match(input,29,FOLLOW_32); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
 												newLeafNode(otherlv_3, grammarAccess.getJvmParameterizedTypeReferenceAccess().getCommaKeyword_1_2_0());
 											}
-							// InternalWeightDefinition.g:6147:5: ( (lv_arguments_4_0= ruleJvmArgumentTypeReference ) )
-							// InternalWeightDefinition.g:6148:6: (lv_arguments_4_0= ruleJvmArgumentTypeReference )
+							// InternalWeightDefinition.g:6151:5: ( (lv_arguments_4_0= ruleJvmArgumentTypeReference ) )
+							// InternalWeightDefinition.g:6152:6: (lv_arguments_4_0= ruleJvmArgumentTypeReference )
 							{
-							// InternalWeightDefinition.g:6148:6: (lv_arguments_4_0= ruleJvmArgumentTypeReference )
-							// InternalWeightDefinition.g:6149:7: lv_arguments_4_0= ruleJvmArgumentTypeReference
+							// InternalWeightDefinition.g:6152:6: (lv_arguments_4_0= ruleJvmArgumentTypeReference )
+							// InternalWeightDefinition.g:6153:7: lv_arguments_4_0= ruleJvmArgumentTypeReference
 							{
 							if ( state.backtracking==0 ) {
 														newCompositeNode(grammarAccess.getJvmParameterizedTypeReferenceAccess().getArgumentsJvmArgumentTypeReferenceParserRuleCall_1_2_1_0());
 													}
-							pushFollow(FOLLOW_34);
+							pushFollow(FOLLOW_33);
 							lv_arguments_4_0=ruleJvmArgumentTypeReference();
 							state._fsp--;
 							if (state.failed) return current;
@@ -14905,43 +14906,43 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 							break;
 
 						default :
-							break loop102;
+							break loop100;
 						}
 					}
 
-					otherlv_5=(Token)match(input,48,FOLLOW_75); if (state.failed) return current;
+					otherlv_5=(Token)match(input,48,FOLLOW_74); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 									newLeafNode(otherlv_5, grammarAccess.getJvmParameterizedTypeReferenceAccess().getGreaterThanSignKeyword_1_3());
 								}
-					// InternalWeightDefinition.g:6171:4: ( ( ( ( () '.' ) )=> ( () otherlv_7= '.' ) ) ( ( ruleValidID ) ) ( ( ( '<' )=>otherlv_9= '<' ) ( (lv_arguments_10_0= ruleJvmArgumentTypeReference ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) ) )* otherlv_13= '>' )? )*
-					loop105:
+					// InternalWeightDefinition.g:6175:4: ( ( ( ( () '.' ) )=> ( () otherlv_7= '.' ) ) ( ( ruleValidID ) ) ( ( ( '<' )=>otherlv_9= '<' ) ( (lv_arguments_10_0= ruleJvmArgumentTypeReference ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) ) )* otherlv_13= '>' )? )*
+					loop103:
 					while (true) {
-						int alt105=2;
-						int LA105_0 = input.LA(1);
-						if ( (LA105_0==34) ) {
-							int LA105_2 = input.LA(2);
-							if ( (LA105_2==RULE_ID) ) {
-								int LA105_3 = input.LA(3);
+						int alt103=2;
+						int LA103_0 = input.LA(1);
+						if ( (LA103_0==34) ) {
+							int LA103_2 = input.LA(2);
+							if ( (LA103_2==RULE_ID) ) {
+								int LA103_3 = input.LA(3);
 								if ( (synpred45_InternalWeightDefinition()) ) {
-									alt105=1;
+									alt103=1;
 								}
 
 							}
 
 						}
 
-						switch (alt105) {
+						switch (alt103) {
 						case 1 :
-							// InternalWeightDefinition.g:6172:5: ( ( ( () '.' ) )=> ( () otherlv_7= '.' ) ) ( ( ruleValidID ) ) ( ( ( '<' )=>otherlv_9= '<' ) ( (lv_arguments_10_0= ruleJvmArgumentTypeReference ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) ) )* otherlv_13= '>' )?
+							// InternalWeightDefinition.g:6176:5: ( ( ( () '.' ) )=> ( () otherlv_7= '.' ) ) ( ( ruleValidID ) ) ( ( ( '<' )=>otherlv_9= '<' ) ( (lv_arguments_10_0= ruleJvmArgumentTypeReference ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) ) )* otherlv_13= '>' )?
 							{
-							// InternalWeightDefinition.g:6172:5: ( ( ( () '.' ) )=> ( () otherlv_7= '.' ) )
-							// InternalWeightDefinition.g:6173:6: ( ( () '.' ) )=> ( () otherlv_7= '.' )
+							// InternalWeightDefinition.g:6176:5: ( ( ( () '.' ) )=> ( () otherlv_7= '.' ) )
+							// InternalWeightDefinition.g:6177:6: ( ( () '.' ) )=> ( () otherlv_7= '.' )
 							{
-							// InternalWeightDefinition.g:6179:6: ( () otherlv_7= '.' )
-							// InternalWeightDefinition.g:6180:7: () otherlv_7= '.'
+							// InternalWeightDefinition.g:6183:6: ( () otherlv_7= '.' )
+							// InternalWeightDefinition.g:6184:7: () otherlv_7= '.'
 							{
-							// InternalWeightDefinition.g:6180:7: ()
-							// InternalWeightDefinition.g:6181:8: 
+							// InternalWeightDefinition.g:6184:7: ()
+							// InternalWeightDefinition.g:6185:8: 
 							{
 							if ( state.backtracking==0 ) {
 															current = forceCreateModelElementAndSet(
@@ -14950,7 +14951,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 														}
 							}
 
-							otherlv_7=(Token)match(input,34,FOLLOW_6); if (state.failed) return current;
+							otherlv_7=(Token)match(input,34,FOLLOW_5); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
 														newLeafNode(otherlv_7, grammarAccess.getJvmParameterizedTypeReferenceAccess().getFullStopKeyword_1_4_0_0_1());
 													}
@@ -14958,11 +14959,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 							}
 
-							// InternalWeightDefinition.g:6193:5: ( ( ruleValidID ) )
-							// InternalWeightDefinition.g:6194:6: ( ruleValidID )
+							// InternalWeightDefinition.g:6197:5: ( ( ruleValidID ) )
+							// InternalWeightDefinition.g:6198:6: ( ruleValidID )
 							{
-							// InternalWeightDefinition.g:6194:6: ( ruleValidID )
-							// InternalWeightDefinition.g:6195:7: ruleValidID
+							// InternalWeightDefinition.g:6198:6: ( ruleValidID )
+							// InternalWeightDefinition.g:6199:7: ruleValidID
 							{
 							if ( state.backtracking==0 ) {
 														if (current==null) {
@@ -14972,7 +14973,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 							if ( state.backtracking==0 ) {
 														newCompositeNode(grammarAccess.getJvmParameterizedTypeReferenceAccess().getTypeJvmTypeCrossReference_1_4_1_0());
 													}
-							pushFollow(FOLLOW_79);
+							pushFollow(FOLLOW_78);
 							ruleValidID();
 							state._fsp--;
 							if (state.failed) return current;
@@ -14983,32 +14984,32 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 							}
 
-							// InternalWeightDefinition.g:6209:5: ( ( ( '<' )=>otherlv_9= '<' ) ( (lv_arguments_10_0= ruleJvmArgumentTypeReference ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) ) )* otherlv_13= '>' )?
-							int alt104=2;
-							alt104 = dfa104.predict(input);
-							switch (alt104) {
+							// InternalWeightDefinition.g:6213:5: ( ( ( '<' )=>otherlv_9= '<' ) ( (lv_arguments_10_0= ruleJvmArgumentTypeReference ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) ) )* otherlv_13= '>' )?
+							int alt102=2;
+							alt102 = dfa102.predict(input);
+							switch (alt102) {
 								case 1 :
-									// InternalWeightDefinition.g:6210:6: ( ( '<' )=>otherlv_9= '<' ) ( (lv_arguments_10_0= ruleJvmArgumentTypeReference ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) ) )* otherlv_13= '>'
+									// InternalWeightDefinition.g:6214:6: ( ( '<' )=>otherlv_9= '<' ) ( (lv_arguments_10_0= ruleJvmArgumentTypeReference ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) ) )* otherlv_13= '>'
 									{
-									// InternalWeightDefinition.g:6210:6: ( ( '<' )=>otherlv_9= '<' )
-									// InternalWeightDefinition.g:6211:7: ( '<' )=>otherlv_9= '<'
+									// InternalWeightDefinition.g:6214:6: ( ( '<' )=>otherlv_9= '<' )
+									// InternalWeightDefinition.g:6215:7: ( '<' )=>otherlv_9= '<'
 									{
-									otherlv_9=(Token)match(input,42,FOLLOW_33); if (state.failed) return current;
+									otherlv_9=(Token)match(input,42,FOLLOW_32); if (state.failed) return current;
 									if ( state.backtracking==0 ) {
 																newLeafNode(otherlv_9, grammarAccess.getJvmParameterizedTypeReferenceAccess().getLessThanSignKeyword_1_4_2_0());
 															}
 									}
 
-									// InternalWeightDefinition.g:6217:6: ( (lv_arguments_10_0= ruleJvmArgumentTypeReference ) )
-									// InternalWeightDefinition.g:6218:7: (lv_arguments_10_0= ruleJvmArgumentTypeReference )
+									// InternalWeightDefinition.g:6221:6: ( (lv_arguments_10_0= ruleJvmArgumentTypeReference ) )
+									// InternalWeightDefinition.g:6222:7: (lv_arguments_10_0= ruleJvmArgumentTypeReference )
 									{
-									// InternalWeightDefinition.g:6218:7: (lv_arguments_10_0= ruleJvmArgumentTypeReference )
-									// InternalWeightDefinition.g:6219:8: lv_arguments_10_0= ruleJvmArgumentTypeReference
+									// InternalWeightDefinition.g:6222:7: (lv_arguments_10_0= ruleJvmArgumentTypeReference )
+									// InternalWeightDefinition.g:6223:8: lv_arguments_10_0= ruleJvmArgumentTypeReference
 									{
 									if ( state.backtracking==0 ) {
 																	newCompositeNode(grammarAccess.getJvmParameterizedTypeReferenceAccess().getArgumentsJvmArgumentTypeReferenceParserRuleCall_1_4_2_1_0());
 																}
-									pushFollow(FOLLOW_34);
+									pushFollow(FOLLOW_33);
 									lv_arguments_10_0=ruleJvmArgumentTypeReference();
 									state._fsp--;
 									if (state.failed) return current;
@@ -15027,33 +15028,33 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 									}
 
-									// InternalWeightDefinition.g:6236:6: (otherlv_11= ',' ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) ) )*
-									loop103:
+									// InternalWeightDefinition.g:6240:6: (otherlv_11= ',' ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) ) )*
+									loop101:
 									while (true) {
-										int alt103=2;
-										int LA103_0 = input.LA(1);
-										if ( (LA103_0==29) ) {
-											alt103=1;
+										int alt101=2;
+										int LA101_0 = input.LA(1);
+										if ( (LA101_0==29) ) {
+											alt101=1;
 										}
 
-										switch (alt103) {
+										switch (alt101) {
 										case 1 :
-											// InternalWeightDefinition.g:6237:7: otherlv_11= ',' ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) )
+											// InternalWeightDefinition.g:6241:7: otherlv_11= ',' ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) )
 											{
-											otherlv_11=(Token)match(input,29,FOLLOW_33); if (state.failed) return current;
+											otherlv_11=(Token)match(input,29,FOLLOW_32); if (state.failed) return current;
 											if ( state.backtracking==0 ) {
 																		newLeafNode(otherlv_11, grammarAccess.getJvmParameterizedTypeReferenceAccess().getCommaKeyword_1_4_2_2_0());
 																	}
-											// InternalWeightDefinition.g:6241:7: ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) )
-											// InternalWeightDefinition.g:6242:8: (lv_arguments_12_0= ruleJvmArgumentTypeReference )
+											// InternalWeightDefinition.g:6245:7: ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) )
+											// InternalWeightDefinition.g:6246:8: (lv_arguments_12_0= ruleJvmArgumentTypeReference )
 											{
-											// InternalWeightDefinition.g:6242:8: (lv_arguments_12_0= ruleJvmArgumentTypeReference )
-											// InternalWeightDefinition.g:6243:9: lv_arguments_12_0= ruleJvmArgumentTypeReference
+											// InternalWeightDefinition.g:6246:8: (lv_arguments_12_0= ruleJvmArgumentTypeReference )
+											// InternalWeightDefinition.g:6247:9: lv_arguments_12_0= ruleJvmArgumentTypeReference
 											{
 											if ( state.backtracking==0 ) {
 																				newCompositeNode(grammarAccess.getJvmParameterizedTypeReferenceAccess().getArgumentsJvmArgumentTypeReferenceParserRuleCall_1_4_2_2_1_0());
 																			}
-											pushFollow(FOLLOW_34);
+											pushFollow(FOLLOW_33);
 											lv_arguments_12_0=ruleJvmArgumentTypeReference();
 											state._fsp--;
 											if (state.failed) return current;
@@ -15076,11 +15077,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 											break;
 
 										default :
-											break loop103;
+											break loop101;
 										}
 									}
 
-									otherlv_13=(Token)match(input,48,FOLLOW_75); if (state.failed) return current;
+									otherlv_13=(Token)match(input,48,FOLLOW_74); if (state.failed) return current;
 									if ( state.backtracking==0 ) {
 															newLeafNode(otherlv_13, grammarAccess.getJvmParameterizedTypeReferenceAccess().getGreaterThanSignKeyword_1_4_2_3());
 														}
@@ -15093,7 +15094,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 							break;
 
 						default :
-							break loop105;
+							break loop103;
 						}
 					}
 
@@ -15126,7 +15127,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleJvmArgumentTypeReference"
-	// InternalWeightDefinition.g:6272:1: entryRuleJvmArgumentTypeReference returns [EObject current=null] :iv_ruleJvmArgumentTypeReference= ruleJvmArgumentTypeReference EOF ;
+	// InternalWeightDefinition.g:6276:1: entryRuleJvmArgumentTypeReference returns [EObject current=null] :iv_ruleJvmArgumentTypeReference= ruleJvmArgumentTypeReference EOF ;
 	public final EObject entryRuleJvmArgumentTypeReference() throws RecognitionException {
 		EObject current = null;
 
@@ -15134,8 +15135,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleJvmArgumentTypeReference =null;
 
 		try {
-			// InternalWeightDefinition.g:6272:65: (iv_ruleJvmArgumentTypeReference= ruleJvmArgumentTypeReference EOF )
-			// InternalWeightDefinition.g:6273:2: iv_ruleJvmArgumentTypeReference= ruleJvmArgumentTypeReference EOF
+			// InternalWeightDefinition.g:6276:65: (iv_ruleJvmArgumentTypeReference= ruleJvmArgumentTypeReference EOF )
+			// InternalWeightDefinition.g:6277:2: iv_ruleJvmArgumentTypeReference= ruleJvmArgumentTypeReference EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getJvmArgumentTypeReferenceRule()); }
 			pushFollow(FOLLOW_1);
@@ -15163,7 +15164,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleJvmArgumentTypeReference"
-	// InternalWeightDefinition.g:6279:1: ruleJvmArgumentTypeReference returns [EObject current=null] : (this_JvmTypeReference_0= ruleJvmTypeReference |this_JvmWildcardTypeReference_1= ruleJvmWildcardTypeReference ) ;
+	// InternalWeightDefinition.g:6283:1: ruleJvmArgumentTypeReference returns [EObject current=null] : (this_JvmTypeReference_0= ruleJvmTypeReference |this_JvmWildcardTypeReference_1= ruleJvmWildcardTypeReference ) ;
 	public final EObject ruleJvmArgumentTypeReference() throws RecognitionException {
 		EObject current = null;
 
@@ -15175,29 +15176,29 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:6285:2: ( (this_JvmTypeReference_0= ruleJvmTypeReference |this_JvmWildcardTypeReference_1= ruleJvmWildcardTypeReference ) )
-			// InternalWeightDefinition.g:6286:2: (this_JvmTypeReference_0= ruleJvmTypeReference |this_JvmWildcardTypeReference_1= ruleJvmWildcardTypeReference )
+			// InternalWeightDefinition.g:6289:2: ( (this_JvmTypeReference_0= ruleJvmTypeReference |this_JvmWildcardTypeReference_1= ruleJvmWildcardTypeReference ) )
+			// InternalWeightDefinition.g:6290:2: (this_JvmTypeReference_0= ruleJvmTypeReference |this_JvmWildcardTypeReference_1= ruleJvmWildcardTypeReference )
 			{
-			// InternalWeightDefinition.g:6286:2: (this_JvmTypeReference_0= ruleJvmTypeReference |this_JvmWildcardTypeReference_1= ruleJvmWildcardTypeReference )
-			int alt107=2;
-			int LA107_0 = input.LA(1);
-			if ( (LA107_0==RULE_ID||LA107_0==21||LA107_0==47) ) {
-				alt107=1;
+			// InternalWeightDefinition.g:6290:2: (this_JvmTypeReference_0= ruleJvmTypeReference |this_JvmWildcardTypeReference_1= ruleJvmWildcardTypeReference )
+			int alt105=2;
+			int LA105_0 = input.LA(1);
+			if ( (LA105_0==RULE_ID||LA105_0==21||LA105_0==47) ) {
+				alt105=1;
 			}
-			else if ( (LA107_0==50) ) {
-				alt107=2;
+			else if ( (LA105_0==50) ) {
+				alt105=2;
 			}
 
 			else {
 				if (state.backtracking>0) {state.failed=true; return current;}
 				NoViableAltException nvae =
-					new NoViableAltException("", 107, 0, input);
+					new NoViableAltException("", 105, 0, input);
 				throw nvae;
 			}
 
-			switch (alt107) {
+			switch (alt105) {
 				case 1 :
-					// InternalWeightDefinition.g:6287:3: this_JvmTypeReference_0= ruleJvmTypeReference
+					// InternalWeightDefinition.g:6291:3: this_JvmTypeReference_0= ruleJvmTypeReference
 					{
 					if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getJvmArgumentTypeReferenceAccess().getJvmTypeReferenceParserRuleCall_0());
@@ -15213,7 +15214,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:6296:3: this_JvmWildcardTypeReference_1= ruleJvmWildcardTypeReference
+					// InternalWeightDefinition.g:6300:3: this_JvmWildcardTypeReference_1= ruleJvmWildcardTypeReference
 					{
 					if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getJvmArgumentTypeReferenceAccess().getJvmWildcardTypeReferenceParserRuleCall_1());
@@ -15253,7 +15254,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleJvmWildcardTypeReference"
-	// InternalWeightDefinition.g:6308:1: entryRuleJvmWildcardTypeReference returns [EObject current=null] :iv_ruleJvmWildcardTypeReference= ruleJvmWildcardTypeReference EOF ;
+	// InternalWeightDefinition.g:6312:1: entryRuleJvmWildcardTypeReference returns [EObject current=null] :iv_ruleJvmWildcardTypeReference= ruleJvmWildcardTypeReference EOF ;
 	public final EObject entryRuleJvmWildcardTypeReference() throws RecognitionException {
 		EObject current = null;
 
@@ -15261,8 +15262,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleJvmWildcardTypeReference =null;
 
 		try {
-			// InternalWeightDefinition.g:6308:65: (iv_ruleJvmWildcardTypeReference= ruleJvmWildcardTypeReference EOF )
-			// InternalWeightDefinition.g:6309:2: iv_ruleJvmWildcardTypeReference= ruleJvmWildcardTypeReference EOF
+			// InternalWeightDefinition.g:6312:65: (iv_ruleJvmWildcardTypeReference= ruleJvmWildcardTypeReference EOF )
+			// InternalWeightDefinition.g:6313:2: iv_ruleJvmWildcardTypeReference= ruleJvmWildcardTypeReference EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getJvmWildcardTypeReferenceRule()); }
 			pushFollow(FOLLOW_1);
@@ -15290,7 +15291,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleJvmWildcardTypeReference"
-	// InternalWeightDefinition.g:6315:1: ruleJvmWildcardTypeReference returns [EObject current=null] : ( () otherlv_1= '?' ( ( ( (lv_constraints_2_0= ruleJvmUpperBound ) ) ( (lv_constraints_3_0= ruleJvmUpperBoundAnded ) )* ) | ( ( (lv_constraints_4_0= ruleJvmLowerBound ) ) ( (lv_constraints_5_0= ruleJvmLowerBoundAnded ) )* ) )? ) ;
+	// InternalWeightDefinition.g:6319:1: ruleJvmWildcardTypeReference returns [EObject current=null] : ( () otherlv_1= '?' ( ( ( (lv_constraints_2_0= ruleJvmUpperBound ) ) ( (lv_constraints_3_0= ruleJvmUpperBoundAnded ) )* ) | ( ( (lv_constraints_4_0= ruleJvmLowerBound ) ) ( (lv_constraints_5_0= ruleJvmLowerBoundAnded ) )* ) )? ) ;
 	public final EObject ruleJvmWildcardTypeReference() throws RecognitionException {
 		EObject current = null;
 
@@ -15305,14 +15306,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:6321:2: ( ( () otherlv_1= '?' ( ( ( (lv_constraints_2_0= ruleJvmUpperBound ) ) ( (lv_constraints_3_0= ruleJvmUpperBoundAnded ) )* ) | ( ( (lv_constraints_4_0= ruleJvmLowerBound ) ) ( (lv_constraints_5_0= ruleJvmLowerBoundAnded ) )* ) )? ) )
-			// InternalWeightDefinition.g:6322:2: ( () otherlv_1= '?' ( ( ( (lv_constraints_2_0= ruleJvmUpperBound ) ) ( (lv_constraints_3_0= ruleJvmUpperBoundAnded ) )* ) | ( ( (lv_constraints_4_0= ruleJvmLowerBound ) ) ( (lv_constraints_5_0= ruleJvmLowerBoundAnded ) )* ) )? )
+			// InternalWeightDefinition.g:6325:2: ( ( () otherlv_1= '?' ( ( ( (lv_constraints_2_0= ruleJvmUpperBound ) ) ( (lv_constraints_3_0= ruleJvmUpperBoundAnded ) )* ) | ( ( (lv_constraints_4_0= ruleJvmLowerBound ) ) ( (lv_constraints_5_0= ruleJvmLowerBoundAnded ) )* ) )? ) )
+			// InternalWeightDefinition.g:6326:2: ( () otherlv_1= '?' ( ( ( (lv_constraints_2_0= ruleJvmUpperBound ) ) ( (lv_constraints_3_0= ruleJvmUpperBoundAnded ) )* ) | ( ( (lv_constraints_4_0= ruleJvmLowerBound ) ) ( (lv_constraints_5_0= ruleJvmLowerBoundAnded ) )* ) )? )
 			{
-			// InternalWeightDefinition.g:6322:2: ( () otherlv_1= '?' ( ( ( (lv_constraints_2_0= ruleJvmUpperBound ) ) ( (lv_constraints_3_0= ruleJvmUpperBoundAnded ) )* ) | ( ( (lv_constraints_4_0= ruleJvmLowerBound ) ) ( (lv_constraints_5_0= ruleJvmLowerBoundAnded ) )* ) )? )
-			// InternalWeightDefinition.g:6323:3: () otherlv_1= '?' ( ( ( (lv_constraints_2_0= ruleJvmUpperBound ) ) ( (lv_constraints_3_0= ruleJvmUpperBoundAnded ) )* ) | ( ( (lv_constraints_4_0= ruleJvmLowerBound ) ) ( (lv_constraints_5_0= ruleJvmLowerBoundAnded ) )* ) )?
+			// InternalWeightDefinition.g:6326:2: ( () otherlv_1= '?' ( ( ( (lv_constraints_2_0= ruleJvmUpperBound ) ) ( (lv_constraints_3_0= ruleJvmUpperBoundAnded ) )* ) | ( ( (lv_constraints_4_0= ruleJvmLowerBound ) ) ( (lv_constraints_5_0= ruleJvmLowerBoundAnded ) )* ) )? )
+			// InternalWeightDefinition.g:6327:3: () otherlv_1= '?' ( ( ( (lv_constraints_2_0= ruleJvmUpperBound ) ) ( (lv_constraints_3_0= ruleJvmUpperBoundAnded ) )* ) | ( ( (lv_constraints_4_0= ruleJvmLowerBound ) ) ( (lv_constraints_5_0= ruleJvmLowerBoundAnded ) )* ) )?
 			{
-			// InternalWeightDefinition.g:6323:3: ()
-			// InternalWeightDefinition.g:6324:4: 
+			// InternalWeightDefinition.g:6327:3: ()
+			// InternalWeightDefinition.g:6328:4: 
 			{
 			if ( state.backtracking==0 ) {
 							current = forceCreateModelElement(
@@ -15321,36 +15322,36 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						}
 			}
 
-			otherlv_1=(Token)match(input,50,FOLLOW_80); if (state.failed) return current;
+			otherlv_1=(Token)match(input,50,FOLLOW_79); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_1, grammarAccess.getJvmWildcardTypeReferenceAccess().getQuestionMarkKeyword_1());
 					}
-			// InternalWeightDefinition.g:6334:3: ( ( ( (lv_constraints_2_0= ruleJvmUpperBound ) ) ( (lv_constraints_3_0= ruleJvmUpperBoundAnded ) )* ) | ( ( (lv_constraints_4_0= ruleJvmLowerBound ) ) ( (lv_constraints_5_0= ruleJvmLowerBoundAnded ) )* ) )?
-			int alt110=3;
-			int LA110_0 = input.LA(1);
-			if ( (LA110_0==61) ) {
-				alt110=1;
+			// InternalWeightDefinition.g:6338:3: ( ( ( (lv_constraints_2_0= ruleJvmUpperBound ) ) ( (lv_constraints_3_0= ruleJvmUpperBoundAnded ) )* ) | ( ( (lv_constraints_4_0= ruleJvmLowerBound ) ) ( (lv_constraints_5_0= ruleJvmLowerBoundAnded ) )* ) )?
+			int alt108=3;
+			int LA108_0 = input.LA(1);
+			if ( (LA108_0==61) ) {
+				alt108=1;
 			}
-			else if ( (LA110_0==75) ) {
-				alt110=2;
+			else if ( (LA108_0==75) ) {
+				alt108=2;
 			}
-			switch (alt110) {
+			switch (alt108) {
 				case 1 :
-					// InternalWeightDefinition.g:6335:4: ( ( (lv_constraints_2_0= ruleJvmUpperBound ) ) ( (lv_constraints_3_0= ruleJvmUpperBoundAnded ) )* )
+					// InternalWeightDefinition.g:6339:4: ( ( (lv_constraints_2_0= ruleJvmUpperBound ) ) ( (lv_constraints_3_0= ruleJvmUpperBoundAnded ) )* )
 					{
-					// InternalWeightDefinition.g:6335:4: ( ( (lv_constraints_2_0= ruleJvmUpperBound ) ) ( (lv_constraints_3_0= ruleJvmUpperBoundAnded ) )* )
-					// InternalWeightDefinition.g:6336:5: ( (lv_constraints_2_0= ruleJvmUpperBound ) ) ( (lv_constraints_3_0= ruleJvmUpperBoundAnded ) )*
+					// InternalWeightDefinition.g:6339:4: ( ( (lv_constraints_2_0= ruleJvmUpperBound ) ) ( (lv_constraints_3_0= ruleJvmUpperBoundAnded ) )* )
+					// InternalWeightDefinition.g:6340:5: ( (lv_constraints_2_0= ruleJvmUpperBound ) ) ( (lv_constraints_3_0= ruleJvmUpperBoundAnded ) )*
 					{
-					// InternalWeightDefinition.g:6336:5: ( (lv_constraints_2_0= ruleJvmUpperBound ) )
-					// InternalWeightDefinition.g:6337:6: (lv_constraints_2_0= ruleJvmUpperBound )
+					// InternalWeightDefinition.g:6340:5: ( (lv_constraints_2_0= ruleJvmUpperBound ) )
+					// InternalWeightDefinition.g:6341:6: (lv_constraints_2_0= ruleJvmUpperBound )
 					{
-					// InternalWeightDefinition.g:6337:6: (lv_constraints_2_0= ruleJvmUpperBound )
-					// InternalWeightDefinition.g:6338:7: lv_constraints_2_0= ruleJvmUpperBound
+					// InternalWeightDefinition.g:6341:6: (lv_constraints_2_0= ruleJvmUpperBound )
+					// InternalWeightDefinition.g:6342:7: lv_constraints_2_0= ruleJvmUpperBound
 					{
 					if ( state.backtracking==0 ) {
 												newCompositeNode(grammarAccess.getJvmWildcardTypeReferenceAccess().getConstraintsJvmUpperBoundParserRuleCall_2_0_0_0());
 											}
-					pushFollow(FOLLOW_81);
+					pushFollow(FOLLOW_80);
 					lv_constraints_2_0=ruleJvmUpperBound();
 					state._fsp--;
 					if (state.failed) return current;
@@ -15369,26 +15370,26 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:6355:5: ( (lv_constraints_3_0= ruleJvmUpperBoundAnded ) )*
-					loop108:
+					// InternalWeightDefinition.g:6359:5: ( (lv_constraints_3_0= ruleJvmUpperBoundAnded ) )*
+					loop106:
 					while (true) {
-						int alt108=2;
-						int LA108_0 = input.LA(1);
-						if ( (LA108_0==20) ) {
-							alt108=1;
+						int alt106=2;
+						int LA106_0 = input.LA(1);
+						if ( (LA106_0==20) ) {
+							alt106=1;
 						}
 
-						switch (alt108) {
+						switch (alt106) {
 						case 1 :
-							// InternalWeightDefinition.g:6356:6: (lv_constraints_3_0= ruleJvmUpperBoundAnded )
+							// InternalWeightDefinition.g:6360:6: (lv_constraints_3_0= ruleJvmUpperBoundAnded )
 							{
-							// InternalWeightDefinition.g:6356:6: (lv_constraints_3_0= ruleJvmUpperBoundAnded )
-							// InternalWeightDefinition.g:6357:7: lv_constraints_3_0= ruleJvmUpperBoundAnded
+							// InternalWeightDefinition.g:6360:6: (lv_constraints_3_0= ruleJvmUpperBoundAnded )
+							// InternalWeightDefinition.g:6361:7: lv_constraints_3_0= ruleJvmUpperBoundAnded
 							{
 							if ( state.backtracking==0 ) {
 														newCompositeNode(grammarAccess.getJvmWildcardTypeReferenceAccess().getConstraintsJvmUpperBoundAndedParserRuleCall_2_0_1_0());
 													}
-							pushFollow(FOLLOW_81);
+							pushFollow(FOLLOW_80);
 							lv_constraints_3_0=ruleJvmUpperBoundAnded();
 							state._fsp--;
 							if (state.failed) return current;
@@ -15409,7 +15410,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 							break;
 
 						default :
-							break loop108;
+							break loop106;
 						}
 					}
 
@@ -15418,21 +15419,21 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:6376:4: ( ( (lv_constraints_4_0= ruleJvmLowerBound ) ) ( (lv_constraints_5_0= ruleJvmLowerBoundAnded ) )* )
+					// InternalWeightDefinition.g:6380:4: ( ( (lv_constraints_4_0= ruleJvmLowerBound ) ) ( (lv_constraints_5_0= ruleJvmLowerBoundAnded ) )* )
 					{
-					// InternalWeightDefinition.g:6376:4: ( ( (lv_constraints_4_0= ruleJvmLowerBound ) ) ( (lv_constraints_5_0= ruleJvmLowerBoundAnded ) )* )
-					// InternalWeightDefinition.g:6377:5: ( (lv_constraints_4_0= ruleJvmLowerBound ) ) ( (lv_constraints_5_0= ruleJvmLowerBoundAnded ) )*
+					// InternalWeightDefinition.g:6380:4: ( ( (lv_constraints_4_0= ruleJvmLowerBound ) ) ( (lv_constraints_5_0= ruleJvmLowerBoundAnded ) )* )
+					// InternalWeightDefinition.g:6381:5: ( (lv_constraints_4_0= ruleJvmLowerBound ) ) ( (lv_constraints_5_0= ruleJvmLowerBoundAnded ) )*
 					{
-					// InternalWeightDefinition.g:6377:5: ( (lv_constraints_4_0= ruleJvmLowerBound ) )
-					// InternalWeightDefinition.g:6378:6: (lv_constraints_4_0= ruleJvmLowerBound )
+					// InternalWeightDefinition.g:6381:5: ( (lv_constraints_4_0= ruleJvmLowerBound ) )
+					// InternalWeightDefinition.g:6382:6: (lv_constraints_4_0= ruleJvmLowerBound )
 					{
-					// InternalWeightDefinition.g:6378:6: (lv_constraints_4_0= ruleJvmLowerBound )
-					// InternalWeightDefinition.g:6379:7: lv_constraints_4_0= ruleJvmLowerBound
+					// InternalWeightDefinition.g:6382:6: (lv_constraints_4_0= ruleJvmLowerBound )
+					// InternalWeightDefinition.g:6383:7: lv_constraints_4_0= ruleJvmLowerBound
 					{
 					if ( state.backtracking==0 ) {
 												newCompositeNode(grammarAccess.getJvmWildcardTypeReferenceAccess().getConstraintsJvmLowerBoundParserRuleCall_2_1_0_0());
 											}
-					pushFollow(FOLLOW_81);
+					pushFollow(FOLLOW_80);
 					lv_constraints_4_0=ruleJvmLowerBound();
 					state._fsp--;
 					if (state.failed) return current;
@@ -15451,26 +15452,26 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:6396:5: ( (lv_constraints_5_0= ruleJvmLowerBoundAnded ) )*
-					loop109:
+					// InternalWeightDefinition.g:6400:5: ( (lv_constraints_5_0= ruleJvmLowerBoundAnded ) )*
+					loop107:
 					while (true) {
-						int alt109=2;
-						int LA109_0 = input.LA(1);
-						if ( (LA109_0==20) ) {
-							alt109=1;
+						int alt107=2;
+						int LA107_0 = input.LA(1);
+						if ( (LA107_0==20) ) {
+							alt107=1;
 						}
 
-						switch (alt109) {
+						switch (alt107) {
 						case 1 :
-							// InternalWeightDefinition.g:6397:6: (lv_constraints_5_0= ruleJvmLowerBoundAnded )
+							// InternalWeightDefinition.g:6401:6: (lv_constraints_5_0= ruleJvmLowerBoundAnded )
 							{
-							// InternalWeightDefinition.g:6397:6: (lv_constraints_5_0= ruleJvmLowerBoundAnded )
-							// InternalWeightDefinition.g:6398:7: lv_constraints_5_0= ruleJvmLowerBoundAnded
+							// InternalWeightDefinition.g:6401:6: (lv_constraints_5_0= ruleJvmLowerBoundAnded )
+							// InternalWeightDefinition.g:6402:7: lv_constraints_5_0= ruleJvmLowerBoundAnded
 							{
 							if ( state.backtracking==0 ) {
 														newCompositeNode(grammarAccess.getJvmWildcardTypeReferenceAccess().getConstraintsJvmLowerBoundAndedParserRuleCall_2_1_1_0());
 													}
-							pushFollow(FOLLOW_81);
+							pushFollow(FOLLOW_80);
 							lv_constraints_5_0=ruleJvmLowerBoundAnded();
 							state._fsp--;
 							if (state.failed) return current;
@@ -15491,7 +15492,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 							break;
 
 						default :
-							break loop109;
+							break loop107;
 						}
 					}
 
@@ -15526,7 +15527,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleJvmUpperBound"
-	// InternalWeightDefinition.g:6421:1: entryRuleJvmUpperBound returns [EObject current=null] :iv_ruleJvmUpperBound= ruleJvmUpperBound EOF ;
+	// InternalWeightDefinition.g:6425:1: entryRuleJvmUpperBound returns [EObject current=null] :iv_ruleJvmUpperBound= ruleJvmUpperBound EOF ;
 	public final EObject entryRuleJvmUpperBound() throws RecognitionException {
 		EObject current = null;
 
@@ -15534,8 +15535,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleJvmUpperBound =null;
 
 		try {
-			// InternalWeightDefinition.g:6421:54: (iv_ruleJvmUpperBound= ruleJvmUpperBound EOF )
-			// InternalWeightDefinition.g:6422:2: iv_ruleJvmUpperBound= ruleJvmUpperBound EOF
+			// InternalWeightDefinition.g:6425:54: (iv_ruleJvmUpperBound= ruleJvmUpperBound EOF )
+			// InternalWeightDefinition.g:6426:2: iv_ruleJvmUpperBound= ruleJvmUpperBound EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getJvmUpperBoundRule()); }
 			pushFollow(FOLLOW_1);
@@ -15563,7 +15564,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleJvmUpperBound"
-	// InternalWeightDefinition.g:6428:1: ruleJvmUpperBound returns [EObject current=null] : (otherlv_0= 'extends' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) ) ;
+	// InternalWeightDefinition.g:6432:1: ruleJvmUpperBound returns [EObject current=null] : (otherlv_0= 'extends' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) ) ;
 	public final EObject ruleJvmUpperBound() throws RecognitionException {
 		EObject current = null;
 
@@ -15575,21 +15576,21 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:6434:2: ( (otherlv_0= 'extends' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) ) )
-			// InternalWeightDefinition.g:6435:2: (otherlv_0= 'extends' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) )
+			// InternalWeightDefinition.g:6438:2: ( (otherlv_0= 'extends' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) ) )
+			// InternalWeightDefinition.g:6439:2: (otherlv_0= 'extends' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) )
 			{
-			// InternalWeightDefinition.g:6435:2: (otherlv_0= 'extends' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) )
-			// InternalWeightDefinition.g:6436:3: otherlv_0= 'extends' ( (lv_typeReference_1_0= ruleJvmTypeReference ) )
+			// InternalWeightDefinition.g:6439:2: (otherlv_0= 'extends' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) )
+			// InternalWeightDefinition.g:6440:3: otherlv_0= 'extends' ( (lv_typeReference_1_0= ruleJvmTypeReference ) )
 			{
-			otherlv_0=(Token)match(input,61,FOLLOW_8); if (state.failed) return current;
+			otherlv_0=(Token)match(input,61,FOLLOW_7); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_0, grammarAccess.getJvmUpperBoundAccess().getExtendsKeyword_0());
 					}
-			// InternalWeightDefinition.g:6440:3: ( (lv_typeReference_1_0= ruleJvmTypeReference ) )
-			// InternalWeightDefinition.g:6441:4: (lv_typeReference_1_0= ruleJvmTypeReference )
+			// InternalWeightDefinition.g:6444:3: ( (lv_typeReference_1_0= ruleJvmTypeReference ) )
+			// InternalWeightDefinition.g:6445:4: (lv_typeReference_1_0= ruleJvmTypeReference )
 			{
-			// InternalWeightDefinition.g:6441:4: (lv_typeReference_1_0= ruleJvmTypeReference )
-			// InternalWeightDefinition.g:6442:5: lv_typeReference_1_0= ruleJvmTypeReference
+			// InternalWeightDefinition.g:6445:4: (lv_typeReference_1_0= ruleJvmTypeReference )
+			// InternalWeightDefinition.g:6446:5: lv_typeReference_1_0= ruleJvmTypeReference
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getJvmUpperBoundAccess().getTypeReferenceJvmTypeReferenceParserRuleCall_1_0());
@@ -15637,7 +15638,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleJvmUpperBoundAnded"
-	// InternalWeightDefinition.g:6463:1: entryRuleJvmUpperBoundAnded returns [EObject current=null] :iv_ruleJvmUpperBoundAnded= ruleJvmUpperBoundAnded EOF ;
+	// InternalWeightDefinition.g:6467:1: entryRuleJvmUpperBoundAnded returns [EObject current=null] :iv_ruleJvmUpperBoundAnded= ruleJvmUpperBoundAnded EOF ;
 	public final EObject entryRuleJvmUpperBoundAnded() throws RecognitionException {
 		EObject current = null;
 
@@ -15645,8 +15646,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleJvmUpperBoundAnded =null;
 
 		try {
-			// InternalWeightDefinition.g:6463:59: (iv_ruleJvmUpperBoundAnded= ruleJvmUpperBoundAnded EOF )
-			// InternalWeightDefinition.g:6464:2: iv_ruleJvmUpperBoundAnded= ruleJvmUpperBoundAnded EOF
+			// InternalWeightDefinition.g:6467:59: (iv_ruleJvmUpperBoundAnded= ruleJvmUpperBoundAnded EOF )
+			// InternalWeightDefinition.g:6468:2: iv_ruleJvmUpperBoundAnded= ruleJvmUpperBoundAnded EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getJvmUpperBoundAndedRule()); }
 			pushFollow(FOLLOW_1);
@@ -15674,7 +15675,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleJvmUpperBoundAnded"
-	// InternalWeightDefinition.g:6470:1: ruleJvmUpperBoundAnded returns [EObject current=null] : (otherlv_0= '&' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) ) ;
+	// InternalWeightDefinition.g:6474:1: ruleJvmUpperBoundAnded returns [EObject current=null] : (otherlv_0= '&' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) ) ;
 	public final EObject ruleJvmUpperBoundAnded() throws RecognitionException {
 		EObject current = null;
 
@@ -15686,21 +15687,21 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:6476:2: ( (otherlv_0= '&' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) ) )
-			// InternalWeightDefinition.g:6477:2: (otherlv_0= '&' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) )
+			// InternalWeightDefinition.g:6480:2: ( (otherlv_0= '&' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) ) )
+			// InternalWeightDefinition.g:6481:2: (otherlv_0= '&' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) )
 			{
-			// InternalWeightDefinition.g:6477:2: (otherlv_0= '&' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) )
-			// InternalWeightDefinition.g:6478:3: otherlv_0= '&' ( (lv_typeReference_1_0= ruleJvmTypeReference ) )
+			// InternalWeightDefinition.g:6481:2: (otherlv_0= '&' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) )
+			// InternalWeightDefinition.g:6482:3: otherlv_0= '&' ( (lv_typeReference_1_0= ruleJvmTypeReference ) )
 			{
-			otherlv_0=(Token)match(input,20,FOLLOW_8); if (state.failed) return current;
+			otherlv_0=(Token)match(input,20,FOLLOW_7); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_0, grammarAccess.getJvmUpperBoundAndedAccess().getAmpersandKeyword_0());
 					}
-			// InternalWeightDefinition.g:6482:3: ( (lv_typeReference_1_0= ruleJvmTypeReference ) )
-			// InternalWeightDefinition.g:6483:4: (lv_typeReference_1_0= ruleJvmTypeReference )
+			// InternalWeightDefinition.g:6486:3: ( (lv_typeReference_1_0= ruleJvmTypeReference ) )
+			// InternalWeightDefinition.g:6487:4: (lv_typeReference_1_0= ruleJvmTypeReference )
 			{
-			// InternalWeightDefinition.g:6483:4: (lv_typeReference_1_0= ruleJvmTypeReference )
-			// InternalWeightDefinition.g:6484:5: lv_typeReference_1_0= ruleJvmTypeReference
+			// InternalWeightDefinition.g:6487:4: (lv_typeReference_1_0= ruleJvmTypeReference )
+			// InternalWeightDefinition.g:6488:5: lv_typeReference_1_0= ruleJvmTypeReference
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getJvmUpperBoundAndedAccess().getTypeReferenceJvmTypeReferenceParserRuleCall_1_0());
@@ -15748,7 +15749,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleJvmLowerBound"
-	// InternalWeightDefinition.g:6505:1: entryRuleJvmLowerBound returns [EObject current=null] :iv_ruleJvmLowerBound= ruleJvmLowerBound EOF ;
+	// InternalWeightDefinition.g:6509:1: entryRuleJvmLowerBound returns [EObject current=null] :iv_ruleJvmLowerBound= ruleJvmLowerBound EOF ;
 	public final EObject entryRuleJvmLowerBound() throws RecognitionException {
 		EObject current = null;
 
@@ -15756,8 +15757,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleJvmLowerBound =null;
 
 		try {
-			// InternalWeightDefinition.g:6505:54: (iv_ruleJvmLowerBound= ruleJvmLowerBound EOF )
-			// InternalWeightDefinition.g:6506:2: iv_ruleJvmLowerBound= ruleJvmLowerBound EOF
+			// InternalWeightDefinition.g:6509:54: (iv_ruleJvmLowerBound= ruleJvmLowerBound EOF )
+			// InternalWeightDefinition.g:6510:2: iv_ruleJvmLowerBound= ruleJvmLowerBound EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getJvmLowerBoundRule()); }
 			pushFollow(FOLLOW_1);
@@ -15785,7 +15786,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleJvmLowerBound"
-	// InternalWeightDefinition.g:6512:1: ruleJvmLowerBound returns [EObject current=null] : (otherlv_0= 'super' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) ) ;
+	// InternalWeightDefinition.g:6516:1: ruleJvmLowerBound returns [EObject current=null] : (otherlv_0= 'super' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) ) ;
 	public final EObject ruleJvmLowerBound() throws RecognitionException {
 		EObject current = null;
 
@@ -15797,21 +15798,21 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:6518:2: ( (otherlv_0= 'super' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) ) )
-			// InternalWeightDefinition.g:6519:2: (otherlv_0= 'super' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) )
+			// InternalWeightDefinition.g:6522:2: ( (otherlv_0= 'super' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) ) )
+			// InternalWeightDefinition.g:6523:2: (otherlv_0= 'super' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) )
 			{
-			// InternalWeightDefinition.g:6519:2: (otherlv_0= 'super' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) )
-			// InternalWeightDefinition.g:6520:3: otherlv_0= 'super' ( (lv_typeReference_1_0= ruleJvmTypeReference ) )
+			// InternalWeightDefinition.g:6523:2: (otherlv_0= 'super' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) )
+			// InternalWeightDefinition.g:6524:3: otherlv_0= 'super' ( (lv_typeReference_1_0= ruleJvmTypeReference ) )
 			{
-			otherlv_0=(Token)match(input,75,FOLLOW_8); if (state.failed) return current;
+			otherlv_0=(Token)match(input,75,FOLLOW_7); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_0, grammarAccess.getJvmLowerBoundAccess().getSuperKeyword_0());
 					}
-			// InternalWeightDefinition.g:6524:3: ( (lv_typeReference_1_0= ruleJvmTypeReference ) )
-			// InternalWeightDefinition.g:6525:4: (lv_typeReference_1_0= ruleJvmTypeReference )
+			// InternalWeightDefinition.g:6528:3: ( (lv_typeReference_1_0= ruleJvmTypeReference ) )
+			// InternalWeightDefinition.g:6529:4: (lv_typeReference_1_0= ruleJvmTypeReference )
 			{
-			// InternalWeightDefinition.g:6525:4: (lv_typeReference_1_0= ruleJvmTypeReference )
-			// InternalWeightDefinition.g:6526:5: lv_typeReference_1_0= ruleJvmTypeReference
+			// InternalWeightDefinition.g:6529:4: (lv_typeReference_1_0= ruleJvmTypeReference )
+			// InternalWeightDefinition.g:6530:5: lv_typeReference_1_0= ruleJvmTypeReference
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getJvmLowerBoundAccess().getTypeReferenceJvmTypeReferenceParserRuleCall_1_0());
@@ -15859,7 +15860,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleJvmLowerBoundAnded"
-	// InternalWeightDefinition.g:6547:1: entryRuleJvmLowerBoundAnded returns [EObject current=null] :iv_ruleJvmLowerBoundAnded= ruleJvmLowerBoundAnded EOF ;
+	// InternalWeightDefinition.g:6551:1: entryRuleJvmLowerBoundAnded returns [EObject current=null] :iv_ruleJvmLowerBoundAnded= ruleJvmLowerBoundAnded EOF ;
 	public final EObject entryRuleJvmLowerBoundAnded() throws RecognitionException {
 		EObject current = null;
 
@@ -15867,8 +15868,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleJvmLowerBoundAnded =null;
 
 		try {
-			// InternalWeightDefinition.g:6547:59: (iv_ruleJvmLowerBoundAnded= ruleJvmLowerBoundAnded EOF )
-			// InternalWeightDefinition.g:6548:2: iv_ruleJvmLowerBoundAnded= ruleJvmLowerBoundAnded EOF
+			// InternalWeightDefinition.g:6551:59: (iv_ruleJvmLowerBoundAnded= ruleJvmLowerBoundAnded EOF )
+			// InternalWeightDefinition.g:6552:2: iv_ruleJvmLowerBoundAnded= ruleJvmLowerBoundAnded EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getJvmLowerBoundAndedRule()); }
 			pushFollow(FOLLOW_1);
@@ -15896,7 +15897,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleJvmLowerBoundAnded"
-	// InternalWeightDefinition.g:6554:1: ruleJvmLowerBoundAnded returns [EObject current=null] : (otherlv_0= '&' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) ) ;
+	// InternalWeightDefinition.g:6558:1: ruleJvmLowerBoundAnded returns [EObject current=null] : (otherlv_0= '&' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) ) ;
 	public final EObject ruleJvmLowerBoundAnded() throws RecognitionException {
 		EObject current = null;
 
@@ -15908,21 +15909,21 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:6560:2: ( (otherlv_0= '&' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) ) )
-			// InternalWeightDefinition.g:6561:2: (otherlv_0= '&' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) )
+			// InternalWeightDefinition.g:6564:2: ( (otherlv_0= '&' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) ) )
+			// InternalWeightDefinition.g:6565:2: (otherlv_0= '&' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) )
 			{
-			// InternalWeightDefinition.g:6561:2: (otherlv_0= '&' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) )
-			// InternalWeightDefinition.g:6562:3: otherlv_0= '&' ( (lv_typeReference_1_0= ruleJvmTypeReference ) )
+			// InternalWeightDefinition.g:6565:2: (otherlv_0= '&' ( (lv_typeReference_1_0= ruleJvmTypeReference ) ) )
+			// InternalWeightDefinition.g:6566:3: otherlv_0= '&' ( (lv_typeReference_1_0= ruleJvmTypeReference ) )
 			{
-			otherlv_0=(Token)match(input,20,FOLLOW_8); if (state.failed) return current;
+			otherlv_0=(Token)match(input,20,FOLLOW_7); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_0, grammarAccess.getJvmLowerBoundAndedAccess().getAmpersandKeyword_0());
 					}
-			// InternalWeightDefinition.g:6566:3: ( (lv_typeReference_1_0= ruleJvmTypeReference ) )
-			// InternalWeightDefinition.g:6567:4: (lv_typeReference_1_0= ruleJvmTypeReference )
+			// InternalWeightDefinition.g:6570:3: ( (lv_typeReference_1_0= ruleJvmTypeReference ) )
+			// InternalWeightDefinition.g:6571:4: (lv_typeReference_1_0= ruleJvmTypeReference )
 			{
-			// InternalWeightDefinition.g:6567:4: (lv_typeReference_1_0= ruleJvmTypeReference )
-			// InternalWeightDefinition.g:6568:5: lv_typeReference_1_0= ruleJvmTypeReference
+			// InternalWeightDefinition.g:6571:4: (lv_typeReference_1_0= ruleJvmTypeReference )
+			// InternalWeightDefinition.g:6572:5: lv_typeReference_1_0= ruleJvmTypeReference
 			{
 			if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getJvmLowerBoundAndedAccess().getTypeReferenceJvmTypeReferenceParserRuleCall_1_0());
@@ -15970,7 +15971,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleQualifiedNameWithWildcard"
-	// InternalWeightDefinition.g:6589:1: entryRuleQualifiedNameWithWildcard returns [String current=null] :iv_ruleQualifiedNameWithWildcard= ruleQualifiedNameWithWildcard EOF ;
+	// InternalWeightDefinition.g:6593:1: entryRuleQualifiedNameWithWildcard returns [String current=null] :iv_ruleQualifiedNameWithWildcard= ruleQualifiedNameWithWildcard EOF ;
 	public final String entryRuleQualifiedNameWithWildcard() throws RecognitionException {
 		String current = null;
 
@@ -15978,8 +15979,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		AntlrDatatypeRuleToken iv_ruleQualifiedNameWithWildcard =null;
 
 		try {
-			// InternalWeightDefinition.g:6589:65: (iv_ruleQualifiedNameWithWildcard= ruleQualifiedNameWithWildcard EOF )
-			// InternalWeightDefinition.g:6590:2: iv_ruleQualifiedNameWithWildcard= ruleQualifiedNameWithWildcard EOF
+			// InternalWeightDefinition.g:6593:65: (iv_ruleQualifiedNameWithWildcard= ruleQualifiedNameWithWildcard EOF )
+			// InternalWeightDefinition.g:6594:2: iv_ruleQualifiedNameWithWildcard= ruleQualifiedNameWithWildcard EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getQualifiedNameWithWildcardRule()); }
 			pushFollow(FOLLOW_1);
@@ -16007,7 +16008,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleQualifiedNameWithWildcard"
-	// InternalWeightDefinition.g:6596:1: ruleQualifiedNameWithWildcard returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_QualifiedName_0= ruleQualifiedName kw= '.' kw= '*' ) ;
+	// InternalWeightDefinition.g:6600:1: ruleQualifiedNameWithWildcard returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_QualifiedName_0= ruleQualifiedName kw= '.' kw= '*' ) ;
 	public final AntlrDatatypeRuleToken ruleQualifiedNameWithWildcard() throws RecognitionException {
 		AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -16019,16 +16020,16 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:6602:2: ( (this_QualifiedName_0= ruleQualifiedName kw= '.' kw= '*' ) )
-			// InternalWeightDefinition.g:6603:2: (this_QualifiedName_0= ruleQualifiedName kw= '.' kw= '*' )
+			// InternalWeightDefinition.g:6606:2: ( (this_QualifiedName_0= ruleQualifiedName kw= '.' kw= '*' ) )
+			// InternalWeightDefinition.g:6607:2: (this_QualifiedName_0= ruleQualifiedName kw= '.' kw= '*' )
 			{
-			// InternalWeightDefinition.g:6603:2: (this_QualifiedName_0= ruleQualifiedName kw= '.' kw= '*' )
-			// InternalWeightDefinition.g:6604:3: this_QualifiedName_0= ruleQualifiedName kw= '.' kw= '*'
+			// InternalWeightDefinition.g:6607:2: (this_QualifiedName_0= ruleQualifiedName kw= '.' kw= '*' )
+			// InternalWeightDefinition.g:6608:3: this_QualifiedName_0= ruleQualifiedName kw= '.' kw= '*'
 			{
 			if ( state.backtracking==0 ) {
 						newCompositeNode(grammarAccess.getQualifiedNameWithWildcardAccess().getQualifiedNameParserRuleCall_0());
 					}
-			pushFollow(FOLLOW_82);
+			pushFollow(FOLLOW_81);
 			this_QualifiedName_0=ruleQualifiedName();
 			state._fsp--;
 			if (state.failed) return current;
@@ -16038,7 +16039,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			if ( state.backtracking==0 ) {
 						afterParserOrEnumRuleCall();
 					}
-			kw=(Token)match(input,34,FOLLOW_83); if (state.failed) return current;
+			kw=(Token)match(input,34,FOLLOW_82); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						current.merge(kw);
 						newLeafNode(kw, grammarAccess.getQualifiedNameWithWildcardAccess().getFullStopKeyword_1());
@@ -16072,7 +16073,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleValidID"
-	// InternalWeightDefinition.g:6628:1: entryRuleValidID returns [String current=null] :iv_ruleValidID= ruleValidID EOF ;
+	// InternalWeightDefinition.g:6632:1: entryRuleValidID returns [String current=null] :iv_ruleValidID= ruleValidID EOF ;
 	public final String entryRuleValidID() throws RecognitionException {
 		String current = null;
 
@@ -16080,8 +16081,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		AntlrDatatypeRuleToken iv_ruleValidID =null;
 
 		try {
-			// InternalWeightDefinition.g:6628:47: (iv_ruleValidID= ruleValidID EOF )
-			// InternalWeightDefinition.g:6629:2: iv_ruleValidID= ruleValidID EOF
+			// InternalWeightDefinition.g:6632:47: (iv_ruleValidID= ruleValidID EOF )
+			// InternalWeightDefinition.g:6633:2: iv_ruleValidID= ruleValidID EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getValidIDRule()); }
 			pushFollow(FOLLOW_1);
@@ -16109,7 +16110,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleValidID"
-	// InternalWeightDefinition.g:6635:1: ruleValidID returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : this_ID_0= RULE_ID ;
+	// InternalWeightDefinition.g:6639:1: ruleValidID returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : this_ID_0= RULE_ID ;
 	public final AntlrDatatypeRuleToken ruleValidID() throws RecognitionException {
 		AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -16120,8 +16121,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:6641:2: (this_ID_0= RULE_ID )
-			// InternalWeightDefinition.g:6642:2: this_ID_0= RULE_ID
+			// InternalWeightDefinition.g:6645:2: (this_ID_0= RULE_ID )
+			// InternalWeightDefinition.g:6646:2: this_ID_0= RULE_ID
 			{
 			this_ID_0=(Token)match(input,RULE_ID,FOLLOW_2); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
@@ -16152,7 +16153,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleXImportDeclaration"
-	// InternalWeightDefinition.g:6652:1: entryRuleXImportDeclaration returns [EObject current=null] :iv_ruleXImportDeclaration= ruleXImportDeclaration EOF ;
+	// InternalWeightDefinition.g:6656:1: entryRuleXImportDeclaration returns [EObject current=null] :iv_ruleXImportDeclaration= ruleXImportDeclaration EOF ;
 	public final EObject entryRuleXImportDeclaration() throws RecognitionException {
 		EObject current = null;
 
@@ -16160,8 +16161,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		EObject iv_ruleXImportDeclaration =null;
 
 		try {
-			// InternalWeightDefinition.g:6652:59: (iv_ruleXImportDeclaration= ruleXImportDeclaration EOF )
-			// InternalWeightDefinition.g:6653:2: iv_ruleXImportDeclaration= ruleXImportDeclaration EOF
+			// InternalWeightDefinition.g:6656:59: (iv_ruleXImportDeclaration= ruleXImportDeclaration EOF )
+			// InternalWeightDefinition.g:6657:2: iv_ruleXImportDeclaration= ruleXImportDeclaration EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getXImportDeclarationRule()); }
 			pushFollow(FOLLOW_1);
@@ -16189,7 +16190,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleXImportDeclaration"
-	// InternalWeightDefinition.g:6659:1: ruleXImportDeclaration returns [EObject current=null] : (otherlv_0= 'import' ( ( ( (lv_static_1_0= 'static' ) ) ( (lv_extension_2_0= 'extension' ) )? ( ( ruleQualifiedNameInStaticImport ) ) ( ( (lv_wildcard_4_0= '*' ) ) | ( (lv_memberName_5_0= ruleValidID ) ) ) ) | ( ( ruleQualifiedName ) ) | ( (lv_importedNamespace_7_0= ruleQualifiedNameWithWildcard ) ) ) (otherlv_8= ';' )? ) ;
+	// InternalWeightDefinition.g:6663:1: ruleXImportDeclaration returns [EObject current=null] : (otherlv_0= 'import' ( ( ( (lv_static_1_0= 'static' ) ) ( (lv_extension_2_0= 'extension' ) )? ( ( ruleQualifiedNameInStaticImport ) ) ( ( (lv_wildcard_4_0= '*' ) ) | ( (lv_memberName_5_0= ruleValidID ) ) ) ) | ( ( ruleQualifiedName ) ) | ( (lv_importedNamespace_7_0= ruleQualifiedNameWithWildcard ) ) ) (otherlv_8= ';' )? ) ;
 	public final EObject ruleXImportDeclaration() throws RecognitionException {
 		EObject current = null;
 
@@ -16206,33 +16207,33 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:6665:2: ( (otherlv_0= 'import' ( ( ( (lv_static_1_0= 'static' ) ) ( (lv_extension_2_0= 'extension' ) )? ( ( ruleQualifiedNameInStaticImport ) ) ( ( (lv_wildcard_4_0= '*' ) ) | ( (lv_memberName_5_0= ruleValidID ) ) ) ) | ( ( ruleQualifiedName ) ) | ( (lv_importedNamespace_7_0= ruleQualifiedNameWithWildcard ) ) ) (otherlv_8= ';' )? ) )
-			// InternalWeightDefinition.g:6666:2: (otherlv_0= 'import' ( ( ( (lv_static_1_0= 'static' ) ) ( (lv_extension_2_0= 'extension' ) )? ( ( ruleQualifiedNameInStaticImport ) ) ( ( (lv_wildcard_4_0= '*' ) ) | ( (lv_memberName_5_0= ruleValidID ) ) ) ) | ( ( ruleQualifiedName ) ) | ( (lv_importedNamespace_7_0= ruleQualifiedNameWithWildcard ) ) ) (otherlv_8= ';' )? )
+			// InternalWeightDefinition.g:6669:2: ( (otherlv_0= 'import' ( ( ( (lv_static_1_0= 'static' ) ) ( (lv_extension_2_0= 'extension' ) )? ( ( ruleQualifiedNameInStaticImport ) ) ( ( (lv_wildcard_4_0= '*' ) ) | ( (lv_memberName_5_0= ruleValidID ) ) ) ) | ( ( ruleQualifiedName ) ) | ( (lv_importedNamespace_7_0= ruleQualifiedNameWithWildcard ) ) ) (otherlv_8= ';' )? ) )
+			// InternalWeightDefinition.g:6670:2: (otherlv_0= 'import' ( ( ( (lv_static_1_0= 'static' ) ) ( (lv_extension_2_0= 'extension' ) )? ( ( ruleQualifiedNameInStaticImport ) ) ( ( (lv_wildcard_4_0= '*' ) ) | ( (lv_memberName_5_0= ruleValidID ) ) ) ) | ( ( ruleQualifiedName ) ) | ( (lv_importedNamespace_7_0= ruleQualifiedNameWithWildcard ) ) ) (otherlv_8= ';' )? )
 			{
-			// InternalWeightDefinition.g:6666:2: (otherlv_0= 'import' ( ( ( (lv_static_1_0= 'static' ) ) ( (lv_extension_2_0= 'extension' ) )? ( ( ruleQualifiedNameInStaticImport ) ) ( ( (lv_wildcard_4_0= '*' ) ) | ( (lv_memberName_5_0= ruleValidID ) ) ) ) | ( ( ruleQualifiedName ) ) | ( (lv_importedNamespace_7_0= ruleQualifiedNameWithWildcard ) ) ) (otherlv_8= ';' )? )
-			// InternalWeightDefinition.g:6667:3: otherlv_0= 'import' ( ( ( (lv_static_1_0= 'static' ) ) ( (lv_extension_2_0= 'extension' ) )? ( ( ruleQualifiedNameInStaticImport ) ) ( ( (lv_wildcard_4_0= '*' ) ) | ( (lv_memberName_5_0= ruleValidID ) ) ) ) | ( ( ruleQualifiedName ) ) | ( (lv_importedNamespace_7_0= ruleQualifiedNameWithWildcard ) ) ) (otherlv_8= ';' )?
+			// InternalWeightDefinition.g:6670:2: (otherlv_0= 'import' ( ( ( (lv_static_1_0= 'static' ) ) ( (lv_extension_2_0= 'extension' ) )? ( ( ruleQualifiedNameInStaticImport ) ) ( ( (lv_wildcard_4_0= '*' ) ) | ( (lv_memberName_5_0= ruleValidID ) ) ) ) | ( ( ruleQualifiedName ) ) | ( (lv_importedNamespace_7_0= ruleQualifiedNameWithWildcard ) ) ) (otherlv_8= ';' )? )
+			// InternalWeightDefinition.g:6671:3: otherlv_0= 'import' ( ( ( (lv_static_1_0= 'static' ) ) ( (lv_extension_2_0= 'extension' ) )? ( ( ruleQualifiedNameInStaticImport ) ) ( ( (lv_wildcard_4_0= '*' ) ) | ( (lv_memberName_5_0= ruleValidID ) ) ) ) | ( ( ruleQualifiedName ) ) | ( (lv_importedNamespace_7_0= ruleQualifiedNameWithWildcard ) ) ) (otherlv_8= ';' )?
 			{
-			otherlv_0=(Token)match(input,68,FOLLOW_84); if (state.failed) return current;
+			otherlv_0=(Token)match(input,68,FOLLOW_83); if (state.failed) return current;
 			if ( state.backtracking==0 ) {
 						newLeafNode(otherlv_0, grammarAccess.getXImportDeclarationAccess().getImportKeyword_0());
 					}
-			// InternalWeightDefinition.g:6671:3: ( ( ( (lv_static_1_0= 'static' ) ) ( (lv_extension_2_0= 'extension' ) )? ( ( ruleQualifiedNameInStaticImport ) ) ( ( (lv_wildcard_4_0= '*' ) ) | ( (lv_memberName_5_0= ruleValidID ) ) ) ) | ( ( ruleQualifiedName ) ) | ( (lv_importedNamespace_7_0= ruleQualifiedNameWithWildcard ) ) )
-			int alt113=3;
-			alt113 = dfa113.predict(input);
-			switch (alt113) {
+			// InternalWeightDefinition.g:6675:3: ( ( ( (lv_static_1_0= 'static' ) ) ( (lv_extension_2_0= 'extension' ) )? ( ( ruleQualifiedNameInStaticImport ) ) ( ( (lv_wildcard_4_0= '*' ) ) | ( (lv_memberName_5_0= ruleValidID ) ) ) ) | ( ( ruleQualifiedName ) ) | ( (lv_importedNamespace_7_0= ruleQualifiedNameWithWildcard ) ) )
+			int alt111=3;
+			alt111 = dfa111.predict(input);
+			switch (alt111) {
 				case 1 :
-					// InternalWeightDefinition.g:6672:4: ( ( (lv_static_1_0= 'static' ) ) ( (lv_extension_2_0= 'extension' ) )? ( ( ruleQualifiedNameInStaticImport ) ) ( ( (lv_wildcard_4_0= '*' ) ) | ( (lv_memberName_5_0= ruleValidID ) ) ) )
+					// InternalWeightDefinition.g:6676:4: ( ( (lv_static_1_0= 'static' ) ) ( (lv_extension_2_0= 'extension' ) )? ( ( ruleQualifiedNameInStaticImport ) ) ( ( (lv_wildcard_4_0= '*' ) ) | ( (lv_memberName_5_0= ruleValidID ) ) ) )
 					{
-					// InternalWeightDefinition.g:6672:4: ( ( (lv_static_1_0= 'static' ) ) ( (lv_extension_2_0= 'extension' ) )? ( ( ruleQualifiedNameInStaticImport ) ) ( ( (lv_wildcard_4_0= '*' ) ) | ( (lv_memberName_5_0= ruleValidID ) ) ) )
-					// InternalWeightDefinition.g:6673:5: ( (lv_static_1_0= 'static' ) ) ( (lv_extension_2_0= 'extension' ) )? ( ( ruleQualifiedNameInStaticImport ) ) ( ( (lv_wildcard_4_0= '*' ) ) | ( (lv_memberName_5_0= ruleValidID ) ) )
+					// InternalWeightDefinition.g:6676:4: ( ( (lv_static_1_0= 'static' ) ) ( (lv_extension_2_0= 'extension' ) )? ( ( ruleQualifiedNameInStaticImport ) ) ( ( (lv_wildcard_4_0= '*' ) ) | ( (lv_memberName_5_0= ruleValidID ) ) ) )
+					// InternalWeightDefinition.g:6677:5: ( (lv_static_1_0= 'static' ) ) ( (lv_extension_2_0= 'extension' ) )? ( ( ruleQualifiedNameInStaticImport ) ) ( ( (lv_wildcard_4_0= '*' ) ) | ( (lv_memberName_5_0= ruleValidID ) ) )
 					{
-					// InternalWeightDefinition.g:6673:5: ( (lv_static_1_0= 'static' ) )
-					// InternalWeightDefinition.g:6674:6: (lv_static_1_0= 'static' )
+					// InternalWeightDefinition.g:6677:5: ( (lv_static_1_0= 'static' ) )
+					// InternalWeightDefinition.g:6678:6: (lv_static_1_0= 'static' )
 					{
-					// InternalWeightDefinition.g:6674:6: (lv_static_1_0= 'static' )
-					// InternalWeightDefinition.g:6675:7: lv_static_1_0= 'static'
+					// InternalWeightDefinition.g:6678:6: (lv_static_1_0= 'static' )
+					// InternalWeightDefinition.g:6679:7: lv_static_1_0= 'static'
 					{
-					lv_static_1_0=(Token)match(input,74,FOLLOW_85); if (state.failed) return current;
+					lv_static_1_0=(Token)match(input,74,FOLLOW_84); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 												newLeafNode(lv_static_1_0, grammarAccess.getXImportDeclarationAccess().getStaticStaticKeyword_1_0_0_0());
 											}
@@ -16246,20 +16247,20 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:6687:5: ( (lv_extension_2_0= 'extension' ) )?
-					int alt111=2;
-					int LA111_0 = input.LA(1);
-					if ( (LA111_0==62) ) {
-						alt111=1;
+					// InternalWeightDefinition.g:6691:5: ( (lv_extension_2_0= 'extension' ) )?
+					int alt109=2;
+					int LA109_0 = input.LA(1);
+					if ( (LA109_0==62) ) {
+						alt109=1;
 					}
-					switch (alt111) {
+					switch (alt109) {
 						case 1 :
-							// InternalWeightDefinition.g:6688:6: (lv_extension_2_0= 'extension' )
+							// InternalWeightDefinition.g:6692:6: (lv_extension_2_0= 'extension' )
 							{
-							// InternalWeightDefinition.g:6688:6: (lv_extension_2_0= 'extension' )
-							// InternalWeightDefinition.g:6689:7: lv_extension_2_0= 'extension'
+							// InternalWeightDefinition.g:6692:6: (lv_extension_2_0= 'extension' )
+							// InternalWeightDefinition.g:6693:7: lv_extension_2_0= 'extension'
 							{
-							lv_extension_2_0=(Token)match(input,62,FOLLOW_6); if (state.failed) return current;
+							lv_extension_2_0=(Token)match(input,62,FOLLOW_5); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
 														newLeafNode(lv_extension_2_0, grammarAccess.getXImportDeclarationAccess().getExtensionExtensionKeyword_1_0_1_0());
 													}
@@ -16276,11 +16277,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:6701:5: ( ( ruleQualifiedNameInStaticImport ) )
-					// InternalWeightDefinition.g:6702:6: ( ruleQualifiedNameInStaticImport )
+					// InternalWeightDefinition.g:6705:5: ( ( ruleQualifiedNameInStaticImport ) )
+					// InternalWeightDefinition.g:6706:6: ( ruleQualifiedNameInStaticImport )
 					{
-					// InternalWeightDefinition.g:6702:6: ( ruleQualifiedNameInStaticImport )
-					// InternalWeightDefinition.g:6703:7: ruleQualifiedNameInStaticImport
+					// InternalWeightDefinition.g:6706:6: ( ruleQualifiedNameInStaticImport )
+					// InternalWeightDefinition.g:6707:7: ruleQualifiedNameInStaticImport
 					{
 					if ( state.backtracking==0 ) {
 												if (current==null) {
@@ -16290,7 +16291,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					if ( state.backtracking==0 ) {
 												newCompositeNode(grammarAccess.getXImportDeclarationAccess().getImportedTypeJvmDeclaredTypeCrossReference_1_0_2_0());
 											}
-					pushFollow(FOLLOW_86);
+					pushFollow(FOLLOW_85);
 					ruleQualifiedNameInStaticImport();
 					state._fsp--;
 					if (state.failed) return current;
@@ -16301,34 +16302,34 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					}
 
-					// InternalWeightDefinition.g:6717:5: ( ( (lv_wildcard_4_0= '*' ) ) | ( (lv_memberName_5_0= ruleValidID ) ) )
-					int alt112=2;
-					int LA112_0 = input.LA(1);
-					if ( (LA112_0==23) ) {
-						alt112=1;
+					// InternalWeightDefinition.g:6721:5: ( ( (lv_wildcard_4_0= '*' ) ) | ( (lv_memberName_5_0= ruleValidID ) ) )
+					int alt110=2;
+					int LA110_0 = input.LA(1);
+					if ( (LA110_0==23) ) {
+						alt110=1;
 					}
-					else if ( (LA112_0==RULE_ID) ) {
-						alt112=2;
+					else if ( (LA110_0==RULE_ID) ) {
+						alt110=2;
 					}
 
 					else {
 						if (state.backtracking>0) {state.failed=true; return current;}
 						NoViableAltException nvae =
-							new NoViableAltException("", 112, 0, input);
+							new NoViableAltException("", 110, 0, input);
 						throw nvae;
 					}
 
-					switch (alt112) {
+					switch (alt110) {
 						case 1 :
-							// InternalWeightDefinition.g:6718:6: ( (lv_wildcard_4_0= '*' ) )
+							// InternalWeightDefinition.g:6722:6: ( (lv_wildcard_4_0= '*' ) )
 							{
-							// InternalWeightDefinition.g:6718:6: ( (lv_wildcard_4_0= '*' ) )
-							// InternalWeightDefinition.g:6719:7: (lv_wildcard_4_0= '*' )
+							// InternalWeightDefinition.g:6722:6: ( (lv_wildcard_4_0= '*' ) )
+							// InternalWeightDefinition.g:6723:7: (lv_wildcard_4_0= '*' )
 							{
-							// InternalWeightDefinition.g:6719:7: (lv_wildcard_4_0= '*' )
-							// InternalWeightDefinition.g:6720:8: lv_wildcard_4_0= '*'
+							// InternalWeightDefinition.g:6723:7: (lv_wildcard_4_0= '*' )
+							// InternalWeightDefinition.g:6724:8: lv_wildcard_4_0= '*'
 							{
-							lv_wildcard_4_0=(Token)match(input,23,FOLLOW_87); if (state.failed) return current;
+							lv_wildcard_4_0=(Token)match(input,23,FOLLOW_86); if (state.failed) return current;
 							if ( state.backtracking==0 ) {
 															newLeafNode(lv_wildcard_4_0, grammarAccess.getXImportDeclarationAccess().getWildcardAsteriskKeyword_1_0_3_0_0());
 														}
@@ -16345,18 +16346,18 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 							}
 							break;
 						case 2 :
-							// InternalWeightDefinition.g:6733:6: ( (lv_memberName_5_0= ruleValidID ) )
+							// InternalWeightDefinition.g:6737:6: ( (lv_memberName_5_0= ruleValidID ) )
 							{
-							// InternalWeightDefinition.g:6733:6: ( (lv_memberName_5_0= ruleValidID ) )
-							// InternalWeightDefinition.g:6734:7: (lv_memberName_5_0= ruleValidID )
+							// InternalWeightDefinition.g:6737:6: ( (lv_memberName_5_0= ruleValidID ) )
+							// InternalWeightDefinition.g:6738:7: (lv_memberName_5_0= ruleValidID )
 							{
-							// InternalWeightDefinition.g:6734:7: (lv_memberName_5_0= ruleValidID )
-							// InternalWeightDefinition.g:6735:8: lv_memberName_5_0= ruleValidID
+							// InternalWeightDefinition.g:6738:7: (lv_memberName_5_0= ruleValidID )
+							// InternalWeightDefinition.g:6739:8: lv_memberName_5_0= ruleValidID
 							{
 							if ( state.backtracking==0 ) {
 															newCompositeNode(grammarAccess.getXImportDeclarationAccess().getMemberNameValidIDParserRuleCall_1_0_3_1_0());
 														}
-							pushFollow(FOLLOW_87);
+							pushFollow(FOLLOW_86);
 							lv_memberName_5_0=ruleValidID();
 							state._fsp--;
 							if (state.failed) return current;
@@ -16385,13 +16386,13 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:6755:4: ( ( ruleQualifiedName ) )
+					// InternalWeightDefinition.g:6759:4: ( ( ruleQualifiedName ) )
 					{
-					// InternalWeightDefinition.g:6755:4: ( ( ruleQualifiedName ) )
-					// InternalWeightDefinition.g:6756:5: ( ruleQualifiedName )
+					// InternalWeightDefinition.g:6759:4: ( ( ruleQualifiedName ) )
+					// InternalWeightDefinition.g:6760:5: ( ruleQualifiedName )
 					{
-					// InternalWeightDefinition.g:6756:5: ( ruleQualifiedName )
-					// InternalWeightDefinition.g:6757:6: ruleQualifiedName
+					// InternalWeightDefinition.g:6760:5: ( ruleQualifiedName )
+					// InternalWeightDefinition.g:6761:6: ruleQualifiedName
 					{
 					if ( state.backtracking==0 ) {
 											if (current==null) {
@@ -16401,7 +16402,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					if ( state.backtracking==0 ) {
 											newCompositeNode(grammarAccess.getXImportDeclarationAccess().getImportedTypeJvmDeclaredTypeCrossReference_1_1_0());
 										}
-					pushFollow(FOLLOW_87);
+					pushFollow(FOLLOW_86);
 					ruleQualifiedName();
 					state._fsp--;
 					if (state.failed) return current;
@@ -16415,18 +16416,18 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					}
 					break;
 				case 3 :
-					// InternalWeightDefinition.g:6772:4: ( (lv_importedNamespace_7_0= ruleQualifiedNameWithWildcard ) )
+					// InternalWeightDefinition.g:6776:4: ( (lv_importedNamespace_7_0= ruleQualifiedNameWithWildcard ) )
 					{
-					// InternalWeightDefinition.g:6772:4: ( (lv_importedNamespace_7_0= ruleQualifiedNameWithWildcard ) )
-					// InternalWeightDefinition.g:6773:5: (lv_importedNamespace_7_0= ruleQualifiedNameWithWildcard )
+					// InternalWeightDefinition.g:6776:4: ( (lv_importedNamespace_7_0= ruleQualifiedNameWithWildcard ) )
+					// InternalWeightDefinition.g:6777:5: (lv_importedNamespace_7_0= ruleQualifiedNameWithWildcard )
 					{
-					// InternalWeightDefinition.g:6773:5: (lv_importedNamespace_7_0= ruleQualifiedNameWithWildcard )
-					// InternalWeightDefinition.g:6774:6: lv_importedNamespace_7_0= ruleQualifiedNameWithWildcard
+					// InternalWeightDefinition.g:6777:5: (lv_importedNamespace_7_0= ruleQualifiedNameWithWildcard )
+					// InternalWeightDefinition.g:6778:6: lv_importedNamespace_7_0= ruleQualifiedNameWithWildcard
 					{
 					if ( state.backtracking==0 ) {
 											newCompositeNode(grammarAccess.getXImportDeclarationAccess().getImportedNamespaceQualifiedNameWithWildcardParserRuleCall_1_2_0());
 										}
-					pushFollow(FOLLOW_87);
+					pushFollow(FOLLOW_86);
 					lv_importedNamespace_7_0=ruleQualifiedNameWithWildcard();
 					state._fsp--;
 					if (state.failed) return current;
@@ -16450,15 +16451,15 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 			}
 
-			// InternalWeightDefinition.g:6792:3: (otherlv_8= ';' )?
-			int alt114=2;
-			int LA114_0 = input.LA(1);
-			if ( (LA114_0==41) ) {
-				alt114=1;
+			// InternalWeightDefinition.g:6796:3: (otherlv_8= ';' )?
+			int alt112=2;
+			int LA112_0 = input.LA(1);
+			if ( (LA112_0==41) ) {
+				alt112=1;
 			}
-			switch (alt114) {
+			switch (alt112) {
 				case 1 :
-					// InternalWeightDefinition.g:6793:4: otherlv_8= ';'
+					// InternalWeightDefinition.g:6797:4: otherlv_8= ';'
 					{
 					otherlv_8=(Token)match(input,41,FOLLOW_2); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
@@ -16493,7 +16494,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "entryRuleQualifiedNameInStaticImport"
-	// InternalWeightDefinition.g:6802:1: entryRuleQualifiedNameInStaticImport returns [String current=null] :iv_ruleQualifiedNameInStaticImport= ruleQualifiedNameInStaticImport EOF ;
+	// InternalWeightDefinition.g:6806:1: entryRuleQualifiedNameInStaticImport returns [String current=null] :iv_ruleQualifiedNameInStaticImport= ruleQualifiedNameInStaticImport EOF ;
 	public final String entryRuleQualifiedNameInStaticImport() throws RecognitionException {
 		String current = null;
 
@@ -16501,8 +16502,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		AntlrDatatypeRuleToken iv_ruleQualifiedNameInStaticImport =null;
 
 		try {
-			// InternalWeightDefinition.g:6802:67: (iv_ruleQualifiedNameInStaticImport= ruleQualifiedNameInStaticImport EOF )
-			// InternalWeightDefinition.g:6803:2: iv_ruleQualifiedNameInStaticImport= ruleQualifiedNameInStaticImport EOF
+			// InternalWeightDefinition.g:6806:67: (iv_ruleQualifiedNameInStaticImport= ruleQualifiedNameInStaticImport EOF )
+			// InternalWeightDefinition.g:6807:2: iv_ruleQualifiedNameInStaticImport= ruleQualifiedNameInStaticImport EOF
 			{
 			if ( state.backtracking==0 ) { newCompositeNode(grammarAccess.getQualifiedNameInStaticImportRule()); }
 			pushFollow(FOLLOW_1);
@@ -16530,7 +16531,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 
 	// $ANTLR start "ruleQualifiedNameInStaticImport"
-	// InternalWeightDefinition.g:6809:1: ruleQualifiedNameInStaticImport returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_ValidID_0= ruleValidID kw= '.' )+ ;
+	// InternalWeightDefinition.g:6813:1: ruleQualifiedNameInStaticImport returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_ValidID_0= ruleValidID kw= '.' )+ ;
 	public final AntlrDatatypeRuleToken ruleQualifiedNameInStaticImport() throws RecognitionException {
 		AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -16542,31 +16543,31 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			enterRule();
 
 		try {
-			// InternalWeightDefinition.g:6815:2: ( (this_ValidID_0= ruleValidID kw= '.' )+ )
-			// InternalWeightDefinition.g:6816:2: (this_ValidID_0= ruleValidID kw= '.' )+
+			// InternalWeightDefinition.g:6819:2: ( (this_ValidID_0= ruleValidID kw= '.' )+ )
+			// InternalWeightDefinition.g:6820:2: (this_ValidID_0= ruleValidID kw= '.' )+
 			{
-			// InternalWeightDefinition.g:6816:2: (this_ValidID_0= ruleValidID kw= '.' )+
-			int cnt115=0;
-			loop115:
+			// InternalWeightDefinition.g:6820:2: (this_ValidID_0= ruleValidID kw= '.' )+
+			int cnt113=0;
+			loop113:
 			while (true) {
-				int alt115=2;
-				int LA115_0 = input.LA(1);
-				if ( (LA115_0==RULE_ID) ) {
-					int LA115_2 = input.LA(2);
-					if ( (LA115_2==34) ) {
-						alt115=1;
+				int alt113=2;
+				int LA113_0 = input.LA(1);
+				if ( (LA113_0==RULE_ID) ) {
+					int LA113_2 = input.LA(2);
+					if ( (LA113_2==34) ) {
+						alt113=1;
 					}
 
 				}
 
-				switch (alt115) {
+				switch (alt113) {
 				case 1 :
-					// InternalWeightDefinition.g:6817:3: this_ValidID_0= ruleValidID kw= '.'
+					// InternalWeightDefinition.g:6821:3: this_ValidID_0= ruleValidID kw= '.'
 					{
 					if ( state.backtracking==0 ) {
 								newCompositeNode(grammarAccess.getQualifiedNameInStaticImportAccess().getValidIDParserRuleCall_0());
 							}
-					pushFollow(FOLLOW_82);
+					pushFollow(FOLLOW_81);
 					this_ValidID_0=ruleValidID();
 					state._fsp--;
 					if (state.failed) return current;
@@ -16576,7 +16577,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					if ( state.backtracking==0 ) {
 								afterParserOrEnumRuleCall();
 							}
-					kw=(Token)match(input,34,FOLLOW_88); if (state.failed) return current;
+					kw=(Token)match(input,34,FOLLOW_87); if (state.failed) return current;
 					if ( state.backtracking==0 ) {
 								current.merge(kw);
 								newLeafNode(kw, grammarAccess.getQualifiedNameInStaticImportAccess().getFullStopKeyword_1());
@@ -16585,12 +16586,12 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 					break;
 
 				default :
-					if ( cnt115 >= 1 ) break loop115;
+					if ( cnt113 >= 1 ) break loop113;
 					if (state.backtracking>0) {state.failed=true; return current;}
-					EarlyExitException eee = new EarlyExitException(115, input);
+					EarlyExitException eee = new EarlyExitException(113, input);
 					throw eee;
 				}
-				cnt115++;
+				cnt113++;
 			}
 
 			}
@@ -16614,22 +16615,22 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred1_InternalWeightDefinition
 	public final void synpred1_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:657:6: ( ( () ( ( ruleOpMultiAssign ) ) ) )
-		// InternalWeightDefinition.g:657:7: ( () ( ( ruleOpMultiAssign ) ) )
+		// InternalWeightDefinition.g:661:6: ( ( () ( ( ruleOpMultiAssign ) ) ) )
+		// InternalWeightDefinition.g:661:7: ( () ( ( ruleOpMultiAssign ) ) )
 		{
-		// InternalWeightDefinition.g:657:7: ( () ( ( ruleOpMultiAssign ) ) )
-		// InternalWeightDefinition.g:658:7: () ( ( ruleOpMultiAssign ) )
+		// InternalWeightDefinition.g:661:7: ( () ( ( ruleOpMultiAssign ) ) )
+		// InternalWeightDefinition.g:662:7: () ( ( ruleOpMultiAssign ) )
 		{
-		// InternalWeightDefinition.g:658:7: ()
-		// InternalWeightDefinition.g:659:7: 
+		// InternalWeightDefinition.g:662:7: ()
+		// InternalWeightDefinition.g:663:7: 
 		{
 		}
 
-		// InternalWeightDefinition.g:660:7: ( ( ruleOpMultiAssign ) )
-		// InternalWeightDefinition.g:661:8: ( ruleOpMultiAssign )
+		// InternalWeightDefinition.g:664:7: ( ( ruleOpMultiAssign ) )
+		// InternalWeightDefinition.g:665:8: ( ruleOpMultiAssign )
 		{
-		// InternalWeightDefinition.g:661:8: ( ruleOpMultiAssign )
-		// InternalWeightDefinition.g:662:9: ruleOpMultiAssign
+		// InternalWeightDefinition.g:665:8: ( ruleOpMultiAssign )
+		// InternalWeightDefinition.g:666:9: ruleOpMultiAssign
 		{
 		pushFollow(FOLLOW_2);
 		ruleOpMultiAssign();
@@ -16648,22 +16649,22 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred2_InternalWeightDefinition
 	public final void synpred2_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:851:5: ( ( () ( ( ruleOpOr ) ) ) )
-		// InternalWeightDefinition.g:851:6: ( () ( ( ruleOpOr ) ) )
+		// InternalWeightDefinition.g:855:5: ( ( () ( ( ruleOpOr ) ) ) )
+		// InternalWeightDefinition.g:855:6: ( () ( ( ruleOpOr ) ) )
 		{
-		// InternalWeightDefinition.g:851:6: ( () ( ( ruleOpOr ) ) )
-		// InternalWeightDefinition.g:852:6: () ( ( ruleOpOr ) )
+		// InternalWeightDefinition.g:855:6: ( () ( ( ruleOpOr ) ) )
+		// InternalWeightDefinition.g:856:6: () ( ( ruleOpOr ) )
 		{
-		// InternalWeightDefinition.g:852:6: ()
-		// InternalWeightDefinition.g:853:6: 
+		// InternalWeightDefinition.g:856:6: ()
+		// InternalWeightDefinition.g:857:6: 
 		{
 		}
 
-		// InternalWeightDefinition.g:854:6: ( ( ruleOpOr ) )
-		// InternalWeightDefinition.g:855:7: ( ruleOpOr )
+		// InternalWeightDefinition.g:858:6: ( ( ruleOpOr ) )
+		// InternalWeightDefinition.g:859:7: ( ruleOpOr )
 		{
-		// InternalWeightDefinition.g:855:7: ( ruleOpOr )
-		// InternalWeightDefinition.g:856:8: ruleOpOr
+		// InternalWeightDefinition.g:859:7: ( ruleOpOr )
+		// InternalWeightDefinition.g:860:8: ruleOpOr
 		{
 		pushFollow(FOLLOW_2);
 		ruleOpOr();
@@ -16682,22 +16683,22 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred3_InternalWeightDefinition
 	public final void synpred3_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:958:5: ( ( () ( ( ruleOpAnd ) ) ) )
-		// InternalWeightDefinition.g:958:6: ( () ( ( ruleOpAnd ) ) )
+		// InternalWeightDefinition.g:962:5: ( ( () ( ( ruleOpAnd ) ) ) )
+		// InternalWeightDefinition.g:962:6: ( () ( ( ruleOpAnd ) ) )
 		{
-		// InternalWeightDefinition.g:958:6: ( () ( ( ruleOpAnd ) ) )
-		// InternalWeightDefinition.g:959:6: () ( ( ruleOpAnd ) )
+		// InternalWeightDefinition.g:962:6: ( () ( ( ruleOpAnd ) ) )
+		// InternalWeightDefinition.g:963:6: () ( ( ruleOpAnd ) )
 		{
-		// InternalWeightDefinition.g:959:6: ()
-		// InternalWeightDefinition.g:960:6: 
+		// InternalWeightDefinition.g:963:6: ()
+		// InternalWeightDefinition.g:964:6: 
 		{
 		}
 
-		// InternalWeightDefinition.g:961:6: ( ( ruleOpAnd ) )
-		// InternalWeightDefinition.g:962:7: ( ruleOpAnd )
+		// InternalWeightDefinition.g:965:6: ( ( ruleOpAnd ) )
+		// InternalWeightDefinition.g:966:7: ( ruleOpAnd )
 		{
-		// InternalWeightDefinition.g:962:7: ( ruleOpAnd )
-		// InternalWeightDefinition.g:963:8: ruleOpAnd
+		// InternalWeightDefinition.g:966:7: ( ruleOpAnd )
+		// InternalWeightDefinition.g:967:8: ruleOpAnd
 		{
 		pushFollow(FOLLOW_2);
 		ruleOpAnd();
@@ -16716,22 +16717,22 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred4_InternalWeightDefinition
 	public final void synpred4_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:1065:5: ( ( () ( ( ruleOpEquality ) ) ) )
-		// InternalWeightDefinition.g:1065:6: ( () ( ( ruleOpEquality ) ) )
+		// InternalWeightDefinition.g:1069:5: ( ( () ( ( ruleOpEquality ) ) ) )
+		// InternalWeightDefinition.g:1069:6: ( () ( ( ruleOpEquality ) ) )
 		{
-		// InternalWeightDefinition.g:1065:6: ( () ( ( ruleOpEquality ) ) )
-		// InternalWeightDefinition.g:1066:6: () ( ( ruleOpEquality ) )
+		// InternalWeightDefinition.g:1069:6: ( () ( ( ruleOpEquality ) ) )
+		// InternalWeightDefinition.g:1070:6: () ( ( ruleOpEquality ) )
 		{
-		// InternalWeightDefinition.g:1066:6: ()
-		// InternalWeightDefinition.g:1067:6: 
+		// InternalWeightDefinition.g:1070:6: ()
+		// InternalWeightDefinition.g:1071:6: 
 		{
 		}
 
-		// InternalWeightDefinition.g:1068:6: ( ( ruleOpEquality ) )
-		// InternalWeightDefinition.g:1069:7: ( ruleOpEquality )
+		// InternalWeightDefinition.g:1072:6: ( ( ruleOpEquality ) )
+		// InternalWeightDefinition.g:1073:7: ( ruleOpEquality )
 		{
-		// InternalWeightDefinition.g:1069:7: ( ruleOpEquality )
-		// InternalWeightDefinition.g:1070:8: ruleOpEquality
+		// InternalWeightDefinition.g:1073:7: ( ruleOpEquality )
+		// InternalWeightDefinition.g:1074:8: ruleOpEquality
 		{
 		pushFollow(FOLLOW_2);
 		ruleOpEquality();
@@ -16750,14 +16751,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred5_InternalWeightDefinition
 	public final void synpred5_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:1193:6: ( ( () 'instanceof' ) )
-		// InternalWeightDefinition.g:1193:7: ( () 'instanceof' )
+		// InternalWeightDefinition.g:1197:6: ( ( () 'instanceof' ) )
+		// InternalWeightDefinition.g:1197:7: ( () 'instanceof' )
 		{
-		// InternalWeightDefinition.g:1193:7: ( () 'instanceof' )
-		// InternalWeightDefinition.g:1194:7: () 'instanceof'
+		// InternalWeightDefinition.g:1197:7: ( () 'instanceof' )
+		// InternalWeightDefinition.g:1198:7: () 'instanceof'
 		{
-		// InternalWeightDefinition.g:1194:7: ()
-		// InternalWeightDefinition.g:1195:7: 
+		// InternalWeightDefinition.g:1198:7: ()
+		// InternalWeightDefinition.g:1199:7: 
 		{
 		}
 
@@ -16771,22 +16772,22 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred6_InternalWeightDefinition
 	public final void synpred6_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:1236:6: ( ( () ( ( ruleOpCompare ) ) ) )
-		// InternalWeightDefinition.g:1236:7: ( () ( ( ruleOpCompare ) ) )
+		// InternalWeightDefinition.g:1240:6: ( ( () ( ( ruleOpCompare ) ) ) )
+		// InternalWeightDefinition.g:1240:7: ( () ( ( ruleOpCompare ) ) )
 		{
-		// InternalWeightDefinition.g:1236:7: ( () ( ( ruleOpCompare ) ) )
-		// InternalWeightDefinition.g:1237:7: () ( ( ruleOpCompare ) )
+		// InternalWeightDefinition.g:1240:7: ( () ( ( ruleOpCompare ) ) )
+		// InternalWeightDefinition.g:1241:7: () ( ( ruleOpCompare ) )
 		{
-		// InternalWeightDefinition.g:1237:7: ()
-		// InternalWeightDefinition.g:1238:7: 
+		// InternalWeightDefinition.g:1241:7: ()
+		// InternalWeightDefinition.g:1242:7: 
 		{
 		}
 
-		// InternalWeightDefinition.g:1239:7: ( ( ruleOpCompare ) )
-		// InternalWeightDefinition.g:1240:8: ( ruleOpCompare )
+		// InternalWeightDefinition.g:1243:7: ( ( ruleOpCompare ) )
+		// InternalWeightDefinition.g:1244:8: ( ruleOpCompare )
 		{
-		// InternalWeightDefinition.g:1240:8: ( ruleOpCompare )
-		// InternalWeightDefinition.g:1241:9: ruleOpCompare
+		// InternalWeightDefinition.g:1244:8: ( ruleOpCompare )
+		// InternalWeightDefinition.g:1245:9: ruleOpCompare
 		{
 		pushFollow(FOLLOW_2);
 		ruleOpCompare();
@@ -16805,22 +16806,22 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred7_InternalWeightDefinition
 	public final void synpred7_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:1371:5: ( ( () ( ( ruleOpOther ) ) ) )
-		// InternalWeightDefinition.g:1371:6: ( () ( ( ruleOpOther ) ) )
+		// InternalWeightDefinition.g:1375:5: ( ( () ( ( ruleOpOther ) ) ) )
+		// InternalWeightDefinition.g:1375:6: ( () ( ( ruleOpOther ) ) )
 		{
-		// InternalWeightDefinition.g:1371:6: ( () ( ( ruleOpOther ) ) )
-		// InternalWeightDefinition.g:1372:6: () ( ( ruleOpOther ) )
+		// InternalWeightDefinition.g:1375:6: ( () ( ( ruleOpOther ) ) )
+		// InternalWeightDefinition.g:1376:6: () ( ( ruleOpOther ) )
 		{
-		// InternalWeightDefinition.g:1372:6: ()
-		// InternalWeightDefinition.g:1373:6: 
+		// InternalWeightDefinition.g:1376:6: ()
+		// InternalWeightDefinition.g:1377:6: 
 		{
 		}
 
-		// InternalWeightDefinition.g:1374:6: ( ( ruleOpOther ) )
-		// InternalWeightDefinition.g:1375:7: ( ruleOpOther )
+		// InternalWeightDefinition.g:1378:6: ( ( ruleOpOther ) )
+		// InternalWeightDefinition.g:1379:7: ( ruleOpOther )
 		{
-		// InternalWeightDefinition.g:1375:7: ( ruleOpOther )
-		// InternalWeightDefinition.g:1376:8: ruleOpOther
+		// InternalWeightDefinition.g:1379:7: ( ruleOpOther )
+		// InternalWeightDefinition.g:1380:8: ruleOpOther
 		{
 		pushFollow(FOLLOW_2);
 		ruleOpOther();
@@ -16839,13 +16840,13 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred8_InternalWeightDefinition
 	public final void synpred8_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:1491:6: ( ( '>' '>' ) )
-		// InternalWeightDefinition.g:1491:7: ( '>' '>' )
+		// InternalWeightDefinition.g:1495:6: ( ( '>' '>' ) )
+		// InternalWeightDefinition.g:1495:7: ( '>' '>' )
 		{
-		// InternalWeightDefinition.g:1491:7: ( '>' '>' )
-		// InternalWeightDefinition.g:1492:7: '>' '>'
+		// InternalWeightDefinition.g:1495:7: ( '>' '>' )
+		// InternalWeightDefinition.g:1496:7: '>' '>'
 		{
-		match(input,48,FOLLOW_24); if (state.failed) return;
+		match(input,48,FOLLOW_23); if (state.failed) return;
 		match(input,48,FOLLOW_2); if (state.failed) return;
 		}
 
@@ -16856,13 +16857,13 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred9_InternalWeightDefinition
 	public final void synpred9_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:1526:6: ( ( '<' '<' ) )
-		// InternalWeightDefinition.g:1526:7: ( '<' '<' )
+		// InternalWeightDefinition.g:1530:6: ( ( '<' '<' ) )
+		// InternalWeightDefinition.g:1530:7: ( '<' '<' )
 		{
-		// InternalWeightDefinition.g:1526:7: ( '<' '<' )
-		// InternalWeightDefinition.g:1527:7: '<' '<'
+		// InternalWeightDefinition.g:1530:7: ( '<' '<' )
+		// InternalWeightDefinition.g:1531:7: '<' '<'
 		{
-		match(input,42,FOLLOW_15); if (state.failed) return;
+		match(input,42,FOLLOW_14); if (state.failed) return;
 		match(input,42,FOLLOW_2); if (state.failed) return;
 		}
 
@@ -16873,22 +16874,22 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred10_InternalWeightDefinition
 	public final void synpred10_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:1599:5: ( ( () ( ( ruleOpAdd ) ) ) )
-		// InternalWeightDefinition.g:1599:6: ( () ( ( ruleOpAdd ) ) )
+		// InternalWeightDefinition.g:1603:5: ( ( () ( ( ruleOpAdd ) ) ) )
+		// InternalWeightDefinition.g:1603:6: ( () ( ( ruleOpAdd ) ) )
 		{
-		// InternalWeightDefinition.g:1599:6: ( () ( ( ruleOpAdd ) ) )
-		// InternalWeightDefinition.g:1600:6: () ( ( ruleOpAdd ) )
+		// InternalWeightDefinition.g:1603:6: ( () ( ( ruleOpAdd ) ) )
+		// InternalWeightDefinition.g:1604:6: () ( ( ruleOpAdd ) )
 		{
-		// InternalWeightDefinition.g:1600:6: ()
-		// InternalWeightDefinition.g:1601:6: 
+		// InternalWeightDefinition.g:1604:6: ()
+		// InternalWeightDefinition.g:1605:6: 
 		{
 		}
 
-		// InternalWeightDefinition.g:1602:6: ( ( ruleOpAdd ) )
-		// InternalWeightDefinition.g:1603:7: ( ruleOpAdd )
+		// InternalWeightDefinition.g:1606:6: ( ( ruleOpAdd ) )
+		// InternalWeightDefinition.g:1607:7: ( ruleOpAdd )
 		{
-		// InternalWeightDefinition.g:1603:7: ( ruleOpAdd )
-		// InternalWeightDefinition.g:1604:8: ruleOpAdd
+		// InternalWeightDefinition.g:1607:7: ( ruleOpAdd )
+		// InternalWeightDefinition.g:1608:8: ruleOpAdd
 		{
 		pushFollow(FOLLOW_2);
 		ruleOpAdd();
@@ -16907,22 +16908,22 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred11_InternalWeightDefinition
 	public final void synpred11_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:1714:5: ( ( () ( ( ruleOpMulti ) ) ) )
-		// InternalWeightDefinition.g:1714:6: ( () ( ( ruleOpMulti ) ) )
+		// InternalWeightDefinition.g:1718:5: ( ( () ( ( ruleOpMulti ) ) ) )
+		// InternalWeightDefinition.g:1718:6: ( () ( ( ruleOpMulti ) ) )
 		{
-		// InternalWeightDefinition.g:1714:6: ( () ( ( ruleOpMulti ) ) )
-		// InternalWeightDefinition.g:1715:6: () ( ( ruleOpMulti ) )
+		// InternalWeightDefinition.g:1718:6: ( () ( ( ruleOpMulti ) ) )
+		// InternalWeightDefinition.g:1719:6: () ( ( ruleOpMulti ) )
 		{
-		// InternalWeightDefinition.g:1715:6: ()
-		// InternalWeightDefinition.g:1716:6: 
+		// InternalWeightDefinition.g:1719:6: ()
+		// InternalWeightDefinition.g:1720:6: 
 		{
 		}
 
-		// InternalWeightDefinition.g:1717:6: ( ( ruleOpMulti ) )
-		// InternalWeightDefinition.g:1718:7: ( ruleOpMulti )
+		// InternalWeightDefinition.g:1721:6: ( ( ruleOpMulti ) )
+		// InternalWeightDefinition.g:1722:7: ( ruleOpMulti )
 		{
-		// InternalWeightDefinition.g:1718:7: ( ruleOpMulti )
-		// InternalWeightDefinition.g:1719:8: ruleOpMulti
+		// InternalWeightDefinition.g:1722:7: ( ruleOpMulti )
+		// InternalWeightDefinition.g:1723:8: ruleOpMulti
 		{
 		pushFollow(FOLLOW_2);
 		ruleOpMulti();
@@ -16941,14 +16942,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred12_InternalWeightDefinition
 	public final void synpred12_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:1949:5: ( ( () 'as' ) )
-		// InternalWeightDefinition.g:1949:6: ( () 'as' )
+		// InternalWeightDefinition.g:1953:5: ( ( () 'as' ) )
+		// InternalWeightDefinition.g:1953:6: ( () 'as' )
 		{
-		// InternalWeightDefinition.g:1949:6: ( () 'as' )
-		// InternalWeightDefinition.g:1950:6: () 'as'
+		// InternalWeightDefinition.g:1953:6: ( () 'as' )
+		// InternalWeightDefinition.g:1954:6: () 'as'
 		{
-		// InternalWeightDefinition.g:1950:6: ()
-		// InternalWeightDefinition.g:1951:6: 
+		// InternalWeightDefinition.g:1954:6: ()
+		// InternalWeightDefinition.g:1955:6: 
 		{
 		}
 
@@ -16962,22 +16963,22 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred13_InternalWeightDefinition
 	public final void synpred13_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:2017:4: ( ( () ( ( ruleOpPostfix ) ) ) )
-		// InternalWeightDefinition.g:2017:5: ( () ( ( ruleOpPostfix ) ) )
+		// InternalWeightDefinition.g:2021:4: ( ( () ( ( ruleOpPostfix ) ) ) )
+		// InternalWeightDefinition.g:2021:5: ( () ( ( ruleOpPostfix ) ) )
 		{
-		// InternalWeightDefinition.g:2017:5: ( () ( ( ruleOpPostfix ) ) )
-		// InternalWeightDefinition.g:2018:5: () ( ( ruleOpPostfix ) )
+		// InternalWeightDefinition.g:2021:5: ( () ( ( ruleOpPostfix ) ) )
+		// InternalWeightDefinition.g:2022:5: () ( ( ruleOpPostfix ) )
 		{
-		// InternalWeightDefinition.g:2018:5: ()
-		// InternalWeightDefinition.g:2019:5: 
+		// InternalWeightDefinition.g:2022:5: ()
+		// InternalWeightDefinition.g:2023:5: 
 		{
 		}
 
-		// InternalWeightDefinition.g:2020:5: ( ( ruleOpPostfix ) )
-		// InternalWeightDefinition.g:2021:6: ( ruleOpPostfix )
+		// InternalWeightDefinition.g:2024:5: ( ( ruleOpPostfix ) )
+		// InternalWeightDefinition.g:2025:6: ( ruleOpPostfix )
 		{
-		// InternalWeightDefinition.g:2021:6: ( ruleOpPostfix )
-		// InternalWeightDefinition.g:2022:7: ruleOpPostfix
+		// InternalWeightDefinition.g:2025:6: ( ruleOpPostfix )
+		// InternalWeightDefinition.g:2026:7: ruleOpPostfix
 		{
 		pushFollow(FOLLOW_2);
 		ruleOpPostfix();
@@ -16996,14 +16997,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred14_InternalWeightDefinition
 	public final void synpred14_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:2113:6: ( ( () ( '.' | ( ( '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) )
-		// InternalWeightDefinition.g:2113:7: ( () ( '.' | ( ( '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign )
+		// InternalWeightDefinition.g:2117:6: ( ( () ( '.' | ( ( '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign ) )
+		// InternalWeightDefinition.g:2117:7: ( () ( '.' | ( ( '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign )
 		{
-		// InternalWeightDefinition.g:2113:7: ( () ( '.' | ( ( '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign )
-		// InternalWeightDefinition.g:2114:7: () ( '.' | ( ( '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign
+		// InternalWeightDefinition.g:2117:7: ( () ( '.' | ( ( '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign )
+		// InternalWeightDefinition.g:2118:7: () ( '.' | ( ( '::' ) ) ) ( ( ruleFeatureCallID ) ) ruleOpSingleAssign
 		{
-		// InternalWeightDefinition.g:2114:7: ()
-		// InternalWeightDefinition.g:2115:7: 
+		// InternalWeightDefinition.g:2118:7: ()
+		// InternalWeightDefinition.g:2119:7: 
 		{
 		}
 
@@ -17017,13 +17018,13 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			MismatchedSetException mse = new MismatchedSetException(null,input);
 			throw mse;
 		}
-		// InternalWeightDefinition.g:2125:7: ( ( ruleFeatureCallID ) )
-		// InternalWeightDefinition.g:2126:8: ( ruleFeatureCallID )
+		// InternalWeightDefinition.g:2129:7: ( ( ruleFeatureCallID ) )
+		// InternalWeightDefinition.g:2130:8: ( ruleFeatureCallID )
 		{
-		// InternalWeightDefinition.g:2126:8: ( ruleFeatureCallID )
-		// InternalWeightDefinition.g:2127:9: ruleFeatureCallID
+		// InternalWeightDefinition.g:2130:8: ( ruleFeatureCallID )
+		// InternalWeightDefinition.g:2131:9: ruleFeatureCallID
 		{
-		pushFollow(FOLLOW_12);
+		pushFollow(FOLLOW_11);
 		ruleFeatureCallID();
 		state._fsp--;
 		if (state.failed) return;
@@ -17044,14 +17045,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred15_InternalWeightDefinition
 	public final void synpred15_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:2210:6: ( ( () ( '.' | ( ( '?.' ) ) | ( ( '::' ) ) ) ) )
-		// InternalWeightDefinition.g:2210:7: ( () ( '.' | ( ( '?.' ) ) | ( ( '::' ) ) ) )
+		// InternalWeightDefinition.g:2214:6: ( ( () ( '.' | ( ( '?.' ) ) | ( ( '::' ) ) ) ) )
+		// InternalWeightDefinition.g:2214:7: ( () ( '.' | ( ( '?.' ) ) | ( ( '::' ) ) ) )
 		{
-		// InternalWeightDefinition.g:2210:7: ( () ( '.' | ( ( '?.' ) ) | ( ( '::' ) ) ) )
-		// InternalWeightDefinition.g:2211:7: () ( '.' | ( ( '?.' ) ) | ( ( '::' ) ) )
+		// InternalWeightDefinition.g:2214:7: ( () ( '.' | ( ( '?.' ) ) | ( ( '::' ) ) ) )
+		// InternalWeightDefinition.g:2215:7: () ( '.' | ( ( '?.' ) ) | ( ( '::' ) ) )
 		{
-		// InternalWeightDefinition.g:2211:7: ()
-		// InternalWeightDefinition.g:2212:7: 
+		// InternalWeightDefinition.g:2215:7: ()
+		// InternalWeightDefinition.g:2216:7: 
 		{
 		}
 
@@ -17074,11 +17075,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred16_InternalWeightDefinition
 	public final void synpred16_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:2348:7: ( ( '(' ) )
-		// InternalWeightDefinition.g:2348:8: ( '(' )
+		// InternalWeightDefinition.g:2352:7: ( ( '(' ) )
+		// InternalWeightDefinition.g:2352:8: ( '(' )
 		{
-		// InternalWeightDefinition.g:2348:8: ( '(' )
-		// InternalWeightDefinition.g:2349:8: '('
+		// InternalWeightDefinition.g:2352:8: ( '(' )
+		// InternalWeightDefinition.g:2353:8: '('
 		{
 		match(input,21,FOLLOW_2); if (state.failed) return;
 		}
@@ -17090,34 +17091,34 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred17_InternalWeightDefinition
 	public final void synpred17_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:2367:8: ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )
-		// InternalWeightDefinition.g:2367:9: ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) )
+		// InternalWeightDefinition.g:2371:8: ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )
+		// InternalWeightDefinition.g:2371:9: ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) )
 		{
-		// InternalWeightDefinition.g:2367:9: ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) )
-		// InternalWeightDefinition.g:2368:9: () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) )
+		// InternalWeightDefinition.g:2371:9: ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) )
+		// InternalWeightDefinition.g:2372:9: () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) )
 		{
-		// InternalWeightDefinition.g:2368:9: ()
-		// InternalWeightDefinition.g:2369:9: 
+		// InternalWeightDefinition.g:2372:9: ()
+		// InternalWeightDefinition.g:2373:9: 
 		{
 		}
 
-		// InternalWeightDefinition.g:2370:9: ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )?
-		int alt117=2;
-		int LA117_0 = input.LA(1);
-		if ( (LA117_0==RULE_ID||LA117_0==21||LA117_0==47) ) {
-			alt117=1;
+		// InternalWeightDefinition.g:2374:9: ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )?
+		int alt115=2;
+		int LA115_0 = input.LA(1);
+		if ( (LA115_0==RULE_ID||LA115_0==21||LA115_0==47) ) {
+			alt115=1;
 		}
-		switch (alt117) {
+		switch (alt115) {
 			case 1 :
-				// InternalWeightDefinition.g:2371:10: ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )*
+				// InternalWeightDefinition.g:2375:10: ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )*
 				{
-				// InternalWeightDefinition.g:2371:10: ( ( ruleJvmFormalParameter ) )
-				// InternalWeightDefinition.g:2372:11: ( ruleJvmFormalParameter )
+				// InternalWeightDefinition.g:2375:10: ( ( ruleJvmFormalParameter ) )
+				// InternalWeightDefinition.g:2376:11: ( ruleJvmFormalParameter )
 				{
-				// InternalWeightDefinition.g:2372:11: ( ruleJvmFormalParameter )
-				// InternalWeightDefinition.g:2373:12: ruleJvmFormalParameter
+				// InternalWeightDefinition.g:2376:11: ( ruleJvmFormalParameter )
+				// InternalWeightDefinition.g:2377:12: ruleJvmFormalParameter
 				{
-				pushFollow(FOLLOW_46);
+				pushFollow(FOLLOW_45);
 				ruleJvmFormalParameter();
 				state._fsp--;
 				if (state.failed) return;
@@ -17125,7 +17126,199 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 				}
 
-				// InternalWeightDefinition.g:2376:10: ( ',' ( ( ruleJvmFormalParameter ) ) )*
+				// InternalWeightDefinition.g:2380:10: ( ',' ( ( ruleJvmFormalParameter ) ) )*
+				loop114:
+				while (true) {
+					int alt114=2;
+					int LA114_0 = input.LA(1);
+					if ( (LA114_0==29) ) {
+						alt114=1;
+					}
+
+					switch (alt114) {
+					case 1 :
+						// InternalWeightDefinition.g:2381:11: ',' ( ( ruleJvmFormalParameter ) )
+						{
+						match(input,29,FOLLOW_7); if (state.failed) return;
+						// InternalWeightDefinition.g:2382:11: ( ( ruleJvmFormalParameter ) )
+						// InternalWeightDefinition.g:2383:12: ( ruleJvmFormalParameter )
+						{
+						// InternalWeightDefinition.g:2383:12: ( ruleJvmFormalParameter )
+						// InternalWeightDefinition.g:2384:13: ruleJvmFormalParameter
+						{
+						pushFollow(FOLLOW_45);
+						ruleJvmFormalParameter();
+						state._fsp--;
+						if (state.failed) return;
+						}
+
+						}
+
+						}
+						break;
+
+					default :
+						break loop114;
+					}
+				}
+
+				}
+				break;
+
+		}
+
+		// InternalWeightDefinition.g:2389:9: ( ( '|' ) )
+		// InternalWeightDefinition.g:2390:10: ( '|' )
+		{
+		// InternalWeightDefinition.g:2390:10: ( '|' )
+		// InternalWeightDefinition.g:2391:11: '|'
+		{
+		match(input,86,FOLLOW_2); if (state.failed) return;
+		}
+
+		}
+
+		}
+
+		}
+
+	}
+	// $ANTLR end synpred17_InternalWeightDefinition
+
+	// $ANTLR start synpred18_InternalWeightDefinition
+	public final void synpred18_InternalWeightDefinition_fragment() throws RecognitionException {
+		// InternalWeightDefinition.g:2468:6: ( ( () '[' ) )
+		// InternalWeightDefinition.g:2468:7: ( () '[' )
+		{
+		// InternalWeightDefinition.g:2468:7: ( () '[' )
+		// InternalWeightDefinition.g:2469:7: () '['
+		{
+		// InternalWeightDefinition.g:2469:7: ()
+		// InternalWeightDefinition.g:2470:7: 
+		{
+		}
+
+		match(input,53,FOLLOW_2); if (state.failed) return;
+		}
+
+		}
+
+	}
+	// $ANTLR end synpred18_InternalWeightDefinition
+
+	// $ANTLR start synpred19_InternalWeightDefinition
+	public final void synpred19_InternalWeightDefinition_fragment() throws RecognitionException {
+		// InternalWeightDefinition.g:2541:4: ( ( () 'synchronized' '(' ) )
+		// InternalWeightDefinition.g:2541:5: ( () 'synchronized' '(' )
+		{
+		// InternalWeightDefinition.g:2541:5: ( () 'synchronized' '(' )
+		// InternalWeightDefinition.g:2542:5: () 'synchronized' '('
+		{
+		// InternalWeightDefinition.g:2542:5: ()
+		// InternalWeightDefinition.g:2543:5: 
+		{
+		}
+
+		match(input,77,FOLLOW_8); if (state.failed) return;
+		match(input,21,FOLLOW_2); if (state.failed) return;
+		}
+
+		}
+
+	}
+	// $ANTLR end synpred19_InternalWeightDefinition
+
+	// $ANTLR start synpred20_InternalWeightDefinition
+	public final void synpred20_InternalWeightDefinition_fragment() throws RecognitionException {
+		// InternalWeightDefinition.g:2586:4: ( ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' ) )
+		// InternalWeightDefinition.g:2586:5: ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' )
+		{
+		// InternalWeightDefinition.g:2586:5: ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' )
+		// InternalWeightDefinition.g:2587:5: () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':'
+		{
+		// InternalWeightDefinition.g:2587:5: ()
+		// InternalWeightDefinition.g:2588:5: 
+		{
+		}
+
+		match(input,65,FOLLOW_8); if (state.failed) return;
+		match(input,21,FOLLOW_7); if (state.failed) return;
+		// InternalWeightDefinition.g:2591:5: ( ( ruleJvmFormalParameter ) )
+		// InternalWeightDefinition.g:2592:6: ( ruleJvmFormalParameter )
+		{
+		// InternalWeightDefinition.g:2592:6: ( ruleJvmFormalParameter )
+		// InternalWeightDefinition.g:2593:7: ruleJvmFormalParameter
+		{
+		pushFollow(FOLLOW_52);
+		ruleJvmFormalParameter();
+		state._fsp--;
+		if (state.failed) return;
+		}
+
+		}
+
+		match(input,39,FOLLOW_2); if (state.failed) return;
+		}
+
+		}
+
+	}
+	// $ANTLR end synpred20_InternalWeightDefinition
+
+	// $ANTLR start synpred21_InternalWeightDefinition
+	public final void synpred21_InternalWeightDefinition_fragment() throws RecognitionException {
+		// InternalWeightDefinition.g:2700:4: ( ( () '[' ) )
+		// InternalWeightDefinition.g:2700:5: ( () '[' )
+		{
+		// InternalWeightDefinition.g:2700:5: ( () '[' )
+		// InternalWeightDefinition.g:2701:5: () '['
+		{
+		// InternalWeightDefinition.g:2701:5: ()
+		// InternalWeightDefinition.g:2702:5: 
+		{
+		}
+
+		match(input,53,FOLLOW_2); if (state.failed) return;
+		}
+
+		}
+
+	}
+	// $ANTLR end synpred21_InternalWeightDefinition
+
+	// $ANTLR start synpred23_InternalWeightDefinition
+	public final void synpred23_InternalWeightDefinition_fragment() throws RecognitionException {
+		// InternalWeightDefinition.g:3005:4: ( ( ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )
+		// InternalWeightDefinition.g:3005:5: ( ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) )
+		{
+		// InternalWeightDefinition.g:3005:5: ( ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) )
+		// InternalWeightDefinition.g:3006:5: ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) )
+		{
+		// InternalWeightDefinition.g:3006:5: ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )?
+		int alt117=2;
+		int LA117_0 = input.LA(1);
+		if ( (LA117_0==RULE_ID||LA117_0==21||LA117_0==47) ) {
+			alt117=1;
+		}
+		switch (alt117) {
+			case 1 :
+				// InternalWeightDefinition.g:3007:6: ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )*
+				{
+				// InternalWeightDefinition.g:3007:6: ( ( ruleJvmFormalParameter ) )
+				// InternalWeightDefinition.g:3008:7: ( ruleJvmFormalParameter )
+				{
+				// InternalWeightDefinition.g:3008:7: ( ruleJvmFormalParameter )
+				// InternalWeightDefinition.g:3009:8: ruleJvmFormalParameter
+				{
+				pushFollow(FOLLOW_45);
+				ruleJvmFormalParameter();
+				state._fsp--;
+				if (state.failed) return;
+				}
+
+				}
+
+				// InternalWeightDefinition.g:3012:6: ( ',' ( ( ruleJvmFormalParameter ) ) )*
 				loop116:
 				while (true) {
 					int alt116=2;
@@ -17136,16 +17329,16 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					switch (alt116) {
 					case 1 :
-						// InternalWeightDefinition.g:2377:11: ',' ( ( ruleJvmFormalParameter ) )
+						// InternalWeightDefinition.g:3013:7: ',' ( ( ruleJvmFormalParameter ) )
 						{
-						match(input,29,FOLLOW_8); if (state.failed) return;
-						// InternalWeightDefinition.g:2378:11: ( ( ruleJvmFormalParameter ) )
-						// InternalWeightDefinition.g:2379:12: ( ruleJvmFormalParameter )
+						match(input,29,FOLLOW_7); if (state.failed) return;
+						// InternalWeightDefinition.g:3014:7: ( ( ruleJvmFormalParameter ) )
+						// InternalWeightDefinition.g:3015:8: ( ruleJvmFormalParameter )
 						{
-						// InternalWeightDefinition.g:2379:12: ( ruleJvmFormalParameter )
-						// InternalWeightDefinition.g:2380:13: ruleJvmFormalParameter
+						// InternalWeightDefinition.g:3015:8: ( ruleJvmFormalParameter )
+						// InternalWeightDefinition.g:3016:9: ruleJvmFormalParameter
 						{
-						pushFollow(FOLLOW_46);
+						pushFollow(FOLLOW_45);
 						ruleJvmFormalParameter();
 						state._fsp--;
 						if (state.failed) return;
@@ -17166,203 +17359,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 		}
 
-		// InternalWeightDefinition.g:2385:9: ( ( '|' ) )
-		// InternalWeightDefinition.g:2386:10: ( '|' )
+		// InternalWeightDefinition.g:3021:5: ( ( '|' ) )
+		// InternalWeightDefinition.g:3022:6: ( '|' )
 		{
-		// InternalWeightDefinition.g:2386:10: ( '|' )
-		// InternalWeightDefinition.g:2387:11: '|'
-		{
-		match(input,86,FOLLOW_2); if (state.failed) return;
-		}
-
-		}
-
-		}
-
-		}
-
-	}
-	// $ANTLR end synpred17_InternalWeightDefinition
-
-	// $ANTLR start synpred18_InternalWeightDefinition
-	public final void synpred18_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:2464:6: ( ( () '[' ) )
-		// InternalWeightDefinition.g:2464:7: ( () '[' )
-		{
-		// InternalWeightDefinition.g:2464:7: ( () '[' )
-		// InternalWeightDefinition.g:2465:7: () '['
-		{
-		// InternalWeightDefinition.g:2465:7: ()
-		// InternalWeightDefinition.g:2466:7: 
-		{
-		}
-
-		match(input,53,FOLLOW_2); if (state.failed) return;
-		}
-
-		}
-
-	}
-	// $ANTLR end synpred18_InternalWeightDefinition
-
-	// $ANTLR start synpred19_InternalWeightDefinition
-	public final void synpred19_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:2537:4: ( ( () 'synchronized' '(' ) )
-		// InternalWeightDefinition.g:2537:5: ( () 'synchronized' '(' )
-		{
-		// InternalWeightDefinition.g:2537:5: ( () 'synchronized' '(' )
-		// InternalWeightDefinition.g:2538:5: () 'synchronized' '('
-		{
-		// InternalWeightDefinition.g:2538:5: ()
-		// InternalWeightDefinition.g:2539:5: 
-		{
-		}
-
-		match(input,77,FOLLOW_9); if (state.failed) return;
-		match(input,21,FOLLOW_2); if (state.failed) return;
-		}
-
-		}
-
-	}
-	// $ANTLR end synpred19_InternalWeightDefinition
-
-	// $ANTLR start synpred20_InternalWeightDefinition
-	public final void synpred20_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:2582:4: ( ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' ) )
-		// InternalWeightDefinition.g:2582:5: ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' )
-		{
-		// InternalWeightDefinition.g:2582:5: ( () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':' )
-		// InternalWeightDefinition.g:2583:5: () 'for' '(' ( ( ruleJvmFormalParameter ) ) ':'
-		{
-		// InternalWeightDefinition.g:2583:5: ()
-		// InternalWeightDefinition.g:2584:5: 
-		{
-		}
-
-		match(input,65,FOLLOW_9); if (state.failed) return;
-		match(input,21,FOLLOW_8); if (state.failed) return;
-		// InternalWeightDefinition.g:2587:5: ( ( ruleJvmFormalParameter ) )
-		// InternalWeightDefinition.g:2588:6: ( ruleJvmFormalParameter )
-		{
-		// InternalWeightDefinition.g:2588:6: ( ruleJvmFormalParameter )
-		// InternalWeightDefinition.g:2589:7: ruleJvmFormalParameter
-		{
-		pushFollow(FOLLOW_53);
-		ruleJvmFormalParameter();
-		state._fsp--;
-		if (state.failed) return;
-		}
-
-		}
-
-		match(input,39,FOLLOW_2); if (state.failed) return;
-		}
-
-		}
-
-	}
-	// $ANTLR end synpred20_InternalWeightDefinition
-
-	// $ANTLR start synpred21_InternalWeightDefinition
-	public final void synpred21_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:2696:4: ( ( () '[' ) )
-		// InternalWeightDefinition.g:2696:5: ( () '[' )
-		{
-		// InternalWeightDefinition.g:2696:5: ( () '[' )
-		// InternalWeightDefinition.g:2697:5: () '['
-		{
-		// InternalWeightDefinition.g:2697:5: ()
-		// InternalWeightDefinition.g:2698:5: 
-		{
-		}
-
-		match(input,53,FOLLOW_2); if (state.failed) return;
-		}
-
-		}
-
-	}
-	// $ANTLR end synpred21_InternalWeightDefinition
-
-	// $ANTLR start synpred23_InternalWeightDefinition
-	public final void synpred23_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:3001:4: ( ( ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )
-		// InternalWeightDefinition.g:3001:5: ( ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) )
-		{
-		// InternalWeightDefinition.g:3001:5: ( ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) )
-		// InternalWeightDefinition.g:3002:5: ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) )
-		{
-		// InternalWeightDefinition.g:3002:5: ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )?
-		int alt119=2;
-		int LA119_0 = input.LA(1);
-		if ( (LA119_0==RULE_ID||LA119_0==21||LA119_0==47) ) {
-			alt119=1;
-		}
-		switch (alt119) {
-			case 1 :
-				// InternalWeightDefinition.g:3003:6: ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )*
-				{
-				// InternalWeightDefinition.g:3003:6: ( ( ruleJvmFormalParameter ) )
-				// InternalWeightDefinition.g:3004:7: ( ruleJvmFormalParameter )
-				{
-				// InternalWeightDefinition.g:3004:7: ( ruleJvmFormalParameter )
-				// InternalWeightDefinition.g:3005:8: ruleJvmFormalParameter
-				{
-				pushFollow(FOLLOW_46);
-				ruleJvmFormalParameter();
-				state._fsp--;
-				if (state.failed) return;
-				}
-
-				}
-
-				// InternalWeightDefinition.g:3008:6: ( ',' ( ( ruleJvmFormalParameter ) ) )*
-				loop118:
-				while (true) {
-					int alt118=2;
-					int LA118_0 = input.LA(1);
-					if ( (LA118_0==29) ) {
-						alt118=1;
-					}
-
-					switch (alt118) {
-					case 1 :
-						// InternalWeightDefinition.g:3009:7: ',' ( ( ruleJvmFormalParameter ) )
-						{
-						match(input,29,FOLLOW_8); if (state.failed) return;
-						// InternalWeightDefinition.g:3010:7: ( ( ruleJvmFormalParameter ) )
-						// InternalWeightDefinition.g:3011:8: ( ruleJvmFormalParameter )
-						{
-						// InternalWeightDefinition.g:3011:8: ( ruleJvmFormalParameter )
-						// InternalWeightDefinition.g:3012:9: ruleJvmFormalParameter
-						{
-						pushFollow(FOLLOW_46);
-						ruleJvmFormalParameter();
-						state._fsp--;
-						if (state.failed) return;
-						}
-
-						}
-
-						}
-						break;
-
-					default :
-						break loop118;
-					}
-				}
-
-				}
-				break;
-
-		}
-
-		// InternalWeightDefinition.g:3017:5: ( ( '|' ) )
-		// InternalWeightDefinition.g:3018:6: ( '|' )
-		{
-		// InternalWeightDefinition.g:3018:6: ( '|' )
-		// InternalWeightDefinition.g:3019:7: '|'
+		// InternalWeightDefinition.g:3022:6: ( '|' )
+		// InternalWeightDefinition.g:3023:7: '|'
 		{
 		match(input,86,FOLLOW_2); if (state.failed) return;
 		}
@@ -17378,8 +17379,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred25_InternalWeightDefinition
 	public final void synpred25_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:3410:5: ( 'else' )
-		// InternalWeightDefinition.g:3410:6: 'else'
+		// InternalWeightDefinition.g:3414:5: ( 'else' )
+		// InternalWeightDefinition.g:3414:6: 'else'
 		{
 		match(input,60,FOLLOW_2); if (state.failed) return;
 		}
@@ -17389,20 +17390,20 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred26_InternalWeightDefinition
 	public final void synpred26_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:3469:6: ( ( '(' ( ( ruleJvmFormalParameter ) ) ':' ) )
-		// InternalWeightDefinition.g:3469:7: ( '(' ( ( ruleJvmFormalParameter ) ) ':' )
+		// InternalWeightDefinition.g:3473:6: ( ( '(' ( ( ruleJvmFormalParameter ) ) ':' ) )
+		// InternalWeightDefinition.g:3473:7: ( '(' ( ( ruleJvmFormalParameter ) ) ':' )
 		{
-		// InternalWeightDefinition.g:3469:7: ( '(' ( ( ruleJvmFormalParameter ) ) ':' )
-		// InternalWeightDefinition.g:3470:7: '(' ( ( ruleJvmFormalParameter ) ) ':'
+		// InternalWeightDefinition.g:3473:7: ( '(' ( ( ruleJvmFormalParameter ) ) ':' )
+		// InternalWeightDefinition.g:3474:7: '(' ( ( ruleJvmFormalParameter ) ) ':'
 		{
-		match(input,21,FOLLOW_8); if (state.failed) return;
-		// InternalWeightDefinition.g:3471:7: ( ( ruleJvmFormalParameter ) )
-		// InternalWeightDefinition.g:3472:8: ( ruleJvmFormalParameter )
+		match(input,21,FOLLOW_7); if (state.failed) return;
+		// InternalWeightDefinition.g:3475:7: ( ( ruleJvmFormalParameter ) )
+		// InternalWeightDefinition.g:3476:8: ( ruleJvmFormalParameter )
 		{
-		// InternalWeightDefinition.g:3472:8: ( ruleJvmFormalParameter )
-		// InternalWeightDefinition.g:3473:9: ruleJvmFormalParameter
+		// InternalWeightDefinition.g:3476:8: ( ruleJvmFormalParameter )
+		// InternalWeightDefinition.g:3477:9: ruleJvmFormalParameter
 		{
-		pushFollow(FOLLOW_53);
+		pushFollow(FOLLOW_52);
 		ruleJvmFormalParameter();
 		state._fsp--;
 		if (state.failed) return;
@@ -17420,19 +17421,19 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred27_InternalWeightDefinition
 	public final void synpred27_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:3536:6: ( ( ( ( ruleJvmFormalParameter ) ) ':' ) )
-		// InternalWeightDefinition.g:3536:7: ( ( ( ruleJvmFormalParameter ) ) ':' )
+		// InternalWeightDefinition.g:3540:6: ( ( ( ( ruleJvmFormalParameter ) ) ':' ) )
+		// InternalWeightDefinition.g:3540:7: ( ( ( ruleJvmFormalParameter ) ) ':' )
 		{
-		// InternalWeightDefinition.g:3536:7: ( ( ( ruleJvmFormalParameter ) ) ':' )
-		// InternalWeightDefinition.g:3537:7: ( ( ruleJvmFormalParameter ) ) ':'
+		// InternalWeightDefinition.g:3540:7: ( ( ( ruleJvmFormalParameter ) ) ':' )
+		// InternalWeightDefinition.g:3541:7: ( ( ruleJvmFormalParameter ) ) ':'
 		{
-		// InternalWeightDefinition.g:3537:7: ( ( ruleJvmFormalParameter ) )
-		// InternalWeightDefinition.g:3538:8: ( ruleJvmFormalParameter )
+		// InternalWeightDefinition.g:3541:7: ( ( ruleJvmFormalParameter ) )
+		// InternalWeightDefinition.g:3542:8: ( ruleJvmFormalParameter )
 		{
-		// InternalWeightDefinition.g:3538:8: ( ruleJvmFormalParameter )
-		// InternalWeightDefinition.g:3539:9: ruleJvmFormalParameter
+		// InternalWeightDefinition.g:3542:8: ( ruleJvmFormalParameter )
+		// InternalWeightDefinition.g:3543:9: ruleJvmFormalParameter
 		{
-		pushFollow(FOLLOW_53);
+		pushFollow(FOLLOW_52);
 		ruleJvmFormalParameter();
 		state._fsp--;
 		if (state.failed) return;
@@ -17450,19 +17451,19 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred29_InternalWeightDefinition
 	public final void synpred29_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:4354:5: ( ( ( ( ruleJvmTypeReference ) ) ( ( ruleValidID ) ) ) )
-		// InternalWeightDefinition.g:4354:6: ( ( ( ruleJvmTypeReference ) ) ( ( ruleValidID ) ) )
+		// InternalWeightDefinition.g:4358:5: ( ( ( ( ruleJvmTypeReference ) ) ( ( ruleValidID ) ) ) )
+		// InternalWeightDefinition.g:4358:6: ( ( ( ruleJvmTypeReference ) ) ( ( ruleValidID ) ) )
 		{
-		// InternalWeightDefinition.g:4354:6: ( ( ( ruleJvmTypeReference ) ) ( ( ruleValidID ) ) )
-		// InternalWeightDefinition.g:4355:6: ( ( ruleJvmTypeReference ) ) ( ( ruleValidID ) )
+		// InternalWeightDefinition.g:4358:6: ( ( ( ruleJvmTypeReference ) ) ( ( ruleValidID ) ) )
+		// InternalWeightDefinition.g:4359:6: ( ( ruleJvmTypeReference ) ) ( ( ruleValidID ) )
 		{
-		// InternalWeightDefinition.g:4355:6: ( ( ruleJvmTypeReference ) )
-		// InternalWeightDefinition.g:4356:7: ( ruleJvmTypeReference )
+		// InternalWeightDefinition.g:4359:6: ( ( ruleJvmTypeReference ) )
+		// InternalWeightDefinition.g:4360:7: ( ruleJvmTypeReference )
 		{
-		// InternalWeightDefinition.g:4356:7: ( ruleJvmTypeReference )
-		// InternalWeightDefinition.g:4357:8: ruleJvmTypeReference
+		// InternalWeightDefinition.g:4360:7: ( ruleJvmTypeReference )
+		// InternalWeightDefinition.g:4361:8: ruleJvmTypeReference
 		{
-		pushFollow(FOLLOW_6);
+		pushFollow(FOLLOW_5);
 		ruleJvmTypeReference();
 		state._fsp--;
 		if (state.failed) return;
@@ -17470,11 +17471,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 		}
 
-		// InternalWeightDefinition.g:4360:6: ( ( ruleValidID ) )
-		// InternalWeightDefinition.g:4361:7: ( ruleValidID )
+		// InternalWeightDefinition.g:4364:6: ( ( ruleValidID ) )
+		// InternalWeightDefinition.g:4365:7: ( ruleValidID )
 		{
-		// InternalWeightDefinition.g:4361:7: ( ruleValidID )
-		// InternalWeightDefinition.g:4362:8: ruleValidID
+		// InternalWeightDefinition.g:4365:7: ( ruleValidID )
+		// InternalWeightDefinition.g:4366:8: ruleValidID
 		{
 		pushFollow(FOLLOW_2);
 		ruleValidID();
@@ -17493,11 +17494,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred30_InternalWeightDefinition
 	public final void synpred30_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:4666:5: ( ( '(' ) )
-		// InternalWeightDefinition.g:4666:6: ( '(' )
+		// InternalWeightDefinition.g:4670:5: ( ( '(' ) )
+		// InternalWeightDefinition.g:4670:6: ( '(' )
 		{
-		// InternalWeightDefinition.g:4666:6: ( '(' )
-		// InternalWeightDefinition.g:4667:6: '('
+		// InternalWeightDefinition.g:4670:6: ( '(' )
+		// InternalWeightDefinition.g:4671:6: '('
 		{
 		match(input,21,FOLLOW_2); if (state.failed) return;
 		}
@@ -17509,34 +17510,34 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred31_InternalWeightDefinition
 	public final void synpred31_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:4685:6: ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )
-		// InternalWeightDefinition.g:4685:7: ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) )
+		// InternalWeightDefinition.g:4689:6: ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )
+		// InternalWeightDefinition.g:4689:7: ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) )
 		{
-		// InternalWeightDefinition.g:4685:7: ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) )
-		// InternalWeightDefinition.g:4686:7: () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) )
+		// InternalWeightDefinition.g:4689:7: ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) )
+		// InternalWeightDefinition.g:4690:7: () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) )
 		{
-		// InternalWeightDefinition.g:4686:7: ()
-		// InternalWeightDefinition.g:4687:7: 
+		// InternalWeightDefinition.g:4690:7: ()
+		// InternalWeightDefinition.g:4691:7: 
 		{
 		}
 
-		// InternalWeightDefinition.g:4688:7: ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )?
-		int alt123=2;
-		int LA123_0 = input.LA(1);
-		if ( (LA123_0==RULE_ID||LA123_0==21||LA123_0==47) ) {
-			alt123=1;
+		// InternalWeightDefinition.g:4692:7: ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )?
+		int alt121=2;
+		int LA121_0 = input.LA(1);
+		if ( (LA121_0==RULE_ID||LA121_0==21||LA121_0==47) ) {
+			alt121=1;
 		}
-		switch (alt123) {
+		switch (alt121) {
 			case 1 :
-				// InternalWeightDefinition.g:4689:8: ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )*
+				// InternalWeightDefinition.g:4693:8: ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )*
 				{
-				// InternalWeightDefinition.g:4689:8: ( ( ruleJvmFormalParameter ) )
-				// InternalWeightDefinition.g:4690:9: ( ruleJvmFormalParameter )
+				// InternalWeightDefinition.g:4693:8: ( ( ruleJvmFormalParameter ) )
+				// InternalWeightDefinition.g:4694:9: ( ruleJvmFormalParameter )
 				{
-				// InternalWeightDefinition.g:4690:9: ( ruleJvmFormalParameter )
-				// InternalWeightDefinition.g:4691:10: ruleJvmFormalParameter
+				// InternalWeightDefinition.g:4694:9: ( ruleJvmFormalParameter )
+				// InternalWeightDefinition.g:4695:10: ruleJvmFormalParameter
 				{
-				pushFollow(FOLLOW_46);
+				pushFollow(FOLLOW_45);
 				ruleJvmFormalParameter();
 				state._fsp--;
 				if (state.failed) return;
@@ -17544,7 +17545,151 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 				}
 
-				// InternalWeightDefinition.g:4694:8: ( ',' ( ( ruleJvmFormalParameter ) ) )*
+				// InternalWeightDefinition.g:4698:8: ( ',' ( ( ruleJvmFormalParameter ) ) )*
+				loop120:
+				while (true) {
+					int alt120=2;
+					int LA120_0 = input.LA(1);
+					if ( (LA120_0==29) ) {
+						alt120=1;
+					}
+
+					switch (alt120) {
+					case 1 :
+						// InternalWeightDefinition.g:4699:9: ',' ( ( ruleJvmFormalParameter ) )
+						{
+						match(input,29,FOLLOW_7); if (state.failed) return;
+						// InternalWeightDefinition.g:4700:9: ( ( ruleJvmFormalParameter ) )
+						// InternalWeightDefinition.g:4701:10: ( ruleJvmFormalParameter )
+						{
+						// InternalWeightDefinition.g:4701:10: ( ruleJvmFormalParameter )
+						// InternalWeightDefinition.g:4702:11: ruleJvmFormalParameter
+						{
+						pushFollow(FOLLOW_45);
+						ruleJvmFormalParameter();
+						state._fsp--;
+						if (state.failed) return;
+						}
+
+						}
+
+						}
+						break;
+
+					default :
+						break loop120;
+					}
+				}
+
+				}
+				break;
+
+		}
+
+		// InternalWeightDefinition.g:4707:7: ( ( '|' ) )
+		// InternalWeightDefinition.g:4708:8: ( '|' )
+		{
+		// InternalWeightDefinition.g:4708:8: ( '|' )
+		// InternalWeightDefinition.g:4709:9: '|'
+		{
+		match(input,86,FOLLOW_2); if (state.failed) return;
+		}
+
+		}
+
+		}
+
+		}
+
+	}
+	// $ANTLR end synpred31_InternalWeightDefinition
+
+	// $ANTLR start synpred32_InternalWeightDefinition
+	public final void synpred32_InternalWeightDefinition_fragment() throws RecognitionException {
+		// InternalWeightDefinition.g:4786:4: ( ( () '[' ) )
+		// InternalWeightDefinition.g:4786:5: ( () '[' )
+		{
+		// InternalWeightDefinition.g:4786:5: ( () '[' )
+		// InternalWeightDefinition.g:4787:5: () '['
+		{
+		// InternalWeightDefinition.g:4787:5: ()
+		// InternalWeightDefinition.g:4788:5: 
+		{
+		}
+
+		match(input,53,FOLLOW_2); if (state.failed) return;
+		}
+
+		}
+
+	}
+	// $ANTLR end synpred32_InternalWeightDefinition
+
+	// $ANTLR start synpred33_InternalWeightDefinition
+	public final void synpred33_InternalWeightDefinition_fragment() throws RecognitionException {
+		// InternalWeightDefinition.g:4946:5: ( '<' )
+		// InternalWeightDefinition.g:4946:6: '<'
+		{
+		match(input,42,FOLLOW_2); if (state.failed) return;
+		}
+
+	}
+	// $ANTLR end synpred33_InternalWeightDefinition
+
+	// $ANTLR start synpred34_InternalWeightDefinition
+	public final void synpred34_InternalWeightDefinition_fragment() throws RecognitionException {
+		// InternalWeightDefinition.g:5003:5: ( ( '(' ) )
+		// InternalWeightDefinition.g:5003:6: ( '(' )
+		{
+		// InternalWeightDefinition.g:5003:6: ( '(' )
+		// InternalWeightDefinition.g:5004:6: '('
+		{
+		match(input,21,FOLLOW_2); if (state.failed) return;
+		}
+
+		}
+
+	}
+	// $ANTLR end synpred34_InternalWeightDefinition
+
+	// $ANTLR start synpred35_InternalWeightDefinition
+	public final void synpred35_InternalWeightDefinition_fragment() throws RecognitionException {
+		// InternalWeightDefinition.g:5022:6: ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )
+		// InternalWeightDefinition.g:5022:7: ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) )
+		{
+		// InternalWeightDefinition.g:5022:7: ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) )
+		// InternalWeightDefinition.g:5023:7: () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) )
+		{
+		// InternalWeightDefinition.g:5023:7: ()
+		// InternalWeightDefinition.g:5024:7: 
+		{
+		}
+
+		// InternalWeightDefinition.g:5025:7: ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )?
+		int alt123=2;
+		int LA123_0 = input.LA(1);
+		if ( (LA123_0==RULE_ID||LA123_0==21||LA123_0==47) ) {
+			alt123=1;
+		}
+		switch (alt123) {
+			case 1 :
+				// InternalWeightDefinition.g:5026:8: ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )*
+				{
+				// InternalWeightDefinition.g:5026:8: ( ( ruleJvmFormalParameter ) )
+				// InternalWeightDefinition.g:5027:9: ( ruleJvmFormalParameter )
+				{
+				// InternalWeightDefinition.g:5027:9: ( ruleJvmFormalParameter )
+				// InternalWeightDefinition.g:5028:10: ruleJvmFormalParameter
+				{
+				pushFollow(FOLLOW_45);
+				ruleJvmFormalParameter();
+				state._fsp--;
+				if (state.failed) return;
+				}
+
+				}
+
+				// InternalWeightDefinition.g:5031:8: ( ',' ( ( ruleJvmFormalParameter ) ) )*
 				loop122:
 				while (true) {
 					int alt122=2;
@@ -17555,16 +17700,16 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 					switch (alt122) {
 					case 1 :
-						// InternalWeightDefinition.g:4695:9: ',' ( ( ruleJvmFormalParameter ) )
+						// InternalWeightDefinition.g:5032:9: ',' ( ( ruleJvmFormalParameter ) )
 						{
-						match(input,29,FOLLOW_8); if (state.failed) return;
-						// InternalWeightDefinition.g:4696:9: ( ( ruleJvmFormalParameter ) )
-						// InternalWeightDefinition.g:4697:10: ( ruleJvmFormalParameter )
+						match(input,29,FOLLOW_7); if (state.failed) return;
+						// InternalWeightDefinition.g:5033:9: ( ( ruleJvmFormalParameter ) )
+						// InternalWeightDefinition.g:5034:10: ( ruleJvmFormalParameter )
 						{
-						// InternalWeightDefinition.g:4697:10: ( ruleJvmFormalParameter )
-						// InternalWeightDefinition.g:4698:11: ruleJvmFormalParameter
+						// InternalWeightDefinition.g:5034:10: ( ruleJvmFormalParameter )
+						// InternalWeightDefinition.g:5035:11: ruleJvmFormalParameter
 						{
-						pushFollow(FOLLOW_46);
+						pushFollow(FOLLOW_45);
 						ruleJvmFormalParameter();
 						state._fsp--;
 						if (state.failed) return;
@@ -17585,155 +17730,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 		}
 
-		// InternalWeightDefinition.g:4703:7: ( ( '|' ) )
-		// InternalWeightDefinition.g:4704:8: ( '|' )
+		// InternalWeightDefinition.g:5040:7: ( ( '|' ) )
+		// InternalWeightDefinition.g:5041:8: ( '|' )
 		{
-		// InternalWeightDefinition.g:4704:8: ( '|' )
-		// InternalWeightDefinition.g:4705:9: '|'
-		{
-		match(input,86,FOLLOW_2); if (state.failed) return;
-		}
-
-		}
-
-		}
-
-		}
-
-	}
-	// $ANTLR end synpred31_InternalWeightDefinition
-
-	// $ANTLR start synpred32_InternalWeightDefinition
-	public final void synpred32_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:4782:4: ( ( () '[' ) )
-		// InternalWeightDefinition.g:4782:5: ( () '[' )
-		{
-		// InternalWeightDefinition.g:4782:5: ( () '[' )
-		// InternalWeightDefinition.g:4783:5: () '['
-		{
-		// InternalWeightDefinition.g:4783:5: ()
-		// InternalWeightDefinition.g:4784:5: 
-		{
-		}
-
-		match(input,53,FOLLOW_2); if (state.failed) return;
-		}
-
-		}
-
-	}
-	// $ANTLR end synpred32_InternalWeightDefinition
-
-	// $ANTLR start synpred33_InternalWeightDefinition
-	public final void synpred33_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:4942:5: ( '<' )
-		// InternalWeightDefinition.g:4942:6: '<'
-		{
-		match(input,42,FOLLOW_2); if (state.failed) return;
-		}
-
-	}
-	// $ANTLR end synpred33_InternalWeightDefinition
-
-	// $ANTLR start synpred34_InternalWeightDefinition
-	public final void synpred34_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:4999:5: ( ( '(' ) )
-		// InternalWeightDefinition.g:4999:6: ( '(' )
-		{
-		// InternalWeightDefinition.g:4999:6: ( '(' )
-		// InternalWeightDefinition.g:5000:6: '('
-		{
-		match(input,21,FOLLOW_2); if (state.failed) return;
-		}
-
-		}
-
-	}
-	// $ANTLR end synpred34_InternalWeightDefinition
-
-	// $ANTLR start synpred35_InternalWeightDefinition
-	public final void synpred35_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:5018:6: ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )
-		// InternalWeightDefinition.g:5018:7: ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) )
-		{
-		// InternalWeightDefinition.g:5018:7: ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) )
-		// InternalWeightDefinition.g:5019:7: () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) )
-		{
-		// InternalWeightDefinition.g:5019:7: ()
-		// InternalWeightDefinition.g:5020:7: 
-		{
-		}
-
-		// InternalWeightDefinition.g:5021:7: ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )?
-		int alt125=2;
-		int LA125_0 = input.LA(1);
-		if ( (LA125_0==RULE_ID||LA125_0==21||LA125_0==47) ) {
-			alt125=1;
-		}
-		switch (alt125) {
-			case 1 :
-				// InternalWeightDefinition.g:5022:8: ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )*
-				{
-				// InternalWeightDefinition.g:5022:8: ( ( ruleJvmFormalParameter ) )
-				// InternalWeightDefinition.g:5023:9: ( ruleJvmFormalParameter )
-				{
-				// InternalWeightDefinition.g:5023:9: ( ruleJvmFormalParameter )
-				// InternalWeightDefinition.g:5024:10: ruleJvmFormalParameter
-				{
-				pushFollow(FOLLOW_46);
-				ruleJvmFormalParameter();
-				state._fsp--;
-				if (state.failed) return;
-				}
-
-				}
-
-				// InternalWeightDefinition.g:5027:8: ( ',' ( ( ruleJvmFormalParameter ) ) )*
-				loop124:
-				while (true) {
-					int alt124=2;
-					int LA124_0 = input.LA(1);
-					if ( (LA124_0==29) ) {
-						alt124=1;
-					}
-
-					switch (alt124) {
-					case 1 :
-						// InternalWeightDefinition.g:5028:9: ',' ( ( ruleJvmFormalParameter ) )
-						{
-						match(input,29,FOLLOW_8); if (state.failed) return;
-						// InternalWeightDefinition.g:5029:9: ( ( ruleJvmFormalParameter ) )
-						// InternalWeightDefinition.g:5030:10: ( ruleJvmFormalParameter )
-						{
-						// InternalWeightDefinition.g:5030:10: ( ruleJvmFormalParameter )
-						// InternalWeightDefinition.g:5031:11: ruleJvmFormalParameter
-						{
-						pushFollow(FOLLOW_46);
-						ruleJvmFormalParameter();
-						state._fsp--;
-						if (state.failed) return;
-						}
-
-						}
-
-						}
-						break;
-
-					default :
-						break loop124;
-					}
-				}
-
-				}
-				break;
-
-		}
-
-		// InternalWeightDefinition.g:5036:7: ( ( '|' ) )
-		// InternalWeightDefinition.g:5037:8: ( '|' )
-		{
-		// InternalWeightDefinition.g:5037:8: ( '|' )
-		// InternalWeightDefinition.g:5038:9: '|'
+		// InternalWeightDefinition.g:5041:8: ( '|' )
+		// InternalWeightDefinition.g:5042:9: '|'
 		{
 		match(input,86,FOLLOW_2); if (state.failed) return;
 		}
@@ -17749,14 +17750,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred36_InternalWeightDefinition
 	public final void synpred36_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:5115:4: ( ( () '[' ) )
-		// InternalWeightDefinition.g:5115:5: ( () '[' )
+		// InternalWeightDefinition.g:5119:4: ( ( () '[' ) )
+		// InternalWeightDefinition.g:5119:5: ( () '[' )
 		{
-		// InternalWeightDefinition.g:5115:5: ( () '[' )
-		// InternalWeightDefinition.g:5116:5: () '['
+		// InternalWeightDefinition.g:5119:5: ( () '[' )
+		// InternalWeightDefinition.g:5120:5: () '['
 		{
-		// InternalWeightDefinition.g:5116:5: ()
-		// InternalWeightDefinition.g:5117:5: 
+		// InternalWeightDefinition.g:5120:5: ()
+		// InternalWeightDefinition.g:5121:5: 
 		{
 		}
 
@@ -17770,7 +17771,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred37_InternalWeightDefinition
 	public final void synpred37_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:5458:4: ( 'extends' | 'static' | 'import' | 'extension' | '!' | '-' | '+' | 'new' | '{' | 'switch' | 'synchronized' | '<' | 'super' | '#' | '[' | 'false' | 'true' | 'null' | 'typeof' | 'if' | 'for' | 'while' | 'do' | 'throw' | 'return' | 'try' | '(' | RULE_ID | RULE_HEX | RULE_INT | RULE_DECIMAL | RULE_STRING )
+		// InternalWeightDefinition.g:5462:4: ( 'extends' | 'static' | 'import' | 'extension' | '!' | '-' | '+' | 'new' | '{' | 'switch' | 'synchronized' | '<' | 'super' | '#' | '[' | 'false' | 'true' | 'null' | 'typeof' | 'if' | 'for' | 'while' | 'do' | 'throw' | 'return' | 'try' | '(' | RULE_ID | RULE_HEX | RULE_INT | RULE_DECIMAL | RULE_STRING )
 		// InternalWeightDefinition.g:
 		{
 		if ( (input.LA(1) >= RULE_DECIMAL && input.LA(1) <= RULE_INT)||input.LA(1)==RULE_STRING||input.LA(1)==13||input.LA(1)==16||input.LA(1)==21||input.LA(1)==26||input.LA(1)==30||input.LA(1)==42||input.LA(1)==53||input.LA(1)==59||(input.LA(1) >= 61 && input.LA(1) <= 63)||input.LA(1)==65||(input.LA(1) >= 67 && input.LA(1) <= 68)||(input.LA(1) >= 70 && input.LA(1) <= 72)||(input.LA(1) >= 74 && input.LA(1) <= 81)||(input.LA(1) >= 84 && input.LA(1) <= 85) ) {
@@ -17790,8 +17791,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred38_InternalWeightDefinition
 	public final void synpred38_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:5529:6: ( 'catch' )
-		// InternalWeightDefinition.g:5529:7: 'catch'
+		// InternalWeightDefinition.g:5533:6: ( 'catch' )
+		// InternalWeightDefinition.g:5533:7: 'catch'
 		{
 		match(input,57,FOLLOW_2); if (state.failed) return;
 		}
@@ -17801,8 +17802,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred39_InternalWeightDefinition
 	public final void synpred39_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:5550:7: ( 'finally' )
-		// InternalWeightDefinition.g:5550:8: 'finally'
+		// InternalWeightDefinition.g:5554:7: ( 'finally' )
+		// InternalWeightDefinition.g:5554:8: 'finally'
 		{
 		match(input,64,FOLLOW_2); if (state.failed) return;
 		}
@@ -17812,8 +17813,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred42_InternalWeightDefinition
 	public final void synpred42_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:5794:5: ( '.' )
-		// InternalWeightDefinition.g:5794:6: '.'
+		// InternalWeightDefinition.g:5798:5: ( '.' )
+		// InternalWeightDefinition.g:5798:6: '.'
 		{
 		match(input,34,FOLLOW_2); if (state.failed) return;
 		}
@@ -17823,14 +17824,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred43_InternalWeightDefinition
 	public final void synpred43_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:5920:5: ( ( () ruleArrayBrackets ) )
-		// InternalWeightDefinition.g:5920:6: ( () ruleArrayBrackets )
+		// InternalWeightDefinition.g:5924:5: ( ( () ruleArrayBrackets ) )
+		// InternalWeightDefinition.g:5924:6: ( () ruleArrayBrackets )
 		{
-		// InternalWeightDefinition.g:5920:6: ( () ruleArrayBrackets )
-		// InternalWeightDefinition.g:5921:6: () ruleArrayBrackets
+		// InternalWeightDefinition.g:5924:6: ( () ruleArrayBrackets )
+		// InternalWeightDefinition.g:5925:6: () ruleArrayBrackets
 		{
-		// InternalWeightDefinition.g:5921:6: ()
-		// InternalWeightDefinition.g:5922:6: 
+		// InternalWeightDefinition.g:5925:6: ()
+		// InternalWeightDefinition.g:5926:6: 
 		{
 		}
 
@@ -17847,8 +17848,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred44_InternalWeightDefinition
 	public final void synpred44_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:6117:5: ( '<' )
-		// InternalWeightDefinition.g:6117:6: '<'
+		// InternalWeightDefinition.g:6121:5: ( '<' )
+		// InternalWeightDefinition.g:6121:6: '<'
 		{
 		match(input,42,FOLLOW_2); if (state.failed) return;
 		}
@@ -17858,14 +17859,14 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred45_InternalWeightDefinition
 	public final void synpred45_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:6173:6: ( ( () '.' ) )
-		// InternalWeightDefinition.g:6173:7: ( () '.' )
+		// InternalWeightDefinition.g:6177:6: ( ( () '.' ) )
+		// InternalWeightDefinition.g:6177:7: ( () '.' )
 		{
-		// InternalWeightDefinition.g:6173:7: ( () '.' )
-		// InternalWeightDefinition.g:6174:7: () '.'
+		// InternalWeightDefinition.g:6177:7: ( () '.' )
+		// InternalWeightDefinition.g:6178:7: () '.'
 		{
-		// InternalWeightDefinition.g:6174:7: ()
-		// InternalWeightDefinition.g:6175:7: 
+		// InternalWeightDefinition.g:6178:7: ()
+		// InternalWeightDefinition.g:6179:7: 
 		{
 		}
 
@@ -17879,8 +17880,8 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 
 	// $ANTLR start synpred46_InternalWeightDefinition
 	public final void synpred46_InternalWeightDefinition_fragment() throws RecognitionException {
-		// InternalWeightDefinition.g:6211:7: ( '<' )
-		// InternalWeightDefinition.g:6211:8: '<'
+		// InternalWeightDefinition.g:6215:7: ( '<' )
+		// InternalWeightDefinition.g:6215:8: '<'
 		{
 		match(input,42,FOLLOW_2); if (state.failed) return;
 		}
@@ -18466,17 +18467,17 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 	}
 
 
-	protected DFA35 dfa35 = new DFA35(this);
-	protected DFA36 dfa36 = new DFA36(this);
-	protected DFA76 dfa76 = new DFA76(this);
-	protected DFA77 dfa77 = new DFA77(this);
-	protected DFA81 dfa81 = new DFA81(this);
-	protected DFA84 dfa84 = new DFA84(this);
-	protected DFA85 dfa85 = new DFA85(this);
-	protected DFA88 dfa88 = new DFA88(this);
-	protected DFA106 dfa106 = new DFA106(this);
+	protected DFA33 dfa33 = new DFA33(this);
+	protected DFA34 dfa34 = new DFA34(this);
+	protected DFA74 dfa74 = new DFA74(this);
+	protected DFA75 dfa75 = new DFA75(this);
+	protected DFA79 dfa79 = new DFA79(this);
+	protected DFA82 dfa82 = new DFA82(this);
+	protected DFA83 dfa83 = new DFA83(this);
+	protected DFA86 dfa86 = new DFA86(this);
 	protected DFA104 dfa104 = new DFA104(this);
-	protected DFA113 dfa113 = new DFA113(this);
+	protected DFA102 dfa102 = new DFA102(this);
+	protected DFA111 dfa111 = new DFA111(this);
 	static final String dfa_1s = "\116\uffff";
 	static final String dfa_2s = "\1\2\115\uffff";
 	static final String dfa_3s = "\1\5\1\0\114\uffff";
@@ -18572,11 +18573,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 	static final short[] dfa_6 = DFA.unpackEncodedString(dfa_6s);
 	static final short[][] dfa_7 = unpackEncodedStringArray(dfa_7s);
 
-	protected class DFA35 extends DFA {
+	protected class DFA33 extends DFA {
 
-		public DFA35(BaseRecognizer recognizer) {
+		public DFA33(BaseRecognizer recognizer) {
 			this.recognizer = recognizer;
-			this.decisionNumber = 35;
+			this.decisionNumber = 33;
 			this.eot = dfa_1;
 			this.eof = dfa_2;
 			this.min = dfa_3;
@@ -18587,7 +18588,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		}
 		@Override
 		public String getDescription() {
-			return "2346:5: ( ( ( ( '(' ) )=> (lv_explicitOperationCall_17_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure ) ) | ( ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )* ) )? otherlv_22= ')' )?";
+			return "2350:5: ( ( ( ( '(' ) )=> (lv_explicitOperationCall_17_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_memberCallArguments_18_0= ruleXShortClosure ) ) | ( ( (lv_memberCallArguments_19_0= ruleXExpression ) ) (otherlv_20= ',' ( (lv_memberCallArguments_21_0= ruleXExpression ) ) )* ) )? otherlv_22= ')' )?";
 		}
 		@Override
 		public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
@@ -18595,21 +18596,21 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			int _s = s;
 			switch ( s ) {
 					case 0 : 
-						int LA35_1 = input.LA(1);
+						int LA33_1 = input.LA(1);
 						 
-						int index35_1 = input.index();
+						int index33_1 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred16_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 2;}
 						 
-						input.seek(index35_1);
+						input.seek(index33_1);
 						if ( s>=0 ) return s;
 						break;
 			}
 			if (state.backtracking>0) {state.failed=true; return -1;}
 			NoViableAltException nvae =
-				new NoViableAltException(getDescription(), 35, _s, input);
+				new NoViableAltException(getDescription(), 33, _s, input);
 			error(nvae);
 			throw nvae;
 		}
@@ -18696,11 +18697,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 	};
 	static final short[][] dfa_8 = unpackEncodedStringArray(dfa_8s);
 
-	protected class DFA36 extends DFA {
+	protected class DFA34 extends DFA {
 
-		public DFA36(BaseRecognizer recognizer) {
+		public DFA34(BaseRecognizer recognizer) {
 			this.recognizer = recognizer;
-			this.decisionNumber = 36;
+			this.decisionNumber = 34;
 			this.eot = dfa_1;
 			this.eof = dfa_2;
 			this.min = dfa_3;
@@ -18711,7 +18712,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		}
 		@Override
 		public String getDescription() {
-			return "2463:5: ( ( ( () '[' ) )=> (lv_memberCallArguments_23_0= ruleXClosure ) )?";
+			return "2467:5: ( ( ( () '[' ) )=> (lv_memberCallArguments_23_0= ruleXClosure ) )?";
 		}
 		@Override
 		public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
@@ -18719,31 +18720,31 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			int _s = s;
 			switch ( s ) {
 					case 0 : 
-						int LA36_1 = input.LA(1);
+						int LA34_1 = input.LA(1);
 						 
-						int index36_1 = input.index();
+						int index34_1 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred18_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 2;}
 						 
-						input.seek(index36_1);
+						input.seek(index34_1);
 						if ( s>=0 ) return s;
 						break;
 			}
 			if (state.backtracking>0) {state.failed=true; return -1;}
 			NoViableAltException nvae =
-				new NoViableAltException(getDescription(), 36, _s, input);
+				new NoViableAltException(getDescription(), 34, _s, input);
 			error(nvae);
 			throw nvae;
 		}
 	}
 
-	protected class DFA76 extends DFA {
+	protected class DFA74 extends DFA {
 
-		public DFA76(BaseRecognizer recognizer) {
+		public DFA74(BaseRecognizer recognizer) {
 			this.recognizer = recognizer;
-			this.decisionNumber = 76;
+			this.decisionNumber = 74;
 			this.eot = dfa_1;
 			this.eof = dfa_2;
 			this.min = dfa_3;
@@ -18754,7 +18755,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		}
 		@Override
 		public String getDescription() {
-			return "4664:3: ( ( ( ( '(' ) )=> (lv_explicitOperationCall_7_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_featureCallArguments_8_0= ruleXShortClosure ) ) | ( ( (lv_featureCallArguments_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_featureCallArguments_11_0= ruleXExpression ) ) )* ) )? otherlv_12= ')' )?";
+			return "4668:3: ( ( ( ( '(' ) )=> (lv_explicitOperationCall_7_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_featureCallArguments_8_0= ruleXShortClosure ) ) | ( ( (lv_featureCallArguments_9_0= ruleXExpression ) ) (otherlv_10= ',' ( (lv_featureCallArguments_11_0= ruleXExpression ) ) )* ) )? otherlv_12= ')' )?";
 		}
 		@Override
 		public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
@@ -18762,31 +18763,31 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			int _s = s;
 			switch ( s ) {
 					case 0 : 
-						int LA76_1 = input.LA(1);
+						int LA74_1 = input.LA(1);
 						 
-						int index76_1 = input.index();
+						int index74_1 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred30_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 2;}
 						 
-						input.seek(index76_1);
+						input.seek(index74_1);
 						if ( s>=0 ) return s;
 						break;
 			}
 			if (state.backtracking>0) {state.failed=true; return -1;}
 			NoViableAltException nvae =
-				new NoViableAltException(getDescription(), 76, _s, input);
+				new NoViableAltException(getDescription(), 74, _s, input);
 			error(nvae);
 			throw nvae;
 		}
 	}
 
-	protected class DFA77 extends DFA {
+	protected class DFA75 extends DFA {
 
-		public DFA77(BaseRecognizer recognizer) {
+		public DFA75(BaseRecognizer recognizer) {
 			this.recognizer = recognizer;
-			this.decisionNumber = 77;
+			this.decisionNumber = 75;
 			this.eot = dfa_1;
 			this.eof = dfa_2;
 			this.min = dfa_3;
@@ -18797,7 +18798,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		}
 		@Override
 		public String getDescription() {
-			return "4781:3: ( ( ( () '[' ) )=> (lv_featureCallArguments_13_0= ruleXClosure ) )?";
+			return "4785:3: ( ( ( () '[' ) )=> (lv_featureCallArguments_13_0= ruleXClosure ) )?";
 		}
 		@Override
 		public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
@@ -18805,21 +18806,21 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			int _s = s;
 			switch ( s ) {
 					case 0 : 
-						int LA77_1 = input.LA(1);
+						int LA75_1 = input.LA(1);
 						 
-						int index77_1 = input.index();
+						int index75_1 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred32_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 2;}
 						 
-						input.seek(index77_1);
+						input.seek(index75_1);
 						if ( s>=0 ) return s;
 						break;
 			}
 			if (state.backtracking>0) {state.failed=true; return -1;}
 			NoViableAltException nvae =
-				new NoViableAltException(getDescription(), 77, _s, input);
+				new NoViableAltException(getDescription(), 75, _s, input);
 			error(nvae);
 			throw nvae;
 		}
@@ -18906,11 +18907,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 	};
 	static final short[][] dfa_9 = unpackEncodedStringArray(dfa_9s);
 
-	protected class DFA81 extends DFA {
+	protected class DFA79 extends DFA {
 
-		public DFA81(BaseRecognizer recognizer) {
+		public DFA79(BaseRecognizer recognizer) {
 			this.recognizer = recognizer;
-			this.decisionNumber = 81;
+			this.decisionNumber = 79;
 			this.eot = dfa_1;
 			this.eof = dfa_2;
 			this.min = dfa_3;
@@ -18921,7 +18922,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		}
 		@Override
 		public String getDescription() {
-			return "4940:3: ( ( ( '<' )=>otherlv_3= '<' ) ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) (otherlv_5= ',' ( (lv_typeArguments_6_0= ruleJvmArgumentTypeReference ) ) )* otherlv_7= '>' )?";
+			return "4944:3: ( ( ( '<' )=>otherlv_3= '<' ) ( (lv_typeArguments_4_0= ruleJvmArgumentTypeReference ) ) (otherlv_5= ',' ( (lv_typeArguments_6_0= ruleJvmArgumentTypeReference ) ) )* otherlv_7= '>' )?";
 		}
 		@Override
 		public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
@@ -18929,31 +18930,31 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			int _s = s;
 			switch ( s ) {
 					case 0 : 
-						int LA81_1 = input.LA(1);
+						int LA79_1 = input.LA(1);
 						 
-						int index81_1 = input.index();
+						int index79_1 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred33_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 2;}
 						 
-						input.seek(index81_1);
+						input.seek(index79_1);
 						if ( s>=0 ) return s;
 						break;
 			}
 			if (state.backtracking>0) {state.failed=true; return -1;}
 			NoViableAltException nvae =
-				new NoViableAltException(getDescription(), 81, _s, input);
+				new NoViableAltException(getDescription(), 79, _s, input);
 			error(nvae);
 			throw nvae;
 		}
 	}
 
-	protected class DFA84 extends DFA {
+	protected class DFA82 extends DFA {
 
-		public DFA84(BaseRecognizer recognizer) {
+		public DFA82(BaseRecognizer recognizer) {
 			this.recognizer = recognizer;
-			this.decisionNumber = 84;
+			this.decisionNumber = 82;
 			this.eot = dfa_1;
 			this.eof = dfa_2;
 			this.min = dfa_3;
@@ -18964,7 +18965,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		}
 		@Override
 		public String getDescription() {
-			return "4997:3: ( ( ( ( '(' ) )=> (lv_explicitConstructorCall_8_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_arguments_9_0= ruleXShortClosure ) ) | ( ( (lv_arguments_10_0= ruleXExpression ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleXExpression ) ) )* ) )? otherlv_13= ')' )?";
+			return "5001:3: ( ( ( ( '(' ) )=> (lv_explicitConstructorCall_8_0= '(' ) ) ( ( ( ( () ( ( ( ruleJvmFormalParameter ) ) ( ',' ( ( ruleJvmFormalParameter ) ) )* )? ( ( '|' ) ) ) )=> (lv_arguments_9_0= ruleXShortClosure ) ) | ( ( (lv_arguments_10_0= ruleXExpression ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleXExpression ) ) )* ) )? otherlv_13= ')' )?";
 		}
 		@Override
 		public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
@@ -18972,31 +18973,31 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			int _s = s;
 			switch ( s ) {
 					case 0 : 
-						int LA84_1 = input.LA(1);
+						int LA82_1 = input.LA(1);
 						 
-						int index84_1 = input.index();
+						int index82_1 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred34_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 2;}
 						 
-						input.seek(index84_1);
+						input.seek(index82_1);
 						if ( s>=0 ) return s;
 						break;
 			}
 			if (state.backtracking>0) {state.failed=true; return -1;}
 			NoViableAltException nvae =
-				new NoViableAltException(getDescription(), 84, _s, input);
+				new NoViableAltException(getDescription(), 82, _s, input);
 			error(nvae);
 			throw nvae;
 		}
 	}
 
-	protected class DFA85 extends DFA {
+	protected class DFA83 extends DFA {
 
-		public DFA85(BaseRecognizer recognizer) {
+		public DFA83(BaseRecognizer recognizer) {
 			this.recognizer = recognizer;
-			this.decisionNumber = 85;
+			this.decisionNumber = 83;
 			this.eot = dfa_1;
 			this.eof = dfa_2;
 			this.min = dfa_3;
@@ -19007,7 +19008,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		}
 		@Override
 		public String getDescription() {
-			return "5114:3: ( ( ( () '[' ) )=> (lv_arguments_14_0= ruleXClosure ) )?";
+			return "5118:3: ( ( ( () '[' ) )=> (lv_arguments_14_0= ruleXClosure ) )?";
 		}
 		@Override
 		public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
@@ -19015,21 +19016,21 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			int _s = s;
 			switch ( s ) {
 					case 0 : 
-						int LA85_1 = input.LA(1);
+						int LA83_1 = input.LA(1);
 						 
-						int index85_1 = input.index();
+						int index83_1 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred36_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 2;}
 						 
-						input.seek(index85_1);
+						input.seek(index83_1);
 						if ( s>=0 ) return s;
 						break;
 			}
 			if (state.backtracking>0) {state.failed=true; return -1;}
 			NoViableAltException nvae =
-				new NoViableAltException(getDescription(), 85, _s, input);
+				new NoViableAltException(getDescription(), 83, _s, input);
 			error(nvae);
 			throw nvae;
 		}
@@ -19126,11 +19127,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 	static final short[] dfa_14 = DFA.unpackEncodedString(dfa_14s);
 	static final short[][] dfa_15 = unpackEncodedStringArray(dfa_15s);
 
-	protected class DFA88 extends DFA {
+	protected class DFA86 extends DFA {
 
-		public DFA88(BaseRecognizer recognizer) {
+		public DFA86(BaseRecognizer recognizer) {
 			this.recognizer = recognizer;
-			this.decisionNumber = 88;
+			this.decisionNumber = 86;
 			this.eot = dfa_1;
 			this.eof = dfa_10;
 			this.min = dfa_11;
@@ -19141,7 +19142,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		}
 		@Override
 		public String getDescription() {
-			return "5457:3: ( ( 'extends' | 'static' | 'import' | 'extension' | '!' | '-' | '+' | 'new' | '{' | 'switch' | 'synchronized' | '<' | 'super' | '#' | '[' | 'false' | 'true' | 'null' | 'typeof' | 'if' | 'for' | 'while' | 'do' | 'throw' | 'return' | 'try' | '(' | RULE_ID | RULE_HEX | RULE_INT | RULE_DECIMAL | RULE_STRING )=> (lv_expression_2_0= ruleXExpression ) )?";
+			return "5461:3: ( ( 'extends' | 'static' | 'import' | 'extension' | '!' | '-' | '+' | 'new' | '{' | 'switch' | 'synchronized' | '<' | 'super' | '#' | '[' | 'false' | 'true' | 'null' | 'typeof' | 'if' | 'for' | 'while' | 'do' | 'throw' | 'return' | 'try' | '(' | RULE_ID | RULE_HEX | RULE_INT | RULE_DECIMAL | RULE_STRING )=> (lv_expression_2_0= ruleXExpression ) )?";
 		}
 		@Override
 		public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
@@ -19149,424 +19150,424 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			int _s = s;
 			switch ( s ) {
 					case 0 : 
-						int LA88_1 = input.LA(1);
+						int LA86_1 = input.LA(1);
 						 
-						int index88_1 = input.index();
+						int index86_1 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_1);
+						input.seek(index86_1);
 						if ( s>=0 ) return s;
 						break;
 
 					case 1 : 
-						int LA88_2 = input.LA(1);
+						int LA86_2 = input.LA(1);
 						 
-						int index88_2 = input.index();
+						int index86_2 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_2);
+						input.seek(index86_2);
 						if ( s>=0 ) return s;
 						break;
 
 					case 2 : 
-						int LA88_3 = input.LA(1);
+						int LA86_3 = input.LA(1);
 						 
-						int index88_3 = input.index();
+						int index86_3 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_3);
+						input.seek(index86_3);
 						if ( s>=0 ) return s;
 						break;
 
 					case 3 : 
-						int LA88_4 = input.LA(1);
+						int LA86_4 = input.LA(1);
 						 
-						int index88_4 = input.index();
+						int index86_4 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_4);
+						input.seek(index86_4);
 						if ( s>=0 ) return s;
 						break;
 
 					case 4 : 
-						int LA88_5 = input.LA(1);
+						int LA86_5 = input.LA(1);
 						 
-						int index88_5 = input.index();
+						int index86_5 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_5);
+						input.seek(index86_5);
 						if ( s>=0 ) return s;
 						break;
 
 					case 5 : 
-						int LA88_6 = input.LA(1);
+						int LA86_6 = input.LA(1);
 						 
-						int index88_6 = input.index();
+						int index86_6 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_6);
+						input.seek(index86_6);
 						if ( s>=0 ) return s;
 						break;
 
 					case 6 : 
-						int LA88_7 = input.LA(1);
+						int LA86_7 = input.LA(1);
 						 
-						int index88_7 = input.index();
+						int index86_7 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_7);
+						input.seek(index86_7);
 						if ( s>=0 ) return s;
 						break;
 
 					case 7 : 
-						int LA88_8 = input.LA(1);
+						int LA86_8 = input.LA(1);
 						 
-						int index88_8 = input.index();
+						int index86_8 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_8);
+						input.seek(index86_8);
 						if ( s>=0 ) return s;
 						break;
 
 					case 8 : 
-						int LA88_9 = input.LA(1);
+						int LA86_9 = input.LA(1);
 						 
-						int index88_9 = input.index();
+						int index86_9 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_9);
+						input.seek(index86_9);
 						if ( s>=0 ) return s;
 						break;
 
 					case 9 : 
-						int LA88_10 = input.LA(1);
+						int LA86_10 = input.LA(1);
 						 
-						int index88_10 = input.index();
+						int index86_10 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_10);
+						input.seek(index86_10);
 						if ( s>=0 ) return s;
 						break;
 
 					case 10 : 
-						int LA88_11 = input.LA(1);
+						int LA86_11 = input.LA(1);
 						 
-						int index88_11 = input.index();
+						int index86_11 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_11);
+						input.seek(index86_11);
 						if ( s>=0 ) return s;
 						break;
 
 					case 11 : 
-						int LA88_12 = input.LA(1);
+						int LA86_12 = input.LA(1);
 						 
-						int index88_12 = input.index();
+						int index86_12 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_12);
+						input.seek(index86_12);
 						if ( s>=0 ) return s;
 						break;
 
 					case 12 : 
-						int LA88_13 = input.LA(1);
+						int LA86_13 = input.LA(1);
 						 
-						int index88_13 = input.index();
+						int index86_13 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_13);
+						input.seek(index86_13);
 						if ( s>=0 ) return s;
 						break;
 
 					case 13 : 
-						int LA88_14 = input.LA(1);
+						int LA86_14 = input.LA(1);
 						 
-						int index88_14 = input.index();
+						int index86_14 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_14);
+						input.seek(index86_14);
 						if ( s>=0 ) return s;
 						break;
 
 					case 14 : 
-						int LA88_15 = input.LA(1);
+						int LA86_15 = input.LA(1);
 						 
-						int index88_15 = input.index();
+						int index86_15 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_15);
+						input.seek(index86_15);
 						if ( s>=0 ) return s;
 						break;
 
 					case 15 : 
-						int LA88_16 = input.LA(1);
+						int LA86_16 = input.LA(1);
 						 
-						int index88_16 = input.index();
+						int index86_16 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_16);
+						input.seek(index86_16);
 						if ( s>=0 ) return s;
 						break;
 
 					case 16 : 
-						int LA88_17 = input.LA(1);
+						int LA86_17 = input.LA(1);
 						 
-						int index88_17 = input.index();
+						int index86_17 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_17);
+						input.seek(index86_17);
 						if ( s>=0 ) return s;
 						break;
 
 					case 17 : 
-						int LA88_18 = input.LA(1);
+						int LA86_18 = input.LA(1);
 						 
-						int index88_18 = input.index();
+						int index86_18 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_18);
+						input.seek(index86_18);
 						if ( s>=0 ) return s;
 						break;
 
 					case 18 : 
-						int LA88_19 = input.LA(1);
+						int LA86_19 = input.LA(1);
 						 
-						int index88_19 = input.index();
+						int index86_19 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_19);
+						input.seek(index86_19);
 						if ( s>=0 ) return s;
 						break;
 
 					case 19 : 
-						int LA88_20 = input.LA(1);
+						int LA86_20 = input.LA(1);
 						 
-						int index88_20 = input.index();
+						int index86_20 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_20);
+						input.seek(index86_20);
 						if ( s>=0 ) return s;
 						break;
 
 					case 20 : 
-						int LA88_21 = input.LA(1);
+						int LA86_21 = input.LA(1);
 						 
-						int index88_21 = input.index();
+						int index86_21 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_21);
+						input.seek(index86_21);
 						if ( s>=0 ) return s;
 						break;
 
 					case 21 : 
-						int LA88_22 = input.LA(1);
+						int LA86_22 = input.LA(1);
 						 
-						int index88_22 = input.index();
+						int index86_22 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_22);
+						input.seek(index86_22);
 						if ( s>=0 ) return s;
 						break;
 
 					case 22 : 
-						int LA88_23 = input.LA(1);
+						int LA86_23 = input.LA(1);
 						 
-						int index88_23 = input.index();
+						int index86_23 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_23);
+						input.seek(index86_23);
 						if ( s>=0 ) return s;
 						break;
 
 					case 23 : 
-						int LA88_24 = input.LA(1);
+						int LA86_24 = input.LA(1);
 						 
-						int index88_24 = input.index();
+						int index86_24 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_24);
+						input.seek(index86_24);
 						if ( s>=0 ) return s;
 						break;
 
 					case 24 : 
-						int LA88_25 = input.LA(1);
+						int LA86_25 = input.LA(1);
 						 
-						int index88_25 = input.index();
+						int index86_25 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_25);
+						input.seek(index86_25);
 						if ( s>=0 ) return s;
 						break;
 
 					case 25 : 
-						int LA88_26 = input.LA(1);
+						int LA86_26 = input.LA(1);
 						 
-						int index88_26 = input.index();
+						int index86_26 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_26);
+						input.seek(index86_26);
 						if ( s>=0 ) return s;
 						break;
 
 					case 26 : 
-						int LA88_27 = input.LA(1);
+						int LA86_27 = input.LA(1);
 						 
-						int index88_27 = input.index();
+						int index86_27 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_27);
+						input.seek(index86_27);
 						if ( s>=0 ) return s;
 						break;
 
 					case 27 : 
-						int LA88_28 = input.LA(1);
+						int LA86_28 = input.LA(1);
 						 
-						int index88_28 = input.index();
+						int index86_28 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_28);
+						input.seek(index86_28);
 						if ( s>=0 ) return s;
 						break;
 
 					case 28 : 
-						int LA88_29 = input.LA(1);
+						int LA86_29 = input.LA(1);
 						 
-						int index88_29 = input.index();
+						int index86_29 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_29);
+						input.seek(index86_29);
 						if ( s>=0 ) return s;
 						break;
 
 					case 29 : 
-						int LA88_30 = input.LA(1);
+						int LA86_30 = input.LA(1);
 						 
-						int index88_30 = input.index();
+						int index86_30 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_30);
+						input.seek(index86_30);
 						if ( s>=0 ) return s;
 						break;
 
 					case 30 : 
-						int LA88_31 = input.LA(1);
+						int LA86_31 = input.LA(1);
 						 
-						int index88_31 = input.index();
+						int index86_31 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_31);
+						input.seek(index86_31);
 						if ( s>=0 ) return s;
 						break;
 
 					case 31 : 
-						int LA88_32 = input.LA(1);
+						int LA86_32 = input.LA(1);
 						 
-						int index88_32 = input.index();
+						int index86_32 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred37_InternalWeightDefinition()) ) {s = 77;}
 						else if ( (true) ) {s = 33;}
 						 
-						input.seek(index88_32);
+						input.seek(index86_32);
 						if ( s>=0 ) return s;
 						break;
 			}
 			if (state.backtracking>0) {state.failed=true; return -1;}
 			NoViableAltException nvae =
-				new NoViableAltException(getDescription(), 88, _s, input);
+				new NoViableAltException(getDescription(), 86, _s, input);
 			error(nvae);
 			throw nvae;
 		}
@@ -19668,49 +19669,6 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 	static final short[] dfa_21 = DFA.unpackEncodedString(dfa_21s);
 	static final short[][] dfa_22 = unpackEncodedStringArray(dfa_22s);
 
-	protected class DFA106 extends DFA {
-
-		public DFA106(BaseRecognizer recognizer) {
-			this.recognizer = recognizer;
-			this.decisionNumber = 106;
-			this.eot = dfa_16;
-			this.eof = dfa_17;
-			this.min = dfa_18;
-			this.max = dfa_19;
-			this.accept = dfa_20;
-			this.special = dfa_21;
-			this.transition = dfa_22;
-		}
-		@Override
-		public String getDescription() {
-			return "6115:3: ( ( ( '<' )=>otherlv_1= '<' ) ( (lv_arguments_2_0= ruleJvmArgumentTypeReference ) ) (otherlv_3= ',' ( (lv_arguments_4_0= ruleJvmArgumentTypeReference ) ) )* otherlv_5= '>' ( ( ( ( () '.' ) )=> ( () otherlv_7= '.' ) ) ( ( ruleValidID ) ) ( ( ( '<' )=>otherlv_9= '<' ) ( (lv_arguments_10_0= ruleJvmArgumentTypeReference ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) ) )* otherlv_13= '>' )? )* )?";
-		}
-		@Override
-		public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
-			TokenStream input = (TokenStream)_input;
-			int _s = s;
-			switch ( s ) {
-					case 0 : 
-						int LA106_1 = input.LA(1);
-						 
-						int index106_1 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred44_InternalWeightDefinition()) ) {s = 78;}
-						else if ( (true) ) {s = 2;}
-						 
-						input.seek(index106_1);
-						if ( s>=0 ) return s;
-						break;
-			}
-			if (state.backtracking>0) {state.failed=true; return -1;}
-			NoViableAltException nvae =
-				new NoViableAltException(getDescription(), 106, _s, input);
-			error(nvae);
-			throw nvae;
-		}
-	}
-
 	protected class DFA104 extends DFA {
 
 		public DFA104(BaseRecognizer recognizer) {
@@ -19726,7 +19684,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		}
 		@Override
 		public String getDescription() {
-			return "6209:5: ( ( ( '<' )=>otherlv_9= '<' ) ( (lv_arguments_10_0= ruleJvmArgumentTypeReference ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) ) )* otherlv_13= '>' )?";
+			return "6119:3: ( ( ( '<' )=>otherlv_1= '<' ) ( (lv_arguments_2_0= ruleJvmArgumentTypeReference ) ) (otherlv_3= ',' ( (lv_arguments_4_0= ruleJvmArgumentTypeReference ) ) )* otherlv_5= '>' ( ( ( ( () '.' ) )=> ( () otherlv_7= '.' ) ) ( ( ruleValidID ) ) ( ( ( '<' )=>otherlv_9= '<' ) ( (lv_arguments_10_0= ruleJvmArgumentTypeReference ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) ) )* otherlv_13= '>' )? )* )?";
 		}
 		@Override
 		public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
@@ -19739,7 +19697,7 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 						int index104_1 = input.index();
 						input.rewind();
 						s = -1;
-						if ( (synpred46_InternalWeightDefinition()) ) {s = 78;}
+						if ( (synpred44_InternalWeightDefinition()) ) {s = 78;}
 						else if ( (true) ) {s = 2;}
 						 
 						input.seek(index104_1);
@@ -19749,6 +19707,49 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 			if (state.backtracking>0) {state.failed=true; return -1;}
 			NoViableAltException nvae =
 				new NoViableAltException(getDescription(), 104, _s, input);
+			error(nvae);
+			throw nvae;
+		}
+	}
+
+	protected class DFA102 extends DFA {
+
+		public DFA102(BaseRecognizer recognizer) {
+			this.recognizer = recognizer;
+			this.decisionNumber = 102;
+			this.eot = dfa_16;
+			this.eof = dfa_17;
+			this.min = dfa_18;
+			this.max = dfa_19;
+			this.accept = dfa_20;
+			this.special = dfa_21;
+			this.transition = dfa_22;
+		}
+		@Override
+		public String getDescription() {
+			return "6213:5: ( ( ( '<' )=>otherlv_9= '<' ) ( (lv_arguments_10_0= ruleJvmArgumentTypeReference ) ) (otherlv_11= ',' ( (lv_arguments_12_0= ruleJvmArgumentTypeReference ) ) )* otherlv_13= '>' )?";
+		}
+		@Override
+		public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
+			TokenStream input = (TokenStream)_input;
+			int _s = s;
+			switch ( s ) {
+					case 0 : 
+						int LA102_1 = input.LA(1);
+						 
+						int index102_1 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred46_InternalWeightDefinition()) ) {s = 78;}
+						else if ( (true) ) {s = 2;}
+						 
+						input.seek(index102_1);
+						if ( s>=0 ) return s;
+						break;
+			}
+			if (state.backtracking>0) {state.failed=true; return -1;}
+			NoViableAltException nvae =
+				new NoViableAltException(getDescription(), 102, _s, input);
 			error(nvae);
 			throw nvae;
 		}
@@ -19778,11 +19779,11 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 	static final short[] dfa_28 = DFA.unpackEncodedString(dfa_28s);
 	static final short[][] dfa_29 = unpackEncodedStringArray(dfa_29s);
 
-	protected class DFA113 extends DFA {
+	protected class DFA111 extends DFA {
 
-		public DFA113(BaseRecognizer recognizer) {
+		public DFA111(BaseRecognizer recognizer) {
 			this.recognizer = recognizer;
-			this.decisionNumber = 113;
+			this.decisionNumber = 111;
 			this.eot = dfa_23;
 			this.eof = dfa_24;
 			this.min = dfa_25;
@@ -19793,96 +19794,95 @@ public class InternalWeightDefinitionParser extends AbstractInternalAntlrParser 
 		}
 		@Override
 		public String getDescription() {
-			return "6671:3: ( ( ( (lv_static_1_0= 'static' ) ) ( (lv_extension_2_0= 'extension' ) )? ( ( ruleQualifiedNameInStaticImport ) ) ( ( (lv_wildcard_4_0= '*' ) ) | ( (lv_memberName_5_0= ruleValidID ) ) ) ) | ( ( ruleQualifiedName ) ) | ( (lv_importedNamespace_7_0= ruleQualifiedNameWithWildcard ) ) )";
+			return "6675:3: ( ( ( (lv_static_1_0= 'static' ) ) ( (lv_extension_2_0= 'extension' ) )? ( ( ruleQualifiedNameInStaticImport ) ) ( ( (lv_wildcard_4_0= '*' ) ) | ( (lv_memberName_5_0= ruleValidID ) ) ) ) | ( ( ruleQualifiedName ) ) | ( (lv_importedNamespace_7_0= ruleQualifiedNameWithWildcard ) ) )";
 		}
 	}
 
 	public static final BitSet FOLLOW_1 = new BitSet(new long[]{0x0000000000000000L});
 	public static final BitSet FOLLOW_2 = new BitSet(new long[]{0x0000000000000002L});
 	public static final BitSet FOLLOW_3 = new BitSet(new long[]{0x0400000000000002L,0x0000000000000204L});
-	public static final BitSet FOLLOW_4 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000004L});
-	public static final BitSet FOLLOW_5 = new BitSet(new long[]{0x0000000000000800L});
-	public static final BitSet FOLLOW_6 = new BitSet(new long[]{0x0000000000000080L});
-	public static final BitSet FOLLOW_7 = new BitSet(new long[]{0x0000000000000000L,0x0000000000200000L});
-	public static final BitSet FOLLOW_8 = new BitSet(new long[]{0x0000800000200080L});
-	public static final BitSet FOLLOW_9 = new BitSet(new long[]{0x0000000000200000L});
-	public static final BitSet FOLLOW_10 = new BitSet(new long[]{0x0000800000600080L});
-	public static final BitSet FOLLOW_11 = new BitSet(new long[]{0x0000000020400000L});
-	public static final BitSet FOLLOW_12 = new BitSet(new long[]{0x0000100000000000L});
-	public static final BitSet FOLLOW_13 = new BitSet(new long[]{0xE8200400442129E0L,0x000000000033FDDAL});
-	public static final BitSet FOLLOW_14 = new BitSet(new long[]{0x0001044112040002L});
-	public static final BitSet FOLLOW_15 = new BitSet(new long[]{0x0000040000000000L});
-	public static final BitSet FOLLOW_16 = new BitSet(new long[]{0x0003000000000000L});
-	public static final BitSet FOLLOW_17 = new BitSet(new long[]{0x0002000000000000L});
-	public static final BitSet FOLLOW_18 = new BitSet(new long[]{0x0000000000000002L,0x0000000000800000L});
-	public static final BitSet FOLLOW_19 = new BitSet(new long[]{0x0000000000080002L});
-	public static final BitSet FOLLOW_20 = new BitSet(new long[]{0x000060000000C002L});
-	public static final BitSet FOLLOW_21 = new BitSet(new long[]{0x0003040000000002L,0x0000000000000020L});
-	public static final BitSet FOLLOW_22 = new BitSet(new long[]{0x00118C1A00000002L});
-	public static final BitSet FOLLOW_23 = new BitSet(new long[]{0x0000000800000000L});
-	public static final BitSet FOLLOW_24 = new BitSet(new long[]{0x0001000000000000L});
-	public static final BitSet FOLLOW_25 = new BitSet(new long[]{0x0000840000000000L});
-	public static final BitSet FOLLOW_26 = new BitSet(new long[]{0x0000000044000002L});
-	public static final BitSet FOLLOW_27 = new BitSet(new long[]{0x0000002001820002L});
-	public static final BitSet FOLLOW_28 = new BitSet(new long[]{0x0080000000000002L});
-	public static final BitSet FOLLOW_29 = new BitSet(new long[]{0x0000000088000002L});
-	public static final BitSet FOLLOW_30 = new BitSet(new long[]{0x0008010400000002L});
-	public static final BitSet FOLLOW_31 = new BitSet(new long[]{0x6000000000000080L,0x0000000000000410L});
-	public static final BitSet FOLLOW_32 = new BitSet(new long[]{0x6000040000000080L,0x0000000000000C10L});
-	public static final BitSet FOLLOW_33 = new BitSet(new long[]{0x0004800000200080L});
-	public static final BitSet FOLLOW_34 = new BitSet(new long[]{0x0001000020000000L});
-	public static final BitSet FOLLOW_35 = new BitSet(new long[]{0x6000000000000080L,0x0000000000000C10L});
-	public static final BitSet FOLLOW_36 = new BitSet(new long[]{0x0028010400200002L});
-	public static final BitSet FOLLOW_37 = new BitSet(new long[]{0xE8208400446129E0L,0x000000000073FDDAL});
-	public static final BitSet FOLLOW_38 = new BitSet(new long[]{0x0000000000400000L});
-	public static final BitSet FOLLOW_39 = new BitSet(new long[]{0x0028010400000002L});
-	public static final BitSet FOLLOW_40 = new BitSet(new long[]{0xE8200400442129E0L,0x000000000133FDDAL});
-	public static final BitSet FOLLOW_41 = new BitSet(new long[]{0x0000000020000000L,0x0000000001000000L});
-	public static final BitSet FOLLOW_42 = new BitSet(new long[]{0x0020000000000000L});
-	public static final BitSet FOLLOW_43 = new BitSet(new long[]{0xE8600400442129E0L,0x000000000033FDDAL});
-	public static final BitSet FOLLOW_44 = new BitSet(new long[]{0x0040000020000000L});
-	public static final BitSet FOLLOW_45 = new BitSet(new long[]{0xE8608400442129E0L,0x00000000007FFDDAL});
-	public static final BitSet FOLLOW_46 = new BitSet(new long[]{0x0000000020000000L,0x0000000000400000L});
-	public static final BitSet FOLLOW_47 = new BitSet(new long[]{0xE8600400442129E0L,0x00000000003FFDDAL});
-	public static final BitSet FOLLOW_48 = new BitSet(new long[]{0x0040000000000000L});
-	public static final BitSet FOLLOW_49 = new BitSet(new long[]{0xE8200600442129E2L,0x00000000003FFDDAL});
-	public static final BitSet FOLLOW_50 = new BitSet(new long[]{0xE8200400442129E2L,0x00000000003FFDDAL});
-	public static final BitSet FOLLOW_51 = new BitSet(new long[]{0x1000000000000002L});
-	public static final BitSet FOLLOW_52 = new BitSet(new long[]{0xE8208400442129E0L,0x000000000033FDDAL});
-	public static final BitSet FOLLOW_53 = new BitSet(new long[]{0x0000008000000000L});
-	public static final BitSet FOLLOW_54 = new BitSet(new long[]{0x0500808020200080L,0x0000000001000000L});
-	public static final BitSet FOLLOW_55 = new BitSet(new long[]{0x0000000000000000L,0x0000000001000000L});
-	public static final BitSet FOLLOW_56 = new BitSet(new long[]{0x0100008020000000L});
-	public static final BitSet FOLLOW_57 = new BitSet(new long[]{0x0000008020000000L});
-	public static final BitSet FOLLOW_58 = new BitSet(new long[]{0xE8200600442129E0L,0x00000000003FFDDAL});
-	public static final BitSet FOLLOW_59 = new BitSet(new long[]{0x0000020020000000L});
-	public static final BitSet FOLLOW_60 = new BitSet(new long[]{0xE8200400442129E0L,0x00000000003FFDDAL});
-	public static final BitSet FOLLOW_61 = new BitSet(new long[]{0xE8200600442129E0L,0x000000000033FDDAL});
-	public static final BitSet FOLLOW_62 = new BitSet(new long[]{0x0000020000000000L});
-	public static final BitSet FOLLOW_63 = new BitSet(new long[]{0xE8200400446129E0L,0x000000000033FDDAL});
-	public static final BitSet FOLLOW_64 = new BitSet(new long[]{0x0000000000000000L,0x0000000000100000L});
-	public static final BitSet FOLLOW_65 = new BitSet(new long[]{0xE8200400442129E0L,0x00000000013FFDDAL});
-	public static final BitSet FOLLOW_66 = new BitSet(new long[]{0xE8200600442129E0L,0x00000000013FFDDAL});
-	public static final BitSet FOLLOW_67 = new BitSet(new long[]{0x0000100000000002L});
-	public static final BitSet FOLLOW_68 = new BitSet(new long[]{0x0020000000200002L});
-	public static final BitSet FOLLOW_69 = new BitSet(new long[]{0x0020000000000002L});
-	public static final BitSet FOLLOW_70 = new BitSet(new long[]{0x0020040000200002L});
-	public static final BitSet FOLLOW_71 = new BitSet(new long[]{0x0020000000400000L});
-	public static final BitSet FOLLOW_72 = new BitSet(new long[]{0xE8200400442129E2L,0x000000000033FDDAL});
-	public static final BitSet FOLLOW_73 = new BitSet(new long[]{0x0200000000000000L,0x0000000000000001L});
-	public static final BitSet FOLLOW_74 = new BitSet(new long[]{0x0200000000000002L,0x0000000000000001L});
-	public static final BitSet FOLLOW_75 = new BitSet(new long[]{0x0000000400000002L});
-	public static final BitSet FOLLOW_76 = new BitSet(new long[]{0x0000000000000120L});
-	public static final BitSet FOLLOW_77 = new BitSet(new long[]{0x0000800000000000L});
-	public static final BitSet FOLLOW_78 = new BitSet(new long[]{0x0000040000000002L});
-	public static final BitSet FOLLOW_79 = new BitSet(new long[]{0x0000040400000002L});
-	public static final BitSet FOLLOW_80 = new BitSet(new long[]{0x2000000000000002L,0x0000000000000800L});
-	public static final BitSet FOLLOW_81 = new BitSet(new long[]{0x0000000000100002L});
-	public static final BitSet FOLLOW_82 = new BitSet(new long[]{0x0000000400000000L});
-	public static final BitSet FOLLOW_83 = new BitSet(new long[]{0x0000000000800000L});
-	public static final BitSet FOLLOW_84 = new BitSet(new long[]{0x0000000000000080L,0x0000000000000400L});
-	public static final BitSet FOLLOW_85 = new BitSet(new long[]{0x4000000000000080L});
-	public static final BitSet FOLLOW_86 = new BitSet(new long[]{0x0000000000800080L});
-	public static final BitSet FOLLOW_87 = new BitSet(new long[]{0x0000020000000002L});
-	public static final BitSet FOLLOW_88 = new BitSet(new long[]{0x0000000000000082L});
+	public static final BitSet FOLLOW_4 = new BitSet(new long[]{0x0000000000000800L});
+	public static final BitSet FOLLOW_5 = new BitSet(new long[]{0x0000000000000080L});
+	public static final BitSet FOLLOW_6 = new BitSet(new long[]{0x0000000000000000L,0x0000000000200000L});
+	public static final BitSet FOLLOW_7 = new BitSet(new long[]{0x0000800000200080L});
+	public static final BitSet FOLLOW_8 = new BitSet(new long[]{0x0000000000200000L});
+	public static final BitSet FOLLOW_9 = new BitSet(new long[]{0x0000800000600080L});
+	public static final BitSet FOLLOW_10 = new BitSet(new long[]{0x0000000020400000L});
+	public static final BitSet FOLLOW_11 = new BitSet(new long[]{0x0000100000000000L});
+	public static final BitSet FOLLOW_12 = new BitSet(new long[]{0xE8200400442129E0L,0x000000000033FDDAL});
+	public static final BitSet FOLLOW_13 = new BitSet(new long[]{0x0001044112040002L});
+	public static final BitSet FOLLOW_14 = new BitSet(new long[]{0x0000040000000000L});
+	public static final BitSet FOLLOW_15 = new BitSet(new long[]{0x0003000000000000L});
+	public static final BitSet FOLLOW_16 = new BitSet(new long[]{0x0002000000000000L});
+	public static final BitSet FOLLOW_17 = new BitSet(new long[]{0x0000000000000002L,0x0000000000800000L});
+	public static final BitSet FOLLOW_18 = new BitSet(new long[]{0x0000000000080002L});
+	public static final BitSet FOLLOW_19 = new BitSet(new long[]{0x000060000000C002L});
+	public static final BitSet FOLLOW_20 = new BitSet(new long[]{0x0003040000000002L,0x0000000000000020L});
+	public static final BitSet FOLLOW_21 = new BitSet(new long[]{0x00118C1A00000002L});
+	public static final BitSet FOLLOW_22 = new BitSet(new long[]{0x0000000800000000L});
+	public static final BitSet FOLLOW_23 = new BitSet(new long[]{0x0001000000000000L});
+	public static final BitSet FOLLOW_24 = new BitSet(new long[]{0x0000840000000000L});
+	public static final BitSet FOLLOW_25 = new BitSet(new long[]{0x0000000044000002L});
+	public static final BitSet FOLLOW_26 = new BitSet(new long[]{0x0000002001820002L});
+	public static final BitSet FOLLOW_27 = new BitSet(new long[]{0x0080000000000002L});
+	public static final BitSet FOLLOW_28 = new BitSet(new long[]{0x0000000088000002L});
+	public static final BitSet FOLLOW_29 = new BitSet(new long[]{0x0008010400000002L});
+	public static final BitSet FOLLOW_30 = new BitSet(new long[]{0x6000000000000080L,0x0000000000000410L});
+	public static final BitSet FOLLOW_31 = new BitSet(new long[]{0x6000040000000080L,0x0000000000000C10L});
+	public static final BitSet FOLLOW_32 = new BitSet(new long[]{0x0004800000200080L});
+	public static final BitSet FOLLOW_33 = new BitSet(new long[]{0x0001000020000000L});
+	public static final BitSet FOLLOW_34 = new BitSet(new long[]{0x6000000000000080L,0x0000000000000C10L});
+	public static final BitSet FOLLOW_35 = new BitSet(new long[]{0x0028010400200002L});
+	public static final BitSet FOLLOW_36 = new BitSet(new long[]{0xE8208400446129E0L,0x000000000073FDDAL});
+	public static final BitSet FOLLOW_37 = new BitSet(new long[]{0x0000000000400000L});
+	public static final BitSet FOLLOW_38 = new BitSet(new long[]{0x0028010400000002L});
+	public static final BitSet FOLLOW_39 = new BitSet(new long[]{0xE8200400442129E0L,0x000000000133FDDAL});
+	public static final BitSet FOLLOW_40 = new BitSet(new long[]{0x0000000020000000L,0x0000000001000000L});
+	public static final BitSet FOLLOW_41 = new BitSet(new long[]{0x0020000000000000L});
+	public static final BitSet FOLLOW_42 = new BitSet(new long[]{0xE8600400442129E0L,0x000000000033FDDAL});
+	public static final BitSet FOLLOW_43 = new BitSet(new long[]{0x0040000020000000L});
+	public static final BitSet FOLLOW_44 = new BitSet(new long[]{0xE8608400442129E0L,0x00000000007FFDDAL});
+	public static final BitSet FOLLOW_45 = new BitSet(new long[]{0x0000000020000000L,0x0000000000400000L});
+	public static final BitSet FOLLOW_46 = new BitSet(new long[]{0xE8600400442129E0L,0x00000000003FFDDAL});
+	public static final BitSet FOLLOW_47 = new BitSet(new long[]{0x0040000000000000L});
+	public static final BitSet FOLLOW_48 = new BitSet(new long[]{0xE8200600442129E2L,0x00000000003FFDDAL});
+	public static final BitSet FOLLOW_49 = new BitSet(new long[]{0xE8200400442129E2L,0x00000000003FFDDAL});
+	public static final BitSet FOLLOW_50 = new BitSet(new long[]{0x1000000000000002L});
+	public static final BitSet FOLLOW_51 = new BitSet(new long[]{0xE8208400442129E0L,0x000000000033FDDAL});
+	public static final BitSet FOLLOW_52 = new BitSet(new long[]{0x0000008000000000L});
+	public static final BitSet FOLLOW_53 = new BitSet(new long[]{0x0500808020200080L,0x0000000001000000L});
+	public static final BitSet FOLLOW_54 = new BitSet(new long[]{0x0000000000000000L,0x0000000001000000L});
+	public static final BitSet FOLLOW_55 = new BitSet(new long[]{0x0100008020000000L});
+	public static final BitSet FOLLOW_56 = new BitSet(new long[]{0x0000008020000000L});
+	public static final BitSet FOLLOW_57 = new BitSet(new long[]{0xE8200600442129E0L,0x00000000003FFDDAL});
+	public static final BitSet FOLLOW_58 = new BitSet(new long[]{0x0000020020000000L});
+	public static final BitSet FOLLOW_59 = new BitSet(new long[]{0xE8200400442129E0L,0x00000000003FFDDAL});
+	public static final BitSet FOLLOW_60 = new BitSet(new long[]{0xE8200600442129E0L,0x000000000033FDDAL});
+	public static final BitSet FOLLOW_61 = new BitSet(new long[]{0x0000020000000000L});
+	public static final BitSet FOLLOW_62 = new BitSet(new long[]{0xE8200400446129E0L,0x000000000033FDDAL});
+	public static final BitSet FOLLOW_63 = new BitSet(new long[]{0x0000000000000000L,0x0000000000100000L});
+	public static final BitSet FOLLOW_64 = new BitSet(new long[]{0xE8200400442129E0L,0x00000000013FFDDAL});
+	public static final BitSet FOLLOW_65 = new BitSet(new long[]{0xE8200600442129E0L,0x00000000013FFDDAL});
+	public static final BitSet FOLLOW_66 = new BitSet(new long[]{0x0000100000000002L});
+	public static final BitSet FOLLOW_67 = new BitSet(new long[]{0x0020000000200002L});
+	public static final BitSet FOLLOW_68 = new BitSet(new long[]{0x0020000000000002L});
+	public static final BitSet FOLLOW_69 = new BitSet(new long[]{0x0020040000200002L});
+	public static final BitSet FOLLOW_70 = new BitSet(new long[]{0x0020000000400000L});
+	public static final BitSet FOLLOW_71 = new BitSet(new long[]{0xE8200400442129E2L,0x000000000033FDDAL});
+	public static final BitSet FOLLOW_72 = new BitSet(new long[]{0x0200000000000000L,0x0000000000000001L});
+	public static final BitSet FOLLOW_73 = new BitSet(new long[]{0x0200000000000002L,0x0000000000000001L});
+	public static final BitSet FOLLOW_74 = new BitSet(new long[]{0x0000000400000002L});
+	public static final BitSet FOLLOW_75 = new BitSet(new long[]{0x0000000000000120L});
+	public static final BitSet FOLLOW_76 = new BitSet(new long[]{0x0000800000000000L});
+	public static final BitSet FOLLOW_77 = new BitSet(new long[]{0x0000040000000002L});
+	public static final BitSet FOLLOW_78 = new BitSet(new long[]{0x0000040400000002L});
+	public static final BitSet FOLLOW_79 = new BitSet(new long[]{0x2000000000000002L,0x0000000000000800L});
+	public static final BitSet FOLLOW_80 = new BitSet(new long[]{0x0000000000100002L});
+	public static final BitSet FOLLOW_81 = new BitSet(new long[]{0x0000000400000000L});
+	public static final BitSet FOLLOW_82 = new BitSet(new long[]{0x0000000000800000L});
+	public static final BitSet FOLLOW_83 = new BitSet(new long[]{0x0000000000000080L,0x0000000000000400L});
+	public static final BitSet FOLLOW_84 = new BitSet(new long[]{0x4000000000000080L});
+	public static final BitSet FOLLOW_85 = new BitSet(new long[]{0x0000000000800080L});
+	public static final BitSet FOLLOW_86 = new BitSet(new long[]{0x0000020000000002L});
+	public static final BitSet FOLLOW_87 = new BitSet(new long[]{0x0000000000000082L});
 }

@@ -20,10 +20,11 @@ import org.emoflon.ibex.tgg.operational.matches.IMatch
 import org.emoflon.ibex.tgg.operational.strategies.OPT
 import org.emoflon.ibex.tgg.weights.weightDefinition.DefaultCalculation
 import org.emoflon.ibex.tgg.operational.strategies.IWeightCalculationStrategy
-import org.eclipse.xtext.xbase.jvmmodel.JvmAnnotationReferenceBuilder
 import javax.annotation.processing.Generated
 import org.emoflon.ibex.tgg.weights.weightDefinition.HelperFunction
 import org.eclipse.xtext.common.types.JvmDeclaredType
+import org.eclipse.xtext.common.types.JvmType
+import org.eclipse.xtext.common.types.JvmOperation
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -37,8 +38,16 @@ class WeightDefinitionJvmModelInferrer extends AbstractModelInferrer {
 	 * convenience API to build and initialize JVM types and their members.
 	 */
 	@Inject extension JvmTypesBuilder
-	@Inject extension JvmAnnotationReferenceBuilder
-
+	
+	val docForMatch = '''The comatch to calculate the weight for'''
+	val docForRuleName = '''Name of the rule the match corresponds to'''
+	val parameterDocForGenericMethods = 
+	'''
+	@param ruleName	«docForRuleName»
+	@param comatch	«docForMatch»
+	'''
+	
+	
 	/**
 	 * The dispatch method {@code infer} is called for each instance of the
 	 * given element's type that is contained in a resource.
@@ -66,13 +75,17 @@ class WeightDefinitionJvmModelInferrer extends AbstractModelInferrer {
 		boolean isPreIndexingPhase) {
 		val fileName = element.eResource.URI.lastSegment
 		val name = fileName.substring(0, fileName.length - 5)
-		acceptor.accept(element.toClass(name)) [ type | type.defineClass(element)]
+		
+		val abstractClass = element.toClass('''Abstract«name»''') [ defineAbstractClass(element)] 
+		val concreteClass = element.toClass(name) [ defineClass(element, abstractClass)]
+		acceptor.accept(abstractClass)
+		acceptor.accept(concreteClass)
 	}
 
 	/**
 	 * Body for the switching method
 	 */
-	def String getBodyForSwitchingMethod(Iterable<TGGRule> rules) {
+	private def String getBodyForSwitchingMethod(Iterable<TGGRule> rules) {
 		'''switch(ruleName) {
 		«FOR rule : rules»
 			case "«rule.name»": 
@@ -86,17 +99,18 @@ class WeightDefinitionJvmModelInferrer extends AbstractModelInferrer {
 	/**
 	 * Body for the rule method, that retrieves all nodes from the match
 	 */
-	def String getBodyThatRetrievesMatchedNodes(TGGRule rule) {
-		'''«FOR node : rule.nodes.filter[!(it instanceof TGGRuleCorr)]»
-			«node.typeNameForNode» «node.name» = («node.typeNameForNode») comatch.get("«node.name»");
-		«ENDFOR»''' +
-			'''return calculateWeightFor«rule.name»(«rule.nodes.filter[!(it instanceof TGGRuleCorr)].map[it.name].join(", ")» );'''
+	private def String getBodyThatRetrievesMatchedNodes(TGGRule rule) {
+		'''
+		«FOR node : rule.nodes.filter[!(it instanceof TGGRuleCorr)]»
+		«node.typeNameForNode» «node.name» = («node.typeNameForNode») comatch.get("«node.name»");
+		«ENDFOR»
+		return calculateWeightFor«rule.name»(«rule.nodes.filter[!(it instanceof TGGRuleCorr)].map[it.name].join(", ")» );'''
 	}
 
 	/**
 	 * Tries to lookup the full type of the node
 	 */
-	def String getTypeNameForNode(TGGRuleNode node) {
+	private def String getTypeNameForNode(TGGRuleNode node) {
 		val typename = node.type.name
 		val packageName = node.type.EPackage.name
 		val ref = typeRef(packageName + "." + typename)
@@ -109,7 +123,7 @@ class WeightDefinitionJvmModelInferrer extends AbstractModelInferrer {
 	/**
 	 * Creates the helper method
 	 */
-	def createMethodForHelperFunction(HelperFunction helperFunction) {
+	private def createMethodForHelperFunction(HelperFunction helperFunction) {
 		helperFunction.toMethod(helperFunction.name, helperFunction.returnType) [
 			for (param : helperFunction.params) {
 				parameters += param.toParameter(param.name, param.parameterType)
@@ -122,48 +136,52 @@ class WeightDefinitionJvmModelInferrer extends AbstractModelInferrer {
 	}
 
 	/**
-	 * Creates the default calculation method for unspecified rules
+	 * Creates the user's default calculation method for unspecified rules
 	 */
-	def createDefaultMethod(WeightDefinitionFile element) {
-		val defaultCalculation = element.^default as DefaultCalculation
-		if (defaultCalculation !== null) {
-			defaultCalculation.toMethod("calculateDefaultWeight", typeRef(double)) [
-				val p1 = element.toParameter("ruleName", typeRef(String))
-				p1.documentation = "Name of the rule the match corresponds to"
-				parameters += p1
-				val p2 = element.toParameter("comatch", typeRef(IMatch))
-				p2.documentation = "The comatch to calculate the weight for"
-				parameters += p2
-				body = defaultCalculation.calc
-				if(defaultCalculation.documentation !== null && !defaultCalculation.documentation.empty) {
-					documentation = defaultCalculation.documentation
-				} else {
-					documentation = '''Default calculation for matches of rules that do not have a specific calculation'''
-				}
-				
-				visibility = JvmVisibility.PROTECTED
-			]
-		} else {
-			element.toMethod("calculateDefaultWeight", typeRef(double)) [
-				val p1 = element.toParameter("ruleName", typeRef(String))
-				p1.documentation = "Name of the rule the match corresponds to"
-				parameters += p1
-				val p2 = element.toParameter("comatch", typeRef(IMatch))
-				p2.documentation = "The comatch to calculate the weight for"
-				parameters += p2
-				body = '''return this.app.getDefaultWeightForMatch(comatch, ruleName);'''
-				documentation = '''Default calculation for matches of rules that do not have a specific calculation'''
-				visibility = JvmVisibility.PROTECTED
-			]
-		}
+	private def createDefaultMethod(DefaultCalculation defaultCalculation) {
+		defaultCalculation.toMethod("calculateDefaultWeight", typeRef(double)) [
+			val p1 = defaultCalculation.toParameter("ruleName", typeRef(String))
+			p1.documentation = "Name of the rule the match corresponds to"
+			parameters += p1
+			val p2 = defaultCalculation.toParameter("comatch", typeRef(IMatch))
+			p2.documentation = "The comatch to calculate the weight for"
+			parameters += p2
+			body = defaultCalculation.calc
+			if(defaultCalculation.documentation !== null && !defaultCalculation.documentation.empty) {
+				documentation = '''«defaultCalculation.documentation»«"\n\n"»parameterDocForGenericMethods'''
+			} else {
+				documentation = '''Default calculation for matches of rules that do not have a specific calculation«"\n\n"»«parameterDocForGenericMethods»'''
+			}
+			annotations += annotationRef(Override)
+			visibility = JvmVisibility.PROTECTED
+		]
+	}
+	
+	/**
+	 * Creates the standard default calculation method for unspecified rules
+	 */
+	private def createDefaultMethodForAbstractClass(WeightDefinitionFile element) {
+		element.toMethod("calculateDefaultWeight", typeRef(double)) [
+			val p1 = element.toParameter("ruleName", typeRef(String))
+			p1.documentation = docForRuleName
+			parameters += p1
+			val p2 = element.toParameter("comatch", typeRef(IMatch))
+			p2.documentation = docForMatch
+			parameters += p2
+			body = '''return this.app.getDefaultWeightForMatch(comatch, ruleName);'''
+			documentation = 
+			'''Default calculation for matches of rules that do not have a specific calculationn«"\n\n"»«parameterDocForGenericMethods»'''
+			visibility = JvmVisibility.PROTECTED
+		]
 	}
 
 	/**
 	 * Creates the rule method which retrieves the matches nodes and calls the calculation method
 	 */
-	def createBasicMethodForRule(RuleWeightDefinition rule) {
+	private def createBasicMethodForRule(RuleWeightDefinition rule) {
 		rule.toMethod('''calculateWeightFor«rule.rule.name»''', typeRef(double)) [
-			documentation = '''Retrieve all matched nodes and calculate the weight for «rule.rule.name»'''
+			documentation = 
+			'''Retrieve all matched nodes and calculate the weight for «rule.rule.name»«"\n\n"»«parameterDocForGenericMethods»'''
 			parameters += rule.toParameter("ruleName", typeRef(String))
 			parameters += rule.toParameter("comatch", typeRef(IMatch))
 			visibility = JvmVisibility.PRIVATE
@@ -173,18 +191,10 @@ class WeightDefinitionJvmModelInferrer extends AbstractModelInferrer {
 	}
 
 	/**
-	 * Creates the weight calculation method
+	 * Adds the parameters of the rule
 	 */
-	def createParameterizedMethodForRule(RuleWeightDefinition rule) {
-		rule.toMethod('''calculateWeightFor«rule.rule.name»''', typeRef(double)) [
-			if(rule.documentation !== null && !rule.documentation.empty) {
-					documentation = rule.documentation
-			} else {
-				documentation = '''Weight calculation for matched nodes of rule «rule.rule.name»'''
-			}
-			
-			visibility = JvmVisibility.PROTECTED
-			for (node : rule.rule.nodes.filter[!(it instanceof TGGRuleCorr)]) {
+	private def addParametersForRule(JvmOperation method, TGGRule rule) {
+		for (node : rule.nodes.filter[!(it instanceof TGGRuleCorr)]) {
 				val typename = node.type.name
 				val packageName = node.type.EPackage.name
 				var ref = typeRef(packageName + "." + typename)
@@ -194,8 +204,49 @@ class WeightDefinitionJvmModelInferrer extends AbstractModelInferrer {
 				val p = rule.toParameter(node.name, ref)
 				
 				p.documentation = '''The matched element for node "«node.name»" of type "«node.type.name»"'''
-				parameters += p
+				method.parameters += p
 			}
+	}
+	
+	/**
+	 * Creates the documentation text for the matched parameters
+	 */
+	private def getDocumentationForParameters(TGGRule rule) {
+		'''
+		«FOR node: rule.nodes.filter[!(it instanceof TGGRuleCorr)]»
+		@param «node.name»	The matched element for node "«node.name»" of type "«node.type.name»"
+		«ENDFOR»
+		'''
+	}
+	
+	/**
+	 * Creates the abstract weight calculation method
+	 */
+	private def createAbstractParameterizedMethodForRule(RuleWeightDefinition rule) {
+		rule.toMethod('''calculateWeightFor«rule.rule.name»''', typeRef(double)) [
+			documentation = 
+				'''Weight calculation for matched nodes of rule «rule.rule.name»«"\n\n"»«rule.rule.documentationForParameters»'''
+			visibility = JvmVisibility.PROTECTED
+			addParametersForRule(rule.rule)
+			abstract = true
+		]
+	}
+	
+	/**
+	 * Creates the weight calculation method
+	 */
+	private def createParameterizedMethodForRule(RuleWeightDefinition rule) {
+		rule.toMethod('''calculateWeightFor«rule.rule.name»''', typeRef(double)) [
+			if(rule.documentation !== null && !rule.documentation.empty) {
+					documentation = '''«rule.documentation»«"\n\n"»«rule.rule.documentationForParameters»'''
+			} else {
+				documentation = 
+					'''Weight calculation for matched nodes of rule «rule.rule.name»«"\n\n"»«rule.rule.documentationForParameters»'''
+			}
+			
+			visibility = JvmVisibility.PROTECTED
+			addParametersForRule(rule.rule)
+			annotations += annotationRef(Override)
 			body = (rule.weightCalc as WeightCalculation).calc
 		]
 	}
@@ -203,12 +254,13 @@ class WeightDefinitionJvmModelInferrer extends AbstractModelInferrer {
 	/**
 	 * Creates the switching method which calls the suitable rule method
 	 */
-	def createSwitchingMethod(WeightDefinitionFile element) {
+	private def createSwitchingMethod(WeightDefinitionFile element) {
 		element.toMethod("calculateWeight", typeRef(double)) [
 				parameters += element.toParameter("ruleName", typeRef(String))
 				parameters += element.toParameter("comatch", typeRef(IMatch))
 				body = '''«element.weigthDefinitions.map[it as RuleWeightDefinition].map[it.rule].bodyForSwitchingMethod»'''
-				documentation = '''Switching method that delegates the weight calculation to the methods dedicated to a single rule or to the default strategy if no calculation is specified'''
+				documentation = 
+				'''Switching method that delegates the weight calculation to the methods dedicated to a single rule or to the default strategy if no calculation is specified.«"\n\n"»«parameterDocForGenericMethods»'''
 				annotations += annotationRef(Override)
 				final = true
 			]
@@ -217,18 +269,33 @@ class WeightDefinitionJvmModelInferrer extends AbstractModelInferrer {
 	/**
 	 * Creates the constructor for the generated class
 	 */
-	def createConstructor(WeightDefinitionFile element) {
+	private def createConstructor(WeightDefinitionFile element) {
 		element.toConstructor [
-				documentation = "Constructor for the WeightCalculationStrategy"
+				documentation = 
+				'''Constructor for the WeightCalculationStrategy«"\n\n"»@param app	The application strategy'''
 				parameters += element.toParameter("app", typeRef(OPT))
-				body = '''this.app = app;'''
+				body = '''super(app);'''
 			]
 	}
 	
 	/**
+	 * Creates the constructor for the generated class
+	 */
+	private def createConstructorForAbstractClass(WeightDefinitionFile element) {
+		element.toConstructor [
+				documentation = 
+				'''Constructor for the WeightCalculationStrategy«"\n\n"»@param app	The application strategy'''
+				parameters += element.toParameter("app", typeRef(OPT))
+				body = '''this.app = app;'''
+				visibility = JvmVisibility.PROTECTED
+			]
+	}
+	
+	
+	/**
 	 * Creates the reference to the strategy
 	 */
-	def createFinalAppField(WeightDefinitionFile element) {
+	private def createFinalAppField(WeightDefinitionFile element) {
 		element.toField("app", typeRef(OPT)) [
 				visibility = JvmVisibility.PRIVATE
 				final = true
@@ -239,38 +306,65 @@ class WeightDefinitionJvmModelInferrer extends AbstractModelInferrer {
 	/**
 	 * Creates the contents of the class
 	 */
-	def defineClass(JvmDeclaredType type, WeightDefinitionFile element) {
+	private def defineClass(JvmDeclaredType type, WeightDefinitionFile element, JvmType abstractSuperClass) {
+		//set class properties
+		type.superTypes += typeRef(abstractSuperClass)
+		type.packageName = "org.emoflon.ibex.tgg.weights"
+		type.visibility = JvmVisibility.PUBLIC
+		type.annotations += annotationRef(Generated, "TGGWeight_Generator")
+		type.documentation = 
+			'''This class defines the calculation of weights of found matches.«"\n"»Calculations are defined in "«element.eResource.URI.toString»"'''
+
+		// create constructor
+		type.members += element.createConstructor
+
+		// create the method for each weight definition
+		element.weigthDefinitions.map[it as RuleWeightDefinition].forEach[
+			// actual calculation method
+			type.members += createParameterizedMethodForRule
+		]
+
+		// add default calculation method
+		element.defaultCalc.map[it as DefaultCalculation].forEach[type.members += createDefaultMethod]
+		
+
+		// add helper methods
+		element.helperFuntions.map[it as HelperFunction].forEach[
+			type.members += createMethodForHelperFunction
+		]
+	}
+	
+	/**
+	 * Defines the abstract base class
+	 */
+	private def defineAbstractClass(JvmDeclaredType type, WeightDefinitionFile element) {
 		//set class properties
 		type.superTypes += typeRef(IWeightCalculationStrategy)
 		type.packageName = "org.emoflon.ibex.tgg.weights"
-		type.visibility = JvmVisibility.PUBLIC
-		type.annotations += annotationRef(Generated)
-		type.documentation = '''This class defines the calculation of weights of found matches.''' + "\n" +
-			'''Calculations are defined in "«element.eResource.URI.toString»"'''
+		type.visibility = JvmVisibility.DEFAULT
+		type.abstract = true
+		type.annotations += annotationRef(Generated, "TGGWeight_Generator")
+		type.documentation = 
+			'''This abstract class defines the api for the calculation of weights of found matches and provides the necessary logic to invoke them.«"\n"»Calculations are defined in "«element.eResource.URI.toString»"'''
 
 		//create app field
 		type.members += element.createFinalAppField
 
 		// create constructor
-		type.members += element.createConstructor
+		type.members += element.createConstructorForAbstractClass
 
 		// add generic method for all kinds of matches
 		type.members += element.createSwitchingMethod
 
 		// create the method for each weight definition
-		for (rule : element.weigthDefinitions.map[it as RuleWeightDefinition]) {
+		element.weigthDefinitions.map[it as RuleWeightDefinition].forEach[
 			// method for rule that retrieves the matched nodes
-			type.members += rule.createBasicMethodForRule
+			type.members += createBasicMethodForRule
 			// actual calculation method
-			type.members += rule.createParameterizedMethodForRule
-		}
+			type.members += createAbstractParameterizedMethodForRule
+		]
 
 		// add default calculation method
-		type.members += element.createDefaultMethod
-
-		// add helper methods
-		for (helperFunction : element.helperFuntions.map[it as HelperFunction].toList) {
-			type.members += helperFunction.createMethodForHelperFunction
-		}
+		type.members += element.createDefaultMethodForAbstractClass
 	}
 }

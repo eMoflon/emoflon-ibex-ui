@@ -1692,10 +1692,10 @@ public class InternalWeightDefinitionLexer extends Lexer {
 		try {
 			int _type = RULE_HEX;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// InternalWeightDefinition.g:6835:10: ( ( '0x' | '0X' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' | '_' )+ ( '#' ( ( 'b' | 'B' ) ( 'i' | 'I' ) | ( 'l' | 'L' ) ) )? )
-			// InternalWeightDefinition.g:6835:12: ( '0x' | '0X' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' | '_' )+ ( '#' ( ( 'b' | 'B' ) ( 'i' | 'I' ) | ( 'l' | 'L' ) ) )?
+			// InternalWeightDefinition.g:6839:10: ( ( '0x' | '0X' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' | '_' )+ ( '#' ( ( 'b' | 'B' ) ( 'i' | 'I' ) | ( 'l' | 'L' ) ) )? )
+			// InternalWeightDefinition.g:6839:12: ( '0x' | '0X' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' | '_' )+ ( '#' ( ( 'b' | 'B' ) ( 'i' | 'I' ) | ( 'l' | 'L' ) ) )?
 			{
-			// InternalWeightDefinition.g:6835:12: ( '0x' | '0X' )
+			// InternalWeightDefinition.g:6839:12: ( '0x' | '0X' )
 			int alt1=2;
 			int LA1_0 = input.LA(1);
 			if ( (LA1_0=='0') ) {
@@ -1729,14 +1729,14 @@ public class InternalWeightDefinitionLexer extends Lexer {
 
 			switch (alt1) {
 				case 1 :
-					// InternalWeightDefinition.g:6835:13: '0x'
+					// InternalWeightDefinition.g:6839:13: '0x'
 					{
 					match("0x"); 
 
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:6835:18: '0X'
+					// InternalWeightDefinition.g:6839:18: '0X'
 					{
 					match("0X"); 
 
@@ -1745,7 +1745,7 @@ public class InternalWeightDefinitionLexer extends Lexer {
 
 			}
 
-			// InternalWeightDefinition.g:6835:24: ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' | '_' )+
+			// InternalWeightDefinition.g:6839:24: ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' | '_' )+
 			int cnt2=0;
 			loop2:
 			while (true) {
@@ -1778,7 +1778,7 @@ public class InternalWeightDefinitionLexer extends Lexer {
 				cnt2++;
 			}
 
-			// InternalWeightDefinition.g:6835:58: ( '#' ( ( 'b' | 'B' ) ( 'i' | 'I' ) | ( 'l' | 'L' ) ) )?
+			// InternalWeightDefinition.g:6839:58: ( '#' ( ( 'b' | 'B' ) ( 'i' | 'I' ) | ( 'l' | 'L' ) ) )?
 			int alt4=2;
 			int LA4_0 = input.LA(1);
 			if ( (LA4_0=='#') ) {
@@ -1786,10 +1786,10 @@ public class InternalWeightDefinitionLexer extends Lexer {
 			}
 			switch (alt4) {
 				case 1 :
-					// InternalWeightDefinition.g:6835:59: '#' ( ( 'b' | 'B' ) ( 'i' | 'I' ) | ( 'l' | 'L' ) )
+					// InternalWeightDefinition.g:6839:59: '#' ( ( 'b' | 'B' ) ( 'i' | 'I' ) | ( 'l' | 'L' ) )
 					{
 					match('#'); 
-					// InternalWeightDefinition.g:6835:63: ( ( 'b' | 'B' ) ( 'i' | 'I' ) | ( 'l' | 'L' ) )
+					// InternalWeightDefinition.g:6839:63: ( ( 'b' | 'B' ) ( 'i' | 'I' ) | ( 'l' | 'L' ) )
 					int alt3=2;
 					int LA3_0 = input.LA(1);
 					if ( (LA3_0=='B'||LA3_0=='b') ) {
@@ -1807,7 +1807,7 @@ public class InternalWeightDefinitionLexer extends Lexer {
 
 					switch (alt3) {
 						case 1 :
-							// InternalWeightDefinition.g:6835:64: ( 'b' | 'B' ) ( 'i' | 'I' )
+							// InternalWeightDefinition.g:6839:64: ( 'b' | 'B' ) ( 'i' | 'I' )
 							{
 							if ( input.LA(1)=='B'||input.LA(1)=='b' ) {
 								input.consume();
@@ -1828,7 +1828,7 @@ public class InternalWeightDefinitionLexer extends Lexer {
 							}
 							break;
 						case 2 :
-							// InternalWeightDefinition.g:6835:84: ( 'l' | 'L' )
+							// InternalWeightDefinition.g:6839:84: ( 'l' | 'L' )
 							{
 							if ( input.LA(1)=='L'||input.LA(1)=='l' ) {
 								input.consume();
@@ -1864,11 +1864,11 @@ public class InternalWeightDefinitionLexer extends Lexer {
 		try {
 			int _type = RULE_INT;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// InternalWeightDefinition.g:6837:10: ( '0' .. '9' ( '0' .. '9' | '_' )* )
-			// InternalWeightDefinition.g:6837:12: '0' .. '9' ( '0' .. '9' | '_' )*
+			// InternalWeightDefinition.g:6841:10: ( '0' .. '9' ( '0' .. '9' | '_' )* )
+			// InternalWeightDefinition.g:6841:12: '0' .. '9' ( '0' .. '9' | '_' )*
 			{
 			matchRange('0','9'); 
-			// InternalWeightDefinition.g:6837:21: ( '0' .. '9' | '_' )*
+			// InternalWeightDefinition.g:6841:21: ( '0' .. '9' | '_' )*
 			loop5:
 			while (true) {
 				int alt5=2;
@@ -1913,12 +1913,12 @@ public class InternalWeightDefinitionLexer extends Lexer {
 		try {
 			int _type = RULE_DECIMAL;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// InternalWeightDefinition.g:6839:14: ( RULE_INT ( ( 'e' | 'E' ) ( '+' | '-' )? RULE_INT )? ( ( 'b' | 'B' ) ( 'i' | 'I' | 'd' | 'D' ) | ( 'l' | 'L' | 'd' | 'D' | 'f' | 'F' ) )? )
-			// InternalWeightDefinition.g:6839:16: RULE_INT ( ( 'e' | 'E' ) ( '+' | '-' )? RULE_INT )? ( ( 'b' | 'B' ) ( 'i' | 'I' | 'd' | 'D' ) | ( 'l' | 'L' | 'd' | 'D' | 'f' | 'F' ) )?
+			// InternalWeightDefinition.g:6843:14: ( RULE_INT ( ( 'e' | 'E' ) ( '+' | '-' )? RULE_INT )? ( ( 'b' | 'B' ) ( 'i' | 'I' | 'd' | 'D' ) | ( 'l' | 'L' | 'd' | 'D' | 'f' | 'F' ) )? )
+			// InternalWeightDefinition.g:6843:16: RULE_INT ( ( 'e' | 'E' ) ( '+' | '-' )? RULE_INT )? ( ( 'b' | 'B' ) ( 'i' | 'I' | 'd' | 'D' ) | ( 'l' | 'L' | 'd' | 'D' | 'f' | 'F' ) )?
 			{
 			mRULE_INT(); 
 
-			// InternalWeightDefinition.g:6839:25: ( ( 'e' | 'E' ) ( '+' | '-' )? RULE_INT )?
+			// InternalWeightDefinition.g:6843:25: ( ( 'e' | 'E' ) ( '+' | '-' )? RULE_INT )?
 			int alt7=2;
 			int LA7_0 = input.LA(1);
 			if ( (LA7_0=='E'||LA7_0=='e') ) {
@@ -1926,7 +1926,7 @@ public class InternalWeightDefinitionLexer extends Lexer {
 			}
 			switch (alt7) {
 				case 1 :
-					// InternalWeightDefinition.g:6839:26: ( 'e' | 'E' ) ( '+' | '-' )? RULE_INT
+					// InternalWeightDefinition.g:6843:26: ( 'e' | 'E' ) ( '+' | '-' )? RULE_INT
 					{
 					if ( input.LA(1)=='E'||input.LA(1)=='e' ) {
 						input.consume();
@@ -1936,7 +1936,7 @@ public class InternalWeightDefinitionLexer extends Lexer {
 						recover(mse);
 						throw mse;
 					}
-					// InternalWeightDefinition.g:6839:36: ( '+' | '-' )?
+					// InternalWeightDefinition.g:6843:36: ( '+' | '-' )?
 					int alt6=2;
 					int LA6_0 = input.LA(1);
 					if ( (LA6_0=='+'||LA6_0=='-') ) {
@@ -1966,7 +1966,7 @@ public class InternalWeightDefinitionLexer extends Lexer {
 
 			}
 
-			// InternalWeightDefinition.g:6839:58: ( ( 'b' | 'B' ) ( 'i' | 'I' | 'd' | 'D' ) | ( 'l' | 'L' | 'd' | 'D' | 'f' | 'F' ) )?
+			// InternalWeightDefinition.g:6843:58: ( ( 'b' | 'B' ) ( 'i' | 'I' | 'd' | 'D' ) | ( 'l' | 'L' | 'd' | 'D' | 'f' | 'F' ) )?
 			int alt8=3;
 			int LA8_0 = input.LA(1);
 			if ( (LA8_0=='B'||LA8_0=='b') ) {
@@ -1977,7 +1977,7 @@ public class InternalWeightDefinitionLexer extends Lexer {
 			}
 			switch (alt8) {
 				case 1 :
-					// InternalWeightDefinition.g:6839:59: ( 'b' | 'B' ) ( 'i' | 'I' | 'd' | 'D' )
+					// InternalWeightDefinition.g:6843:59: ( 'b' | 'B' ) ( 'i' | 'I' | 'd' | 'D' )
 					{
 					if ( input.LA(1)=='B'||input.LA(1)=='b' ) {
 						input.consume();
@@ -1998,7 +1998,7 @@ public class InternalWeightDefinitionLexer extends Lexer {
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:6839:87: ( 'l' | 'L' | 'd' | 'D' | 'f' | 'F' )
+					// InternalWeightDefinition.g:6843:87: ( 'l' | 'L' | 'd' | 'D' | 'f' | 'F' )
 					{
 					if ( input.LA(1)=='D'||input.LA(1)=='F'||input.LA(1)=='L'||input.LA(1)=='d'||input.LA(1)=='f'||input.LA(1)=='l' ) {
 						input.consume();
@@ -2029,10 +2029,10 @@ public class InternalWeightDefinitionLexer extends Lexer {
 		try {
 			int _type = RULE_ID;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// InternalWeightDefinition.g:6841:9: ( ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' | '0' .. '9' )* )
-			// InternalWeightDefinition.g:6841:11: ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' | '0' .. '9' )*
+			// InternalWeightDefinition.g:6845:9: ( ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' | '0' .. '9' )* )
+			// InternalWeightDefinition.g:6845:11: ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' | '0' .. '9' )*
 			{
-			// InternalWeightDefinition.g:6841:11: ( '^' )?
+			// InternalWeightDefinition.g:6845:11: ( '^' )?
 			int alt9=2;
 			int LA9_0 = input.LA(1);
 			if ( (LA9_0=='^') ) {
@@ -2040,7 +2040,7 @@ public class InternalWeightDefinitionLexer extends Lexer {
 			}
 			switch (alt9) {
 				case 1 :
-					// InternalWeightDefinition.g:6841:11: '^'
+					// InternalWeightDefinition.g:6845:11: '^'
 					{
 					match('^'); 
 					}
@@ -2056,7 +2056,7 @@ public class InternalWeightDefinitionLexer extends Lexer {
 				recover(mse);
 				throw mse;
 			}
-			// InternalWeightDefinition.g:6841:44: ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' | '0' .. '9' )*
+			// InternalWeightDefinition.g:6845:44: ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' | '0' .. '9' )*
 			loop10:
 			while (true) {
 				int alt10=2;
@@ -2101,10 +2101,10 @@ public class InternalWeightDefinitionLexer extends Lexer {
 		try {
 			int _type = RULE_STRING;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// InternalWeightDefinition.g:6843:13: ( ( '\"' ( '\\\\' . |~ ( ( '\\\\' | '\"' ) ) )* ( '\"' )? | '\\'' ( '\\\\' . |~ ( ( '\\\\' | '\\'' ) ) )* ( '\\'' )? ) )
-			// InternalWeightDefinition.g:6843:15: ( '\"' ( '\\\\' . |~ ( ( '\\\\' | '\"' ) ) )* ( '\"' )? | '\\'' ( '\\\\' . |~ ( ( '\\\\' | '\\'' ) ) )* ( '\\'' )? )
+			// InternalWeightDefinition.g:6847:13: ( ( '\"' ( '\\\\' . |~ ( ( '\\\\' | '\"' ) ) )* ( '\"' )? | '\\'' ( '\\\\' . |~ ( ( '\\\\' | '\\'' ) ) )* ( '\\'' )? ) )
+			// InternalWeightDefinition.g:6847:15: ( '\"' ( '\\\\' . |~ ( ( '\\\\' | '\"' ) ) )* ( '\"' )? | '\\'' ( '\\\\' . |~ ( ( '\\\\' | '\\'' ) ) )* ( '\\'' )? )
 			{
-			// InternalWeightDefinition.g:6843:15: ( '\"' ( '\\\\' . |~ ( ( '\\\\' | '\"' ) ) )* ( '\"' )? | '\\'' ( '\\\\' . |~ ( ( '\\\\' | '\\'' ) ) )* ( '\\'' )? )
+			// InternalWeightDefinition.g:6847:15: ( '\"' ( '\\\\' . |~ ( ( '\\\\' | '\"' ) ) )* ( '\"' )? | '\\'' ( '\\\\' . |~ ( ( '\\\\' | '\\'' ) ) )* ( '\\'' )? )
 			int alt15=2;
 			int LA15_0 = input.LA(1);
 			if ( (LA15_0=='\"') ) {
@@ -2122,10 +2122,10 @@ public class InternalWeightDefinitionLexer extends Lexer {
 
 			switch (alt15) {
 				case 1 :
-					// InternalWeightDefinition.g:6843:16: '\"' ( '\\\\' . |~ ( ( '\\\\' | '\"' ) ) )* ( '\"' )?
+					// InternalWeightDefinition.g:6847:16: '\"' ( '\\\\' . |~ ( ( '\\\\' | '\"' ) ) )* ( '\"' )?
 					{
 					match('\"'); 
-					// InternalWeightDefinition.g:6843:20: ( '\\\\' . |~ ( ( '\\\\' | '\"' ) ) )*
+					// InternalWeightDefinition.g:6847:20: ( '\\\\' . |~ ( ( '\\\\' | '\"' ) ) )*
 					loop11:
 					while (true) {
 						int alt11=3;
@@ -2139,14 +2139,14 @@ public class InternalWeightDefinitionLexer extends Lexer {
 
 						switch (alt11) {
 						case 1 :
-							// InternalWeightDefinition.g:6843:21: '\\\\' .
+							// InternalWeightDefinition.g:6847:21: '\\\\' .
 							{
 							match('\\'); 
 							matchAny(); 
 							}
 							break;
 						case 2 :
-							// InternalWeightDefinition.g:6843:28: ~ ( ( '\\\\' | '\"' ) )
+							// InternalWeightDefinition.g:6847:28: ~ ( ( '\\\\' | '\"' ) )
 							{
 							if ( (input.LA(1) >= '\u0000' && input.LA(1) <= '!')||(input.LA(1) >= '#' && input.LA(1) <= '[')||(input.LA(1) >= ']' && input.LA(1) <= '\uFFFF') ) {
 								input.consume();
@@ -2164,7 +2164,7 @@ public class InternalWeightDefinitionLexer extends Lexer {
 						}
 					}
 
-					// InternalWeightDefinition.g:6843:44: ( '\"' )?
+					// InternalWeightDefinition.g:6847:44: ( '\"' )?
 					int alt12=2;
 					int LA12_0 = input.LA(1);
 					if ( (LA12_0=='\"') ) {
@@ -2172,7 +2172,7 @@ public class InternalWeightDefinitionLexer extends Lexer {
 					}
 					switch (alt12) {
 						case 1 :
-							// InternalWeightDefinition.g:6843:44: '\"'
+							// InternalWeightDefinition.g:6847:44: '\"'
 							{
 							match('\"'); 
 							}
@@ -2183,10 +2183,10 @@ public class InternalWeightDefinitionLexer extends Lexer {
 					}
 					break;
 				case 2 :
-					// InternalWeightDefinition.g:6843:49: '\\'' ( '\\\\' . |~ ( ( '\\\\' | '\\'' ) ) )* ( '\\'' )?
+					// InternalWeightDefinition.g:6847:49: '\\'' ( '\\\\' . |~ ( ( '\\\\' | '\\'' ) ) )* ( '\\'' )?
 					{
 					match('\''); 
-					// InternalWeightDefinition.g:6843:54: ( '\\\\' . |~ ( ( '\\\\' | '\\'' ) ) )*
+					// InternalWeightDefinition.g:6847:54: ( '\\\\' . |~ ( ( '\\\\' | '\\'' ) ) )*
 					loop13:
 					while (true) {
 						int alt13=3;
@@ -2200,14 +2200,14 @@ public class InternalWeightDefinitionLexer extends Lexer {
 
 						switch (alt13) {
 						case 1 :
-							// InternalWeightDefinition.g:6843:55: '\\\\' .
+							// InternalWeightDefinition.g:6847:55: '\\\\' .
 							{
 							match('\\'); 
 							matchAny(); 
 							}
 							break;
 						case 2 :
-							// InternalWeightDefinition.g:6843:62: ~ ( ( '\\\\' | '\\'' ) )
+							// InternalWeightDefinition.g:6847:62: ~ ( ( '\\\\' | '\\'' ) )
 							{
 							if ( (input.LA(1) >= '\u0000' && input.LA(1) <= '&')||(input.LA(1) >= '(' && input.LA(1) <= '[')||(input.LA(1) >= ']' && input.LA(1) <= '\uFFFF') ) {
 								input.consume();
@@ -2225,7 +2225,7 @@ public class InternalWeightDefinitionLexer extends Lexer {
 						}
 					}
 
-					// InternalWeightDefinition.g:6843:79: ( '\\'' )?
+					// InternalWeightDefinition.g:6847:79: ( '\\'' )?
 					int alt14=2;
 					int LA14_0 = input.LA(1);
 					if ( (LA14_0=='\'') ) {
@@ -2233,7 +2233,7 @@ public class InternalWeightDefinitionLexer extends Lexer {
 					}
 					switch (alt14) {
 						case 1 :
-							// InternalWeightDefinition.g:6843:79: '\\''
+							// InternalWeightDefinition.g:6847:79: '\\''
 							{
 							match('\''); 
 							}
@@ -2262,12 +2262,12 @@ public class InternalWeightDefinitionLexer extends Lexer {
 		try {
 			int _type = RULE_ML_COMMENT;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// InternalWeightDefinition.g:6845:17: ( '/*' ( options {greedy=false; } : . )* '*/' )
-			// InternalWeightDefinition.g:6845:19: '/*' ( options {greedy=false; } : . )* '*/'
+			// InternalWeightDefinition.g:6849:17: ( '/*' ( options {greedy=false; } : . )* '*/' )
+			// InternalWeightDefinition.g:6849:19: '/*' ( options {greedy=false; } : . )* '*/'
 			{
 			match("/*"); 
 
-			// InternalWeightDefinition.g:6845:24: ( options {greedy=false; } : . )*
+			// InternalWeightDefinition.g:6849:24: ( options {greedy=false; } : . )*
 			loop16:
 			while (true) {
 				int alt16=2;
@@ -2288,7 +2288,7 @@ public class InternalWeightDefinitionLexer extends Lexer {
 
 				switch (alt16) {
 				case 1 :
-					// InternalWeightDefinition.g:6845:52: .
+					// InternalWeightDefinition.g:6849:52: .
 					{
 					matchAny(); 
 					}
@@ -2317,12 +2317,12 @@ public class InternalWeightDefinitionLexer extends Lexer {
 		try {
 			int _type = RULE_SL_COMMENT;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// InternalWeightDefinition.g:6847:17: ( '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )? )
-			// InternalWeightDefinition.g:6847:19: '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )?
+			// InternalWeightDefinition.g:6851:17: ( '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )? )
+			// InternalWeightDefinition.g:6851:19: '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )?
 			{
 			match("//"); 
 
-			// InternalWeightDefinition.g:6847:24: (~ ( ( '\\n' | '\\r' ) ) )*
+			// InternalWeightDefinition.g:6851:24: (~ ( ( '\\n' | '\\r' ) ) )*
 			loop17:
 			while (true) {
 				int alt17=2;
@@ -2351,7 +2351,7 @@ public class InternalWeightDefinitionLexer extends Lexer {
 				}
 			}
 
-			// InternalWeightDefinition.g:6847:40: ( ( '\\r' )? '\\n' )?
+			// InternalWeightDefinition.g:6851:40: ( ( '\\r' )? '\\n' )?
 			int alt19=2;
 			int LA19_0 = input.LA(1);
 			if ( (LA19_0=='\n'||LA19_0=='\r') ) {
@@ -2359,9 +2359,9 @@ public class InternalWeightDefinitionLexer extends Lexer {
 			}
 			switch (alt19) {
 				case 1 :
-					// InternalWeightDefinition.g:6847:41: ( '\\r' )? '\\n'
+					// InternalWeightDefinition.g:6851:41: ( '\\r' )? '\\n'
 					{
-					// InternalWeightDefinition.g:6847:41: ( '\\r' )?
+					// InternalWeightDefinition.g:6851:41: ( '\\r' )?
 					int alt18=2;
 					int LA18_0 = input.LA(1);
 					if ( (LA18_0=='\r') ) {
@@ -2369,7 +2369,7 @@ public class InternalWeightDefinitionLexer extends Lexer {
 					}
 					switch (alt18) {
 						case 1 :
-							// InternalWeightDefinition.g:6847:41: '\\r'
+							// InternalWeightDefinition.g:6851:41: '\\r'
 							{
 							match('\r'); 
 							}
@@ -2399,10 +2399,10 @@ public class InternalWeightDefinitionLexer extends Lexer {
 		try {
 			int _type = RULE_WS;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// InternalWeightDefinition.g:6849:9: ( ( ' ' | '\\t' | '\\r' | '\\n' )+ )
-			// InternalWeightDefinition.g:6849:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
+			// InternalWeightDefinition.g:6853:9: ( ( ' ' | '\\t' | '\\r' | '\\n' )+ )
+			// InternalWeightDefinition.g:6853:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
 			{
-			// InternalWeightDefinition.g:6849:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
+			// InternalWeightDefinition.g:6853:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
 			int cnt20=0;
 			loop20:
 			while (true) {
@@ -2451,8 +2451,8 @@ public class InternalWeightDefinitionLexer extends Lexer {
 		try {
 			int _type = RULE_ANY_OTHER;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// InternalWeightDefinition.g:6851:16: ( . )
-			// InternalWeightDefinition.g:6851:18: .
+			// InternalWeightDefinition.g:6855:16: ( . )
+			// InternalWeightDefinition.g:6855:18: .
 			{
 			matchAny(); 
 			}

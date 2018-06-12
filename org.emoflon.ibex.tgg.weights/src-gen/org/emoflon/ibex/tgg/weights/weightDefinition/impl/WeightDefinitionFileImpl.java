@@ -35,7 +35,7 @@ import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionPackage;
  * <ul>
  *   <li>{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightDefinitionFileImpl#getImports <em>Imports</em>}</li>
  *   <li>{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightDefinitionFileImpl#getWeigthDefinitions <em>Weigth Definitions</em>}</li>
- *   <li>{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightDefinitionFileImpl#getDefault <em>Default</em>}</li>
+ *   <li>{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightDefinitionFileImpl#getDefaultCalc <em>Default Calc</em>}</li>
  *   <li>{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightDefinitionFileImpl#getHelperFuntions <em>Helper Funtions</em>}</li>
  * </ul>
  *
@@ -64,14 +64,14 @@ public class WeightDefinitionFileImpl extends MinimalEObjectImpl.Container imple
   protected EList<XExpression> weigthDefinitions;
 
   /**
-   * The cached value of the '{@link #getDefault() <em>Default</em>}' containment reference.
+   * The cached value of the '{@link #getDefaultCalc() <em>Default Calc</em>}' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getDefault()
+   * @see #getDefaultCalc()
    * @generated
    * @ordered
    */
-  protected XExpression default_;
+  protected EList<XExpression> defaultCalc;
 
   /**
    * The cached value of the '{@link #getHelperFuntions() <em>Helper Funtions</em>}' containment reference list.
@@ -171,47 +171,13 @@ public class WeightDefinitionFileImpl extends MinimalEObjectImpl.Container imple
    * <!-- end-user-doc -->
    * @generated
    */
-  public XExpression getDefault()
+  public EList<XExpression> getDefaultCalc()
   {
-    return default_;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public NotificationChain basicSetDefault(XExpression newDefault, NotificationChain msgs)
-  {
-    XExpression oldDefault = default_;
-    default_ = newDefault;
-    if (eNotificationRequired())
+    if (defaultCalc == null)
     {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__DEFAULT, oldDefault, newDefault);
-      if (msgs == null) msgs = notification; else msgs.add(notification);
+      defaultCalc = new EObjectContainmentEList<XExpression>(XExpression.class, this, WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__DEFAULT_CALC);
     }
-    return msgs;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setDefault(XExpression newDefault)
-  {
-    if (newDefault != default_)
-    {
-      NotificationChain msgs = null;
-      if (default_ != null)
-        msgs = ((InternalEObject)default_).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__DEFAULT, null, msgs);
-      if (newDefault != null)
-        msgs = ((InternalEObject)newDefault).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__DEFAULT, null, msgs);
-      msgs = basicSetDefault(newDefault, msgs);
-      if (msgs != null) msgs.dispatch();
-    }
-    else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__DEFAULT, newDefault, newDefault));
+    return defaultCalc;
   }
 
   /**
@@ -242,8 +208,8 @@ public class WeightDefinitionFileImpl extends MinimalEObjectImpl.Container imple
         return basicSetImports(null, msgs);
       case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__WEIGTH_DEFINITIONS:
         return ((InternalEList<?>)getWeigthDefinitions()).basicRemove(otherEnd, msgs);
-      case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__DEFAULT:
-        return basicSetDefault(null, msgs);
+      case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__DEFAULT_CALC:
+        return ((InternalEList<?>)getDefaultCalc()).basicRemove(otherEnd, msgs);
       case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__HELPER_FUNTIONS:
         return ((InternalEList<?>)getHelperFuntions()).basicRemove(otherEnd, msgs);
     }
@@ -264,8 +230,8 @@ public class WeightDefinitionFileImpl extends MinimalEObjectImpl.Container imple
         return getImports();
       case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__WEIGTH_DEFINITIONS:
         return getWeigthDefinitions();
-      case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__DEFAULT:
-        return getDefault();
+      case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__DEFAULT_CALC:
+        return getDefaultCalc();
       case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__HELPER_FUNTIONS:
         return getHelperFuntions();
     }
@@ -290,8 +256,9 @@ public class WeightDefinitionFileImpl extends MinimalEObjectImpl.Container imple
         getWeigthDefinitions().clear();
         getWeigthDefinitions().addAll((Collection<? extends XExpression>)newValue);
         return;
-      case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__DEFAULT:
-        setDefault((XExpression)newValue);
+      case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__DEFAULT_CALC:
+        getDefaultCalc().clear();
+        getDefaultCalc().addAll((Collection<? extends XExpression>)newValue);
         return;
       case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__HELPER_FUNTIONS:
         getHelperFuntions().clear();
@@ -317,8 +284,8 @@ public class WeightDefinitionFileImpl extends MinimalEObjectImpl.Container imple
       case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__WEIGTH_DEFINITIONS:
         getWeigthDefinitions().clear();
         return;
-      case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__DEFAULT:
-        setDefault((XExpression)null);
+      case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__DEFAULT_CALC:
+        getDefaultCalc().clear();
         return;
       case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__HELPER_FUNTIONS:
         getHelperFuntions().clear();
@@ -341,8 +308,8 @@ public class WeightDefinitionFileImpl extends MinimalEObjectImpl.Container imple
         return imports != null;
       case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__WEIGTH_DEFINITIONS:
         return weigthDefinitions != null && !weigthDefinitions.isEmpty();
-      case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__DEFAULT:
-        return default_ != null;
+      case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__DEFAULT_CALC:
+        return defaultCalc != null && !defaultCalc.isEmpty();
       case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__HELPER_FUNTIONS:
         return helperFuntions != null && !helperFuntions.isEmpty();
     }

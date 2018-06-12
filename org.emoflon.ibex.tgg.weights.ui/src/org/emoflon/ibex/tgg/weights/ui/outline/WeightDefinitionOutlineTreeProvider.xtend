@@ -7,23 +7,39 @@ import org.eclipse.xtext.xbase.ui.outline.XbaseOutlineTreeProvider
 import org.emoflon.ibex.tgg.weights.weightDefinition.RuleWeightDefinition
 import org.emoflon.ibex.tgg.weights.weightDefinition.DefaultCalculation
 import org.emoflon.ibex.tgg.weights.weightDefinition.HelperFunction
+import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile
+import org.eclipse.xtext.ui.editor.outline.impl.DocumentRootNode
+import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionPackage
 
 /**
  * Customization of the default outline structure.
- *
+ * 
  * See https://www.eclipse.org/Xtext/documentation/310_eclipse_support.html#outline
  */
 class WeightDefinitionOutlineTreeProvider extends XbaseOutlineTreeProvider {
-	
+
 	def _isLeaf(RuleWeightDefinition ruleDef) {
 		true
 	}
-	
+
 	def _isLeaf(DefaultCalculation defaultCalc) {
 		true
 	}
-	
+
 	def _isLeaf(HelperFunction helperFunc) {
 		true
+	}
+
+	def _createChildren(DocumentRootNode parentNode, WeightDefinitionFile file) {
+		createEObjectNode(parentNode, file.imports)
+		createEStructuralFeatureNode(parentNode, file,
+			WeightDefinitionPackage.Literals.WEIGHT_DEFINITION_FILE__DEFAULT_CALC, imageDispatcher.invoke(file),
+			"Default Weight", false);
+		createEStructuralFeatureNode(parentNode, file,
+			WeightDefinitionPackage.Literals.WEIGHT_DEFINITION_FILE__WEIGTH_DEFINITIONS, imageDispatcher.invoke(file),
+			"Rule Weight", false);
+		createEStructuralFeatureNode(parentNode, file,
+			WeightDefinitionPackage.Literals.WEIGHT_DEFINITION_FILE__HELPER_FUNTIONS, imageDispatcher.invoke(file),
+			"Helper Functions", false);
 	}
 }

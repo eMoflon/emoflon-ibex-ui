@@ -2115,6 +2115,33 @@ finally {
 	restoreStackSize(stackSize);
 }
 
+rule__WeightDefinitionFile__Alternatives_1
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	(
+		{ before(grammarAccess.getWeightDefinitionFileAccess().getWeigthDefinitionsAssignment_1_0()); }
+		(rule__WeightDefinitionFile__WeigthDefinitionsAssignment_1_0)
+		{ after(grammarAccess.getWeightDefinitionFileAccess().getWeigthDefinitionsAssignment_1_0()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getWeightDefinitionFileAccess().getDefaultCalcAssignment_1_1()); }
+		(rule__WeightDefinitionFile__DefaultCalcAssignment_1_1)
+		{ after(grammarAccess.getWeightDefinitionFileAccess().getDefaultCalcAssignment_1_1()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getWeightDefinitionFileAccess().getHelperFuntionsAssignment_1_2()); }
+		(rule__WeightDefinitionFile__HelperFuntionsAssignment_1_2)
+		{ after(grammarAccess.getWeightDefinitionFileAccess().getHelperFuntionsAssignment_1_2()); }
+	)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
 rule__XAssignment__Alternatives
 	@init {
 		int stackSize = keepStackSize();
@@ -3225,7 +3252,6 @@ rule__WeightDefinitionFile__Group__1
 	}
 :
 	rule__WeightDefinitionFile__Group__1__Impl
-	rule__WeightDefinitionFile__Group__2
 ;
 finally {
 	restoreStackSize(stackSize);
@@ -3237,62 +3263,9 @@ rule__WeightDefinitionFile__Group__1__Impl
 	}
 :
 (
-	{ before(grammarAccess.getWeightDefinitionFileAccess().getWeigthDefinitionsAssignment_1()); }
-	(rule__WeightDefinitionFile__WeigthDefinitionsAssignment_1)*
-	{ after(grammarAccess.getWeightDefinitionFileAccess().getWeigthDefinitionsAssignment_1()); }
-)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__WeightDefinitionFile__Group__2
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-	rule__WeightDefinitionFile__Group__2__Impl
-	rule__WeightDefinitionFile__Group__3
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__WeightDefinitionFile__Group__2__Impl
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-(
-	{ before(grammarAccess.getWeightDefinitionFileAccess().getDefaultAssignment_2()); }
-	(rule__WeightDefinitionFile__DefaultAssignment_2)?
-	{ after(grammarAccess.getWeightDefinitionFileAccess().getDefaultAssignment_2()); }
-)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__WeightDefinitionFile__Group__3
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-	rule__WeightDefinitionFile__Group__3__Impl
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__WeightDefinitionFile__Group__3__Impl
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-(
-	{ before(grammarAccess.getWeightDefinitionFileAccess().getHelperFuntionsAssignment_3()); }
-	(rule__WeightDefinitionFile__HelperFuntionsAssignment_3)*
-	{ after(grammarAccess.getWeightDefinitionFileAccess().getHelperFuntionsAssignment_3()); }
+	{ before(grammarAccess.getWeightDefinitionFileAccess().getAlternatives_1()); }
+	(rule__WeightDefinitionFile__Alternatives_1)*
+	{ after(grammarAccess.getWeightDefinitionFileAccess().getAlternatives_1()); }
 )
 ;
 finally {
@@ -15634,45 +15607,45 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__WeightDefinitionFile__WeigthDefinitionsAssignment_1
+rule__WeightDefinitionFile__WeigthDefinitionsAssignment_1_0
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getWeightDefinitionFileAccess().getWeigthDefinitionsRuleWeightDefinitionParserRuleCall_1_0()); }
+		{ before(grammarAccess.getWeightDefinitionFileAccess().getWeigthDefinitionsRuleWeightDefinitionParserRuleCall_1_0_0()); }
 		ruleRuleWeightDefinition
-		{ after(grammarAccess.getWeightDefinitionFileAccess().getWeigthDefinitionsRuleWeightDefinitionParserRuleCall_1_0()); }
+		{ after(grammarAccess.getWeightDefinitionFileAccess().getWeigthDefinitionsRuleWeightDefinitionParserRuleCall_1_0_0()); }
 	)
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__WeightDefinitionFile__DefaultAssignment_2
+rule__WeightDefinitionFile__DefaultCalcAssignment_1_1
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getWeightDefinitionFileAccess().getDefaultDefaultCalculationParserRuleCall_2_0()); }
+		{ before(grammarAccess.getWeightDefinitionFileAccess().getDefaultCalcDefaultCalculationParserRuleCall_1_1_0()); }
 		ruleDefaultCalculation
-		{ after(grammarAccess.getWeightDefinitionFileAccess().getDefaultDefaultCalculationParserRuleCall_2_0()); }
+		{ after(grammarAccess.getWeightDefinitionFileAccess().getDefaultCalcDefaultCalculationParserRuleCall_1_1_0()); }
 	)
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__WeightDefinitionFile__HelperFuntionsAssignment_3
+rule__WeightDefinitionFile__HelperFuntionsAssignment_1_2
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getWeightDefinitionFileAccess().getHelperFuntionsHelperFuntionParserRuleCall_3_0()); }
+		{ before(grammarAccess.getWeightDefinitionFileAccess().getHelperFuntionsHelperFuntionParserRuleCall_1_2_0()); }
 		ruleHelperFuntion
-		{ after(grammarAccess.getWeightDefinitionFileAccess().getHelperFuntionsHelperFuntionParserRuleCall_3_0()); }
+		{ after(grammarAccess.getWeightDefinitionFileAccess().getHelperFuntionsHelperFuntionParserRuleCall_1_2_0()); }
 	)
 ;
 finally {

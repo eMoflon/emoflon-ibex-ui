@@ -24,6 +24,9 @@ import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionPackage
  */
 class WeightDefinitionScopeProvider extends AbstractWeightDefinitionScopeProvider {
 
+	/**
+	 * Cached imported resource
+	 */
 	var Resource importedTGG
 
 	override getScope(EObject context, EReference reference) {
@@ -33,11 +36,17 @@ class WeightDefinitionScopeProvider extends AbstractWeightDefinitionScopeProvide
 		return super.getScope(context, reference)
 	}
 
+	/**
+	 * Checks if the requested scope is the rule reference
+	 */
 	def isRuleWeightDefinition(EObject context, EReference reference) {
 		return context instanceof RuleWeightDefinition &&
 			reference == WeightDefinitionPackage.Literals.RULE_WEIGHT_DEFINITION__RULE
 	}
 
+	/**
+	 * Generates the scope for rule references by checking which rules exist in the imported TGG
+	 */
 	def getScopeForRuleWeightDefinition(EObject context, EReference reference) {
 		val importUri = (context.eContainer as WeightDefinitionFile).imports.importURI
 		val uri = URI.createURI(importUri);
@@ -55,7 +64,4 @@ class WeightDefinitionScopeProvider extends AbstractWeightDefinitionScopeProvide
 				.toList
 		);
 	}
-//	
-//	override createLocalVarScope(IScope parentScope,
-//			LocalVariableScopeContext scopeContext) {
 }

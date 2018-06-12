@@ -97,59 +97,63 @@ ruleWeightDefinitionFile returns [EObject current=null]
 		)
 		(
 			(
-				{
-					newCompositeNode(grammarAccess.getWeightDefinitionFileAccess().getWeigthDefinitionsRuleWeightDefinitionParserRuleCall_1_0());
-				}
-				lv_weigthDefinitions_1_0=ruleRuleWeightDefinition
-				{
-					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getWeightDefinitionFileRule());
+				(
+					{
+						newCompositeNode(grammarAccess.getWeightDefinitionFileAccess().getWeigthDefinitionsRuleWeightDefinitionParserRuleCall_1_0_0());
 					}
-					add(
-						$current,
-						"weigthDefinitions",
-						lv_weigthDefinitions_1_0,
-						"org.emoflon.ibex.tgg.weights.WeightDefinition.RuleWeightDefinition");
-					afterParserOrEnumRuleCall();
-				}
+					lv_weigthDefinitions_1_0=ruleRuleWeightDefinition
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getWeightDefinitionFileRule());
+						}
+						add(
+							$current,
+							"weigthDefinitions",
+							lv_weigthDefinitions_1_0,
+							"org.emoflon.ibex.tgg.weights.WeightDefinition.RuleWeightDefinition");
+						afterParserOrEnumRuleCall();
+					}
+				)
 			)
-		)*
-		(
+			    |
 			(
-				{
-					newCompositeNode(grammarAccess.getWeightDefinitionFileAccess().getDefaultDefaultCalculationParserRuleCall_2_0());
-				}
-				lv_default_2_0=ruleDefaultCalculation
-				{
-					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getWeightDefinitionFileRule());
+				(
+					{
+						newCompositeNode(grammarAccess.getWeightDefinitionFileAccess().getDefaultCalcDefaultCalculationParserRuleCall_1_1_0());
 					}
-					set(
-						$current,
-						"default",
-						lv_default_2_0,
-						"org.emoflon.ibex.tgg.weights.WeightDefinition.DefaultCalculation");
-					afterParserOrEnumRuleCall();
-				}
+					lv_defaultCalc_2_0=ruleDefaultCalculation
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getWeightDefinitionFileRule());
+						}
+						add(
+							$current,
+							"defaultCalc",
+							lv_defaultCalc_2_0,
+							"org.emoflon.ibex.tgg.weights.WeightDefinition.DefaultCalculation");
+						afterParserOrEnumRuleCall();
+					}
+				)
 			)
-		)?
-		(
+			    |
 			(
-				{
-					newCompositeNode(grammarAccess.getWeightDefinitionFileAccess().getHelperFuntionsHelperFuntionParserRuleCall_3_0());
-				}
-				lv_helperFuntions_3_0=ruleHelperFuntion
-				{
-					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getWeightDefinitionFileRule());
+				(
+					{
+						newCompositeNode(grammarAccess.getWeightDefinitionFileAccess().getHelperFuntionsHelperFuntionParserRuleCall_1_2_0());
 					}
-					add(
-						$current,
-						"helperFuntions",
-						lv_helperFuntions_3_0,
-						"org.emoflon.ibex.tgg.weights.WeightDefinition.HelperFuntion");
-					afterParserOrEnumRuleCall();
-				}
+					lv_helperFuntions_3_0=ruleHelperFuntion
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getWeightDefinitionFileRule());
+						}
+						add(
+							$current,
+							"helperFuntions",
+							lv_helperFuntions_3_0,
+							"org.emoflon.ibex.tgg.weights.WeightDefinition.HelperFuntion");
+						afterParserOrEnumRuleCall();
+					}
+				)
 			)
 		)*
 	)

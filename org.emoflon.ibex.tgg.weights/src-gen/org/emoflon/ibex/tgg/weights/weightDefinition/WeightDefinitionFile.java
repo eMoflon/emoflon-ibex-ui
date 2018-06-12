@@ -20,7 +20,7 @@ import org.eclipse.xtext.xbase.XExpression;
  * <ul>
  *   <li>{@link org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile#getImports <em>Imports</em>}</li>
  *   <li>{@link org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile#getWeigthDefinitions <em>Weigth Definitions</em>}</li>
- *   <li>{@link org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile#getDefault <em>Default</em>}</li>
+ *   <li>{@link org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile#getDefaultCalc <em>Default Calc</em>}</li>
  *   <li>{@link org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile#getHelperFuntions <em>Helper Funtions</em>}</li>
  * </ul>
  *
@@ -73,30 +73,20 @@ public interface WeightDefinitionFile extends EObject
   EList<XExpression> getWeigthDefinitions();
 
   /**
-   * Returns the value of the '<em><b>Default</b></em>' containment reference.
+   * Returns the value of the '<em><b>Default Calc</b></em>' containment reference list.
+   * The list contents are of type {@link org.eclipse.xtext.xbase.XExpression}.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Default</em>' containment reference isn't clear,
+   * If the meaning of the '<em>Default Calc</em>' containment reference list isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Default</em>' containment reference.
-   * @see #setDefault(XExpression)
-   * @see org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionPackage#getWeightDefinitionFile_Default()
+   * @return the value of the '<em>Default Calc</em>' containment reference list.
+   * @see org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionPackage#getWeightDefinitionFile_DefaultCalc()
    * @model containment="true"
    * @generated
    */
-  XExpression getDefault();
-
-  /**
-   * Sets the value of the '{@link org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile#getDefault <em>Default</em>}' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Default</em>' containment reference.
-   * @see #getDefault()
-   * @generated
-   */
-  void setDefault(XExpression value);
+  EList<XExpression> getDefaultCalc();
 
   /**
    * Returns the value of the '<em><b>Helper Funtions</b></em>' containment reference list.

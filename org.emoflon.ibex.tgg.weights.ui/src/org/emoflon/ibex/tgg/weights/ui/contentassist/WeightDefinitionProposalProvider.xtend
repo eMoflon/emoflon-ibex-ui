@@ -44,7 +44,7 @@ class WeightDefinitionProposalProvider extends AbstractWeightDefinitionProposalP
 			}
 		];
 	}
-
+	
 	def checkIfTGGFile(URI uri) {
 		val importedTGG = new ResourceSetImpl().createResource(uri, ContentHandler.UNSPECIFIED_CONTENT_TYPE);
 		importedTGG.load(null);

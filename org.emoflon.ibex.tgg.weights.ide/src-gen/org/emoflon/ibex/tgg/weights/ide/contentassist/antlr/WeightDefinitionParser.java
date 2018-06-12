@@ -31,6 +31,7 @@ public class WeightDefinitionParser extends AbstractContentAssistParser {
 		}
 		
 		private static void init(ImmutableMap.Builder<AbstractElement, String> builder, WeightDefinitionGrammarAccess grammarAccess) {
+			builder.put(grammarAccess.getWeightDefinitionFileAccess().getAlternatives_1(), "rule__WeightDefinitionFile__Alternatives_1");
 			builder.put(grammarAccess.getXAssignmentAccess().getAlternatives(), "rule__XAssignment__Alternatives");
 			builder.put(grammarAccess.getOpMultiAssignAccess().getAlternatives(), "rule__OpMultiAssign__Alternatives");
 			builder.put(grammarAccess.getOpEqualityAccess().getAlternatives(), "rule__OpEquality__Alternatives");
@@ -259,9 +260,9 @@ public class WeightDefinitionParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getXImportDeclarationAccess().getGroup_1_0(), "rule__XImportDeclaration__Group_1_0__0");
 			builder.put(grammarAccess.getQualifiedNameInStaticImportAccess().getGroup(), "rule__QualifiedNameInStaticImport__Group__0");
 			builder.put(grammarAccess.getWeightDefinitionFileAccess().getImportsAssignment_0(), "rule__WeightDefinitionFile__ImportsAssignment_0");
-			builder.put(grammarAccess.getWeightDefinitionFileAccess().getWeigthDefinitionsAssignment_1(), "rule__WeightDefinitionFile__WeigthDefinitionsAssignment_1");
-			builder.put(grammarAccess.getWeightDefinitionFileAccess().getDefaultAssignment_2(), "rule__WeightDefinitionFile__DefaultAssignment_2");
-			builder.put(grammarAccess.getWeightDefinitionFileAccess().getHelperFuntionsAssignment_3(), "rule__WeightDefinitionFile__HelperFuntionsAssignment_3");
+			builder.put(grammarAccess.getWeightDefinitionFileAccess().getWeigthDefinitionsAssignment_1_0(), "rule__WeightDefinitionFile__WeigthDefinitionsAssignment_1_0");
+			builder.put(grammarAccess.getWeightDefinitionFileAccess().getDefaultCalcAssignment_1_1(), "rule__WeightDefinitionFile__DefaultCalcAssignment_1_1");
+			builder.put(grammarAccess.getWeightDefinitionFileAccess().getHelperFuntionsAssignment_1_2(), "rule__WeightDefinitionFile__HelperFuntionsAssignment_1_2");
 			builder.put(grammarAccess.getImportAccess().getImportURIAssignment_1(), "rule__Import__ImportURIAssignment_1");
 			builder.put(grammarAccess.getRuleWeightDefinitionAccess().getRuleAssignment_2(), "rule__RuleWeightDefinition__RuleAssignment_2");
 			builder.put(grammarAccess.getRuleWeightDefinitionAccess().getWeightCalcAssignment_3(), "rule__RuleWeightDefinition__WeightCalcAssignment_3");

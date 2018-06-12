@@ -9,7 +9,7 @@
     <genClasses ecoreClass="WeightDefinition.ecore#//WeightDefinitionFile">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference WeightDefinition.ecore#//WeightDefinitionFile/imports"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference WeightDefinition.ecore#//WeightDefinitionFile/weigthDefinitions"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference WeightDefinition.ecore#//WeightDefinitionFile/default"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference WeightDefinition.ecore#//WeightDefinitionFile/defaultCalc"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference WeightDefinition.ecore#//WeightDefinitionFile/helperFuntions"/>
     </genClasses>
     <genClasses ecoreClass="WeightDefinition.ecore#//Import">

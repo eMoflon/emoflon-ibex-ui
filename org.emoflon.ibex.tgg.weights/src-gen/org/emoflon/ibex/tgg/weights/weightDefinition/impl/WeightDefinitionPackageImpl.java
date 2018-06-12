@@ -188,7 +188,7 @@ public class WeightDefinitionPackageImpl extends EPackageImpl implements WeightD
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getWeightDefinitionFile_Default()
+  public EReference getWeightDefinitionFile_DefaultCalc()
   {
     return (EReference)weightDefinitionFileEClass.getEStructuralFeatures().get(2);
   }
@@ -406,7 +406,7 @@ public class WeightDefinitionPackageImpl extends EPackageImpl implements WeightD
     weightDefinitionFileEClass = createEClass(WEIGHT_DEFINITION_FILE);
     createEReference(weightDefinitionFileEClass, WEIGHT_DEFINITION_FILE__IMPORTS);
     createEReference(weightDefinitionFileEClass, WEIGHT_DEFINITION_FILE__WEIGTH_DEFINITIONS);
-    createEReference(weightDefinitionFileEClass, WEIGHT_DEFINITION_FILE__DEFAULT);
+    createEReference(weightDefinitionFileEClass, WEIGHT_DEFINITION_FILE__DEFAULT_CALC);
     createEReference(weightDefinitionFileEClass, WEIGHT_DEFINITION_FILE__HELPER_FUNTIONS);
 
     importEClass = createEClass(IMPORT);
@@ -477,7 +477,7 @@ public class WeightDefinitionPackageImpl extends EPackageImpl implements WeightD
     initEClass(weightDefinitionFileEClass, WeightDefinitionFile.class, "WeightDefinitionFile", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getWeightDefinitionFile_Imports(), this.getImport(), null, "imports", null, 0, 1, WeightDefinitionFile.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getWeightDefinitionFile_WeigthDefinitions(), theXbasePackage.getXExpression(), null, "weigthDefinitions", null, 0, -1, WeightDefinitionFile.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getWeightDefinitionFile_Default(), theXbasePackage.getXExpression(), null, "default", null, 0, 1, WeightDefinitionFile.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getWeightDefinitionFile_DefaultCalc(), theXbasePackage.getXExpression(), null, "defaultCalc", null, 0, -1, WeightDefinitionFile.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getWeightDefinitionFile_HelperFuntions(), theXbasePackage.getXExpression(), null, "helperFuntions", null, 0, -1, WeightDefinitionFile.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(importEClass, Import.class, "Import", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

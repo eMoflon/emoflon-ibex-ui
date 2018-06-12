@@ -7,6 +7,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import java.util.List;
 import org.eclipse.xtext.Action;
+import org.eclipse.xtext.Alternatives;
 import org.eclipse.xtext.Assignment;
 import org.eclipse.xtext.CrossReference;
 import org.eclipse.xtext.Grammar;
@@ -29,21 +30,22 @@ public class WeightDefinitionGrammarAccess extends AbstractGrammarElementFinder 
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Assignment cImportsAssignment_0 = (Assignment)cGroup.eContents().get(0);
 		private final RuleCall cImportsImportParserRuleCall_0_0 = (RuleCall)cImportsAssignment_0.eContents().get(0);
-		private final Assignment cWeigthDefinitionsAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cWeigthDefinitionsRuleWeightDefinitionParserRuleCall_1_0 = (RuleCall)cWeigthDefinitionsAssignment_1.eContents().get(0);
-		private final Assignment cDefaultAssignment_2 = (Assignment)cGroup.eContents().get(2);
-		private final RuleCall cDefaultDefaultCalculationParserRuleCall_2_0 = (RuleCall)cDefaultAssignment_2.eContents().get(0);
-		private final Assignment cHelperFuntionsAssignment_3 = (Assignment)cGroup.eContents().get(3);
-		private final RuleCall cHelperFuntionsHelperFuntionParserRuleCall_3_0 = (RuleCall)cHelperFuntionsAssignment_3.eContents().get(0);
+		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
+		private final Assignment cWeigthDefinitionsAssignment_1_0 = (Assignment)cAlternatives_1.eContents().get(0);
+		private final RuleCall cWeigthDefinitionsRuleWeightDefinitionParserRuleCall_1_0_0 = (RuleCall)cWeigthDefinitionsAssignment_1_0.eContents().get(0);
+		private final Assignment cDefaultCalcAssignment_1_1 = (Assignment)cAlternatives_1.eContents().get(1);
+		private final RuleCall cDefaultCalcDefaultCalculationParserRuleCall_1_1_0 = (RuleCall)cDefaultCalcAssignment_1_1.eContents().get(0);
+		private final Assignment cHelperFuntionsAssignment_1_2 = (Assignment)cAlternatives_1.eContents().get(2);
+		private final RuleCall cHelperFuntionsHelperFuntionParserRuleCall_1_2_0 = (RuleCall)cHelperFuntionsAssignment_1_2.eContents().get(0);
 		
 		//WeightDefinitionFile:
-		//	imports=Import
-		//	weigthDefinitions+=RuleWeightDefinition*
-		//	default=DefaultCalculation?
-		//	helperFuntions+=HelperFuntion*;
+		//	imports=Import (weigthDefinitions+=RuleWeightDefinition
+		//	| defaultCalc+=DefaultCalculation
+		//	| helperFuntions+=HelperFuntion)*;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//imports=Import weigthDefinitions+=RuleWeightDefinition* default=DefaultCalculation? helperFuntions+=HelperFuntion*
+		//imports=Import (weigthDefinitions+=RuleWeightDefinition | defaultCalc+=DefaultCalculation |
+		//helperFuntions+=HelperFuntion)*
 		public Group getGroup() { return cGroup; }
 		
 		//imports=Import
@@ -52,23 +54,26 @@ public class WeightDefinitionGrammarAccess extends AbstractGrammarElementFinder 
 		//Import
 		public RuleCall getImportsImportParserRuleCall_0_0() { return cImportsImportParserRuleCall_0_0; }
 		
-		//weigthDefinitions+=RuleWeightDefinition*
-		public Assignment getWeigthDefinitionsAssignment_1() { return cWeigthDefinitionsAssignment_1; }
+		//(weigthDefinitions+=RuleWeightDefinition | defaultCalc+=DefaultCalculation | helperFuntions+=HelperFuntion)*
+		public Alternatives getAlternatives_1() { return cAlternatives_1; }
+		
+		//weigthDefinitions+=RuleWeightDefinition
+		public Assignment getWeigthDefinitionsAssignment_1_0() { return cWeigthDefinitionsAssignment_1_0; }
 		
 		//RuleWeightDefinition
-		public RuleCall getWeigthDefinitionsRuleWeightDefinitionParserRuleCall_1_0() { return cWeigthDefinitionsRuleWeightDefinitionParserRuleCall_1_0; }
+		public RuleCall getWeigthDefinitionsRuleWeightDefinitionParserRuleCall_1_0_0() { return cWeigthDefinitionsRuleWeightDefinitionParserRuleCall_1_0_0; }
 		
-		//default=DefaultCalculation?
-		public Assignment getDefaultAssignment_2() { return cDefaultAssignment_2; }
+		//defaultCalc+=DefaultCalculation
+		public Assignment getDefaultCalcAssignment_1_1() { return cDefaultCalcAssignment_1_1; }
 		
 		//DefaultCalculation
-		public RuleCall getDefaultDefaultCalculationParserRuleCall_2_0() { return cDefaultDefaultCalculationParserRuleCall_2_0; }
+		public RuleCall getDefaultCalcDefaultCalculationParserRuleCall_1_1_0() { return cDefaultCalcDefaultCalculationParserRuleCall_1_1_0; }
 		
-		//helperFuntions+=HelperFuntion*
-		public Assignment getHelperFuntionsAssignment_3() { return cHelperFuntionsAssignment_3; }
+		//helperFuntions+=HelperFuntion
+		public Assignment getHelperFuntionsAssignment_1_2() { return cHelperFuntionsAssignment_1_2; }
 		
 		//HelperFuntion
-		public RuleCall getHelperFuntionsHelperFuntionParserRuleCall_3_0() { return cHelperFuntionsHelperFuntionParserRuleCall_3_0; }
+		public RuleCall getHelperFuntionsHelperFuntionParserRuleCall_1_2_0() { return cHelperFuntionsHelperFuntionParserRuleCall_1_2_0; }
 	}
 	public class ImportElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.weights.WeightDefinition.Import");
@@ -362,10 +367,9 @@ public class WeightDefinitionGrammarAccess extends AbstractGrammarElementFinder 
 
 	
 	//WeightDefinitionFile:
-	//	imports=Import
-	//	weigthDefinitions+=RuleWeightDefinition*
-	//	default=DefaultCalculation?
-	//	helperFuntions+=HelperFuntion*;
+	//	imports=Import (weigthDefinitions+=RuleWeightDefinition
+	//	| defaultCalc+=DefaultCalculation
+	//	| helperFuntions+=HelperFuntion)*;
 	public WeightDefinitionFileElements getWeightDefinitionFileAccess() {
 		return pWeightDefinitionFile;
 	}
