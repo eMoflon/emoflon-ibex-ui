@@ -7,27 +7,30 @@
   <genPackages prefix="WeightDefinition" basePackage="org.emoflon.ibex.tgg.weights"
       disposableProviderFactory="true" fileExtensions="tggw" ecorePackage="WeightDefinition.ecore#/">
     <genClasses ecoreClass="WeightDefinition.ecore#//WeightDefinitionFile">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference WeightDefinition.ecore#//WeightDefinitionFile/imports"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference WeightDefinition.ecore#//WeightDefinitionFile/importedTgg"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference WeightDefinition.ecore#//WeightDefinitionFile/weigthDefinitions"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference WeightDefinition.ecore#//WeightDefinitionFile/defaultCalc"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference WeightDefinition.ecore#//WeightDefinitionFile/helperFuntions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference WeightDefinition.ecore#//WeightDefinitionFile/variables"/>
     </genClasses>
     <genClasses ecoreClass="WeightDefinition.ecore#//Import">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute WeightDefinition.ecore#//Import/importURI"/>
     </genClasses>
-    <genClasses ecoreClass="WeightDefinition.ecore#//HelperFuncParameter">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference WeightDefinition.ecore#//HelperFuncParameter/parameterType"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute WeightDefinition.ecore#//HelperFuncParameter/name"/>
+    <genClasses ecoreClass="WeightDefinition.ecore#//VariableDeclaration">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference WeightDefinition.ecore#//VariableDeclaration/parameterType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute WeightDefinition.ecore#//VariableDeclaration/name"/>
     </genClasses>
     <genClasses ecoreClass="WeightDefinition.ecore#//RuleWeightDefinition">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference WeightDefinition.ecore#//RuleWeightDefinition/rule"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference WeightDefinition.ecore#//RuleWeightDefinition/weightCalc"/>
     </genClasses>
-    <genClasses ecoreClass="WeightDefinition.ecore#//WeightCalculation">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference WeightDefinition.ecore#//WeightCalculation/calc"/>
-    </genClasses>
     <genClasses ecoreClass="WeightDefinition.ecore#//DefaultCalculation">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference WeightDefinition.ecore#//DefaultCalculation/calc"/>
+    </genClasses>
+    <genClasses ecoreClass="WeightDefinition.ecore#//HelperFuntion"/>
+    <genClasses ecoreClass="WeightDefinition.ecore#//HelperFuncParameter">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference WeightDefinition.ecore#//HelperFuncParameter/parameterType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute WeightDefinition.ecore#//HelperFuncParameter/name"/>
     </genClasses>
     <genClasses ecoreClass="WeightDefinition.ecore#//HelperFunction">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference WeightDefinition.ecore#//HelperFunction/returnType"/>

@@ -13,34 +13,35 @@ import "platform:/plugin/org.emoflon.ibex.tgg.core.language/model/Language.ecore
 generate weightDefinition "http://www.emoflon.org/ibex/tgg/weights/WeightDefinition"
 
 WeightDefinitionFile:
-	imports = Import
+	importedTgg = Import
 	(
 		weigthDefinitions+=RuleWeightDefinition
 		|defaultCalc += DefaultCalculation
 		|helperFuntions += HelperFuntion
+		|variables += VariableDeclaration
 	)*;
 
 Import:
 	'import' importURI=STRING
 ;
 
-RuleWeightDefinition returns xbase::XExpression:
-	{RuleWeightDefinition}
-	'rule' rule = [language::TGGRule]
-	weightCalc = WeightCalculation
-	;
-	
-WeightCalculation returns xbase::XExpression:
-	{WeightCalculation} calc = XBlockExpression
+VariableDeclaration:
+	'var' parameterType=JvmTypeReference name=ValidID
 ;
 
-DefaultCalculation returns xbase::XExpression:
+RuleWeightDefinition:
+	{RuleWeightDefinition}
+	'rule' rule = [language::TGGRule]
+	weightCalc = XBlockExpression
+	;
+
+DefaultCalculation:
 	{DefaultCalculation}
 	'default'
 	calc = XBlockExpression
 ;
 
-HelperFuntion returns xbase::XExpression:
+HelperFuntion:
 	{HelperFunction}
 	'function' 
 	returnType = JvmTypeReference

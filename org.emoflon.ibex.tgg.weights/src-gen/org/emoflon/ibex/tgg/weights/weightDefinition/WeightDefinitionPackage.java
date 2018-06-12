@@ -8,8 +8,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
-import org.eclipse.xtext.xbase.XbasePackage;
-
 /**
  * <!-- begin-user-doc -->
  * The <b>Package</b> for the model.
@@ -70,13 +68,13 @@ public interface WeightDefinitionPackage extends EPackage
   int WEIGHT_DEFINITION_FILE = 0;
 
   /**
-   * The feature id for the '<em><b>Imports</b></em>' containment reference.
+   * The feature id for the '<em><b>Imported Tgg</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int WEIGHT_DEFINITION_FILE__IMPORTS = 0;
+  int WEIGHT_DEFINITION_FILE__IMPORTED_TGG = 0;
 
   /**
    * The feature id for the '<em><b>Weigth Definitions</b></em>' containment reference list.
@@ -106,13 +104,22 @@ public interface WeightDefinitionPackage extends EPackage
   int WEIGHT_DEFINITION_FILE__HELPER_FUNTIONS = 3;
 
   /**
+   * The feature id for the '<em><b>Variables</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int WEIGHT_DEFINITION_FILE__VARIABLES = 4;
+
+  /**
    * The number of structural features of the '<em>File</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int WEIGHT_DEFINITION_FILE_FEATURE_COUNT = 4;
+  int WEIGHT_DEFINITION_FILE_FEATURE_COUNT = 5;
 
   /**
    * The meta object id for the '{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.ImportImpl <em>Import</em>}' class.
@@ -143,6 +150,127 @@ public interface WeightDefinitionPackage extends EPackage
   int IMPORT_FEATURE_COUNT = 1;
 
   /**
+   * The meta object id for the '{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.VariableDeclarationImpl <em>Variable Declaration</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.emoflon.ibex.tgg.weights.weightDefinition.impl.VariableDeclarationImpl
+   * @see org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightDefinitionPackageImpl#getVariableDeclaration()
+   * @generated
+   */
+  int VARIABLE_DECLARATION = 2;
+
+  /**
+   * The feature id for the '<em><b>Parameter Type</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int VARIABLE_DECLARATION__PARAMETER_TYPE = 0;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int VARIABLE_DECLARATION__NAME = 1;
+
+  /**
+   * The number of structural features of the '<em>Variable Declaration</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int VARIABLE_DECLARATION_FEATURE_COUNT = 2;
+
+  /**
+   * The meta object id for the '{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.RuleWeightDefinitionImpl <em>Rule Weight Definition</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.emoflon.ibex.tgg.weights.weightDefinition.impl.RuleWeightDefinitionImpl
+   * @see org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightDefinitionPackageImpl#getRuleWeightDefinition()
+   * @generated
+   */
+  int RULE_WEIGHT_DEFINITION = 3;
+
+  /**
+   * The feature id for the '<em><b>Rule</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RULE_WEIGHT_DEFINITION__RULE = 0;
+
+  /**
+   * The feature id for the '<em><b>Weight Calc</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RULE_WEIGHT_DEFINITION__WEIGHT_CALC = 1;
+
+  /**
+   * The number of structural features of the '<em>Rule Weight Definition</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RULE_WEIGHT_DEFINITION_FEATURE_COUNT = 2;
+
+  /**
+   * The meta object id for the '{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.DefaultCalculationImpl <em>Default Calculation</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.emoflon.ibex.tgg.weights.weightDefinition.impl.DefaultCalculationImpl
+   * @see org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightDefinitionPackageImpl#getDefaultCalculation()
+   * @generated
+   */
+  int DEFAULT_CALCULATION = 4;
+
+  /**
+   * The feature id for the '<em><b>Calc</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int DEFAULT_CALCULATION__CALC = 0;
+
+  /**
+   * The number of structural features of the '<em>Default Calculation</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int DEFAULT_CALCULATION_FEATURE_COUNT = 1;
+
+  /**
+   * The meta object id for the '{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.HelperFuntionImpl <em>Helper Funtion</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.emoflon.ibex.tgg.weights.weightDefinition.impl.HelperFuntionImpl
+   * @see org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightDefinitionPackageImpl#getHelperFuntion()
+   * @generated
+   */
+  int HELPER_FUNTION = 5;
+
+  /**
+   * The number of structural features of the '<em>Helper Funtion</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int HELPER_FUNTION_FEATURE_COUNT = 0;
+
+  /**
    * The meta object id for the '{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.HelperFuncParameterImpl <em>Helper Func Parameter</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -150,7 +278,7 @@ public interface WeightDefinitionPackage extends EPackage
    * @see org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightDefinitionPackageImpl#getHelperFuncParameter()
    * @generated
    */
-  int HELPER_FUNC_PARAMETER = 2;
+  int HELPER_FUNC_PARAMETER = 6;
 
   /**
    * The feature id for the '<em><b>Parameter Type</b></em>' containment reference.
@@ -180,99 +308,6 @@ public interface WeightDefinitionPackage extends EPackage
   int HELPER_FUNC_PARAMETER_FEATURE_COUNT = 2;
 
   /**
-   * The meta object id for the '{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.RuleWeightDefinitionImpl <em>Rule Weight Definition</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see org.emoflon.ibex.tgg.weights.weightDefinition.impl.RuleWeightDefinitionImpl
-   * @see org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightDefinitionPackageImpl#getRuleWeightDefinition()
-   * @generated
-   */
-  int RULE_WEIGHT_DEFINITION = 3;
-
-  /**
-   * The feature id for the '<em><b>Rule</b></em>' reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int RULE_WEIGHT_DEFINITION__RULE = XbasePackage.XEXPRESSION_FEATURE_COUNT + 0;
-
-  /**
-   * The feature id for the '<em><b>Weight Calc</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int RULE_WEIGHT_DEFINITION__WEIGHT_CALC = XbasePackage.XEXPRESSION_FEATURE_COUNT + 1;
-
-  /**
-   * The number of structural features of the '<em>Rule Weight Definition</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int RULE_WEIGHT_DEFINITION_FEATURE_COUNT = XbasePackage.XEXPRESSION_FEATURE_COUNT + 2;
-
-  /**
-   * The meta object id for the '{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightCalculationImpl <em>Weight Calculation</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightCalculationImpl
-   * @see org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightDefinitionPackageImpl#getWeightCalculation()
-   * @generated
-   */
-  int WEIGHT_CALCULATION = 4;
-
-  /**
-   * The feature id for the '<em><b>Calc</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int WEIGHT_CALCULATION__CALC = XbasePackage.XEXPRESSION_FEATURE_COUNT + 0;
-
-  /**
-   * The number of structural features of the '<em>Weight Calculation</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int WEIGHT_CALCULATION_FEATURE_COUNT = XbasePackage.XEXPRESSION_FEATURE_COUNT + 1;
-
-  /**
-   * The meta object id for the '{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.DefaultCalculationImpl <em>Default Calculation</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see org.emoflon.ibex.tgg.weights.weightDefinition.impl.DefaultCalculationImpl
-   * @see org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightDefinitionPackageImpl#getDefaultCalculation()
-   * @generated
-   */
-  int DEFAULT_CALCULATION = 5;
-
-  /**
-   * The feature id for the '<em><b>Calc</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int DEFAULT_CALCULATION__CALC = XbasePackage.XEXPRESSION_FEATURE_COUNT + 0;
-
-  /**
-   * The number of structural features of the '<em>Default Calculation</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int DEFAULT_CALCULATION_FEATURE_COUNT = XbasePackage.XEXPRESSION_FEATURE_COUNT + 1;
-
-  /**
    * The meta object id for the '{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.HelperFunctionImpl <em>Helper Function</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -280,7 +315,7 @@ public interface WeightDefinitionPackage extends EPackage
    * @see org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightDefinitionPackageImpl#getHelperFunction()
    * @generated
    */
-  int HELPER_FUNCTION = 6;
+  int HELPER_FUNCTION = 7;
 
   /**
    * The feature id for the '<em><b>Return Type</b></em>' containment reference.
@@ -289,7 +324,7 @@ public interface WeightDefinitionPackage extends EPackage
    * @generated
    * @ordered
    */
-  int HELPER_FUNCTION__RETURN_TYPE = XbasePackage.XEXPRESSION_FEATURE_COUNT + 0;
+  int HELPER_FUNCTION__RETURN_TYPE = HELPER_FUNTION_FEATURE_COUNT + 0;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -298,7 +333,7 @@ public interface WeightDefinitionPackage extends EPackage
    * @generated
    * @ordered
    */
-  int HELPER_FUNCTION__NAME = XbasePackage.XEXPRESSION_FEATURE_COUNT + 1;
+  int HELPER_FUNCTION__NAME = HELPER_FUNTION_FEATURE_COUNT + 1;
 
   /**
    * The feature id for the '<em><b>Params</b></em>' containment reference list.
@@ -307,7 +342,7 @@ public interface WeightDefinitionPackage extends EPackage
    * @generated
    * @ordered
    */
-  int HELPER_FUNCTION__PARAMS = XbasePackage.XEXPRESSION_FEATURE_COUNT + 2;
+  int HELPER_FUNCTION__PARAMS = HELPER_FUNTION_FEATURE_COUNT + 2;
 
   /**
    * The feature id for the '<em><b>Body</b></em>' containment reference.
@@ -316,7 +351,7 @@ public interface WeightDefinitionPackage extends EPackage
    * @generated
    * @ordered
    */
-  int HELPER_FUNCTION__BODY = XbasePackage.XEXPRESSION_FEATURE_COUNT + 3;
+  int HELPER_FUNCTION__BODY = HELPER_FUNTION_FEATURE_COUNT + 3;
 
   /**
    * The number of structural features of the '<em>Helper Function</em>' class.
@@ -325,7 +360,7 @@ public interface WeightDefinitionPackage extends EPackage
    * @generated
    * @ordered
    */
-  int HELPER_FUNCTION_FEATURE_COUNT = XbasePackage.XEXPRESSION_FEATURE_COUNT + 4;
+  int HELPER_FUNCTION_FEATURE_COUNT = HELPER_FUNTION_FEATURE_COUNT + 4;
 
 
   /**
@@ -339,15 +374,15 @@ public interface WeightDefinitionPackage extends EPackage
   EClass getWeightDefinitionFile();
 
   /**
-   * Returns the meta object for the containment reference '{@link org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile#getImports <em>Imports</em>}'.
+   * Returns the meta object for the containment reference '{@link org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile#getImportedTgg <em>Imported Tgg</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Imports</em>'.
-   * @see org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile#getImports()
+   * @return the meta object for the containment reference '<em>Imported Tgg</em>'.
+   * @see org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile#getImportedTgg()
    * @see #getWeightDefinitionFile()
    * @generated
    */
-  EReference getWeightDefinitionFile_Imports();
+  EReference getWeightDefinitionFile_ImportedTgg();
 
   /**
    * Returns the meta object for the containment reference list '{@link org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile#getWeigthDefinitions <em>Weigth Definitions</em>}'.
@@ -383,6 +418,17 @@ public interface WeightDefinitionPackage extends EPackage
   EReference getWeightDefinitionFile_HelperFuntions();
 
   /**
+   * Returns the meta object for the containment reference list '{@link org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile#getVariables <em>Variables</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Variables</em>'.
+   * @see org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile#getVariables()
+   * @see #getWeightDefinitionFile()
+   * @generated
+   */
+  EReference getWeightDefinitionFile_Variables();
+
+  /**
    * Returns the meta object for class '{@link org.emoflon.ibex.tgg.weights.weightDefinition.Import <em>Import</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -404,36 +450,36 @@ public interface WeightDefinitionPackage extends EPackage
   EAttribute getImport_ImportURI();
 
   /**
-   * Returns the meta object for class '{@link org.emoflon.ibex.tgg.weights.weightDefinition.HelperFuncParameter <em>Helper Func Parameter</em>}'.
+   * Returns the meta object for class '{@link org.emoflon.ibex.tgg.weights.weightDefinition.VariableDeclaration <em>Variable Declaration</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Helper Func Parameter</em>'.
-   * @see org.emoflon.ibex.tgg.weights.weightDefinition.HelperFuncParameter
+   * @return the meta object for class '<em>Variable Declaration</em>'.
+   * @see org.emoflon.ibex.tgg.weights.weightDefinition.VariableDeclaration
    * @generated
    */
-  EClass getHelperFuncParameter();
+  EClass getVariableDeclaration();
 
   /**
-   * Returns the meta object for the containment reference '{@link org.emoflon.ibex.tgg.weights.weightDefinition.HelperFuncParameter#getParameterType <em>Parameter Type</em>}'.
+   * Returns the meta object for the containment reference '{@link org.emoflon.ibex.tgg.weights.weightDefinition.VariableDeclaration#getParameterType <em>Parameter Type</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the containment reference '<em>Parameter Type</em>'.
-   * @see org.emoflon.ibex.tgg.weights.weightDefinition.HelperFuncParameter#getParameterType()
-   * @see #getHelperFuncParameter()
+   * @see org.emoflon.ibex.tgg.weights.weightDefinition.VariableDeclaration#getParameterType()
+   * @see #getVariableDeclaration()
    * @generated
    */
-  EReference getHelperFuncParameter_ParameterType();
+  EReference getVariableDeclaration_ParameterType();
 
   /**
-   * Returns the meta object for the attribute '{@link org.emoflon.ibex.tgg.weights.weightDefinition.HelperFuncParameter#getName <em>Name</em>}'.
+   * Returns the meta object for the attribute '{@link org.emoflon.ibex.tgg.weights.weightDefinition.VariableDeclaration#getName <em>Name</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the attribute '<em>Name</em>'.
-   * @see org.emoflon.ibex.tgg.weights.weightDefinition.HelperFuncParameter#getName()
-   * @see #getHelperFuncParameter()
+   * @see org.emoflon.ibex.tgg.weights.weightDefinition.VariableDeclaration#getName()
+   * @see #getVariableDeclaration()
    * @generated
    */
-  EAttribute getHelperFuncParameter_Name();
+  EAttribute getVariableDeclaration_Name();
 
   /**
    * Returns the meta object for class '{@link org.emoflon.ibex.tgg.weights.weightDefinition.RuleWeightDefinition <em>Rule Weight Definition</em>}'.
@@ -468,27 +514,6 @@ public interface WeightDefinitionPackage extends EPackage
   EReference getRuleWeightDefinition_WeightCalc();
 
   /**
-   * Returns the meta object for class '{@link org.emoflon.ibex.tgg.weights.weightDefinition.WeightCalculation <em>Weight Calculation</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Weight Calculation</em>'.
-   * @see org.emoflon.ibex.tgg.weights.weightDefinition.WeightCalculation
-   * @generated
-   */
-  EClass getWeightCalculation();
-
-  /**
-   * Returns the meta object for the containment reference '{@link org.emoflon.ibex.tgg.weights.weightDefinition.WeightCalculation#getCalc <em>Calc</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Calc</em>'.
-   * @see org.emoflon.ibex.tgg.weights.weightDefinition.WeightCalculation#getCalc()
-   * @see #getWeightCalculation()
-   * @generated
-   */
-  EReference getWeightCalculation_Calc();
-
-  /**
    * Returns the meta object for class '{@link org.emoflon.ibex.tgg.weights.weightDefinition.DefaultCalculation <em>Default Calculation</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -508,6 +533,48 @@ public interface WeightDefinitionPackage extends EPackage
    * @generated
    */
   EReference getDefaultCalculation_Calc();
+
+  /**
+   * Returns the meta object for class '{@link org.emoflon.ibex.tgg.weights.weightDefinition.HelperFuntion <em>Helper Funtion</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Helper Funtion</em>'.
+   * @see org.emoflon.ibex.tgg.weights.weightDefinition.HelperFuntion
+   * @generated
+   */
+  EClass getHelperFuntion();
+
+  /**
+   * Returns the meta object for class '{@link org.emoflon.ibex.tgg.weights.weightDefinition.HelperFuncParameter <em>Helper Func Parameter</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Helper Func Parameter</em>'.
+   * @see org.emoflon.ibex.tgg.weights.weightDefinition.HelperFuncParameter
+   * @generated
+   */
+  EClass getHelperFuncParameter();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.emoflon.ibex.tgg.weights.weightDefinition.HelperFuncParameter#getParameterType <em>Parameter Type</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Parameter Type</em>'.
+   * @see org.emoflon.ibex.tgg.weights.weightDefinition.HelperFuncParameter#getParameterType()
+   * @see #getHelperFuncParameter()
+   * @generated
+   */
+  EReference getHelperFuncParameter_ParameterType();
+
+  /**
+   * Returns the meta object for the attribute '{@link org.emoflon.ibex.tgg.weights.weightDefinition.HelperFuncParameter#getName <em>Name</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Name</em>'.
+   * @see org.emoflon.ibex.tgg.weights.weightDefinition.HelperFuncParameter#getName()
+   * @see #getHelperFuncParameter()
+   * @generated
+   */
+  EAttribute getHelperFuncParameter_Name();
 
   /**
    * Returns the meta object for class '{@link org.emoflon.ibex.tgg.weights.weightDefinition.HelperFunction <em>Helper Function</em>}'.
@@ -597,12 +664,12 @@ public interface WeightDefinitionPackage extends EPackage
     EClass WEIGHT_DEFINITION_FILE = eINSTANCE.getWeightDefinitionFile();
 
     /**
-     * The meta object literal for the '<em><b>Imports</b></em>' containment reference feature.
+     * The meta object literal for the '<em><b>Imported Tgg</b></em>' containment reference feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference WEIGHT_DEFINITION_FILE__IMPORTS = eINSTANCE.getWeightDefinitionFile_Imports();
+    EReference WEIGHT_DEFINITION_FILE__IMPORTED_TGG = eINSTANCE.getWeightDefinitionFile_ImportedTgg();
 
     /**
      * The meta object literal for the '<em><b>Weigth Definitions</b></em>' containment reference list feature.
@@ -629,6 +696,14 @@ public interface WeightDefinitionPackage extends EPackage
     EReference WEIGHT_DEFINITION_FILE__HELPER_FUNTIONS = eINSTANCE.getWeightDefinitionFile_HelperFuntions();
 
     /**
+     * The meta object literal for the '<em><b>Variables</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference WEIGHT_DEFINITION_FILE__VARIABLES = eINSTANCE.getWeightDefinitionFile_Variables();
+
+    /**
      * The meta object literal for the '{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.ImportImpl <em>Import</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -647,14 +722,14 @@ public interface WeightDefinitionPackage extends EPackage
     EAttribute IMPORT__IMPORT_URI = eINSTANCE.getImport_ImportURI();
 
     /**
-     * The meta object literal for the '{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.HelperFuncParameterImpl <em>Helper Func Parameter</em>}' class.
+     * The meta object literal for the '{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.VariableDeclarationImpl <em>Variable Declaration</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see org.emoflon.ibex.tgg.weights.weightDefinition.impl.HelperFuncParameterImpl
-     * @see org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightDefinitionPackageImpl#getHelperFuncParameter()
+     * @see org.emoflon.ibex.tgg.weights.weightDefinition.impl.VariableDeclarationImpl
+     * @see org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightDefinitionPackageImpl#getVariableDeclaration()
      * @generated
      */
-    EClass HELPER_FUNC_PARAMETER = eINSTANCE.getHelperFuncParameter();
+    EClass VARIABLE_DECLARATION = eINSTANCE.getVariableDeclaration();
 
     /**
      * The meta object literal for the '<em><b>Parameter Type</b></em>' containment reference feature.
@@ -662,7 +737,7 @@ public interface WeightDefinitionPackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference HELPER_FUNC_PARAMETER__PARAMETER_TYPE = eINSTANCE.getHelperFuncParameter_ParameterType();
+    EReference VARIABLE_DECLARATION__PARAMETER_TYPE = eINSTANCE.getVariableDeclaration_ParameterType();
 
     /**
      * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
@@ -670,7 +745,7 @@ public interface WeightDefinitionPackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute HELPER_FUNC_PARAMETER__NAME = eINSTANCE.getHelperFuncParameter_Name();
+    EAttribute VARIABLE_DECLARATION__NAME = eINSTANCE.getVariableDeclaration_Name();
 
     /**
      * The meta object literal for the '{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.RuleWeightDefinitionImpl <em>Rule Weight Definition</em>}' class.
@@ -699,24 +774,6 @@ public interface WeightDefinitionPackage extends EPackage
     EReference RULE_WEIGHT_DEFINITION__WEIGHT_CALC = eINSTANCE.getRuleWeightDefinition_WeightCalc();
 
     /**
-     * The meta object literal for the '{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightCalculationImpl <em>Weight Calculation</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightCalculationImpl
-     * @see org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightDefinitionPackageImpl#getWeightCalculation()
-     * @generated
-     */
-    EClass WEIGHT_CALCULATION = eINSTANCE.getWeightCalculation();
-
-    /**
-     * The meta object literal for the '<em><b>Calc</b></em>' containment reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference WEIGHT_CALCULATION__CALC = eINSTANCE.getWeightCalculation_Calc();
-
-    /**
      * The meta object literal for the '{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.DefaultCalculationImpl <em>Default Calculation</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -733,6 +790,42 @@ public interface WeightDefinitionPackage extends EPackage
      * @generated
      */
     EReference DEFAULT_CALCULATION__CALC = eINSTANCE.getDefaultCalculation_Calc();
+
+    /**
+     * The meta object literal for the '{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.HelperFuntionImpl <em>Helper Funtion</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.emoflon.ibex.tgg.weights.weightDefinition.impl.HelperFuntionImpl
+     * @see org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightDefinitionPackageImpl#getHelperFuntion()
+     * @generated
+     */
+    EClass HELPER_FUNTION = eINSTANCE.getHelperFuntion();
+
+    /**
+     * The meta object literal for the '{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.HelperFuncParameterImpl <em>Helper Func Parameter</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.emoflon.ibex.tgg.weights.weightDefinition.impl.HelperFuncParameterImpl
+     * @see org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightDefinitionPackageImpl#getHelperFuncParameter()
+     * @generated
+     */
+    EClass HELPER_FUNC_PARAMETER = eINSTANCE.getHelperFuncParameter();
+
+    /**
+     * The meta object literal for the '<em><b>Parameter Type</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference HELPER_FUNC_PARAMETER__PARAMETER_TYPE = eINSTANCE.getHelperFuncParameter_ParameterType();
+
+    /**
+     * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute HELPER_FUNC_PARAMETER__NAME = eINSTANCE.getHelperFuncParameter_Name();
 
     /**
      * The meta object literal for the '{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.HelperFunctionImpl <em>Helper Function</em>}' class.

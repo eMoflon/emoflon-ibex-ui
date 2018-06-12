@@ -8,8 +8,6 @@ import org.eclipse.emf.ecore.EPackage;
 
 import org.eclipse.emf.ecore.util.Switch;
 
-import org.eclipse.xtext.xbase.XExpression;
-
 import org.emoflon.ibex.tgg.weights.weightDefinition.*;
 
 /**
@@ -89,10 +87,10 @@ public class WeightDefinitionSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case WeightDefinitionPackage.HELPER_FUNC_PARAMETER:
+      case WeightDefinitionPackage.VARIABLE_DECLARATION:
       {
-        HelperFuncParameter helperFuncParameter = (HelperFuncParameter)theEObject;
-        T result = caseHelperFuncParameter(helperFuncParameter);
+        VariableDeclaration variableDeclaration = (VariableDeclaration)theEObject;
+        T result = caseVariableDeclaration(variableDeclaration);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -100,15 +98,6 @@ public class WeightDefinitionSwitch<T> extends Switch<T>
       {
         RuleWeightDefinition ruleWeightDefinition = (RuleWeightDefinition)theEObject;
         T result = caseRuleWeightDefinition(ruleWeightDefinition);
-        if (result == null) result = caseXExpression(ruleWeightDefinition);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case WeightDefinitionPackage.WEIGHT_CALCULATION:
-      {
-        WeightCalculation weightCalculation = (WeightCalculation)theEObject;
-        T result = caseWeightCalculation(weightCalculation);
-        if (result == null) result = caseXExpression(weightCalculation);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -116,7 +105,20 @@ public class WeightDefinitionSwitch<T> extends Switch<T>
       {
         DefaultCalculation defaultCalculation = (DefaultCalculation)theEObject;
         T result = caseDefaultCalculation(defaultCalculation);
-        if (result == null) result = caseXExpression(defaultCalculation);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case WeightDefinitionPackage.HELPER_FUNTION:
+      {
+        HelperFuntion helperFuntion = (HelperFuntion)theEObject;
+        T result = caseHelperFuntion(helperFuntion);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case WeightDefinitionPackage.HELPER_FUNC_PARAMETER:
+      {
+        HelperFuncParameter helperFuncParameter = (HelperFuncParameter)theEObject;
+        T result = caseHelperFuncParameter(helperFuncParameter);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -124,7 +126,7 @@ public class WeightDefinitionSwitch<T> extends Switch<T>
       {
         HelperFunction helperFunction = (HelperFunction)theEObject;
         T result = caseHelperFunction(helperFunction);
-        if (result == null) result = caseXExpression(helperFunction);
+        if (result == null) result = caseHelperFuntion(helperFunction);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -165,17 +167,17 @@ public class WeightDefinitionSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Helper Func Parameter</em>'.
+   * Returns the result of interpreting the object as an instance of '<em>Variable Declaration</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
    * returning a non-null result will terminate the switch.
    * <!-- end-user-doc -->
    * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Helper Func Parameter</em>'.
+   * @return the result of interpreting the object as an instance of '<em>Variable Declaration</em>'.
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseHelperFuncParameter(HelperFuncParameter object)
+  public T caseVariableDeclaration(VariableDeclaration object)
   {
     return null;
   }
@@ -197,22 +199,6 @@ public class WeightDefinitionSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Weight Calculation</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Weight Calculation</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseWeightCalculation(WeightCalculation object)
-  {
-    return null;
-  }
-
-  /**
    * Returns the result of interpreting the object as an instance of '<em>Default Calculation</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -229,6 +215,38 @@ public class WeightDefinitionSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>Helper Funtion</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Helper Funtion</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseHelperFuntion(HelperFuntion object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Helper Func Parameter</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Helper Func Parameter</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseHelperFuncParameter(HelperFuncParameter object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>Helper Function</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -240,23 +258,6 @@ public class WeightDefinitionSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseHelperFunction(HelperFunction object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>XExpression</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>XExpression</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @since 2.7
-   * @generated
-   */
-  public T caseXExpression(XExpression object)
   {
     return null;
   }

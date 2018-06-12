@@ -3,23 +3,9 @@
  */
 package org.emoflon.ibex.tgg.weights
 
-import org.eclipse.xtext.xbase.typesystem.computation.ITypeComputer
-import org.emoflon.ibex.tgg.weights.scoping.TggWeightTypeComputer
-
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
  */
 class WeightDefinitionRuntimeModule extends AbstractWeightDefinitionRuntimeModule {
-//
-//	override Class<? extends IDefaultResourceDescriptionStrategy> bindIDefaultResourceDescriptionStrategy() {
-//		ResourceDesctiptionStrategy
-//	}
-//	
-//	override Class<? extends IGlobalScopeProvider> bindIGlobalScopeProvider() {
-//		MyImportUriGlobalScopeProvider;
-//	}
-//
-	def Class<? extends ITypeComputer> bindITypeComputer() {
-       TggWeightTypeComputer
-    }
+
 }

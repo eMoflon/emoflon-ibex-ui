@@ -33,5 +33,6 @@ Export-Package: org.emoflon.ibex.tgg.weights.scoping,
  org.emoflon.ibex.tgg.weights.serializer,
  org.emoflon.ibex.tgg.weights.parser.antlr.internal,
  org.emoflon.ibex.tgg.weights.parser.antlr,
- org.emoflon.ibex.tgg.weights.jvmmodel
+ org.emoflon.ibex.tgg.weights.jvmmodel,
+ org.emoflon.ibex.tgg.weights.formatting2
 Import-Package: org.apache.log4j

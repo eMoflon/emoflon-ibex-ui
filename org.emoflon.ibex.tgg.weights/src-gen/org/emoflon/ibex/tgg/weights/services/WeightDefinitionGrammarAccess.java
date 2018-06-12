@@ -28,8 +28,8 @@ public class WeightDefinitionGrammarAccess extends AbstractGrammarElementFinder 
 	public class WeightDefinitionFileElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.weights.WeightDefinition.WeightDefinitionFile");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Assignment cImportsAssignment_0 = (Assignment)cGroup.eContents().get(0);
-		private final RuleCall cImportsImportParserRuleCall_0_0 = (RuleCall)cImportsAssignment_0.eContents().get(0);
+		private final Assignment cImportedTggAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final RuleCall cImportedTggImportParserRuleCall_0_0 = (RuleCall)cImportedTggAssignment_0.eContents().get(0);
 		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
 		private final Assignment cWeigthDefinitionsAssignment_1_0 = (Assignment)cAlternatives_1.eContents().get(0);
 		private final RuleCall cWeigthDefinitionsRuleWeightDefinitionParserRuleCall_1_0_0 = (RuleCall)cWeigthDefinitionsAssignment_1_0.eContents().get(0);
@@ -37,24 +37,28 @@ public class WeightDefinitionGrammarAccess extends AbstractGrammarElementFinder 
 		private final RuleCall cDefaultCalcDefaultCalculationParserRuleCall_1_1_0 = (RuleCall)cDefaultCalcAssignment_1_1.eContents().get(0);
 		private final Assignment cHelperFuntionsAssignment_1_2 = (Assignment)cAlternatives_1.eContents().get(2);
 		private final RuleCall cHelperFuntionsHelperFuntionParserRuleCall_1_2_0 = (RuleCall)cHelperFuntionsAssignment_1_2.eContents().get(0);
+		private final Assignment cVariablesAssignment_1_3 = (Assignment)cAlternatives_1.eContents().get(3);
+		private final RuleCall cVariablesVariableDeclarationParserRuleCall_1_3_0 = (RuleCall)cVariablesAssignment_1_3.eContents().get(0);
 		
 		//WeightDefinitionFile:
-		//	imports=Import (weigthDefinitions+=RuleWeightDefinition
+		//	importedTgg=Import (weigthDefinitions+=RuleWeightDefinition
 		//	| defaultCalc+=DefaultCalculation
-		//	| helperFuntions+=HelperFuntion)*;
+		//	| helperFuntions+=HelperFuntion
+		//	| variables+=VariableDeclaration)*;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//imports=Import (weigthDefinitions+=RuleWeightDefinition | defaultCalc+=DefaultCalculation |
-		//helperFuntions+=HelperFuntion)*
+		//importedTgg=Import (weigthDefinitions+=RuleWeightDefinition | defaultCalc+=DefaultCalculation |
+		//helperFuntions+=HelperFuntion | variables+=VariableDeclaration)*
 		public Group getGroup() { return cGroup; }
 		
-		//imports=Import
-		public Assignment getImportsAssignment_0() { return cImportsAssignment_0; }
+		//importedTgg=Import
+		public Assignment getImportedTggAssignment_0() { return cImportedTggAssignment_0; }
 		
 		//Import
-		public RuleCall getImportsImportParserRuleCall_0_0() { return cImportsImportParserRuleCall_0_0; }
+		public RuleCall getImportedTggImportParserRuleCall_0_0() { return cImportedTggImportParserRuleCall_0_0; }
 		
-		//(weigthDefinitions+=RuleWeightDefinition | defaultCalc+=DefaultCalculation | helperFuntions+=HelperFuntion)*
+		//(weigthDefinitions+=RuleWeightDefinition | defaultCalc+=DefaultCalculation | helperFuntions+=HelperFuntion |
+		//variables+=VariableDeclaration)*
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
 		//weigthDefinitions+=RuleWeightDefinition
@@ -74,6 +78,12 @@ public class WeightDefinitionGrammarAccess extends AbstractGrammarElementFinder 
 		
 		//HelperFuntion
 		public RuleCall getHelperFuntionsHelperFuntionParserRuleCall_1_2_0() { return cHelperFuntionsHelperFuntionParserRuleCall_1_2_0; }
+		
+		//variables+=VariableDeclaration
+		public Assignment getVariablesAssignment_1_3() { return cVariablesAssignment_1_3; }
+		
+		//VariableDeclaration
+		public RuleCall getVariablesVariableDeclarationParserRuleCall_1_3_0() { return cVariablesVariableDeclarationParserRuleCall_1_3_0; }
 	}
 	public class ImportElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.weights.WeightDefinition.Import");
@@ -98,6 +108,37 @@ public class WeightDefinitionGrammarAccess extends AbstractGrammarElementFinder 
 		//STRING
 		public RuleCall getImportURISTRINGTerminalRuleCall_1_0() { return cImportURISTRINGTerminalRuleCall_1_0; }
 	}
+	public class VariableDeclarationElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.weights.WeightDefinition.VariableDeclaration");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Keyword cVarKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Assignment cParameterTypeAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cParameterTypeJvmTypeReferenceParserRuleCall_1_0 = (RuleCall)cParameterTypeAssignment_1.eContents().get(0);
+		private final Assignment cNameAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final RuleCall cNameValidIDParserRuleCall_2_0 = (RuleCall)cNameAssignment_2.eContents().get(0);
+		
+		//VariableDeclaration:
+		//	'var' parameterType=JvmTypeReference name=ValidID;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'var' parameterType=JvmTypeReference name=ValidID
+		public Group getGroup() { return cGroup; }
+		
+		//'var'
+		public Keyword getVarKeyword_0() { return cVarKeyword_0; }
+		
+		//parameterType=JvmTypeReference
+		public Assignment getParameterTypeAssignment_1() { return cParameterTypeAssignment_1; }
+		
+		//JvmTypeReference
+		public RuleCall getParameterTypeJvmTypeReferenceParserRuleCall_1_0() { return cParameterTypeJvmTypeReferenceParserRuleCall_1_0; }
+		
+		//name=ValidID
+		public Assignment getNameAssignment_2() { return cNameAssignment_2; }
+		
+		//ValidID
+		public RuleCall getNameValidIDParserRuleCall_2_0() { return cNameValidIDParserRuleCall_2_0; }
+	}
 	public class RuleWeightDefinitionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.weights.WeightDefinition.RuleWeightDefinition");
 		private final Group cGroup = (Group)rule.eContents().get(1);
@@ -107,14 +148,14 @@ public class WeightDefinitionGrammarAccess extends AbstractGrammarElementFinder 
 		private final CrossReference cRuleTGGRuleCrossReference_2_0 = (CrossReference)cRuleAssignment_2.eContents().get(0);
 		private final RuleCall cRuleTGGRuleIDTerminalRuleCall_2_0_1 = (RuleCall)cRuleTGGRuleCrossReference_2_0.eContents().get(1);
 		private final Assignment cWeightCalcAssignment_3 = (Assignment)cGroup.eContents().get(3);
-		private final RuleCall cWeightCalcWeightCalculationParserRuleCall_3_0 = (RuleCall)cWeightCalcAssignment_3.eContents().get(0);
+		private final RuleCall cWeightCalcXBlockExpressionParserRuleCall_3_0 = (RuleCall)cWeightCalcAssignment_3.eContents().get(0);
 		
-		//RuleWeightDefinition xbase::XExpression:
+		//RuleWeightDefinition:
 		//	{RuleWeightDefinition}
-		//	'rule' rule=[language::TGGRule] weightCalc=WeightCalculation;
+		//	'rule' rule=[language::TGGRule] weightCalc=XBlockExpression;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{RuleWeightDefinition} 'rule' rule=[language::TGGRule] weightCalc=WeightCalculation
+		//{RuleWeightDefinition} 'rule' rule=[language::TGGRule] weightCalc=XBlockExpression
 		public Group getGroup() { return cGroup; }
 		
 		//{RuleWeightDefinition}
@@ -132,34 +173,11 @@ public class WeightDefinitionGrammarAccess extends AbstractGrammarElementFinder 
 		//ID
 		public RuleCall getRuleTGGRuleIDTerminalRuleCall_2_0_1() { return cRuleTGGRuleIDTerminalRuleCall_2_0_1; }
 		
-		//weightCalc=WeightCalculation
+		//weightCalc=XBlockExpression
 		public Assignment getWeightCalcAssignment_3() { return cWeightCalcAssignment_3; }
 		
-		//WeightCalculation
-		public RuleCall getWeightCalcWeightCalculationParserRuleCall_3_0() { return cWeightCalcWeightCalculationParserRuleCall_3_0; }
-	}
-	public class WeightCalculationElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.weights.WeightDefinition.WeightCalculation");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Action cWeightCalculationAction_0 = (Action)cGroup.eContents().get(0);
-		private final Assignment cCalcAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cCalcXBlockExpressionParserRuleCall_1_0 = (RuleCall)cCalcAssignment_1.eContents().get(0);
-		
-		//WeightCalculation xbase::XExpression:
-		//	{WeightCalculation} calc=XBlockExpression;
-		@Override public ParserRule getRule() { return rule; }
-		
-		//{WeightCalculation} calc=XBlockExpression
-		public Group getGroup() { return cGroup; }
-		
-		//{WeightCalculation}
-		public Action getWeightCalculationAction_0() { return cWeightCalculationAction_0; }
-		
-		//calc=XBlockExpression
-		public Assignment getCalcAssignment_1() { return cCalcAssignment_1; }
-		
 		//XBlockExpression
-		public RuleCall getCalcXBlockExpressionParserRuleCall_1_0() { return cCalcXBlockExpressionParserRuleCall_1_0; }
+		public RuleCall getWeightCalcXBlockExpressionParserRuleCall_3_0() { return cWeightCalcXBlockExpressionParserRuleCall_3_0; }
 	}
 	public class DefaultCalculationElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.weights.WeightDefinition.DefaultCalculation");
@@ -169,7 +187,7 @@ public class WeightDefinitionGrammarAccess extends AbstractGrammarElementFinder 
 		private final Assignment cCalcAssignment_2 = (Assignment)cGroup.eContents().get(2);
 		private final RuleCall cCalcXBlockExpressionParserRuleCall_2_0 = (RuleCall)cCalcAssignment_2.eContents().get(0);
 		
-		//DefaultCalculation xbase::XExpression:
+		//DefaultCalculation:
 		//	{DefaultCalculation}
 		//	'default'
 		//	calc=XBlockExpression;
@@ -211,7 +229,7 @@ public class WeightDefinitionGrammarAccess extends AbstractGrammarElementFinder 
 		private final Assignment cBodyAssignment_7 = (Assignment)cGroup.eContents().get(7);
 		private final RuleCall cBodyXBlockExpressionParserRuleCall_7_0 = (RuleCall)cBodyAssignment_7.eContents().get(0);
 		
-		//HelperFuntion xbase::XExpression:
+		//HelperFuntion:
 		//	{HelperFunction}
 		//	'function'
 		//	returnType=JvmTypeReference
@@ -307,8 +325,8 @@ public class WeightDefinitionGrammarAccess extends AbstractGrammarElementFinder 
 	
 	private final WeightDefinitionFileElements pWeightDefinitionFile;
 	private final ImportElements pImport;
+	private final VariableDeclarationElements pVariableDeclaration;
 	private final RuleWeightDefinitionElements pRuleWeightDefinition;
-	private final WeightCalculationElements pWeightCalculation;
 	private final DefaultCalculationElements pDefaultCalculation;
 	private final HelperFuntionElements pHelperFuntion;
 	private final HelperFuncParameterElements pHelperFuncParameter;
@@ -328,8 +346,8 @@ public class WeightDefinitionGrammarAccess extends AbstractGrammarElementFinder 
 		this.gaXtype = gaXtype;
 		this.pWeightDefinitionFile = new WeightDefinitionFileElements();
 		this.pImport = new ImportElements();
+		this.pVariableDeclaration = new VariableDeclarationElements();
 		this.pRuleWeightDefinition = new RuleWeightDefinitionElements();
-		this.pWeightCalculation = new WeightCalculationElements();
 		this.pDefaultCalculation = new DefaultCalculationElements();
 		this.pHelperFuntion = new HelperFuntionElements();
 		this.pHelperFuncParameter = new HelperFuncParameterElements();
@@ -367,9 +385,10 @@ public class WeightDefinitionGrammarAccess extends AbstractGrammarElementFinder 
 
 	
 	//WeightDefinitionFile:
-	//	imports=Import (weigthDefinitions+=RuleWeightDefinition
+	//	importedTgg=Import (weigthDefinitions+=RuleWeightDefinition
 	//	| defaultCalc+=DefaultCalculation
-	//	| helperFuntions+=HelperFuntion)*;
+	//	| helperFuntions+=HelperFuntion
+	//	| variables+=VariableDeclaration)*;
 	public WeightDefinitionFileElements getWeightDefinitionFileAccess() {
 		return pWeightDefinitionFile;
 	}
@@ -388,9 +407,19 @@ public class WeightDefinitionGrammarAccess extends AbstractGrammarElementFinder 
 		return getImportAccess().getRule();
 	}
 	
-	//RuleWeightDefinition xbase::XExpression:
+	//VariableDeclaration:
+	//	'var' parameterType=JvmTypeReference name=ValidID;
+	public VariableDeclarationElements getVariableDeclarationAccess() {
+		return pVariableDeclaration;
+	}
+	
+	public ParserRule getVariableDeclarationRule() {
+		return getVariableDeclarationAccess().getRule();
+	}
+	
+	//RuleWeightDefinition:
 	//	{RuleWeightDefinition}
-	//	'rule' rule=[language::TGGRule] weightCalc=WeightCalculation;
+	//	'rule' rule=[language::TGGRule] weightCalc=XBlockExpression;
 	public RuleWeightDefinitionElements getRuleWeightDefinitionAccess() {
 		return pRuleWeightDefinition;
 	}
@@ -399,17 +428,7 @@ public class WeightDefinitionGrammarAccess extends AbstractGrammarElementFinder 
 		return getRuleWeightDefinitionAccess().getRule();
 	}
 	
-	//WeightCalculation xbase::XExpression:
-	//	{WeightCalculation} calc=XBlockExpression;
-	public WeightCalculationElements getWeightCalculationAccess() {
-		return pWeightCalculation;
-	}
-	
-	public ParserRule getWeightCalculationRule() {
-		return getWeightCalculationAccess().getRule();
-	}
-	
-	//DefaultCalculation xbase::XExpression:
+	//DefaultCalculation:
 	//	{DefaultCalculation}
 	//	'default'
 	//	calc=XBlockExpression;
@@ -421,7 +440,7 @@ public class WeightDefinitionGrammarAccess extends AbstractGrammarElementFinder 
 		return getDefaultCalculationAccess().getRule();
 	}
 	
-	//HelperFuntion xbase::XExpression:
+	//HelperFuntion:
 	//	{HelperFunction}
 	//	'function'
 	//	returnType=JvmTypeReference

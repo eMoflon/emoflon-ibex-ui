@@ -10,10 +10,9 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import org.eclipse.xtext.xbase.XExpression;
-
-import org.eclipse.xtext.xbase.impl.XExpressionImpl;
 
 import org.emoflon.ibex.tgg.weights.weightDefinition.DefaultCalculation;
 import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionPackage;
@@ -31,7 +30,7 @@ import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionPackage;
  *
  * @generated
  */
-public class DefaultCalculationImpl extends XExpressionImpl implements DefaultCalculation
+public class DefaultCalculationImpl extends MinimalEObjectImpl.Container implements DefaultCalculation
 {
   /**
    * The cached value of the '{@link #getCalc() <em>Calc</em>}' containment reference.

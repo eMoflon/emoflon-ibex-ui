@@ -67,10 +67,11 @@ public class WeightDefinitionFactoryImpl extends EFactoryImpl implements WeightD
     {
       case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE: return createWeightDefinitionFile();
       case WeightDefinitionPackage.IMPORT: return createImport();
-      case WeightDefinitionPackage.HELPER_FUNC_PARAMETER: return createHelperFuncParameter();
+      case WeightDefinitionPackage.VARIABLE_DECLARATION: return createVariableDeclaration();
       case WeightDefinitionPackage.RULE_WEIGHT_DEFINITION: return createRuleWeightDefinition();
-      case WeightDefinitionPackage.WEIGHT_CALCULATION: return createWeightCalculation();
       case WeightDefinitionPackage.DEFAULT_CALCULATION: return createDefaultCalculation();
+      case WeightDefinitionPackage.HELPER_FUNTION: return createHelperFuntion();
+      case WeightDefinitionPackage.HELPER_FUNC_PARAMETER: return createHelperFuncParameter();
       case WeightDefinitionPackage.HELPER_FUNCTION: return createHelperFunction();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
@@ -104,10 +105,10 @@ public class WeightDefinitionFactoryImpl extends EFactoryImpl implements WeightD
    * <!-- end-user-doc -->
    * @generated
    */
-  public HelperFuncParameter createHelperFuncParameter()
+  public VariableDeclaration createVariableDeclaration()
   {
-    HelperFuncParameterImpl helperFuncParameter = new HelperFuncParameterImpl();
-    return helperFuncParameter;
+    VariableDeclarationImpl variableDeclaration = new VariableDeclarationImpl();
+    return variableDeclaration;
   }
 
   /**
@@ -126,10 +127,10 @@ public class WeightDefinitionFactoryImpl extends EFactoryImpl implements WeightD
    * <!-- end-user-doc -->
    * @generated
    */
-  public WeightCalculation createWeightCalculation()
+  public DefaultCalculation createDefaultCalculation()
   {
-    WeightCalculationImpl weightCalculation = new WeightCalculationImpl();
-    return weightCalculation;
+    DefaultCalculationImpl defaultCalculation = new DefaultCalculationImpl();
+    return defaultCalculation;
   }
 
   /**
@@ -137,10 +138,21 @@ public class WeightDefinitionFactoryImpl extends EFactoryImpl implements WeightD
    * <!-- end-user-doc -->
    * @generated
    */
-  public DefaultCalculation createDefaultCalculation()
+  public HelperFuntion createHelperFuntion()
   {
-    DefaultCalculationImpl defaultCalculation = new DefaultCalculationImpl();
-    return defaultCalculation;
+    HelperFuntionImpl helperFuntion = new HelperFuntionImpl();
+    return helperFuntion;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public HelperFuncParameter createHelperFuncParameter()
+  {
+    HelperFuncParameterImpl helperFuncParameter = new HelperFuncParameterImpl();
+    return helperFuncParameter;
   }
 
   /**

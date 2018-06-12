@@ -3,6 +3,8 @@
  */
 package org.emoflon.ibex.tgg.weights.weightDefinition;
 
+import org.eclipse.emf.ecore.EObject;
+
 import org.eclipse.xtext.xbase.XExpression;
 
 /**
@@ -21,7 +23,7 @@ import org.eclipse.xtext.xbase.XExpression;
  * @model
  * @generated
  */
-public interface DefaultCalculation extends XExpression
+public interface DefaultCalculation extends EObject
 {
   /**
    * Returns the value of the '<em><b>Calc</b></em>' containment reference.

@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.resource.ContentHandler
 import org.eclipse.emf.ecore.util.EcoreUtil
 import language.TGG
+import org.emoflon.ibex.tgg.weights.weightDefinition.VariableDeclaration
 
 /**
  * Provides labels for EObjects.
@@ -24,7 +25,7 @@ import language.TGG
  * See https://www.eclipse.org/Xtext/documentation/304_ide_concepts.html#label-provider
  */
 class WeightDefinitionLabelProvider extends XbaseLabelProvider {
-	
+
 	/**
 	 * Cached imported resource
 	 */
@@ -34,47 +35,43 @@ class WeightDefinitionLabelProvider extends XbaseLabelProvider {
 	new(AdapterFactoryLabelProvider delegate) {
 		super(delegate);
 	}
-	
+
 	def text(WeightDefinitionFile file) {
 		val fileName = file.eResource.URI.lastSegment
 		fileName.substring(0, fileName.length - 5)
 	}
-	
+
 	def text(RuleWeightDefinition ruleElement) {
-		ruleElement.rule.name
+		ruleElement.rule?.name
 	}
-	
+
 	def text(DefaultCalculation defaultCalc) {
 		"Default Weight Calculation"
 	}
-	
+
+	def String text(VariableDeclaration variable) {
+		'''«variable.name» : «variable.parameterType.type.simpleName»'''
+	}
+
 	def text(Import importNode) {
-		val importUri = importNode.importURI
-		val uri = URI.createURI(importUri);
-		val resolvedUri = uri.resolve(URI.createPlatformResourceURI("/", true))
-		if ((importedTGG === null) || (importedTGG.URI != resolvedUri)) {
-			importedTGG = new ResourceSetImpl().createResource(resolvedUri, ContentHandler.UNSPECIFIED_CONTENT_TYPE);
-			importedTGG.load(null);
-			EcoreUtil.resolveAll(importedTGG);
-		}
 		try {
-			val tgg = importedTGG.contents
-				.filter[it instanceof TGG].get(0) as TGG
+			val importUri = importNode.importURI
+			val uri = URI.createURI(importUri);
+			val resolvedUri = uri.resolve(URI.createPlatformResourceURI("/", true))
+			if ((importedTGG === null) || (importedTGG.URI != resolvedUri)) {
+				importedTGG = new ResourceSetImpl().createResource(resolvedUri,
+					ContentHandler.UNSPECIFIED_CONTENT_TYPE);
+				importedTGG.load(null);
+				EcoreUtil.resolveAll(importedTGG);
+			}
+			val tgg = importedTGG.contents.filter[it instanceof TGG].get(0) as TGG
 			return '''TGG «tgg.name» ([«tgg.src.map[name].join(",")»]<=>[«tgg.trg.map[name].join(",")»])'''
 		} catch (Exception e) {
 			return '''TGG (unresolvable, at «importNode.importURI»)'''
 		}
 	}
-	
-	def text(HelperFunction helperFunc) {
-		var text = '''«helperFunc.name»('''
-		var first = true
-		for(param : helperFunc.params) {
-			if(!first)
-				text += ", "
-			first = false
-			text += param.parameterType.type.simpleName
-		}
-		text += ''') : «helperFunc.returnType.type.simpleName»'''
+
+	def String text(HelperFunction helperFunc) {
+		'''«helperFunc.name»(«helperFunc.params.map[parameterType.type.simpleName].join(", ")») : «helperFunc.returnType.type.simpleName»'''
 	}
 }

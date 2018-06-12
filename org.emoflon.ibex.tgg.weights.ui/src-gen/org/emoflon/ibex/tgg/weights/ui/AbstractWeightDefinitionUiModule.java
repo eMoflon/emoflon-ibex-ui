@@ -62,6 +62,8 @@ import org.eclipse.xtext.ui.editor.contentassist.antlr.AntlrProposalConflictHelp
 import org.eclipse.xtext.ui.editor.contentassist.antlr.DelegatingContentAssistContextFactory;
 import org.eclipse.xtext.ui.editor.findrefs.FindReferencesHandler;
 import org.eclipse.xtext.ui.editor.findrefs.ReferenceQueryExecutor;
+import org.eclipse.xtext.ui.editor.formatting.IContentFormatterFactory;
+import org.eclipse.xtext.ui.editor.formatting2.ContentFormatterFactory;
 import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider;
 import org.eclipse.xtext.ui.editor.outline.IOutlineTreeProvider;
 import org.eclipse.xtext.ui.editor.outline.impl.IOutlineTreeStructureProvider;
@@ -218,6 +220,11 @@ public abstract class AbstractWeightDefinitionUiModule extends DefaultXbaseUiMod
 		binder.bind(IPreferenceStoreInitializer.class)
 			.annotatedWith(Names.named("builderPreferenceInitializer"))
 			.to(BuilderPreferenceAccess.Initializer.class);
+	}
+	
+	// contributed by org.eclipse.xtext.xtext.generator.formatting.Formatter2Fragment2
+	public Class<? extends IContentFormatterFactory> bindIContentFormatterFactory() {
+		return ContentFormatterFactory.class;
 	}
 	
 	// contributed by org.eclipse.xtext.xtext.generator.ui.labeling.LabelProviderFragment2

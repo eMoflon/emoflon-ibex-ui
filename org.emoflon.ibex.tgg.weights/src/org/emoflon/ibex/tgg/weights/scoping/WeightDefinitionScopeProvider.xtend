@@ -15,6 +15,7 @@ import org.eclipse.xtext.scoping.Scopes
 import org.emoflon.ibex.tgg.weights.weightDefinition.RuleWeightDefinition
 import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile
 import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionPackage
+import java.util.LinkedList
 
 /**
  * This class contains custom scoping description.
@@ -48,14 +49,20 @@ class WeightDefinitionScopeProvider extends AbstractWeightDefinitionScopeProvide
 	 * Generates the scope for rule references by checking which rules exist in the imported TGG
 	 */
 	def getScopeForRuleWeightDefinition(EObject context, EReference reference) {
-		val importUri = (context.eContainer as WeightDefinitionFile).imports.importURI
-		val uri = URI.createURI(importUri);
-		val resolvedUri = uri.resolve(URI.createPlatformResourceURI("/", true))
-		if ((importedTGG === null) || (importedTGG.URI != resolvedUri)) {
-			importedTGG = new ResourceSetImpl().createResource(resolvedUri, ContentHandler.UNSPECIFIED_CONTENT_TYPE);
-			importedTGG.load(null);
-			EcoreUtil.resolveAll(importedTGG);
+		try {
+			val importUri = (context.eContainer as WeightDefinitionFile).importedTgg?.importURI
+			val uri = URI.createURI(importUri);
+			val resolvedUri = uri.resolve(URI.createPlatformResourceURI("/", true))
+			if ((importedTGG === null) || (importedTGG.URI != resolvedUri)) {
+				importedTGG = new ResourceSetImpl().createResource(resolvedUri, ContentHandler.UNSPECIFIED_CONTENT_TYPE);
+				importedTGG.load(null);
+				EcoreUtil.resolveAll(importedTGG);
+			}
+		} catch (Exception e) {
+			// could not load resource
+			return Scopes.scopeFor(new LinkedList)
 		}
+		
 		return Scopes.scopeFor(
 			importedTGG.contents
 				.filter[it instanceof TGG]

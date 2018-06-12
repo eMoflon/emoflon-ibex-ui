@@ -19,9 +19,11 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
-import org.eclipse.xtext.xbase.XExpression;
-
+import org.emoflon.ibex.tgg.weights.weightDefinition.DefaultCalculation;
+import org.emoflon.ibex.tgg.weights.weightDefinition.HelperFuntion;
 import org.emoflon.ibex.tgg.weights.weightDefinition.Import;
+import org.emoflon.ibex.tgg.weights.weightDefinition.RuleWeightDefinition;
+import org.emoflon.ibex.tgg.weights.weightDefinition.VariableDeclaration;
 import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile;
 import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionPackage;
 
@@ -33,10 +35,11 @@ import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionPackage;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightDefinitionFileImpl#getImports <em>Imports</em>}</li>
+ *   <li>{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightDefinitionFileImpl#getImportedTgg <em>Imported Tgg</em>}</li>
  *   <li>{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightDefinitionFileImpl#getWeigthDefinitions <em>Weigth Definitions</em>}</li>
  *   <li>{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightDefinitionFileImpl#getDefaultCalc <em>Default Calc</em>}</li>
  *   <li>{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightDefinitionFileImpl#getHelperFuntions <em>Helper Funtions</em>}</li>
+ *   <li>{@link org.emoflon.ibex.tgg.weights.weightDefinition.impl.WeightDefinitionFileImpl#getVariables <em>Variables</em>}</li>
  * </ul>
  *
  * @generated
@@ -44,14 +47,14 @@ import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionPackage;
 public class WeightDefinitionFileImpl extends MinimalEObjectImpl.Container implements WeightDefinitionFile
 {
   /**
-   * The cached value of the '{@link #getImports() <em>Imports</em>}' containment reference.
+   * The cached value of the '{@link #getImportedTgg() <em>Imported Tgg</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getImports()
+   * @see #getImportedTgg()
    * @generated
    * @ordered
    */
-  protected Import imports;
+  protected Import importedTgg;
 
   /**
    * The cached value of the '{@link #getWeigthDefinitions() <em>Weigth Definitions</em>}' containment reference list.
@@ -61,7 +64,7 @@ public class WeightDefinitionFileImpl extends MinimalEObjectImpl.Container imple
    * @generated
    * @ordered
    */
-  protected EList<XExpression> weigthDefinitions;
+  protected EList<RuleWeightDefinition> weigthDefinitions;
 
   /**
    * The cached value of the '{@link #getDefaultCalc() <em>Default Calc</em>}' containment reference list.
@@ -71,7 +74,7 @@ public class WeightDefinitionFileImpl extends MinimalEObjectImpl.Container imple
    * @generated
    * @ordered
    */
-  protected EList<XExpression> defaultCalc;
+  protected EList<DefaultCalculation> defaultCalc;
 
   /**
    * The cached value of the '{@link #getHelperFuntions() <em>Helper Funtions</em>}' containment reference list.
@@ -81,7 +84,17 @@ public class WeightDefinitionFileImpl extends MinimalEObjectImpl.Container imple
    * @generated
    * @ordered
    */
-  protected EList<XExpression> helperFuntions;
+  protected EList<HelperFuntion> helperFuntions;
+
+  /**
+   * The cached value of the '{@link #getVariables() <em>Variables</em>}' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getVariables()
+   * @generated
+   * @ordered
+   */
+  protected EList<VariableDeclaration> variables;
 
   /**
    * <!-- begin-user-doc -->
@@ -109,9 +122,9 @@ public class WeightDefinitionFileImpl extends MinimalEObjectImpl.Container imple
    * <!-- end-user-doc -->
    * @generated
    */
-  public Import getImports()
+  public Import getImportedTgg()
   {
-    return imports;
+    return importedTgg;
   }
 
   /**
@@ -119,13 +132,13 @@ public class WeightDefinitionFileImpl extends MinimalEObjectImpl.Container imple
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetImports(Import newImports, NotificationChain msgs)
+  public NotificationChain basicSetImportedTgg(Import newImportedTgg, NotificationChain msgs)
   {
-    Import oldImports = imports;
-    imports = newImports;
+    Import oldImportedTgg = importedTgg;
+    importedTgg = newImportedTgg;
     if (eNotificationRequired())
     {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__IMPORTS, oldImports, newImports);
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__IMPORTED_TGG, oldImportedTgg, newImportedTgg);
       if (msgs == null) msgs = notification; else msgs.add(notification);
     }
     return msgs;
@@ -136,20 +149,20 @@ public class WeightDefinitionFileImpl extends MinimalEObjectImpl.Container imple
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setImports(Import newImports)
+  public void setImportedTgg(Import newImportedTgg)
   {
-    if (newImports != imports)
+    if (newImportedTgg != importedTgg)
     {
       NotificationChain msgs = null;
-      if (imports != null)
-        msgs = ((InternalEObject)imports).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__IMPORTS, null, msgs);
-      if (newImports != null)
-        msgs = ((InternalEObject)newImports).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__IMPORTS, null, msgs);
-      msgs = basicSetImports(newImports, msgs);
+      if (importedTgg != null)
+        msgs = ((InternalEObject)importedTgg).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__IMPORTED_TGG, null, msgs);
+      if (newImportedTgg != null)
+        msgs = ((InternalEObject)newImportedTgg).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__IMPORTED_TGG, null, msgs);
+      msgs = basicSetImportedTgg(newImportedTgg, msgs);
       if (msgs != null) msgs.dispatch();
     }
     else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__IMPORTS, newImports, newImports));
+      eNotify(new ENotificationImpl(this, Notification.SET, WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__IMPORTED_TGG, newImportedTgg, newImportedTgg));
   }
 
   /**
@@ -157,11 +170,11 @@ public class WeightDefinitionFileImpl extends MinimalEObjectImpl.Container imple
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<XExpression> getWeigthDefinitions()
+  public EList<RuleWeightDefinition> getWeigthDefinitions()
   {
     if (weigthDefinitions == null)
     {
-      weigthDefinitions = new EObjectContainmentEList<XExpression>(XExpression.class, this, WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__WEIGTH_DEFINITIONS);
+      weigthDefinitions = new EObjectContainmentEList<RuleWeightDefinition>(RuleWeightDefinition.class, this, WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__WEIGTH_DEFINITIONS);
     }
     return weigthDefinitions;
   }
@@ -171,11 +184,11 @@ public class WeightDefinitionFileImpl extends MinimalEObjectImpl.Container imple
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<XExpression> getDefaultCalc()
+  public EList<DefaultCalculation> getDefaultCalc()
   {
     if (defaultCalc == null)
     {
-      defaultCalc = new EObjectContainmentEList<XExpression>(XExpression.class, this, WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__DEFAULT_CALC);
+      defaultCalc = new EObjectContainmentEList<DefaultCalculation>(DefaultCalculation.class, this, WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__DEFAULT_CALC);
     }
     return defaultCalc;
   }
@@ -185,13 +198,27 @@ public class WeightDefinitionFileImpl extends MinimalEObjectImpl.Container imple
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<XExpression> getHelperFuntions()
+  public EList<HelperFuntion> getHelperFuntions()
   {
     if (helperFuntions == null)
     {
-      helperFuntions = new EObjectContainmentEList<XExpression>(XExpression.class, this, WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__HELPER_FUNTIONS);
+      helperFuntions = new EObjectContainmentEList<HelperFuntion>(HelperFuntion.class, this, WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__HELPER_FUNTIONS);
     }
     return helperFuntions;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EList<VariableDeclaration> getVariables()
+  {
+    if (variables == null)
+    {
+      variables = new EObjectContainmentEList<VariableDeclaration>(VariableDeclaration.class, this, WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__VARIABLES);
+    }
+    return variables;
   }
 
   /**
@@ -204,14 +231,16 @@ public class WeightDefinitionFileImpl extends MinimalEObjectImpl.Container imple
   {
     switch (featureID)
     {
-      case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__IMPORTS:
-        return basicSetImports(null, msgs);
+      case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__IMPORTED_TGG:
+        return basicSetImportedTgg(null, msgs);
       case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__WEIGTH_DEFINITIONS:
         return ((InternalEList<?>)getWeigthDefinitions()).basicRemove(otherEnd, msgs);
       case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__DEFAULT_CALC:
         return ((InternalEList<?>)getDefaultCalc()).basicRemove(otherEnd, msgs);
       case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__HELPER_FUNTIONS:
         return ((InternalEList<?>)getHelperFuntions()).basicRemove(otherEnd, msgs);
+      case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__VARIABLES:
+        return ((InternalEList<?>)getVariables()).basicRemove(otherEnd, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -226,14 +255,16 @@ public class WeightDefinitionFileImpl extends MinimalEObjectImpl.Container imple
   {
     switch (featureID)
     {
-      case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__IMPORTS:
-        return getImports();
+      case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__IMPORTED_TGG:
+        return getImportedTgg();
       case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__WEIGTH_DEFINITIONS:
         return getWeigthDefinitions();
       case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__DEFAULT_CALC:
         return getDefaultCalc();
       case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__HELPER_FUNTIONS:
         return getHelperFuntions();
+      case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__VARIABLES:
+        return getVariables();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -249,20 +280,24 @@ public class WeightDefinitionFileImpl extends MinimalEObjectImpl.Container imple
   {
     switch (featureID)
     {
-      case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__IMPORTS:
-        setImports((Import)newValue);
+      case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__IMPORTED_TGG:
+        setImportedTgg((Import)newValue);
         return;
       case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__WEIGTH_DEFINITIONS:
         getWeigthDefinitions().clear();
-        getWeigthDefinitions().addAll((Collection<? extends XExpression>)newValue);
+        getWeigthDefinitions().addAll((Collection<? extends RuleWeightDefinition>)newValue);
         return;
       case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__DEFAULT_CALC:
         getDefaultCalc().clear();
-        getDefaultCalc().addAll((Collection<? extends XExpression>)newValue);
+        getDefaultCalc().addAll((Collection<? extends DefaultCalculation>)newValue);
         return;
       case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__HELPER_FUNTIONS:
         getHelperFuntions().clear();
-        getHelperFuntions().addAll((Collection<? extends XExpression>)newValue);
+        getHelperFuntions().addAll((Collection<? extends HelperFuntion>)newValue);
+        return;
+      case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__VARIABLES:
+        getVariables().clear();
+        getVariables().addAll((Collection<? extends VariableDeclaration>)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -278,8 +313,8 @@ public class WeightDefinitionFileImpl extends MinimalEObjectImpl.Container imple
   {
     switch (featureID)
     {
-      case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__IMPORTS:
-        setImports((Import)null);
+      case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__IMPORTED_TGG:
+        setImportedTgg((Import)null);
         return;
       case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__WEIGTH_DEFINITIONS:
         getWeigthDefinitions().clear();
@@ -289,6 +324,9 @@ public class WeightDefinitionFileImpl extends MinimalEObjectImpl.Container imple
         return;
       case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__HELPER_FUNTIONS:
         getHelperFuntions().clear();
+        return;
+      case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__VARIABLES:
+        getVariables().clear();
         return;
     }
     super.eUnset(featureID);
@@ -304,14 +342,16 @@ public class WeightDefinitionFileImpl extends MinimalEObjectImpl.Container imple
   {
     switch (featureID)
     {
-      case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__IMPORTS:
-        return imports != null;
+      case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__IMPORTED_TGG:
+        return importedTgg != null;
       case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__WEIGTH_DEFINITIONS:
         return weigthDefinitions != null && !weigthDefinitions.isEmpty();
       case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__DEFAULT_CALC:
         return defaultCalc != null && !defaultCalc.isEmpty();
       case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__HELPER_FUNTIONS:
         return helperFuntions != null && !helperFuntions.isEmpty();
+      case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE__VARIABLES:
+        return variables != null && !variables.isEmpty();
     }
     return super.eIsSet(featureID);
   }

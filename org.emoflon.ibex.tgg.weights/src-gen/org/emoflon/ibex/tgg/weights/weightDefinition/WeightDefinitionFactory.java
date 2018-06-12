@@ -42,13 +42,13 @@ public interface WeightDefinitionFactory extends EFactory
   Import createImport();
 
   /**
-   * Returns a new object of class '<em>Helper Func Parameter</em>'.
+   * Returns a new object of class '<em>Variable Declaration</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Helper Func Parameter</em>'.
+   * @return a new object of class '<em>Variable Declaration</em>'.
    * @generated
    */
-  HelperFuncParameter createHelperFuncParameter();
+  VariableDeclaration createVariableDeclaration();
 
   /**
    * Returns a new object of class '<em>Rule Weight Definition</em>'.
@@ -60,15 +60,6 @@ public interface WeightDefinitionFactory extends EFactory
   RuleWeightDefinition createRuleWeightDefinition();
 
   /**
-   * Returns a new object of class '<em>Weight Calculation</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Weight Calculation</em>'.
-   * @generated
-   */
-  WeightCalculation createWeightCalculation();
-
-  /**
    * Returns a new object of class '<em>Default Calculation</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -76,6 +67,24 @@ public interface WeightDefinitionFactory extends EFactory
    * @generated
    */
   DefaultCalculation createDefaultCalculation();
+
+  /**
+   * Returns a new object of class '<em>Helper Funtion</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Helper Funtion</em>'.
+   * @generated
+   */
+  HelperFuntion createHelperFuntion();
+
+  /**
+   * Returns a new object of class '<em>Helper Func Parameter</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Helper Func Parameter</em>'.
+   * @generated
+   */
+  HelperFuncParameter createHelperFuncParameter();
 
   /**
    * Returns a new object of class '<em>Helper Function</em>'.

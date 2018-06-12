@@ -26,6 +26,7 @@ import org.emoflon.ibex.tgg.weights.weightDefinition.Import
 import org.emoflon.ibex.tgg.weights.weightDefinition.RuleWeightDefinition
 import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile
 import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionPackage
+import org.emoflon.ibex.tgg.weights.weightDefinition.VariableDeclaration
 
 /**
  * This class contains custom validation rules. 
@@ -35,11 +36,16 @@ import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionPackage
 class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
 	
 	@Inject TypeReferences ref;
+	
+	/**
+	 * Cached imported resource
+	 */
+	var Resource importedTGG
 
 	/**
 	 * Checks that there is at most one weight calculation per TGG rule
 	 */
-	@Check
+	@Check(FAST)
 	def checkRuleUniqueness(RuleWeightDefinition ruleWeightDefinition) {
 		(ruleWeightDefinition.eContainer as WeightDefinitionFile).weigthDefinitions.map[(it as RuleWeightDefinition)].
 			filter[it !== ruleWeightDefinition].filter[it.rule === ruleWeightDefinition.rule].forEach [
@@ -54,7 +60,7 @@ class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
 	/**
 	 * Checks there is at most one default calculation
 	 */
-	@Check
+	@Check(FAST)
 	def checkOnlyOneDefaultMethod(DefaultCalculation defaultCalc) {
 		if((defaultCalc.eContainer as WeightDefinitionFile).defaultCalc.length > 1) {
 			error(
@@ -68,7 +74,7 @@ class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
 	/**
 	 * Checks whether the types of rule nodes can be resolved
 	 */
-	@Check
+	@Check(NORMAL)
 	def checkNodeImports(RuleWeightDefinition ruleWeightDefinition) {
 		for (node : ruleWeightDefinition.rule.nodes.filter[!(it instanceof TGGRuleCorr)]) {
 			if (node.getTypeRef(ruleWeightDefinition) === null) {
@@ -81,7 +87,10 @@ class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
 		}
 	}
 	
-	def JvmTypeReference getTypeRef(TGGRuleNode node, EObject context) {
+	/**
+	 * Resolves type references for the node's type. Returns null if no type is found
+	 */
+	private def JvmTypeReference getTypeRef(TGGRuleNode node, EObject context) {
 		val typename = node.type.name
 		val packageName = node.type.EPackage.name
 		var JvmTypeReference ref = null
@@ -95,25 +104,42 @@ class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
 		}
 		return ref
 	}
+	
+	/**
+	 * Checks whether all variable names are unique
+	 */
+	@Check(FAST)
+	def checkVariableUniqueness(VariableDeclaration variable) {
+		(variable.eContainer as WeightDefinitionFile).variables.map[(it as VariableDeclaration)]
+		.filter[it !== variable].filter[it.name == variable.name].forEach [
+				error(
+					"Duplicated variable declaration " + (variable.name),
+					variable,
+					WeightDefinitionPackage.Literals.VARIABLE_DECLARATION__NAME
+				)
+			]
+	}
 
 	/**
 	 * Checks whether the imported file exists and contains a TGG
 	 */
-	@Check
+	@Check(NORMAL)
 	def checkTggFile(Import importFile) {
-		var Resource importedTGG
 		try {
 			val uri = URI.createURI(importFile.importURI);
 			val resolvedUri = uri.resolve(URI.createPlatformResourceURI("/", true))
-			importedTGG = new ResourceSetImpl().createResource(resolvedUri, ContentHandler.UNSPECIFIED_CONTENT_TYPE);
-			importedTGG.load(null);
-			EcoreUtil.resolveAll(importedTGG);
+			if ((importedTGG === null) || (importedTGG.URI != resolvedUri)) {
+				importedTGG = new ResourceSetImpl().createResource(resolvedUri, ContentHandler.UNSPECIFIED_CONTENT_TYPE);
+				importedTGG.load(null);
+				EcoreUtil.resolveAll(importedTGG);
+			}
 		} catch (Exception e) {
 			error(
 				"Cannot load TGG from " + (importFile.importURI),
 				importFile,
 				WeightDefinitionPackage.Literals.IMPORT__IMPORT_URI
 			)
+			return
 		}
 
 		if (!importedTGG.contents.exists[it instanceof TGG]) {
@@ -135,7 +161,7 @@ class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
 	/**
 	 * Checks helper functions are not duplicated
 	 */
-	@Check
+	@Check(NORMAL)
 	def checkHelperFunctionNameUniqueness(HelperFunction helperFuntion) {
 		(helperFuntion.eContainer as WeightDefinitionFile).helperFuntions.map[(it as HelperFunction)].
 			filter[it !== helperFuntion]
@@ -153,7 +179,7 @@ class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
 	/**
 	 * Checks helper functions have unique variable names
 	 */
-	@Check
+	@Check(FAST)
 	def checkFunctionParameterUniqueness(HelperFuncParameter parameter) {
 		(parameter.eContainer as HelperFunction).params.map[(it as HelperFuncParameter)].
 			filter[it !== parameter].filter[it.name == parameter.name].forEach [
@@ -168,7 +194,7 @@ class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
 	/**
 	 * Checks whether all parameter types of the helperFunction are equal 
 	 */
-	def checkAllParametersEqual(HelperFunction a, HelperFunction b) {
+	private def checkAllParametersEqual(HelperFunction a, HelperFunction b) {
 		if(a.params.size !== b.params.size)
 			return false
 		for(var i=0; i< a.params.size; i++) {
@@ -182,7 +208,7 @@ class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
 	/**
 	 * Checks signature of helper function is not the signature of reserved functions
 	 */
-	@Check
+	@Check(FAST)
 	def checkHelperMethodDoesNotHaveForbiddenName(HelperFunction h) {
 		if(h.name == "calculateDefaultWeight" || 
 			h.name == "calculateWeight"
@@ -200,6 +226,7 @@ class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
 	/**
 	 * Check for signature of generic weight methods
 	 */
+	@Check(FAST)
 	def checkForGenericParameters(HelperFunction h) {
 		if(h.params.size == 2
 			&& h.params.get(0).parameterType.type == ref.getTypeForName(String, h).type
@@ -210,7 +237,10 @@ class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
 		return false;
 	}
 	
-	@Check
+	/**
+	 * Checks the helper function does not have the same signature as any rule weight function
+	 */
+	@Check(NORMAL)
 	def checkHelperFunctionDoesNotMatchRuleWeightDef(HelperFunction h) {
 		(h.eContainer as WeightDefinitionFile).weigthDefinitions.map[(it as RuleWeightDefinition)]
 			.filter[checkHelperFunctionRuleWeightCombination(h, it)].forEach [
@@ -222,7 +252,10 @@ class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
 			]
 	}
 	
-	def checkHelperFunctionRuleWeightCombination(HelperFunction h, RuleWeightDefinition ruleWeightDefinition) {
+	/**
+	 * Checks whether the helper function and the generated parameterized rule weight function have the same signature
+	 */
+	private def checkHelperFunctionRuleWeightCombination(HelperFunction h, RuleWeightDefinition ruleWeightDefinition) {
 		val String ruleNameCalcMethod = '''calculateWeightFor«ruleWeightDefinition.rule.name»''' 
 		if(h.name != ruleNameCalcMethod)
 			return false

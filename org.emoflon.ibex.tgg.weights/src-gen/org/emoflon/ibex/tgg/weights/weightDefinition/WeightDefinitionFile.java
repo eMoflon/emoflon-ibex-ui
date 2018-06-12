@@ -7,8 +7,6 @@ import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EObject;
 
-import org.eclipse.xtext.xbase.XExpression;
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>File</b></em>'.
@@ -18,10 +16,11 @@ import org.eclipse.xtext.xbase.XExpression;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile#getImports <em>Imports</em>}</li>
+ *   <li>{@link org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile#getImportedTgg <em>Imported Tgg</em>}</li>
  *   <li>{@link org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile#getWeigthDefinitions <em>Weigth Definitions</em>}</li>
  *   <li>{@link org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile#getDefaultCalc <em>Default Calc</em>}</li>
  *   <li>{@link org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile#getHelperFuntions <em>Helper Funtions</em>}</li>
+ *   <li>{@link org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile#getVariables <em>Variables</em>}</li>
  * </ul>
  *
  * @see org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionPackage#getWeightDefinitionFile()
@@ -31,34 +30,34 @@ import org.eclipse.xtext.xbase.XExpression;
 public interface WeightDefinitionFile extends EObject
 {
   /**
-   * Returns the value of the '<em><b>Imports</b></em>' containment reference.
+   * Returns the value of the '<em><b>Imported Tgg</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Imports</em>' containment reference isn't clear,
+   * If the meaning of the '<em>Imported Tgg</em>' containment reference isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Imports</em>' containment reference.
-   * @see #setImports(Import)
-   * @see org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionPackage#getWeightDefinitionFile_Imports()
+   * @return the value of the '<em>Imported Tgg</em>' containment reference.
+   * @see #setImportedTgg(Import)
+   * @see org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionPackage#getWeightDefinitionFile_ImportedTgg()
    * @model containment="true"
    * @generated
    */
-  Import getImports();
+  Import getImportedTgg();
 
   /**
-   * Sets the value of the '{@link org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile#getImports <em>Imports</em>}' containment reference.
+   * Sets the value of the '{@link org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile#getImportedTgg <em>Imported Tgg</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Imports</em>' containment reference.
-   * @see #getImports()
+   * @param value the new value of the '<em>Imported Tgg</em>' containment reference.
+   * @see #getImportedTgg()
    * @generated
    */
-  void setImports(Import value);
+  void setImportedTgg(Import value);
 
   /**
    * Returns the value of the '<em><b>Weigth Definitions</b></em>' containment reference list.
-   * The list contents are of type {@link org.eclipse.xtext.xbase.XExpression}.
+   * The list contents are of type {@link org.emoflon.ibex.tgg.weights.weightDefinition.RuleWeightDefinition}.
    * <!-- begin-user-doc -->
    * <p>
    * If the meaning of the '<em>Weigth Definitions</em>' containment reference list isn't clear,
@@ -70,11 +69,11 @@ public interface WeightDefinitionFile extends EObject
    * @model containment="true"
    * @generated
    */
-  EList<XExpression> getWeigthDefinitions();
+  EList<RuleWeightDefinition> getWeigthDefinitions();
 
   /**
    * Returns the value of the '<em><b>Default Calc</b></em>' containment reference list.
-   * The list contents are of type {@link org.eclipse.xtext.xbase.XExpression}.
+   * The list contents are of type {@link org.emoflon.ibex.tgg.weights.weightDefinition.DefaultCalculation}.
    * <!-- begin-user-doc -->
    * <p>
    * If the meaning of the '<em>Default Calc</em>' containment reference list isn't clear,
@@ -86,11 +85,11 @@ public interface WeightDefinitionFile extends EObject
    * @model containment="true"
    * @generated
    */
-  EList<XExpression> getDefaultCalc();
+  EList<DefaultCalculation> getDefaultCalc();
 
   /**
    * Returns the value of the '<em><b>Helper Funtions</b></em>' containment reference list.
-   * The list contents are of type {@link org.eclipse.xtext.xbase.XExpression}.
+   * The list contents are of type {@link org.emoflon.ibex.tgg.weights.weightDefinition.HelperFuntion}.
    * <!-- begin-user-doc -->
    * <p>
    * If the meaning of the '<em>Helper Funtions</em>' containment reference list isn't clear,
@@ -102,6 +101,22 @@ public interface WeightDefinitionFile extends EObject
    * @model containment="true"
    * @generated
    */
-  EList<XExpression> getHelperFuntions();
+  EList<HelperFuntion> getHelperFuntions();
+
+  /**
+   * Returns the value of the '<em><b>Variables</b></em>' containment reference list.
+   * The list contents are of type {@link org.emoflon.ibex.tgg.weights.weightDefinition.VariableDeclaration}.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Variables</em>' containment reference list isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Variables</em>' containment reference list.
+   * @see org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionPackage#getWeightDefinitionFile_Variables()
+   * @model containment="true"
+   * @generated
+   */
+  EList<VariableDeclaration> getVariables();
 
 } // WeightDefinitionFile

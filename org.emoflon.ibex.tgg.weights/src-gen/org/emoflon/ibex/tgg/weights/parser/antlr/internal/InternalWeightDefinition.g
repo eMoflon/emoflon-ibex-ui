@@ -79,17 +79,17 @@ ruleWeightDefinitionFile returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getWeightDefinitionFileAccess().getImportsImportParserRuleCall_0_0());
+					newCompositeNode(grammarAccess.getWeightDefinitionFileAccess().getImportedTggImportParserRuleCall_0_0());
 				}
-				lv_imports_0_0=ruleImport
+				lv_importedTgg_0_0=ruleImport
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getWeightDefinitionFileRule());
 					}
 					set(
 						$current,
-						"imports",
-						lv_imports_0_0,
+						"importedTgg",
+						lv_importedTgg_0_0,
 						"org.emoflon.ibex.tgg.weights.WeightDefinition.Import");
 					afterParserOrEnumRuleCall();
 				}
@@ -155,6 +155,26 @@ ruleWeightDefinitionFile returns [EObject current=null]
 					}
 				)
 			)
+			    |
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getWeightDefinitionFileAccess().getVariablesVariableDeclarationParserRuleCall_1_3_0());
+					}
+					lv_variables_4_0=ruleVariableDeclaration
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getWeightDefinitionFileRule());
+						}
+						add(
+							$current,
+							"variables",
+							lv_variables_4_0,
+							"org.emoflon.ibex.tgg.weights.WeightDefinition.VariableDeclaration");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
 		)*
 	)
 ;
@@ -194,6 +214,67 @@ ruleImport returns [EObject current=null]
 						"importURI",
 						lv_importURI_1_0,
 						"org.eclipse.xtext.xbase.Xtype.STRING");
+				}
+			)
+		)
+	)
+;
+
+// Entry rule entryRuleVariableDeclaration
+entryRuleVariableDeclaration returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getVariableDeclarationRule()); }
+	iv_ruleVariableDeclaration=ruleVariableDeclaration
+	{ $current=$iv_ruleVariableDeclaration.current; }
+	EOF;
+
+// Rule VariableDeclaration
+ruleVariableDeclaration returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		otherlv_0='var'
+		{
+			newLeafNode(otherlv_0, grammarAccess.getVariableDeclarationAccess().getVarKeyword_0());
+		}
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getVariableDeclarationAccess().getParameterTypeJvmTypeReferenceParserRuleCall_1_0());
+				}
+				lv_parameterType_1_0=ruleJvmTypeReference
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getVariableDeclarationRule());
+					}
+					set(
+						$current,
+						"parameterType",
+						lv_parameterType_1_0,
+						"org.eclipse.xtext.xbase.Xtype.JvmTypeReference");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getVariableDeclarationAccess().getNameValidIDParserRuleCall_2_0());
+				}
+				lv_name_2_0=ruleValidID
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getVariableDeclarationRule());
+					}
+					set(
+						$current,
+						"name",
+						lv_name_2_0,
+						"org.eclipse.xtext.xbase.Xtype.ValidID");
+					afterParserOrEnumRuleCall();
 				}
 			)
 		)
@@ -243,9 +324,9 @@ ruleRuleWeightDefinition returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getRuleWeightDefinitionAccess().getWeightCalcWeightCalculationParserRuleCall_3_0());
+					newCompositeNode(grammarAccess.getRuleWeightDefinitionAccess().getWeightCalcXBlockExpressionParserRuleCall_3_0());
 				}
-				lv_weightCalc_3_0=ruleWeightCalculation
+				lv_weightCalc_3_0=ruleXBlockExpression
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getRuleWeightDefinitionRule());
@@ -254,51 +335,6 @@ ruleRuleWeightDefinition returns [EObject current=null]
 						$current,
 						"weightCalc",
 						lv_weightCalc_3_0,
-						"org.emoflon.ibex.tgg.weights.WeightDefinition.WeightCalculation");
-					afterParserOrEnumRuleCall();
-				}
-			)
-		)
-	)
-;
-
-// Entry rule entryRuleWeightCalculation
-entryRuleWeightCalculation returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getWeightCalculationRule()); }
-	iv_ruleWeightCalculation=ruleWeightCalculation
-	{ $current=$iv_ruleWeightCalculation.current; }
-	EOF;
-
-// Rule WeightCalculation
-ruleWeightCalculation returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		(
-			{
-				$current = forceCreateModelElement(
-					grammarAccess.getWeightCalculationAccess().getWeightCalculationAction_0(),
-					$current);
-			}
-		)
-		(
-			(
-				{
-					newCompositeNode(grammarAccess.getWeightCalculationAccess().getCalcXBlockExpressionParserRuleCall_1_0());
-				}
-				lv_calc_1_0=ruleXBlockExpression
-				{
-					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getWeightCalculationRule());
-					}
-					set(
-						$current,
-						"calc",
-						lv_calc_1_0,
 						"org.eclipse.xtext.xbase.Xbase.XBlockExpression");
 					afterParserOrEnumRuleCall();
 				}

@@ -10,6 +10,7 @@ import org.emoflon.ibex.tgg.weights.weightDefinition.HelperFunction
 import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile
 import org.eclipse.xtext.ui.editor.outline.impl.DocumentRootNode
 import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionPackage
+import org.emoflon.ibex.tgg.weights.weightDefinition.VariableDeclaration
 
 /**
  * Customization of the default outline structure.
@@ -29,12 +30,17 @@ class WeightDefinitionOutlineTreeProvider extends XbaseOutlineTreeProvider {
 	def _isLeaf(HelperFunction helperFunc) {
 		true
 	}
+	
+	def _isLeaf(VariableDeclaration varDec) {
+		true
+	}
 
 	def _createChildren(DocumentRootNode parentNode, WeightDefinitionFile file) {
-		createEObjectNode(parentNode, file.imports)
+		createNode(parentNode, file.importedTgg)
+		file.defaultCalc.forEach[createNode(parentNode, it)]
 		createEStructuralFeatureNode(parentNode, file,
-			WeightDefinitionPackage.Literals.WEIGHT_DEFINITION_FILE__DEFAULT_CALC, imageDispatcher.invoke(file),
-			"Default Weight", false);
+		WeightDefinitionPackage.Literals.WEIGHT_DEFINITION_FILE__VARIABLES, imageDispatcher.invoke(file),
+		"Variables", false);
 		createEStructuralFeatureNode(parentNode, file,
 			WeightDefinitionPackage.Literals.WEIGHT_DEFINITION_FILE__WEIGTH_DEFINITIONS, imageDispatcher.invoke(file),
 			"Rule Weight", false);

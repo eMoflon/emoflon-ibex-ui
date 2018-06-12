@@ -10,8 +10,6 @@ import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 
 import org.eclipse.emf.ecore.EObject;
 
-import org.eclipse.xtext.xbase.XExpression;
-
 import org.emoflon.ibex.tgg.weights.weightDefinition.*;
 
 /**
@@ -88,9 +86,9 @@ public class WeightDefinitionAdapterFactory extends AdapterFactoryImpl
         return createImportAdapter();
       }
       @Override
-      public Adapter caseHelperFuncParameter(HelperFuncParameter object)
+      public Adapter caseVariableDeclaration(VariableDeclaration object)
       {
-        return createHelperFuncParameterAdapter();
+        return createVariableDeclarationAdapter();
       }
       @Override
       public Adapter caseRuleWeightDefinition(RuleWeightDefinition object)
@@ -98,24 +96,24 @@ public class WeightDefinitionAdapterFactory extends AdapterFactoryImpl
         return createRuleWeightDefinitionAdapter();
       }
       @Override
-      public Adapter caseWeightCalculation(WeightCalculation object)
-      {
-        return createWeightCalculationAdapter();
-      }
-      @Override
       public Adapter caseDefaultCalculation(DefaultCalculation object)
       {
         return createDefaultCalculationAdapter();
       }
       @Override
+      public Adapter caseHelperFuntion(HelperFuntion object)
+      {
+        return createHelperFuntionAdapter();
+      }
+      @Override
+      public Adapter caseHelperFuncParameter(HelperFuncParameter object)
+      {
+        return createHelperFuncParameterAdapter();
+      }
+      @Override
       public Adapter caseHelperFunction(HelperFunction object)
       {
         return createHelperFunctionAdapter();
-      }
-      @Override
-      public Adapter caseXExpression(XExpression object)
-      {
-        return createXExpressionAdapter();
       }
       @Override
       public Adapter defaultCase(EObject object)
@@ -170,16 +168,16 @@ public class WeightDefinitionAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link org.emoflon.ibex.tgg.weights.weightDefinition.HelperFuncParameter <em>Helper Func Parameter</em>}'.
+   * Creates a new adapter for an object of class '{@link org.emoflon.ibex.tgg.weights.weightDefinition.VariableDeclaration <em>Variable Declaration</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see org.emoflon.ibex.tgg.weights.weightDefinition.HelperFuncParameter
+   * @see org.emoflon.ibex.tgg.weights.weightDefinition.VariableDeclaration
    * @generated
    */
-  public Adapter createHelperFuncParameterAdapter()
+  public Adapter createVariableDeclarationAdapter()
   {
     return null;
   }
@@ -200,21 +198,6 @@ public class WeightDefinitionAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link org.emoflon.ibex.tgg.weights.weightDefinition.WeightCalculation <em>Weight Calculation</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.emoflon.ibex.tgg.weights.weightDefinition.WeightCalculation
-   * @generated
-   */
-  public Adapter createWeightCalculationAdapter()
-  {
-    return null;
-  }
-
-  /**
    * Creates a new adapter for an object of class '{@link org.emoflon.ibex.tgg.weights.weightDefinition.DefaultCalculation <em>Default Calculation</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -230,6 +213,36 @@ public class WeightDefinitionAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link org.emoflon.ibex.tgg.weights.weightDefinition.HelperFuntion <em>Helper Funtion</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.emoflon.ibex.tgg.weights.weightDefinition.HelperFuntion
+   * @generated
+   */
+  public Adapter createHelperFuntionAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.emoflon.ibex.tgg.weights.weightDefinition.HelperFuncParameter <em>Helper Func Parameter</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.emoflon.ibex.tgg.weights.weightDefinition.HelperFuncParameter
+   * @generated
+   */
+  public Adapter createHelperFuncParameterAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link org.emoflon.ibex.tgg.weights.weightDefinition.HelperFunction <em>Helper Function</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -240,22 +253,6 @@ public class WeightDefinitionAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createHelperFunctionAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link org.eclipse.xtext.xbase.XExpression <em>XExpression</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.eclipse.xtext.xbase.XExpression
-   * @since 2.7
-   * @generated
-   */
-  public Adapter createXExpressionAdapter()
   {
     return null;
   }

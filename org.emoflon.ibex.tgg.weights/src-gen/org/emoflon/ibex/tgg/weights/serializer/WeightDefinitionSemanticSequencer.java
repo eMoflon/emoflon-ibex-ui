@@ -65,7 +65,7 @@ import org.emoflon.ibex.tgg.weights.weightDefinition.HelperFuncParameter;
 import org.emoflon.ibex.tgg.weights.weightDefinition.HelperFunction;
 import org.emoflon.ibex.tgg.weights.weightDefinition.Import;
 import org.emoflon.ibex.tgg.weights.weightDefinition.RuleWeightDefinition;
-import org.emoflon.ibex.tgg.weights.weightDefinition.WeightCalculation;
+import org.emoflon.ibex.tgg.weights.weightDefinition.VariableDeclaration;
 import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile;
 import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionPackage;
 
@@ -156,8 +156,8 @@ public class WeightDefinitionSemanticSequencer extends XbaseSemanticSequencer {
 			case WeightDefinitionPackage.RULE_WEIGHT_DEFINITION:
 				sequence_RuleWeightDefinition(context, (RuleWeightDefinition) semanticObject); 
 				return; 
-			case WeightDefinitionPackage.WEIGHT_CALCULATION:
-				sequence_WeightCalculation(context, (WeightCalculation) semanticObject); 
+			case WeightDefinitionPackage.VARIABLE_DECLARATION:
+				sequence_VariableDeclaration(context, (VariableDeclaration) semanticObject); 
 				return; 
 			case WeightDefinitionPackage.WEIGHT_DEFINITION_FILE:
 				sequence_WeightDefinitionFile(context, (WeightDefinitionFile) semanticObject); 
@@ -422,7 +422,7 @@ public class WeightDefinitionSemanticSequencer extends XbaseSemanticSequencer {
 	 *     RuleWeightDefinition returns RuleWeightDefinition
 	 *
 	 * Constraint:
-	 *     (rule=[TGGRule|ID] weightCalc=WeightCalculation)
+	 *     (rule=[TGGRule|ID] weightCalc=XBlockExpression)
 	 */
 	protected void sequence_RuleWeightDefinition(ISerializationContext context, RuleWeightDefinition semanticObject) {
 		if (errorAcceptor != null) {
@@ -433,25 +433,28 @@ public class WeightDefinitionSemanticSequencer extends XbaseSemanticSequencer {
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getRuleWeightDefinitionAccess().getRuleTGGRuleIDTerminalRuleCall_2_0_1(), semanticObject.eGet(WeightDefinitionPackage.Literals.RULE_WEIGHT_DEFINITION__RULE, false));
-		feeder.accept(grammarAccess.getRuleWeightDefinitionAccess().getWeightCalcWeightCalculationParserRuleCall_3_0(), semanticObject.getWeightCalc());
+		feeder.accept(grammarAccess.getRuleWeightDefinitionAccess().getWeightCalcXBlockExpressionParserRuleCall_3_0(), semanticObject.getWeightCalc());
 		feeder.finish();
 	}
 	
 	
 	/**
 	 * Contexts:
-	 *     WeightCalculation returns WeightCalculation
+	 *     VariableDeclaration returns VariableDeclaration
 	 *
 	 * Constraint:
-	 *     calc=XBlockExpression
+	 *     (parameterType=JvmTypeReference name=ValidID)
 	 */
-	protected void sequence_WeightCalculation(ISerializationContext context, WeightCalculation semanticObject) {
+	protected void sequence_VariableDeclaration(ISerializationContext context, VariableDeclaration semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, WeightDefinitionPackage.Literals.WEIGHT_CALCULATION__CALC) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, WeightDefinitionPackage.Literals.WEIGHT_CALCULATION__CALC));
+			if (transientValues.isValueTransient(semanticObject, WeightDefinitionPackage.Literals.VARIABLE_DECLARATION__PARAMETER_TYPE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, WeightDefinitionPackage.Literals.VARIABLE_DECLARATION__PARAMETER_TYPE));
+			if (transientValues.isValueTransient(semanticObject, WeightDefinitionPackage.Literals.VARIABLE_DECLARATION__NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, WeightDefinitionPackage.Literals.VARIABLE_DECLARATION__NAME));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getWeightCalculationAccess().getCalcXBlockExpressionParserRuleCall_1_0(), semanticObject.getCalc());
+		feeder.accept(grammarAccess.getVariableDeclarationAccess().getParameterTypeJvmTypeReferenceParserRuleCall_1_0(), semanticObject.getParameterType());
+		feeder.accept(grammarAccess.getVariableDeclarationAccess().getNameValidIDParserRuleCall_2_0(), semanticObject.getName());
 		feeder.finish();
 	}
 	
@@ -461,7 +464,10 @@ public class WeightDefinitionSemanticSequencer extends XbaseSemanticSequencer {
 	 *     WeightDefinitionFile returns WeightDefinitionFile
 	 *
 	 * Constraint:
-	 *     (imports=Import (weigthDefinitions+=RuleWeightDefinition | defaultCalc+=DefaultCalculation | helperFuntions+=HelperFuntion)*)
+	 *     (
+	 *         importedTgg=Import 
+	 *         (weigthDefinitions+=RuleWeightDefinition | defaultCalc+=DefaultCalculation | helperFuntions+=HelperFuntion | variables+=VariableDeclaration)*
+	 *     )
 	 */
 	protected void sequence_WeightDefinitionFile(ISerializationContext context, WeightDefinitionFile semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
