@@ -270,7 +270,11 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 	
 	def is_equal_or_super_type_of_ov(EClass sup, IEObjectDescription desc){
 		val sub = getOVType(desc.EObjectOrProxy)
-		sub != null && (EcoreUtils.equalsFQN(sub, sup) || sub.EAllSuperTypes.contains(sup) || EcorePackage.eINSTANCE.EObject.equals(sup))
+		sub != null && (  
+			EcoreUtils.equalsFQN(sub, sup) 
+		 	|| !sub.EAllSuperTypes.filter[superType | EcoreUtils.equalsFQN(superType, sup)].empty 
+		 	|| EcoreUtils.equalsFQN(sub, EcorePackage.eINSTANCE.EObject)
+		)
 	}
 	
 	def is_type_of_ov(EObject context, EReference reference) {
