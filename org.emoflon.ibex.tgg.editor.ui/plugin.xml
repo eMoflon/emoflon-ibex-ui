@@ -9,7 +9,7 @@
               contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
               default="true"
               extensions="tgg"
-              icon="resources/icons/moflonFile.png"
+              icon="resources/icons/tgg-rule.gif"
               id="org.moflon.tgg.mosl.TGG"
               name="TGG Editor">
         </editor>
