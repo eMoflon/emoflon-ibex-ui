@@ -13,6 +13,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.ui.INewWizard;
 import org.emoflon.ibex.tgg.ide.admin.IbexTGGNature;
 import org.moflon.core.utilities.LogUtils;
+import org.moflon.core.utilities.MoflonUtil;
 import org.moflon.core.utilities.WorkspaceHelper;
 import org.moflon.tgg.mosl.defaults.AttrCondDefLibraryProvider;
 import org.moflon.tgg.mosl.defaults.DefaultFilesHelper;
@@ -44,7 +45,7 @@ public class NewIntegrationWizard extends AbstractMoflonWizard implements INewWi
 	protected void generateDefaultFiles(final IProgressMonitor monitor, IProject project) throws CoreException {
 		try {
 			final SubMonitor subMon = SubMonitor.convert(monitor, "Generating default files", 3);
-			String defaultSchema = DefaultFilesHelper.generateDefaultSchema(project.getName());
+			String defaultSchema = DefaultFilesHelper.generateDefaultSchema(MoflonUtil.lastCapitalizedSegmentOf(project.getName()));
 			IPath pathToSchema = new Path(IbexTGGNature.SCHEMA_FILE);
 			WorkspaceHelper.addAllFoldersAndFile(project, pathToSchema, defaultSchema, subMon.split(1));
 			WorkspaceHelper.addAllFolders(project, "src/org/emoflon/ibex/tgg/rules", subMon.split(1));
