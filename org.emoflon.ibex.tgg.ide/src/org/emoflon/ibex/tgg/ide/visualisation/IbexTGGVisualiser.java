@@ -15,6 +15,7 @@ import org.emoflon.ibex.tgg.ide.admin.IbexTGGBuilder;
 import org.emoflon.ibex.tgg.ide.transformation.EditorTGGtoFlattenedTGG;
 import org.moflon.core.ui.visualisation.EMoflonPlantUMLGenerator;
 import org.moflon.core.ui.visualisation.EMoflonVisualiser;
+import org.moflon.core.utilities.MoflonUtil;
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile;
 
 public class IbexTGGVisualiser extends EMoflonVisualiser {
@@ -42,7 +43,7 @@ public class IbexTGGVisualiser extends EMoflonVisualiser {
 	private TripleGraphGrammarFile loadTGG(String projectName) {
 		ResourceSet rs = new ResourceSetImpl();
 		Resource tgg = rs.getResource(URI.createPlatformResourceURI(projectName + "/" + 
-				IbexTGGBuilder.MODEL_FOLDER + "/" + projectName + 
+				IbexTGGBuilder.MODEL_FOLDER + "/" + MoflonUtil.lastCapitalizedSegmentOf(projectName) + 
 				IbexTGGBuilder.EDITOR_MODEL_EXTENSION, true), true);
 		return (TripleGraphGrammarFile) tgg.getContents().get(0);
 	}
