@@ -12,11 +12,12 @@ import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
 import org.emoflon.ibex.gt.editor.gT.EditorPattern
 import org.emoflon.ibex.gt.editor.utils.GTConditionHelper
 
+
 /**
  * Utility methods to print objects of the editor model.
  */
 class GTVisualizationUtils {
-
+	
 	/**
 	 * Returns the signature of the pattern.
 	 */

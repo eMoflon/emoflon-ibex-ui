@@ -2,7 +2,7 @@ package org.emoflon.ibex.gt.editor.ui.visualization
 
 import java.util.HashSet
 import java.util.Set
-
+import org.apache.commons.lang3.StringUtils
 import org.eclipse.emf.common.util.EList
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorCondition
@@ -22,6 +22,7 @@ class GTPlantUMLGenerator {
 	static val ContextColor = 'Black'
 	static val CreateColor = 'DarkGreen'
 	static val DeleteColor = 'Crimson'
+	static int MAX_STR_LENGTH = 25
 
 	/**
 	 * Returns the PlantUML code for the visualization of an empty file.
@@ -134,7 +135,7 @@ class GTPlantUMLGenerator {
 		val operator = if(attr.relation == EditorRelation.ASSIGNMENT) '+' else '#'
 		val name = if(attr.attribute === null || attr.attribute.name === null) '?' else attr.attribute.name
 		val relation = if(attr.relation === null) '?' else attr.relation.toString
-		'''«operator» «name» «relation» «GTVisualizationUtils.toString(attr.value)»'''
+		'''«operator» «name» «relation» «StringUtils.abbreviateMiddle(GTVisualizationUtils.toString(attr.value), "...", MAX_STR_LENGTH)»'''
 	}
 
 	/**
