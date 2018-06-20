@@ -48,6 +48,7 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 import org.moflon.core.utilities.ExtensionsUtil;
 import org.emoflon.ibex.tgg.ide.transformation.EditorTGGtoFlattenedTGG;
 import org.moflon.core.utilities.LogUtils;
+import org.moflon.core.utilities.MoflonUtil;
 import org.moflon.core.utilities.WorkspaceHelper;
 import org.moflon.tgg.mosl.defaults.AttrCondDefLibraryProvider;
 import org.moflon.tgg.mosl.tgg.AttrCond;
@@ -120,8 +121,9 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 
 		performClean();
 		generateAttrCondLib();
-		generateEditorModel().ifPresent(editorModel -> generateFlattenedEditorModel(editorModel)
-				.ifPresent(flattenedEditorModel -> generateExtraModels(this, editorModel, flattenedEditorModel)));
+		generateEditorModel().ifPresent(editorModel//
+		-> generateFlattenedEditorModel(editorModel).ifPresent(flattenedEditorModel//
+		-> generateExtraModels(this, editorModel, flattenedEditorModel)));
 
 		long toc = System.currentTimeMillis();
 
@@ -134,7 +136,7 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 		return flattenedTGGOp.map(flattenedTGG -> {
 			ResourceSet rs = editorModel.eResource().getResourceSet();
 			IFile tggFile = getProject().getFolder(IbexTGGBuilder.MODEL_FOLDER)
-					.getFile(getProject().getName() + EDITOR_FLATTENED_MODEL_EXTENSION);
+					.getFile(determineNameOfGeneratedFile() + EDITOR_FLATTENED_MODEL_EXTENSION);
 			try {
 				saveModelInProject(tggFile, rs, flattenedTGG);
 			} catch (Exception e) {
@@ -166,7 +168,7 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 
 	public void establishDefaultRunFile(String fileName, BiFunction<String, String, String> generator, Boolean force)
 			throws CoreException {
-		createIfNotExists(RUN_FILE_PATH_PREFIX + getProject().getName().toLowerCase() + "/", fileName, ".java",
+		createIfNotExists(RUN_FILE_PATH_PREFIX + determineNameOfGeneratedFile().toLowerCase() + "/", fileName, ".java",
 				generator, force);
 	}
 
@@ -220,14 +222,14 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 					EcoreUtil.resolveAll(resourceSet);
 
 					// Combine to form single tgg model
-					TripleGraphGrammarFile xtextParsedTGG = (TripleGraphGrammarFile) schemaResource.getContents()
-							.get(0);
+					TripleGraphGrammarFile xtextParsedTGG = //
+							(TripleGraphGrammarFile) schemaResource.getContents().get(0);
 					collectAllRules(xtextParsedTGG, resourceSet);
 					addAttrCondDefLibraryReferencesToSchema(xtextParsedTGG);
 
 					// Persist and return
-					IFile editorFile = getProject().getFolder(IbexTGGBuilder.MODEL_FOLDER)
-							.getFile(getProject().getName() + EDITOR_MODEL_EXTENSION);
+					IFile editorFile = getProject().getFolder(IbexTGGBuilder.MODEL_FOLDER)//
+							.getFile(determineNameOfGeneratedFile() + EDITOR_MODEL_EXTENSION);
 
 					saveModelInProject(editorFile, resourceSet, xtextParsedTGG);
 
@@ -242,6 +244,10 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 		}
 
 		return Optional.empty();
+	}
+
+	private String determineNameOfGeneratedFile() {
+		return MoflonUtil.lastCapitalizedSegmentOf(getProject().getName());
 	}
 
 	private void validateEditorTGGModel(TripleGraphGrammarFile xtextParsedTGG, IFile editorFile) throws CoreException {
@@ -383,8 +389,8 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	}
 
 	public static void saveModelInProject(IFile file, ResourceSet rs, EObject model) throws IOException {
-		URI uri = URI.createPlatformResourceURI(
-				file.getProject().getName() + "/" + file.getProjectRelativePath().toString(), true);
+		URI uri = URI.createPlatformResourceURI(file.getProject().getName()//
+				+ "/" + file.getProjectRelativePath().toString(), true);
 		Resource resource = rs.createResource(uri);
 		resource.getContents().add(model);
 		Map<Object, Object> options = ((XMLResource) resource).getDefaultSaveOptions();
@@ -418,29 +424,34 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 
 	private void performClean() {
 		try {
-			Arrays.asList(getProject().findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE)).forEach(m -> {
-				try {
-					m.delete();
-				} catch (CoreException e) {
-					LogUtils.error(logger, e);
-				}
-			});
+			Arrays.asList(getProject().findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE))//
+					.forEach(m -> {
+						try {
+							m.delete();
+						} catch (CoreException e) {
+							LogUtils.error(logger, e);
+						}
+					});
 		} catch (CoreException e) {
 			LogUtils.error(logger, e);
 		}
 
-		List<String> toDelete = Arrays.asList(MODEL_FOLDER + "/" + getProject().getName() + ECORE_FILE_EXTENSION,
-				MODEL_FOLDER + "/" + getProject().getName() + EDITOR_MODEL_EXTENSION,
-				MODEL_FOLDER + "/" + getProject().getName() + INTERNAL_TGG_MODEL_EXTENSION,
-				MODEL_FOLDER + "/" + getProject().getName() + EDITOR_FLATTENED_MODEL_EXTENSION,
-				MODEL_FOLDER + "/" + getProject().getName() + INTERNAL_TGG_FLATTENED_MODEL_EXTENSION);
-		toDelete.stream().map(f -> getProject().getFile(f)).filter(IFile::exists).forEach(f -> {
-			try {
-				f.delete(true, new NullProgressMonitor());
-			} catch (CoreException e) {
-				LogUtils.error(logger, e);
-			}
-		});
+		List<String> toDelete = Arrays.asList(//
+				MODEL_FOLDER + "/" + determineNameOfGeneratedFile() + ECORE_FILE_EXTENSION,
+				MODEL_FOLDER + "/" + determineNameOfGeneratedFile() + EDITOR_MODEL_EXTENSION,
+				MODEL_FOLDER + "/" + determineNameOfGeneratedFile() + INTERNAL_TGG_MODEL_EXTENSION,
+				MODEL_FOLDER + "/" + determineNameOfGeneratedFile() + EDITOR_FLATTENED_MODEL_EXTENSION,
+				MODEL_FOLDER + "/" + determineNameOfGeneratedFile() + INTERNAL_TGG_FLATTENED_MODEL_EXTENSION);
+		toDelete.stream()//
+				.map(f -> getProject().getFile(f))//
+				.filter(IFile::exists)//
+				.forEach(f -> {
+					try {
+						f.delete(true, new NullProgressMonitor());
+					} catch (CoreException e) {
+						LogUtils.error(logger, e);
+					}
+				});
 
 		builderExtensions.forEach(be -> be.performClean(this));
 	}

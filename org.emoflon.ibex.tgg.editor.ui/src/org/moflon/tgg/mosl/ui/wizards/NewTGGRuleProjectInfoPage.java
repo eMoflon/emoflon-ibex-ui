@@ -26,6 +26,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.emoflon.ibex.tgg.ide.admin.IbexTGGPlugin;
 import org.moflon.core.utilities.LogUtils;
+import org.moflon.core.utilities.MoflonUtil;
 
 public class NewTGGRuleProjectInfoPage extends WizardPage
 {
@@ -74,7 +75,7 @@ public class NewTGGRuleProjectInfoPage extends WizardPage
 
    private void setSchema()
    {
-      schema = project.map(p -> p.getName());
+      schema = project.map(p -> MoflonUtil.lastCapitalizedSegmentOf(p.getName()));
    }
 
    @Override
