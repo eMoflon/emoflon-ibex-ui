@@ -18,6 +18,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
@@ -41,12 +42,15 @@ public abstract class AbstractMoflonProjectInfoPage extends WizardPage
    private Button browseTargetDirectoryButton;
 
    private Text projectNameTextfield;
+   
+   private boolean selectMetaModels;
 
    public AbstractMoflonProjectInfoPage(String name, String title, String desc)
    {
       super(name);
       projectName = "";
       useDefaultLocation = true;
+      selectMetaModels = true;
       setProjectLocation(null);
 
       // Set information on the page
@@ -54,27 +58,28 @@ public abstract class AbstractMoflonProjectInfoPage extends WizardPage
       setDescription(desc);
       setImageDescriptor(AbstractMoflonWizard.getImage("resources/icons/metamodelProjectWizard.gif"));
    }
-
+   	
    @Override
-   public void createControl(final Composite parent)
-   {
-      // Create root container
-      Composite container = new Composite(parent, SWT.NULL);
-      GridLayout layout = new GridLayout();
-      container.setLayout(layout);
-      layout.numColumns = 3;
+   public void createControl(final Composite parent) {
+		// Create root container
+		Composite container = new Composite(parent, SWT.NULL);
+		GridLayout layout = new GridLayout();
+		container.setLayout(layout);
+		layout.numColumns = 3;
 
-      createControlsForProjectName(container);
+		createControlsForProjectName(container);
 
-      createControlsForProjectLocation(container);
+		createControlsForProjectLocation(container);
 
-      // Place cursor in textfield
-      projectNameTextfield.setFocus();
+		createControlsForProjectType(container);
 
-      // Set controls and update
-      setControl(container);
-      dialogChanged();
-   }
+		// Place cursor in textfield
+		projectNameTextfield.setFocus();
+
+		// Set controls and update
+		setControl(container);
+		dialogChanged();
+	}
 
    public void createControlsForProjectLocation(final Composite container)
    {
@@ -173,6 +178,50 @@ public abstract class AbstractMoflonProjectInfoPage extends WizardPage
          }
       });
    }
+   
+	public void createControlsForProjectType(final Composite container) {
+		Label label = createDummyLabel(container);
+		label.setText("&Project type:");
+		// Create a container to contain 2 radio buttons that specify the project type
+		Composite selectionContainer = new Composite(container, SWT.NONE);
+		selectionContainer.setLayout(new RowLayout(SWT.VERTICAL));
+		Button buttonSelectMetaModels = new Button(selectionContainer, SWT.RADIO);
+		buttonSelectMetaModels.setText("Project with preselected metamodels");
+		// Default option: Select metamodels
+		buttonSelectMetaModels.setSelection(true);
+		Button buttonBlankProject = new Button(selectionContainer, SWT.RADIO);
+		buttonBlankProject.setText("Blank project");
+
+		buttonSelectMetaModels.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Button source = (Button) e.getSource();
+
+				if (source.getSelection()) {
+					selectMetaModels = true;
+					updateNextPages(false);
+					dialogChanged();
+				}
+			}
+
+		});
+
+		buttonBlankProject.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Button source = (Button) e.getSource();
+
+				if (source.getSelection()) {
+					updateNextPages(true);
+					selectMetaModels = false;
+					dialogChanged();
+				}
+			}
+
+		});
+	}
 
    public Label createDummyLabel(final Composite container)
    {
@@ -211,6 +260,10 @@ public abstract class AbstractMoflonProjectInfoPage extends WizardPage
    {
       return projectName;
    }
+   
+	public boolean isSelectMetaModels() {
+		return selectMetaModels;
+	}
 
    /**
     * Returns the selected project location.
@@ -278,5 +331,16 @@ public abstract class AbstractMoflonProjectInfoPage extends WizardPage
       // Everything was fine
       return new Status(IStatus.OK, pluginId, "Project name is valid");
    }
+   
+	private void updateNextPages(boolean isComplete) {
+		AbstractMoflonMetaModelSelectionPage srcSelectionPage = (AbstractMoflonMetaModelSelectionPage) getWizard()
+				.getPage("NewIntegrationProjectSrcModelSelection");
+		AbstractMoflonMetaModelSelectionPage trgSelectionPage = (AbstractMoflonMetaModelSelectionPage) getWizard()
+				.getPage("NewIntegrationProjectTrgModelSelection");
+		srcSelectionPage.setSelectedMetaModels(null);
+		trgSelectionPage.setSelectedMetaModels(null);
+		srcSelectionPage.setPageComplete(isComplete);
+		trgSelectionPage.setPageComplete(isComplete);
+	}
 
 }
