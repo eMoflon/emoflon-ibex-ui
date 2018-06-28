@@ -35,7 +35,7 @@ class IbexPlantUMLGenerator {
 			else {
 				val chosenNac = file.nacs.filter[n | n.name.equals(selected.get)]
 				if(chosenNac.length == 1)
-					return visualiseNAC(chosenNac.get(0)).orElse("title Unable to visualise NAC")
+					return visualiseNAC_Safe(chosenNac.get(0))
 				else {
 					val chosenComplementRule = file.complementRules.filter[cr | cr.name.equals(selected.get)]
 					if(chosenComplementRule.length == 1)
@@ -46,6 +46,10 @@ class IbexPlantUMLGenerator {
 				}		
 			}
 		}	
+	}
+	
+	def static String visualiseNAC_Safe(Nac n) {
+		return visualiseNAC(n).orElse("title Unable to visualise NAC")
 	}
 	
 	def static Optional<String> visualiseNAC(Nac n) {
