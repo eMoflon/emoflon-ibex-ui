@@ -28,15 +28,18 @@ public class IbexTGGVisualiser extends EMoflonVisualiser {
 
 	@Override
 	protected String getDiagramBody(IEditorPart editor, ISelection selection) {
-		return maybeVisualiseTGGRule(editor, selection)
-				.orElse(maybeVisualiseTGGSchema(editor, selection).orElse(EMoflonPlantUMLGenerator.emptyDiagram()));
+		return maybeVisualiseTGGRule(editor, selection) //
+				.orElse(maybeVisualiseTGGSchema(editor, selection) //
+						.orElse(EMoflonPlantUMLGenerator.emptyDiagram()));
 	}
 
 	private Optional<String> maybeVisualiseTGGSchema(IEditorPart editor, ISelection selection) {
 		try {
-			return extractTGGFileFromEditor(editor).filter(file -> file.getSchema() != null)
-					.map(file -> file.eResource().getURI().segment(1)).map(projectName -> IbexPlantUMLGenerator
-							.visualiseTGGRuleOverview(projectName, loadTGG(projectName)));
+			return extractTGGFileFromEditor(editor) //
+					.filter(file -> file.getSchema() != null) //
+					.map(file -> file.eResource().getURI().segment(1)) //
+					.map(projectName -> IbexPlantUMLGenerator.visualiseTGGRuleOverview(projectName,
+							loadTGG(projectName)));
 		} catch (Exception e) {
 			return Optional.empty();
 		}
@@ -60,25 +63,31 @@ public class IbexTGGVisualiser extends EMoflonVisualiser {
 		Optional<TripleGraphGrammarFile> flattenedOptional = flatten(file);
 		if (!flattenedOptional.isPresent()) {
 			logger.debug("Unable to visualise " + selection);
+			return "";
 		}
 		TripleGraphGrammarFile flattened = flattenedOptional.get();
 
-		// If there's only one TGG rule in the file then visualise this.
+		// If there's only one TGG rule, then visualize this.
 		if (flattened.getRules().size() == 1 && flattened.getNacs().size() == 0
 				&& flattened.getComplementRules().size() == 0)
 			return IbexPlantUMLGenerator.visualiseTGGRule(flattened.getRules().get(0));
 
-		// If there's only one NAC then visualise this-
+		// If there's only one NAC, then visualize this.
 		if (flattened.getRules().size() == 0 && flattened.getNacs().size() == 1
 				&& flattened.getComplementRules().size() == 0)
-			return IbexPlantUMLGenerator.visualiseNAC_Safe(flattened.getNacs().get(0));
+			return IbexPlantUMLGenerator.visualiseNAC(flattened.getNacs().get(0));
 
-		// If there's only one complement rule then visualise this.
+		// If there's only one complement rule, then visualize this.
 		if (flattened.getRules().size() == 0 && flattened.getNacs().size() == 0
 				&& flattened.getComplementRules().size() == 1)
 			return IbexPlantUMLGenerator.visualiseComplementRule(flattened.getComplementRules().get(0));
 
 		// Otherwise visualize the user has selected in the TGG editor.
+		return visualizeSelection(file, flattened, selection);
+	}
+
+	private String visualizeSelection(TripleGraphGrammarFile file, TripleGraphGrammarFile flattened,
+			ISelection selection) {
 		if (selection instanceof TextSelection) {
 			TextSelection textSelection = (TextSelection) selection;
 			int selectionStart = textSelection.getStartLine() + 1;
@@ -94,17 +103,17 @@ public class IbexTGGVisualiser extends EMoflonVisualiser {
 			for (final Nac nac : file.getNacs()) {
 				ICompositeNode object = NodeModelUtils.getNode(nac);
 				if (selectionStart >= object.getStartLine() && selectionEnd <= object.getEndLine()) {
-					return IbexPlantUMLGenerator.visualiseNAC_Safe(nac);
+					return IbexPlantUMLGenerator.visualiseNAC(nac);
 				}
 			}
 
 			String text = textSelection.getText();
 			if (text != null && !text.isEmpty()) {
-				return IbexPlantUMLGenerator.visualiseTGGFile(flattened, Optional.of(text));
+				return IbexPlantUMLGenerator.visualiseTGGFile(flattened, text);
 			}
 		}
 
-		return IbexPlantUMLGenerator.visualiseTGGFile(flattened, Optional.empty());
+		return IbexPlantUMLGenerator.visualizeNothing();
 	}
 
 	private Optional<TripleGraphGrammarFile> flatten(TripleGraphGrammarFile file) {
@@ -118,7 +127,8 @@ public class IbexTGGVisualiser extends EMoflonVisualiser {
 
 	private Optional<TripleGraphGrammarFile> extractTGGFileFromEditor(IEditorPart editor) {
 		try {
-			return Optional.of(editor).flatMap(maybeCast(XtextEditor.class))
+			return Optional.of(editor) //
+					.flatMap(maybeCast(XtextEditor.class)) //
 					.map(e -> e.getDocument().readOnly(res -> res.getContents().get(0)))
 					.flatMap(maybeCast(TripleGraphGrammarFile.class));
 		} catch (Exception e) {
