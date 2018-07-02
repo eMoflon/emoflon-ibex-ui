@@ -16,7 +16,6 @@ import org.eclipse.xtext.common.types.JvmUnknownTypeReference
 import language.TGGRuleNode
 import org.eclipse.xtext.common.types.JvmVisibility
 import org.emoflon.ibex.tgg.operational.matches.IMatch
-import org.emoflon.ibex.tgg.operational.strategies.OPT
 import org.emoflon.ibex.tgg.weights.weightDefinition.DefaultCalculation
 import org.emoflon.ibex.tgg.operational.strategies.IWeightCalculationStrategy
 import javax.annotation.processing.Generated
@@ -25,6 +24,7 @@ import org.eclipse.xtext.common.types.JvmDeclaredType
 import org.eclipse.xtext.common.types.JvmType
 import org.eclipse.xtext.common.types.JvmOperation
 import org.emoflon.ibex.tgg.weights.weightDefinition.VariableDeclaration
+import org.emoflon.ibex.tgg.operational.strategies.opt.OPT
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
