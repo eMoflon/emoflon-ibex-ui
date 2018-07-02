@@ -1,19 +1,51 @@
 package org.moflon.tgg.mosl.defaults
 
-class DefaultFilesHelper {
+import java.util.List
 
-	static def generateDefaultSchema(String projectName) {
+class DefaultFilesHelper {
+	
+	private static def concatAndFormatMetamodelNameList(List<String> metamodelNames) {
+		val StringBuilder sb = new StringBuilder();
+		if(metamodelNames == null || metamodelNames.size() == 0) {
+			return sb.toString();
+		}
+		
+		for(String name : metamodelNames) {
+			sb.append(name);
+			sb.append(System.lineSeparator());
+		}
+		return sb.toString();
+	}
+
+	static def generateDefaultSchema(String projectName, List<String> importURIs, List<String> sourceMetamodels,
+		List<String> targetMetamodels) {
+		var String importSection = "// Add imports here" + System.lineSeparator();
+		if (importURIs != null && importURIs.size() > 0) {
+			val StringBuilder sb = new StringBuilder();
+			for (String modelURI : importURIs) {
+				sb.append("#import \"");
+				sb.append(modelURI);
+				sb.append("\"")
+				sb.append(System.lineSeparator());
+			}
+
+			importSection = sb.toString();
+		}
+		
+		val String sourceSection = concatAndFormatMetamodelNameList(sourceMetamodels);
+		val String targetSection = concatAndFormatMetamodelNameList(targetMetamodels);
+
 		return '''
-			// Add imports here
+			«importSection»
 			
 			#schema «projectName»
 				
 			#source {
-				
+				«sourceSection»
 			}
 			
 			#target { 
-				
+				«targetSection»
 			} 
 			
 			#correspondence {
