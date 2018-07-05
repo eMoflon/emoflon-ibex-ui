@@ -21,7 +21,7 @@ class GTVisualizationUtils {
 	/**
 	 * Returns the signature of the pattern.
 	 */
-	public static def String signature(EditorPattern pattern) {
+	static def String signature(EditorPattern pattern) {
 		'''«FOR parameter : pattern.parameters BEFORE '(' SEPARATOR ', ' AFTER ')'»«parameterDeclaration(parameter)»«ENDFOR»'''
 	}
 
@@ -36,7 +36,7 @@ class GTVisualizationUtils {
 	/**
 	 * Returns a String representation of the conditions (alternatives) of the pattern.
 	 */
-	public static def String getConditionString(EditorPattern pattern) {
+	static def String getConditionString(EditorPattern pattern) {
 		'''
 			«FOR c : pattern.conditions SEPARATOR ' **||** '»
 				«getConditionString(c)»
@@ -47,7 +47,7 @@ class GTVisualizationUtils {
 	/**
 	 * Returns a String representation of the flattened clauses of the condition.
 	 */
-	public static def String getConditionString(EditorCondition condition) {
+	static def String getConditionString(EditorCondition condition) {
 		val conditions = new GTConditionHelper(condition).getApplicationConditions()
 		if (conditions.size == 1) {
 			return getConditionString(conditions.get(0))
@@ -71,7 +71,7 @@ class GTVisualizationUtils {
 	/**
 	 * Returns a String representation of the expression.
 	 */
-	public static def String toString(EditorExpression expression) {
+	static def String toString(EditorExpression expression) {
 		if (expression === null) {
 			return 'INVALID expression'
 		}

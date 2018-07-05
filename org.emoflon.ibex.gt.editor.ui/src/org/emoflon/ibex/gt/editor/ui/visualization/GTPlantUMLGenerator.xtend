@@ -27,7 +27,7 @@ class GTPlantUMLGenerator {
 	/**
 	 * Returns the PlantUML code for the visualization of an empty file.
 	 */
-	public static def String visualizeNothing() {
+	static def String visualizeNothing() {
 		'''
 			title There is nothing to visualize yet.
 		'''
@@ -36,7 +36,7 @@ class GTPlantUMLGenerator {
 	/**
 	 * Returns the PlantUML code for the visualization of the given pattern.
 	 */
-	public static def String visualizePattern(EditorPattern pattern) {
+	static def String visualizePattern(EditorPattern pattern) {
 		val flattenedPattern = new GTFlattener(pattern).getFlattenedPattern
 		val nodeNamesInFlattenedPattern = flattenedPattern.nodes.map[it.name]
 		'''
@@ -186,7 +186,7 @@ class GTPlantUMLGenerator {
 	/**
 	 * Returns the PlantUML code for the visualization of the refinement hierarchy of the given patterns.
 	 */
-	public static def String visualizePatternHierarchy(EList<EditorPattern> patterns) {
+	static def String visualizePatternHierarchy(EList<EditorPattern> patterns) {
 		val allPatterns = new HashSet(patterns)
 		for (p : patterns) {
 			for (s : GTEditorPatternUtils.getAllSuperPatterns(p)) {

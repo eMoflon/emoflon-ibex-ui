@@ -40,7 +40,7 @@ class GTValidator extends AbstractGTValidator {
 	/**
 	 * The list of invalid node names.
 	 */
-	private static val nodeNameBlacklist = #[
+	static val nodeNameBlacklist = #[
 		"class",
 		"rule"
 	]
@@ -48,7 +48,7 @@ class GTValidator extends AbstractGTValidator {
 	/**
 	 * The list of invalid pattern names.
 	 */
-	private static val patternNameBlacklist = #[
+	static val patternNameBlacklist = #[
 		"clone",
 		"equals",
 		"finalize",
@@ -60,7 +60,7 @@ class GTValidator extends AbstractGTValidator {
 		"wait"
 	]
 
-	private static val CODE_PREFIX = "org.emoflon.ibex.gt.editor."
+	static val CODE_PREFIX = "org.emoflon.ibex.gt.editor."
 
 	// General errors for named elements.
 	public static val NAME_BLACKLISTED = CODE_PREFIX + "name.blacklisted"
