@@ -24,7 +24,10 @@ import org.eclipse.xtext.common.types.JvmType
 import org.eclipse.xtext.common.types.JvmOperation
 import org.emoflon.ibex.tgg.weights.weightDefinition.VariableDeclaration
 import org.emoflon.ibex.tgg.operational.strategies.opt.OPT
-import javax.annotation.processing.Generated
+
+// FIXME:  Use this instead when we have switched to Java 10  
+// import javax.annotation.processing.Generated
+import javax.annotation.Generated
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
