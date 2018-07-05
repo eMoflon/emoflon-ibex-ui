@@ -8,20 +8,19 @@ Bundle-SymbolicName: org.emoflon.ibex.tgg.weights; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext,
  org.eclipse.xtext.xbase,
- org.eclipse.equinox.common;bundle-version="3.5.0",
+ org.eclipse.equinox.common,
  org.eclipse.emf.ecore,
  org.antlr.runtime,
  org.eclipse.xtext.util,
  org.eclipse.emf.common,
  org.eclipse.xtend.lib;bundle-version="2.14.0",
- org.emoflon.ibex.tgg.core.language;bundle-version="1.0.0",
+ org.emoflon.ibex.tgg.core.language,
  org.eclipse.xtext.common.types,
- org.objectweb.asm;bundle-version="[6.1.1,6.2.0)";resolution:=optional,
+ org.objectweb.asm;bundle-version="[5.0.1,6.0.0)";resolution:=optional,
  org.eclipse.xtext.xtext.generator,
  org.eclipse.xtext.xbase.lib;bundle-version="2.14.0",
- org.emoflon.ibex.common;bundle-version="1.0.0",
- org.emoflon.ibex.tgg.core.runtime;bundle-version="1.0.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-10
+ org.emoflon.ibex.common,
+ org.emoflon.ibex.tgg.core.runtime
 Export-Package: org.emoflon.ibex.tgg.weights.scoping,
  org.emoflon.ibex.tgg.weights.weightDefinition.util,
  org.emoflon.ibex.tgg.weights.generator,
@@ -36,3 +35,4 @@ Export-Package: org.emoflon.ibex.tgg.weights.scoping,
  org.emoflon.ibex.tgg.weights.jvmmodel,
  org.emoflon.ibex.tgg.weights.formatting2
 Import-Package: org.apache.log4j
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
