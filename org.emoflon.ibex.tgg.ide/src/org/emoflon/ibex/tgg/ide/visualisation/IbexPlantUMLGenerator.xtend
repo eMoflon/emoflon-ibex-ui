@@ -252,7 +252,7 @@ class IbexPlantUMLGenerator {
 			return "BLACK"
 	}
 
-	public def static String visualiseTGGRuleOverview(String projectName, TripleGraphGrammarFile tgg) {
+	def static String visualiseTGGRuleOverview(String projectName, TripleGraphGrammarFile tgg) {
 		'''
 			hide empty members
 			hide circle
