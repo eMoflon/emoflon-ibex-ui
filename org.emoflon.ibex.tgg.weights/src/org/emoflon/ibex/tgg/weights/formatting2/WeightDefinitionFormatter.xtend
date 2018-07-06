@@ -3,6 +3,8 @@
  */
 package org.emoflon.ibex.tgg.weights.formatting2
 
+
+
 import org.eclipse.xtext.formatting2.IFormattableDocument
 import org.eclipse.xtext.xbase.formatting2.XbaseFormatter
 import org.emoflon.ibex.tgg.weights.weightDefinition.DefaultCalculation
@@ -16,10 +18,7 @@ import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionPackage
 
 class WeightDefinitionFormatter extends XbaseFormatter {
 
-//	@Inject extension WeightDefinitionGrammarAccess
-
 	def dispatch void format(WeightDefinitionFile weightDefinitionFile, extension IFormattableDocument document) {
-		// TODO: format HiddenRegions around keywords, attributes, cross references, etc. 
 		weightDefinitionFile.importedTgg.format
 		for (xExpression : weightDefinitionFile.weigthDefinitions) {
 			xExpression.format
