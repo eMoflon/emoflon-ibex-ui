@@ -13,15 +13,15 @@ import org.emoflon.ibex.gt.editor.gT.EditorOperator
  * The configuration for syntax highlighting.
  */
 class GTHighlightingConfiguration extends DefaultHighlightingConfiguration {
-	private static final String STYLE_PREFIX = "org.emoflon.ibex.gt.editor."
+	static final String STYLE_PREFIX = "org.emoflon.ibex.gt.editor."
 	public static final String CONTEXT = STYLE_PREFIX + "context"
 	public static final String CREATE = STYLE_PREFIX + "create"
 	public static final String DELETE = STYLE_PREFIX + "delete"
 	public static final String REFINED = STYLE_PREFIX + "refined"
 
-	private static final RGB BLACK = new RGB(0, 0, 0)
-	private static final RGB GREEN = new RGB(0, 128, 0)
-	private static final RGB RED = new RGB(255, 0, 0)
+	static final RGB BLACK = new RGB(0, 0, 0)
+	static final RGB GREEN = new RGB(0, 128, 0)
+	static final RGB RED = new RGB(255, 0, 0)
 
 	override void configure(IHighlightingConfigurationAcceptor acceptor) {
 		super.configure(acceptor);

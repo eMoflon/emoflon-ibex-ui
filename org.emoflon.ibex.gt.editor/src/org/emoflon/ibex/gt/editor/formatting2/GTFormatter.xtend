@@ -25,7 +25,7 @@ import org.emoflon.ibex.gt.editor.gT.GTPackage
  * https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#formatting
  */
 class GTFormatter extends AbstractFormatter2 {
-	private static val MAX_LINE_WIDTH = 100
+	static val MAX_LINE_WIDTH = 100
 
 	def dispatch void format(EditorGTFile file, extension IFormattableDocument document) {
 		// No space before first import.

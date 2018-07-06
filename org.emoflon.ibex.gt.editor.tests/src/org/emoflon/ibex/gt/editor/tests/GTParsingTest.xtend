@@ -36,7 +36,7 @@ abstract class GTParsingTest {
 	@Inject
 	protected ParseHelper<EditorGTFile> parseHelper
 
-	@Inject extension private ValidationTestHelper validationHelper
+	@Inject extension ValidationTestHelper validationHelper
 
 	def parse(CharSequence s) {
 		return parseHelper.parse(

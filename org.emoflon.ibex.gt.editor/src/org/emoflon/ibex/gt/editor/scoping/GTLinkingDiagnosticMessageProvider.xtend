@@ -13,7 +13,7 @@ import org.emoflon.ibex.gt.editor.gT.EditorAttribute
  * Custom error codes and messages for scoping violations.
  */
 class GTLinkingDiagnosticMessageProvider extends LinkingDiagnosticMessageProvider {
-	private static val CODE_PREFIX = "org.emoflon.ibex.gt.editor."
+	static val CODE_PREFIX = "org.emoflon.ibex.gt.editor."
 
 	public static val ATTRIBUTE_NOT_FOUND = CODE_PREFIX + "attribute.type.notFound"
 	public static val ATTRIBUTE_NOT_FOUND_MESSAGE = "Could not find attribute '%s'."

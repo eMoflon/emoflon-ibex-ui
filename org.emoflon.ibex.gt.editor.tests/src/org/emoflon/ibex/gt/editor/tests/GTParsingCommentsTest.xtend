@@ -13,7 +13,7 @@ import org.emoflon.ibex.gt.editor.utils.GTCommentExtractor
 @RunWith(XtextRunner)
 @InjectWith(GTInjectorProvider)
 class GTParsingCommentsTest extends GTParsingTest {
-	private static val testComment = "Finds an object."
+	static val testComment = "Finds an object."
 
 	@Test
 	def extractNoComment() {
