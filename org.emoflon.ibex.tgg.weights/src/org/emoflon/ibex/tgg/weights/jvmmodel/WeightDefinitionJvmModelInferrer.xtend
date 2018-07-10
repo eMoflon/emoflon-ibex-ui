@@ -26,8 +26,7 @@ import org.emoflon.ibex.tgg.weights.weightDefinition.VariableDeclaration
 import org.emoflon.ibex.tgg.operational.strategies.opt.OPT
 
 // FIXME:  Use this instead when we have switched to Java 10  
-// import javax.annotation.processing.Generated
-import javax.annotation.Generated
+//import javax.annotation.processing.Generated
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -314,7 +313,8 @@ class WeightDefinitionJvmModelInferrer extends AbstractModelInferrer {
 		type.superTypes += typeRef(abstractSuperClass)
 		type.packageName = "org.emoflon.ibex.tgg.weights"
 		type.visibility = JvmVisibility.PUBLIC
-		type.annotations += annotationRef(Generated, "TGGWeight_Generator")
+		// FIXME:  Use this instead when we have switched to Java 10
+//		type.annotations += annotationRef(Generated, "TGGWeight_Generator")
 		type.documentation = '''This class defines the calculation of weights of found matches.«"\n"»Calculations are defined in "«element.eResource.URI.toString»"'''
 
 		// add variables
@@ -347,7 +347,8 @@ class WeightDefinitionJvmModelInferrer extends AbstractModelInferrer {
 		type.packageName = "org.emoflon.ibex.tgg.weights"
 		type.visibility = JvmVisibility.DEFAULT
 		type.abstract = true
-		type.annotations += annotationRef(Generated, "TGGWeight_Generator")
+		// FIXME:  Use this instead when we have switched to Java 10
+//		type.annotations += annotationRef(Generated, "TGGWeight_Generator")
 		type.documentation = '''This abstract class defines the api for the calculation of weights of found matches and provides the necessary logic to invoke them.«"\n"»Calculations are defined in "«element.eResource.URI.toString»"'''
 
 		// create app field
