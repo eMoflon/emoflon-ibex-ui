@@ -21,7 +21,8 @@ Require-Bundle: org.eclipse.xtext,
  org.eclipse.xtext.xbase.lib;bundle-version="2.14.0",
  org.emoflon.ibex.common,
  org.emoflon.ibex.tgg.core.runtime,
- org.eclipse.emf.mwe2.launch;bundle-version="2.9.0"
+ org.eclipse.emf.mwe2.launch;bundle-version="2.9.0",
+ org.eclipse.core.resources;bundle-version="3.13.0"
 Export-Package: org.emoflon.ibex.tgg.weights,
  org.emoflon.ibex.tgg.weights.formatting2,
  org.emoflon.ibex.tgg.weights.generator,

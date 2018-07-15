@@ -27,6 +27,11 @@ import org.emoflon.ibex.tgg.weights.weightDefinition.RuleWeightDefinition
 import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile
 import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionPackage
 import org.emoflon.ibex.tgg.weights.weightDefinition.VariableDeclaration
+import org.eclipse.emf.common.CommonPlugin
+import java.io.File
+import com.google.common.hash.HashCode
+import com.google.common.io.Files
+import com.google.common.hash.Hashing
 
 /**
  * This class contains custom validation rules. 
@@ -41,6 +46,10 @@ class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
 	 * Cached imported resource
 	 */
 	var Resource importedTGG
+	/**
+	 * MD5 hash of the imported resource file (use to detect changes without loading the resource)
+	 */
+	var HashCode resourceFileHash 
 
 	/**
 	 * Checks that there is at most one weight calculation per TGG rule
@@ -128,10 +137,22 @@ class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
 		try {
 			val uri = URI.createURI(importFile.importURI);
 			val resolvedUri = uri.resolve(URI.createPlatformResourceURI("/", true))
-			if ((importedTGG === null) || (importedTGG.URI != resolvedUri)) {
+			val fileUri = CommonPlugin.asLocalURI(resolvedUri)
+			val file = new File(fileUri.path)
+			if(!file.exists) {
+				error(
+				"The file at " + (importFile.importURI) + "does not exist",
+				importFile,
+				WeightDefinitionPackage.Literals.IMPORT__IMPORT_URI
+				)
+				return
+			}
+			val hash = Files.asByteSource(file).hash(Hashing.md5)
+			if ((importedTGG === null) || (importedTGG.URI != resolvedUri) || hash != resourceFileHash) {
 				importedTGG = new ResourceSetImpl().createResource(resolvedUri, ContentHandler.UNSPECIFIED_CONTENT_TYPE);
 				importedTGG.load(null);
 				EcoreUtil.resolveAll(importedTGG);
+				resourceFileHash = hash
 			}
 		} catch (Exception e) {
 			error(
