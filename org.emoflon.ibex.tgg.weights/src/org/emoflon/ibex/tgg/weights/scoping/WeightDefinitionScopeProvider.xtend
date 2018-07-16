@@ -21,6 +21,7 @@ import org.eclipse.emf.common.CommonPlugin
 import java.io.File
 import com.google.common.io.Files
 import com.google.common.hash.Hashing
+import java.net.URL
 
 /**
  * This class contains custom scoping description.
@@ -62,35 +63,31 @@ class WeightDefinitionScopeProvider extends AbstractWeightDefinitionScopeProvide
 			val importUri = (context.eContainer as WeightDefinitionFile).importedTgg?.importURI
 			val uri = URI.createURI(importUri);
 			val resolvedUri = uri.resolve(URI.createPlatformResourceURI("/", true))
-			val fileUri = CommonPlugin.asLocalURI(resolvedUri)
+			val fileUri = new URL(CommonPlugin.asLocalURI(resolvedUri).toString).toURI
 			val file = new File(fileUri.path)
-			if(!file.exists) {
+			if (!file.exists) {
 				// could not load resource
+				importedTGG = null
+				resourceFileHash = null
 				return Scopes.scopeFor(new LinkedList)
 			}
 			val hash = Files.asByteSource(file).hash(Hashing.md5)
 			if ((importedTGG === null) || (importedTGG.URI != resolvedUri) || hash != resourceFileHash) {
-				importedTGG = new ResourceSetImpl().createResource(resolvedUri, ContentHandler.UNSPECIFIED_CONTENT_TYPE);
+				importedTGG = new ResourceSetImpl().createResource(resolvedUri,
+					ContentHandler.UNSPECIFIED_CONTENT_TYPE);
 				importedTGG.load(null);
 				EcoreUtil.resolveAll(importedTGG);
 				resourceFileHash = hash
 			}
-			if ((importedTGG === null) || (importedTGG.URI != resolvedUri)) {
-				importedTGG = new ResourceSetImpl().createResource(resolvedUri, ContentHandler.UNSPECIFIED_CONTENT_TYPE);
-				importedTGG.load(null);
-				EcoreUtil.resolveAll(importedTGG);
-			}
 		} catch (Exception e) {
 			// could not load resource
+			importedTGG = null
+			resourceFileHash = null
 			return Scopes.scopeFor(new LinkedList)
 		}
-		
+
 		return Scopes.scopeFor(
-			importedTGG.contents
-				.filter[it instanceof TGG]
-				.flatMap[(it as TGG).rules]
-				.filter[!it.abstract]
-				.toList
+			importedTGG.contents.filter[it instanceof TGG].flatMap[(it as TGG).rules].filter[!it.abstract].toList
 		);
 	}
 }

@@ -32,6 +32,7 @@ import java.io.File
 import com.google.common.hash.HashCode
 import com.google.common.io.Files
 import com.google.common.hash.Hashing
+import java.net.URL
 
 /**
  * This class contains custom validation rules. 
@@ -39,9 +40,9 @@ import com.google.common.hash.Hashing
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
-	
+
 	@Inject TypeReferences ref;
-	
+
 	/**
 	 * Cached imported resource
 	 */
@@ -49,7 +50,7 @@ class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
 	/**
 	 * MD5 hash of the imported resource file (use to detect changes without loading the resource)
 	 */
-	var HashCode resourceFileHash 
+	var HashCode resourceFileHash
 
 	/**
 	 * Checks that there is at most one weight calculation per TGG rule
@@ -65,19 +66,19 @@ class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
 				)
 			]
 	}
-	
+
 	/**
 	 * Checks there is at most one default calculation
 	 */
 	@Check(FAST)
 	def checkOnlyOneDefaultMethod(DefaultCalculation defaultCalc) {
-		if((defaultCalc.eContainer as WeightDefinitionFile).defaultCalc.length > 1) {
+		if ((defaultCalc.eContainer as WeightDefinitionFile).defaultCalc.length > 1) {
 			error(
 				"Duplicated \"default\": Only one default calculation is allowed",
 				defaultCalc,
 				WeightDefinitionPackage.Literals.DEFAULT_CALCULATION__CALC
 			)
-		} 
+		}
 	}
 
 	/**
@@ -95,7 +96,7 @@ class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
 			}
 		}
 	}
-	
+
 	/**
 	 * Resolves type references for the node's type. Returns null if no type is found
 	 */
@@ -113,14 +114,14 @@ class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
 		}
 		return ref
 	}
-	
+
 	/**
 	 * Checks whether all variable names are unique
 	 */
 	@Check(FAST)
 	def checkVariableUniqueness(VariableDeclaration variable) {
-		(variable.eContainer as WeightDefinitionFile).variables.map[(it as VariableDeclaration)]
-		.filter[it !== variable].filter[it.name == variable.name].forEach [
+		(variable.eContainer as WeightDefinitionFile).variables.map[(it as VariableDeclaration)].
+			filter[it !== variable].filter[it.name == variable.name].forEach [
 				error(
 					"Duplicated variable declaration " + (variable.name),
 					variable,
@@ -137,24 +138,29 @@ class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
 		try {
 			val uri = URI.createURI(importFile.importURI);
 			val resolvedUri = uri.resolve(URI.createPlatformResourceURI("/", true))
-			val fileUri = CommonPlugin.asLocalURI(resolvedUri)
+			val fileUri = new URL(CommonPlugin.asLocalURI(resolvedUri).toString).toURI
 			val file = new File(fileUri.path)
-			if(!file.exists) {
+			if (!file.exists) {
+				importedTGG = null
+				resourceFileHash = null
 				error(
-				"The file at " + (importFile.importURI) + "does not exist",
-				importFile,
-				WeightDefinitionPackage.Literals.IMPORT__IMPORT_URI
+					"The file at " + (importFile.importURI) + "does not exist",
+					importFile,
+					WeightDefinitionPackage.Literals.IMPORT__IMPORT_URI
 				)
 				return
 			}
 			val hash = Files.asByteSource(file).hash(Hashing.md5)
 			if ((importedTGG === null) || (importedTGG.URI != resolvedUri) || hash != resourceFileHash) {
-				importedTGG = new ResourceSetImpl().createResource(resolvedUri, ContentHandler.UNSPECIFIED_CONTENT_TYPE);
+				importedTGG = new ResourceSetImpl().createResource(resolvedUri,
+					ContentHandler.UNSPECIFIED_CONTENT_TYPE);
 				importedTGG.load(null);
 				EcoreUtil.resolveAll(importedTGG);
 				resourceFileHash = hash
 			}
 		} catch (Exception e) {
+			importedTGG = null
+			resourceFileHash = null
 			error(
 				"Cannot load TGG from " + (importFile.importURI),
 				importFile,
@@ -178,63 +184,60 @@ class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
 			)
 		}
 	}
-	
+
 	/**
 	 * Checks helper functions are not duplicated
 	 */
 	@Check(NORMAL)
 	def checkHelperFunctionNameUniqueness(HelperFunction helperFuntion) {
-		(helperFuntion.eContainer as WeightDefinitionFile).helperFuntions.map[(it as HelperFunction)].
-			filter[it !== helperFuntion]
-			.filter[it.name == helperFuntion.name]
-			.filter[helperFuntion.checkAllParametersEqual(it)]
-			.forEach[
-				error(
-					"Duplicated function signature: " + (it.name),
-					helperFuntion,
-					WeightDefinitionPackage.Literals.HELPER_FUNCTION__NAME
-				)
-			]
+		(helperFuntion.eContainer as WeightDefinitionFile).helperFuntions.map[(it as HelperFunction)].filter [
+			it !== helperFuntion
+		].filter[it.name == helperFuntion.name].filter[helperFuntion.checkAllParametersEqual(it)].forEach [
+			error(
+				"Duplicated function signature: " + (it.name),
+				helperFuntion,
+				WeightDefinitionPackage.Literals.HELPER_FUNCTION__NAME
+			)
+		]
 	}
-	
+
 	/**
 	 * Checks helper functions have unique variable names
 	 */
 	@Check(FAST)
 	def checkFunctionParameterUniqueness(HelperFuncParameter parameter) {
-		(parameter.eContainer as HelperFunction).params.map[(it as HelperFuncParameter)].
-			filter[it !== parameter].filter[it.name == parameter.name].forEach [
-				error(
-					"Duplicated variable name: " + (it.name),
-					parameter,
-					WeightDefinitionPackage.Literals.HELPER_FUNC_PARAMETER__NAME
-				)
-			]
+		(parameter.eContainer as HelperFunction).params.map[(it as HelperFuncParameter)].filter[it !== parameter].filter [
+			it.name == parameter.name
+		].forEach [
+			error(
+				"Duplicated variable name: " + (it.name),
+				parameter,
+				WeightDefinitionPackage.Literals.HELPER_FUNC_PARAMETER__NAME
+			)
+		]
 	}
-	
+
 	/**
 	 * Checks whether all parameter types of the helperFunction are equal 
 	 */
 	private def checkAllParametersEqual(HelperFunction a, HelperFunction b) {
-		if(a.params.size !== b.params.size)
+		if (a.params.size !== b.params.size)
 			return false
-		for(var i=0; i< a.params.size; i++) {
-			if(a.params.get(i).parameterType.type != b.params.get(i).parameterType.type) {
-					return false
-				}
+		for (var i = 0; i < a.params.size; i++) {
+			if (a.params.get(i).parameterType.type != b.params.get(i).parameterType.type) {
+				return false
+			}
 		}
 		return true
 	}
-	
+
 	/**
 	 * Checks signature of helper function is not the signature of reserved functions
 	 */
 	@Check(FAST)
 	def checkHelperMethodDoesNotHaveForbiddenName(HelperFunction h) {
-		if(h.name == "calculateDefaultWeight" || 
-			h.name == "calculateWeight"
-		) {
-			if(checkForGenericParameters(h)) {
+		if (h.name == "calculateDefaultWeight" || h.name == "calculateWeight") {
+			if (checkForGenericParameters(h)) {
 				error(
 					"Reserved function signature",
 					h,
@@ -243,48 +246,47 @@ class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
 			}
 		}
 	}
-	
+
 	/**
 	 * Check for signature of generic weight methods
 	 */
 	@Check(FAST)
 	def checkForGenericParameters(HelperFunction h) {
-		if(h.params.size == 2
-			&& h.params.get(0).parameterType.type == ref.getTypeForName(String, h).type
-			&& h.params.get(1).parameterType.type == ref.getTypeForName(IMatch, h).type
-		) {
+		if (h.params.size == 2 && h.params.get(0).parameterType.type == ref.getTypeForName(String, h).type &&
+			h.params.get(1).parameterType.type == ref.getTypeForName(IMatch, h).type) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Checks the helper function does not have the same signature as any rule weight function
 	 */
 	@Check(NORMAL)
 	def checkHelperFunctionDoesNotMatchRuleWeightDef(HelperFunction h) {
-		(h.eContainer as WeightDefinitionFile).weigthDefinitions.map[(it as RuleWeightDefinition)]
-			.filter[checkHelperFunctionRuleWeightCombination(h, it)].forEach [
-				error(
-					'''Function signature duplicates weight calculation for rule "«it.rule.name»"''',
-					h,
-					WeightDefinitionPackage.Literals.HELPER_FUNCTION__NAME
-				)
-			]
+		(h.eContainer as WeightDefinitionFile).weigthDefinitions.map[(it as RuleWeightDefinition)].filter [
+			checkHelperFunctionRuleWeightCombination(h, it)
+		].forEach [
+			error(
+				'''Function signature duplicates weight calculation for rule "«it.rule.name»"''',
+				h,
+				WeightDefinitionPackage.Literals.HELPER_FUNCTION__NAME
+			)
+		]
 	}
-	
+
 	/**
 	 * Checks whether the helper function and the generated parameterized rule weight function have the same signature
 	 */
 	private def checkHelperFunctionRuleWeightCombination(HelperFunction h, RuleWeightDefinition ruleWeightDefinition) {
-		val String ruleNameCalcMethod = '''calculateWeightFor«ruleWeightDefinition.rule.name»''' 
-		if(h.name != ruleNameCalcMethod)
+		val String ruleNameCalcMethod = '''calculateWeightFor«ruleWeightDefinition.rule.name»'''
+		if (h.name != ruleNameCalcMethod)
 			return false
 		val nodes = ruleWeightDefinition.rule.nodes.filter[!(it instanceof TGGRuleCorr)]
-		if(h.params.size != nodes.size)
+		if (h.params.size != nodes.size)
 			return false
-		for(var i=0; i< h.params.size; i++) {
-			if(h.params.get(i).parameterType.type != nodes.get(i).getTypeRef(ruleWeightDefinition).type) {
+		for (var i = 0; i < h.params.size; i++) {
+			if (h.params.get(i).parameterType.type != nodes.get(i).getTypeRef(ruleWeightDefinition).type) {
 				return false
 			}
 		}
