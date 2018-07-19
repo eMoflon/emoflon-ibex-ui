@@ -16,6 +16,12 @@ import org.emoflon.ibex.tgg.weights.weightDefinition.RuleWeightDefinition
 import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile
 import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionPackage
 import java.util.LinkedList
+import com.google.common.hash.HashCode
+import org.eclipse.emf.common.CommonPlugin
+import java.io.File
+import com.google.common.io.Files
+import com.google.common.hash.Hashing
+import java.net.URL
 
 /**
  * This class contains custom scoping description.
@@ -29,6 +35,10 @@ class WeightDefinitionScopeProvider extends AbstractWeightDefinitionScopeProvide
 	 * Cached imported resource
 	 */
 	var Resource importedTGG
+	/**
+	 * MD5 hash of the imported resource file (use to detect changes without loading the resource)
+	 */
+	var HashCode resourceFileHash
 
 	override getScope(EObject context, EReference reference) {
 		if (isRuleWeightDefinition(context, reference)) {
@@ -53,22 +63,31 @@ class WeightDefinitionScopeProvider extends AbstractWeightDefinitionScopeProvide
 			val importUri = (context.eContainer as WeightDefinitionFile).importedTgg?.importURI
 			val uri = URI.createURI(importUri);
 			val resolvedUri = uri.resolve(URI.createPlatformResourceURI("/", true))
-			if ((importedTGG === null) || (importedTGG.URI != resolvedUri)) {
-				importedTGG = new ResourceSetImpl().createResource(resolvedUri, ContentHandler.UNSPECIFIED_CONTENT_TYPE);
+			val fileUri = new URL(CommonPlugin.asLocalURI(resolvedUri).toString).toURI
+			val file = new File(fileUri.path)
+			if (!file.exists) {
+				// could not load resource
+				importedTGG = null
+				resourceFileHash = null
+				return Scopes.scopeFor(new LinkedList)
+			}
+			val hash = Files.asByteSource(file).hash(Hashing.md5)
+			if ((importedTGG === null) || (importedTGG.URI != resolvedUri) || hash != resourceFileHash) {
+				importedTGG = new ResourceSetImpl().createResource(resolvedUri,
+					ContentHandler.UNSPECIFIED_CONTENT_TYPE);
 				importedTGG.load(null);
 				EcoreUtil.resolveAll(importedTGG);
+				resourceFileHash = hash
 			}
 		} catch (Exception e) {
 			// could not load resource
+			importedTGG = null
+			resourceFileHash = null
 			return Scopes.scopeFor(new LinkedList)
 		}
-		
+
 		return Scopes.scopeFor(
-			importedTGG.contents
-				.filter[it instanceof TGG]
-				.flatMap[(it as TGG).rules]
-				.filter[!it.abstract]
-				.toList
+			importedTGG.contents.filter[it instanceof TGG].flatMap[(it as TGG).rules].filter[!it.abstract].toList
 		);
 	}
 }
