@@ -13,9 +13,8 @@ Require-Bundle: org.eclipse.xtext,
  org.eclipse.xtext.util,
  org.eclipse.emf.common,
  org.eclipse.xtend.lib;bundle-version="2.14.0",
- org.emoflon.ibex.tgg.core.language,
  org.eclipse.xtext.common.types,
- org.objectweb.asm,
+ org.objectweb.asm;bundle-version="[6.1.1,6.2.0)";resolution:=optional,
  org.eclipse.xtext.xtext.generator,
  org.eclipse.xtext.xbase.lib;bundle-version="2.14.0",
  org.eclipse.emf.mwe2.launch,
@@ -25,6 +24,7 @@ Require-Bundle: org.eclipse.xtext,
  com.ibm.icu,
  org.emoflon.ibex.common,
  org.emoflon.ibex.tgg.core.runtime,
+ org.emoflon.ibex.tgg.core.language,
  org.antlr.runtime
 Export-Package: org.emoflon.ibex.tgg.weights,
  org.emoflon.ibex.tgg.weights.formatting2,
@@ -41,5 +41,5 @@ Export-Package: org.emoflon.ibex.tgg.weights,
  org.emoflon.ibex.tgg.weights.weightDefinition.util,
  org.emoflon.ibex.tgg.weights.workflowhelper
 Import-Package: org.apache.log4j
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-10
 Bundle-ClassPath: .antlr-generator-3.2.0-patch.jar,.
