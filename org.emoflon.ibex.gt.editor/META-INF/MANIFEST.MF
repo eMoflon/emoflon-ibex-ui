@@ -5,7 +5,6 @@ Bundle-SymbolicName: org.emoflon.ibex.gt.editor; singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: eMoflon::IBeX Developers
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-10
 Require-Bundle: org.antlr.runtime,
  org.eclipse.equinox.common,
  org.eclipse.emf.common,

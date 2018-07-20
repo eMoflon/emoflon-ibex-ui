@@ -30,4 +30,3 @@ Export-Package: org.emoflon.ibex.tgg.weights.ui.quickfix,
  org.emoflon.ibex.tgg.weights.ui.contentassist,
  org.emoflon.ibex.tgg.weights.ui.editor
 Bundle-Activator: org.emoflon.ibex.tgg.weights.ui.internal.WeightsActivator
-Bundle-RequiredExecutionEnvironment: JavaSE-10

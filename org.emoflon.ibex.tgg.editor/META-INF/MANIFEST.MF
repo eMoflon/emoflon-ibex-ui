@@ -24,7 +24,6 @@ Require-Bundle: org.antlr.runtime,
  org.eclipse.xtext.xbase.lib,
  org.moflon.core.utilities,
  org.objectweb.asm;resolution:=optional
-Bundle-RequiredExecutionEnvironment: JavaSE-10
 Bundle-ClassPath: .antlr-generator-3.2.0-patch.jar,.
 Export-Package: org.moflon.ide.mosl.core.scoping,
  org.moflon.tgg.mosl,
