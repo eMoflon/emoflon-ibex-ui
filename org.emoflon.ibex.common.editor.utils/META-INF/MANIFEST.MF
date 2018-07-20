@@ -4,6 +4,6 @@ Bundle-Name: eMoflon::IBeX Editor Utils
 Bundle-SymbolicName: org.emoflon.ibex.common.editor.utils;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: eMoflon::IBeX Developers
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-10
 Require-Bundle: org.moflon.core.ui.autosetup
 Automatic-Module-Name: org.emoflon.ibex.common.editor.utils

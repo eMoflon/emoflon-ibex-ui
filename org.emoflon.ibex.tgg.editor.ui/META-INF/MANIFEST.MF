@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.emoflon.ibex.tgg.editor.ui;singleton:=true
 Bundle-Version: 1.0.1.qualifier
 Bundle-Vendor: eMoflon::IBeX Developers
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-10
 Require-Bundle: org.apache.log4j,
  org.eclipse.compare,
  org.eclipse.core.resources,

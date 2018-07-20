@@ -16,20 +16,20 @@ class MyResourceSetInitializer extends XtextGeneratorResourceSetInitializer {
 		resourceSet.packageRegistry.put("platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore",
 			EcorePackage.eINSTANCE)
 		resourceSet.packageRegistry.put("http://www.eclipse.org/emf/2002/Ecore", EcorePackage.eINSTANCE)
-		resourceSet.packageRegistry.put("platform:/plugin/org.emoflon.ibex.tgg.core.language/model/Language.ecore#/",
+		resourceSet.packageRegistry.put("platform:/resource/org.emoflon.ibex.tgg.core.language/model/Language.ecore",
 			LanguagePackage.eINSTANCE)
 		resourceSet.packageRegistry.put(
-			"platform:/plugin/org.emoflon.ibex.tgg.core.language/model/Language.ecore#//inplaceAttributes",
+			"platform:/resource/org.emoflon.ibex.tgg.core.language/model/Language.ecore#//inplaceAttributes",
 			InplaceAttributesFactory.eINSTANCE)
 		resourceSet.packageRegistry.put(
-			"platform:/plugin/org.emoflon.ibex.tgg.core.language/model/Language.ecore#//csp", CspFactory.eINSTANCE)
+			"platform:/resource/org.emoflon.ibex.tgg.core.language/model/Language.ecore#//csp", CspFactory.eINSTANCE)
 		resourceSet.packageRegistry.put(
-			"platform:/plugin/org.emoflon.ibex.tgg.core.language/model/Language.ecore#//csp//definition",
+			"platform:/resource/org.emoflon.ibex.tgg.core.language/model/Language.ecore#//csp/definition",
 			DefinitionFactory.eINSTANCE)
 		resourceSet.packageRegistry.put(
-			"platform:/plugin/org.emoflon.ibex.tgg.core.language/model/Language.ecore#//basic", BasicFactory.eINSTANCE)
+			"platform:/resource/org.emoflon.ibex.tgg.core.language/model/Language.ecore#//basic", BasicFactory.eINSTANCE)
 		resourceSet.packageRegistry.put(
-			"platform:/plugin/org.emoflon.ibex.tgg.core.language/model/Language.ecore#/misc/expressions",
+			"platform:/resource/org.emoflon.ibex.tgg.core.language/model/Language.ecore#//basic/expressions",
 			ExpressionsFactory.eINSTANCE)
 		super.initialize(resourceSet, referencedResources)
 	}
