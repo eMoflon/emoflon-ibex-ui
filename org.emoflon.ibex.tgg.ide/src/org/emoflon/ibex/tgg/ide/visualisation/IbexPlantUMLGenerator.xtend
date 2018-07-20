@@ -42,10 +42,6 @@ class IbexPlantUMLGenerator {
 			return '''title I don't know how to visualise "«StringUtils.abbreviate(selected.replaceAll("\\s+",""), 20)»"...'''
 	}
 
-	def static String visualizeNothing() {
-		'''title Choose the name of a single TGG rule, complement rule, or NAC to visualise it!'''
-	}
-
 	def static String visualiseNAC(Nac n) {
 		val file = TggFactory.eINSTANCE.createTripleGraphGrammarFile;
 		file.rules.add(EcoreUtil.copy(n.rule));
@@ -206,7 +202,7 @@ class IbexPlantUMLGenerator {
 
 	private def static visualisePattern(ObjectVariablePattern p, String domain) {
 		'''
-			class «idForPattern(p.name, p.type.name)» <<«opToColour(p.op)»>> <<«domain»>>
+			class «idForPattern(p.name, p?.type.name)» <<«opToColour(p.op)»>> <<«domain»>>
 			«FOR lv : p.linkVariablePatterns»
 				«IbexPlantUMLGenerator.visualiseLinkVariable(p, lv)»
 			«ENDFOR»

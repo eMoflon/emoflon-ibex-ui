@@ -18,6 +18,7 @@ import org.emoflon.ibex.tgg.ide.transformation.EditorTGGtoFlattenedTGG;
 import org.moflon.core.ui.visualisation.EMoflonPlantUMLGenerator;
 import org.moflon.core.ui.visualisation.EMoflonVisualiser;
 import org.moflon.core.utilities.MoflonUtil;
+import org.moflon.tgg.mosl.tgg.ComplementRule;
 import org.moflon.tgg.mosl.tgg.Nac;
 import org.moflon.tgg.mosl.tgg.Rule;
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile;
@@ -26,11 +27,24 @@ public class IbexTGGVisualiser extends EMoflonVisualiser {
 
 	private Logger logger = Logger.getLogger(IbexTGGVisualiser.class);
 
+	private Optional<String> lastDiagramBody = Optional.empty();
+
 	@Override
 	protected String getDiagramBody(IEditorPart editor, ISelection selection) {
-		return maybeVisualiseTGGRule(editor, selection) //
-				.orElse(maybeVisualiseTGGSchema(editor, selection) //
-						.orElse(EMoflonPlantUMLGenerator.emptyDiagram()));
+		try {
+			String body = maybeVisualiseTGGRule(editor, selection) //
+					.orElse(maybeVisualiseTGGSchema(editor, selection)//
+							.orElse(defaultDiagramBody()));
+			lastDiagramBody = Optional.of(body);
+		} catch (Exception e) {
+			logger.warn("Unable to visualise current state in editor, reverting to last diagram if available.");
+		}
+
+		return defaultDiagramBody();
+	}
+
+	private String defaultDiagramBody() {
+		return lastDiagramBody.orElse(EMoflonPlantUMLGenerator.errorDiagram());
 	}
 
 	private Optional<String> maybeVisualiseTGGSchema(IEditorPart editor, ISelection selection) {
@@ -63,7 +77,7 @@ public class IbexTGGVisualiser extends EMoflonVisualiser {
 		Optional<TripleGraphGrammarFile> flattenedOptional = flatten(file);
 		if (!flattenedOptional.isPresent()) {
 			logger.debug("Unable to visualise " + selection);
-			return "";
+			return null;
 		}
 		TripleGraphGrammarFile flattened = flattenedOptional.get();
 
@@ -82,7 +96,7 @@ public class IbexTGGVisualiser extends EMoflonVisualiser {
 				&& flattened.getComplementRules().size() == 1)
 			return IbexPlantUMLGenerator.visualiseComplementRule(flattened.getComplementRules().get(0));
 
-		// Otherwise visualize the user has selected in the TGG editor.
+		// Otherwise visualize what the user has selected in the TGG editor.
 		return visualizeSelection(file, flattened, selection);
 	}
 
@@ -96,24 +110,55 @@ public class IbexTGGVisualiser extends EMoflonVisualiser {
 			for (final Rule rule : file.getRules()) {
 				ICompositeNode object = NodeModelUtils.getNode(rule);
 				if (selectionStart >= object.getStartLine() && selectionEnd <= object.getEndLine()) {
-					return IbexPlantUMLGenerator.visualiseTGGRule(rule);
+					return IbexPlantUMLGenerator.visualiseTGGRule(flattenedRuleIfPossible(rule, flattened));
 				}
 			}
 
 			for (final Nac nac : file.getNacs()) {
 				ICompositeNode object = NodeModelUtils.getNode(nac);
 				if (selectionStart >= object.getStartLine() && selectionEnd <= object.getEndLine()) {
-					return IbexPlantUMLGenerator.visualiseNAC(nac);
+					return IbexPlantUMLGenerator.visualiseNAC(flattenedNacIfPossible(nac, flattened));
 				}
 			}
 
+			for (final ComplementRule rule : file.getComplementRules()) {
+				ICompositeNode object = NodeModelUtils.getNode(rule);
+				if (selectionStart >= object.getStartLine() && selectionEnd <= object.getEndLine()) {
+					return IbexPlantUMLGenerator.visualiseComplementRule(flattenedComplementRuleIfPossible(rule, flattened));
+				}
+			}
+			
 			String text = textSelection.getText();
 			if (text != null && !text.isEmpty()) {
 				return IbexPlantUMLGenerator.visualiseTGGFile(flattened, text);
 			}
 		}
 
-		return IbexPlantUMLGenerator.visualizeNothing();
+		return IbexPlantUMLGenerator.visualiseTGGRuleOverview(file.eResource().getURI().segment(1), file);
+	}
+
+	private ComplementRule flattenedComplementRuleIfPossible(ComplementRule rule, TripleGraphGrammarFile flattened) {
+		return flattened.getComplementRules()//
+				.stream()//
+				.filter(r -> r.getName().equals(rule.getName()))//
+				.findAny()//
+				.orElse(rule);
+	}
+	
+	private Rule flattenedRuleIfPossible(Rule rule, TripleGraphGrammarFile flattened) {
+		return flattened.getRules()//
+				.stream()//
+				.filter(r -> r.getName().equals(rule.getName()))//
+				.findAny()//
+				.orElse(rule);
+	}
+
+	private Nac flattenedNacIfPossible(Nac nac, TripleGraphGrammarFile flattened) {
+		return flattened.getNacs()//
+				.stream()//
+				.filter(r -> r.getName().equals(nac.getName()))//
+				.findAny()//
+				.orElse(nac);
 	}
 
 	private Optional<TripleGraphGrammarFile> flatten(TripleGraphGrammarFile file) {
