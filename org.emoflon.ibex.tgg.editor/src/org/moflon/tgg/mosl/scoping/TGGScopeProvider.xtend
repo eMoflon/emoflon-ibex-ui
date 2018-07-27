@@ -379,15 +379,24 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 	
 	def sourcePatterns(EObject o){
 		switch o {
-			Rule : o.sourcePatterns
+			Rule : {
+				var all = new ArrayList(o.sourcePatterns);
+				all.addAll(o.supertypes.flatMap[st | st.sourcePatterns])
+				return all
+			}
 			ComplementRule : o.sourcePatterns
 		}
 	}
 	
-	def targetPatterns(EObject o){
+	def targetPatterns(EObject o) {
 		switch o {
-			Rule : o.targetPatterns
-			ComplementRule : o.targetPatterns
+			Rule: {
+				var all = new ArrayList(o.targetPatterns)
+				all.addAll(o.supertypes.flatMap[st|st.targetPatterns])
+				return all
+			}
+			ComplementRule:
+				o.targetPatterns
 		}
 	}
 	
