@@ -3,25 +3,18 @@
  */
 package org.emoflon.ibex.tgg.weights.scoping
 
+import java.util.LinkedList
 import language.TGG
+import org.apache.log4j.Logger
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
-import org.eclipse.emf.ecore.resource.ContentHandler
 import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
-import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.xtext.scoping.Scopes
 import org.emoflon.ibex.tgg.weights.weightDefinition.RuleWeightDefinition
 import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile
 import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionPackage
-import java.util.LinkedList
-import com.google.common.hash.HashCode
-import org.eclipse.emf.common.CommonPlugin
-import java.io.File
-import com.google.common.io.Files
-import com.google.common.hash.Hashing
-import java.net.URL
+import org.emoflon.ibex.tgg.weights.TggFileHelper
 
 /**
  * This class contains custom scoping description.
@@ -31,14 +24,7 @@ import java.net.URL
  */
 class WeightDefinitionScopeProvider extends AbstractWeightDefinitionScopeProvider {
 
-	/**
-	 * Cached imported resource
-	 */
-	var Resource importedTGG
-	/**
-	 * MD5 hash of the imported resource file (use to detect changes without loading the resource)
-	 */
-	var HashCode resourceFileHash
+	var logger = Logger.getLogger(WeightDefinitionScopeProvider)
 
 	override getScope(EObject context, EReference reference) {
 		if (isRuleWeightDefinition(context, reference)) {
@@ -59,30 +45,14 @@ class WeightDefinitionScopeProvider extends AbstractWeightDefinitionScopeProvide
 	 * Generates the scope for rule references by checking which rules exist in the imported TGG
 	 */
 	def getScopeForRuleWeightDefinition(EObject context, EReference reference) {
+		var Resource importedTGG
 		try {
 			val importUri = (context.eContainer as WeightDefinitionFile).importedTgg?.importURI
 			val uri = URI.createURI(importUri);
-			val resolvedUri = uri.resolve(URI.createPlatformResourceURI("/", true))
-			val fileUri = new URL(CommonPlugin.asLocalURI(resolvedUri).toString).toURI
-			val file = new File(fileUri.path)
-			if (!file.exists) {
-				// could not load resource
-				importedTGG = null
-				resourceFileHash = null
-				return Scopes.scopeFor(new LinkedList)
-			}
-			val hash = Files.asByteSource(file).hash(Hashing.md5)
-			if ((importedTGG === null) || (importedTGG.URI != resolvedUri) || hash != resourceFileHash) {
-				importedTGG = new ResourceSetImpl().createResource(resolvedUri,
-					ContentHandler.UNSPECIFIED_CONTENT_TYPE);
-				importedTGG.load(null);
-				EcoreUtil.resolveAll(importedTGG);
-				resourceFileHash = hash
-			}
+			importedTGG = TggFileHelper.getResource(uri)
 		} catch (Exception e) {
 			// could not load resource
-			importedTGG = null
-			resourceFileHash = null
+			logger.warn("Unable to load TGG file.\n"+ e)
 			return Scopes.scopeFor(new LinkedList)
 		}
 
