@@ -125,7 +125,7 @@ class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
 			importedTGG = TggFileHelper.getResource(uri)
 		} catch (FileNotFoundException e) {
 			error(
-				"The file at " + (importFile.importURI) + "does not exist",
+				"The file at " + (importFile.importURI) + " does not exist",
 				importFile,
 				WeightDefinitionPackage.Literals.IMPORT__IMPORT_URI
 			)
@@ -147,7 +147,7 @@ class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
 			)
 		}
 		if (!importedTGG.contents.filter[it instanceof TGG].flatMap[(it as TGG).rules].exists[it instanceof TGGRule]) {
-			error(
+			warning(
 				"File at \"" + (importFile.importURI) + "\" does not contain any TGG rules",
 				importFile,
 				WeightDefinitionPackage.Literals.IMPORT__IMPORT_URI

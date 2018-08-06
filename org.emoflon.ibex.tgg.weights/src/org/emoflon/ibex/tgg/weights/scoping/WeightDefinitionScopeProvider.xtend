@@ -5,7 +5,6 @@ package org.emoflon.ibex.tgg.weights.scoping
 
 import java.util.LinkedList
 import language.TGG
-import org.apache.log4j.Logger
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
@@ -23,8 +22,6 @@ import org.emoflon.ibex.tgg.weights.TggFileHelper
  * on how and when to use it.
  */
 class WeightDefinitionScopeProvider extends AbstractWeightDefinitionScopeProvider {
-
-	var logger = Logger.getLogger(WeightDefinitionScopeProvider)
 
 	override getScope(EObject context, EReference reference) {
 		if (isRuleWeightDefinition(context, reference)) {
@@ -52,7 +49,6 @@ class WeightDefinitionScopeProvider extends AbstractWeightDefinitionScopeProvide
 			importedTGG = TggFileHelper.getResource(uri)
 		} catch (Exception e) {
 			// could not load resource
-			logger.warn("Unable to load TGG file.\n"+ e)
 			return Scopes.scopeFor(new LinkedList)
 		}
 

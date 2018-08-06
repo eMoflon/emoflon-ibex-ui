@@ -42,11 +42,15 @@ class WeightDefinitionProposalProvider extends AbstractWeightDefinitionProposalP
 			}
 		];
 	}
-	
+
 	def checkIfTGGFile(URI uri) {
-		
-		var importedTGG = TggFileHelper.getResource(uri)
-		(importedTGG.contents.exists[it instanceof TGG]) 
-			&& (importedTGG.contents.filter[it instanceof TGG].flatMap[(it as TGG).rules].exists[it instanceof TGGRule])
+		try {
+			var importedTGG = TggFileHelper.getResource(uri)
+			(importedTGG.contents.exists[it instanceof TGG]) && (importedTGG.contents.filter[it instanceof TGG].flatMap [
+				(it as TGG).rules
+			].exists[it instanceof TGGRule])
+		} catch(Exception e) {
+			false
+		}
 	}
 }
