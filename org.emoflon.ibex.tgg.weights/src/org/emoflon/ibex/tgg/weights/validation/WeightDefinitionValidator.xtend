@@ -4,16 +4,14 @@
 package org.emoflon.ibex.tgg.weights.validation
 
 import com.google.inject.Inject
+import java.io.FileNotFoundException
 import language.TGG
 import language.TGGRule
 import language.TGGRuleCorr
 import language.TGGRuleNode
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.resource.ContentHandler
 import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
-import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.common.types.JvmUnknownTypeReference
 import org.eclipse.xtext.common.types.util.TypeReferences
@@ -24,15 +22,10 @@ import org.emoflon.ibex.tgg.weights.weightDefinition.HelperFuncParameter
 import org.emoflon.ibex.tgg.weights.weightDefinition.HelperFunction
 import org.emoflon.ibex.tgg.weights.weightDefinition.Import
 import org.emoflon.ibex.tgg.weights.weightDefinition.RuleWeightDefinition
+import org.emoflon.ibex.tgg.weights.weightDefinition.VariableDeclaration
 import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionFile
 import org.emoflon.ibex.tgg.weights.weightDefinition.WeightDefinitionPackage
-import org.emoflon.ibex.tgg.weights.weightDefinition.VariableDeclaration
-import org.eclipse.emf.common.CommonPlugin
-import java.io.File
-import com.google.common.hash.HashCode
-import com.google.common.io.Files
-import com.google.common.hash.Hashing
-import java.net.URL
+import org.emoflon.ibex.tgg.weights.TggFileHelper
 
 /**
  * This class contains custom validation rules. 
@@ -42,15 +35,6 @@ import java.net.URL
 class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
 
 	@Inject TypeReferences ref;
-
-	/**
-	 * Cached imported resource
-	 */
-	var Resource importedTGG
-	/**
-	 * MD5 hash of the imported resource file (use to detect changes without loading the resource)
-	 */
-	var HashCode resourceFileHash
 
 	/**
 	 * Checks that there is at most one weight calculation per TGG rule
@@ -135,34 +119,20 @@ class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
 	 */
 	@Check(NORMAL)
 	def checkTggFile(Import importFile) {
+		val uri = URI.createURI(importFile.importURI);
+		var Resource importedTGG
 		try {
-			val uri = URI.createURI(importFile.importURI);
-			val resolvedUri = uri.resolve(URI.createPlatformResourceURI("/", true))
-			val fileUri = new URL(CommonPlugin.asLocalURI(resolvedUri).toString).toURI
-			val file = new File(fileUri.path)
-			if (!file.exists) {
-				importedTGG = null
-				resourceFileHash = null
-				error(
-					"The file at " + (importFile.importURI) + "does not exist",
-					importFile,
-					WeightDefinitionPackage.Literals.IMPORT__IMPORT_URI
-				)
-				return
-			}
-			val hash = Files.asByteSource(file).hash(Hashing.md5)
-			if ((importedTGG === null) || (importedTGG.URI != resolvedUri) || hash != resourceFileHash) {
-				importedTGG = new ResourceSetImpl().createResource(resolvedUri,
-					ContentHandler.UNSPECIFIED_CONTENT_TYPE);
-				importedTGG.load(null);
-				EcoreUtil.resolveAll(importedTGG);
-				resourceFileHash = hash
-			}
-		} catch (Exception e) {
-			importedTGG = null
-			resourceFileHash = null
+			importedTGG = TggFileHelper.getResource(uri)
+		} catch (FileNotFoundException e) {
 			error(
-				"Cannot load TGG from " + (importFile.importURI),
+				"The file at " + (importFile.importURI) + " does not exist",
+				importFile,
+				WeightDefinitionPackage.Literals.IMPORT__IMPORT_URI
+			)
+			return
+		} catch (Exception e) {
+			error(
+				"Cannot load TGG from " + (importFile.importURI) + "\n"+e,
 				importFile,
 				WeightDefinitionPackage.Literals.IMPORT__IMPORT_URI
 			)
@@ -177,7 +147,7 @@ class WeightDefinitionValidator extends AbstractWeightDefinitionValidator {
 			)
 		}
 		if (!importedTGG.contents.filter[it instanceof TGG].flatMap[(it as TGG).rules].exists[it instanceof TGGRule]) {
-			error(
+			warning(
 				"File at \"" + (importFile.importURI) + "\" does not contain any TGG rules",
 				importFile,
 				WeightDefinitionPackage.Literals.IMPORT__IMPORT_URI
