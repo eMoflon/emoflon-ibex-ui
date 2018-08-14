@@ -11,7 +11,7 @@ class MyResourceSetInitializer extends XtextGeneratorResourceSetInitializer {
 		resourceSet.packageRegistry.put("platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore",
 			EcorePackage.eINSTANCE)
 		resourceSet.packageRegistry.put("http://www.eclipse.org/emf/2002/Ecore", EcorePackage.eINSTANCE)
-		resourceSet.packageRegistry.put("platform:/resource/org.emoflon.ibex.tgg.core.language/model/Language.ecore",
+		resourceSet.packageRegistry.put("platform:/plugin/org.emoflon.ibex.tgg.core.language/model/Language.ecore",
 			LanguagePackage.eINSTANCE)
 		super.initialize(resourceSet, referencedResources)
 	}
