@@ -16,7 +16,7 @@ import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.emoflon.ibex.tgg.ide.admin.IbexTGGBuilder;
 import org.emoflon.ibex.tgg.ide.transformation.EditorTGGtoFlattenedTGG;
 import org.moflon.core.ui.visualisation.EMoflonPlantUMLGenerator;
-import org.moflon.core.ui.visualisation.EMoflonVisualiser;
+import org.moflon.core.ui.visualisation.common.EMoflonVisualiser;
 import org.moflon.core.utilities.MoflonUtil;
 import org.moflon.tgg.mosl.tgg.ComplementRule;
 import org.moflon.tgg.mosl.tgg.Nac;
