@@ -15,7 +15,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil
 
 class TggFileHelper {
 
-	static val hashCodes = CollectionFactory.INSTANCE.createObjectToObjectHashMap()
+	static val hashCodes = CollectionFactory.cfactory.createObjectToObjectHashMap()
 	static val resourceSet = new ResourceSetImpl()
 	static val logger = Logger.getLogger(TggFileHelper)
 
