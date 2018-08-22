@@ -12,7 +12,7 @@ import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile;
 import org.emoflon.ibex.gt.editor.gT.EditorPattern;
 import org.moflon.core.ui.visualisation.EMoflonPlantUMLGenerator;
-import org.moflon.core.ui.visualisation.EMoflonVisualiser;
+import org.moflon.core.ui.visualisation.common.EMoflonVisualiser;
 
 /**
  * The GTVisualizer provides a PlantUML visualization of graph transformation

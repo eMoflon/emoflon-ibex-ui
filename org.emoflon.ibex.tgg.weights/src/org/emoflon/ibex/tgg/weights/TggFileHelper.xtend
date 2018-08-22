@@ -1,22 +1,21 @@
 package org.emoflon.ibex.tgg.weights
 
-import com.google.common.hash.HashCode
+import org.emoflon.ibex.common.collections.CollectionFactory
 import com.google.common.hash.Hashing
 import com.google.common.io.Files
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import java.io.File
 import java.io.FileNotFoundException
 import java.net.URL
+import org.apache.log4j.Logger
 import org.eclipse.emf.common.CommonPlugin
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.util.EcoreUtil
-import org.apache.log4j.Logger
 
 class TggFileHelper {
 
-	static val hashCodes = new Object2ObjectOpenHashMap<String, HashCode>()
+	static val hashCodes = CollectionFactory.cfactory.createObjectToObjectHashMap()
 	static val resourceSet = new ResourceSetImpl()
 	static val logger = Logger.getLogger(TggFileHelper)
 
