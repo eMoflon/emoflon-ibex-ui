@@ -29,7 +29,7 @@ enum EditorPatternType:
 EditorParameter:
 	name=ID ':' type=[ecore::EDataType];
 
-	// Nodes
+// Nodes
 EditorNode:
 	(operator=OperatorInEditor)?
 	name=ID ':' type=[ecore::EClass]
@@ -97,3 +97,7 @@ EditorSimpleCondition:
 enum EditorApplicationConditionType:
 	POSITIVE='enforce' |
 	NEGATIVE='forbid';
+
+// This rule serves to have a common super class for pattern parameters and editor nodes
+EditorParameterOrNode:
+    (EditorNode | EditorParameter);

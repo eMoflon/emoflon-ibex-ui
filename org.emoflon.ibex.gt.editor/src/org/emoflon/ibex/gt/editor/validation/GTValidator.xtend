@@ -32,8 +32,8 @@ import org.emoflon.ibex.gt.editor.utils.GTEditorPatternUtils
 import org.emoflon.ibex.gt.editor.utils.GTFlattener
 
 /**
- * This class contains custom validation rules. 
- * 
+ * This class contains custom validation rules.
+ *
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 class GTValidator extends AbstractGTValidator {
@@ -272,7 +272,7 @@ class GTValidator extends AbstractGTValidator {
 					NAME_EXPECT_CAMEL_CASE
 				)
 			} else {
-				// The pattern name should start with a lower case character. 
+				// The pattern name should start with a lower case character.
 				if (!Character.isLowerCase(pattern.name.charAt(0))) {
 					warning(
 						String.format(PATTERN_NAME_STARTS_WITH_LOWER_CASE_MESSAGE, pattern.name),
@@ -424,7 +424,7 @@ class GTValidator extends AbstractGTValidator {
 		if (nodeNameBlacklist.contains(parameter.name)) {
 			error(
 				String.format(PARAMETER_NAME_FORBIDDEN_MESSAGE, parameter.name),
-				GTPackage.Literals.EDITOR_PARAMETER__NAME,
+				GTPackage.Literals.EDITOR_PARAMETER_OR_NODE__NAME,
 				NAME_BLACKLISTED
 			)
 		} else {
@@ -432,7 +432,7 @@ class GTValidator extends AbstractGTValidator {
 			if (parameter.name.contains('_')) {
 				warning(
 					String.format(PARAMETER_NAME_CONTAINS_UNDERSCORES_MESSAGE, parameter.name),
-					GTPackage.Literals.EDITOR_PARAMETER__NAME,
+					GTPackage.Literals.EDITOR_PARAMETER_OR_NODE__NAME,
 					NAME_EXPECT_CAMEL_CASE
 				)
 			} else {
@@ -440,7 +440,7 @@ class GTValidator extends AbstractGTValidator {
 				if (Character.isUpperCase(parameter.name.charAt(0))) {
 					warning(
 						String.format(PARAMETER_NAME_STARTS_WITH_LOWER_CASE_MESSAGE, parameter.name),
-						GTPackage.Literals.EDITOR_PARAMETER__NAME,
+						GTPackage.Literals.EDITOR_PARAMETER_OR_NODE__NAME,
 						NAME_EXPECT_LOWER_CASE
 					)
 				}
@@ -453,7 +453,7 @@ class GTValidator extends AbstractGTValidator {
 		if (count !== 1) {
 			error(
 				String.format(PARAMETER_NAME_MULTIPLE_DECLARATIONS_MESSAGE, parameter.name, getTimes(count)),
-				GTPackage.Literals.EDITOR_PARAMETER__NAME,
+				GTPackage.Literals.EDITOR_PARAMETER_OR_NODE__NAME,
 				NAME_EXPECT_UNIQUE
 			)
 		}
@@ -465,7 +465,7 @@ class GTValidator extends AbstractGTValidator {
 		if (nodeNameBlacklist.contains(node.name)) {
 			error(
 				String.format(NODE_NAME_FORBIDDEN_MESSAGE, node.name),
-				GTPackage.Literals.EDITOR_NODE__NAME,
+				GTPackage.Literals.EDITOR_PARAMETER_OR_NODE__NAME,
 				NAME_BLACKLISTED
 			)
 		} else {
@@ -474,7 +474,7 @@ class GTValidator extends AbstractGTValidator {
 			if (node.name.substring(1).contains('_')) {
 				warning(
 					String.format(NODE_NAME_CONTAINS_UNDERSCORES_MESSAGE, node.name),
-					GTPackage.Literals.EDITOR_NODE__NAME,
+					GTPackage.Literals.EDITOR_PARAMETER_OR_NODE__NAME,
 					NAME_EXPECT_CAMEL_CASE
 				)
 			} else {
@@ -482,7 +482,7 @@ class GTValidator extends AbstractGTValidator {
 				if (Character.isUpperCase(node.name.charAt(0))) {
 					warning(
 						String.format(NODE_NAME_STARTS_WITH_LOWER_CASE_MESSAGE, node.name),
-						GTPackage.Literals.EDITOR_NODE__NAME,
+						GTPackage.Literals.EDITOR_PARAMETER_OR_NODE__NAME,
 						NAME_EXPECT_LOWER_CASE
 					)
 				}
@@ -496,7 +496,7 @@ class GTValidator extends AbstractGTValidator {
 			if (nodeDeclarationsCount !== 1) {
 				error(
 					String.format(NODE_NAME_MULTIPLE_DECLARATIONS_MESSAGE, node.name, getTimes(nodeDeclarationsCount)),
-					GTPackage.Literals.EDITOR_NODE__NAME,
+					GTPackage.Literals.EDITOR_PARAMETER_OR_NODE__NAME,
 					NAME_EXPECT_UNIQUE
 				)
 			}
@@ -505,7 +505,7 @@ class GTValidator extends AbstractGTValidator {
 			if (pattern.parameters.exists[node.name.equals(it.name)]) {
 				error(
 					String.format(NODE_NAME_EQUALS_PARAMETER_NAME_MESSAGE, node.name, node.name),
-					GTPackage.Literals.EDITOR_NODE__NAME,
+					GTPackage.Literals.EDITOR_PARAMETER_OR_NODE__NAME,
 					NODE_NAME_EQUALS_PARAMETER_NAME
 				)
 			}
@@ -780,7 +780,7 @@ class GTValidator extends AbstractGTValidator {
 	}
 
 	/**
-	 * Validates that the given pattern has no parameters and is no rule. 
+	 * Validates that the given pattern has no parameters and is no rule.
 	 */
 	def checkPatternInApplicationCondition(EditorPattern pattern, EStructuralFeature feature) {
 		// Patterns in conditions must not be rules.

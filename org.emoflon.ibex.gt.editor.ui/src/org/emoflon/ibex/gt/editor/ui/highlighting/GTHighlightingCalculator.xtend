@@ -17,7 +17,7 @@ import org.emoflon.ibex.gt.editor.gT.EditorRelation
 import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.utils.GTEditorPatternUtils
 
-/** 
+/**
  * Applying syntax highlighting configuration.
  */
 class GTHighlightingCalculator extends DefaultSemanticHighlightingCalculator {
@@ -49,7 +49,7 @@ class GTHighlightingCalculator extends DefaultSemanticHighlightingCalculator {
 		if (element.operator == EditorOperator.CREATE || element.operator == EditorOperator.DELETE) {
 			highlight(acceptor, element, GTPackage.Literals.EDITOR_NODE__OPERATOR, styles)
 		}
-		highlight(acceptor, element, GTPackage.Literals.EDITOR_NODE__NAME, styles)
+		highlight(acceptor, element, GTPackage.Literals.EDITOR_PARAMETER_OR_NODE__NAME, styles)
 		highlight(acceptor, element, GTPackage.Literals.EDITOR_NODE__TYPE, styles)
 	}
 
