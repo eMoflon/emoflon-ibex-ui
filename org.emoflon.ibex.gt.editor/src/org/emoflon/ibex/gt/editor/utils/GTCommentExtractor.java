@@ -41,7 +41,10 @@ public class GTCommentExtractor {
 				documentation.append(extract(i.getText()));
 			}
 		});
-		return documentation.toString().trim();
+		return documentation.toString() //
+				.replaceAll("\r", "").replaceAll("\n", "") // remove line breaks
+				.replace("  ", " ") // remove multiple consecutive spaces
+				.trim();
 	}
 
 	/**

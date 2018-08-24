@@ -23,6 +23,7 @@ import org.eclipse.xtext.scoping.Scopes
 import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider
 import org.eclipse.xtext.scoping.impl.FilteringScope
 import org.eclipse.xtext.scoping.impl.SimpleScope
+import org.moflon.core.utilities.EcoreUtils
 import org.moflon.ide.mosl.core.scoping.MoflonScope
 import org.moflon.tgg.mosl.tgg.AttributeAssignment
 import org.moflon.tgg.mosl.tgg.AttributeConstraint
@@ -41,7 +42,6 @@ import org.moflon.tgg.mosl.tgg.Rule
 import org.moflon.tgg.mosl.tgg.Schema
 import org.moflon.tgg.mosl.tgg.TggPackage
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
-import org.emoflon.ibex.common.utils.EcoreUtils
 
 /**
  * This class contains custom scoping description.
@@ -166,6 +166,34 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 		context instanceof AttributeExpression && reference == TggPackage.Literals.ATTRIBUTE_EXPRESSION__ATTRIBUTE
 	}
 	
+	def is_objectvar_of_attr_expression(EObject context, EReference reference) {
+		context instanceof AttributeExpression && reference == TggPackage.Literals.ATTRIBUTE_EXPRESSION__OBJECT_VAR
+	}
+	
+	def object_must_be_of_ovPattern_or_cOvPattern(EObject context) {
+		Scopes.scopeFor(getCObjectVariablePatterns(context));
+	}
+	
+	def getCObjectVariablePatterns(EObject context) {
+		var scopeOVs = new ArrayList
+		var container = context.eContainer
+		while(container != null) {
+			switch container {
+				Rule : {
+					scopeOVs.addAll(container.sourcePatterns)
+					scopeOVs.addAll(container.targetPatterns)
+					return scopeOVs
+				}
+				Nac : {
+					scopeOVs.addAll(container.sourcePatterns)
+					scopeOVs.addAll(container.targetPatterns)
+					return scopeOVs
+				}
+			}
+			container = container.eContainer
+		}
+	}
+	
 	def attr_must_be_of_ov(EObject context) {
 		return Scopes.scopeFor(getOVType(context).EAllAttributes)
 	}
@@ -242,9 +270,13 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 	
 	def is_equal_or_super_type_of_ov(EClass sup, IEObjectDescription desc){
 		val sub = getOVType(desc.EObjectOrProxy)
-		sub != null && (EcoreUtils.equalsFQN(sub, sup) || sub.EAllSuperTypes.contains(sup) || EcorePackage.eINSTANCE.EObject.equals(sup))
+		sub != null && (  
+			EcoreUtils.equalsFQN(sub, sup) 
+		 	|| !sub.EAllSuperTypes.filter[superType | EcoreUtils.equalsFQN(superType, sup)].empty 
+		 	|| EcoreUtils.equalsFQN(sub, EcorePackage.eINSTANCE.EObject)
+		)
 	}
-
+	
 	def is_type_of_ov(EObject context, EReference reference) {
 		if(context instanceof ObjectVariablePattern)
 			reference == TggPackage.Literals.OBJECT_VARIABLE_PATTERN__TYPE
@@ -347,15 +379,24 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 	
 	def sourcePatterns(EObject o){
 		switch o {
-			Rule : o.sourcePatterns
+			Rule : {
+				var all = new ArrayList(o.sourcePatterns);
+				all.addAll(o.supertypes.flatMap[st | st.sourcePatterns])
+				return all
+			}
 			ComplementRule : o.sourcePatterns
 		}
 	}
 	
-	def targetPatterns(EObject o){
+	def targetPatterns(EObject o) {
 		switch o {
-			Rule : o.targetPatterns
-			ComplementRule : o.targetPatterns
+			Rule: {
+				var all = new ArrayList(o.targetPatterns)
+				all.addAll(o.supertypes.flatMap[st|st.targetPatterns])
+				return all
+			}
+			ComplementRule:
+				o.targetPatterns
 		}
 	}
 	

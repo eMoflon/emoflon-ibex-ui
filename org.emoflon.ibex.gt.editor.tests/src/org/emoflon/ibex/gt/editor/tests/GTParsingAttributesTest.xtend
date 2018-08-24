@@ -1,6 +1,5 @@
 package org.emoflon.ibex.gt.editor.tests
 
-import org.eclipse.xtext.diagnostics.Diagnostic
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
@@ -102,7 +101,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 				dataType: EDataType
 				
 				clazz: EClass {
-					.name == dataType.serializable
+					.name == dataType.x
 				}
 			}
 		''')
@@ -110,8 +109,8 @@ class GTParsingAttributesTest extends GTParsingTest {
 		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorAttributeExpression,
-			Diagnostic::LINKING_DIAGNOSTIC,
-			"Couldn't resolve reference to EAttribute 'serializable'."
+			GTLinkingDiagnosticMessageProvider.ATTRIBUTE_EXPRESSION_ATTRIBUTE_NOT_FOUND,
+			String.format(GTLinkingDiagnosticMessageProvider.ATTRIBUTE_EXPRESSION_ATTRIBUTE_NOT_FOUND_MESSAGE, 'x')
 		)
 	}
 
@@ -340,8 +339,8 @@ class GTParsingAttributesTest extends GTParsingTest {
 		assertValidationErrors(
 			file,
 			GTPackage.eINSTANCE.editorAttribute,
-			Diagnostic::LINKING_DIAGNOSTIC,
-			"Couldn't resolve reference to EAttribute 'name'."
+			GTLinkingDiagnosticMessageProvider.ATTRIBUTE_NOT_FOUND,
+			String.format(GTLinkingDiagnosticMessageProvider.ATTRIBUTE_NOT_FOUND_MESSAGE, 'name')
 		)
 	}
 }

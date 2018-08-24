@@ -4,9 +4,11 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.Assignment
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor
+import org.moflon.core.utilities.WorkspaceSearch
 import org.moflon.tgg.mosl.tgg.AttributeExpression
+import org.moflon.tgg.mosl.tgg.ContextObjectVariablePattern
+import org.moflon.tgg.mosl.tgg.ObjectVariablePattern
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
-import org.emoflon.ibex.common.editor.utils.WorkspaceSearch
 
 /**
  * See https://www.eclipse.org/Xtext/documentation/310_eclipse_support.html#content-assist
@@ -44,9 +46,17 @@ class TGGProposalProvider extends AbstractTGGProposalProvider {
 		if (model instanceof AttributeExpression) {
 			var attrVar = model as AttributeExpression
 
-			for (attr : attrVar.objectVar.type.EAllAttributes) {
+			for (attr : getOPatternType(attrVar.objectVar).EAllAttributes) {
 				acceptor.accept(createCompletionProposal(attr.name, context))
 			}
+		}
+	}
+	
+	
+	def getOPatternType(EObject obj) {
+		switch obj {
+			ObjectVariablePattern : obj.type
+			ContextObjectVariablePattern : obj.type
 		}
 	}
 }

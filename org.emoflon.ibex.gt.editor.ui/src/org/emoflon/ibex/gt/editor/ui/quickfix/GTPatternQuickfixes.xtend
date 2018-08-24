@@ -13,7 +13,7 @@ class GTPatternQuickfixes {
 	/**
 	 * Changes a pattern type.
 	 */
-	public static def changePatternType(Issue issue, IssueResolutionAcceptor acceptor, EditorPatternType oldType,
+	static def changePatternType(Issue issue, IssueResolutionAcceptor acceptor, EditorPatternType oldType,
 		EditorPatternType newType) {
 		val patternName = issue.data?.get(0)
 		var label = '''Change «oldType.toString» '«patternName»' to a «newType.toString».'''
@@ -34,7 +34,7 @@ class GTPatternQuickfixes {
 	/**
 	 * Remove duplicate conditions.
 	 */
-	public static def makeConditionsDistinct(Issue issue, IssueResolutionAcceptor acceptor) {
+	static def makeConditionsDistinct(Issue issue, IssueResolutionAcceptor acceptor) {
 		val name = issue.data?.get(0)
 		val label = '''Remove duplicate conditions declarations of «name».'''
 		acceptor.accept(
@@ -56,7 +56,7 @@ class GTPatternQuickfixes {
 	/**
 	 * Remove duplicate super patterns.
 	 */
-	public static def makeSuperPatternsDistinct(Issue issue, IssueResolutionAcceptor acceptor) {
+	static def makeSuperPatternsDistinct(Issue issue, IssueResolutionAcceptor acceptor) {
 		val ruleName = issue.data?.get(0)
 		val label = '''Remove duplicate super rule declarations of rule «ruleName».'''
 		acceptor.accept(
@@ -78,7 +78,7 @@ class GTPatternQuickfixes {
 	/**
 	 * Makes the pattern abstract.
 	 */
-	public static def makeAbstract(Issue issue, IssueResolutionAcceptor acceptor) {
+	static def makeAbstract(Issue issue, IssueResolutionAcceptor acceptor) {
 		val name = issue.data?.get(1)
 		val label = '''Make rule '«name»' abstract.'''
 		acceptor.accept(
@@ -99,7 +99,7 @@ class GTPatternQuickfixes {
 	/**
 	 * Removes all conditions of the pattern.
 	 */
-	public static def removeConditions(Issue issue, IssueResolutionAcceptor acceptor) {
+	static def removeConditions(Issue issue, IssueResolutionAcceptor acceptor) {
 		val name = issue.data?.get(0)
 		val label = '''Remove all conditions of «name».'''
 		acceptor.accept(

@@ -2,17 +2,12 @@ package org.emoflon.ibex.gt.editor.ui.visualization
 
 import java.util.HashSet
 import java.util.Set
-
+import org.apache.commons.lang3.StringUtils
 import org.eclipse.emf.common.util.EList
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute
-import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
 import org.emoflon.ibex.gt.editor.gT.EditorCondition
-import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression
-import org.emoflon.ibex.gt.editor.gT.EditorExpression
-import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression
 import org.emoflon.ibex.gt.editor.gT.EditorNode
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
-import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
 import org.emoflon.ibex.gt.editor.gT.EditorPattern
 import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
@@ -27,11 +22,12 @@ class GTPlantUMLGenerator {
 	static val ContextColor = 'Black'
 	static val CreateColor = 'DarkGreen'
 	static val DeleteColor = 'Crimson'
+	static int MAX_STR_LENGTH = 25
 
 	/**
 	 * Returns the PlantUML code for the visualization of an empty file.
 	 */
-	public static def String visualizeNothing() {
+	static def String visualizeNothing() {
 		'''
 			title There is nothing to visualize yet.
 		'''
@@ -40,7 +36,7 @@ class GTPlantUMLGenerator {
 	/**
 	 * Returns the PlantUML code for the visualization of the given pattern.
 	 */
-	public static def String visualizePattern(EditorPattern pattern) {
+	static def String visualizePattern(EditorPattern pattern) {
 		val flattenedPattern = new GTFlattener(pattern).getFlattenedPattern
 		val nodeNamesInFlattenedPattern = flattenedPattern.nodes.map[it.name]
 		'''
@@ -139,7 +135,7 @@ class GTPlantUMLGenerator {
 		val operator = if(attr.relation == EditorRelation.ASSIGNMENT) '+' else '#'
 		val name = if(attr.attribute === null || attr.attribute.name === null) '?' else attr.attribute.name
 		val relation = if(attr.relation === null) '?' else attr.relation.toString
-		'''«operator» «name» «relation» «expression(attr.value)»'''
+		'''«operator» «name» «relation» «StringUtils.abbreviateMiddle(GTVisualizationUtils.toString(attr.value), "...", MAX_STR_LENGTH)»'''
 	}
 
 	/**
@@ -163,33 +159,6 @@ class GTPlantUMLGenerator {
 	private static def String referenceLabel(EditorReference reference) {
 		val type = if(reference === null || reference.type === null) '?' else reference.type.name
 		'''<color:«referenceColor(reference)»>«type»'''
-	}
-
-	/**
-	 * Prints the expression.
-	 */
-	private static def String expression(EditorExpression expression) {
-		if (expression === null) {
-			return 'INVALID expression'
-		}
-		if (expression instanceof EditorAttributeExpression) {
-			val nodeName = if(expression.node === null) '?' else expression.node.name
-			val attributeName = if(expression.attribute === null) '?' else expression.attribute.name
-			return '''«nodeName».«attributeName»'''
-		}
-		if (expression instanceof EditorEnumExpression) {
-			return '''«expression.literal.literal»'''
-		}
-		if (expression instanceof EditorLiteralExpression) {
-			return '''«expression.value.toString»'''
-		}
-		if (expression instanceof EditorParameterExpression) {
-			if (expression.parameter === null) {
-				return 'unknown parameter'
-			}
-			return '''«expression.parameter.name»'''
-		}
-		return '''«expression.toString»'''
 	}
 
 	/**
@@ -217,7 +186,7 @@ class GTPlantUMLGenerator {
 	/**
 	 * Returns the PlantUML code for the visualization of the refinement hierarchy of the given patterns.
 	 */
-	public static def String visualizePatternHierarchy(EList<EditorPattern> patterns) {
+	static def String visualizePatternHierarchy(EList<EditorPattern> patterns) {
 		val allPatterns = new HashSet(patterns)
 		for (p : patterns) {
 			for (s : GTEditorPatternUtils.getAllSuperPatterns(p)) {

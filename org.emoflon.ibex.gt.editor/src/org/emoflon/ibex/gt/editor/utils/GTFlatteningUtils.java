@@ -1,12 +1,14 @@
 package org.emoflon.ibex.gt.editor.utils;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute;
 import org.emoflon.ibex.gt.editor.gT.EditorNode;
 import org.emoflon.ibex.gt.editor.gT.EditorOperator;
@@ -26,7 +28,7 @@ public class GTFlatteningUtils {
 	 *            the operator of the second element
 	 * @return the operator of the merged element
 	 */
-	public static Optional<EditorOperator> getMergedOperator(final EditorOperator a, final EditorOperator b) {
+	public static Optional<EditorOperator> mergedOperators(final EditorOperator a, final EditorOperator b) {
 		if (a.equals(b)) {
 			return Optional.of(a);
 		}
@@ -54,7 +56,7 @@ public class GTFlatteningUtils {
 		}
 		EditorOperator result = operators[0];
 		for (int i = 1; i < operators.length; i++) {
-			Optional<EditorOperator> o = getMergedOperator(result, operators[i]);
+			Optional<EditorOperator> o = mergedOperators(result, operators[i]);
 			if (o.isPresent()) {
 				result = o.get();
 			} else {
@@ -62,6 +64,48 @@ public class GTFlatteningUtils {
 			}
 		}
 		return Optional.of(result);
+	}
+
+	/**
+	 * Returns the lowest type of the given classes.
+	 * 
+	 * @param classes
+	 *            the types
+	 * @return the merged type
+	 */
+	private static EClass mergeTypes(final List<EClass> classes) {
+		EClass result = classes.get(0);
+		for (int i = 1; i < classes.size(); i++) {
+			if (result.isSuperTypeOf(classes.get(i))) {
+				result = classes.get(i);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Checks whether the nodes have conflicting type declarations.
+	 * 
+	 * @param nodes
+	 *            the nodes
+	 * @return the type declarations which are not compatible with the merged type
+	 */
+	public static Set<EClass> getConflictingNodeTypes(final Set<EditorNode> nodes) {
+		List<EClass> types = nodes.stream() //
+				.filter(n -> n.getType() != null) //
+				.map(n -> n.getType()) //
+				.distinct() //
+				.collect(Collectors.toList());
+		EClass mergedType = mergeTypes(types);
+
+		Set<EClass> conflictingTypes = new HashSet<EClass>();
+		for (final EClass typeToTest : types) {
+			if (!typeToTest.isSuperTypeOf(mergedType)) {
+				conflictingTypes.add(mergedType);
+				conflictingTypes.add(typeToTest);
+			}
+		}
+		return conflictingTypes;
 	}
 
 	/**
@@ -83,19 +127,15 @@ public class GTFlatteningUtils {
 	}
 
 	/**
-	 * Checks whether the nodes with the given same name have conflicting
-	 * assignments.
+	 * Checks whether the nodes have conflicting assignments.
 	 * 
 	 * @param nodes
 	 *            the nodes
-	 * @param name
-	 *            the name of the nodes to check
 	 * @return <code>true</code> if and only if there are multiple, different
 	 *         assignments for the same attribute
 	 */
-	public static boolean hasConflictingAssignment(final Set<EditorNode> nodes, final String name) {
+	public static boolean hasConflictingAssignment(final Set<EditorNode> nodes) {
 		List<EditorAttribute> assignments = nodes.stream() //
-				.filter(n -> n.getName().equals(name)) //
 				.flatMap(n -> n.getAttributes().stream()) //
 				.filter(a -> a.getRelation() == EditorRelation.ASSIGNMENT) //
 				.collect(Collectors.toList());

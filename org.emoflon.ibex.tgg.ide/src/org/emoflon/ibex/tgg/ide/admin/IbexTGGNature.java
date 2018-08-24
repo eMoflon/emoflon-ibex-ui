@@ -22,11 +22,9 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.wizards.JavaCapabilityConfigurationPage;
 import org.eclipse.ui.PlatformUI;
-import org.moflon.core.utilities.ExtensionsUtil;
 import org.moflon.core.plugins.BuildPropertiesFileBuilder;
 import org.moflon.core.plugins.manifest.ManifestFileUpdater;
-import org.moflon.core.plugins.manifest.ManifestFileUpdater.AttributeUpdatePolicy;
-import org.moflon.core.plugins.manifest.PluginManifestConstants;
+import org.moflon.core.utilities.ExtensionsUtil;
 import org.moflon.core.utilities.LogUtils;
 import org.moflon.core.utilities.WorkspaceHelper;
 
@@ -42,46 +40,43 @@ public class IbexTGGNature implements IProjectNature {
 
 	private static Logger logger = Logger.getLogger(IbexTGGNature.class);
 
-	private Collection<NatureExtension> natureExtensions;
+	private final Collection<NatureExtension> natureExtensions;
 
 	public IbexTGGNature() {
-		natureExtensions = ExtensionsUtil.collectExtensions(INATURE_EXTENSON_ID, "class", NatureExtension.class);
+		this.natureExtensions = ExtensionsUtil.collectExtensions(IbexTGGNature.INATURE_EXTENSON_ID, "class", NatureExtension.class);
 	}
 
 	@Override
 	public void configure() throws CoreException {
-		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					performSetUpRoutines();
-					addIBexTGGBuilder();
-				} catch (CoreException | IOException e) {
-					LogUtils.error(logger, e);
-				}
+		PlatformUI.getWorkbench().getDisplay().syncExec(() -> {
+			try {
+				IbexTGGNature.this.performSetUpRoutines();
+				IbexTGGNature.this.addIBexTGGBuilder();
+			} catch (CoreException | IOException e) {
+				LogUtils.error(IbexTGGNature.logger, e);
 			}
 		});
 	}
 
 	private void addIBexTGGBuilder() throws CoreException {
-		IProjectDescription projectDescription = project.getDescription();
+		IProjectDescription projectDescription = this.project.getDescription();
 		ICommand[] buildSpec = projectDescription.getBuildSpec();
 		ICommand command = projectDescription.newCommand();
-		command.setBuilderName(IBEX_TGG_BUILDER_ID);
+		command.setBuilderName(IbexTGGNature.IBEX_TGG_BUILDER_ID);
 		Collection<ICommand> list = new ArrayList<>();
 		list.add(command);
 		list.addAll(Arrays.asList(buildSpec));
 		projectDescription.setBuildSpec(list.toArray(new ICommand[list.size()]));
-		project.setDescription(projectDescription, new NullProgressMonitor());
+		this.project.setDescription(projectDescription, new NullProgressMonitor());
 	}
 
 	private void performSetUpRoutines() throws CoreException, IOException {
-		setUpAsJavaProject(project, new NullProgressMonitor());
-		setUpAsPluginProject();
-		setUpAsXtextProject();
-		setUpAsIbexProject();
-		for (NatureExtension ne : natureExtensions)
-			ne.setUpProject(project);
+		this.setUpAsJavaProject(this.project, new NullProgressMonitor());
+		this.setUpAsPluginProject();
+		this.setUpAsXtextProject();
+		this.setUpAsIbexProject();
+		for (NatureExtension ne : this.natureExtensions)
+			ne.setUpProject(this.project);
 	}
 
 	private void setUpAsJavaProject(final IProject project, final IProgressMonitor monitor) {
@@ -89,47 +84,46 @@ public class IbexTGGNature implements IProjectNature {
 		final JavaCapabilityConfigurationPage jcpage = new JavaCapabilityConfigurationPage();
 		final IJavaProject javaProject = JavaCore.create(project);
 
-		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-			@Override
-			public void run() {
-				jcpage.init(javaProject, null, null, true);
-				try {
-					jcpage.configureJavaProject(subMon.newChild(1));
-				} catch (final Exception e) {
-					logger.error("Exception during setup of Java project", e);
-				}
+		PlatformUI.getWorkbench().getDisplay().syncExec(() -> {
+			jcpage.init(javaProject, null, null, true);
+			try {
+				jcpage.configureJavaProject(subMon.newChild(1));
+			} catch (final Exception e) {
+				IbexTGGNature.logger.error("Exception during setup of Java project", e);
 			}
 		});
 	}
 
 	private void setUpAsIbexProject() throws CoreException, IOException {
-		new ManifestFileUpdater().processManifest(project, manifest -> {
+		new ManifestFileUpdater().processManifest(this.project, manifest -> {
 			boolean changed = false;
 			changed |= ManifestFileUpdater.updateDependencies(manifest, Arrays.asList(
 					// Misc deps
-					"org.apache.log4j", "com.google.guava",
-					"org.sat4j.core", "org.sat4j.pb",
+					"org.apache.log4j", "com.google.guava", "org.sat4j.core", "org.sat4j.pb",
 
 					// EMF deps
 					"org.eclipse.emf.ecore.xmi",
 
 					// Ibex deps
-					"org.emoflon.ibex.common", "org.emoflon.ibex.tgg.core.language", "org.emoflon.ibex.tgg.core.runtime"
+					"org.emoflon.ibex.common", "org.emoflon.ibex.tgg.core.language", "org.emoflon.ibex.tgg.core.runtime",
 
-			));
+					//Xtend deps
+					"org.eclipse.xtend.lib"
+
+					));
 			return changed;
 		});
 	}
 
 	private void setUpAsXtextProject() throws CoreException {
-		WorkspaceHelper.addNature(project, XTEXT_NATURE_ID, new NullProgressMonitor());
+		WorkspaceHelper.addNature(this.project, IbexTGGNature.XTEXT_NATURE_ID, new NullProgressMonitor());
 	}
 
 	private void setUpAsPluginProject() throws CoreException, IOException {
-		WorkspaceHelper.addNature(project, PLUGIN_NATURE_ID, new NullProgressMonitor());
-		setUpBuildProperties();
-		setUpManifestFile();
-		addContainerToBuildPath(project, "org.eclipse.pde.core.requiredPlugins");
+		WorkspaceHelper.addNature(this.project, IbexTGGNature.PLUGIN_NATURE_ID, new NullProgressMonitor());
+		this.setUpBuildProperties();
+		this.setUpManifestFile();
+		IbexTGGNature.addContainerToBuildPath(this.project, "org.eclipse.pde.core.requiredPlugins");
 	}
 
 	/**
@@ -137,7 +131,7 @@ public class IbexTGGNature implements IProjectNature {
 	 * contains no entry with the same name, yet.
 	 */
 	public static void addContainerToBuildPath(final IProject project, final String container) {
-		addContainerToBuildPath(JavaCore.create(project), container);
+		IbexTGGNature.addContainerToBuildPath(JavaCore.create(project), container);
 	}
 
 	/**
@@ -149,11 +143,11 @@ public class IbexTGGNature implements IProjectNature {
 			Collection<IClasspathEntry> classpathEntries = new ArrayList<>(
 					Arrays.asList(iJavaProject.getRawClasspath()));
 
-			addContainerToBuildPath(classpathEntries, container);
+			IbexTGGNature.addContainerToBuildPath(classpathEntries, container);
 
-			setBuildPath(iJavaProject, classpathEntries);
+			IbexTGGNature.setBuildPath(iJavaProject, classpathEntries);
 		} catch (JavaModelException e) {
-			LogUtils.error(logger, e, "Unable to set classpath variable");
+			LogUtils.error(IbexTGGNature.logger, e, "Unable to set classpath variable");
 		}
 	}
 
@@ -187,39 +181,22 @@ public class IbexTGGNature implements IProjectNature {
 
 	private static void setBuildPath(final IJavaProject javaProject, final Collection<IClasspathEntry> entries)
 			throws JavaModelException {
-		setBuildPath(javaProject, entries, new NullProgressMonitor());
+		IbexTGGNature.setBuildPath(javaProject, entries, new NullProgressMonitor());
 	}
 
 	private void setUpBuildProperties() throws CoreException {
-		logger.debug("Adding build.properties");
+		IbexTGGNature.logger.debug("Adding build.properties");
 		Properties buildProperties = new Properties();
 		buildProperties.put("bin.includes", "META-INF/, bin/, model/");
 		buildProperties.put("source..", "src/");
 		buildProperties.put("output..", "bin/");
-		new BuildPropertiesFileBuilder().createBuildProperties(project, new NullProgressMonitor(), buildProperties);
+		new BuildPropertiesFileBuilder().createBuildProperties(this.project, new NullProgressMonitor(), buildProperties);
 	}
 
 	private void setUpManifestFile() throws CoreException, IOException {
-		logger.debug("Adding MANIFEST.MF");
-		new ManifestFileUpdater().processManifest(project, manifest -> {
-			boolean changed = false;
-			changed |= ManifestFileUpdater.updateAttribute(manifest, PluginManifestConstants.MANIFEST_VERSION, "1.0",
-					AttributeUpdatePolicy.KEEP);
-			changed |= ManifestFileUpdater.updateAttribute(manifest, PluginManifestConstants.BUNDLE_MANIFEST_VERSION,
-					"2", AttributeUpdatePolicy.KEEP);
-			changed |= ManifestFileUpdater.updateAttribute(manifest, PluginManifestConstants.BUNDLE_NAME,
-					project.getName(), AttributeUpdatePolicy.KEEP);
-			changed |= ManifestFileUpdater.updateAttribute(manifest, PluginManifestConstants.BUNDLE_SYMBOLIC_NAME,
-					project.getName() + ";singleton:=true", AttributeUpdatePolicy.KEEP);
-			changed |= ManifestFileUpdater.updateAttribute(manifest, PluginManifestConstants.BUNDLE_VERSION, "1.0",
-					AttributeUpdatePolicy.KEEP);
-			changed |= ManifestFileUpdater.updateAttribute(manifest, PluginManifestConstants.BUNDLE_VENDOR,
-					"eMoflon IBeX", AttributeUpdatePolicy.KEEP);
-			changed |= ManifestFileUpdater.updateAttribute(manifest, PluginManifestConstants.BUNDLE_ACTIVATION_POLICY,
-					"lazy", AttributeUpdatePolicy.KEEP);
-			changed |= ManifestFileUpdater.updateAttribute(manifest,
-					PluginManifestConstants.BUNDLE_EXECUTION_ENVIRONMENT, "JavaSE-1.8", AttributeUpdatePolicy.KEEP);
-			return changed;
+		IbexTGGNature.logger.debug("Adding MANIFEST.MF");
+		new ManifestFileUpdater().processManifest(this.project, manifest -> {
+			return ManifestFileUpdater.setBasicProperties(manifest, this.project.getName());
 		});
 	}
 
@@ -230,11 +207,11 @@ public class IbexTGGNature implements IProjectNature {
 
 	@Override
 	public IProject getProject() {
-		return project;
+		return this.project;
 	}
 
 	@Override
-	public void setProject(IProject project) {
+	public void setProject(final IProject project) {
 		this.project = project;
 	}
 }

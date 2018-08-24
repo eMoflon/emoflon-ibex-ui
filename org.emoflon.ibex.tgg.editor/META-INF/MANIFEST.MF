@@ -23,11 +23,8 @@ Require-Bundle: org.antlr.runtime,
  org.eclipse.xtext.util,
  org.eclipse.xtext.xbase.lib,
  org.moflon.core.utilities,
- org.objectweb.asm;resolution:=optional,
- org.emoflon.ibex.common;bundle-version="1.0.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Bundle-ClassPath: .antlr-generator-3.2.0-patch.jar,
- .
+ org.objectweb.asm;resolution:=optional
+Bundle-ClassPath: .antlr-generator-3.2.0-patch.jar,.
 Export-Package: org.moflon.ide.mosl.core.scoping,
  org.moflon.tgg.mosl,
  org.moflon.tgg.mosl.defaults,
@@ -44,3 +41,4 @@ Export-Package: org.moflon.ide.mosl.core.scoping,
  org.moflon.tgg.mosl.tgg.util,
  org.moflon.tgg.mosl.validation
 Automatic-Module-Name: org.emoflon.ibex.tgg.editor
+Import-Package: org.apache.log4j

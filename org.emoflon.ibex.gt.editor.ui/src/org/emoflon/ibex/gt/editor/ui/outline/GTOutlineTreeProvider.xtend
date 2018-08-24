@@ -21,10 +21,10 @@ import org.emoflon.ibex.gt.editor.gT.EditorCondition
  */
 class GTOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	@Inject
-	private IImageHelper imageHelper
+	IImageHelper imageHelper
 
 	@Inject
-	private StylerFactory stylerFactory
+	StylerFactory stylerFactory
 
 	override _createNode(IOutlineNode parentNode, EObject modelElement) {
 		if (modelElement instanceof EditorPattern || modelElement instanceof EditorCondition) {

@@ -13,7 +13,13 @@ import org.emoflon.ibex.gt.editor.gT.EditorAttribute
  * Custom error codes and messages for scoping violations.
  */
 class GTLinkingDiagnosticMessageProvider extends LinkingDiagnosticMessageProvider {
-	private static val CODE_PREFIX = "org.emoflon.ibex.gt.editor."
+	static val CODE_PREFIX = "org.emoflon.ibex.gt.editor."
+
+	public static val ATTRIBUTE_NOT_FOUND = CODE_PREFIX + "attribute.type.notFound"
+	public static val ATTRIBUTE_NOT_FOUND_MESSAGE = "Could not find attribute '%s'."
+
+	public static val ATTRIBUTE_EXPRESSION_ATTRIBUTE_NOT_FOUND = CODE_PREFIX + "attributeExpression.attribute.notFound"
+	public static val ATTRIBUTE_EXPRESSION_ATTRIBUTE_NOT_FOUND_MESSAGE = "Could not find attribute '%s'."
 
 	public static val ATTRIBUTE_EXPRESSION_NODE_NOT_FOUND = CODE_PREFIX + "attributeExpression.node.notFound"
 	public static val ATTRIBUTE_EXPRESSION_NODE_NOT_FOUND_MESSAGE = "Could not find node '%s'."
@@ -27,6 +33,9 @@ class GTLinkingDiagnosticMessageProvider extends LinkingDiagnosticMessageProvide
 	public static val PARAMETER_EXPRESSION_PARAMETER_NOT_FOUND = CODE_PREFIX + "parameterExpression.parameter.notFound"
 	public static val PARAMETER_EXPRESSION_PARAMETER_NOT_FOUND_MESSAGE = "Could not find parameter '%s' of type '%s'."
 
+	public static val REFERENCE_NOT_FOUND = CODE_PREFIX + "reference.type.notFound"
+	public static val REFERENCE_NOT_FOUND_MESSAGE = "Could not find reference '%s'."
+
 	public static val REFERENCE_TARGET_NODE_NOT_FOUND = CODE_PREFIX + "reference.target.nodeNotFound"
 	public static val REFERENCE_TARGET_NODE_NOT_FOUND_MESSAGE = "Could not find node '%s' of type '%s'."
 
@@ -36,6 +45,24 @@ class GTLinkingDiagnosticMessageProvider extends LinkingDiagnosticMessageProvide
 			linkText = context.getLinkText();
 		} catch (IllegalNodeException e) {
 			linkText = e.getNode().getText();
+		}
+
+		// Attribute not found.
+		if (context.reference === GTPackage.Literals.EDITOR_ATTRIBUTE__ATTRIBUTE) {
+			return new DiagnosticMessage(
+				String.format(ATTRIBUTE_NOT_FOUND_MESSAGE, linkText),
+				Severity.ERROR,
+				ATTRIBUTE_NOT_FOUND
+			)
+		}
+
+		// Attribute type of attribute expression not found.
+		if (context.reference === GTPackage.Literals.EDITOR_ATTRIBUTE_EXPRESSION__ATTRIBUTE) {
+			return new DiagnosticMessage(
+				String.format(ATTRIBUTE_EXPRESSION_ATTRIBUTE_NOT_FOUND_MESSAGE, linkText),
+				Severity.ERROR,
+				ATTRIBUTE_EXPRESSION_ATTRIBUTE_NOT_FOUND
+			)
 		}
 
 		// Node of attribute expression not found.
@@ -75,9 +102,18 @@ class GTLinkingDiagnosticMessageProvider extends LinkingDiagnosticMessageProvide
 			)
 		}
 
-		// Node for reference target not found in scope.
+		// Reference type not found.
+		if (context.reference === GTPackage.Literals.EDITOR_REFERENCE__TYPE) {
+			return new DiagnosticMessage(
+				String.format(REFERENCE_NOT_FOUND_MESSAGE, linkText),
+				Severity.ERROR,
+				REFERENCE_NOT_FOUND
+			)
+		}
+
+		// Reference target node not found in scope.
 		if (context.reference === GTPackage.Literals.EDITOR_REFERENCE__TARGET) {
-			val expectedType = (context.context as EditorReference).type.EReferenceType.name
+			val expectedType = (context.context as EditorReference).type?.EReferenceType?.name
 			return new DiagnosticMessage(
 				String.format(REFERENCE_TARGET_NODE_NOT_FOUND_MESSAGE, linkText, expectedType),
 				Severity.ERROR,

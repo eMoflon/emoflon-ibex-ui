@@ -1,45 +1,51 @@
 package org.moflon.tgg.mosl.defaults
 
-import org.apache.commons.lang3.StringUtils
-import org.eclipse.emf.common.util.URI
-import org.moflon.core.utilities.MoflonUtil
+import java.util.List
 
 class DefaultFilesHelper {
-
-	private static def getDefaultURIToEcoreFileInPlugin(String pluginID) {
-		return URI.createPlatformPluginURI("/" + pluginID + "/" + getDefaultPathToEcoreFileInProject(pluginID), true);
+	
+	private static def concatAndFormatMetamodelNameList(List<String> metamodelNames) {
+		val StringBuilder sb = new StringBuilder();
+		if(metamodelNames == null || metamodelNames.size() == 0) {
+			return sb.toString();
+		}
+		
+		for(String name : metamodelNames) {
+			sb.append(name);
+			sb.append(System.lineSeparator());
+		}
+		return sb.toString();
 	}
 
-	private static def getDefaultPathToEcoreFileInProject(String projectName) {
-		return "model/" + StringUtils.capitalize(MoflonUtil.lastSegmentOf(projectName)) + ".ecore";
-	}
+	static def generateDefaultSchema(String projectName, List<String> importURIs, List<String> sourceMetamodels,
+		List<String> targetMetamodels) {
+		var String importSection = "// Add imports here" + System.lineSeparator();
+		if (importURIs != null && importURIs.size() > 0) {
+			val StringBuilder sb = new StringBuilder();
+			for (String modelURI : importURIs) {
+				sb.append("#import \"");
+				sb.append(modelURI);
+				sb.append("\"")
+				sb.append(System.lineSeparator());
+			}
 
-	static def generateDefaultEPackageForProject(String projectName) {
+			importSection = sb.toString();
+		}
+		
+		val String sourceSection = concatAndFormatMetamodelNameList(sourceMetamodels);
+		val String targetSection = concatAndFormatMetamodelNameList(targetMetamodels);
+
 		return '''
-			<?xml version="1.0" encoding="ASCII"?>
-			<ecore:EPackage xmi:version="2.0" 
-							xmlns:xmi="http://www.omg.org/XMI" 
-							xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-							xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" 
-							name="«MoflonUtil.lastSegmentOf(projectName)»" 
-							nsURI="«getDefaultURIToEcoreFileInPlugin(projectName)»" 
-							nsPrefix="«projectName»">
-			</ecore:EPackage>		
-		'''
-	}
-
-	static def generateDefaultSchema(String projectName) {
-		return '''
-			// Add imports here
+			«importSection»
 			
 			#schema «projectName»
 				
 			#source {
-				
+				«sourceSection»
 			}
 			
 			#target { 
-				
+				«targetSection»
 			} 
 			
 			#correspondence {

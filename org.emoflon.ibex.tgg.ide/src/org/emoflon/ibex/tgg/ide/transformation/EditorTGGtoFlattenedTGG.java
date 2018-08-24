@@ -13,12 +13,14 @@ import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.moflon.tgg.mosl.tgg.AttrCond;
 import org.moflon.tgg.mosl.tgg.AttributeAssignment;
 import org.moflon.tgg.mosl.tgg.AttributeConstraint;
 import org.moflon.tgg.mosl.tgg.AttributeExpression;
 import org.moflon.tgg.mosl.tgg.ComplementRule;
+import org.moflon.tgg.mosl.tgg.ContextObjectVariablePattern;
 import org.moflon.tgg.mosl.tgg.CorrType;
 import org.moflon.tgg.mosl.tgg.CorrVariablePattern;
 import org.moflon.tgg.mosl.tgg.EnumExpression;
@@ -393,36 +395,45 @@ public class EditorTGGtoFlattenedTGG {
 		rule.getAttrConditions().stream()
 								.flatMap(a -> a.getValues().stream())
 								.filter(v -> v instanceof AttributeExpression)
-								.forEach(a -> ((AttributeExpression)a).setObjectVar(objectPatterns.get(((AttributeExpression)a)
-																								  .getObjectVar().getName())));
+								.forEach(a -> ((AttributeExpression)a).setObjectVar(objectPatterns.get(getObjectVarName(((AttributeExpression)a)
+																								  .getObjectVar()))));
 
 		rule.getSourcePatterns().stream()
 								.flatMap(s -> s.getAttributeAssignments().stream())
 								.map(a -> a.getValueExp())
 								.filter(v -> v instanceof AttributeExpression)
-								.forEach(a -> ((AttributeExpression)a).setObjectVar(objectPatterns.get(((AttributeExpression)a)
-																								  .getObjectVar().getName())));
+								.forEach(a -> ((AttributeExpression)a).setObjectVar(objectPatterns.get(getObjectVarName(((AttributeExpression)a)
+																								  .getObjectVar()))));
 
 		rule.getTargetPatterns().stream()
 								.flatMap(s -> s.getAttributeAssignments().stream())
 								.map(a -> a.getValueExp())
 								.filter(v -> v instanceof AttributeExpression)
-								.forEach(a -> ((AttributeExpression)a).setObjectVar(objectPatterns.get(((AttributeExpression)a)
-																								  .getObjectVar().getName())));
+								.forEach(a -> ((AttributeExpression)a).setObjectVar(objectPatterns.get(getObjectVarName(((AttributeExpression)a)
+																								  .getObjectVar()))));
 
 		rule.getSourcePatterns().stream()
 								.flatMap(s -> s.getAttributeConstraints().stream())
 								.map(a -> a.getValueExp())
 								.filter(v -> v instanceof AttributeExpression)
-								.forEach(a -> ((AttributeExpression)a).setObjectVar(objectPatterns.get(((AttributeExpression)a)
-																								  .getObjectVar().getName())));
+								.forEach(a -> ((AttributeExpression)a).setObjectVar(objectPatterns.get(getObjectVarName(((AttributeExpression)a)
+																								  .getObjectVar()))));
 
 		rule.getTargetPatterns().stream()
 								.flatMap(s -> s.getAttributeConstraints().stream())
 								.map(a -> a.getValueExp())
 								.filter(v -> v instanceof AttributeExpression)
-								.forEach(a -> ((AttributeExpression)a).setObjectVar(objectPatterns.get(((AttributeExpression)a)
-																								  .getObjectVar().getName())));
+								.forEach(a -> ((AttributeExpression)a).setObjectVar(objectPatterns.get(getObjectVarName(((AttributeExpression)a)
+																								  .getObjectVar()))));
+	}
+	
+	private String getObjectVarName(EObject obj) {
+		if(obj instanceof ObjectVariablePattern)
+			return ((ObjectVariablePattern) obj).getName();
+		if(obj instanceof ObjectVariablePattern)
+			return ((ContextObjectVariablePattern) obj).getName();
+		else 
+			throw new IllegalStateException("obj is not an ObjectVariablepattern nor ContextObjectVariablePattern");
 	}
 
 }

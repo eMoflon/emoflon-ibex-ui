@@ -9,10 +9,10 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
-import org.emoflon.ibex.common.editor.utils.IBeXWorkspaceHelper;
 import org.emoflon.ibex.gt.editor.ui.builder.GTNature;
 import org.moflon.core.ui.UiUtilities;
 import org.moflon.core.utilities.LogUtils;
+import org.moflon.core.utilities.WorkspaceHelper;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -65,7 +65,7 @@ public class GTNewFileWizard extends Wizard implements INewWizard {
 	public boolean performFinish() {
 		IFile file = mainPage.createNewFile();
 		try {
-			IBeXWorkspaceHelper.addFirstProjectNature(file.getProject(), GTNature.NATURE_ID, null);
+			WorkspaceHelper.addPrimaryNature(file.getProject(), GTNature.NATURE_ID, null);
 		} catch (CoreException e) {
 			LogUtils.error(logger, String.format("Could not add nature %s to project %s.", GTNature.NATURE_ID,
 					file.getProject().getName()));
