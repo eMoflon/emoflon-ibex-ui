@@ -12,4 +12,5 @@ Require-Bundle: org.antlr.runtime,
 Export-Package: org.emoflon.ibex.gt.editor.ide.contentassist.antlr.internal,
  org.emoflon.ibex.gt.editor.ide.contentassist.antlr
 Automatic-Module-Name: org.emoflon.ibex.gt.editor.ide
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 

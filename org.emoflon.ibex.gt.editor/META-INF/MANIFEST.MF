@@ -11,10 +11,10 @@ Require-Bundle: org.antlr.runtime,
  org.eclipse.emf.ecore,
  org.eclipse.xtext,
  org.eclipse.xtext.common.types,
- org.eclipse.xtend.lib;bundle-version="2.14.0",
- org.eclipse.xtext.util,
- org.eclipse.xtext.xbase,
- org.eclipse.xtext.xbase.lib;bundle-version="2.14.0",
+ org.eclipse.xtend.lib;bundle-version="2.12.0",
+ org.eclipse.xtext.util;bundle-version="2.12.0",
+ org.eclipse.xtext.xbase;bundle-version="2.12.0",
+ org.eclipse.xtext.xbase.lib;bundle-version="2.12.0",
  org.objectweb.asm;resolution:=optional
 Export-Package: org.emoflon.ibex.gt.editor,
  org.emoflon.ibex.gt.editor.formatting2,
@@ -31,3 +31,4 @@ Export-Package: org.emoflon.ibex.gt.editor,
  org.emoflon.ibex.gt.editor.validation
 Import-Package: org.apache.log4j
 Automatic-Module-Name: org.emoflon.ibex.gt.editor
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
