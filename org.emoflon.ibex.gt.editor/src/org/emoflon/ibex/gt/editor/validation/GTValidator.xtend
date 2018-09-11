@@ -118,6 +118,9 @@ class GTValidator extends AbstractGTValidator {
 
 	public static val PATTERN_SUPER_PATTERNS_INVALID_PARAMETER = CODE_PREFIX + "pattern.superPatterns.invalidParameter"
 	public static val PATTERN_SUPER_PATTERNS_INVALID_PARAMETER_MESSAGE = "%s has conflicting type declarations for parameter '%s': %s."
+	
+	public static val PATTERN_OR_CONNECTED_CONDITIONS_NOT_SUPPORTED = "%s uses multiple AND connected conditions. This is not supported for TIE-GT"
+	public static val PATTERN_CONDITIONS_UNSUPPORTED = CODE_PREFIX + "pattern.conditions.unsupported"
 
 	// Errors for parameters.
 	public static val PARAMETER_NAME_CONTAINS_UNDERSCORES_MESSAGE = "Parameter name '%s' contains underscores. Use camelCase instead."
@@ -393,6 +396,17 @@ class GTValidator extends AbstractGTValidator {
 				)
 			}
 		}
+	}
+
+	/** EditorPattern are not allowed to have multiple OR connected EditorConditions for TIE-GT */
+	@Check
+	def checkPatternNoORConnectedConditions(EditorPattern pattern) {
+		if(pattern.conditions.size>1)
+			error(
+					String.format(PATTERN_OR_CONNECTED_CONDITIONS_NOT_SUPPORTED, pattern.toText),
+					GTPackage.Literals.EDITOR_PATTERN__CONDITIONS,
+					PATTERN_CONDITIONS_UNSUPPORTED
+				)
 	}
 
 	/**
