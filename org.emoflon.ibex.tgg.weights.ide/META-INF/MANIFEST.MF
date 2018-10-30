@@ -12,4 +12,5 @@ Require-Bundle: org.emoflon.ibex.tgg.weights,
  org.antlr.runtime
 Export-Package: org.emoflon.ibex.tgg.weights.ide.contentassist.antlr,
  org.emoflon.ibex.tgg.weights.ide.contentassist.antlr.internal
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 
