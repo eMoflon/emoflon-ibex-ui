@@ -6,7 +6,7 @@ generate gT "http://www.emoflon.org/ibex/gt/editor/GT"
 EditorGTFile:
 	(imports+=EditorImport)*
 	(patterns+=EditorPattern |
-	conditions+=EditorCondition
+	conditions+=EditorCondition |
 	attributeConditionLibraries+=EditorAttributeConditionLibrary)*;
 
 EditorImport:
