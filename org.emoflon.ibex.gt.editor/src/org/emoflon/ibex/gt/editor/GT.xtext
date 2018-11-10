@@ -32,7 +32,7 @@ EditorParameter:
 // Nodes
 EditorNode:
 	(operator=OperatorInEditor)?
-	name=ID ':' type=[ecore::EClass]
+	name=ID ':' type=[ecore::EClass] (binding=EditorBindingExpression)?
 	('{'
 	attributes+=EditorAttribute*
 	references+=EditorReference*
@@ -98,6 +98,8 @@ enum EditorApplicationConditionType:
 	POSITIVE='enforce' |
 	NEGATIVE='forbid';
 
+EditorBindingExpression:
+	':=' node=[EditorNode];
 // This rule serves to have a common super class for pattern parameters and editor nodes
 EditorParameterOrNode:
     (EditorNode | EditorParameter);
