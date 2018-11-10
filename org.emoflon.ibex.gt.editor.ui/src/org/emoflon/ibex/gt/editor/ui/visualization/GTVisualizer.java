@@ -12,7 +12,7 @@ import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile;
 import org.emoflon.ibex.gt.editor.gT.EditorPattern;
 import org.moflon.core.ui.visualisation.EMoflonPlantUMLGenerator;
-import org.moflon.core.ui.visualisation.EMoflonVisualiser;
+import org.moflon.core.ui.visualisation.common.EMoflonVisualiser;
 
 /**
  * The GTVisualizer provides a PlantUML visualization of graph transformation
@@ -31,7 +31,7 @@ public class GTVisualizer extends EMoflonVisualiser {
 
 	/**
 	 * Returns the visualization of the selection.
-	 * 
+	 *
 	 * @param selection
 	 *            the selection
 	 * @param patterns
@@ -55,7 +55,7 @@ public class GTVisualizer extends EMoflonVisualiser {
 	/**
 	 * Checks whether there is a rule with the name being equal to the current
 	 * selected text.
-	 * 
+	 *
 	 * @param selection
 	 *            the current selection
 	 * @param patterns
@@ -87,7 +87,7 @@ public class GTVisualizer extends EMoflonVisualiser {
 
 	/**
 	 * Loads the file from the given editor.
-	 * 
+	 *
 	 * @param editor
 	 *            the editor
 	 * @return an {@link Optional} for the {@link GraphTransformationFile}

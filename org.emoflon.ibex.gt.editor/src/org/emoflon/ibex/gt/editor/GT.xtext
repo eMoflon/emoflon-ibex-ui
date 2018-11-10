@@ -6,7 +6,8 @@ generate gT "http://www.emoflon.org/ibex/gt/editor/GT"
 EditorGTFile:
 	(imports+=EditorImport)*
 	(patterns+=EditorPattern |
-	conditions+=EditorCondition)*;
+	conditions+=EditorCondition
+	attributeConditionLibraries+=EditorAttributeConditionLibrary)*;
 
 EditorImport:
 	'import' name=STRING;
@@ -36,6 +37,7 @@ EditorNode:
 	('{'
 	attributes+=EditorAttribute*
 	references+=EditorReference*
+	attributeConditions+=EditorPatternAttributeCondition*
 	'}')?;
 
 enum EditorOperator:
@@ -83,7 +85,37 @@ EditorParameterExpression:
 EditorReference:
 	(operator=OperatorInEditor)? '-' type=[ecore::EReference] '->' target=[EditorNode];
 
-	// Graph Conditions
+EditorPatternAttributeCondition:
+    {EditorPatternAttributeCondition}
+    'attributeCondition' '{'
+    constraints += EditorPatternAttributeConstraint*
+    '}'
+;
+
+EditorPatternAttributeConstraint:
+    EditorPatternAttributeConstraintVariable | EditorPatternAttributeConstraintPredicate
+;
+
+EditorPatternAttributeConstraintVariable:
+    name = ID ':' eType = [ecore::EDataType]
+;
+
+EditorPatternAttributeConstraintPredicate:
+    name=EditorAttributeConditionSpecification
+    '(' args += EditorPatternAttributeConstraintArgument? (',' args += EditorPatternAttributeConstraintArgument)*
+    ')'
+;
+
+EditorPatternAttributeConstraintArgument:
+     EditorPatternAttributeConstraintAttributeValueExpression | EditorLiteralExpression | EditorEnumExpression
+;
+
+EditorPatternAttributeConstraintAttributeValueExpression:
+    editorNode = [EditorNode] '.' name = [ecore::EAttribute] (free ?= "'")?
+;
+
+
+// Graph Conditions
 EditorCondition:
 	'condition' name=ID '='
 	conditions+=EditorSimpleCondition ('&&' conditions+=EditorSimpleCondition)*;
@@ -100,6 +132,42 @@ enum EditorApplicationConditionType:
 
 EditorBindingExpression:
 	':=' node=[EditorNode];
+
+EditorAttributeConditionLibrary:
+    {EditorAttributeConditionLibrary}
+    'attributeConditionLibrary'
+    (conditionSpecifications+=EditorAttributeConditionSpecification)*
+;
+
+EditorAttributeConditionSpecification:
+    name = ID
+    ('('
+    (parameters+=EditorAttributeConditionParameter (',' parameters+=EditorAttributeConditionParameter)*)?
+    ')')
+    ('{'
+    (operationalizations+=EditorAttributeConditionOperationalization*)
+    '}')?
+;
+
+EditorAttributeConditionParameter:
+    name=ID ':' type=[ecore::EDataType]
+;
+
+EditorAttributeConditionOperationalization:
+    'op' '[' adornments+=EditorAttributeConditionAdornment+ ']'
+    '{'
+        target=EditorAttributeConditionTargetPlatform ':' specification = STRING
+    '}'
+;
+
+enum EditorAttributeConditionAdornment:
+    BOUND='B' |
+    FREE='F';
+
+enum EditorAttributeConditionTargetPlatform:
+    JAVA='Java' |
+    CONTIKI='Contiki';
+
 // This rule serves to have a common super class for pattern parameters and editor nodes
 EditorParameterOrNode:
     (EditorNode | EditorParameter);

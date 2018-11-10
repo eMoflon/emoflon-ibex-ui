@@ -503,7 +503,7 @@
  <extension
        point="net.sourceforge.plantuml.eclipse.diagramTextProvider">
     <diagramTextProvider
-          priority="5"
+          priority="20"
           providerClass="org.emoflon.ibex.gt.editor.ui.visualization.GTVisualizer">
     </diagramTextProvider>
  </extension>
