@@ -118,7 +118,7 @@ class GTValidator extends AbstractGTValidator {
 
 	public static val PATTERN_SUPER_PATTERNS_INVALID_PARAMETER = CODE_PREFIX + "pattern.superPatterns.invalidParameter"
 	public static val PATTERN_SUPER_PATTERNS_INVALID_PARAMETER_MESSAGE = "%s has conflicting type declarations for parameter '%s': %s."
-	
+
 	public static val PATTERN_OR_CONNECTED_CONDITIONS_NOT_SUPPORTED = "%s uses multiple AND connected conditions. This is not supported for TIE-GT"
 	public static val PATTERN_CONDITIONS_UNSUPPORTED = CODE_PREFIX + "pattern.conditions.unsupported"
 
@@ -715,7 +715,7 @@ class GTValidator extends AbstractGTValidator {
 		val node = reference.eContainer as EditorNode
 		val pattern = node.eContainer as EditorPattern
 
-		val targetNodes = GTEditorPatternUtils.getAllNodesOfPattern(pattern, [it.name.equals(reference.target.name)])
+		val targetNodes = GTEditorPatternUtils.getAllNodesOfPattern(pattern, [it.name.equals(reference?.target?.name)])
 		val targetNodeOperator = GTFlatteningUtils.mergeOperators(targetNodes.map[it.operator])
 
 		if (reference.operator == EditorOperator.CONTEXT) {
