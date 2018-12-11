@@ -6,7 +6,6 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.xtext.scoping.Scopes
 import org.eclipse.xtext.scoping.impl.FilteringScope
-
 import org.emoflon.ibex.gt.editor.gT.EditorApplicationCondition
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
@@ -205,7 +204,9 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		}
 
 		// Alternatively the node type can be a (grand)parent of the expected node type.
-		node.type.EAllSuperTypes.contains(expectedNodeType)
+		val allSuperTypes = node.type?.EAllSuperTypes
+		if (allSuperTypes !== null)
+      allSuperTypes.contains(expectedNodeType)
 	}
 
 	/**
