@@ -279,6 +279,9 @@ class GTValidator extends AbstractGTValidator {
 	}
 
 	def checkPatternNameValid(EditorPattern pattern) {
+	  if (pattern.name === null)
+	    return ""
+
 		// The pattern name must not be blacklisted.
 		if (patternNameBlacklist.contains(pattern.name)) {
 			error(
@@ -312,7 +315,7 @@ class GTValidator extends AbstractGTValidator {
 	 */
 	def checkPatternNameUnique(EditorPattern pattern) {
 		val file = pattern.eContainer as EditorGTFile
-		val count = file.patterns.filter[name.equals(pattern.name)].size
+		val count = file.patterns.filter[name !== null && name.equals(pattern.name)].size
 		if (count !== 1) {
 			error(
 				String.format(PATTERN_NAME_MULTIPLE_DECLARATIONS_MESSAGE, pattern.name, getTimes(count)),
