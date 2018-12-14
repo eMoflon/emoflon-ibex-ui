@@ -21,6 +21,7 @@ import org.moflon.tgg.mosl.tgg.TggFactory
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
 import org.moflon.core.ui.visualisation.EMoflonPlantUMLGenerator
 import org.moflon.core.utilities.WorkspaceHelper
+import org.moflon.tgg.mosl.tgg.EMFFile
 
 class IbexPlantUMLGenerator {
 
@@ -283,6 +284,12 @@ class IbexPlantUMLGenerator {
 					"«r.kernel.name»" *--> "0..*" "«r.name»"
 				«ENDIF»
 			«ENDFOR»
+		'''
+	}
+	
+	def static String visualiseEMFRuleOverview(String projectName, EMFFile tgg){
+		'''
+		
 		'''
 	}
 
