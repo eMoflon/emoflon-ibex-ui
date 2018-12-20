@@ -905,7 +905,7 @@ class GTValidator extends AbstractGTValidator {
 			return "'" + names.get(0) + "'"
 		}
 		val sortedNames = names.sortWith [ a, b |
-			a.compareTo(b)
+			if(a === null){return  -1} else {a.compareTo(b)}
 		]
 		var s = ""
 		for (name : sortedNames.subList(0, names.size - 1)) {
