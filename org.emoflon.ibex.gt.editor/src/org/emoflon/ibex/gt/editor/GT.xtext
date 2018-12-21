@@ -4,170 +4,164 @@ import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 generate gT "http://www.emoflon.org/ibex/gt/editor/GT"
 
 EditorGTFile:
-	(imports+=EditorImport)*
-	(patterns+=EditorPattern |
-	conditions+=EditorCondition |
-	attributeConditionLibraries+=EditorAttributeConditionLibrary)*;
+  (imports+=EditorImport)*
+  (patterns+=EditorPattern |
+  conditions+=EditorCondition |
+  attributeConditionLibraries+=EditorAttributeConditionLibrary)*;
 
 EditorImport:
-	'import' name=STRING;
+  'import' name=STRING;
 
 EditorPattern:
-	(abstract?='abstract')? type=EditorPatternType name=ID
-	('('
-	(parameters+=EditorParameter (',' parameters+=EditorParameter)*)?
-	')')?
-	('refines' superPatterns+=[EditorPattern] (',' superPatterns+=[EditorPattern])*)?
-	('{'
-	(nodes+=EditorNode)*
-	'}')?
-	('when' conditions+=[EditorCondition] ('||' conditions+=[EditorCondition])*)?;
+  (abstract?='abstract')? type=EditorPatternType name=ID
+  ('('
+  (parameters+=EditorParameter (',' parameters+=EditorParameter)*)?
+  ')')?
+  ('refines' superPatterns+=[EditorPattern] (',' superPatterns+=[EditorPattern])*)?
+  ('{'
+  (nodes+=EditorNode | complexAttributeConstraints+=EditorPatternAttributeCondition)*
+  '}')?
+  ('when' conditions+=[EditorCondition] ('||' conditions+=[EditorCondition])*)?;
+
+EditorPatternElement:
+  EditorNode | EditorPatternAttributeCondition;
 
 enum EditorPatternType:
-	PATTERN='pattern' |
-	RULE='rule';
+  PATTERN='pattern' |
+  RULE='rule';
 
 EditorParameter:
-	name=ID ':' type=[ecore::EDataType];
+  name=ID ':' type=[ecore::EDataType];
 
-// Nodes
+  // Nodes
 EditorNode:
-	(operator=OperatorInEditor)?
-	name=ID ':' type=[ecore::EClass] (binding=EditorBindingExpression)?
-	('{'
-	attributes+=EditorAttribute*
-	references+=EditorReference*
-	attributeConditions+=EditorPatternAttributeCondition*
-	'}')?;
+  (operator=OperatorInEditor)?
+  name=ID ':' type=[ecore::EClass] (binding=EditorBindingExpression)?
+  ('{'
+  attributes+=EditorAttribute*
+  references+=EditorReference*
+  attributeConditions+=EditorPatternAttributeCondition*
+  '}')?;
 
 enum EditorOperator:
-	CONTEXT |
-	CREATE |
-	DELETE;
+  CONTEXT |
+  CREATE |
+  DELETE;
 
 enum OperatorInEditor returns EditorOperator:
-	CREATE='++' |
-	DELETE='--';
+  CREATE='++' |
+  DELETE='--';
 
-	// Attribute Assignments and Conditions
+  // Attribute Assignments and Conditions
 EditorAttribute:
-	'.' attribute=[ecore::EAttribute] relation=EditorRelation value=EditorExpression;
+  '.' attribute=[ecore::EAttribute] relation=EditorRelation value=EditorExpression;
 
 enum EditorRelation:
-	ASSIGNMENT=':=' |
-	GREATER='>' |
-	GREATER_OR_EQUAL='>=' |
-	EQUAL='==' |
-	UNEQUAL='!=' |
-	SMALLER_OR_EQUAL='<=' |
-	SMALLER='<';
+  ASSIGNMENT=':=' |
+  GREATER='>' |
+  GREATER_OR_EQUAL='>=' |
+  EQUAL='==' |
+  UNEQUAL='!=' |
+  SMALLER_OR_EQUAL='<=' |
+  SMALLER='<';
 
 EditorExpression:
-	EditorAttributeExpression | EditorLiteralExpression | EditorEnumExpression | EditorParameterExpression;
+  EditorAttributeExpression | EditorLiteralExpression | EditorEnumExpression | EditorParameterExpression;
 
 EditorAttributeExpression:
-	node=[EditorNode] '.' attribute=[ecore::EAttribute];
+  node=[EditorNode] '.' attribute=[ecore::EAttribute];
 
 EditorLiteralExpression:
-	value=('true' | 'false' | Number) |
-	{StringConstant} value=STRING;
+  value=('true' | 'false' | Number) |
+  {StringConstant} value=STRING;
 
 Number:
-	('-')? INT ('.' INT)?;
+  ('-')? INT ('.' INT)?;
 
 EditorEnumExpression:
-	'enum::' literal=[ecore::EEnumLiteral];
+  'enum::' literal=[ecore::EEnumLiteral];
 
 EditorParameterExpression:
-	'param::' parameter=[EditorParameter];
+  'param::' parameter=[EditorParameter];
 
-	// References
+  // References
 EditorReference:
-	(operator=OperatorInEditor)? '-' type=[ecore::EReference] '->' target=[EditorNode];
+  (operator=OperatorInEditor)? '-' type=[ecore::EReference] '->' target=[EditorNode];
 
 EditorPatternAttributeCondition:
-    {EditorPatternAttributeCondition}
-    'attributeCondition' '{'
-    constraints += EditorPatternAttributeConstraint*
-    '}'
-;
+  {EditorPatternAttributeCondition}
+  'attributeCondition' '{'
+  constraints+=EditorPatternAttributeConstraint*
+  '}';
 
 EditorPatternAttributeConstraint:
-    EditorPatternAttributeConstraintVariable | EditorPatternAttributeConstraintPredicate
-;
+  EditorPatternAttributeConstraintVariable | EditorPatternAttributeConstraintPredicate;
 
 EditorPatternAttributeConstraintVariable:
-    name = ID ':' eType = [ecore::EDataType]
-;
+  name=ID ':' type=[ecore::EDataType];
 
 EditorPatternAttributeConstraintPredicate:
-    name=EditorAttributeConditionSpecification
-    '(' args += EditorPatternAttributeConstraintArgument? (',' args += EditorPatternAttributeConstraintArgument)*
-    ')'
-;
+  name=[EditorAttributeConditionSpecification|ID]
+  '(' args+=EditorPatternAttributeConstraintArgument? (',' args+=EditorPatternAttributeConstraintArgument)*
+  ')';
 
 EditorPatternAttributeConstraintArgument:
-     EditorPatternAttributeConstraintAttributeValueExpression | EditorLiteralExpression | EditorEnumExpression
-;
+  EditorPatternAttributeConstraintAttributeValueExpression | EditorLiteralExpression | EditorEnumExpression;
 
 EditorPatternAttributeConstraintAttributeValueExpression:
-    editorNode = [EditorNode] '.' name = [ecore::EAttribute] (free ?= "'")?
-;
+  editorNode=[EditorNode] '.' attribute=[ecore::EAttribute] (free?="'")?;
 
-
-// Graph Conditions
+  // Graph Conditions
 EditorCondition:
-	'condition' name=ID '='
-	conditions+=EditorSimpleCondition ('&&' conditions+=EditorSimpleCondition)*;
+  'condition' name=ID '='
+  conditions+=EditorSimpleCondition ('&&' conditions+=EditorSimpleCondition)*;
 
 EditorSimpleCondition:
-	{EditorConditionReference}
-	condition=[EditorCondition] |
-	{EditorApplicationCondition}
-	type=EditorApplicationConditionType pattern=[EditorPattern];
+  {EditorConditionReference}
+  condition=[EditorCondition] |
+  {EditorApplicationCondition}
+  type=EditorApplicationConditionType pattern=[EditorPattern];
 
 enum EditorApplicationConditionType:
-	POSITIVE='enforce' |
-	NEGATIVE='forbid';
+  POSITIVE='enforce' |
+  NEGATIVE='forbid';
 
 EditorBindingExpression:
-	':=' node=[EditorNode];
+  ':=' node=[EditorNode];
 
 EditorAttributeConditionLibrary:
-    {EditorAttributeConditionLibrary}
-    'attributeConditionLibrary'
-    (conditionSpecifications+=EditorAttributeConditionSpecification)*
-;
+  {EditorAttributeConditionLibrary}
+  'attributeConditionLibrary' '{'
+  (conditionSpecifications+=EditorAttributeConditionSpecification)*
+  '}';
 
 EditorAttributeConditionSpecification:
-    name = ID
-    ('('
-    (parameters+=EditorAttributeConditionParameter (',' parameters+=EditorAttributeConditionParameter)*)?
-    ')')
-    ('{'
-    (operationalizations+=EditorAttributeConditionOperationalization*)
-    '}')?
-;
+  {EditorAttributeConditionSpecification}
+  name=ID
+  ('('
+  (parameters+=EditorAttributeConditionParameter (',' parameters+=EditorAttributeConditionParameter)*)?
+  ')')
+  (('reuse' reusedConditionSpecification=[EditorAttributeConditionSpecification|ID]) | ('{'
+  (operationalizations+=EditorAttributeConditionOperationalization*)
+  '}'))?;
 
 EditorAttributeConditionParameter:
-    name=ID ':' type=[ecore::EDataType]
-;
+  name=ID ':' type=[ecore::EDataType];
 
 EditorAttributeConditionOperationalization:
-    'op' '[' adornments+=EditorAttributeConditionAdornment+ ']'
-    '{'
-        target=EditorAttributeConditionTargetPlatform ':' specification = STRING
-    '}'
-;
+  {EditorAttributeConditionOperationalization}
+  'op' '[' adornments+=EditorAttributeConditionAdornment+ ']'
+  '{'
+  target=EditorAttributeConditionTargetPlatform ':' specification=STRING
+  '}';
 
 enum EditorAttributeConditionAdornment:
-    BOUND='B' |
-    FREE='F';
+  BOUND='B' |
+  FREE='F';
 
 enum EditorAttributeConditionTargetPlatform:
-    JAVA='Java' |
-    CONTIKI='Contiki';
+  JAVA='Java';
 
-// This rule serves to have a common super class for pattern parameters and editor nodes
+  // This rule serves to have a common super class for pattern parameters and editor nodes
 EditorParameterOrNode:
-    (EditorNode | EditorParameter);
+  (EditorNode | EditorParameter);

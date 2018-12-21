@@ -21,6 +21,9 @@ import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 import org.emoflon.ibex.gt.editor.utils.GTEditorPatternUtils
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeConditionParameter
+import org.emoflon.ibex.gt.editor.gT.EditorPatternAttributeConstraintVariable
+import org.emoflon.ibex.gt.editor.gT.EditorPatternAttributeConstraintAttributeValueExpression
 
 /**
  * This class contains custom scoping description.
@@ -30,253 +33,303 @@ import org.emoflon.ibex.gt.editor.utils.GTEditorPatternUtils
  */
 class GTScopeProvider extends AbstractGTScopeProvider {
 
-	override getScope(EObject context, EReference reference) {
-		// Attributes
-		if (isAttributeName(context, reference)) {
-			return getScopeForAttributes(context as EditorAttribute)
-		}
+  override getScope(EObject context, EReference reference) {
+    // Attributes
+    if (isAttributeName(context, reference)) {
+      return getScopeForAttributes(context as EditorAttribute)
+    }
 
-		// Condition
-		if (isConditionOfCondition(context, reference)) {
-			return filterScopeForOtherObjectsFromSamePackage(context, reference)
-		}
-		if (isPatternOfCondition(context, reference)) {
-			return filterScopeForOtherObjectsFromSamePackage(context, reference)
-		}
+    // Condition
+    if (isConditionOfCondition(context, reference)) {
+      return filterScopeForOtherObjectsFromSamePackage(context, reference)
+    }
+    if (isPatternOfCondition(context, reference)) {
+      return filterScopeForOtherObjectsFromSamePackage(context, reference)
+    }
 
-		// Expressions
-		if (isAttributeOfAttributeExpression(context, reference)) {
-			return getScopeForAttributeExpressionAttributes(context as EditorAttributeExpression)
-		}
-		if (isNodeOfAttributeExpression(context, reference)) {
-			return getScopeForAttributeExpressionNodes(context as EditorAttributeExpression)
-		}
-		if (isEnumExpression(context, reference)) {
-			return getScopeForEnumLiterals(context as EditorEnumExpression)
-		}
-		if (isParameterExpression(context, reference)) {
-			return getScopeForParameterExpressions(context as EditorParameterExpression)
-		}
+    // Expressions
+    if (isAttributeOfAttributeExpression(context, reference)) {
+      return getScopeForAttributeExpressionAttributes(context as EditorAttributeExpression)
+    }
+    if (isNodeOfAttributeExpression(context, reference)) {
+      return getScopeForAttributeExpressionNodes(context as EditorAttributeExpression)
+    }
+    if (isEnumExpression(context, reference)) {
+      return getScopeForEnumLiterals(context as EditorEnumExpression)
+    }
+    if (isParameterExpression(context, reference)) {
+      return getScopeForParameterExpressions(context as EditorParameterExpression)
+    }
 
-		// Nodes
-		if (isNodeType(context, reference)) {
-			return getScopeForNodeTypes(context as EditorNode)
-		}
+    // Nodes
+    if (isNodeType(context, reference)) {
+      return getScopeForNodeTypes(context as EditorNode)
+    }
 
-		// Parameters
-		if (isParameterType(context, reference)) {
-			return getScopeForParameterDatatypes(context as EditorParameter)
-		}
+    // Parameters
+    if (isParameterType(context, reference)) {
+      return getScopeForParameterDatatypes(context as EditorParameter)
+    }
 
-		// References
-		if (isReferenceType(context, reference)) {
-			return getScopeForReferenceTypes(context as EditorReference)
-		}
-		if (isReferenceTarget(context, reference)) {
-			return getScopeForReferenceTargets(context as EditorReference)
-		}
+    // References
+    if (isReferenceType(context, reference)) {
+      return getScopeForReferenceTypes(context as EditorReference)
+    }
+    if (isReferenceTarget(context, reference)) {
+      return getScopeForReferenceTargets(context as EditorReference)
+    }
 
-		// Patterns
-		if (isSuperPattern(context, reference)) {
-			return filterScopeForOtherObjectsFromSamePackage(context, reference)
-		}
-		if (isConditionOfPattern(context, reference)) {
-			return filterScopeForOtherObjectsFromSamePackage(context, reference)
-		}
+    // Patterns
+    if (isSuperPattern(context, reference)) {
+      return filterScopeForOtherObjectsFromSamePackage(context, reference)
+    }
+    if (isConditionOfPattern(context, reference)) {
+      return filterScopeForOtherObjectsFromSamePackage(context, reference)
+    }
 
-		return super.getScope(context, reference)
-	}
+    // Complex attribute constraints
+    if (isEditorAttributeConditionParameter(context, reference)) {
+      return getScopeForEditorAttributeConditionParameter(context as EditorAttributeConditionParameter)
+    }
 
-	def isAttributeName(EObject context, EReference reference) {
-		return (context instanceof EditorAttribute && reference == GTPackage.Literals.EDITOR_ATTRIBUTE__ATTRIBUTE)
-	}
+    if (isEditorPatternAttributeConstraintVariable(context, reference)) {
+      return getScopeForEditorPatternAttributeConstraintVariable(context as EditorPatternAttributeConstraintVariable)
+    }
 
-	def isNodeOfAttributeExpression(EObject context, EReference reference) {
-		return (context instanceof EditorAttributeExpression &&
-			reference == GTPackage.Literals.EDITOR_ATTRIBUTE_EXPRESSION__NODE)
-	}
+    if (isEditorPatternAttributeConstraintAttributeValueExpression(context, reference)) {
+      return getScopeForEditorPatternAttributeConstraintAttributeValueExpression(
+        context as EditorPatternAttributeConstraintAttributeValueExpression, reference)
+    }
 
-	def isAttributeOfAttributeExpression(EObject context, EReference reference) {
-		return (context instanceof EditorAttributeExpression &&
-			reference == GTPackage.Literals.EDITOR_ATTRIBUTE_EXPRESSION__ATTRIBUTE)
-	}
+    return super.getScope(context, reference)
+  }
+  
+  def isEditorPatternAttributeConstraintAttributeValueExpression(EObject context, EReference reference) {
+     return (context instanceof EditorPatternAttributeConstraintAttributeValueExpression &&
+      reference == GTPackage.Literals.EDITOR_PATTERN_ATTRIBUTE_CONSTRAINT_ATTRIBUTE_VALUE_EXPRESSION__ATTRIBUTE)
+  }
+  
+  def getScopeForEditorPatternAttributeConstraintAttributeValueExpression(EditorPatternAttributeConstraintAttributeValueExpression expression, EReference reference) {
+    return Scopes.scopeFor(expression.editorNode.type.EAllAttributes)
+  }
 
-	def isEnumExpression(EObject context, EReference reference) {
-		return (context instanceof EditorEnumExpression &&
-			reference == GTPackage.Literals.EDITOR_ENUM_EXPRESSION__LITERAL)
-	}
+  def isEditorPatternAttributeConstraintVariable(EObject context, EReference reference) {
+    return (context instanceof EditorPatternAttributeConstraintVariable &&
+      reference == GTPackage.Literals.EDITOR_PATTERN_ATTRIBUTE_CONSTRAINT_VARIABLE__TYPE)
+  }
 
-	def isParameterExpression(EObject context, EReference reference) {
-		return (context instanceof EditorParameterExpression &&
-			reference == GTPackage.Literals.EDITOR_PARAMETER_EXPRESSION__PARAMETER);
-	}
+  def getScopeForEditorPatternAttributeConstraintVariable(EditorPatternAttributeConstraintVariable parameter) {
+    var EObject fileCandidate = parameter;
+    while (!(fileCandidate instanceof EditorGTFile)) {
+      fileCandidate = fileCandidate.eContainer;
+    }
+    val file = fileCandidate as EditorGTFile
+    return Scopes.scopeFor(GTEditorModelUtils.getDatatypes(file))
+  }
 
-	def isConditionOfCondition(EObject context, EReference reference) {
-		return (context instanceof EditorConditionReference &&
-			reference == GTPackage.Literals.EDITOR_CONDITION_REFERENCE__CONDITION)
-	}
+  def isEditorAttributeConditionParameter(EObject context, EReference reference) {
+    return (context instanceof EditorAttributeConditionParameter &&
+      reference == GTPackage.Literals.EDITOR_ATTRIBUTE_CONDITION_PARAMETER__TYPE)
+  }
 
-	def isPatternOfCondition(EObject context, EReference reference) {
-		return (context instanceof EditorApplicationCondition &&
-			reference == GTPackage.Literals.EDITOR_APPLICATION_CONDITION__PATTERN)
-	}
+  def getScopeForEditorAttributeConditionParameter(EditorAttributeConditionParameter parameter) {
+    var EObject fileCandidate = parameter;
+    while (!(fileCandidate instanceof EditorGTFile)) {
+      fileCandidate = fileCandidate.eContainer;
+    }
+    val file = fileCandidate as EditorGTFile
+    return Scopes.scopeFor(GTEditorModelUtils.getDatatypes(file))
+  }
 
-	def isNodeType(EObject context, EReference reference) {
-		return (context instanceof EditorNode && reference == GTPackage.Literals.EDITOR_NODE__TYPE)
-	}
+  def isAttributeName(EObject context, EReference reference) {
+    return (context instanceof EditorAttribute && reference == GTPackage.Literals.EDITOR_ATTRIBUTE__ATTRIBUTE)
+  }
 
-	def isParameterType(EObject context, EReference reference) {
-		return (context instanceof EditorParameter && reference == GTPackage.Literals.EDITOR_PARAMETER__TYPE)
-	}
+  def isNodeOfAttributeExpression(EObject context, EReference reference) {
+    return (context instanceof EditorAttributeExpression &&
+      reference == GTPackage.Literals.EDITOR_ATTRIBUTE_EXPRESSION__NODE)
+  }
 
-	def isReferenceType(EObject context, EReference reference) {
-		return (context instanceof EditorReference && reference == GTPackage.Literals.EDITOR_REFERENCE__TYPE)
-	}
+  def isAttributeOfAttributeExpression(EObject context, EReference reference) {
+    return (context instanceof EditorAttributeExpression &&
+      reference == GTPackage.Literals.EDITOR_ATTRIBUTE_EXPRESSION__ATTRIBUTE)
+  }
 
-	def isReferenceTarget(EObject context, EReference reference) {
-		return (context instanceof EditorReference && reference == GTPackage.Literals.EDITOR_REFERENCE__TARGET)
-	}
+  def isEnumExpression(EObject context, EReference reference) {
+    return (context instanceof EditorEnumExpression && reference == GTPackage.Literals.EDITOR_ENUM_EXPRESSION__LITERAL)
+  }
 
-	def isSuperPattern(EObject context, EReference reference) {
-		return (context instanceof EditorPattern && reference == GTPackage.Literals.EDITOR_PATTERN__SUPER_PATTERNS)
-	}
+  def isParameterExpression(EObject context, EReference reference) {
+    return (context instanceof EditorParameterExpression &&
+      reference == GTPackage.Literals.EDITOR_PARAMETER_EXPRESSION__PARAMETER);
+  }
 
-	def isConditionOfPattern(EObject context, EReference reference) {
-		return (context instanceof EditorPattern && reference == GTPackage.Literals.EDITOR_PATTERN__CONDITIONS)
-	}
+  def isConditionOfCondition(EObject context, EReference reference) {
+    return (context instanceof EditorConditionReference &&
+      reference == GTPackage.Literals.EDITOR_CONDITION_REFERENCE__CONDITION)
+  }
 
-	/**
-	 * Filters the scope of the super scope provider of the context for the objects
-	 * which are defined in the same package as the file containing the context. 
-	 */
-	def filterScopeForOtherObjectsFromSamePackage(EObject context, EReference reference) {
-		val contextURI = context.eResource.URI.appendFragment(context.eResource.getURIFragment(context))
-		return new FilteringScope(super.getScope(context, reference), [
-			context.eResource.URI.trimFragment.trimSegments(1).equals(it.EObjectURI.trimFragment.trimSegments(1)) &&
-				it.EObjectURI !== contextURI
-		])
-	}
+  def isPatternOfCondition(EObject context, EReference reference) {
+    return (context instanceof EditorApplicationCondition &&
+      reference == GTPackage.Literals.EDITOR_APPLICATION_CONDITION__PATTERN)
+  }
 
-	/**
-	 * The node type must be an EClass from the meta-model.
-	 */
-	def getScopeForNodeTypes(EditorNode node) {
-		return Scopes.scopeFor(GTEditorModelUtils.getClasses(node.eContainer.eContainer as EditorGTFile))
-	}
+  def isNodeType(EObject context, EReference reference) {
+    return (context instanceof EditorNode && reference == GTPackage.Literals.EDITOR_NODE__TYPE)
+  }
 
-	/**
-	 * The type of a reference must be one of the EReferences from the EClass
-	 * of the node containing the reference.
-	 */
-	def getScopeForReferenceTypes(EditorReference context) {
-		val containingNode = context.eContainer as EditorNode
-		return Scopes.scopeFor(containingNode.type.EAllReferences)
-	}
+  def isParameterType(EObject context, EReference reference) {
+    return (context instanceof EditorParameter && reference == GTPackage.Literals.EDITOR_PARAMETER__TYPE)
+  }
 
-	/**
-	 * The target of the reference must be another node within the same pattern 
-	 * or its super patterns of the correct type.
-	 */
-	def getScopeForReferenceTargets(EditorReference reference) {
-		val referenceType = reference.type
-		val pattern = reference.eContainer.eContainer as EditorPattern
+  def isReferenceType(EObject context, EReference reference) {
+    return (context instanceof EditorReference && reference == GTPackage.Literals.EDITOR_REFERENCE__TYPE)
+  }
 
-		if (referenceType !== null) {
-			val targetNodeType = referenceType.EReferenceType
-			if (targetNodeType !== null) {
-				val nodes = GTEditorPatternUtils.getAllNodesOfPattern(pattern, [
-					isNodeOfType(it, targetNodeType)
-				])
-				return Scopes.scopeFor(nodes)
-			}
-		}
+  def isReferenceTarget(EObject context, EReference reference) {
+    return (context instanceof EditorReference && reference == GTPackage.Literals.EDITOR_REFERENCE__TARGET)
+  }
 
-		// If the type cannot be resolved return all nodes.
-		return Scopes.scopeFor(GTEditorPatternUtils.getAllNodesOfPattern(pattern, [true]))
-	}
+  def isSuperPattern(EObject context, EReference reference) {
+    return (context instanceof EditorPattern && reference == GTPackage.Literals.EDITOR_PATTERN__SUPER_PATTERNS)
+  }
 
-	/**
-	 * Returns whether the node is of the given type.
-	 */
-	def static isNodeOfType(EditorNode node, EClass expectedNodeType) {
-		if (node.type == expectedNodeType) {
-			return true
-		}
+  def isConditionOfPattern(EObject context, EReference reference) {
+    return (context instanceof EditorPattern && reference == GTPackage.Literals.EDITOR_PATTERN__CONDITIONS)
+  }
 
-		// Alternatively the node type can be a (grand)parent of the expected node type.
-		val allSuperTypes = node.type?.EAllSuperTypes
-		if (allSuperTypes !== null)
+  /**
+   * Filters the scope of the super scope provider of the context for the objects
+   * which are defined in the same package as the file containing the context. 
+   */
+  def filterScopeForOtherObjectsFromSamePackage(EObject context, EReference reference) {
+    val contextURI = context.eResource.URI.appendFragment(context.eResource.getURIFragment(context))
+    return new FilteringScope(super.getScope(context, reference), [
+      context.eResource.URI.trimFragment.trimSegments(1).equals(it.EObjectURI.trimFragment.trimSegments(1)) &&
+        it.EObjectURI !== contextURI
+    ])
+  }
+
+  /**
+   * The node type must be an EClass from the meta-model.
+   */
+  def getScopeForNodeTypes(EditorNode node) {
+    return Scopes.scopeFor(GTEditorModelUtils.getClasses(node.eContainer.eContainer as EditorGTFile))
+  }
+
+  /**
+   * The type of a reference must be one of the EReferences from the EClass
+   * of the node containing the reference.
+   */
+  def getScopeForReferenceTypes(EditorReference context) {
+    val containingNode = context.eContainer as EditorNode
+    return Scopes.scopeFor(containingNode.type.EAllReferences)
+  }
+
+  /**
+   * The target of the reference must be another node within the same pattern 
+   * or its super patterns of the correct type.
+   */
+  def getScopeForReferenceTargets(EditorReference reference) {
+    val referenceType = reference.type
+    val pattern = reference.eContainer.eContainer as EditorPattern
+
+    if (referenceType !== null) {
+      val targetNodeType = referenceType.EReferenceType
+      if (targetNodeType !== null) {
+        val nodes = GTEditorPatternUtils.getAllNodesOfPattern(pattern, [
+          isNodeOfType(it, targetNodeType)
+        ])
+        return Scopes.scopeFor(nodes)
+      }
+    }
+
+    // If the type cannot be resolved return all nodes.
+    return Scopes.scopeFor(GTEditorPatternUtils.getAllNodesOfPattern(pattern, [true]))
+  }
+
+  /**
+   * Returns whether the node is of the given type.
+   */
+  def static isNodeOfType(EditorNode node, EClass expectedNodeType) {
+    if (node.type == expectedNodeType) {
+      return true
+    }
+
+    // Alternatively the node type can be a (grand)parent of the expected node type.
+    val allSuperTypes = node.type?.EAllSuperTypes
+    if (allSuperTypes !== null)
       allSuperTypes.contains(expectedNodeType)
-	}
+  }
 
-	/**
-	 * The attribute name must be one of the EAttribute from the EClass
-	 * of the node containing the attribute assignment or condition.
-	 */
-	def getScopeForAttributes(EditorAttribute context) {
-		val containingNode = context.eContainer as EditorNode
-		return Scopes.scopeFor(containingNode.type.EAllAttributes)
-	}
+  /**
+   * The attribute name must be one of the EAttribute from the EClass
+   * of the node containing the attribute assignment or condition.
+   */
+  def getScopeForAttributes(EditorAttribute context) {
+    val containingNode = context.eContainer as EditorNode
+    return Scopes.scopeFor(containingNode.type.EAllAttributes)
+  }
 
-	/**
-	 * The parameter type must be one of the EDatatypes from the meta-models.
-	 */
-	def getScopeForParameterDatatypes(EditorParameter parameter) {
-		val file = parameter.eContainer.eContainer as EditorGTFile
-		return Scopes.scopeFor(GTEditorModelUtils.getDatatypes(file))
-	}
+  /**
+   * The parameter type must be one of the EDatatypes from the meta-models.
+   */
+  def getScopeForParameterDatatypes(EditorParameter parameter) {
+    val file = parameter.eContainer.eContainer as EditorGTFile
+    return Scopes.scopeFor(GTEditorModelUtils.getDatatypes(file))
+  }
 
-	/**
-	 * The node of an attribute expression can be any context node which is valid within the same rule.
-	 */
-	def getScopeForAttributeExpressionNodes(EditorAttributeExpression attributeExpression) {
-		val pattern = attributeExpression.eContainer.eContainer.eContainer as EditorPattern
-		val nodes = GTEditorPatternUtils.getAllNodesOfPattern(pattern, [
-			it.operator == EditorOperator.CONTEXT
-		])
-		return Scopes.scopeFor(nodes)
-	}
+  /**
+   * The node of an attribute expression can be any context node which is valid within the same rule.
+   */
+  def getScopeForAttributeExpressionNodes(EditorAttributeExpression attributeExpression) {
+    val pattern = attributeExpression.eContainer.eContainer.eContainer as EditorPattern
+    val nodes = GTEditorPatternUtils.getAllNodesOfPattern(pattern, [
+      it.operator == EditorOperator.CONTEXT
+    ])
+    return Scopes.scopeFor(nodes)
+  }
 
-	/**
-	 * Any attributes of the node of the attribute expression are valid
-	 * if their type fits to the one expected for the attribute value. 
-	 */
-	def getScopeForAttributeExpressionAttributes(EditorAttributeExpression attributeExpression) {
-		val attributeConstraint = attributeExpression.eContainer as EditorAttribute
-		val node = attributeExpression.node
-		if (node === null || node.type === null) {
-			return Scopes.scopeFor([])
-		}
-		val attributes = node.type.EAllAttributes.filter [
-			it.EAttributeType == attributeConstraint.attribute.EAttributeType
-		]
-		return Scopes.scopeFor(attributes)
-	}
+  /**
+   * Any attributes of the node of the attribute expression are valid
+   * if their type fits to the one expected for the attribute value. 
+   */
+  def getScopeForAttributeExpressionAttributes(EditorAttributeExpression attributeExpression) {
+    val attributeConstraint = attributeExpression.eContainer as EditorAttribute
+    val node = attributeExpression.node
+    if (node === null || node.type === null) {
+      return Scopes.scopeFor([])
+    }
+    val attributes = node.type.EAllAttributes.filter [
+      it.EAttributeType == attributeConstraint.attribute.EAttributeType
+    ]
+    return Scopes.scopeFor(attributes)
+  }
 
-	/**
-	 * Parameter expressions must reference a parameter of the type expected for the attribute value.
-	 */
-	def getScopeForParameterExpressions(EditorParameterExpression parameterExpression) {
-		val attributeConstraint = parameterExpression.eContainer as EditorAttribute
-		val pattern = attributeConstraint.eContainer.eContainer as EditorPattern
-		val parameters = newArrayList()
-		GTEditorPatternUtils.getPatternWithAllSuperPatterns(pattern).forEach [
-			parameters.addAll(it.parameters.filter [
-				it.type == attributeConstraint.attribute.EAttributeType
-			])
-		]
-		return Scopes.scopeFor(parameters)
-	}
+  /**
+   * Parameter expressions must reference a parameter of the type expected for the attribute value.
+   */
+  def getScopeForParameterExpressions(EditorParameterExpression parameterExpression) {
+    val attributeConstraint = parameterExpression.eContainer as EditorAttribute
+    val pattern = attributeConstraint.eContainer.eContainer as EditorPattern
+    val parameters = newArrayList()
+    GTEditorPatternUtils.getPatternWithAllSuperPatterns(pattern).forEach [
+      parameters.addAll(it.parameters.filter [
+        it.type == attributeConstraint.attribute.EAttributeType
+      ])
+    ]
+    return Scopes.scopeFor(parameters)
+  }
 
-	/**
-	 * Any literal of the attribute's enum is valid.
-	 */
-	def getScopeForEnumLiterals(EditorEnumExpression enumExpression) {
-		val attributeConstraint = enumExpression.eContainer as EditorAttribute
-		val type = attributeConstraint.attribute.EAttributeType
-		if (type instanceof EEnum) {
-			return Scopes.scopeFor(type.ELiterals)
-		}
-		return Scopes.scopeFor([])
-	}
+  /**
+   * Any literal of the attribute's enum is valid.
+   */
+  def getScopeForEnumLiterals(EditorEnumExpression enumExpression) {
+    val attributeConstraint = enumExpression.eContainer as EditorAttribute
+    val type = attributeConstraint.attribute.EAttributeType
+    if (type instanceof EEnum) {
+      return Scopes.scopeFor(type.ELiterals)
+    }
+    return Scopes.scopeFor([])
+  }
 }
