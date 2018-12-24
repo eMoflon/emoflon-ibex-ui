@@ -4,9 +4,6 @@
    <extension
          point="org.moflon.core.ui.autosetup.RegisterPsfUrlExtension">
       <register_psf_uri_extension
-            class="org.emoflon.ibex.common.editor.handbook.RegisterPsfUrlForHandbookPart1">
-      </register_psf_uri_extension>
-      <register_psf_uri_extension
             class="org.emoflon.ibex.common.editor.handbook.RegisterPsfUrlForHandbookPart2">
       </register_psf_uri_extension>
       <register_psf_uri_extension
@@ -14,6 +11,9 @@
       </register_psf_uri_extension>
       <register_psf_uri_extension
             class="org.emoflon.ibex.common.editor.handbook.RegisterPsfUrlForHandbookPart4">
+      </register_psf_uri_extension>
+      <register_psf_uri_extension
+            class="org.emoflon.ibex.common.editor.handbook.RegisterPsfUrlForHandbookPart5">
       </register_psf_uri_extension>
    </extension>
 
