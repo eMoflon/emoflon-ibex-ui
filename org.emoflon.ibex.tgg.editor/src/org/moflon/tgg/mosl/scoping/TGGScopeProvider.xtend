@@ -130,8 +130,13 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 		
 		// Crawl up eContainers to Rule
 		var EObject current = enumExp
-		while(!(current instanceof Rule))
+		while(!(current instanceof Rule) && !(current instanceof ComplementRule))
 			current = current.eContainer
+		
+		// Get kernel of ComplementRule
+		if(current instanceof ComplementRule) {
+			current = current.getKernel();
+		}
 		
 		// Get imports from schema
 		val schema = getSchema(current)

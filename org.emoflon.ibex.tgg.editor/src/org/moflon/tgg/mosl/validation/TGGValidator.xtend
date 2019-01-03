@@ -30,6 +30,8 @@ import org.moflon.tgg.mosl.tgg.impl.LocalVariableImpl
 import org.moflon.tgg.mosl.tgg.CorrVariablePattern
 import org.eclipse.emf.ecore.EStructuralFeature
 import org.moflon.tgg.mosl.tgg.ContextObjectVariablePattern
+import org.eclipse.core.resources.ResourcesPlugin
+import org.eclipse.core.runtime.Path
 
 /**
  * This class contains custom validation rules. 
@@ -50,6 +52,7 @@ class TGGValidator extends AbstractTGGValidator {
 	public static val INVALID_IMPORT = 'invalidImport'
 	public static val INVALID_ASSIGNMENT_OPERATOR = 'invalidAssignmentOperator'
 	public static val INVALID_CORRESPONDENCE_VARIABLE = 'invalidCorrespondence'
+	public static val SCHEMA_NAME_DOES_NOT_MATCH_PROJECT_NAME = 'schemaNameDoesNotMatchProjectName'
   
 	@Check
 	def checkAttributeExpression(AttributeExpression attrVar){
@@ -332,6 +335,20 @@ class TGGValidator extends AbstractTGGValidator {
 				structuralFeature,
 				TGGValidator.INVALID_CORRESPONDENCE_VARIABLE
 			)
+		}
+	}
+	
+	@Check
+	def checkSchemaAndProjectNameMatch(TripleGraphGrammarFile file) {
+		if(file.schema != null) {
+			if(!ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(file.eResource().URI.toPlatformString(true))).getProject().name.equals(file.schema.name)) {
+				error(
+					"The schema name must match the project name.",
+					file.schema,
+					TggPackage.Literals.NAMED_ELEMENTS__NAME,
+					TGGValidator.SCHEMA_NAME_DOES_NOT_MATCH_PROJECT_NAME
+				)
+			}
 		}
 	}
 }
