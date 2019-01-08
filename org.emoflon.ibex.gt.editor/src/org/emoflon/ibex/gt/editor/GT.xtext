@@ -150,7 +150,7 @@ EditorAttributeConditionParameter:
 
 EditorAttributeConditionOperationalization:
   {EditorAttributeConditionOperationalization}
-  'op' '[' adornments+=EditorAttributeConditionAdornment+ ']'
+  operationalizationType = EditorAttributeConditionType '[' adornments+=EditorAttributeConditionAdornment+ ']'
   '{'
   target=EditorAttributeConditionTargetPlatform ':' specification=STRING
   '}';
@@ -158,6 +158,10 @@ EditorAttributeConditionOperationalization:
 enum EditorAttributeConditionAdornment:
   BOUND='B' |
   FREE='F';
+  
+enum EditorAttributeConditionType:
+  CHECK='check' |
+  EXTEND='extend';
 
 enum EditorAttributeConditionTargetPlatform:
   JAVA='Java';
