@@ -1,13 +1,18 @@
 package org.emoflon.ibex.gt.editor.utils;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression;
 import org.emoflon.ibex.gt.editor.gT.EditorRelation;
 import org.emoflon.ibex.gt.editor.gT.StringConstant;
+
+import com.sun.javafx.fxml.expression.LiteralExpression;
 
 /**
  * Utility methods for attribute validation.
@@ -21,10 +26,8 @@ public class GTEditorAttributeUtils {
 	/**
 	 * Parses the literal value to the expected type.
 	 * 
-	 * @param type
-	 *            the expected data type
-	 * @param expression
-	 *            the editor expression
+	 * @param type       the expected data type
+	 * @param expression the editor expression
 	 * @return an Optional for an Object of the type if the expression can be
 	 *         converted to the type. Otherwise the Optional will be empty.
 	 */
@@ -45,10 +48,8 @@ public class GTEditorAttributeUtils {
 	/**
 	 * Parses the String to the expected type.
 	 * 
-	 * @param type
-	 *            the expected data type
-	 * @param s
-	 *            the string to parse
+	 * @param type the expected data type
+	 * @param s    the string to parse
 	 * @return an Optional for an Object of the type if the string can be converted
 	 *         to the type. Otherwise the Optional will be empty.
 	 */
@@ -64,8 +65,7 @@ public class GTEditorAttributeUtils {
 	/**
 	 * Checks whether the data type is comparable.
 	 * 
-	 * @param datatype
-	 *            the data type to check
+	 * @param datatype the data type to check
 	 * @return true if the implementation of the data type implements Comparable
 	 */
 	public static boolean isComparable(final EDataType datatype) {
@@ -81,11 +81,45 @@ public class GTEditorAttributeUtils {
 	/**
 	 * Checks whether the relation is an equality check.
 	 * 
-	 * @param relation
-	 *            the relation to check
+	 * @param relation the relation to check
 	 * @return true if the relation is Equal or Unequal
 	 */
 	public static boolean isEqualityCheck(final EditorRelation relation) {
 		return equalityChecks.contains(relation);
+	}
+
+	/**
+	 * Tries to find a suitable {@link EDataType} for the given
+	 * {@link LiteralExpression}
+	 * 
+	 * @param expression the expression
+	 * @return an {@link Optional} containing the identified {@link EDataType} (if a
+	 *         match was found)
+	 */
+	public static Optional<EDataType> guessEDataType(final EditorLiteralExpression expression) {
+		final EcorePackage ecore = EcorePackage.eINSTANCE;
+		if (expression instanceof StringConstant)
+			return Optional.of(ecore.getEString());
+
+		final String value = expression.getValue();
+		switch (value) {
+		case "true":
+		case "false":
+			return Optional.of(ecore.getEBoolean());
+		default:
+			final Collection<EDataType> candidateEDataTypestypes;
+			if (value.matches("\\d+"))
+				candidateEDataTypestypes = Arrays.asList(ecore.getEInt(), ecore.getELong());
+			else
+				candidateEDataTypestypes = Arrays.asList(ecore.getEDouble(), ecore.getEFloat());
+
+			for (final EDataType type : candidateEDataTypestypes) {
+				if (convertEDataTypeStringToObject(type, value).isPresent()) {
+					return Optional.of(type);
+				}
+			}
+		}
+
+		return Optional.empty();
 	}
 }

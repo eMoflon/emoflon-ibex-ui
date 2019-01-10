@@ -84,10 +84,11 @@ EditorEnumExpression:
 EditorParameterExpression:
   'param::' parameter=[EditorParameter];
 
-  // References
+// References
 EditorReference:
   (operator=OperatorInEditor)? '-' type=[ecore::EReference] '->' target=[EditorNode];
 
+// Complex attribute conditions
 EditorPatternAttributeCondition:
   {EditorPatternAttributeCondition}
   'attributeCondition' '{'
@@ -111,7 +112,7 @@ EditorPatternAttributeConstraintArgument:
 EditorPatternAttributeConstraintAttributeValueExpression:
   editorNode=[EditorNode] '.' attribute=[ecore::EAttribute] (free?="'")?;
 
-  // Graph Conditions
+// Graph Conditions
 EditorCondition:
   'condition' name=ID '='
   conditions+=EditorSimpleCondition ('&&' conditions+=EditorSimpleCondition)*;
@@ -129,6 +130,7 @@ enum EditorApplicationConditionType:
 EditorBindingExpression:
   ':=' node=[EditorNode];
 
+// Attribute constraints library
 EditorAttributeConditionLibrary:
   {EditorAttributeConditionLibrary}
   'attributeConditionLibrary' '{'
