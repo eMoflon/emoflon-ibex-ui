@@ -130,7 +130,12 @@ enum EditorApplicationConditionType:
 EditorBindingExpression:
   ':=' node=[EditorNode];
 
-// Attribute constraints library
+/*
+ * Attribute constraints library
+ * This library allows the developer to provide her own constraint types (only for EDataTypes)
+ * An EditorAttributeConditionSpecification represents a predicate with a number of typed parameters
+ * An EditorAttributeConditionOperationalization is an operationalization of such a predicate (i.e., one way to fulfill the constraint)
+ */
 EditorAttributeConditionLibrary:
   {EditorAttributeConditionLibrary}
   'attributeConditionLibrary' '{'
@@ -157,6 +162,9 @@ EditorAttributeConditionOperationalization:
   target=EditorAttributeConditionTargetPlatform ':' specification=STRING
   '}';
 
+/*
+ * A BOUND parameter possesses a value prior to the evaluation of an operation, a free parameter is bound by the operation
+ */
 enum EditorAttributeConditionAdornment:
   BOUND='B' |
   FREE='F';
