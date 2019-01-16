@@ -33,6 +33,9 @@ import org.emoflon.ibex.gt.editor.utils.GTFlattener
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeConditionOperationalization
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeConditionAdornment
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeConditionType
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeConditionSpecification
+import org.eclipse.emf.common.util.EList
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeConditionParameter
 
 /**
  * This class contains custom validation rules.
@@ -217,6 +220,18 @@ class GTValidator extends AbstractGTValidator {
   public static val EDITOR_ATTREIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_ADORNMENT_CODE = CODE_PREFIX +
     "attributeConstraintsLibrary.inconsistentAdornment";
   public static val EDITOR_ATTREIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_ADORNMENT = "Operations of type 'extend' must have at least one F adornment, and operations of type 'check' must have only B adornments."
+  
+  public static val EDITOR_ATTREIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_ADORNMENT_LENGTH_CODE = CODE_PREFIX +
+    "attributeConstraintsLibrary.inconsistentAdornmentLength";
+  public static val EDITOR_ATTREIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_ADORNMENT_LENGTH = "Number of adornments must match number of parameters."
+  
+  public static val EDITOR_ATTREIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_PARAMETER_NAMES_REUSE_CODE = CODE_PREFIX +
+    "attributeConstraintsLibrary.inconsistentParameterNamesWhileReusing";
+  public static val EDITOR_ATTREIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_PARAMETER_NAMES_REUSE = "Parameter names in reusing operation specification must be the same as in reused %s."
+  
+  public static val EDITOR_ATTREIBUTE_CONDITION_OPERATIONALIZATION_REUSE_CYCLE_CODE = CODE_PREFIX +
+    "attributeConstraintsLibrary.reuseCycle";
+  public static val EDITOR_ATTREIBUTE_CONDITION_OPERATIONALIZATION_REUSE_CYCLE = "Cycle in reuse relation."
   
 
   @Check
@@ -924,6 +939,9 @@ class GTValidator extends AbstractGTValidator {
     return s + " and '" + sortedNames.last + "'"
   }
 
+  /**
+   * Checks that an extend operation has at least one free adornment and that a check operation has only bound operations
+   */
   @Check
   def checkConsistencyOfOperationTypeAndAdornment(
     EditorAttributeConditionOperationalization editorAttributeConditionOperationalization) {
@@ -943,4 +961,93 @@ class GTValidator extends AbstractGTValidator {
   def static boolean hasFreeAdornment(Collection<EditorAttributeConditionAdornment> adornments) {
     return adornments.exists[it == EditorAttributeConditionAdornment.FREE]
   }
+  
+  /**
+   * Checks that the adornment of an operationalization matches the length of the parameter list
+   */
+  @Check
+  def checkParameterCountVsAdornmentLength(EditorAttributeConditionOperationalization editorAttributeConditionOperationalization) {
+    val adornments = editorAttributeConditionOperationalization.adornments
+    val constraintSpecification = editorAttributeConditionOperationalization.eContainer
+    if (constraintSpecification instanceof EditorAttributeConditionSpecification) {
+      val parameters = constraintSpecification.parameters
+      if (parameters.size != adornments.size) {
+        error(
+        EDITOR_ATTREIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_ADORNMENT_LENGTH,
+        GTPackage.Literals.EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION__OPERATIONALIZATION_TYPE,
+        EDITOR_ATTREIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_ADORNMENT_LENGTH_CODE
+        )
+      }
+    }
+  }
+  
+  /**
+   * Checks that the reuse relation is free of loops and that the parameter names of the reusing and reused specification match 
+   */
+  @Check
+  def checkParameterListLengthWhenReusing(EditorAttributeConditionSpecification editorAttributeConditionSpecification) {
+      if (hasReuseCycle(editorAttributeConditionSpecification)) {
+        error(
+          EDITOR_ATTREIBUTE_CONDITION_OPERATIONALIZATION_REUSE_CYCLE,
+          GTPackage.Literals.EDITOR_ATTRIBUTE_CONDITION_SPECIFICATION__REUSED_CONDITION_SPECIFICATION,
+          EDITOR_ATTREIBUTE_CONDITION_OPERATIONALIZATION_REUSE_CYCLE_CODE
+        )
+        return      
+      }
+
+    val reusedCondition = findReusedSpecification(editorAttributeConditionSpecification)
+    if (reusedCondition !== null) {        
+      val parameters = editorAttributeConditionSpecification.parameters
+      val parametersOfReusedCondition = reusedCondition.parameters
+      if (!haveSameNames(parameters, parametersOfReusedCondition)) {
+        error(
+        EDITOR_ATTREIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_PARAMETER_NAMES_REUSE,
+        GTPackage.Literals.EDITOR_ATTRIBUTE_CONDITION_SPECIFICATION__NAME,
+        EDITOR_ATTREIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_PARAMETER_NAMES_REUSE_CODE
+        )
+      }
+    }
+  }
+  
+  def hasReuseCycle(EditorAttributeConditionSpecification specification) {
+    if (specification.reusedConditionSpecification === null)
+      return false
+      
+    var reusedCondition = specification.reusedConditionSpecification
+    while (reusedCondition.reusedConditionSpecification !== null) {
+      reusedCondition = reusedCondition.reusedConditionSpecification
+      if (reusedCondition === specification) {
+        return true
+      }
+    }
+    
+    return false
+  }
+  
+  /**
+   * Precondition: specification.reusedConditionSpecification !== null
+   */
+  def findReusedSpecification(EditorAttributeConditionSpecification specification) {
+    var reusedCondition = specification.reusedConditionSpecification
+    if (reusedCondition === null)
+      return null
+      
+    while (reusedCondition.reusedConditionSpecification !== null)
+      reusedCondition = reusedCondition.reusedConditionSpecification
+    
+    return reusedCondition
+  }
+  
+  def haveSameNames(EList<EditorAttributeConditionParameter> parameters1, EList<EditorAttributeConditionParameter> parameters2) {
+    if (parameters1.size != parameters2.size)
+      return false;     
+    
+    for (var i = 0; i < parameters1.size; i++) {
+      if (!parameters1.get(i).name.equals(parameters2.get(i).name))
+        return false;
+    }
+    
+    return true;
+  }
+  
 }
