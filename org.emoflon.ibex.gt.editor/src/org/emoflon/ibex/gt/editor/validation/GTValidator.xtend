@@ -217,22 +217,31 @@ class GTValidator extends AbstractGTValidator {
   public static val CONDITION_SELF_REFERENCE_MESSAGE = "Condition '%s' references itself which is not allowed."
 
   // Constants for attribute constraints library
-  public static val EDITOR_ATTREIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_ADORNMENT_CODE = CODE_PREFIX +
+  public static val EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_ADORNMENT_CODE = CODE_PREFIX +
     "attributeConstraintsLibrary.inconsistentAdornment";
-  public static val EDITOR_ATTREIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_ADORNMENT = "Operations of type 'extend' must have at least one F adornment, and operations of type 'check' must have only B adornments."
-  
-  public static val EDITOR_ATTREIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_ADORNMENT_LENGTH_CODE = CODE_PREFIX +
+  public static val EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_ADORNMENT = "Operations of type 'extend' must have at least one F adornment, and operations of type 'check' must have only B adornments."
+
+  public static val EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_ADORNMENT_LENGTH_CODE = CODE_PREFIX +
     "attributeConstraintsLibrary.inconsistentAdornmentLength";
-  public static val EDITOR_ATTREIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_ADORNMENT_LENGTH = "Number of adornments must match number of parameters."
-  
-  public static val EDITOR_ATTREIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_PARAMETER_NAMES_REUSE_CODE = CODE_PREFIX +
+  public static val EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_ADORNMENT_LENGTH = "Number of adornments must match number of parameters."
+
+  public static val EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_PARAMETER_NAMES_REUSE_CODE = CODE_PREFIX +
     "attributeConstraintsLibrary.inconsistentParameterNamesWhileReusing";
-  public static val EDITOR_ATTREIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_PARAMETER_NAMES_REUSE = "Parameter names in reusing operation specification must be the same as in reused %s."
-  
-  public static val EDITOR_ATTREIBUTE_CONDITION_OPERATIONALIZATION_REUSE_CYCLE_CODE = CODE_PREFIX +
+  public static val EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_PARAMETER_NAMES_REUSE = "Parameter names in reusing operation specification must be the same as in reused %s."
+
+  public static val EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_REUSE_CYCLE_CODE = CODE_PREFIX +
     "attributeConstraintsLibrary.reuseCycle";
-  public static val EDITOR_ATTREIBUTE_CONDITION_OPERATIONALIZATION_REUSE_CYCLE = "Cycle in reuse relation."
-  
+  public static val EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_REUSE_CYCLE = "Cycle in reuse relation."
+
+  public static val EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_SPECIFICATION_UNTERMINATED_PARAMETER_CODE = CODE_PREFIX +
+    "attributeConstraintsLibrary.unterminatedParameterReference";
+  public static val EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_SPECIFICATION_UNTERMINATED_PARAMETER = "Unterminated parameter reference in code fragment."
+
+  public static val EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_SPECIFICATION_UNKNOWN_PARAMETER_CODE = CODE_PREFIX +
+    "attributeConstraintsLibrary.unknownParameterReference";
+  public static val EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_SPECIFICATION_UNKNOWN_PARAMETER = "Unknown parameter referenced in code fragment: %s"
+
+  public static val EDITOR_ATTRIBUTE_CONDITION_PARAMETER_NAME_PATTERN = "[a-zA-z][a-zA-z0-9]*"
 
   @Check
   def checkFile(EditorGTFile file) {
@@ -951,9 +960,9 @@ class GTValidator extends AbstractGTValidator {
     if ((operationType == EditorAttributeConditionType.CHECK && hasFreeAdornment) ||
       (operationType == EditorAttributeConditionType.EXTEND && !hasFreeAdornment)) {
       error(
-        EDITOR_ATTREIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_ADORNMENT,
+        EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_ADORNMENT,
         GTPackage.Literals.EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION__OPERATIONALIZATION_TYPE,
-        EDITOR_ATTREIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_ADORNMENT_CODE
+        EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_ADORNMENT_CODE
       )
     }
   }
@@ -961,58 +970,59 @@ class GTValidator extends AbstractGTValidator {
   def static boolean hasFreeAdornment(Collection<EditorAttributeConditionAdornment> adornments) {
     return adornments.exists[it == EditorAttributeConditionAdornment.FREE]
   }
-  
+
   /**
    * Checks that the adornment of an operationalization matches the length of the parameter list
    */
   @Check
-  def checkParameterCountVsAdornmentLength(EditorAttributeConditionOperationalization editorAttributeConditionOperationalization) {
+  def checkParameterCountVsAdornmentLength(
+    EditorAttributeConditionOperationalization editorAttributeConditionOperationalization) {
     val adornments = editorAttributeConditionOperationalization.adornments
     val constraintSpecification = editorAttributeConditionOperationalization.eContainer
     if (constraintSpecification instanceof EditorAttributeConditionSpecification) {
       val parameters = constraintSpecification.parameters
       if (parameters.size != adornments.size) {
         error(
-        EDITOR_ATTREIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_ADORNMENT_LENGTH,
-        GTPackage.Literals.EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION__OPERATIONALIZATION_TYPE,
-        EDITOR_ATTREIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_ADORNMENT_LENGTH_CODE
+          EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_ADORNMENT_LENGTH,
+          GTPackage.Literals.EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION__OPERATIONALIZATION_TYPE,
+          EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_ADORNMENT_LENGTH_CODE
         )
       }
     }
   }
-  
+
   /**
    * Checks that the reuse relation is free of loops and that the parameter names of the reusing and reused specification match 
    */
   @Check
   def checkParameterListLengthWhenReusing(EditorAttributeConditionSpecification editorAttributeConditionSpecification) {
-      if (hasReuseCycle(editorAttributeConditionSpecification)) {
-        error(
-          EDITOR_ATTREIBUTE_CONDITION_OPERATIONALIZATION_REUSE_CYCLE,
-          GTPackage.Literals.EDITOR_ATTRIBUTE_CONDITION_SPECIFICATION__REUSED_CONDITION_SPECIFICATION,
-          EDITOR_ATTREIBUTE_CONDITION_OPERATIONALIZATION_REUSE_CYCLE_CODE
-        )
-        return      
-      }
+    if (hasReuseCycle(editorAttributeConditionSpecification)) {
+      error(
+        EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_REUSE_CYCLE,
+        GTPackage.Literals.EDITOR_ATTRIBUTE_CONDITION_SPECIFICATION__REUSED_CONDITION_SPECIFICATION,
+        EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_REUSE_CYCLE_CODE
+      )
+      return
+    }
 
     val reusedCondition = findReusedSpecification(editorAttributeConditionSpecification)
-    if (reusedCondition !== null) {        
+    if (reusedCondition !== null) {
       val parameters = editorAttributeConditionSpecification.parameters
       val parametersOfReusedCondition = reusedCondition.parameters
       if (!haveSameNames(parameters, parametersOfReusedCondition)) {
         error(
-        EDITOR_ATTREIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_PARAMETER_NAMES_REUSE,
-        GTPackage.Literals.EDITOR_ATTRIBUTE_CONDITION_SPECIFICATION__NAME,
-        EDITOR_ATTREIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_PARAMETER_NAMES_REUSE_CODE
+          EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_PARAMETER_NAMES_REUSE,
+          GTPackage.Literals.EDITOR_ATTRIBUTE_CONDITION_SPECIFICATION__NAME,
+          EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_PARAMETER_NAMES_REUSE_CODE
         )
       }
     }
   }
-  
+
   def hasReuseCycle(EditorAttributeConditionSpecification specification) {
     if (specification.reusedConditionSpecification === null)
       return false
-      
+
     var reusedCondition = specification.reusedConditionSpecification
     while (reusedCondition.reusedConditionSpecification !== null) {
       reusedCondition = reusedCondition.reusedConditionSpecification
@@ -1020,10 +1030,10 @@ class GTValidator extends AbstractGTValidator {
         return true
       }
     }
-    
+
     return false
   }
-  
+
   /**
    * Precondition: specification.reusedConditionSpecification !== null
    */
@@ -1031,23 +1041,85 @@ class GTValidator extends AbstractGTValidator {
     var reusedCondition = specification.reusedConditionSpecification
     if (reusedCondition === null)
       return null
-      
+
     while (reusedCondition.reusedConditionSpecification !== null)
       reusedCondition = reusedCondition.reusedConditionSpecification
-    
+
     return reusedCondition
   }
-  
-  def haveSameNames(EList<EditorAttributeConditionParameter> parameters1, EList<EditorAttributeConditionParameter> parameters2) {
+
+  def haveSameNames(EList<EditorAttributeConditionParameter> parameters1,
+    EList<EditorAttributeConditionParameter> parameters2) {
     if (parameters1.size != parameters2.size)
-      return false;     
-    
+      return false
+
     for (var i = 0; i < parameters1.size; i++) {
       if (!parameters1.get(i).name.equals(parameters2.get(i).name))
-        return false;
+        return false
     }
-    
+
     return true;
   }
-  
+
+  /**
+   * Checks that parameter names that occur in the specification string correspond to parameters 
+   */
+  @Check
+  def checkParameterNamesInTargetPlatformSpecification(
+    EditorAttributeConditionOperationalization editorAttributeConditionOperationalization) {
+    val codeFragment = editorAttributeConditionOperationalization.specification
+    if (countDelimiters(codeFragment) % 2 == 1) {
+      error(
+        EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_SPECIFICATION_UNTERMINATED_PARAMETER,
+        GTPackage.Literals.EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION__SPECIFICATION,
+        EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_SPECIFICATION_UNTERMINATED_PARAMETER_CODE
+      )
+    }
+    val parameterNamesInSpecification = getParameterNames(codeFragment)
+    val constraintSpecification = editorAttributeConditionOperationalization.eContainer
+    if (constraintSpecification instanceof EditorAttributeConditionSpecification) {
+      val parameters = constraintSpecification.parameters
+      val parameterNamesOfPredicate = getParameterNames(parameters)
+
+      val unknonParameters = newHashSet()
+      unknonParameters.addAll(parameterNamesInSpecification.filter[!parameterNamesOfPredicate.contains(it)])
+      if (!unknonParameters.isEmpty) {
+        error(
+          String.format(EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_SPECIFICATION_UNKNOWN_PARAMETER,
+            unknonParameters),
+          GTPackage.Literals.EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION__SPECIFICATION,
+          EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_SPECIFICATION_UNKNOWN_PARAMETER_CODE
+        )
+      }
+    }
+
+  }
+
+  def getParameterNames(EList<EditorAttributeConditionParameter> list) {
+    return list.map[it.name]
+  }
+
+  def getParameterNames(String codeFragment) {
+    val parameterPattern = java.util.regex.Pattern.compile(
+      "\\$(" + EDITOR_ATTRIBUTE_CONDITION_PARAMETER_NAME_PATTERN + ")\\$")
+    val matcher = parameterPattern.matcher(codeFragment)
+    var parameterNames = newArrayList
+    var start = 0
+    while (matcher.find(start)) {
+      parameterNames.add(matcher.group(1))
+      start = matcher.end
+    }
+    return parameterNames
+  }
+
+  def countDelimiters(String string) {
+    var int count = 0;
+    for (var int i = 0; i < string.length; i++) {
+      if (string.charAt(i) == '$') {
+        count++
+      }
+    }
+    return count
+  }
+
 }
