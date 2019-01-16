@@ -110,7 +110,7 @@ EditorPatternAttributeConstraintArgument:
   EditorPatternAttributeConstraintAttributeValueExpression | EditorLiteralExpression | EditorEnumExpression;
 
 EditorPatternAttributeConstraintAttributeValueExpression:
-  editorNode=[EditorNode] '.' attribute=[ecore::EAttribute] (free?="'")?;
+  editorNode=[EditorNode] '.' attribute=[ecore::EAttribute] (free?="*")?;
 
 // Graph Conditions
 EditorCondition:
