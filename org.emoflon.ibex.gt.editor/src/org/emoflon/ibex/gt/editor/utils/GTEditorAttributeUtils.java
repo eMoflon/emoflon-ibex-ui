@@ -97,29 +97,53 @@ public class GTEditorAttributeUtils {
 	 *         match was found)
 	 */
 	public static Optional<EDataType> guessEDataType(final EditorLiteralExpression expression) {
-		final EcorePackage ecore = EcorePackage.eINSTANCE;
 		if (expression instanceof StringConstant)
-			return Optional.of(ecore.getEString());
+			return Optional.of(EcorePackage.eINSTANCE.getEString());
 
 		final String value = expression.getValue();
 		switch (value) {
 		case "true":
 		case "false":
-			return Optional.of(ecore.getEBoolean());
+			return Optional.of(EcorePackage.eINSTANCE.getEBoolean());
 		default:
-			final Collection<EDataType> candidateEDataTypestypes;
-			if (value.matches("\\d+"))
-				candidateEDataTypestypes = Arrays.asList(ecore.getEInt(), ecore.getELong());
-			else
-				candidateEDataTypestypes = Arrays.asList(ecore.getEDouble(), ecore.getEFloat());
-
-			for (final EDataType type : candidateEDataTypestypes) {
-				if (convertEDataTypeStringToObject(type, value).isPresent()) {
-					return Optional.of(type);
-				}
-			}
+			return guessNumericDataType(value);
 		}
 
+	}
+
+	/**
+	 * Tries to determine an appropriate numeric {@link EDataType} that is capable
+	 * of parsing the given value
+	 * 
+	 * @param value the literal value
+	 * @return possibly a numeric {@link EDataType}
+	 */
+	private static Optional<EDataType> guessNumericDataType(final String value) {
+		final Collection<EDataType> candidateEDataTypestypes = getCandidateNumericDataTypes(value);
+
+		for (final EDataType type : candidateEDataTypestypes) {
+			if (convertEDataTypeStringToObject(type, value).isPresent()) {
+				return Optional.of(type);
+			}
+		}
 		return Optional.empty();
+	}
+
+	/**
+	 * Returns EInt and ELong if the value consists of digits. Returns EInt and
+	 * ELong if the value consists of digits and an intermediate period. Else,
+	 * returns an empty list
+	 * 
+	 * @param value the literal value
+	 * @return the list of candidate numeric {@link EDataType} objects
+	 */
+	private static Collection<EDataType> getCandidateNumericDataTypes(final String value) {
+		final EcorePackage ecore = EcorePackage.eINSTANCE;
+		if (value.matches("\\d+"))
+			return Arrays.asList(ecore.getEInt(), ecore.getELong());
+		else if (value.matches("\\d+\\.\\d+"))
+			return Arrays.asList(ecore.getEDouble(), ecore.getEFloat());
+		else
+			return Arrays.asList();
 	}
 }
