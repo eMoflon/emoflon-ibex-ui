@@ -1,18 +1,20 @@
 package org.emoflon.ibex.gt.editor.ui.outline
 
 import com.google.inject.Inject
-
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.swt.SWT
 import org.eclipse.swt.graphics.FontData
-import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider
+import org.eclipse.xtext.ui.IImageHelper
 import org.eclipse.xtext.ui.editor.outline.IOutlineNode
+import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider
 import org.eclipse.xtext.ui.editor.utils.TextStyle
 import org.eclipse.xtext.ui.label.StylerFactory
-import org.eclipse.xtext.ui.IImageHelper
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeConditionLibrary
+import org.emoflon.ibex.gt.editor.gT.EditorCondition
 import org.emoflon.ibex.gt.editor.gT.EditorPattern
 import org.emoflon.ibex.gt.editor.gT.EditorPatternType
-import org.emoflon.ibex.gt.editor.gT.EditorCondition
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeConditionSpecification
+import org.emoflon.ibex.gt.editor.utils.GtPrettyPrinter
 
 /**
  * Customization of the default outline structure.
@@ -26,13 +28,26 @@ class GTOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	@Inject
 	StylerFactory stylerFactory
 
+  /**
+   * Only create nodes for the elements selected in the following
+   */
 	override _createNode(IOutlineNode parentNode, EObject modelElement) {
-		if (modelElement instanceof EditorPattern || modelElement instanceof EditorCondition) {
+		if (modelElement instanceof EditorPattern 
+		  || modelElement instanceof EditorCondition 
+		) {
 			super._createNode(parentNode, modelElement)
+		}
+		if (modelElement instanceof EditorAttributeConditionLibrary) {
+		  super._createNode(parentNode, modelElement)
+		  val outlineLibraryNode = parentNode.children.last
+		  val library = modelElement as EditorAttributeConditionLibrary
+		  for (EditorAttributeConditionSpecification cond : library.conditionSpecifications) {
+		    super._createNode(outlineLibraryNode, cond)
+		  }
 		}
 		return
 	}
-
+	
 	/**
 	 * Avoid display patterns as expandable nodes.
 	 */
@@ -46,7 +61,11 @@ class GTOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	def _isLeaf(EditorCondition condition) {
 		return true;
 	}
-
+	
+	def _isLeaf(EditorAttributeConditionSpecification object) {
+	  return true;
+	}
+	
 	/**
 	 * Customize the displayed text for the pattern.
 	 */
@@ -63,6 +82,14 @@ class GTOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		}
 		return text
 	}
+	
+	def _text(EditorAttributeConditionLibrary library) {
+	  return "Attribute Condition Library"
+	}
+	
+	def _text(EditorAttributeConditionSpecification conditionSpecification) {
+    return GtPrettyPrinter.describe(conditionSpecification)
+  }
 
 	/**
 	 * Customize the image for patterns/rules.
@@ -79,5 +106,9 @@ class GTOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	 */
 	def _image(EditorCondition condition) {
 		return imageHelper.getImage('gt-condition.gif')
+	}
+	
+	def _image(EditorAttributeConditionLibrary library) {
+	  return imageHelper.getImage('gt-attribute-libary.gif')
 	}
 }

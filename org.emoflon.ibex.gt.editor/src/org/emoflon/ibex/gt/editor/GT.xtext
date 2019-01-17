@@ -4,96 +4,182 @@ import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 generate gT "http://www.emoflon.org/ibex/gt/editor/GT"
 
 EditorGTFile:
-	(imports+=EditorImport)*
-	(patterns+=EditorPattern |
-	conditions+=EditorCondition)*;
+  (imports+=EditorImport)*
+  (patterns+=EditorPattern |
+  conditions+=EditorCondition |
+  attributeConditionLibraries+=EditorAttributeConditionLibrary)*;
 
 EditorImport:
-	'import' name=STRING;
+  'import' name=STRING;
 
 EditorPattern:
-	(abstract?='abstract')? type=EditorPatternType name=ID
-	('('
-	(parameters+=EditorParameter (',' parameters+=EditorParameter)*)?
-	')')?
-	('refines' superPatterns+=[EditorPattern] (',' superPatterns+=[EditorPattern])*)?
-	('{'
-	(nodes+=EditorNode)*
-	'}')?
-	('when' conditions+=[EditorCondition] ('||' conditions+=[EditorCondition])*)?;
+  (abstract?='abstract')? type=EditorPatternType name=ID
+  ('('
+  (parameters+=EditorParameter (',' parameters+=EditorParameter)*)?
+  ')')?
+  ('refines' superPatterns+=[EditorPattern] (',' superPatterns+=[EditorPattern])*)?
+  ('{'
+  (nodes+=EditorNode | complexAttributeConstraints+=EditorPatternAttributeCondition)*
+  '}')?
+  ('when' conditions+=[EditorCondition] ('||' conditions+=[EditorCondition])*)?;
+
+EditorPatternElement:
+  EditorNode | EditorPatternAttributeCondition;
 
 enum EditorPatternType:
-	PATTERN='pattern' |
-	RULE='rule';
+  PATTERN='pattern' |
+  RULE='rule';
 
 EditorParameter:
-	name=ID ':' type=[ecore::EDataType];
+  name=ID ':' type=[ecore::EDataType];
 
-	// Nodes
+  // Nodes
 EditorNode:
-	(operator=OperatorInEditor)?
-	name=ID ':' type=[ecore::EClass]
-	('{'
-	attributes+=EditorAttribute*
-	references+=EditorReference*
-	'}')?;
+  (operator=OperatorInEditor)?
+  name=ID ':' type=[ecore::EClass] (binding=EditorBindingExpression)?
+  ('{'
+  attributes+=EditorAttribute*
+  references+=EditorReference*
+  attributeConditions+=EditorPatternAttributeCondition*
+  '}')?;
 
 enum EditorOperator:
-	CONTEXT |
-	CREATE |
-	DELETE;
+  CONTEXT |
+  CREATE |
+  DELETE;
 
 enum OperatorInEditor returns EditorOperator:
-	CREATE='++' |
-	DELETE='--';
+  CREATE='++' |
+  DELETE='--';
 
-	// Attribute Assignments and Conditions
+  // Attribute Assignments and Conditions
 EditorAttribute:
-	'.' attribute=[ecore::EAttribute] relation=EditorRelation value=EditorExpression;
+  '.' attribute=[ecore::EAttribute] relation=EditorRelation value=EditorExpression;
 
 enum EditorRelation:
-	ASSIGNMENT=':=' |
-	GREATER='>' |
-	GREATER_OR_EQUAL='>=' |
-	EQUAL='==' |
-	UNEQUAL='!=' |
-	SMALLER_OR_EQUAL='<=' |
-	SMALLER='<';
+  ASSIGNMENT=':=' |
+  GREATER='>' |
+  GREATER_OR_EQUAL='>=' |
+  EQUAL='==' |
+  UNEQUAL='!=' |
+  SMALLER_OR_EQUAL='<=' |
+  SMALLER='<';
 
 EditorExpression:
-	EditorAttributeExpression | EditorLiteralExpression | EditorEnumExpression | EditorParameterExpression;
+  EditorAttributeExpression | EditorLiteralExpression | EditorEnumExpression | EditorParameterExpression;
 
 EditorAttributeExpression:
-	node=[EditorNode] '.' attribute=[ecore::EAttribute];
+  node=[EditorNode] '.' attribute=[ecore::EAttribute];
 
 EditorLiteralExpression:
-	value=('true' | 'false' | Number) |
-	{StringConstant} value=STRING;
+  value=('true' | 'false' | Number) |
+  {StringConstant} value=STRING;
 
 Number:
-	('-')? INT ('.' INT)?;
+  ('-')? INT ('.' INT)?;
 
 EditorEnumExpression:
-	'enum::' literal=[ecore::EEnumLiteral];
+  'enum::' literal=[ecore::EEnumLiteral];
 
 EditorParameterExpression:
-	'param::' parameter=[EditorParameter];
+  'param::' parameter=[EditorParameter];
 
-	// References
+// References
 EditorReference:
-	(operator=OperatorInEditor)? '-' type=[ecore::EReference] '->' target=[EditorNode];
+  (operator=OperatorInEditor)? '-' type=[ecore::EReference] '->' target=[EditorNode];
 
-	// Graph Conditions
+// Complex attribute conditions
+EditorPatternAttributeCondition:
+  {EditorPatternAttributeCondition}
+  'attributeCondition' '{'
+  constraints+=EditorPatternAttributeConstraint*
+  '}';
+
+EditorPatternAttributeConstraint:
+  EditorPatternAttributeConstraintVariable | EditorPatternAttributeConstraintPredicate;
+
+EditorPatternAttributeConstraintVariable:
+  name=ID ':' type=[ecore::EDataType];
+
+EditorPatternAttributeConstraintPredicate:
+  name=[EditorAttributeConditionSpecification|ID]
+  '(' args+=EditorPatternAttributeConstraintArgument? (',' args+=EditorPatternAttributeConstraintArgument)*
+  ')';
+
+EditorPatternAttributeConstraintArgument:
+  EditorPatternAttributeConstraintAttributeValueExpression | EditorLiteralExpression | EditorEnumExpression | EditorPatternAttributeConstraintVariableReference;
+
+EditorPatternAttributeConstraintAttributeValueExpression:
+  editorNode=[EditorNode] '.' attribute=[ecore::EAttribute] (free?="*")?;
+  
+EditorPatternAttributeConstraintVariableReference:
+  name=[EditorPatternAttributeConstraintVariable]
+;
+
+// Graph Conditions
 EditorCondition:
-	'condition' name=ID '='
-	conditions+=EditorSimpleCondition ('&&' conditions+=EditorSimpleCondition)*;
+  'condition' name=ID '='
+  conditions+=EditorSimpleCondition ('&&' conditions+=EditorSimpleCondition)*;
 
 EditorSimpleCondition:
-	{EditorConditionReference}
-	condition=[EditorCondition] |
-	{EditorApplicationCondition}
-	type=EditorApplicationConditionType pattern=[EditorPattern];
+  {EditorConditionReference}
+  condition=[EditorCondition] |
+  {EditorApplicationCondition}
+  type=EditorApplicationConditionType pattern=[EditorPattern];
 
 enum EditorApplicationConditionType:
-	POSITIVE='enforce' |
-	NEGATIVE='forbid';
+  POSITIVE='enforce' |
+  NEGATIVE='forbid';
+
+EditorBindingExpression:
+  ':=' node=[EditorNode];
+
+/*
+ * Attribute constraints library
+ * This library allows the developer to provide her own constraint types (only for EDataTypes)
+ * An EditorAttributeConditionSpecification represents a predicate with a number of typed parameters
+ * An EditorAttributeConditionOperationalization is an operationalization of such a predicate (i.e., one way to fulfill the constraint)
+ */
+EditorAttributeConditionLibrary:
+  {EditorAttributeConditionLibrary}
+  'attributeConditionLibrary' '{'
+  (conditionSpecifications+=EditorAttributeConditionSpecification)*
+  '}';
+
+EditorAttributeConditionSpecification:
+  {EditorAttributeConditionSpecification}
+  name=ID
+  ('('
+  (parameters+=EditorAttributeConditionParameter (',' parameters+=EditorAttributeConditionParameter)*)?
+  ')')
+  (('reuse' reusedConditionSpecification=[EditorAttributeConditionSpecification|ID]) | ('{'
+  (operationalizations+=EditorAttributeConditionOperationalization*)
+  '}'))?;
+
+EditorAttributeConditionParameter:
+  name=ID ':' type=[ecore::EDataType];
+
+EditorAttributeConditionOperationalization:
+  {EditorAttributeConditionOperationalization}
+  operationalizationType = EditorAttributeConditionType '[' adornments+=EditorAttributeConditionAdornment+ ']'
+  '{'
+  target=EditorAttributeConditionTargetPlatform ':' specification=STRING
+  '}';
+
+/*
+ * A BOUND parameter possesses a value prior to the evaluation of an operation, a free parameter is bound by the operation
+ */
+enum EditorAttributeConditionAdornment:
+  BOUND='B' |
+  FREE='F';
+  
+enum EditorAttributeConditionType:
+  CHECK='check' |
+  EXTEND='extend';
+
+enum EditorAttributeConditionTargetPlatform:
+  JAVA='Java';
+
+  // This rule serves to have a common super class for pattern parameters and editor nodes
+EditorParameterOrNode:
+  (EditorNode | EditorParameter);

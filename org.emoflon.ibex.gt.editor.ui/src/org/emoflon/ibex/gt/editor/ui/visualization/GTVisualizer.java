@@ -31,7 +31,7 @@ public class GTVisualizer extends EMoflonVisualiser {
 
 	/**
 	 * Returns the visualization of the selection.
-	 * 
+	 *
 	 * @param selection
 	 *            the selection
 	 * @param patterns
@@ -55,7 +55,7 @@ public class GTVisualizer extends EMoflonVisualiser {
 	/**
 	 * Checks whether there is a rule with the name being equal to the current
 	 * selected text.
-	 * 
+	 *
 	 * @param selection
 	 *            the current selection
 	 * @param patterns
@@ -87,7 +87,7 @@ public class GTVisualizer extends EMoflonVisualiser {
 
 	/**
 	 * Loads the file from the given editor.
-	 * 
+	 *
 	 * @param editor
 	 *            the editor
 	 * @return an {@link Optional} for the {@link GraphTransformationFile}

@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: eMoflon::IBeX Editor for Graph Transformation Rules (IDE)
 Bundle-SymbolicName: org.emoflon.ibex.gt.editor.ide; singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.1.0.qualifier
 Bundle-Vendor: eMoflon::IBeX Developers
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.antlr.runtime,
+Require-Bundle: org.antlr.runtime;bundle-version="[3.2.0,3.2.1)",
  org.eclipse.xtext.ide,
  org.eclipse.xtext.xbase.ide,
  org.emoflon.ibex.gt.editor

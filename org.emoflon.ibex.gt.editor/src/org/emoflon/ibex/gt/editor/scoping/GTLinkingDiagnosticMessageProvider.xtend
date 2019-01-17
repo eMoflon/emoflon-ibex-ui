@@ -76,7 +76,7 @@ class GTLinkingDiagnosticMessageProvider extends LinkingDiagnosticMessageProvide
 
 		// Parameter of parameter expression not found.
 		if (context.reference === GTPackage.Literals.EDITOR_PARAMETER_EXPRESSION__PARAMETER) {
-			val expectedType = (context.context.eContainer as EditorAttribute).attribute.EAttributeType.name
+			val expectedType = (context?.context?.eContainer as EditorAttribute)?.attribute?.EAttributeType?.name
 			return new DiagnosticMessage(
 				String.format(PARAMETER_EXPRESSION_PARAMETER_NOT_FOUND_MESSAGE, linkText, expectedType),
 				Severity.ERROR,
