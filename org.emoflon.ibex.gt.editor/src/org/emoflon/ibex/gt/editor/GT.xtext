@@ -107,10 +107,14 @@ EditorPatternAttributeConstraintPredicate:
   ')';
 
 EditorPatternAttributeConstraintArgument:
-  EditorPatternAttributeConstraintAttributeValueExpression | EditorLiteralExpression | EditorEnumExpression;
+  EditorPatternAttributeConstraintAttributeValueExpression | EditorLiteralExpression | EditorEnumExpression | EditorPatternAttributeConstraintVariableReference;
 
 EditorPatternAttributeConstraintAttributeValueExpression:
   editorNode=[EditorNode] '.' attribute=[ecore::EAttribute] (free?="*")?;
+  
+EditorPatternAttributeConstraintVariableReference:
+  name=[EditorPatternAttributeConstraintVariable]
+;
 
 // Graph Conditions
 EditorCondition:
