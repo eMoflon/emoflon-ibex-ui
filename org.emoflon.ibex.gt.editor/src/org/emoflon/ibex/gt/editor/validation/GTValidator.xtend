@@ -433,8 +433,11 @@ class GTValidator extends AbstractGTValidator {
     }
   }
 
-  /** EditorPattern are not allowed to have multiple OR connected EditorConditions for TIE-GT */
-  @Check
+  /**
+   * EditorPattern are not allowed to have multiple OR connected EditorConditions for TIE-GT
+   * (currently disabled because we would have to decide whether this is TIE-GT or IBeX) 
+   */
+  // @Check 
   def checkPatternNoORConnectedConditions(EditorPattern pattern) {
     if (pattern.conditions.size > 1)
       error(
