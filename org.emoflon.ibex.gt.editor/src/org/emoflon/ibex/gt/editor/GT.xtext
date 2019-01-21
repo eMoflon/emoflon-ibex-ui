@@ -107,7 +107,7 @@ EditorPatternAttributeConstraintPredicate:
   ')';
 
 EditorPatternAttributeConstraintArgument:
-  EditorPatternAttributeConstraintAttributeValueExpression | EditorLiteralExpression | EditorEnumExpression | EditorPatternAttributeConstraintVariableReference;
+  EditorPatternAttributeConstraintAttributeValueExpression | EditorLiteralExpression | EditorEnumExpression | EditorPatternAttributeConstraintVariableReference | EditorParameterExpression;
 
 EditorPatternAttributeConstraintAttributeValueExpression:
   editorNode=[EditorNode] '.' attribute=[ecore::EAttribute] (free?="*")?;
