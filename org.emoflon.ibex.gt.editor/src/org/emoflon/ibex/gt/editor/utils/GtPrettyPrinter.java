@@ -7,6 +7,7 @@ import org.emoflon.ibex.gt.editor.gT.EditorAttributeConditionParameter;
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeConditionSpecification;
 import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression;
 import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression;
+import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression;
 import org.emoflon.ibex.gt.editor.gT.EditorPatternAttributeConstraint;
 import org.emoflon.ibex.gt.editor.gT.EditorPatternAttributeConstraintArgument;
 import org.emoflon.ibex.gt.editor.gT.EditorPatternAttributeConstraintAttributeValueExpression;
@@ -66,6 +67,8 @@ public final class GtPrettyPrinter {
 			return describe(EditorEnumExpression.class.cast(predicateArgument));
 		else if (predicateArgument instanceof EditorPatternAttributeConstraintVariableReference)
 			return describe(EditorPatternAttributeConstraintVariableReference.class.cast(predicateArgument));
+		else if (predicateArgument instanceof EditorParameterExpression)
+			return describe(EditorParameterExpression.class.cast(predicateArgument));
 		else
 			return describeDefault(predicateArgument);
 	}
@@ -85,6 +88,10 @@ public final class GtPrettyPrinter {
 	public static String describe(final EditorPatternAttributeConstraintVariableReference variableReference) {
 		final EditorPatternAttributeConstraintVariable variable = variableReference.getName();
 		return String.format("%s:%s", variable.getName(), describe(variable.getType()));
+	}
+
+	public static String describe(final EditorParameterExpression expression) {
+		return String.format("param::%s", expression.getParameter().getName());
 	}
 
 	public static String describe(final EClassifier eClassifier) {
