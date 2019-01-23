@@ -25,6 +25,7 @@ import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 import org.emoflon.ibex.gt.editor.utils.GTEditorPatternUtils
+import org.emoflon.ibex.gt.editor.gT.EditorPatternAttributeConstraintArgument
 
 /**
  * This class contains custom scoping description.
@@ -104,13 +105,14 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 
     return super.getScope(context, reference)
   }
-  
+
   def isEditorPatternAttributeConstraintAttributeValueExpression(EObject context, EReference reference) {
-     return (context instanceof EditorPatternAttributeConstraintAttributeValueExpression &&
+    return (context instanceof EditorPatternAttributeConstraintAttributeValueExpression &&
       reference == GTPackage.Literals.EDITOR_PATTERN_ATTRIBUTE_CONSTRAINT_ATTRIBUTE_VALUE_EXPRESSION__ATTRIBUTE)
   }
-  
-  def getScopeForEditorPatternAttributeConstraintAttributeValueExpression(EditorPatternAttributeConstraintAttributeValueExpression expression, EReference reference) {
+
+  def getScopeForEditorPatternAttributeConstraintAttributeValueExpression(
+    EditorPatternAttributeConstraintAttributeValueExpression expression, EReference reference) {
     return Scopes.scopeFor(expression.editorNode.type.EAllAttributes)
   }
 
@@ -311,7 +313,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
    * Parameter expressions must reference a parameter of the type expected for the attribute value.
    */
   def getScopeForParameterExpressions(EditorParameterExpression parameterExpression) {
-    if (parameterExpression.eContainer instanceof EditorAttribute) {    
+    if (parameterExpression.eContainer instanceof EditorAttribute) {
       val attributeConstraint = parameterExpression.eContainer as EditorAttribute
       val pattern = attributeConstraint.eContainer.eContainer as EditorPattern
       val parameters = newArrayList()
@@ -324,17 +326,12 @@ class GTScopeProvider extends AbstractGTScopeProvider {
     } else if (parameterExpression.eContainer instanceof EditorPatternAttributeConstraintPredicate) {
       val pattern = parameterExpression.eContainer.eContainer.eContainer as EditorPattern
       val predicate = parameterExpression.eContainer as EditorPatternAttributeConstraintPredicate
+      var offset = getOffsetOfExpression(predicate, parameterExpression);
       val predicateArgumentTypes = predicate.name.parameters
-      var offset = -1
-      for (var i = 0; i < predicate.args.size; i++) {
-        if (predicate.args.get(i).equals(parameterExpression)) {
-          offset = i;
-        }
-      }
       val parameterType = predicateArgumentTypes.get(offset).type
       val parameters = newArrayList()
       GTEditorPatternUtils.getPatternWithAllSuperPatterns(pattern).forEach [
-        parameters.addAll(it.parameters.filter [it.type == parameterType])
+        parameters.addAll(it.parameters.filter[it.type == parameterType])
       ]
       return Scopes.scopeFor(parameters)
     } else {
@@ -346,11 +343,32 @@ class GTScopeProvider extends AbstractGTScopeProvider {
    * Any literal of the attribute's enum is valid.
    */
   def getScopeForEnumLiterals(EditorEnumExpression enumExpression) {
-    val attributeConstraint = enumExpression.eContainer as EditorAttribute
-    val type = attributeConstraint.attribute.EAttributeType
-    if (type instanceof EEnum) {
-      return Scopes.scopeFor(type.ELiterals)
-    }
-    return Scopes.scopeFor([])
+    val container = enumExpression.eContainer
+    if (container instanceof EditorAttribute) {
+      val attributeConstraint = container as EditorAttribute
+      val type = attributeConstraint.attribute.EAttributeType
+      if (type instanceof EEnum) {
+        return Scopes.scopeFor(type.ELiterals)
+      }
+    } else if (container instanceof EditorPatternAttributeConstraintPredicate) {
+      val predicate = container as EditorPatternAttributeConstraintPredicate
+      var offset = getOffsetOfExpression(predicate, enumExpression);
+      val predicateArgumentTypes = predicate.name.parameters
+      val parameterType = predicateArgumentTypes.get(offset).type
+      if (parameterType instanceof EEnum) {
+        return Scopes.scopeFor(parameterType.ELiterals)
+      }
+    } else
+      return Scopes.scopeFor([])
+  }
+  
+  
+  private def int getOffsetOfExpression(EditorPatternAttributeConstraintPredicate predicate,
+    EditorPatternAttributeConstraintArgument expression) {
+    var offset = -1
+    for (var i = 0; i < predicate.args.size; i++)
+      if (predicate.args.get(i).equals(expression))
+        offset = i
+    return offset
   }
 }
