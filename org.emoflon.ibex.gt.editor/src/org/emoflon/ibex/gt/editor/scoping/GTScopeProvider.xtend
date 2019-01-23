@@ -25,7 +25,7 @@ import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 import org.emoflon.ibex.gt.editor.utils.GTEditorPatternUtils
-import org.emoflon.ibex.gt.editor.gT.EditorPatternAttributeConstraintArgument
+import org.emoflon.ibex.gt.editor.utils.GTEnumExpressionHelper
 
 /**
  * This class contains custom scoping description.
@@ -326,7 +326,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
     } else if (parameterExpression.eContainer instanceof EditorPatternAttributeConstraintPredicate) {
       val pattern = parameterExpression.eContainer.eContainer.eContainer as EditorPattern
       val predicate = parameterExpression.eContainer as EditorPatternAttributeConstraintPredicate
-      var offset = getOffsetOfExpression(predicate, parameterExpression);
+      var offset = GTEnumExpressionHelper.getOffsetOfExpression(predicate, parameterExpression);
       val predicateArgumentTypes = predicate.name.parameters
       val parameterType = predicateArgumentTypes.get(offset).type
       val parameters = newArrayList()
@@ -343,32 +343,11 @@ class GTScopeProvider extends AbstractGTScopeProvider {
    * Any literal of the attribute's enum is valid.
    */
   def getScopeForEnumLiterals(EditorEnumExpression enumExpression) {
-    val container = enumExpression.eContainer
-    if (container instanceof EditorAttribute) {
-      val attributeConstraint = container as EditorAttribute
-      val type = attributeConstraint.attribute.EAttributeType
-      if (type instanceof EEnum) {
-        return Scopes.scopeFor(type.ELiterals)
-      }
-    } else if (container instanceof EditorPatternAttributeConstraintPredicate) {
-      val predicate = container as EditorPatternAttributeConstraintPredicate
-      var offset = getOffsetOfExpression(predicate, enumExpression);
-      val predicateArgumentTypes = predicate.name.parameters
-      val parameterType = predicateArgumentTypes.get(offset).type
-      if (parameterType instanceof EEnum) {
-        return Scopes.scopeFor(parameterType.ELiterals)
-      }
+    val type = GTEnumExpressionHelper.getEnumDataType(enumExpression)
+    if (type instanceof EEnum) {
+      return Scopes.scopeFor(type.ELiterals)
     } else
       return Scopes.scopeFor([])
   }
-  
-  
-  private def int getOffsetOfExpression(EditorPatternAttributeConstraintPredicate predicate,
-    EditorPatternAttributeConstraintArgument expression) {
-    var offset = -1
-    for (var i = 0; i < predicate.args.size; i++)
-      if (predicate.args.get(i).equals(expression))
-        offset = i
-    return offset
-  }
+
 }
