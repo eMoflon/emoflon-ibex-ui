@@ -20,13 +20,12 @@ public class GTEditorPatternUtils {
 	/**
 	 * Returns all transitive super patterns of the given pattern.
 	 * 
-	 * @param pattern
-	 *            the pattern
+	 * @param pattern the pattern
 	 * @return all super patterns of the patterns
 	 */
 	public static Set<EditorPattern> getAllSuperPatterns(final EditorPattern pattern) {
-		Set<EditorPattern> patterns = new HashSet<EditorPattern>();
-		for (EditorPattern superPattern : pattern.getSuperPatterns()) {
+		final Set<EditorPattern> patterns = new HashSet<>();
+		for (final EditorPattern superPattern : pattern.getSuperPatterns()) {
 			// Check necessary to avoid endless loop.
 			if (!isRefinementOf(superPattern, pattern)) {
 				patterns.add(superPattern);
@@ -39,12 +38,11 @@ public class GTEditorPatternUtils {
 	/**
 	 * Returns a set containing the patterns and all its super patterns.
 	 * 
-	 * @param pattern
-	 *            the pattern
+	 * @param pattern the pattern
 	 * @return the pattern and all its super pattern
 	 */
 	public static Set<EditorPattern> getPatternWithAllSuperPatterns(final EditorPattern pattern) {
-		Set<EditorPattern> patterns = new HashSet<EditorPattern>();
+		final Set<EditorPattern> patterns = new HashSet<>();
 		patterns.add(pattern);
 		patterns.addAll(getAllSuperPatterns(pattern));
 		return patterns;
@@ -54,10 +52,8 @@ public class GTEditorPatternUtils {
 	 * Returns all nodes which are valid in a pattern (i. e. from the pattern itself
 	 * as well as from its super patterns).
 	 * 
-	 * @param pattern
-	 *            the pattern
-	 * @param nodeFilter
-	 *            a filter for the nodes
+	 * @param pattern    the pattern
+	 * @param nodeFilter a filter for the nodes
 	 * @return the nodes of the pattern and its super pattern after applying the
 	 *         filter
 	 */
@@ -69,10 +65,8 @@ public class GTEditorPatternUtils {
 	/**
 	 * Returns all nodes which the inherited from super patterns.
 	 * 
-	 * @param pattern
-	 *            the pattern
-	 * @param nodeFilter
-	 *            a filter for the nodes
+	 * @param pattern    the pattern
+	 * @param nodeFilter a filter for the nodes
 	 * @return the nodes from the super patterns of the pattern after applying the
 	 *         filter
 	 */
@@ -84,15 +78,13 @@ public class GTEditorPatternUtils {
 	/**
 	 * Returns the nodes of the patterns.
 	 * 
-	 * @param patterns
-	 *            the patterns
-	 * @param nodeFilter
-	 *            a filter for the nodes
+	 * @param patterns   the patterns
+	 * @param nodeFilter a filter for the nodes
 	 * @return the nodes of the patterns after applying the given filter
 	 */
 	private static Set<EditorNode> getFilteredNodes(final Set<EditorPattern> patterns,
 			final Predicate<EditorNode> nodeFilter) {
-		Set<EditorNode> nodes = new HashSet<EditorNode>();
+		final Set<EditorNode> nodes = new HashSet<EditorNode>();
 		patterns.forEach(p -> nodes.addAll(p.getNodes().stream().filter(nodeFilter).collect(Collectors.toSet())));
 		return nodes;
 	}
@@ -101,12 +93,11 @@ public class GTEditorPatternUtils {
 	 * Returns all parameters of the pattern including parameters from super
 	 * patterns.
 	 * 
-	 * @param pattern
-	 *            the pattern
+	 * @param pattern the pattern
 	 * @return the parameters of the pattern
 	 */
 	public static Set<EditorParameter> getAllParametersOfPattern(final EditorPattern pattern) {
-		Set<EditorParameter> parameters = new HashSet<EditorParameter>();
+		final Set<EditorParameter> parameters = new HashSet<EditorParameter>();
 		getPatternWithAllSuperPatterns(pattern).forEach(p -> parameters.addAll(p.getParameters()));
 		return parameters;
 	}
@@ -114,22 +105,20 @@ public class GTEditorPatternUtils {
 	/**
 	 * Checks whether the first pattern is an refinement of the second.
 	 * 
-	 * @param a
-	 *            the first pattern
-	 * @param b
-	 *            the second pattern
+	 * @param a the first pattern
+	 * @param b the second pattern
 	 * @return true if a directly or indirectly refines b
 	 */
-	public static boolean isRefinementOf(EditorPattern a, EditorPattern b) {
+	public static boolean isRefinementOf(final EditorPattern a, final EditorPattern b) {
 		try {
 			if (a.getSuperPatterns().contains(b)) {
 				return true;
 			}
-		} catch (CyclicLinkingException e) {
+		} catch (final CyclicLinkingException e) {
 			// Cycling linking detected: a refines b and b refines a.
 			return true;
 		}
-		for (EditorPattern superPattern : a.getSuperPatterns()) {
+		for (final EditorPattern superPattern : a.getSuperPatterns()) {
 			if (isRefinementOf(superPattern, b)) {
 				return true;
 			}
@@ -141,8 +130,7 @@ public class GTEditorPatternUtils {
 	 * Checks whether the editor pattern contains at least one created or deleted
 	 * element (node or reference) or at least one attribute assignment.
 	 * 
-	 * @param editorPattern
-	 *            the editor pattern
+	 * @param editorPattern the editor pattern
 	 * @return true if the pattern contains a created or deleted element or an
 	 *         attribute assignment.
 	 */
@@ -155,8 +143,7 @@ public class GTEditorPatternUtils {
 	 * Checks whether the editor pattern contains at least one created or deleted
 	 * node.
 	 * 
-	 * @param editorPattern
-	 *            the editor pattern
+	 * @param editorPattern the editor pattern
 	 * @return true if the pattern contains a created or deleted node.
 	 */
 	public static boolean hasCreatedOrDeletedNode(final EditorPattern editorPattern) {
@@ -168,8 +155,7 @@ public class GTEditorPatternUtils {
 	 * Checks whether the editor pattern contains at least one created or deleted
 	 * reference.
 	 * 
-	 * @param editorPattern
-	 *            the editor pattern
+	 * @param editorPattern the editor pattern
 	 * @return true if the pattern contains a created or deleted reference.
 	 */
 	public static boolean hasCreatedOrDeletedReference(final EditorPattern editorPattern) {
@@ -183,8 +169,7 @@ public class GTEditorPatternUtils {
 	 * Checks whether the editor pattern contains at least one operator node or
 	 * reference.
 	 * 
-	 * @param editorPattern
-	 *            the editor pattern
+	 * @param editorPattern the editor pattern
 	 * @return true if the pattern contains an attribute assignment.
 	 */
 	public static boolean hasAttributeAssignment(final EditorPattern editorPattern) {
