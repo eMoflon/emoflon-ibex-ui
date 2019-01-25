@@ -10,6 +10,8 @@ import org.emoflon.ibex.gt.editor.gT.EditorNode;
 import org.emoflon.ibex.gt.editor.gT.EditorOperator;
 import org.emoflon.ibex.gt.editor.gT.EditorParameter;
 import org.emoflon.ibex.gt.editor.gT.EditorPattern;
+import org.emoflon.ibex.gt.editor.gT.EditorPatternAttributeConstraintAttributeValueExpression;
+import org.emoflon.ibex.gt.editor.gT.EditorPatternAttributeConstraintPredicate;
 import org.emoflon.ibex.gt.editor.gT.EditorRelation;
 
 /**
@@ -136,7 +138,7 @@ public class GTEditorPatternUtils {
 	 */
 	public static boolean containsCreatedOrDeletedElements(final EditorPattern editorPattern) {
 		return hasCreatedOrDeletedNode(editorPattern) || hasCreatedOrDeletedReference(editorPattern)
-				|| hasAttributeAssignment(editorPattern);
+				|| hasAttributeAssignment(editorPattern) || hasFreeVariablesInAttributeConditions(editorPattern);
 	}
 
 	/**
@@ -178,4 +180,24 @@ public class GTEditorPatternUtils {
 				.flatMap(attributes -> attributes.stream()) //
 				.anyMatch(attribute -> attribute.getRelation() == EditorRelation.ASSIGNMENT);
 	}
+
+	/**
+	 * Checks whether the editor pattern has an attribute condition with a free
+	 * variable
+	 * 
+	 * @param editorPattern the pattern to check
+	 * @return true if a free variable exists
+	 */
+	public static boolean hasFreeVariablesInAttributeConditions(final EditorPattern editorPattern) {
+		final boolean match = editorPattern.getComplexAttributeConstraints().stream()
+				.flatMap(condition -> condition.getConstraints().stream()) // Stream all conditions
+				.filter(condition -> condition instanceof EditorPatternAttributeConstraintPredicate)
+				.map(condition -> (EditorPatternAttributeConstraintPredicate) condition)
+				.flatMap(condition -> condition.getArgs().stream()) // Stream all arguments of predicates
+				.filter(argument -> argument instanceof EditorPatternAttributeConstraintAttributeValueExpression)
+				.map(argument -> (EditorPatternAttributeConstraintAttributeValueExpression) argument)
+				.anyMatch(EditorPatternAttributeConstraintAttributeValueExpression::isFree);
+		return match;
+	}
+
 }
