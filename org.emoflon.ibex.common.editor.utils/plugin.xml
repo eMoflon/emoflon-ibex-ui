@@ -15,6 +15,15 @@
       <register_psf_uri_extension
             class="org.emoflon.ibex.common.editor.handbook.RegisterPsfUrlForHandbookPart5">
       </register_psf_uri_extension>
+      <register_psf_uri_extension
+            class="org.emoflon.ibex.common.editor.handbook.RegisterPsfUrlForHandbookPart6">
+      </register_psf_uri_extension>
+      <register_psf_uri_extension
+            class="org.emoflon.ibex.common.editor.handbook.RegisterPsfUrlForHandbookPart7">
+      </register_psf_uri_extension>
+      <register_psf_uri_extension
+            class="org.emoflon.ibex.common.editor.handbook.RegisterPsfUrlForHandbookPart8">
+      </register_psf_uri_extension>
    </extension>
 
 </plugin>
