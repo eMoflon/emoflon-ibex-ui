@@ -44,31 +44,42 @@ public class GTFlattener {
 			return;
 		}
 
-		final Set<EditorPattern> superPatterns = GTEditorPatternUtils.getAllSuperPatterns(pattern);
-		final List<EditorParameter> parameters = mergeParameters(pattern, superPatterns);
-		final List<EditorNode> nodes = mergeNodes(pattern, superPatterns, parameters);
-		final List<EditorPatternAttributeCondition> attributeConditions = mergeAttributeConditions(pattern,
-				superPatterns, parameters);
-		createFlattenedPattern(pattern, parameters, nodes, attributeConditions);
+		createFlattenedPattern(pattern);
 	}
 
 	/**
 	 * Creates the flattened pattern.
 	 * 
 	 * @param pattern             the original pattern
-	 * @param parameters          the parameters
-	 * @param nodes               the nodes
 	 * @param attributeConditions
 	 */
-	private void createFlattenedPattern(final EditorPattern pattern, final List<EditorParameter> parameters,
-			final List<EditorNode> nodes, final List<EditorPatternAttributeCondition> attributeConditions) {
+	private void createFlattenedPattern(final EditorPattern pattern) {
+
+		final Set<EditorPattern> superPatterns = GTEditorPatternUtils.getAllSuperPatterns(pattern);
+
 		flattenedPattern = GTFactory.eINSTANCE.createEditorPattern();
 		flattenedPattern.setAbstract(pattern.isAbstract());
 		flattenedPattern.setType(pattern.getType());
 		flattenedPattern.setName(pattern.getName());
-		flattenedPattern.getParameters().addAll(parameters);
-		flattenedPattern.getNodes().addAll(nodes);
+		initializeParameters(pattern, superPatterns);
+		initializeNodes(pattern, superPatterns);
 		flattenedPattern.getConditions().addAll(pattern.getConditions());
+		initializeAttributeConstraints(pattern, superPatterns);
+	}
+
+	private void initializeParameters(final EditorPattern pattern, final Set<EditorPattern> superPatterns) {
+		final List<EditorParameter> parameters = mergeParameters(pattern, superPatterns);
+		flattenedPattern.getParameters().addAll(parameters);
+	}
+
+	private void initializeNodes(final EditorPattern pattern, final Set<EditorPattern> superPatterns) {
+		final List<EditorNode> nodes = mergeNodes(pattern, superPatterns);
+		flattenedPattern.getNodes().addAll(nodes);
+	}
+
+	private void initializeAttributeConstraints(final EditorPattern pattern, final Set<EditorPattern> superPatterns) {
+		final List<EditorPatternAttributeCondition> attributeConditions = mergeAttributeConditions(pattern,
+				superPatterns);
 		flattenedPattern.getComplexAttributeConstraints().addAll(attributeConditions);
 	}
 
@@ -146,11 +157,9 @@ public class GTFlattener {
 	 * 
 	 * @param pattern       the pattern
 	 * @param superPatterns the super patterns of the pattern
-	 * @param parameters    the parameters of the flattened pattern
 	 * @return the merged nodes
 	 */
-	private List<EditorNode> mergeNodes(final EditorPattern pattern, final Set<EditorPattern> superPatterns,
-			final List<EditorParameter> parameters) {
+	private List<EditorNode> mergeNodes(final EditorPattern pattern, final Set<EditorPattern> superPatterns) {
 		// Collect nodes.
 		final List<EditorNode> collectedNodes = new ArrayList<>();
 		collectedNodes.addAll(EcoreUtil.copyAll(pattern.getNodes()));
@@ -313,7 +322,7 @@ public class GTFlattener {
 	}
 
 	private List<EditorPatternAttributeCondition> mergeAttributeConditions(final EditorPattern pattern,
-			final Set<EditorPattern> superPatterns, final List<EditorParameter> parameters) {
+			final Set<EditorPattern> superPatterns) {
 		final ArrayList<EditorPatternAttributeCondition> attributeConditions = new ArrayList<>();
 		attributeConditions.addAll(EcoreUtil.copyAll(pattern.getComplexAttributeConstraints()));
 		superPatterns.forEach(r -> attributeConditions.addAll(EcoreUtil.copyAll(r.getComplexAttributeConstraints())));
