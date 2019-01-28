@@ -1,10 +1,5 @@
 package org.emoflon.ibex.gt.editor.ui.wizard;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +17,11 @@ import org.eclipse.xtext.ui.wizard.AbstractPluginProjectCreator;
 import org.eclipse.xtext.ui.wizard.DefaultProjectInfo;
 import org.emoflon.ibex.gt.editor.ui.builder.GTNature;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+
 /**
  * Creator for Graph Transformation Projects.
  */
@@ -34,7 +34,7 @@ public class GTProjectCreator extends AbstractPluginProjectCreator {
 
 	@Override
 	protected PluginProjectFactory createProjectFactory() {
-		PluginProjectFactory projectFactory = super.createProjectFactory();
+		final PluginProjectFactory projectFactory = super.createProjectFactory();
 		projectFactory.setWithPluginXml(false);
 		return projectFactory;
 	}
@@ -56,14 +56,14 @@ public class GTProjectCreator extends AbstractPluginProjectCreator {
 
 	@Override
 	protected String[] getProjectNatures() {
-		ArrayList<String> natures = Lists.newArrayList(GTNature.NATURE_ID);
+		final ArrayList<String> natures = Lists.newArrayList(GTNature.NATURE_ID);
 		natures.addAll(Lists.newArrayList(super.getProjectNatures()));
 		return natures.toArray(new String[natures.size()]);
 	}
 
 	@Override
 	protected String[] getBuilders() {
-		ArrayList<String> builders = Lists.newArrayList(GTNature.getRequiredBuilders());
+		final ArrayList<String> builders = Lists.newArrayList(GTNature.getRequiredBuilders());
 		builders.addAll(Lists.newArrayList(super.getBuilders()));
 		return builders.toArray(new String[builders.size()]);
 	}
@@ -75,16 +75,16 @@ public class GTProjectCreator extends AbstractPluginProjectCreator {
 
 	@Override
 	protected void enhanceProject(final IProject project, final IProgressMonitor monitor) throws CoreException {
-		IFileSystemAccess2 access = getFileSystemAccess(project, monitor);
+		final IFileSystemAccess2 access = getFileSystemAccess(project, monitor);
 		initialContents.generateInitialContents(access, project);
 		project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 	}
 
 	protected IFileSystemAccess2 getFileSystemAccess(final IProject project, final IProgressMonitor monitor) {
-		EclipseResourceFileSystemAccess2 access = fileSystemAccessProvider.get();
+		final EclipseResourceFileSystemAccess2 access = fileSystemAccessProvider.get();
 		access.setContext(project);
 		access.setMonitor(monitor);
-		OutputConfiguration defaultOutput = new OutputConfiguration(IFileSystemAccess.DEFAULT_OUTPUT);
+		final OutputConfiguration defaultOutput = new OutputConfiguration(IFileSystemAccess.DEFAULT_OUTPUT);
 		defaultOutput.setDescription("Output Folder");
 		defaultOutput.setOutputDirectory("./");
 		defaultOutput.setOverrideExistingResources(true);
@@ -92,7 +92,7 @@ public class GTProjectCreator extends AbstractPluginProjectCreator {
 		defaultOutput.setCleanUpDerivedResources(false);
 		defaultOutput.setSetDerivedProperty(false);
 		defaultOutput.setKeepLocalHistory(false);
-		HashMap<String, OutputConfiguration> outputConfigurations = new HashMap<String, OutputConfiguration>();
+		final HashMap<String, OutputConfiguration> outputConfigurations = new HashMap<>();
 		outputConfigurations.put(IFileSystemAccess.DEFAULT_OUTPUT, defaultOutput);
 		access.setOutputConfigurations(outputConfigurations);
 		return access;

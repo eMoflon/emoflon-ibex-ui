@@ -12,15 +12,14 @@ import org.emoflon.ibex.gt.editor.gT.EditorSimpleCondition;
  * Utility class to flatten {@link EditorConditionReference}s.
  */
 public class GTConditionHelper {
-	private Set<EditorApplicationCondition> applicationConditions = new HashSet<EditorApplicationCondition>();
-	private Set<EditorCondition> visitedConditions = new HashSet<EditorCondition>();
+	private final Set<EditorApplicationCondition> applicationConditions = new HashSet<>();
+	private final Set<EditorCondition> visitedConditions = new HashSet<>();
 	private boolean hasIllegalReferences = false;
 
 	/**
 	 * Initializes a new GTConditionHelper for the given condition
 	 * 
-	 * @param condition
-	 *            the condition
+	 * @param condition the condition
 	 */
 	public GTConditionHelper(final EditorCondition condition) {
 		visit(condition);
@@ -29,7 +28,7 @@ public class GTConditionHelper {
 	private void visit(final EditorCondition condition) {
 		visitedConditions.add(condition);
 
-		for (EditorSimpleCondition c : condition.getConditions()) {
+		for (final EditorSimpleCondition c : condition.getConditions()) {
 			visit(c);
 		}
 	}
@@ -38,7 +37,7 @@ public class GTConditionHelper {
 		if (simpleCondition instanceof EditorApplicationCondition) {
 			applicationConditions.add((EditorApplicationCondition) simpleCondition);
 		} else if (simpleCondition instanceof EditorConditionReference) {
-			EditorCondition referencedCondition = ((EditorConditionReference) simpleCondition).getCondition();
+			final EditorCondition referencedCondition = ((EditorConditionReference) simpleCondition).getCondition();
 			if (visitedConditions.contains(referencedCondition)) {
 				hasIllegalReferences = true;
 			} else {

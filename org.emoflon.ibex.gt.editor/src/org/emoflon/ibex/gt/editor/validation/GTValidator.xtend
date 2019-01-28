@@ -104,7 +104,7 @@ class GTValidator extends AbstractGTValidator {
   public static val PATTERN_NAME_STARTS_WITH_LOWER_CASE_MESSAGE = "Pattern/rule '%s' should start with a lower case character."
 
   public static val PATTERN_TYPE_INVALID_PATTERN = CODE_PREFIX + "pattern.type.invalidConstraint"
-  public static val PATTERN_TYPE_INVALID_PATTERN_MESSAGE = "The pattern '%s' must not contain created or deleted elements."
+  public static val PATTERN_TYPE_INVALID_PATTERN_MESSAGE = "The pattern '%s' must contain neither created nor deleted elements, nor attribute value assignments."
 
   public static val PATTERN_TYPE_INVALID_RULE = CODE_PREFIX + "pattern.type.invalidRule"
   public static val PATTERN_TYPE_INVALID_RULE_MESSAGE = "The rule '%s' must contain at least one created or deleted element."
@@ -904,7 +904,7 @@ class GTValidator extends AbstractGTValidator {
           CONDITION_PATTERN_INVALID_PARAMETERS
         )
       } else {
-        // Patterns in conditons must not have more than one condition.
+        // Patterns in conditions must not have more than one condition.
         if (pattern.conditions.size > 1) {
           error(
             String.format(CONDITION_PATTERN_INVALID_CONDITIONS_MESSAGE, pattern.name),

@@ -42,7 +42,8 @@ public class GTBuilder extends IncrementalProjectBuilder {
 	private IFolder srcFolder;
 
 	@Override
-	protected IProject[] build(int kind, Map<String, String> args, IProgressMonitor monitor) throws CoreException {
+	protected IProject[] build(final int kind, final Map<String, String> args, final IProgressMonitor monitor)
+			throws CoreException {
 		srcFolder = getProject().getFolder(SOURCE_FOLDER);
 		if (!srcFolder.exists()) {
 			log("src folder is missing");
@@ -89,8 +90,7 @@ public class GTBuilder extends IncrementalProjectBuilder {
 	/**
 	 * Performs a build for the given packages.
 	 * 
-	 * @param packages
-	 *            the packages to build
+	 * @param packages the packages to build
 	 */
 	private void buildPackages(final Set<IPath> packages) {
 		packages.forEach(packagePath -> runBuilderExtensions(ext -> ext.run(getProject(), packagePath)));
@@ -99,13 +99,12 @@ public class GTBuilder extends IncrementalProjectBuilder {
 	/**
 	 * Runs the registered GTBuilderExtensions for the package.
 	 * 
-	 * @param action
-	 *            the method to call on the builder extension
+	 * @param action the method to call on the builder extension
 	 */
 	private void runBuilderExtensions(final Consumer<GTBuilderExtension> action) {
-		ISafeRunnable runnable = new ISafeRunnable() {
+		final ISafeRunnable runnable = new ISafeRunnable() {
 			@Override
-			public void handleException(Throwable e) {
+			public void handleException(final Throwable e) {
 				logError(e.getMessage());
 			}
 
@@ -136,13 +135,12 @@ public class GTBuilder extends IncrementalProjectBuilder {
 	/**
 	 * Determines the folders containing .gt files in the given delta.
 	 * 
-	 * @param delta
-	 *            the delta
+	 * @param delta the delta
 	 * @return the package paths affected by the delta
 	 */
 	private Set<IPath> getPackagesFromDelta(final IResourceDelta delta) {
-		Set<IPath> paths = new HashSet<IPath>();
-		IResource resource = delta.getResource();
+		final Set<IPath> paths = new HashSet<>();
+		final IResource resource = delta.getResource();
 		if (resource.getType() == IResource.FOLDER) {
 			Arrays.stream(delta.getAffectedChildren()).forEach(c -> {
 				paths.addAll(getPackagesFromDelta(c));
@@ -157,8 +155,7 @@ public class GTBuilder extends IncrementalProjectBuilder {
 	/**
 	 * Checks whether the given resource delta contains at least one gt file.
 	 * 
-	 * @param delta
-	 *            the resources delta
+	 * @param delta the resources delta
 	 * @return true if a gt file is found
 	 */
 	private static boolean isRulePackage(final IResourceDelta[] delta) {
@@ -170,16 +167,15 @@ public class GTBuilder extends IncrementalProjectBuilder {
 	/**
 	 * Determines the folders in the given container which contain .gt files.
 	 * 
-	 * @param container
-	 *            the container to check for folders
+	 * @param container the container to check for folders
 	 * @return the package paths in the container which contain .gt files
 	 */
 	private Set<IPath> findFolders(final IContainer container) {
-		Set<IPath> set = new HashSet<IPath>();
+		final Set<IPath> set = new HashSet<>();
 		IResource[] members;
 		try {
 			members = container.members();
-		} catch (Throwable e) {
+		} catch (final Throwable e) {
 			logError(e.getMessage());
 			return set;
 		}
@@ -195,8 +191,7 @@ public class GTBuilder extends IncrementalProjectBuilder {
 	/**
 	 * Checks whether the given resources contain at least one gt file.
 	 * 
-	 * @param members
-	 *            the resources to search
+	 * @param members the resources to search
 	 * @return true if a gt file is found
 	 */
 	private static boolean isRulePackage(final IResource[] members) {

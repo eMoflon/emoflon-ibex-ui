@@ -10,10 +10,11 @@ import java.util.Set;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute;
-import org.emoflon.ibex.gt.editor.gT.EditorOperator;
 import org.emoflon.ibex.gt.editor.gT.EditorNode;
+import org.emoflon.ibex.gt.editor.gT.EditorOperator;
 import org.emoflon.ibex.gt.editor.gT.EditorParameter;
 import org.emoflon.ibex.gt.editor.gT.EditorPattern;
+import org.emoflon.ibex.gt.editor.gT.EditorPatternAttributeCondition;
 import org.emoflon.ibex.gt.editor.gT.EditorReference;
 import org.emoflon.ibex.gt.editor.gT.GTFactory;
 
@@ -29,13 +30,12 @@ public class GTFlattener {
 	/**
 	 * The errors occurred during flattening.
 	 */
-	private List<String> errors = new ArrayList<String>();
+	private final List<String> errors = new ArrayList<>();
 
 	/**
 	 * Creates a flattened version of the given pattern.
 	 * 
-	 * @param pattern
-	 *            the pattern
+	 * @param pattern the pattern
 	 */
 	public GTFlattener(final EditorPattern pattern) {
 		// Early return if there's nothing to flatten.
@@ -44,31 +44,43 @@ public class GTFlattener {
 			return;
 		}
 
-		Set<EditorPattern> superPatterns = GTEditorPatternUtils.getAllSuperPatterns(pattern);
-		List<EditorParameter> parameters = mergeParameters(pattern, superPatterns);
-		List<EditorNode> nodes = mergeNodes(pattern, superPatterns, parameters);
-		createFlattenedPattern(pattern, parameters, nodes);
+		createFlattenedPattern(pattern);
 	}
 
 	/**
 	 * Creates the flattened pattern.
 	 * 
-	 * @param pattern
-	 *            the original pattern
-	 * @param parameters
-	 *            the parameters
-	 * @param nodes
-	 *            the nodes
+	 * @param pattern             the original pattern
+	 * @param attributeConditions
 	 */
-	private void createFlattenedPattern(final EditorPattern pattern, final List<EditorParameter> parameters,
-			final List<EditorNode> nodes) {
+	private void createFlattenedPattern(final EditorPattern pattern) {
+
+		final Set<EditorPattern> superPatterns = GTEditorPatternUtils.getAllSuperPatterns(pattern);
+
 		flattenedPattern = GTFactory.eINSTANCE.createEditorPattern();
 		flattenedPattern.setAbstract(pattern.isAbstract());
 		flattenedPattern.setType(pattern.getType());
 		flattenedPattern.setName(pattern.getName());
-		flattenedPattern.getParameters().addAll(parameters);
-		flattenedPattern.getNodes().addAll(nodes);
+		initializeParameters(pattern, superPatterns);
+		initializeNodes(pattern, superPatterns);
 		flattenedPattern.getConditions().addAll(pattern.getConditions());
+		initializeAttributeConstraints(pattern, superPatterns);
+	}
+
+	private void initializeParameters(final EditorPattern pattern, final Set<EditorPattern> superPatterns) {
+		final List<EditorParameter> parameters = mergeParameters(pattern, superPatterns);
+		flattenedPattern.getParameters().addAll(parameters);
+	}
+
+	private void initializeNodes(final EditorPattern pattern, final Set<EditorPattern> superPatterns) {
+		final List<EditorNode> nodes = mergeNodes(pattern, superPatterns);
+		flattenedPattern.getNodes().addAll(nodes);
+	}
+
+	private void initializeAttributeConstraints(final EditorPattern pattern, final Set<EditorPattern> superPatterns) {
+		final List<EditorPatternAttributeCondition> attributeConditions = mergeAttributeConditions(pattern,
+				superPatterns);
+		flattenedPattern.getComplexAttributeConstraints().addAll(attributeConditions);
 	}
 
 	/**
@@ -102,15 +114,13 @@ public class GTFlattener {
 	 * Merges the given parameters based on the convention that parameters with the
 	 * same name must be equal.
 	 * 
-	 * @param pattern
-	 *            the pattern
-	 * @param superPatterns
-	 *            the super patterns of the pattern
+	 * @param pattern       the pattern
+	 * @param superPatterns the super patterns of the pattern
 	 * @return the merged parameters
 	 */
 	private List<EditorParameter> mergeParameters(final EditorPattern pattern, final Set<EditorPattern> superPatterns) {
-		List<EditorParameter> parameters = new ArrayList<EditorParameter>();
-		Map<String, EditorParameter> parameterNameToParameter = new HashMap<String, EditorParameter>();
+		final List<EditorParameter> parameters = new ArrayList<>();
+		final Map<String, EditorParameter> parameterNameToParameter = new HashMap<>();
 		addParametersFromPattern(pattern, parameters, parameterNameToParameter);
 		superPatterns.forEach(r -> addParametersFromPattern(r, parameters, parameterNameToParameter));
 		return parameters;
@@ -119,24 +129,22 @@ public class GTFlattener {
 	/**
 	 * Adds the parameters of the given pattern.
 	 * 
-	 * @param pattern
-	 *            the pattern whose parameters to add
-	 * @param parameters
-	 *            the parameters (in order of adding to the list)
-	 * @param parameterNameToParameter
-	 *            the mapping between names and parameters
+	 * @param pattern                  the pattern whose parameters to add
+	 * @param parameters               the parameters (in order of adding to the
+	 *                                 list)
+	 * @param parameterNameToParameter the mapping between names and parameters
 	 */
 	private void addParametersFromPattern(final EditorPattern pattern, final List<EditorParameter> parameters,
 			final Map<String, EditorParameter> parameterNameToParameter) {
 		for (final EditorParameter parameter : pattern.getParameters()) {
 			if (parameterNameToParameter.containsKey(parameter.getName())) {
-				EDataType typeOfExistingParameter = parameterNameToParameter.get(parameter.getName()).getType();
+				final EDataType typeOfExistingParameter = parameterNameToParameter.get(parameter.getName()).getType();
 				if (!typeOfExistingParameter.equals(parameter.getType())) {
 					errors.add(String.format("Inconsistent type declarations for parameter %s: %s and %s.",
 							parameter.getName(), typeOfExistingParameter.getName(), parameter.getType().getName()));
 				}
 			} else {
-				EditorParameter copy = EcoreUtil.copy(parameter);
+				final EditorParameter copy = EcoreUtil.copy(parameter);
 				parameterNameToParameter.put(parameter.getName(), copy);
 				parameters.add(copy);
 			}
@@ -147,26 +155,21 @@ public class GTFlattener {
 	 * Merged the given nodes based on the convention that nodes with the same name
 	 * are equal.
 	 * 
-	 * @param pattern
-	 *            the pattern
-	 * @param superPatterns
-	 *            the super patterns of the pattern
-	 * @param parameters
-	 *            the parameters of the flattened pattern
+	 * @param pattern       the pattern
+	 * @param superPatterns the super patterns of the pattern
 	 * @return the merged nodes
 	 */
-	private List<EditorNode> mergeNodes(final EditorPattern pattern, final Set<EditorPattern> superPatterns,
-			final List<EditorParameter> parameters) {
+	private List<EditorNode> mergeNodes(final EditorPattern pattern, final Set<EditorPattern> superPatterns) {
 		// Collect nodes.
-		List<EditorNode> collectedNodes = new ArrayList<EditorNode>();
+		final List<EditorNode> collectedNodes = new ArrayList<>();
 		collectedNodes.addAll(EcoreUtil.copyAll(pattern.getNodes()));
 		superPatterns.forEach(r -> collectedNodes.addAll(EcoreUtil.copyAll(r.getNodes())));
 
 		// Merge nodes with the same name.
-		Map<String, EditorNode> nodeNameToNode = mergeNodesOfTheSameName(collectedNodes);
+		final Map<String, EditorNode> nodeNameToNode = mergeNodesOfTheSameName(collectedNodes);
 
 		// Cleanup reference targets.
-		List<EditorNode> nodes = new ArrayList<EditorNode>(nodeNameToNode.values());
+		final List<EditorNode> nodes = new ArrayList<>(nodeNameToNode.values());
 		cleanupNodes(nodes, nodeNameToNode);
 		return nodes;
 	}
@@ -174,12 +177,11 @@ public class GTFlattener {
 	/**
 	 * Merges nodes of the same name.
 	 * 
-	 * @param collectedNodes
-	 *            the nodes to merge
+	 * @param collectedNodes the nodes to merge
 	 * @return a map node name -> node
 	 */
 	private Map<String, EditorNode> mergeNodesOfTheSameName(final List<EditorNode> collectedNodes) {
-		Map<String, EditorNode> nodeNameToNode = new HashMap<String, EditorNode>();
+		final Map<String, EditorNode> nodeNameToNode = new HashMap<>();
 		for (final EditorNode node : collectedNodes) {
 			if (nodeNameToNode.containsKey(node.getName())) {
 				mergeTwoNodes(nodeNameToNode.get(node.getName()), node);
@@ -193,10 +195,8 @@ public class GTFlattener {
 	/**
 	 * Sets the reference targets of all nodes to the correct node from the map.
 	 * 
-	 * @param nodes
-	 *            the nodes
-	 * @param nodeNameToNode
-	 *            the mapping between node names and nodes
+	 * @param nodes          the nodes
+	 * @param nodeNameToNode the mapping between node names and nodes
 	 */
 	private void cleanupNodes(final List<EditorNode> nodes, final Map<String, EditorNode> nodeNameToNode) {
 		nodes.stream().flatMap(node -> node.getReferences().stream()) //
@@ -208,10 +208,8 @@ public class GTFlattener {
 	/**
 	 * Merged the given nodes.
 	 * 
-	 * @param node
-	 *            the node
-	 * @param mergedNode
-	 *            the node merged into the other node
+	 * @param node       the node
+	 * @param mergedNode the node merged into the other node
 	 */
 	private void mergeTwoNodes(final EditorNode node, final EditorNode mergedNode) {
 		mergeTypesOfNodes(node, mergedNode);
@@ -223,10 +221,8 @@ public class GTFlattener {
 	/**
 	 * Merges the type of the second node with the one of the first one.
 	 * 
-	 * @param node
-	 *            the node
-	 * @param mergedNode
-	 *            the node merged into the other node
+	 * @param node       the node
+	 * @param mergedNode the node merged into the other node
 	 */
 	private void mergeTypesOfNodes(final EditorNode node, final EditorNode mergedNode) {
 		if (node.getType() == null && mergedNode.getType() == null) {
@@ -242,13 +238,11 @@ public class GTFlattener {
 	/**
 	 * Merges the operators of the given nodes if possible.
 	 * 
-	 * @param node
-	 *            the node
-	 * @param mergedNode
-	 *            the node merged into the first one
+	 * @param node       the node
+	 * @param mergedNode the node merged into the first one
 	 */
 	private void mergeOperatorsOfNodes(final EditorNode node, final EditorNode mergedNode) {
-		Optional<EditorOperator> operator = GTFlatteningUtils.mergedOperators(node.getOperator(),
+		final Optional<EditorOperator> operator = GTFlatteningUtils.mergedOperators(node.getOperator(),
 				mergedNode.getOperator());
 		if (operator.isPresent()) {
 			node.setOperator(operator.get());
@@ -262,13 +256,11 @@ public class GTFlattener {
 	 * Merges the attribute constraints of the second node into the attributes of
 	 * the first node.
 	 * 
-	 * @param node
-	 *            the node
-	 * @param mergedNode
-	 *            the node merged into the first one
+	 * @param node       the node
+	 * @param mergedNode the node merged into the first one
 	 */
 	private void mergeAttributesOfNodes(final EditorNode node, final EditorNode mergedNode) {
-		for (EditorAttribute mergedAttribute : mergedNode.getAttributes()) {
+		for (final EditorAttribute mergedAttribute : mergedNode.getAttributes()) {
 			mergeAttribute(node, mergedAttribute);
 		}
 	}
@@ -276,13 +268,11 @@ public class GTFlattener {
 	/**
 	 * Merges the attribute into the attributes of the node.
 	 * 
-	 * @param node
-	 *            the node
-	 * @param mergedAttribute
-	 *            the attribute to merge
+	 * @param node            the node
+	 * @param mergedAttribute the attribute to merge
 	 */
 	private void mergeAttribute(final EditorNode node, final EditorAttribute mergedAttribute) {
-		Optional<EditorAttribute> attribute = node.getAttributes().stream()
+		final Optional<EditorAttribute> attribute = node.getAttributes().stream()
 				.filter(a -> GTEditorAttributeComparator.areAttributeConstraintsEqual(a, mergedAttribute)).findAny();
 		if (!attribute.isPresent()) {
 			if (GTFlatteningUtils.hasConflictingAssignment(node, mergedAttribute)) {
@@ -298,13 +288,11 @@ public class GTFlattener {
 	 * Merges the references of the second node into the references of the first
 	 * node.
 	 * 
-	 * @param node
-	 *            the node
-	 * @param mergedNode
-	 *            the node merged into the first one
+	 * @param node       the node
+	 * @param mergedNode the node merged into the first one
 	 */
 	private void mergeReferencesOfNodes(final EditorNode node, final EditorNode mergedNode) {
-		for (EditorReference mergedReference : mergedNode.getReferences()) {
+		for (final EditorReference mergedReference : mergedNode.getReferences()) {
 			mergeReference(node, mergedReference);
 		}
 	}
@@ -312,17 +300,15 @@ public class GTFlattener {
 	/**
 	 * Merges the reference into the references of the node.
 	 * 
-	 * @param node
-	 *            the node
-	 * @param mergedReference
-	 *            the reference to merge
+	 * @param node            the node
+	 * @param mergedReference the reference to merge
 	 */
 	private void mergeReference(final EditorNode node, final EditorReference mergedReference) {
-		Optional<EditorReference> referenceInNode = node.getReferences().stream()
+		final Optional<EditorReference> referenceInNode = node.getReferences().stream()
 				.filter(r -> GTEditorAttributeComparator.areReferencesEqual(r, mergedReference)).findAny();
 		if (referenceInNode.isPresent()) {
-			Optional<EditorOperator> operator = GTFlatteningUtils.mergedOperators(referenceInNode.get().getOperator(),
-					mergedReference.getOperator());
+			final Optional<EditorOperator> operator = GTFlatteningUtils
+					.mergedOperators(referenceInNode.get().getOperator(), mergedReference.getOperator());
 			if (operator.isPresent()) {
 				referenceInNode.get().setOperator(operator.get());
 			} else {
@@ -333,5 +319,13 @@ public class GTFlattener {
 		} else {
 			node.getReferences().add(EcoreUtil.copy(mergedReference));
 		}
+	}
+
+	private List<EditorPatternAttributeCondition> mergeAttributeConditions(final EditorPattern pattern,
+			final Set<EditorPattern> superPatterns) {
+		final ArrayList<EditorPatternAttributeCondition> attributeConditions = new ArrayList<>();
+		attributeConditions.addAll(EcoreUtil.copyAll(pattern.getComplexAttributeConstraints()));
+		superPatterns.forEach(r -> attributeConditions.addAll(EcoreUtil.copyAll(r.getComplexAttributeConstraints())));
+		return attributeConditions;
 	}
 }
