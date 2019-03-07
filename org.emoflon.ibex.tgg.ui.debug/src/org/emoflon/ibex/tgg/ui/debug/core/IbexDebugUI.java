@@ -75,7 +75,9 @@ public class IbexDebugUI implements Runnable {
 	matchListView.registerMatchDisplayView(matchDisplayView);
 
 	controller = new IbexController(matchListView);
-	notify();
+	synchronized (this) {
+	    notify();
+	}
 
 	shell.open();
 	while (!shell.isDisposed())
