@@ -15,7 +15,7 @@ public class IbexController implements IMatchChooser {
 
     @Override
     public IMatch chooseOneMatch(ImmutableMatchContainer pMatchContainer) {
-	IbexDebugUI.DISPLAY.syncExec(() -> matchListView.display(pMatchContainer.getMatches()));
+	IbexDebugUI.getDisplay().syncExec(() -> matchListView.display(pMatchContainer.getMatches()));
 
 	return matchListView.getChosenMatch();
     }

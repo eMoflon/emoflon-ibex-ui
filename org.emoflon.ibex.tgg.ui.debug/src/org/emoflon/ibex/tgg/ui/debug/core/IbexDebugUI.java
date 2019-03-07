@@ -11,7 +11,7 @@ import net.miginfocom.swt.MigLayout;
 public class IbexDebugUI implements Runnable {
 
     private static Thread uiThread;
-    public static final Display DISPLAY = new Display();
+    private static Display display;
 
     /**
      * Creates, starts and returns a new IBeX debugging UI.<br>
@@ -30,6 +30,10 @@ public class IbexDebugUI implements Runnable {
 	uiThread.start();
 
 	return ibexDebugUI;
+    }
+
+    public static Display getDisplay() {
+	return display;
     }
 
     // -----------------------------------
@@ -59,7 +63,8 @@ public class IbexDebugUI implements Runnable {
 
     @Override
     public void run() {
-	Shell shell = new Shell(DISPLAY);
+	display = new Display();
+	Shell shell = new Shell(display);
 	shell.setLayout(new MigLayout("fill", "[30%][70%]"));
 
 	matchListView = MatchListView.create(shell);
@@ -74,8 +79,8 @@ public class IbexDebugUI implements Runnable {
 
 	shell.open();
 	while (!shell.isDisposed())
-	    if (!DISPLAY.readAndDispatch())
-		DISPLAY.sleep();
-	DISPLAY.dispose();
+	    if (!display.readAndDispatch())
+		display.sleep();
+	display.dispose();
     }
 }
