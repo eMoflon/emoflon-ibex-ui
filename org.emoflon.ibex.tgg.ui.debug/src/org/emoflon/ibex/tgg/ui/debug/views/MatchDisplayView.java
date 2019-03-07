@@ -1,4 +1,4 @@
-package views;
+package org.emoflon.ibex.tgg.ui.debug.views;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

@@ -1,10 +1,9 @@
-package core;
+package org.emoflon.ibex.tgg.ui.debug.core;
 
 import org.emoflon.ibex.tgg.operational.matches.IMatch;
 import org.emoflon.ibex.tgg.operational.matches.ImmutableMatchContainer;
 import org.emoflon.ibex.tgg.operational.monitoring.VictoryMonitor.IMatchChooser;
-
-import views.MatchListView;
+import org.emoflon.ibex.tgg.ui.debug.views.MatchListView;
 
 public class IbexController implements IMatchChooser {
 

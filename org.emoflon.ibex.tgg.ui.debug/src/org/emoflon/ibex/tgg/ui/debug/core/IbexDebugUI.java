@@ -1,12 +1,12 @@
-package core;
+package org.emoflon.ibex.tgg.ui.debug.core;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.emoflon.ibex.tgg.operational.monitoring.VictoryMonitor.IMatchChooser;
+import org.emoflon.ibex.tgg.ui.debug.views.MatchDisplayView;
+import org.emoflon.ibex.tgg.ui.debug.views.MatchListView;
 
 import net.miginfocom.swt.MigLayout;
-import views.MatchDisplayView;
-import views.MatchListView;
 
 public class IbexDebugUI implements Runnable {
 
