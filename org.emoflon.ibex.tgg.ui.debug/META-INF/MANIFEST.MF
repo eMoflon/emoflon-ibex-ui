@@ -3,35 +3,13 @@ Bundle-SymbolicName: org.emoflon.ibex.tgg.ui.debug;singleton:=true
 Bundle-Name: eMoflon::IBeX Victory Debugger
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: eMoflon::IBeX Developers
-Require-Bundle: com.google.guava,
- org.apache.log4j,
- org.eclipse.core.commands,
- org.eclipse.core.resources,
- org.eclipse.core.runtime,
- org.eclipse.e4.core.di,
- org.eclipse.emf.ecore,
- org.eclipse.emf.ecore.editor,
- org.eclipse.emf.ecore.xmi,
- org.eclipse.jdt.core,
- org.eclipse.jdt.ui,
- org.eclipse.jface,
- org.eclipse.pde.core,
- org.eclipse.ui.workbench,
- org.eclipse.xtend.lib,
- org.eclipse.xtend.lib.macro,
- org.eclipse.xtext,
- org.eclipse.xtext.ui,
- org.eclipse.xtext.xbase.lib,
- org.emoflon.ibex.common.editor.utils,
- org.emoflon.ibex.tgg.editor,
- org.moflon.core.plugins,
- org.moflon.core.ui,
- org.moflon.core.utilities,
- org.eclipse.swt.win32.win32.x86_64.source;bundle-version="3.106.3",
- net.sourceforge.plantuml.lib;bundle-version="1.2018.9"
+Require-Bundle: net.sourceforge.plantuml.lib;visibility:=reexport,
+ com.google.guava,
+ org.eclipse.swt;visibility:=reexport
 Bundle-ManifestVersion: 2
 Bundle-ActivationPolicy: lazy
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ lib/miglayout-4.0.jar
 Export-Package: org.emoflon.ibex.tgg.ui.debug.core,
  org.emoflon.ibex.tgg.ui.debug.views
 Automatic-Module-Name: org.emoflon.ibex.tgg.ide
