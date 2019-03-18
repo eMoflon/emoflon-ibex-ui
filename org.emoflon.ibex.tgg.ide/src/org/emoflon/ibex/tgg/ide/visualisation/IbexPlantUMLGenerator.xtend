@@ -23,7 +23,7 @@ import org.moflon.core.ui.visualisation.EMoflonPlantUMLGenerator
 import org.moflon.core.utilities.WorkspaceHelper
 
 class IbexPlantUMLGenerator {
-
+ 
 	def static String visualiseTGGFile(TripleGraphGrammarFile file, String selected) {
 		val chosenRule = file.rules.filter[r|r.name.equals(selected)]
 		if (chosenRule.length == 1) {
