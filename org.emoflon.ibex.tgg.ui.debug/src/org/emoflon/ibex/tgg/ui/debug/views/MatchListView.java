@@ -113,6 +113,8 @@ public class MatchListView extends Composite {
 	// TODO make sure this is correctly disposing of everything
 	// Do I need to dispose of the TreeItems recursively manually?
 	treeView.removeAll();
+	ruleItems.clear();
+	matchItems.clear();
 
 	if (pMatches == null)
 	    return;
