@@ -2,27 +2,30 @@ package org.emoflon.ibex.tgg.ui.debug.core;
 
 import org.emoflon.ibex.tgg.operational.matches.IMatch;
 import org.emoflon.ibex.tgg.operational.matches.ImmutableMatchContainer;
-import org.emoflon.ibex.tgg.operational.monitoring.VictoryMonitor.IMatchChooser;
+import org.emoflon.ibex.tgg.operational.monitoring.IbexController;
 import org.emoflon.ibex.tgg.ui.debug.views.MatchListView;
 
-public class IbexController implements IMatchChooser {
+public class UIController extends IbexController {
 
     private MatchListView matchListView; // TODO convert to interface
 
-    public IbexController(MatchListView pMatchListView) {
+    public UIController(MatchListView pMatchListView) {
 	matchListView = pMatchListView;
     }
 
     @Override
     public IMatch chooseOneMatch(ImmutableMatchContainer pMatchContainer) {
-	IbexDebugUI.getDisplay().syncExec(() -> matchListView.display(pMatchContainer.getMatches()));
+	// CONCURRENCY: Ibex thread only
+
+	IbexDebugUI.getDisplay().syncExec(() -> matchListView.populate(pMatchContainer.getMatches()));
 
 	return matchListView.getChosenMatch();
     }
 
     @Override
-    public void matchHasBeenApplied(IMatch match) {
-	// don't care about this yet
-	// TODO implement later
+    public void update(ObservableEvent eventType, Object... additionalInformation) {
+	// CONCURRENCY: Ibex thread only
+
+	// TODO implement
     }
 }

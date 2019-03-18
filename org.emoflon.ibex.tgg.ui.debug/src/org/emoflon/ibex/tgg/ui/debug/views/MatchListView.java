@@ -18,7 +18,7 @@ import net.miginfocom.swt.MigLayout;
 
 public class MatchListView extends Composite {
 
-    private MatchDisplayView matchDisplayView;
+    private IVisualiser visualiser;
 
     private Tree treeView;
     private Button applyButton;
@@ -31,6 +31,8 @@ public class MatchListView extends Composite {
     private MatchListView(Composite pParent) {
 	super(pParent, SWT.NONE);
 
+	registerVisualiser(null);
+
 	ruleItems = HashBiMap.create();
 	matchItems = HashBiMap.create();
     }
@@ -41,38 +43,20 @@ public class MatchListView extends Composite {
 	treeView = new Tree(this, SWT.BORDER | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.SINGLE);
 	treeView.setLayoutData("grow");
 
-	// begin test code
-	for (int i = 0; i < 5; i++) {
-	    TreeItem item = new TreeItem(treeView, SWT.NONE);
-	    item.setText(String.valueOf(i));
-	    for (int j = 0; j < 3; j++) {
-		TreeItem subItem = new TreeItem(item, SWT.NONE);
-		subItem.setText(String.valueOf(i) + " " + String.valueOf(j));
-	    }
-	}
-	// end test code
-
 	treeView.addSelectionListener(new SelectionAdapter() {
 	    @Override
 	    public void widgetSelected(SelectionEvent pSelectionEvent) {
 
-		// begin test code
-		if (matchDisplayView != null) {
-		    String source = "@startuml\n";
-		    source += "Bob -> Alice : ";
-		    source += treeView.getSelection()[0].getText() + "\n";
-		    source += "@enduml\n";
-		    matchDisplayView.display(source);
-		}
-		// end test code
+		TreeItem selectedItem = treeView.getSelection()[0];
 
-		// TreeItem selectedItem = treeView.getSelection()[0];
-		// if (matchDisplayView != null) {
-		// String source = null; // TODO build source String
-		// matchDisplayView.display(source);
-		// }
-		//
-		// applyButton.setEnabled(matchItems.containsValue(selectedItem));
+		if (ruleItems.containsValue(selectedItem)) {
+		    visualiser.display(ruleItems.inverse().get(selectedItem));
+
+		} else if (matchItems.containsValue(selectedItem)) {
+		    applyButton.setEnabled(matchItems.containsValue(selectedItem));
+
+		    visualiser.display(matchItems.inverse().get(selectedItem));
+		}
 	    }
 	});
 	treeView.pack();
@@ -103,15 +87,21 @@ public class MatchListView extends Composite {
 	return new MatchListView(pParent).build();
     }
 
-    public void registerMatchDisplayView(MatchDisplayView pMatchDisplayView) {
-	matchDisplayView = pMatchDisplayView;
+    public void registerVisualiser(IVisualiser pVisualiser) {
+	if (pVisualiser == null)
+	    visualiser = new IVisualiser() {
+	    };
+	else
+	    visualiser = pVisualiser;
     }
 
-    // TODO get test data to try this out
-    public void display(Collection<IMatch> pMatches) {
-
-	// TODO make sure this is correctly disposing of everything
-	// Do I need to dispose of the TreeItems recursively manually?
+    /**
+     * Populates the list-view with the given collection of matches.
+     * 
+     * @param pMatches
+     *            the collection of matches to populate the list-view with
+     */
+    public void populate(Collection<IMatch> pMatches) {
 	treeView.removeAll();
 	ruleItems.clear();
 	matchItems.clear();
