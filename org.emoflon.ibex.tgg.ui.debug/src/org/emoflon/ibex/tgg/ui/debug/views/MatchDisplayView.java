@@ -53,18 +53,28 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	if (rule == null)
 	    throw new IllegalArgumentException("Unknown rule");
 
+	displayPlantUMLString(VictoryPlantUMLGenerator.visualiseTGGRule(rule));
+    }
+
+    @Override
+    public void display(IMatch pMatch) {
+
+	TGGRule rule = dataProvider.getRule(pMatch.getRuleName());
+
+	if (rule == null)
+	    throw new IllegalArgumentException("Unknown rule");
+
+	displayPlantUMLString(VictoryPlantUMLGenerator.visualiseMatch(pMatch, rule));
+    }
+
+    private void displayPlantUMLString(String pPlantUMLString) {
 	ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 	try {
-	    new SourceStringReader(VictoryPlantUMLGenerator.visualiseTGGRule(rule)).outputImage(outputStream);
+	    new SourceStringReader(pPlantUMLString).outputImage(outputStream);
 	} catch (IOException pIOE) {
 	    // TODO what do I do here?
 	}
 
 	imageContainer.setImage(new Image(Display.getCurrent(), new ByteArrayInputStream(outputStream.toByteArray())));
-    }
-
-    @Override
-    public void display(IMatch pMatch) {
-	// TODO
     }
 }
