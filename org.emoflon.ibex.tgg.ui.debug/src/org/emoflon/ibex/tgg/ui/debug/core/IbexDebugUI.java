@@ -2,8 +2,8 @@ package org.emoflon.ibex.tgg.ui.debug.core;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.emoflon.ibex.tgg.operational.monitoring.IbexController;
 import org.emoflon.ibex.tgg.operational.monitoring.IVictoryDataProvider;
+import org.emoflon.ibex.tgg.operational.monitoring.IbexController;
 import org.emoflon.ibex.tgg.ui.debug.views.MatchDisplayView;
 import org.emoflon.ibex.tgg.ui.debug.views.MatchListView;
 
@@ -11,7 +11,6 @@ import net.miginfocom.swt.MigLayout;
 
 public class IbexDebugUI implements Runnable {
 
-    private static Thread uiThread;
     private static Display display;
 
     private IbexDebugUI(IVictoryDataProvider pDataProvider) {
@@ -19,20 +18,28 @@ public class IbexDebugUI implements Runnable {
     }
 
     /**
-     * Creates, starts and returns a new IBeX debugging UI.<br>
-     * Note that the debugging UI is automatically started on its own thread. No
-     * further initialization is required.
+     * Creates and returns a new IBeX debugging UI.
+     * <p>
+     * If the <code>pRunOnNewThread</code> flag is set to <code>true</code>, then
+     * the debugging UI is automatically started on its own thread. No further
+     * initialization is required.
+     * <p>
+     * If the flag is set to false, then the UI needs to be specifically started by
+     * calling {@link IbexDebugUI#run()}. Note that the UI will use the calling
+     * thread as its event loop, thereby blocking any execution of other statements
+     * until the UI is closed.
      * 
      * @return the IBeX debugging UI that was created
      */
-    public static IbexDebugUI create(IVictoryDataProvider pDataProvider) {
-	if (uiThread != null)
-	    throw new IllegalStateException("UI thread is already running");
-
+    public static IbexDebugUI create(IVictoryDataProvider pDataProvider, boolean pRunOnNewThread) {
 	IbexDebugUI ibexDebugUI = new IbexDebugUI(pDataProvider);
-	uiThread = new Thread(ibexDebugUI);
-	uiThread.setName("IbexDebugUI - SWT UI thread");
-	uiThread.start();
+	if (pRunOnNewThread) {
+	    Thread uiThread = new Thread(ibexDebugUI);
+	    uiThread.setName("IbexDebugUI - SWT UI thread");
+	    uiThread.start();
+	} else {
+	    Thread.currentThread().setName("IbexDebugUI - SWT UI thread");
+	}
 
 	return ibexDebugUI;
     }
