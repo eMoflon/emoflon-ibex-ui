@@ -23,23 +23,29 @@ class VictoryPlantUMLGenerator {
 			@startuml
 			«EMoflonPlantUMLGenerator.plantUMLPreamble»
 
-			together {
-				«FOR node : nodeGroupMap.get(DomainType.SRC)»
-					«visualiseRuleNode(nodeIdMap.get(node), bindingToColour(node.bindingType), node.domainType)»
-				«ENDFOR»
-			}
+			«IF nodeGroupMap.containsKey(DomainType.SRC)»
+				together {
+					«FOR node : nodeGroupMap.get(DomainType.SRC)»
+						«visualiseRuleNode(nodeIdMap.get(node), bindingToColour(node.bindingType), node.domainType)»
+					«ENDFOR»
+				}
+			«ENDIF»
 
-			together {
-				«FOR node : nodeGroupMap.get(DomainType.TRG)»
-					«visualiseRuleNode(nodeIdMap.get(node), bindingToColour(node.bindingType), node.domainType)»
+			«IF nodeGroupMap.containsKey(DomainType.TRG)»
+				together {
+					«FOR node : nodeGroupMap.get(DomainType.TRG)»
+						«visualiseRuleNode(nodeIdMap.get(node), bindingToColour(node.bindingType), node.domainType)»
+					«ENDFOR»
+				}
+			«ENDIF»
+
+			«IF nodeGroupMap.containsKey(DomainType.CORR)»
+				«FOR node : nodeGroupMap.get(DomainType.CORR)»
+					«val corrNode = node as TGGRuleCorr»
+					«visualiseRuleCorrEdge(nodeIdMap.get(corrNode.source), nodeIdMap.get(corrNode.target), corrNode.type.name, corrNode.bindingType === BindingType.CREATE)»
 				«ENDFOR»
-			}
-			
-			«FOR node : nodeGroupMap.get(DomainType.CORR)»
-				«val corrNode = node as TGGRuleCorr»
-				«visualiseRuleCorrEdge(nodeIdMap.get(corrNode.source), nodeIdMap.get(corrNode.target), corrNode.type.name, corrNode.bindingType === BindingType.CREATE)»
-			«ENDFOR»
-			
+			«ENDIF»
+
 			«FOR edge : rule.edges»
 				«if(edge.domainType !== DomainType.CORR) visualiseRuleEdge(nodeIdMap.get(edge.srcNode), nodeIdMap.get(edge.trgNode), edge.type.name, edge.bindingType === BindingType.CREATE)»
 			«ENDFOR»
