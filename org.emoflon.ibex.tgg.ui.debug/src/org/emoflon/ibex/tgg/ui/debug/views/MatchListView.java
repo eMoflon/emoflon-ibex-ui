@@ -48,15 +48,13 @@ public class MatchListView extends Composite {
 	    public void widgetSelected(SelectionEvent pSelectionEvent) {
 
 		TreeItem selectedItem = treeView.getSelection()[0];
+		applyButton.setEnabled(matchItems.containsValue(selectedItem));
 
-		if (ruleItems.containsValue(selectedItem)) {
+		if (ruleItems.containsValue(selectedItem))
 		    visualiser.display(ruleItems.inverse().get(selectedItem));
-
-		} else if (matchItems.containsValue(selectedItem)) {
-		    applyButton.setEnabled(matchItems.containsValue(selectedItem));
-
+		else if (matchItems.containsValue(selectedItem))
 		    visualiser.display(matchItems.inverse().get(selectedItem));
-		}
+
 	    }
 	});
 	treeView.pack();
