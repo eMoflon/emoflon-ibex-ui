@@ -11,6 +11,8 @@ import language.TGGRuleCorr
 import org.emoflon.ibex.tgg.operational.matches.IMatch
 import java.util.Collection
 import java.security.DomainCombiner
+import org.eclipse.emf.ecore.EAttribute
+import org.eclipse.emf.ecore.EObject
 
 class VictoryPlantUMLGenerator {
 	
@@ -52,11 +54,12 @@ class VictoryPlantUMLGenerator {
 			@enduml
 		'''
 	}
+	
 	def static String visualiseMatch(IMatch match, TGGRule rule) {
 		
 		val paramToNodeMap = match.parameterNames.toInvertedMap[param | rule.nodes.findFirst[node | param === node.name]]
-		val nonCorrParams = match.parameterNames.filter[paramToNodeMap.get(it).domainType !== DomainType.CORR]
 		val paramToNodeIdMap = paramToNodeMap.mapValues[idForNode(it)]
+		val nonCorrParamToEObjectMap = match.parameterNames.filter[paramToNodeMap.get(it).domainType !== DomainType.CORR].toInvertedMap[match.get(it) as EObject]
 		
 		'''
 			@startuml
@@ -65,13 +68,13 @@ class VictoryPlantUMLGenerator {
 			«visualiseRulePrecondition(rule)»
 			
 			together {
-				«FOR String param : nonCorrParams»
-					class «match.get(param).class.name» <<BLACK>> <<SRC>>
+				«FOR EObject object : nonCorrParamToEObjectMap.values»
+					«visualiseEObject(object)»
 				«ENDFOR»
 			}
 			
-			«FOR String param : nonCorrParams»
-				«paramToNodeIdMap.get(param)» <...> «match.get(param).class.name»
+			«FOR String param : nonCorrParamToEObjectMap.keySet»
+				«paramToNodeIdMap.get(param)» #...# «idForEObject(nonCorrParamToEObjectMap.get(param))»
 			«ENDFOR»
 			
 			@enduml
@@ -94,15 +97,25 @@ class VictoryPlantUMLGenerator {
 		'''
 	}
 	
-	private def static visualiseRuleNode(String ruleId, String bindingColour, DomainType domainType) {
+	private def static String visualiseEObject(EObject object) {
+		'''
+			class «idForEObject(object)» <<BLACK>> <<SRC>> {
+				«FOR EAttribute attr : object.eClass.EAttributes»
+					«attr.EType.name» «attr.name» «object.eGet(attr)»
+				«ENDFOR»
+			}
+		'''
+	}
+	
+	private def static String visualiseRuleNode(String ruleId, String bindingColour, DomainType domainType) {
 		'''class «ruleId» <<«bindingColour»>> <<«domainType»>>'''
 	}
 
-	private def static visualiseRuleEdge(String srcNodeId, String trgNodeId, String edgeId, boolean bindingTypeCreate) {
+	private def static String visualiseRuleEdge(String srcNodeId, String trgNodeId, String edgeId, boolean bindingTypeCreate) {
 		'''«srcNodeId» -«IF (bindingTypeCreate)»[#SpringGreen]«ENDIF»-> «trgNodeId» : "«edgeId»"'''
 	}
 	
-	private def static visualiseRuleCorrEdge(String srcNodeId, String trgNodeId, String edgeId, boolean bindingTypeCreate) {
+	private def static String visualiseRuleCorrEdge(String srcNodeId, String trgNodeId, String edgeId, boolean bindingTypeCreate) {
 		'''«srcNodeId» ...«IF (bindingTypeCreate)»[#SpringGreen]«ENDIF» «trgNodeId» : "«edgeId»"'''
 	}
 	
@@ -110,7 +123,11 @@ class VictoryPlantUMLGenerator {
 		'''"«node.name» : «node.type.name»"'''
 	}
 	
-	private def static bindingToColour(BindingType binding) {
+	private def static String idForEObject(EObject object) {
+		'''«object.eClass.name»'''
+	}
+	
+	private def static String bindingToColour(BindingType binding) {
 		if (binding === BindingType.CREATE)
 			return "GREEN"
 		else
