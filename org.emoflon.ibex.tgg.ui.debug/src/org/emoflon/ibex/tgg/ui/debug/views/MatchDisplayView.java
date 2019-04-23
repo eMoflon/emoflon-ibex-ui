@@ -3,7 +3,9 @@ package org.emoflon.ibex.tgg.ui.debug.views;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Collection;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
@@ -60,11 +62,12 @@ public class MatchDisplayView extends Composite implements IVisualiser {
     public void display(IMatch pMatch) {
 
 	TGGRule rule = dataProvider.getRule(pMatch.getRuleName());
+	Collection<EObject> matchNeighborhood = dataProvider.getMatchNeighbourhood(pMatch, 1);
 
 	if (rule == null)
 	    throw new IllegalArgumentException("Unknown rule");
 
-	displayPlantUMLString(VictoryPlantUMLGenerator.visualiseMatch(pMatch, rule));
+	displayPlantUMLString(VictoryPlantUMLGenerator.visualiseMatch(pMatch, rule, matchNeighborhood));
     }
 
     private void displayPlantUMLString(String pPlantUMLString) {

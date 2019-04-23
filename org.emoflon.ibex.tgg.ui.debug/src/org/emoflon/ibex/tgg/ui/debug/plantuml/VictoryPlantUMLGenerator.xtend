@@ -54,7 +54,9 @@ class VictoryPlantUMLGenerator {
 		'''
 	}
 	
-	def static String visualiseMatch(IMatch match, TGGRule rule) {
+	def static String visualiseMatch(IMatch match, TGGRule rule, Collection<EObject> matchNeighborhood) {
+		
+		// TODO implement usage of actual match neighborhood
 		
 		val paramToNodeMap = match.parameterNames.toInvertedMap[param | rule.nodes.findFirst[node | param === node.name]]
 		val paramToNodeIdMap = paramToNodeMap.mapValues[idForNode(it)]
