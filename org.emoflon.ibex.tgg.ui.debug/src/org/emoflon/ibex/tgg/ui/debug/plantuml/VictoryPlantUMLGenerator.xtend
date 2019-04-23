@@ -4,15 +4,14 @@ import org.moflon.core.ui.visualisation.EMoflonPlantUMLGenerator
 import language.TGGRule
 import language.TGGRuleNode
 import language.BindingType
-import language.TGGRuleEdge
 import java.util.Map
 import language.DomainType
 import language.TGGRuleCorr
 import org.emoflon.ibex.tgg.operational.matches.IMatch
 import java.util.Collection
-import java.security.DomainCombiner
 import org.eclipse.emf.ecore.EAttribute
 import org.eclipse.emf.ecore.EObject
+import java.util.HashMap
 
 class VictoryPlantUMLGenerator {
 	
@@ -60,6 +59,11 @@ class VictoryPlantUMLGenerator {
 		val paramToNodeMap = match.parameterNames.toInvertedMap[param | rule.nodes.findFirst[node | param === node.name]]
 		val paramToNodeIdMap = paramToNodeMap.mapValues[idForNode(it)]
 		val nonCorrParamToEObjectMap = match.parameterNames.filter[paramToNodeMap.get(it).domainType !== DomainType.CORR].toInvertedMap[match.get(it) as EObject]
+		val eObjectMapping = nonCorrParamToEObjectMap.values.toInvertedMap[
+			val id = labelFor(it) + "_" + indexFor(it)
+			val label = id + " : " + it.eClass.name
+			id->label
+		]
 		
 		'''
 			@startuml
@@ -67,14 +71,10 @@ class VictoryPlantUMLGenerator {
 			
 			«visualiseRulePrecondition(rule)»
 			
-			together {
-				«FOR EObject object : nonCorrParamToEObjectMap.values»
-					«visualiseEObject(object)»
-				«ENDFOR»
-			}
+			«visualiseEObjectGraph(eObjectMapping)»
 			
 			«FOR String param : nonCorrParamToEObjectMap.keySet»
-				«paramToNodeIdMap.get(param)» #...# «idForEObject(nonCorrParamToEObjectMap.get(param))»
+				«paramToNodeIdMap.get(param)» #...# «eObjectMapping.get(nonCorrParamToEObjectMap.get(param)).key»
 			«ENDFOR»
 			
 			@enduml
@@ -97,14 +97,38 @@ class VictoryPlantUMLGenerator {
 		'''
 	}
 	
-	private def static String visualiseEObject(EObject object) {
+	private def static String visualiseEObjectGraph(Map<EObject, Pair<String, String>> eObjectMapping) {
 		'''
-			class «idForEObject(object)» <<BLACK>> <<SRC>> {
-				«FOR EAttribute attr : object.eClass.EAttributes»
-					«attr.EType.name» «attr.name» «object.eGet(attr)»
-				«ENDFOR»
-			}
+		together {
+			«FOR object: eObjectMapping.keySet»
+				object "«eObjectMapping.get(object).value»" as «eObjectMapping.get(object).key» <<BLACK>> <<SRC>> {
+					«FOR EAttribute attr : object.eClass.EAttributes»
+						«attr.EType.name» «attr.name» «object.eGet(attr)»
+					«ENDFOR»
+				}
+			«ENDFOR»
+			
+			««« TODO visualise edges between objects
+		}
 		'''
+	}
+	
+	private def static String labelFor(EObject object) {
+		if(object.eContainingFeature() !== null) {
+			return object.eContainingFeature().getName();
+		} else {
+			return "root";
+		}
+	}
+
+	private def static String indexFor(EObject object) {
+		if (object.eContainer() === null) {
+			val resource = object.eResource()
+			return resource.getResourceSet().getResources().indexOf(resource) + "_" + resource.getContents().indexOf(object)
+		} else {
+			val container = object.eContainer()
+			return indexFor(container) + "_" + container.eContents().indexOf(object)
+		}
 	}
 	
 	private def static String visualiseRuleNode(String ruleId, String bindingColour, DomainType domainType) {
@@ -121,10 +145,6 @@ class VictoryPlantUMLGenerator {
 	
 	private def static String idForNode(TGGRuleNode node) {
 		'''"«node.name» : «node.type.name»"'''
-	}
-	
-	private def static String idForEObject(EObject object) {
-		'''«object.eClass.name»'''
 	}
 	
 	private def static String bindingToColour(BindingType binding) {
