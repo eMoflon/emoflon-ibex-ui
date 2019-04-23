@@ -106,9 +106,13 @@ class VictoryPlantUMLGenerator {
 						«attr.EType.name» «attr.name» «object.eGet(attr)»
 					«ENDFOR»
 				}
+				
+				«FOR contentObject : object.eContents»
+					«IF eObjectMapping.containsKey(contentObject)»
+						«eObjectMapping.get(object).key» --> «eObjectMapping.get(contentObject).key» : «contentObject.eContainingFeature.name»
+					«ENDIF»
+				«ENDFOR»
 			«ENDFOR»
-			
-			««« TODO visualise edges between objects
 		}
 		'''
 	}
