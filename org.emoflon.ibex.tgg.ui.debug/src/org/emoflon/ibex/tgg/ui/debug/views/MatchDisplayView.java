@@ -4,6 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.SWT;
@@ -47,6 +49,13 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	return new MatchDisplayView(pParent, pDataProvider).build();
     }
 
+    /*
+     * display specific code
+     */
+
+    private Map<String, byte[]> ruleImageCache = new HashMap<>();
+    private Map<IMatch, byte[]> matchImageCache = new HashMap<>();
+
     @Override
     public void display(String pRuleName) {
 
@@ -55,7 +64,14 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	if (rule == null)
 	    throw new IllegalArgumentException("Unknown rule");
 
-	displayPlantUMLString(VictoryPlantUMLGenerator.visualiseTGGRule(rule));
+	byte[] image;
+	if (ruleImageCache.containsKey(pRuleName)) {
+	    image = ruleImageCache.get(pRuleName);
+	} else {
+	    image = generatePlantUMLImage(VictoryPlantUMLGenerator.visualiseTGGRule(rule));
+	    ruleImageCache.put(pRuleName, image);
+	}
+	displayImage(image);
     }
 
     @Override
@@ -67,17 +83,27 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	if (rule == null)
 	    throw new IllegalArgumentException("Unknown rule");
 
-	displayPlantUMLString(VictoryPlantUMLGenerator.visualiseMatch(pMatch, rule, matchNeighborhood));
+	byte[] image;
+	if (matchImageCache.containsKey(pMatch)) {
+	    image = matchImageCache.get(pMatch);
+	} else {
+	    image = generatePlantUMLImage(VictoryPlantUMLGenerator.visualiseMatch(pMatch, rule, matchNeighborhood));
+	    matchImageCache.put(pMatch, image);
+	}
+	displayImage(image);
     }
 
-    private void displayPlantUMLString(String pPlantUMLString) {
+    private byte[] generatePlantUMLImage(String pPlantUMLString) {
 	ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 	try {
 	    new SourceStringReader(pPlantUMLString).outputImage(outputStream);
 	} catch (IOException pIOE) {
 	    // TODO what do I do here?
 	}
+	return outputStream.toByteArray();
+    }
 
-	imageContainer.setImage(new Image(Display.getCurrent(), new ByteArrayInputStream(outputStream.toByteArray())));
+    private void displayImage(byte[] pImageData) {
+	imageContainer.setImage(new Image(Display.getCurrent(), new ByteArrayInputStream(pImageData)));
     }
 }
