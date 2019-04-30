@@ -76,7 +76,7 @@ class VictoryPlantUMLGenerator {
 			«visualiseEObjectGraph(eObjectMapping)»
 			
 			«FOR String param : nonCorrParamToEObjectMap.keySet»
-				«paramToNodeIdMap.get(param)» #...# «eObjectMapping.get(nonCorrParamToEObjectMap.get(param)).key»
+				«paramToNodeIdMap.get(param)» #.[#Blue]..# «eObjectMapping.get(nonCorrParamToEObjectMap.get(param)).key»
 			«ENDFOR»
 			
 			@enduml
