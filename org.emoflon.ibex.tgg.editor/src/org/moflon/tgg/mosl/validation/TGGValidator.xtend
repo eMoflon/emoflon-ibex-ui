@@ -32,6 +32,8 @@ import org.eclipse.emf.ecore.EStructuralFeature
 import org.moflon.tgg.mosl.tgg.ContextObjectVariablePattern
 import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.Path
+import org.moflon.tgg.mosl.tgg.AttributeAssignment
+import org.eclipse.emf.ecore.EAttribute
 
 /**
  * This class contains custom validation rules. 
@@ -53,6 +55,9 @@ class TGGValidator extends AbstractTGGValidator {
 	public static val INVALID_ASSIGNMENT_OPERATOR = 'invalidAssignmentOperator'
 	public static val INVALID_CORRESPONDENCE_VARIABLE = 'invalidCorrespondence'
 	public static val SCHEMA_NAME_DOES_NOT_MATCH_PROJECT_NAME = 'schemaNameDoesNotMatchProjectName'
+	public static val ATTRIBUTE_HAS_MULTIPLE_ASSIGNMENTS = 'attributeHasMultipleAssignments'
+	public static val ATTRIBUTE_HAS_MULTIPLE_EQUAL_CONSTRAINTS = 'attributeHasMultipleEqualConstraints'
+	public static val ATTRIBUTE_MAY_HAVE_CONFLICTING_CONSTRAINTS = 'attributeMayHaveConflictingConstraints'
   
 	@Check
 	def checkAttributeExpression(AttributeExpression attrVar){
@@ -351,4 +356,56 @@ class TGGValidator extends AbstractTGGValidator {
 			}
 		}
 	}
+	
+	List<EAttribute> assignedAttr = new ArrayList<EAttribute>();
+	
+	@Check
+	def checkForUniqueAttributeAssignments(ObjectVariablePattern ov) {
+		if(ov.attributeAssignments != null) {
+			assignedAttr.clear();
+			for(attrAssignment : ov.attributeAssignments) {
+				checkForUniqueAttributeAssignments(attrAssignment);
+			}
+		}
+	}
+	
+	def checkForUniqueAttributeAssignments(AttributeAssignment attrAssignment) {
+		if(assignedAttr.contains(attrAssignment.attribute)) {
+			error("An attribute can only be assigned once: '" + attrAssignment.attribute.name + "'", TggPackage.Literals.OBJECT_VARIABLE_PATTERN__ATTRIBUTE_ASSIGNMENTS, TGGValidator.ATTRIBUTE_HAS_MULTIPLE_ASSIGNMENTS);
+		} else {
+			assignedAttr.add(attrAssignment.attribute);
+		}
+	}
+	
+	Map<EAttribute, List<AttributeConstraint>> constrainedAttr = new HashMap<EAttribute, List<AttributeConstraint>>();
+	
+	@Check
+	def checkForConsistentAttributeConstraints(ObjectVariablePattern ov) {
+		if(ov.attributeConstraints != null) {
+			constrainedAttr.clear();
+			for(attrConstr : ov.attributeConstraints) {
+				checkForConsistentAttributeConstraints(attrConstr);
+			}
+		}
+	}
+	
+	def checkForConsistentAttributeConstraints(AttributeConstraint attrConstr) {
+		if(constrainedAttr.containsKey(attrConstr.attribute)) {
+			var List<AttributeConstraint> list = constrainedAttr.get(attrConstr.attribute);
+			list.add(attrConstr);
+			
+			var int numberOfEq = list.filter[el | el.op.equals("==")].size;
+			if(numberOfEq > 0 && numberOfEq < list.size) {
+				warning("Constraints for the attribute '" + attrConstr.attribute.name + "' may be in conflict with each other.", TggPackage.Literals.OBJECT_VARIABLE_PATTERN__ATTRIBUTE_CONSTRAINTS, TGGValidator.ATTRIBUTE_MAY_HAVE_CONFLICTING_CONSTRAINTS);
+			}
+			if(numberOfEq > 1) {
+				error("Multiple equal constraints for the attribute '" + attrConstr.attribute.name + "'.", TggPackage.Literals.OBJECT_VARIABLE_PATTERN__ATTRIBUTE_CONSTRAINTS, TGGValidator.ATTRIBUTE_HAS_MULTIPLE_EQUAL_CONSTRAINTS);
+			}
+		} else {
+			var List<AttributeConstraint> newList = new ArrayList<AttributeConstraint>();
+			newList.add(attrConstr);
+			constrainedAttr.put(attrConstr.attribute, newList);
+		}
+	}
+	
 }

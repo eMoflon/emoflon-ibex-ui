@@ -12,8 +12,6 @@ import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression;
 import org.emoflon.ibex.gt.editor.gT.EditorRelation;
 import org.emoflon.ibex.gt.editor.gT.StringConstant;
 
-import com.sun.javafx.fxml.expression.LiteralExpression;
-
 /**
  * Utility methods for attribute validation.
  */
