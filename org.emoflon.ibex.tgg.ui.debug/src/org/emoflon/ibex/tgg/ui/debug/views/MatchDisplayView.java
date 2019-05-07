@@ -9,7 +9,10 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -39,11 +42,23 @@ public class MatchDisplayView extends Composite implements IVisualiser {
     }
 
     private MatchDisplayView build() {
+	setLayout(new MigLayout("fill"));
+
 	imageContainer = new Label(this, SWT.BORDER | SWT.CENTER);
 	imageContainer.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 	imageContainer.setLayoutData("grow");
 	imageContainer.setImage(null);
 	imageContainer.pack();
+
+	Button toggleFullRuleVisButton = new Button(this, SWT.TOGGLE);
+	toggleFullRuleVisButton.setText("Full rule Vis");
+	toggleFullRuleVisButton.setLayoutData("dock north");
+	toggleFullRuleVisButton.addSelectionListener(new SelectionAdapter() {
+	    @Override
+	    public void widgetSelected(SelectionEvent pSelectionEvent) {
+		userOptionsManager.setDisplayFullRuleForMatches(toggleFullRuleVisButton.getSelection());
+	    }
+	});
 
 	pack();
 	return this;
