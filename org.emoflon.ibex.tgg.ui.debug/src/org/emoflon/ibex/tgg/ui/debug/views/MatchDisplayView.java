@@ -1,13 +1,9 @@
 package org.emoflon.ibex.tgg.ui.debug.views;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -19,11 +15,11 @@ import org.eclipse.swt.widgets.Label;
 import org.emoflon.ibex.tgg.operational.matches.IMatch;
 import org.emoflon.ibex.tgg.operational.monitoring.IVictoryDataProvider;
 import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager;
-import org.emoflon.ibex.tgg.ui.debug.plantuml.VictoryPlantUMLGenerator;
+import org.emoflon.ibex.tgg.ui.debug.views.visualisable.IMatchVisualisation;
+import org.emoflon.ibex.tgg.ui.debug.views.visualisable.TGGRuleVisualisation;
+import org.emoflon.ibex.tgg.ui.debug.views.visualisable.VisualisableElement;
 
-import language.TGGRule;
 import net.miginfocom.swt.MigLayout;
-import net.sourceforge.plantuml.SourceStringReader;
 
 public class MatchDisplayView extends Composite implements IVisualiser {
 
@@ -57,6 +53,7 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	    @Override
 	    public void widgetSelected(SelectionEvent pSelectionEvent) {
 		userOptionsManager.setDisplayFullRuleForMatches(toggleFullRuleVisButton.getSelection());
+		refresh();
 	    }
 	});
 
@@ -73,61 +70,46 @@ public class MatchDisplayView extends Composite implements IVisualiser {
      * display specific code
      */
 
-    private Map<String, byte[]> ruleImageCache = new HashMap<>();
-    private Map<IMatch, byte[]> matchImageCache = new HashMap<>();
+    private Map<String, VisualisableElement> ruleElementMap = new HashMap<>();
+    private Map<IMatch, VisualisableElement> matchElementMap = new HashMap<>();
+
+    private VisualisableElement currentElement;
 
     @Override
     public void display(String pRuleName) {
 
-	TGGRule rule = dataProvider.getRule(pRuleName);
-
-	if (rule == null)
-	    throw new IllegalArgumentException("Unknown rule");
-
-	byte[] image;
-	if (ruleImageCache.containsKey(pRuleName)) {
-	    image = ruleImageCache.get(pRuleName);
-	} else {
-	    image = generatePlantUMLImage(VictoryPlantUMLGenerator.visualiseTGGRule(rule));
-	    ruleImageCache.put(pRuleName, image);
+	if (!ruleElementMap.containsKey(pRuleName)) {
+	    VisualisableElement ruleElement = new TGGRuleVisualisation(dataProvider.getRule(pRuleName));
+	    ruleElementMap.put(pRuleName, ruleElement);
 	}
-	displayImage(image);
+
+	currentElement = ruleElementMap.get(pRuleName);
+
+	refresh();
     }
 
     @Override
     public void display(IMatch pMatch) {
 
-	TGGRule rule = dataProvider.getRule(pMatch.getRuleName());
-	Collection<EObject> matchNeighborhood = dataProvider.getMatchNeighbourhood(pMatch, 1);
-
-	if (rule == null)
-	    throw new IllegalArgumentException("Unknown rule");
-
-	byte[] image;
-
-	if (userOptionsManager.isMatchCacheInvalid()) {
-	    matchImageCache.clear();
-	    userOptionsManager.setMatchCacheValidated();
+	if (!matchElementMap.containsKey(pMatch)) {
+	    VisualisableElement matchElement = new IMatchVisualisation(pMatch, dataProvider, userOptionsManager);
+	    matchElementMap.put(pMatch, matchElement);
 	}
 
-	if (matchImageCache.containsKey(pMatch)) {
-	    image = matchImageCache.get(pMatch);
-	} else {
-	    image = generatePlantUMLImage(
-		    VictoryPlantUMLGenerator.visualiseMatch(pMatch, rule, matchNeighborhood, userOptionsManager));
-	    matchImageCache.put(pMatch, image);
-	}
-	displayImage(image);
+	currentElement = matchElementMap.get(pMatch);
+
+	refresh();
     }
 
-    private byte[] generatePlantUMLImage(String pPlantUMLString) {
-	ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-	try {
-	    new SourceStringReader(pPlantUMLString).outputImage(outputStream);
-	} catch (IOException pIOE) {
-	    // TODO what do I do here?
+    @Override
+    public void refresh() {
+	if (userOptionsManager.isInvalid()) {
+	    ruleElementMap.values().forEach(VisualisableElement::invalidate);
+	    matchElementMap.values().forEach(VisualisableElement::invalidate);
+	    userOptionsManager.revalidate();
 	}
-	return outputStream.toByteArray();
+
+	displayImage(currentElement.getImage());
     }
 
     private void displayImage(byte[] pImageData) {

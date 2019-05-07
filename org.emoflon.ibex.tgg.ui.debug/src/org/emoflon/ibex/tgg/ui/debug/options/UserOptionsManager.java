@@ -2,7 +2,7 @@ package org.emoflon.ibex.tgg.ui.debug.options;
 
 public class UserOptionsManager implements IUserOptions {
 
-    private boolean isMatchCacheInvalid = false;
+    private boolean isInvalid = false;
 
     private boolean displayFullRuleForMatches = false;
 
@@ -13,15 +13,15 @@ public class UserOptionsManager implements IUserOptions {
     public void setDisplayFullRuleForMatches(boolean pDisplayFullRuleForMatches) {
 	if (displayFullRuleForMatches != pDisplayFullRuleForMatches) {
 	    displayFullRuleForMatches = pDisplayFullRuleForMatches;
-	    isMatchCacheInvalid = true;
+	    isInvalid = true;
 	}
     }
 
-    public boolean isMatchCacheInvalid() {
-	return isMatchCacheInvalid;
+    public boolean isInvalid() {
+	return isInvalid;
     }
 
-    public void setMatchCacheValidated() {
-	isMatchCacheInvalid = false;
+    public void revalidate() {
+	isInvalid = false;
     }
 }
