@@ -11,6 +11,7 @@ import org.emoflon.ibex.tgg.operational.matches.IMatch
 import java.util.Collection
 import org.eclipse.emf.ecore.EAttribute
 import org.eclipse.emf.ecore.EObject
+import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions
 
 class VictoryPlantUMLGenerator {
 	
@@ -26,7 +27,7 @@ class VictoryPlantUMLGenerator {
 		'''
 	}
 	
-	def static String visualiseMatch(IMatch match, TGGRule rule, Collection<EObject> matchNeighborhood) {
+	def static String visualiseMatch(IMatch match, TGGRule rule, Collection<EObject> matchNeighborhood, IUserOptions userOptions) {
 		
 		// TODO implement usage of actual match neighborhood
 		
@@ -43,7 +44,7 @@ class VictoryPlantUMLGenerator {
 			@startuml
 			«EMoflonPlantUMLGenerator.plantUMLPreamble»
 			
-			«visualiseRule(rule, true, false)»
+			«visualiseRule(rule, true, userOptions.displayFullRuleForMatches)»
 			
 			«visualiseEObjectGraph(eObjectMapping)»
 			

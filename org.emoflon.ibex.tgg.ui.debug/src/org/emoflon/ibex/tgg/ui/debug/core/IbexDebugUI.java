@@ -4,6 +4,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.emoflon.ibex.tgg.operational.monitoring.IVictoryDataProvider;
 import org.emoflon.ibex.tgg.operational.monitoring.IbexController;
+import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager;
 import org.emoflon.ibex.tgg.ui.debug.views.MatchDisplayView;
 import org.emoflon.ibex.tgg.ui.debug.views.MatchListView;
 
@@ -54,6 +55,7 @@ public class IbexDebugUI implements Runnable {
     private IVictoryDataProvider dataProvider;
     private MatchListView matchListView;
     private MatchDisplayView matchDisplayView;
+    private UserOptionsManager userOptionsManager;
 
     @Override
     public void run() {
@@ -72,10 +74,12 @@ public class IbexDebugUI implements Runnable {
     private void initUI(Shell pShell) {
 	pShell.setLayout(new MigLayout("fill", "[30%][70%]"));
 
+	userOptionsManager = new UserOptionsManager();
+
 	matchListView = MatchListView.create(pShell);
 	matchListView.setLayoutData("grow");
 
-	matchDisplayView = MatchDisplayView.create(pShell, dataProvider);
+	matchDisplayView = MatchDisplayView.create(pShell, dataProvider, userOptionsManager);
 	matchDisplayView.setLayoutData("grow");
 
 	matchListView.registerVisualiser(matchDisplayView);

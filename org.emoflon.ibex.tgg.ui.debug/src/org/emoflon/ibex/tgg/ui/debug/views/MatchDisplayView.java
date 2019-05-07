@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.emoflon.ibex.tgg.operational.matches.IMatch;
 import org.emoflon.ibex.tgg.operational.monitoring.IVictoryDataProvider;
+import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager;
 import org.emoflon.ibex.tgg.ui.debug.plantuml.VictoryPlantUMLGenerator;
 
 import language.TGGRule;
@@ -24,14 +25,17 @@ import net.sourceforge.plantuml.SourceStringReader;
 public class MatchDisplayView extends Composite implements IVisualiser {
 
     private IVictoryDataProvider dataProvider;
+    private UserOptionsManager userOptionsManager;
 
     private Label imageContainer;
 
-    private MatchDisplayView(Composite parent, IVictoryDataProvider pDataProvider) {
+    private MatchDisplayView(Composite parent, IVictoryDataProvider pDataProvider,
+	    UserOptionsManager pUserOptionsManager) {
 	super(parent, SWT.NONE);
 	setLayout(new MigLayout("fill"));
 
 	dataProvider = pDataProvider;
+	userOptionsManager = pUserOptionsManager;
     }
 
     private MatchDisplayView build() {
@@ -45,8 +49,9 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	return this;
     }
 
-    public static MatchDisplayView create(Composite pParent, IVictoryDataProvider pDataProvider) {
-	return new MatchDisplayView(pParent, pDataProvider).build();
+    public static MatchDisplayView create(Composite pParent, IVictoryDataProvider pDataProvider,
+	    UserOptionsManager pUserOptionsManager) {
+	return new MatchDisplayView(pParent, pDataProvider, pUserOptionsManager).build();
     }
 
     /*
@@ -87,7 +92,8 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	if (matchImageCache.containsKey(pMatch)) {
 	    image = matchImageCache.get(pMatch);
 	} else {
-	    image = generatePlantUMLImage(VictoryPlantUMLGenerator.visualiseMatch(pMatch, rule, matchNeighborhood));
+	    image = generatePlantUMLImage(
+		    VictoryPlantUMLGenerator.visualiseMatch(pMatch, rule, matchNeighborhood, userOptionsManager));
 	    matchImageCache.put(pMatch, image);
 	}
 	displayImage(image);
