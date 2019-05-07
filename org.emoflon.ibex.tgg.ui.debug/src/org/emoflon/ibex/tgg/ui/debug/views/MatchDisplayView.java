@@ -104,6 +104,12 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	    throw new IllegalArgumentException("Unknown rule");
 
 	byte[] image;
+
+	if (userOptionsManager.isMatchCacheInvalid()) {
+	    matchImageCache.clear();
+	    userOptionsManager.setMatchCacheValidated();
+	}
+
 	if (matchImageCache.containsKey(pMatch)) {
 	    image = matchImageCache.get(pMatch);
 	} else {
