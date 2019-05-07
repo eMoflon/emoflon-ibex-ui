@@ -22,4 +22,11 @@ public interface IVisualiser {
     public default void display(IMatch pMatch) {
 	// don't do anything
     }
+
+    /**
+     * Called to force a refresh of the currently visualised element.
+     */
+    public default void refresh() {
+	// don't do anything
+    }
 }

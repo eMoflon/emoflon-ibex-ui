@@ -11,50 +11,23 @@ import org.emoflon.ibex.tgg.operational.matches.IMatch
 import java.util.Collection
 import org.eclipse.emf.ecore.EAttribute
 import org.eclipse.emf.ecore.EObject
-import java.util.HashMap
+import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions
 
 class VictoryPlantUMLGenerator {
 	
 	def static String visualiseTGGRule(TGGRule rule) {
-		
-		val nodeGroupMap = rule.nodes.groupBy[it.domainType]
-		val nodeIdMap = rule.nodes.toInvertedMap[idForNode]
-		
 		'''
 			@startuml
+			
 			«EMoflonPlantUMLGenerator.plantUMLPreamble»
 
-			«IF nodeGroupMap.containsKey(DomainType.SRC)»
-				together {
-					«FOR node : nodeGroupMap.get(DomainType.SRC)»
-						«visualiseRuleNode(nodeIdMap.get(node), bindingToColour(node.bindingType), node.domainType)»
-					«ENDFOR»
-				}
-			«ENDIF»
-
-			«IF nodeGroupMap.containsKey(DomainType.TRG)»
-				together {
-					«FOR node : nodeGroupMap.get(DomainType.TRG)»
-						«visualiseRuleNode(nodeIdMap.get(node), bindingToColour(node.bindingType), node.domainType)»
-					«ENDFOR»
-				}
-			«ENDIF»
-
-			«IF nodeGroupMap.containsKey(DomainType.CORR)»
-				«FOR node : nodeGroupMap.get(DomainType.CORR)»
-					«val corrNode = node as TGGRuleCorr»
-					«visualiseRuleCorrEdge(nodeIdMap.get(corrNode.source), nodeIdMap.get(corrNode.target), corrNode.type.name, corrNode.bindingType === BindingType.CREATE)»
-				«ENDFOR»
-			«ENDIF»
-
-			«FOR edge : rule.edges»
-				«if(edge.domainType !== DomainType.CORR) visualiseRuleEdge(nodeIdMap.get(edge.srcNode), nodeIdMap.get(edge.trgNode), edge.type.name, edge.bindingType === BindingType.CREATE)»
-			«ENDFOR»
+			«visualiseRule(rule, false, true)»
+			
 			@enduml
 		'''
 	}
 	
-	def static String visualiseMatch(IMatch match, TGGRule rule, Collection<EObject> matchNeighborhood) {
+	def static String visualiseMatch(IMatch match, TGGRule rule, Collection<EObject> matchNeighborhood, IUserOptions userOptions) {
 		
 		// TODO implement usage of actual match neighborhood
 		
@@ -71,7 +44,7 @@ class VictoryPlantUMLGenerator {
 			@startuml
 			«EMoflonPlantUMLGenerator.plantUMLPreamble»
 			
-			«visualiseRulePrecondition(rule)»
+			«visualiseRule(rule, true, userOptions.displayFullRuleForMatches)»
 			
 			«visualiseEObjectGraph(eObjectMapping)»
 			
@@ -83,19 +56,50 @@ class VictoryPlantUMLGenerator {
 		'''
 	}
 	
-	private def static String visualiseRulePrecondition(TGGRule rule) {
+	private def static String visualiseRule(TGGRule rule, boolean groupFullRule, boolean showCreated) {
+		
+		val nodeGroupMap = rule.nodes.groupBy[it.domainType]
+		val nodeIdMap = rule.nodes.toInvertedMap[idForNode]
+		
 		'''
-			together {
-				«FOR node : rule.nodes.filter[it.bindingType !== BindingType.CREATE && it.domainType !== DomainType.CORR]»
-					«visualiseRuleNode(idForNode(node), bindingToColour(node.bindingType), node.domainType)»
+			«IF groupFullRule»together {«ENDIF»
+			
+			«IF nodeGroupMap.containsKey(DomainType.SRC)»
+				together {
+					«FOR node : nodeGroupMap.get(DomainType.SRC)»
+						«IF showCreated || node.bindingType !== BindingType.CREATE»
+							«visualiseRuleNode(nodeIdMap.get(node), bindingToColour(node.bindingType), node.domainType)»
+						«ENDIF»
+					«ENDFOR»
+				}
+			«ENDIF»
+			
+			«IF nodeGroupMap.containsKey(DomainType.TRG)»
+				together {
+					«FOR node : nodeGroupMap.get(DomainType.TRG)»
+						«IF showCreated || node.bindingType !== BindingType.CREATE»
+							«visualiseRuleNode(nodeIdMap.get(node), bindingToColour(node.bindingType), node.domainType)»
+						«ENDIF»
+					«ENDFOR»
+				}
+			«ENDIF»
+			
+			«IF nodeGroupMap.containsKey(DomainType.CORR)»
+				«FOR node : nodeGroupMap.get(DomainType.CORR)»
+					«val corrNode = node as TGGRuleCorr»
+					«IF showCreated || corrNode.bindingType !== BindingType.CREATE»
+						«visualiseRuleCorrEdge(nodeIdMap.get(corrNode.source), nodeIdMap.get(corrNode.target), corrNode.type.name, corrNode.bindingType === BindingType.CREATE)»
+					«ENDIF»
 				«ENDFOR»
-				«FOR edge : rule.edges.filter[it.bindingType !== BindingType.CREATE && it.domainType !== DomainType.CORR]»
-					«visualiseRuleEdge(idForNode(edge.srcNode), idForNode(edge.trgNode), edge.type.name, false)»
-				«ENDFOR»
-				«FOR corrNode : rule.nodes.filter[it.bindingType !== BindingType.CREATE && it.domainType === DomainType.CORR].map[it as TGGRuleCorr]»
-					«visualiseRuleCorrEdge(idForNode(corrNode.source), idForNode(corrNode.target), corrNode.type.name, false)»
-				«ENDFOR»
-			}
+			«ENDIF»
+			
+			«FOR edge : rule.edges»
+				«IF edge.domainType !== DomainType.CORR && (showCreated || edge.bindingType !== BindingType.CREATE)»
+					«visualiseRuleEdge(nodeIdMap.get(edge.srcNode), nodeIdMap.get(edge.trgNode), edge.type.name, edge.bindingType === BindingType.CREATE)»
+				«ENDIF»
+			«ENDFOR»
+			
+			«IF groupFullRule»}«ENDIF»
 		'''
 	}
 	
