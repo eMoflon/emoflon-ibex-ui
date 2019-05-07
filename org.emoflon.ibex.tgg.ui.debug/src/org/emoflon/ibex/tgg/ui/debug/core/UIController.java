@@ -1,9 +1,7 @@
 package org.emoflon.ibex.tgg.ui.debug.core;
 
-import java.util.Collection;
-import java.util.Map;
-
 import org.emoflon.ibex.tgg.operational.matches.IMatch;
+import org.emoflon.ibex.tgg.operational.matches.ImmutableMatchContainer;
 import org.emoflon.ibex.tgg.operational.monitoring.IbexController;
 import org.emoflon.ibex.tgg.ui.debug.views.MatchListView;
 
@@ -16,26 +14,18 @@ public class UIController extends IbexController {
     }
 
     @Override
-    public void update(ObservableEvent eventType, Object... additionalInformation) {
+    public IMatch chooseOneMatch(ImmutableMatchContainer pMatchContainer) {
 	// CONCURRENCY: Ibex thread only
 
-	// TODO implement
-    }
-
-    @Override
-    public IMatch chooseOneMatch(Map<IMatch, Collection<IMatch>> matches) {
-	// CONCURRENCY: Ibex thread only
-
-	IbexDebugUI.getDisplay().syncExec(() -> matchListView.populate(matches.keySet()));
+	IbexDebugUI.getDisplay().syncExec(() -> matchListView.populate(pMatchContainer.getMatches()));
 
 	return matchListView.getChosenMatch();
     }
 
     @Override
-    protected int getRequestedMatchCount() {
+    public void update(ObservableEvent eventType, Object... additionalInformation) {
+	// CONCURRENCY: Ibex thread only
 
-	// TODO implement actual user-specified setting
-
-	return 100;
+	// TODO implement
     }
 }
