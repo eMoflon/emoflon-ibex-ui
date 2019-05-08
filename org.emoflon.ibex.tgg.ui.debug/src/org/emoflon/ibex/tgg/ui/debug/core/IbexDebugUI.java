@@ -32,17 +32,9 @@ public class IbexDebugUI implements Runnable {
      * 
      * @return the IBeX debugging UI that was created
      */
-    public static IbexDebugUI create(IVictoryDataProvider pDataProvider, boolean pRunOnNewThread) {
-	IbexDebugUI ibexDebugUI = new IbexDebugUI(pDataProvider);
-	if (pRunOnNewThread) {
-	    Thread uiThread = new Thread(ibexDebugUI);
-	    uiThread.setName("IbexDebugUI - SWT UI thread");
-	    uiThread.start();
-	} else {
-	    Thread.currentThread().setName("IbexDebugUI - SWT UI thread");
-	}
-
-	return ibexDebugUI;
+    public static IbexDebugUI create(IVictoryDataProvider pDataProvider) {
+	Thread.currentThread().setName("IbexDebugUI - SWT UI thread");
+	return new IbexDebugUI(pDataProvider);
     }
 
     public static Display getDisplay() {
