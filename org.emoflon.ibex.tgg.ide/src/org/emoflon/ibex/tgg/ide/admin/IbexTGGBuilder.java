@@ -158,18 +158,23 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	 */
 	public void createDefaultRunFile(String fileName, BiFunction<String, String, String> generator)
 			throws CoreException {
-		establishDefaultRunFile(fileName, generator, false);
+	establishDefaultRunFile(fileName, false, generator, false);
+	}
+
+	public void createDefaultDebugRunFile(String fileName, BiFunction<String, String, String> generator)
+	    throws CoreException {
+	establishDefaultRunFile(fileName, true, generator, false);
 	}
 
 	public void enforceDefaultRunFile(String fileName, BiFunction<String, String, String> generator)
 			throws CoreException {
-		establishDefaultRunFile(fileName, generator, true);
+	establishDefaultRunFile(fileName, false, generator, true);
 	}
 
-	public void establishDefaultRunFile(String fileName, BiFunction<String, String, String> generator, Boolean force)
+	public void establishDefaultRunFile(String fileName, boolean debug, BiFunction<String, String, String> generator, Boolean force)
 			throws CoreException {
-		createIfNotExists(RUN_FILE_PATH_PREFIX + determineNameOfGeneratedFile().toLowerCase() + "/", fileName, ".java",
-				generator, force);
+	createIfNotExists(RUN_FILE_PATH_PREFIX + (debug ? "debug" : determineNameOfGeneratedFile().toLowerCase()) + "/",
+		fileName, ".java", generator, force);
 	}
 
 	/**
