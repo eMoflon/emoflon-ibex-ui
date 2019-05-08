@@ -1,6 +1,5 @@
 package org.emoflon.ibex.tgg.ui.debug.plantuml
 
-import org.moflon.core.ui.visualisation.EMoflonPlantUMLGenerator
 import language.TGGRule
 import language.TGGRuleNode
 import language.BindingType
@@ -12,16 +11,16 @@ import java.util.Collection
 import org.eclipse.emf.ecore.EAttribute
 import org.eclipse.emf.ecore.EObject
 import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions
+import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions.Op
 
 class VictoryPlantUMLGenerator {
 	
-	def static String visualiseTGGRule(TGGRule rule) {
+	def static String visualiseTGGRule(TGGRule rule, IUserOptions userOptions) {
 		'''
 			@startuml
-			
-			«EMoflonPlantUMLGenerator.plantUMLPreamble»
+			«plantUMLPreamble»
 
-			«visualiseRule(rule, false, true)»
+			«visualiseRule(rule, false, true, userOptions.op)»
 			
 			@enduml
 		'''
@@ -42,9 +41,9 @@ class VictoryPlantUMLGenerator {
 		
 		'''
 			@startuml
-			«EMoflonPlantUMLGenerator.plantUMLPreamble»
+			«plantUMLPreamble»
 			
-			«visualiseRule(rule, true, userOptions.displayFullRuleForMatches)»
+			«visualiseRule(rule, true, userOptions.displayFullRuleForMatches, userOptions.op)»
 			
 			«visualiseEObjectGraph(eObjectMapping)»
 			
@@ -56,7 +55,27 @@ class VictoryPlantUMLGenerator {
 		'''
 	}
 	
-	private def static String visualiseRule(TGGRule rule, boolean groupFullRule, boolean showCreated) {
+	private def static String plantUMLPreamble(){
+		'''
+			hide empty members
+			hide circle
+			hide stereotype
+			
+			skinparam shadowing false
+			
+			skinparam class {
+				BorderColor<<CREATE>> SpringGreen
+				BorderColor<<TRANSLATE>> Grey
+				BorderColor<<OTHER>> Black
+				BackgroundColor<<TRG>> MistyRose
+				BackgroundColor<<SRC>> LightYellow
+				BackgroundColor<<CORR>> LightCyan 
+				ArrowColor Black
+			}	
+		'''
+	}
+	
+	private def static String visualiseRule(TGGRule rule, boolean groupFullRule, boolean showCreated, Op op) {
 		
 		val nodeGroupMap = rule.nodes.groupBy[it.domainType]
 		val nodeIdMap = rule.nodes.toInvertedMap[idForNode]
@@ -68,7 +87,7 @@ class VictoryPlantUMLGenerator {
 				together {
 					«FOR node : nodeGroupMap.get(DomainType.SRC)»
 						«IF showCreated || node.bindingType !== BindingType.CREATE»
-							«visualiseRuleNode(nodeIdMap.get(node), bindingToColour(node.bindingType), node.domainType)»
+							«visualiseRuleNode(nodeIdMap.get(node), getColorDefinitions(node.bindingType, node.domainType, op))»
 						«ENDIF»
 					«ENDFOR»
 				}
@@ -78,7 +97,7 @@ class VictoryPlantUMLGenerator {
 				together {
 					«FOR node : nodeGroupMap.get(DomainType.TRG)»
 						«IF showCreated || node.bindingType !== BindingType.CREATE»
-							«visualiseRuleNode(nodeIdMap.get(node), bindingToColour(node.bindingType), node.domainType)»
+							«visualiseRuleNode(nodeIdMap.get(node), getColorDefinitions(node.bindingType, node.domainType, op))»
 						«ENDIF»
 					«ENDFOR»
 				}
@@ -141,8 +160,8 @@ class VictoryPlantUMLGenerator {
 		}
 	}
 	
-	private def static String visualiseRuleNode(String ruleId, String bindingColour, DomainType domainType) {
-		'''class «ruleId» <<«bindingColour»>> <<«domainType»>>'''
+	private def static String visualiseRuleNode(String ruleId, String colorDefinitions) {
+		'''class «ruleId» «colorDefinitions»'''
 	}
 
 	private def static String visualiseRuleEdge(String srcNodeId, String trgNodeId, String edgeId, boolean bindingTypeCreate) {
@@ -157,11 +176,17 @@ class VictoryPlantUMLGenerator {
 		'''"«node.name» : «node.type.name»"'''
 	}
 	
-	private def static String bindingToColour(BindingType binding) {
-		if (binding === BindingType.CREATE)
-			return "GREEN"
-		else
-			return "BLACK"
+	private def static String getColorDefinitions(BindingType binding, DomainType domain, Op op) {
+		
+		var bindingColour = "OTHER"
+		if(binding === BindingType.CREATE)
+			if((op === Op.INITIAL_FWD && domain === DomainType.SRC)
+				|| (op === Op.INITIAL_BWD && domain === DomainType.TRG))
+					bindingColour = "TRANSLATE"
+			else
+				bindingColour = "CREATE"
+		
+		'''<<«bindingColour»>> <<«domain»>>'''
 	}
 
 }

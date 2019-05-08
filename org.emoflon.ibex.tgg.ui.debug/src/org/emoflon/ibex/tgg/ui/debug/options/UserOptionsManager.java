@@ -5,9 +5,18 @@ public class UserOptionsManager implements IUserOptions {
     private boolean isInvalid = false;
 
     private boolean displayFullRuleForMatches = false;
+    private final Op op;
+
+    public UserOptionsManager(Op pOp) {
+	op = pOp;
+    }
 
     public boolean displayFullRuleForMatches() {
 	return displayFullRuleForMatches;
+    }
+
+    public Op getOp() {
+	return op;
     }
 
     public void setDisplayFullRuleForMatches(boolean pDisplayFullRuleForMatches) {

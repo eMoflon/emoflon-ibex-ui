@@ -79,7 +79,8 @@ public class MatchDisplayView extends Composite implements IVisualiser {
     public void display(String pRuleName) {
 
 	if (!ruleElementMap.containsKey(pRuleName)) {
-	    VisualisableElement ruleElement = new TGGRuleVisualisation(dataProvider.getRule(pRuleName));
+	    VisualisableElement ruleElement = new TGGRuleVisualisation(dataProvider.getRule(pRuleName),
+		    userOptionsManager);
 	    ruleElementMap.put(pRuleName, ruleElement);
 	}
 
