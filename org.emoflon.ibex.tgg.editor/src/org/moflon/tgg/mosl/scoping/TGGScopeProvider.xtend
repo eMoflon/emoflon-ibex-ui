@@ -28,7 +28,6 @@ import org.moflon.ide.mosl.core.scoping.MoflonScope
 import org.moflon.tgg.mosl.tgg.AttributeAssignment
 import org.moflon.tgg.mosl.tgg.AttributeConstraint
 import org.moflon.tgg.mosl.tgg.AttributeExpression
-import org.moflon.tgg.mosl.tgg.ComplementRule
 import org.moflon.tgg.mosl.tgg.ContextLinkVariablePattern
 import org.moflon.tgg.mosl.tgg.ContextObjectVariablePattern
 import org.moflon.tgg.mosl.tgg.CorrType
@@ -130,13 +129,8 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 		
 		// Crawl up eContainers to Rule
 		var EObject current = enumExp
-		while(!(current instanceof Rule) && !(current instanceof ComplementRule))
+		while(!(current instanceof Rule))
 			current = current.eContainer
-		
-		// Get kernel of ComplementRule
-		if(current instanceof ComplementRule) {
-			current = current.getKernel();
-		}
 		
 		// Get imports from schema
 		val schema = getSchema(current)
@@ -389,7 +383,6 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 				all.addAll(o.supertypes.flatMap[st | st.sourcePatterns])
 				return all
 			}
-			ComplementRule : o.sourcePatterns
 		}
 	}
 	
@@ -400,8 +393,6 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 				all.addAll(o.supertypes.flatMap[st|st.targetPatterns])
 				return all
 			}
-			ComplementRule:
-				o.targetPatterns
 		}
 	}
 	
@@ -464,7 +455,6 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 		val o = ov.eContainer
 		switch o {
 			Rule : o.schema
-			ComplementRule : o.kernel.schema
 		}
 	}
 	

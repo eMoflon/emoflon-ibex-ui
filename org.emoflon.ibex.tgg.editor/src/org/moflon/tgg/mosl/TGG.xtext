@@ -14,7 +14,6 @@ TripleGraphGrammarFile:
 	using += Using*	
 	(schema = Schema)?
   	(rules += Rule)*
-  	(complementRules += ComplementRule)*
   	(nacs += Nac)*
   	(library = AttrCondDefLibrary)?
 ;
@@ -169,30 +168,6 @@ Operator:
 	value='++'
 ;
 
-/* ------------- */
-/*   COMPLEMENT RULES   */
-/* ------------- */
-
-ComplementRule:
-	'#complement' name = ID '#for' kernel = [Rule]
-		
-	('#source' '{'
-		sourcePatterns += ObjectVariablePattern* 
-	'}')? 	
-	
-	('#target' '{'
-		targetPatterns += ObjectVariablePattern* 
-	'}')? 
-	
-	('#correspondence' '{'
-		correspondencePatterns += CorrVariablePattern*	
-	'}')? 
-
-	('#attributeConditions' '{'
-		attrConditions += AttrCond*
-	'}')? 
-;
-
 /* ------------ */
 /*    NACs      */
 /* ------------ */
@@ -254,7 +229,7 @@ OperatorPattern:
 ;
 
 NamedElements:
-	 Rule | ComplementRule | Schema | CorrType | AttrCondDef | NamePattern | AttrCondDefLibrary | Nac
+	 Rule  | Schema | CorrType | AttrCondDef | NamePattern | AttrCondDefLibrary | Nac
 ;
 
 NamePattern:
