@@ -172,26 +172,6 @@ class IbexPlantUMLGenerator {
 		'''«idForPattern(src.name, src.type.name)» -«IF (p.op !== null)»[#SpringGreen]«ENDIF»-> «idForPattern(p.target.name, p.target.type.name)» : " «p.type.name»"'''
 	}
 
-	// Visualization for Kernel rule
-	private def static visualiseKernelPattern(ObjectVariablePattern p, String domain) {
-		'''
-			class «idForPattern(p.name, p.type.name)» <<KERN>> <<«domain»>>
-			 «FOR lv : p.linkVariablePatterns»
-			 	«IbexPlantUMLGenerator.visualiseKernelLinkVariable(p, lv)»
-			 «ENDFOR»
-		'''
-	}
-
-	private def static visualiseKernelLinkVariable(ObjectVariablePattern src, LinkVariablePattern p) {
-		'''«idForPattern(src.name, src.type.name)» -[#LightGray]-> «idForPattern(p.target.name, p.target.type.name)» : " «p.type.name»"'''
-	}
-
-	private def static visualiseKernelCorrs(CorrVariablePattern corr) {
-		'''
-			«idForPattern(corr.source.name, corr.source.type.name)» .[#LightGray]..«idForPattern(corr.target.name, corr.target.type.name)» : «StringUtils.abbreviate(corr.name + ":" + corr.type.name, 11)»
-		'''
-	}
-
 	private def static opToColour(Operator op) {
 		if (op !== null)
 			return "GREEN"

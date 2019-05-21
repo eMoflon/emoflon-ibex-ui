@@ -42,7 +42,6 @@ class TGGFormatter extends AbstractFormatter2 {
     val srcArrowKW	= "#src->"
     val trgArrowKW 	= "#trg->"
     val ruleKW		= "#rule"
-    val cmplRuleW	= "#complement"
     val syncKW 		= "#sync:"
     val genKW 		= "#gen:"
     val arrowKW		= "->"
