@@ -1,6 +1,7 @@
 package org.emoflon.ibex.tgg.ui.debug.views;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,6 +57,20 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 		refresh();
 	    }
 	});
+	
+	Button saveModelsButton = new Button(this, SWT.PUSH);
+	saveModelsButton.setText("Save Models");
+	saveModelsButton.setLayoutData("dock south");
+	saveModelsButton.addSelectionListener(new SelectionAdapter() {
+	    @Override
+	    public void widgetSelected(SelectionEvent pSelectionEvent) {
+	    	try {
+				dataProvider.saveModels();
+			} catch (IOException e) {
+				throw new IllegalArgumentException("Save Models has a problem.");
+			}
+	    }
+	});	
 
 	pack();
 	return this;
