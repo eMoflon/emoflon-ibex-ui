@@ -8,7 +8,8 @@ import org.eclipse.core.resources.IProject
 import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.emoflon.ibex.tgg.ide.transformation.EditorTGGtoFlattenedTGG
-import org.moflon.tgg.mosl.tgg.ComplementRule
+import org.moflon.core.ui.visualisation.EMoflonPlantUMLGenerator
+import org.moflon.core.utilities.WorkspaceHelper
 import org.moflon.tgg.mosl.tgg.ContextLinkVariablePattern
 import org.moflon.tgg.mosl.tgg.ContextObjectVariablePattern
 import org.moflon.tgg.mosl.tgg.CorrVariablePattern
@@ -19,8 +20,6 @@ import org.moflon.tgg.mosl.tgg.Operator
 import org.moflon.tgg.mosl.tgg.Rule
 import org.moflon.tgg.mosl.tgg.TggFactory
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
-import org.moflon.core.ui.visualisation.EMoflonPlantUMLGenerator
-import org.moflon.core.utilities.WorkspaceHelper
 
 class IbexPlantUMLGenerator {
  
@@ -29,17 +28,13 @@ class IbexPlantUMLGenerator {
 		if (chosenRule.length == 1) {
 			return visualiseTGGRule(chosenRule.get(0))
 		}
-
+ 
 		val chosenNac = file.nacs.filter[n|n.name.equals(selected)]
 		if (chosenNac.length == 1) {
 			return visualiseNAC(chosenNac.get(0))
 		}
 
-		val chosenComplementRule = file.complementRules.filter[cr|cr.name.equals(selected)]
-		if (chosenComplementRule.length == 1)
-			return visualiseComplementRule(chosenComplementRule.get(0))
-		else
-			return '''title I don't know how to visualise "«StringUtils.abbreviate(selected.replaceAll("\\s+",""), 20)»"...'''
+		return '''title I don't know how to visualise "«StringUtils.abbreviate(selected.replaceAll("\\s+",""), 20)»"...'''
 	}
 
 	def static String visualiseNAC(Nac n) {
@@ -93,50 +88,6 @@ class IbexPlantUMLGenerator {
 		]).orElse("title Unable to visualise NAC")
 	}
 
-	def static String visualiseComplementRule(ComplementRule cr) {
-		'''
-					«EMoflonPlantUMLGenerator.plantUMLPreamble()»
-					
-				together {
-					«FOR sp : cr.sourcePatterns»
-						«visualisePattern(sp, "SRC")»
-					«ENDFOR»
-				}
-				
-				together {
-					«FOR tp : cr.targetPatterns»
-						«visualisePattern(tp, "TRG")»
-					«ENDFOR»
-				}
-				together {
-					«FOR cp : cr.correspondencePatterns»
-						«visualiseCorrs(cp)»
-					«ENDFOR»			
-				}
-				
-				namespace «cr.kernel.name» <<frame>> {
-					«FOR sp : cr.kernel.sourcePatterns»
-						«visualiseKernelPattern(sp, "SRC")»
-					«ENDFOR»
-				}
-			
-						namespace «cr.kernel.name» <<frame>> {
-							«FOR tp : cr.kernel.targetPatterns»
-								«visualiseKernelPattern(tp, "TRG")»
-							«ENDFOR»
-						}
-						
-						namespace «cr.kernel.name» <<frame>> {
-							«FOR sp : cr.kernel.correspondencePatterns»
-								«visualiseKernelCorrs(sp)»
-							«ENDFOR»
-						}
-						
-						«connectSameObjectVariablesCR(cr.sourcePatterns, cr.kernel.sourcePatterns, cr.kernel.name)»
-						«connectSameObjectVariablesCR(cr.targetPatterns, cr.kernel.targetPatterns, cr.kernel.name)»
-						
-		'''
-	}
 
 	def static connectSameObjectVariables(EList<ContextObjectVariablePattern> nac, EList<ObjectVariablePattern> rule,
 		String ruleName) {
@@ -221,26 +172,6 @@ class IbexPlantUMLGenerator {
 		'''«idForPattern(src.name, src.type.name)» -«IF (p.op !== null)»[#SpringGreen]«ENDIF»-> «idForPattern(p.target.name, p.target.type.name)» : " «p.type.name»"'''
 	}
 
-	// Visualization for Kernel rule
-	private def static visualiseKernelPattern(ObjectVariablePattern p, String domain) {
-		'''
-			class «idForPattern(p.name, p.type.name)» <<KERN>> <<«domain»>>
-			 «FOR lv : p.linkVariablePatterns»
-			 	«IbexPlantUMLGenerator.visualiseKernelLinkVariable(p, lv)»
-			 «ENDFOR»
-		'''
-	}
-
-	private def static visualiseKernelLinkVariable(ObjectVariablePattern src, LinkVariablePattern p) {
-		'''«idForPattern(src.name, src.type.name)» -[#LightGray]-> «idForPattern(p.target.name, p.target.type.name)» : " «p.type.name»"'''
-	}
-
-	private def static visualiseKernelCorrs(CorrVariablePattern corr) {
-		'''
-			«idForPattern(corr.source.name, corr.source.type.name)» .[#LightGray]..«idForPattern(corr.target.name, corr.target.type.name)» : «StringUtils.abbreviate(corr.name + ":" + corr.type.name, 11)»
-		'''
-	}
-
 	private def static opToColour(Operator op) {
 		if (op !== null)
 			return "GREEN"
@@ -266,9 +197,6 @@ class IbexPlantUMLGenerator {
 			«FOR r : tgg.rules»
 				«IF r.abstractRule»abstract«ENDIF» class "«r.name»" «platformURIToRule(projectName, r.name)»
 			«ENDFOR»
-			«FOR r : tgg.complementRules»
-				class "«r.name»" «platformURIToRule(projectName, r.name)»
-			«ENDFOR»
 			«FOR n : tgg.nacs»
 				class "«n.name»"<<NAC>> «platformURIToRule(projectName, n.name)»
 				"«n.rule.name»" --> "«n.name»"
@@ -277,11 +205,6 @@ class IbexPlantUMLGenerator {
 				«FOR sup:r.supertypes»
 					"«r.name»" -up-|> "«sup.name»"
 				«ENDFOR»
-			«ENDFOR»
-			«FOR r : tgg.complementRules»
-				«IF r.kernel !== null»
-					"«r.kernel.name»" *--> "0..*" "«r.name»"
-				«ENDIF»
 			«ENDFOR»
 		'''
 	}

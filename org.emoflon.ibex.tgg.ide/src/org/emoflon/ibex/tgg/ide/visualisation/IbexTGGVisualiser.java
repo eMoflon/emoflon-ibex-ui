@@ -18,7 +18,6 @@ import org.emoflon.ibex.tgg.ide.transformation.EditorTGGtoFlattenedTGG;
 import org.moflon.core.ui.visualisation.EMoflonPlantUMLGenerator;
 import org.moflon.core.ui.visualisation.common.EMoflonVisualiser;
 import org.moflon.core.utilities.MoflonUtil;
-import org.moflon.tgg.mosl.tgg.ComplementRule;
 import org.moflon.tgg.mosl.tgg.Nac;
 import org.moflon.tgg.mosl.tgg.Rule;
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile;
@@ -82,19 +81,12 @@ public class IbexTGGVisualiser extends EMoflonVisualiser {
 		TripleGraphGrammarFile flattened = flattenedOptional.get();
 
 		// If there's only one TGG rule, then visualize this.
-		if (flattened.getRules().size() == 1 && flattened.getNacs().size() == 0
-				&& flattened.getComplementRules().size() == 0)
+		if (flattened.getRules().size() == 1 && flattened.getNacs().size() == 0)
 			return IbexPlantUMLGenerator.visualiseTGGRule(flattened.getRules().get(0));
 
 		// If there's only one NAC, then visualize this.
-		if (flattened.getRules().size() == 0 && flattened.getNacs().size() == 1
-				&& flattened.getComplementRules().size() == 0)
+		if (flattened.getRules().size() == 0 && flattened.getNacs().size() == 1)
 			return IbexPlantUMLGenerator.visualiseNAC(flattened.getNacs().get(0));
-
-		// If there's only one complement rule, then visualize this.
-		if (flattened.getRules().size() == 0 && flattened.getNacs().size() == 0
-				&& flattened.getComplementRules().size() == 1)
-			return IbexPlantUMLGenerator.visualiseComplementRule(flattened.getComplementRules().get(0));
 
 		// Otherwise visualize what the user has selected in the TGG editor.
 		return visualizeSelection(file, flattened, selection);
@@ -121,13 +113,6 @@ public class IbexTGGVisualiser extends EMoflonVisualiser {
 				}
 			}
 
-			for (final ComplementRule rule : file.getComplementRules()) {
-				ICompositeNode object = NodeModelUtils.getNode(rule);
-				if (selectionStart >= object.getStartLine() && selectionEnd <= object.getEndLine()) {
-					return IbexPlantUMLGenerator.visualiseComplementRule(flattenedComplementRuleIfPossible(rule, flattened));
-				}
-			}
-			
 			String text = textSelection.getText();
 			if (text != null && !text.isEmpty()) {
 				return IbexPlantUMLGenerator.visualiseTGGFile(flattened, text);
@@ -137,14 +122,6 @@ public class IbexTGGVisualiser extends EMoflonVisualiser {
 		return IbexPlantUMLGenerator.visualiseTGGRuleOverview(file.eResource().getURI().segment(1), file);
 	}
 
-	private ComplementRule flattenedComplementRuleIfPossible(ComplementRule rule, TripleGraphGrammarFile flattened) {
-		return flattened.getComplementRules()//
-				.stream()//
-				.filter(r -> r.getName().equals(rule.getName()))//
-				.findAny()//
-				.orElse(rule);
-	}
-	
 	private Rule flattenedRuleIfPossible(Rule rule, TripleGraphGrammarFile flattened) {
 		return flattened.getRules()//
 				.stream()//

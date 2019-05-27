@@ -19,7 +19,6 @@ import org.moflon.tgg.mosl.tgg.AttrCond;
 import org.moflon.tgg.mosl.tgg.AttributeAssignment;
 import org.moflon.tgg.mosl.tgg.AttributeConstraint;
 import org.moflon.tgg.mosl.tgg.AttributeExpression;
-import org.moflon.tgg.mosl.tgg.ComplementRule;
 import org.moflon.tgg.mosl.tgg.ContextObjectVariablePattern;
 import org.moflon.tgg.mosl.tgg.CorrType;
 import org.moflon.tgg.mosl.tgg.CorrVariablePattern;
@@ -67,7 +66,6 @@ public class EditorTGGtoFlattenedTGG {
 			rules.addAll(newRules);
 
 			cleanUpNACsIfPossible(flattened);
-			cleanUpKernelsIfPossible(flattened);
 			cleanUpDuplicateAttributeConditions(flattened);
 
 			return Optional.of(flattened);
@@ -142,17 +140,6 @@ public class EditorTGGtoFlattenedTGG {
 		if(!a.getOp().equals(assign.getOp())) return false;
 		if(!a.getAttribute().equals(assign.getAttribute())) return false;
 		return identical(a.getValueExp(), assign.getValueExp());
-	}
-
-	private void cleanUpKernelsIfPossible(TripleGraphGrammarFile flattened) {
-		for (ComplementRule cr : flattened.getComplementRules()) {
-			Rule oldKernel = cr.getKernel();
-			Optional<Rule> newKernel = flattened.getRules().stream()
-											   .filter(r -> r.getName().equals(oldKernel.getName()))
-											   .findAny();
-			newKernel.ifPresent(r -> cr.setKernel(r));
-		}
-		
 	}
 
 	private void cleanUpNACsIfPossible(TripleGraphGrammarFile flattened) {
