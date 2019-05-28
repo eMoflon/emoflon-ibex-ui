@@ -5,6 +5,8 @@ import java.util.Collection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
@@ -13,8 +15,6 @@ import org.emoflon.ibex.tgg.operational.matches.IMatch;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-
-import net.miginfocom.swt.MigLayout;
 
 public class MatchListView extends Composite {
 
@@ -38,10 +38,10 @@ public class MatchListView extends Composite {
     }
 
     private MatchListView build() {
-	setLayout(new MigLayout("fill"));
+	setLayout(new GridLayout());
 
 	treeView = new Tree(this, SWT.BORDER | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.SINGLE);
-	treeView.setLayoutData("grow");
+	treeView.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 	treeView.addSelectionListener(new SelectionAdapter() {
 	    @Override
@@ -61,7 +61,7 @@ public class MatchListView extends Composite {
 
 	applyButton = new Button(this, SWT.PUSH);
 	applyButton.setText("Apply match");
-	applyButton.setLayoutData("dock south");
+	applyButton.setLayoutData(new GridData()); // TODO
 	applyButton.addSelectionListener(new SelectionAdapter() {
 	    @Override
 	    public void widgetSelected(SelectionEvent pSelectionEvent) {
