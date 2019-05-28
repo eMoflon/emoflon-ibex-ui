@@ -81,7 +81,7 @@ public class IbexDebugUI implements Runnable {
 
 	SashForm sashForm = new SashForm(pShell, SWT.HORIZONTAL);
 	sashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
-	sashForm.setBackground(sashForm.getDisplay().getSystemColor(SWT.COLOR_GRAY));
+	sashForm.setBackground(display.getSystemColor(SWT.COLOR_GRAY));
 
 	matchListView = MatchListView.create(sashForm);
 	matchListView.setLayoutData(new GridData(GridData.FILL_BOTH));

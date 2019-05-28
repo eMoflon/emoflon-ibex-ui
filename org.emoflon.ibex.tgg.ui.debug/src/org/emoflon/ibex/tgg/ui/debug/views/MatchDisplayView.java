@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -26,6 +27,7 @@ public class MatchDisplayView extends Composite implements IVisualiser {
     private IVictoryDataProvider dataProvider;
     private UserOptionsManager userOptionsManager;
 
+    private ScrolledComposite imageScroller;
     private Label imageContainer;
 
     private MatchDisplayView(Composite parent, IVictoryDataProvider pDataProvider,
@@ -39,11 +41,19 @@ public class MatchDisplayView extends Composite implements IVisualiser {
     private MatchDisplayView build() {
 	setLayout(new GridLayout());
 
-	imageContainer = new Label(this, SWT.BORDER | SWT.CENTER);
+	imageScroller = new ScrolledComposite(this, SWT.H_SCROLL | SWT.V_SCROLL);
+	imageScroller.setLayoutData(new GridData(GridData.FILL_BOTH));
+	imageScroller.setExpandHorizontal(true);
+	imageScroller.setExpandVertical(true);
+	imageScroller.setAlwaysShowScrollBars(true);
+
+	imageContainer = new Label(imageScroller, SWT.BORDER | SWT.CENTER);
 	imageContainer.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 	imageContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
 	imageContainer.setImage(null);
 	imageContainer.pack();
+
+	imageScroller.setContent(imageContainer);
 
 	Button toggleFullRuleVisButton = new Button(this, SWT.TOGGLE);
 	toggleFullRuleVisButton.setText("Full rule Vis");
@@ -112,6 +122,8 @@ public class MatchDisplayView extends Composite implements IVisualiser {
     }
 
     private void displayImage(byte[] pImageData) {
-	imageContainer.setImage(new Image(Display.getCurrent(), new ByteArrayInputStream(pImageData)));
+	Image image = new Image(Display.getCurrent(), new ByteArrayInputStream(pImageData));
+	imageScroller.setMinSize(image.getBounds().width, image.getBounds().height);
+	imageContainer.setImage(image);
     }
 }
