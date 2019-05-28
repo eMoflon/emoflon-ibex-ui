@@ -1,6 +1,7 @@
 package org.emoflon.ibex.tgg.ui.debug.views;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,9 +56,13 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 
 	imageScroller.setContent(imageContainer);
 
-	Button toggleFullRuleVisButton = new Button(this, SWT.TOGGLE);
+	Composite buttonRow = new Composite(this, SWT.NONE);
+	buttonRow.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+	buttonRow.setLayout(new GridLayout(2, true));
+
+	Button toggleFullRuleVisButton = new Button(buttonRow, SWT.TOGGLE);
 	toggleFullRuleVisButton.setText("Full rule Vis");
-	toggleFullRuleVisButton.setLayoutData(new GridData());
+	toggleFullRuleVisButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
 	toggleFullRuleVisButton.addSelectionListener(new SelectionAdapter() {
 	    @Override
 	    public void widgetSelected(SelectionEvent pSelectionEvent) {
@@ -65,6 +70,20 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 		refresh();
 	    }
 	});
+
+	Button saveModelsButton = new Button(buttonRow, SWT.PUSH);
+	saveModelsButton.setText("Save Models");
+	saveModelsButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
+	saveModelsButton.addSelectionListener(new SelectionAdapter() {
+	    @Override
+	    public void widgetSelected(SelectionEvent pSelectionEvent) {
+	    	try {
+				dataProvider.saveModels();
+			} catch (IOException e) {
+				throw new IllegalArgumentException("Save Models has a problem.");
+			}
+	    }
+	});	
 
 	pack();
 	return this;
