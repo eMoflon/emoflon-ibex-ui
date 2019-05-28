@@ -8,6 +8,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -19,8 +21,6 @@ import org.emoflon.ibex.tgg.ui.debug.views.visualisable.IMatchVisualisation;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.TGGRuleVisualisation;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.VisualisableElement;
 
-import net.miginfocom.swt.MigLayout;
-
 public class MatchDisplayView extends Composite implements IVisualiser {
 
     private IVictoryDataProvider dataProvider;
@@ -31,24 +31,23 @@ public class MatchDisplayView extends Composite implements IVisualiser {
     private MatchDisplayView(Composite parent, IVictoryDataProvider pDataProvider,
 	    UserOptionsManager pUserOptionsManager) {
 	super(parent, SWT.NONE);
-	setLayout(new MigLayout("fill"));
 
 	dataProvider = pDataProvider;
 	userOptionsManager = pUserOptionsManager;
     }
 
     private MatchDisplayView build() {
-	setLayout(new MigLayout("fill"));
+	setLayout(new GridLayout());
 
 	imageContainer = new Label(this, SWT.BORDER | SWT.CENTER);
 	imageContainer.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
-	imageContainer.setLayoutData("grow");
+	imageContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
 	imageContainer.setImage(null);
 	imageContainer.pack();
 
 	Button toggleFullRuleVisButton = new Button(this, SWT.TOGGLE);
 	toggleFullRuleVisButton.setText("Full rule Vis");
-	toggleFullRuleVisButton.setLayoutData("dock north");
+	toggleFullRuleVisButton.setLayoutData(new GridData());
 	toggleFullRuleVisButton.addSelectionListener(new SelectionAdapter() {
 	    @Override
 	    public void widgetSelected(SelectionEvent pSelectionEvent) {
