@@ -103,6 +103,7 @@ public class MatchListView extends Composite {
 	treeView.removeAll();
 	ruleItems.clear();
 	matchItems.clear();
+	applyButton.setEnabled(false);
 
 	if (pMatches == null)
 	    return;
