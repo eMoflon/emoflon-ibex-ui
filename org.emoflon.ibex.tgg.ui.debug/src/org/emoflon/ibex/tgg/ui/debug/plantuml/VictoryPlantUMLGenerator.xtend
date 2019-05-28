@@ -65,7 +65,7 @@ class VictoryPlantUMLGenerator {
 			
 			skinparam class {
 				BorderColor<<CREATE>> SpringGreen
-				BorderColor<<TRANSLATE>> Grey
+				BorderColor<<TRANSLATE>> Gold
 				BorderColor<<OTHER>> Black
 				BackgroundColor<<TRG>> MistyRose
 				BackgroundColor<<SRC>> LightYellow
