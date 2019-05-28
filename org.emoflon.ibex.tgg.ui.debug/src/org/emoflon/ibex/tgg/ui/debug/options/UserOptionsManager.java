@@ -5,9 +5,9 @@ public class UserOptionsManager implements IUserOptions {
     private boolean isInvalid = false;
 
     private boolean displayFullRuleForMatches = false;
-    private final Op op;
+    private final IBeXOp op;
 
-    public UserOptionsManager(Op pOp) {
+    public UserOptionsManager(IBeXOp pOp) {
 	op = pOp;
     }
 
@@ -15,7 +15,7 @@ public class UserOptionsManager implements IUserOptions {
 	return displayFullRuleForMatches;
     }
 
-    public Op getOp() {
+    public IBeXOp getOp() {
 	return op;
     }
 

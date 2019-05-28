@@ -13,8 +13,7 @@ Require-Bundle: net.sourceforge.plantuml.lib;visibility:=reexport,
  org.emoflon.ibex.tgg.core.runtime;bundle-version="1.0.0"
 Bundle-ManifestVersion: 2
 Bundle-ActivationPolicy: lazy
-Bundle-ClassPath: .,
- lib/miglayout-4.0.jar
+Bundle-ClassPath: .
 Export-Package: org.emoflon.ibex.tgg.ui.debug.core,
  org.emoflon.ibex.tgg.ui.debug.options
 Automatic-Module-Name: org.emoflon.ibex.tgg.ide

@@ -1,21 +1,23 @@
 package org.emoflon.ibex.tgg.ui.debug.core;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.emoflon.ibex.tgg.operational.monitoring.IVictoryDataProvider;
 import org.emoflon.ibex.tgg.operational.monitoring.IbexController;
-import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions.Op;
+import org.emoflon.ibex.tgg.ui.debug.options.IBeXOp;
 import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager;
 import org.emoflon.ibex.tgg.ui.debug.views.MatchDisplayView;
 import org.emoflon.ibex.tgg.ui.debug.views.MatchListView;
-
-import net.miginfocom.swt.MigLayout;
 
 public class IbexDebugUI implements Runnable {
 
     private static Display display;
 
-    private IbexDebugUI(IVictoryDataProvider pDataProvider, Op pOp) {
+    private IbexDebugUI(IVictoryDataProvider pDataProvider, IBeXOp pOp) {
 	dataProvider = pDataProvider;
 	userOptionsManager = new UserOptionsManager(pOp);
     }
@@ -34,7 +36,7 @@ public class IbexDebugUI implements Runnable {
      * 
      * @return the IBeX debugging UI that was created
      */
-    public static IbexDebugUI create(IVictoryDataProvider pDataProvider, Op pOp) {
+    public static IbexDebugUI create(IVictoryDataProvider pDataProvider, IBeXOp pOp) {
 	Thread.currentThread().setName("IbexDebugUI - SWT UI thread");
 	return new IbexDebugUI(pDataProvider, pOp);
     }
@@ -66,13 +68,20 @@ public class IbexDebugUI implements Runnable {
     }
 
     private void initUI(Shell pShell) {
-	pShell.setLayout(new MigLayout("fill", "[30%][70%]"));
+	GridLayout layout = new GridLayout(2, false);
+	pShell.setLayout(layout);
 
-	matchListView = MatchListView.create(pShell);
-	matchListView.setLayoutData("grow");
+	SashForm sashForm = new SashForm(pShell, SWT.HORIZONTAL);
+	sashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
+	sashForm.setBackground(display.getSystemColor(SWT.COLOR_GRAY));
 
-	matchDisplayView = MatchDisplayView.create(pShell, dataProvider, userOptionsManager);
-	matchDisplayView.setLayoutData("grow");
+	matchListView = MatchListView.create(sashForm);
+	matchListView.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+	matchDisplayView = MatchDisplayView.create(sashForm, dataProvider, userOptionsManager);
+	matchDisplayView.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+	sashForm.setWeights(new int[] { 30, 70 });
 
 	matchListView.registerVisualiser(matchDisplayView);
 

@@ -11,7 +11,7 @@ import java.util.Collection
 import org.eclipse.emf.ecore.EAttribute
 import org.eclipse.emf.ecore.EObject
 import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions
-import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions.Op
+import org.emoflon.ibex.tgg.ui.debug.options.IBeXOp
 
 class VictoryPlantUMLGenerator {
 	
@@ -75,7 +75,7 @@ class VictoryPlantUMLGenerator {
 		'''
 	}
 	
-	private def static String visualiseRule(TGGRule rule, boolean groupFullRule, boolean showCreated, Op op) {
+	private def static String visualiseRule(TGGRule rule, boolean groupFullRule, boolean showCreated, IBeXOp op) {
 		
 		val nodeGroupMap = rule.nodes.groupBy[it.domainType]
 		val nodeIdMap = rule.nodes.toInvertedMap[idForNode]
@@ -176,12 +176,12 @@ class VictoryPlantUMLGenerator {
 		'''"«node.name» : «node.type.name»"'''
 	}
 	
-	private def static String getColorDefinitions(BindingType binding, DomainType domain, Op op) {
+	private def static String getColorDefinitions(BindingType binding, DomainType domain, IBeXOp op) {
 		
 		var bindingColour = "OTHER"
 		if(binding === BindingType.CREATE)
-			if((op === Op.INITIAL_FWD && domain === DomainType.SRC)
-				|| (op === Op.INITIAL_BWD && domain === DomainType.TRG))
+			if((op === IBeXOp.INITIAL_FWD && domain === DomainType.SRC)
+				|| (op === IBeXOp.INITIAL_BWD && domain === DomainType.TRG))
 					bindingColour = "TRANSLATE"
 			else
 				bindingColour = "CREATE"
