@@ -332,7 +332,7 @@ class TGGValidator extends AbstractTGGValidator {
 	}
 
 	def noCreateObjectVariableInContextCorrespondence(ObjectVariablePattern ov, EStructuralFeature structuralFeature) {
-		if (ov !== null && "++".equals(ov.op.value)) {
+		if (ov !== null && ov.op !== null && "++".equals(ov.op.value)) {
 			error(
 				"A context correspondence must not reference elements created by the rule!",
 				structuralFeature,
