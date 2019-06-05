@@ -1,10 +1,8 @@
 package org.emoflon.ibex.tgg.ui.debug.core;
 
-import java.util.Collection;
-import java.util.Map;
-
 import org.emoflon.ibex.tgg.operational.matches.IMatch;
 import org.emoflon.ibex.tgg.operational.monitoring.IbexController;
+import org.emoflon.ibex.tgg.operational.monitoring.VictoryDataPackage;
 import org.emoflon.ibex.tgg.ui.debug.views.MatchListView;
 
 public class UIController extends IbexController {
@@ -23,10 +21,10 @@ public class UIController extends IbexController {
     }
 
     @Override
-    public IMatch chooseOneMatch(Map<IMatch, Collection<IMatch>> matches) {
+    public IMatch chooseOneMatch(VictoryDataPackage pDataPackage) {
 	// CONCURRENCY: Ibex thread only
 
-	IbexDebugUI.getDisplay().syncExec(() -> matchListView.populate(matches.keySet()));
+	IbexDebugUI.getDisplay().syncExec(() -> matchListView.populate(pDataPackage.getMatches()));
 
 	return matchListView.getChosenMatch();
     }
