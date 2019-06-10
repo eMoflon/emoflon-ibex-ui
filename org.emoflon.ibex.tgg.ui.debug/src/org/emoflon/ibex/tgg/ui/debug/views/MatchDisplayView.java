@@ -58,7 +58,7 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 
 	Composite buttonRow = new Composite(this, SWT.NONE);
 	buttonRow.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-	buttonRow.setLayout(new GridLayout(2, true));
+	buttonRow.setLayout(new GridLayout(3, false));
 
 	Button toggleFullRuleVisButton = new Button(buttonRow, SWT.TOGGLE);
 	toggleFullRuleVisButton.setText("Full rule Vis");
@@ -77,13 +77,23 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	saveModelsButton.addSelectionListener(new SelectionAdapter() {
 	    @Override
 	    public void widgetSelected(SelectionEvent pSelectionEvent) {
-	    	try {
-				dataProvider.saveModels();
-			} catch (IOException e) {
-				throw new IllegalArgumentException("Save Models has a problem.");
-			}
+		try {
+		    dataProvider.saveModels();
+		} catch (IOException e) {
+		    throw new IllegalArgumentException("Save Models has a problem.");
+		}
 	    }
-	});	
+	});
+
+	Button terminateButton = new Button(buttonRow, SWT.PUSH);
+	terminateButton.setText("Quit Debugger");
+	terminateButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
+	terminateButton.addSelectionListener(new SelectionAdapter() {
+	    @Override
+	    public void widgetSelected(SelectionEvent pSelectionEvent) {
+		System.exit(0);
+	    }
+	});
 
 	pack();
 	return this;

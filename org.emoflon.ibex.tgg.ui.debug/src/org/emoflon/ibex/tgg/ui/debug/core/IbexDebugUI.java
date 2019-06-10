@@ -65,6 +65,7 @@ public class IbexDebugUI implements Runnable {
 	    if (!display.readAndDispatch())
 		display.sleep();
 	display.dispose();
+	System.exit(0);
     }
 
     private void initUI(Shell pShell) {
