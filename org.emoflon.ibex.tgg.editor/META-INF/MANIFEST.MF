@@ -22,8 +22,7 @@ Require-Bundle: org.antlr.runtime,
  org.eclipse.xtext.common.types,
  org.eclipse.xtext.util,
  org.eclipse.xtext.xbase.lib,
- org.moflon.core.utilities,
- org.objectweb.asm;bundle-version="[7.0.0,7.1.0)";resolution:=optional
+ org.moflon.core.utilities
 Bundle-ClassPath: .antlr-generator-3.2.0-patch.jar,
  .
 Export-Package: org.moflon.ide.mosl.core.scoping,
