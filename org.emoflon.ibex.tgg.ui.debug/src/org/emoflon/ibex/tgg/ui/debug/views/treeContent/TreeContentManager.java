@@ -1,12 +1,14 @@
 package org.emoflon.ibex.tgg.ui.debug.views.treeContent;
 
+import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeNode.TreeRootNode;
 
-public class TreeContentManager implements ITreeContentProvider, ILabelProvider {
+public class TreeContentManager implements ITreeContentProvider, ILabelProvider, IColorProvider {
 
     private TreeRootNode root = new TreeRootNode();
 
@@ -50,6 +52,11 @@ public class TreeContentManager implements ITreeContentProvider, ILabelProvider 
 	    throw new IllegalStateException("Tree must not contain any elements other than TreeNodes");
     }
 
+    @Override
+    public void dispose() {
+	root.dispose();
+    }
+
     /*
      * ILabelProvider methods
      */
@@ -88,8 +95,23 @@ public class TreeContentManager implements ITreeContentProvider, ILabelProvider 
 	    throw new IllegalStateException("Tree must not contain any elements other than TreeNodes");
     }
 
+    /*
+     * IColorProvider methods
+     */
+
     @Override
-    public void dispose() {
-	root.dispose();
+    public Color getForeground(Object pElement) {
+	if (pElement instanceof TreeNode)
+	    return ((TreeNode) pElement).getForeground();
+	else
+	    throw new IllegalStateException("Tree must not contain any elements other than TreeNodes");
+    }
+
+    @Override
+    public Color getBackground(Object pElement) {
+	if (pElement instanceof TreeNode)
+	    return ((TreeNode) pElement).getBackground();
+	else
+	    throw new IllegalStateException("Tree must not contain any elements other than TreeNodes");
     }
 }

@@ -3,6 +3,7 @@ package org.emoflon.ibex.tgg.ui.debug.views.treeContent;
 import java.util.Collection;
 import java.util.HashSet;
 
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
 public abstract class TreeNode {
@@ -37,6 +38,10 @@ public abstract class TreeNode {
 
     protected abstract Image getImage();
 
+    protected abstract Color getForeground();
+
+    protected abstract Color getBackground();
+
     /**
      * Called when this node is disposed. Specifically intended to dispose of any
      * image resources that might have been cached by a subclass.<br>
@@ -68,6 +73,16 @@ public abstract class TreeNode {
 
 	@Override
 	public Image getImage() {
+	    return null;
+	}
+
+	@Override
+	protected Color getForeground() {
+	    return null;
+	}
+
+	@Override
+	protected Color getBackground() {
 	    return null;
 	}
     }
