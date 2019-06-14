@@ -40,6 +40,11 @@ public class MatchListContentManager {
 	    return;
 	}
 
+	for (IMatch existingMatch : matchNodes.keySet())
+	    if (!pMatches.contains(existingMatch)) {
+		matchNodes.remove(existingMatch).removeFromParent();
+	    }
+
 	for (IMatch match : pMatches) {
 	    if (!matchNodes.containsKey(match)) {
 		MatchNode node = new MatchNode(match, match.getPatternName());

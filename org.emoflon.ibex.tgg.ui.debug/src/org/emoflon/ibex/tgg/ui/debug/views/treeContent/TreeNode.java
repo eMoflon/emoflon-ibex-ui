@@ -29,6 +29,10 @@ public abstract class TreeNode {
 	    removeChild(child);
     }
 
+    public void removeFromParent() {
+	parent.removeChild(this);
+    }
+
     protected abstract String getLabel();
 
     protected abstract Image getImage();
