@@ -23,6 +23,8 @@ import org.emoflon.ibex.tgg.ui.debug.views.visualisable.IMatchVisualisation;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.TGGRuleVisualisation;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.VisualisableElement;
 
+import language.TGGRule;
+
 public class MatchDisplayView extends Composite implements IVisualiser {
 
     private IVictoryDataProvider dataProvider;
@@ -58,10 +60,10 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 
 	Composite buttonRow = new Composite(this, SWT.NONE);
 	buttonRow.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-	buttonRow.setLayout(new GridLayout(2, true));
+	buttonRow.setLayout(new GridLayout(3, false));
 
 	Button toggleFullRuleVisButton = new Button(buttonRow, SWT.TOGGLE);
-	toggleFullRuleVisButton.setText("Full rule Vis");
+	toggleFullRuleVisButton.setText("Full Vis");
 	toggleFullRuleVisButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
 	toggleFullRuleVisButton.addSelectionListener(new SelectionAdapter() {
 	    @Override
@@ -77,13 +79,23 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	saveModelsButton.addSelectionListener(new SelectionAdapter() {
 	    @Override
 	    public void widgetSelected(SelectionEvent pSelectionEvent) {
-	    	try {
-				dataProvider.saveModels();
-			} catch (IOException e) {
-				throw new IllegalArgumentException("Save Models has a problem.");
-			}
+		try {
+		    dataProvider.saveModels();
+		} catch (IOException e) {
+		    throw new IllegalArgumentException("Save Models has a problem.");
+		}
 	    }
-	});	
+	});
+
+	Button terminateButton = new Button(buttonRow, SWT.PUSH);
+	terminateButton.setText("Quit Debugger");
+	terminateButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
+	terminateButton.addSelectionListener(new SelectionAdapter() {
+	    @Override
+	    public void widgetSelected(SelectionEvent pSelectionEvent) {
+		System.exit(0);
+	    }
+	});
 
 	pack();
 	return this;
@@ -98,20 +110,20 @@ public class MatchDisplayView extends Composite implements IVisualiser {
      * display specific code
      */
 
-    private Map<String, VisualisableElement> ruleElementMap = new HashMap<>();
+    private Map<TGGRule, VisualisableElement> ruleElementMap = new HashMap<>();
     private Map<IMatch, VisualisableElement> matchElementMap = new HashMap<>();
 
     private VisualisableElement currentElement;
 
     @Override
-    public void display(String pRuleName) {
+    public void display(TGGRule pRule) {
 
-	if (!ruleElementMap.containsKey(pRuleName)) {
-	    VisualisableElement ruleElement = new TGGRuleVisualisation(dataProvider.getRule(pRuleName));
-	    ruleElementMap.put(pRuleName, ruleElement);
+	if (!ruleElementMap.containsKey(pRule)) {
+	    VisualisableElement ruleElement = new TGGRuleVisualisation(pRule, userOptionsManager);
+	    ruleElementMap.put(pRule, ruleElement);
 	}
 
-	currentElement = ruleElementMap.get(pRuleName);
+	currentElement = ruleElementMap.get(pRule);
 
 	refresh();
     }

@@ -8,6 +8,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.emoflon.ibex.tgg.operational.monitoring.IVictoryDataProvider;
 import org.emoflon.ibex.tgg.operational.monitoring.IbexController;
+import org.emoflon.ibex.tgg.ui.debug.options.IBeXOp;
 import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager;
 import org.emoflon.ibex.tgg.ui.debug.views.MatchDisplayView;
 import org.emoflon.ibex.tgg.ui.debug.views.MatchListView;
@@ -16,8 +17,9 @@ public class IbexDebugUI implements Runnable {
 
     private static Display display;
 
-    private IbexDebugUI(IVictoryDataProvider pDataProvider) {
+    private IbexDebugUI(IVictoryDataProvider pDataProvider, IBeXOp pOp) {
 	dataProvider = pDataProvider;
+	userOptionsManager = new UserOptionsManager(pOp);
     }
 
     /**
@@ -34,17 +36,9 @@ public class IbexDebugUI implements Runnable {
      * 
      * @return the IBeX debugging UI that was created
      */
-    public static IbexDebugUI create(IVictoryDataProvider pDataProvider, boolean pRunOnNewThread) {
-	IbexDebugUI ibexDebugUI = new IbexDebugUI(pDataProvider);
-	if (pRunOnNewThread) {
-	    Thread uiThread = new Thread(ibexDebugUI);
-	    uiThread.setName("IbexDebugUI - SWT UI thread");
-	    uiThread.start();
-	} else {
-	    Thread.currentThread().setName("IbexDebugUI - SWT UI thread");
-	}
-
-	return ibexDebugUI;
+    public static IbexDebugUI create(IVictoryDataProvider pDataProvider, IBeXOp pOp) {
+	Thread.currentThread().setName("IbexDebugUI - SWT UI thread");
+	return new IbexDebugUI(pDataProvider, pOp);
     }
 
     public static Display getDisplay() {
@@ -71,19 +65,18 @@ public class IbexDebugUI implements Runnable {
 	    if (!display.readAndDispatch())
 		display.sleep();
 	display.dispose();
+	System.exit(0);
     }
 
     private void initUI(Shell pShell) {
 	GridLayout layout = new GridLayout(2, false);
 	pShell.setLayout(layout);
 
-	userOptionsManager = new UserOptionsManager();
-
 	SashForm sashForm = new SashForm(pShell, SWT.HORIZONTAL);
 	sashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
 	sashForm.setBackground(display.getSystemColor(SWT.COLOR_GRAY));
 
-	matchListView = MatchListView.create(sashForm);
+	matchListView = MatchListView.create(sashForm, dataProvider.getAllRules());
 	matchListView.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 	matchDisplayView = MatchDisplayView.create(sashForm, dataProvider, userOptionsManager);

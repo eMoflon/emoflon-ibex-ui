@@ -45,15 +45,14 @@ import org.eclipse.emf.ecore.xmi.impl.URIHandlerImpl;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
-import org.moflon.core.utilities.ExtensionsUtil;
 import org.emoflon.ibex.tgg.ide.transformation.EditorTGGtoFlattenedTGG;
+import org.moflon.core.utilities.ExtensionsUtil;
 import org.moflon.core.utilities.LogUtils;
 import org.moflon.core.utilities.MoflonUtil;
 import org.moflon.core.utilities.WorkspaceHelper;
 import org.moflon.tgg.mosl.defaults.AttrCondDefLibraryProvider;
 import org.moflon.tgg.mosl.tgg.AttrCond;
 import org.moflon.tgg.mosl.tgg.AttrCondDef;
-import org.moflon.tgg.mosl.tgg.ComplementRule;
 import org.moflon.tgg.mosl.tgg.Nac;
 import org.moflon.tgg.mosl.tgg.Rule;
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile;
@@ -173,7 +172,7 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 
 	public void establishDefaultRunFile(String fileName, boolean debug, BiFunction<String, String, String> generator, Boolean force)
 			throws CoreException {
-	createIfNotExists(RUN_FILE_PATH_PREFIX + (debug ? "debug" : determineNameOfGeneratedFile().toLowerCase()) + "/",
+	createIfNotExists(RUN_FILE_PATH_PREFIX + determineNameOfGeneratedFile().toLowerCase() + (debug ? "/debug/" : "/"),
 		fileName, ".java", generator, force);
 	}
 
@@ -261,7 +260,6 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 
 	private void noTwoRulesWithTheSameName(TripleGraphGrammarFile xtextParsedTGG) {
 		Stream<String> names = xtextParsedTGG.getRules().stream().map(r -> r.getName());
-		names = Stream.concat(names, xtextParsedTGG.getComplementRules().stream().map(r -> r.getName()));
 		names = Stream.concat(names, xtextParsedTGG.getNacs().stream().map(r -> r.getName()));
 		names = names.sorted();
 
@@ -315,7 +313,6 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 					TripleGraphGrammarFile f = (TripleGraphGrammarFile) root;
 					xtextParsedTGG.getRules().addAll(f.getRules());
 					xtextParsedTGG.getNacs().addAll(f.getNacs());
-					xtextParsedTGG.getComplementRules().addAll(f.getComplementRules());
 				}
 			}
 		}
@@ -325,13 +322,6 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 		EList<AttrCondDef> usedAttrCondDefs = new BasicEList<AttrCondDef>();
 		for (Rule rule : xtextParsedTGG.getRules()) {
 			for (AttrCond attrCond : rule.getAttrConditions()) {
-				if (!usedAttrCondDefs.contains(attrCond.getName()) && !attrCond.getName().isUserDefined()) {
-					usedAttrCondDefs.add(attrCond.getName());
-				}
-			}
-		}
-		for (ComplementRule crule : xtextParsedTGG.getComplementRules()) {
-			for (AttrCond attrCond : crule.getAttrConditions()) {
 				if (!usedAttrCondDefs.contains(attrCond.getName()) && !attrCond.getName().isUserDefined()) {
 					usedAttrCondDefs.add(attrCond.getName());
 				}

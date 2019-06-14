@@ -30,7 +30,6 @@ import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
 import org.moflon.tgg.mosl.tgg.Using
 
 import static org.moflon.tgg.mosl.tgg.TggPackage.Literals.*
-import org.moflon.tgg.mosl.tgg.ComplementRule
 
 class TGGFormatter extends AbstractFormatter2 {
 
@@ -43,7 +42,6 @@ class TGGFormatter extends AbstractFormatter2 {
     val srcArrowKW	= "#src->"
     val trgArrowKW 	= "#trg->"
     val ruleKW		= "#rule"
-    val cmplRuleW	= "#complement"
     val syncKW 		= "#sync:"
     val genKW 		= "#gen:"
     val arrowKW		= "->"
@@ -85,9 +83,6 @@ class TGGFormatter extends AbstractFormatter2 {
 		format(triplegraphgrammarfile.getSchema(), document);
 		for (Rule rules : triplegraphgrammarfile.getRules()) {
 			format(rules, document);
-		}
-		for (ComplementRule cmplRules : triplegraphgrammarfile.getComplementRules()) {
-			format(cmplRules, document);
 		}
 		format(triplegraphgrammarfile.library, document);
 	}
@@ -165,38 +160,6 @@ class TGGFormatter extends AbstractFormatter2 {
 		
 		lineSeparator(rule.attrConditions,document)
 		for (AttrCond attrConditions : rule.getAttrConditions()) {
-			format(attrConditions, document);
-		}
-		
-	}
-	
-	def dispatch void format(ComplementRule cmplRule, extension IFormattableDocument document) {
-		cmplRule.append[newLines = 3]
-		cmplRule.regionFor.keyword(cmplRuleW).prepend[setNewLines(2);highPriority]
-		cmplRule.regionFor.keyword(sourceKW).prepend[setNewLines(2)]
-		cmplRule.regionFor.keyword(targetKW).prepend[setNewLines(2)]
-		cmplRule.regionFor.keyword(corrKW).prepend[setNewLines(2)]
-		cmplRule.regionFor.keyword(attrCondsKW).prepend[setNewLines(2)]
-		cmplRule.regionFor.keyword(",").prepend[noSpace]
-	
-		
-		lineSeparator(cmplRule.sourcePatterns, document)
-		for (ObjectVariablePattern sourcePatterns : cmplRule.getSourcePatterns()) {
-			format(sourcePatterns, document);
-		}
-		
-		lineSeparator(cmplRule.targetPatterns, document)
-		for (ObjectVariablePattern targetPatterns : cmplRule.getTargetPatterns()) {
-			format(targetPatterns, document);
-		}
-		
-		lineSeparator(cmplRule.correspondencePatterns,document)
-		for (CorrVariablePattern correspondencePatterns : cmplRule.getCorrespondencePatterns()) {
-			format(correspondencePatterns, document);
-		}
-		
-		lineSeparator(cmplRule.attrConditions,document)
-		for (AttrCond attrConditions : cmplRule.getAttrConditions()) {
 			format(attrConditions, document);
 		}
 		
