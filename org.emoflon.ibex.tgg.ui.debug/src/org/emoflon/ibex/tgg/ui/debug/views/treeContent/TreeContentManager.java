@@ -1,19 +1,25 @@
 package org.emoflon.ibex.tgg.ui.debug.views.treeContent;
 
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.IColorProvider;
-import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeNode.TreeRootNode;
 
-public class TreeContentManager implements ITreeContentProvider, ILabelProvider, IColorProvider {
+public class TreeContentManager implements ITreeContentProvider, IStyledLabelProvider, IColorProvider {
 
     private TreeRootNode root = new TreeRootNode();
 
     public TreeNode getRoot() {
 	return root;
+    }
+
+    public DelegatingStyledCellLabelProvider getCellLabelProvider() {
+	return new DelegatingStyledCellLabelProvider(this);
     }
 
     /*
@@ -88,9 +94,9 @@ public class TreeContentManager implements ITreeContentProvider, ILabelProvider,
     }
 
     @Override
-    public String getText(Object pElement) {
+    public StyledString getStyledText(Object pElement) {
 	if (pElement instanceof TreeNode)
-	    return ((TreeNode) pElement).getLabel();
+	    return ((TreeNode) pElement).getCellLabel();
 	else
 	    throw new IllegalStateException("Tree must not contain any elements other than TreeNodes");
     }

@@ -3,10 +3,21 @@ package org.emoflon.ibex.tgg.ui.debug.views.treeContent;
 import java.util.Collection;
 import java.util.HashSet;
 
+import org.eclipse.jface.resource.FontDescriptor;
+import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.viewers.StyledString.Styler;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.TextStyle;
+import org.emoflon.ibex.tgg.ui.debug.core.IbexDebugUI;
 
 public abstract class TreeNode {
+    private String font = "Monospaced";
+    private int fontSize = 10;
+    private int fontStyle = SWT.NORMAL;
+
     private TreeNode parent;
     private Collection<TreeNode> children = new HashSet<>();
 
@@ -32,6 +43,28 @@ public abstract class TreeNode {
 
     public void removeFromParent() {
 	parent.removeChild(this);
+    }
+
+    public final StyledString getCellLabel() {
+	return new StyledString(getLabel(), new Styler() {
+	    @Override
+	    public void applyStyles(TextStyle pTextStyle) {
+		pTextStyle.font = FontDescriptor.createFrom(new FontData(font, fontSize, fontStyle))
+			.createFont(IbexDebugUI.getDisplay());
+	    }
+	});
+    }
+
+    public void setFont(String pFont) {
+	font = pFont;
+    }
+
+    public void setFontSize(int pFontSize) {
+	fontSize = pFontSize;
+    }
+
+    public void setFontStyle(int pFontStyle) {
+	fontStyle = pFontStyle;
     }
 
     protected abstract String getLabel();

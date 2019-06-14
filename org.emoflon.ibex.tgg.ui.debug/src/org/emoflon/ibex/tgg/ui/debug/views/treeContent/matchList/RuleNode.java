@@ -11,6 +11,7 @@ import language.TGGRule;
 public class RuleNode extends TreeNode {
 
     private TGGRule rule;
+    private boolean markBold;
 
     protected RuleNode(TGGRule pRule) {
 	rule = pRule;
@@ -20,8 +21,13 @@ public class RuleNode extends TreeNode {
 	return rule;
     }
 
+    public void setBold(boolean pBold) {
+	markBold = pBold;
+    }
+
     @Override
     protected String getLabel() {
+	setFontStyle(markBold ? SWT.BOLD : SWT.NORMAL);
 	return rule.getName() + " (" + getChildren().size() + ")";
     }
 

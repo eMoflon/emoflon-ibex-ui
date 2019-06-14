@@ -44,7 +44,7 @@ public class MatchListView extends Composite {
 
 	treeViewer = new TreeViewer(this, SWT.BORDER | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.SINGLE);
 	treeViewer.setContentProvider(contentManager.getTreeContentManager());
-	treeViewer.setLabelProvider(contentManager.getTreeContentManager());
+	treeViewer.setLabelProvider(contentManager.getTreeContentManager().getCellLabelProvider());
 	treeViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 	treeViewer.setInput("root");
 

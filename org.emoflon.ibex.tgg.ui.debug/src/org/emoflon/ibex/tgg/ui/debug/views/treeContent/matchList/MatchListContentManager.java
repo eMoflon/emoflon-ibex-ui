@@ -45,11 +45,16 @@ public class MatchListContentManager {
 		matchNodes.remove(existingMatch).removeFromParent();
 	    }
 
+	for (RuleNode rule : ruleNodes.values())
+	    rule.setBold(false);
+
 	for (IMatch match : pMatches) {
 	    if (!matchNodes.containsKey(match)) {
 		MatchNode node = new MatchNode(match, match.getPatternName());
 		matchNodes.put(match, node);
-		ruleNodes.get(match.getRuleName()).addChild(node);
+		RuleNode rule = ruleNodes.get(match.getRuleName());
+		rule.addChild(node);
+		rule.setBold(true);
 	    }
 	}
     }
