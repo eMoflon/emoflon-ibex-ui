@@ -66,7 +66,7 @@ public class MatchListView extends Composite {
 	});
 
 	applyButton = new Button(this, SWT.PUSH);
-	applyButton.setText("Apply match");
+	applyButton.setText("Apply");
 	applyButton.addSelectionListener(new SelectionAdapter() {
 	    @Override
 	    public void widgetSelected(SelectionEvent pSelectionEvent) {

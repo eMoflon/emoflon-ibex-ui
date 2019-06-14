@@ -63,7 +63,7 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	buttonRow.setLayout(new GridLayout(3, false));
 
 	Button toggleFullRuleVisButton = new Button(buttonRow, SWT.TOGGLE);
-	toggleFullRuleVisButton.setText("Full rule Vis");
+	toggleFullRuleVisButton.setText("Full Vis");
 	toggleFullRuleVisButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
 	toggleFullRuleVisButton.addSelectionListener(new SelectionAdapter() {
 	    @Override
