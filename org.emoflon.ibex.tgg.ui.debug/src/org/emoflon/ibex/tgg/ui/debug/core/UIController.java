@@ -24,7 +24,7 @@ public class UIController extends IbexController {
     public IMatch chooseOneMatch(VictoryDataPackage pDataPackage) {
 	// CONCURRENCY: Ibex thread only
 
-	IbexDebugUI.getDisplay().syncExec(() -> matchListView.populate(pDataPackage.getMatches()));
+	IbexDebugUI.getDisplay().syncExec(() -> matchListView.populate(pDataPackage));
 
 	return matchListView.getChosenMatch();
     }

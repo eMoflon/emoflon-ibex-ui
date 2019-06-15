@@ -14,6 +14,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.emoflon.ibex.tgg.operational.matches.IMatch;
+import org.emoflon.ibex.tgg.operational.monitoring.VictoryDataPackage;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.matchList.MatchListContentManager;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.matchList.MatchNode;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.matchList.RuleNode;
@@ -100,15 +101,12 @@ public class MatchListView extends Composite {
     /**
      * Populates the list-view with the given collection of matches.
      * 
-     * @param pMatches the collection of matches to populate the list-view with
+     * @param pDataPackage the collection of matches to populate the list-view with
      */
-    public void populate(Collection<IMatch> pMatches) {
+    public void populate(VictoryDataPackage pDataPackage) {
 	applyButton.setEnabled(false);
-	contentManager.populate(pMatches);
+	contentManager.populate(pDataPackage);
 	treeViewer.refresh();
-
-	if (pMatches == null)
-	    return;
     }
 
     /**

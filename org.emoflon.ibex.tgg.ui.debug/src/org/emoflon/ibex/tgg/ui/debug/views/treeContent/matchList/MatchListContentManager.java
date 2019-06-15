@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.emoflon.ibex.tgg.operational.matches.IMatch;
+import org.emoflon.ibex.tgg.operational.monitoring.VictoryDataPackage;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeContentManager;
 
 import com.google.common.collect.Maps;
@@ -33,24 +34,27 @@ public class MatchListContentManager {
 	matchNodes = new HashMap<>();
     }
 
-    public void populate(Collection<IMatch> pMatches) {
+    public void populate(VictoryDataPackage pDataPackage) {
 
-	if (pMatches == null || pMatches.isEmpty()) {
+	Collection<IMatch> matches = pDataPackage.getMatches().keySet();
+
+	if (matches == null || matches.isEmpty()) {
 	    // TODO what happens when there are no matches?
 	    return;
 	}
 
 	for (IMatch existingMatch : matchNodes.keySet())
-	    if (!pMatches.contains(existingMatch)) {
+	    if (!matches.contains(existingMatch)) {
 		matchNodes.remove(existingMatch).removeFromParent();
 	    }
 
 	for (RuleNode rule : ruleNodes.values())
 	    rule.setBold(false);
 
-	for (IMatch match : pMatches) {
+	for (IMatch match : matches) {
 	    if (!matchNodes.containsKey(match)) {
-		MatchNode node = new MatchNode(match, match.getPatternName());
+		String matchName = pDataPackage.getMatches().get(match);
+		MatchNode node = new MatchNode(match, matchName == null ? match.getPatternName() : matchName);
 		matchNodes.put(match, node);
 		RuleNode rule = ruleNodes.get(match.getRuleName());
 		rule.addChild(node);
