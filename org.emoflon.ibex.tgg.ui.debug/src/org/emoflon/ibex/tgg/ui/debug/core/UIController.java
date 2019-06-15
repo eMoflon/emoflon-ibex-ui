@@ -23,10 +23,10 @@ public class UIController extends IbexController {
     }
 
     @Override
-    public IMatch chooseOneMatch(Map<IMatch, Collection<IMatch>> matches) {
+    public IMatch chooseOneMatch(Map<IMatch, Collection<IMatch>> applicableMatches, Map<IMatch, Collection<IMatch>> inapplicableMatches) {
 	// CONCURRENCY: Ibex thread only
 
-	IbexDebugUI.getDisplay().syncExec(() -> matchListView.populate(matches.keySet()));
+	IbexDebugUI.getDisplay().syncExec(() -> matchListView.populate(applicableMatches.keySet(), inapplicableMatches.keySet()));
 
 	return matchListView.getChosenMatch();
     }
