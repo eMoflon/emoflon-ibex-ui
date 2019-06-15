@@ -6,7 +6,6 @@ import java.util.HashMap;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -137,7 +136,7 @@ public class MatchListView extends Composite {
 					itemToApplicability.put(ruleItem, false);
 				}
 				TreeItem matchItem = new TreeItem(ruleItems.get(ruleName), SWT.NONE);
-				matchItem.setText("[blocked]" + match.getPatternName());
+				matchItem.setText("[blocked] " + match.getPatternName());
 				matchItem.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
 				matchItems.put(match, matchItem);
 				itemToApplicability.put(matchItem, false);
