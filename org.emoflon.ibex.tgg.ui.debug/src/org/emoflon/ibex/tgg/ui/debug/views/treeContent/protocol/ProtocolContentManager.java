@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeContentManager;
 
 public class ProtocolContentManager {
@@ -30,5 +32,18 @@ public class ProtocolContentManager {
 
     public TreeContentManager getTreeContentManager() {
 	return manager;
+    }
+
+    public ViewerComparator getProtocolNodeComparator() {
+	return new ViewerComparator() {
+	    @Override
+	    public int compare(Viewer pViewer, Object pElement1, Object pElement2) {
+		if (!(pElement1 instanceof ProtocolNode && pElement2 instanceof ProtocolNode))
+		    throw new IllegalStateException(
+			    "Protocol view tree must not contain any elements other than ProtocolNodes");
+
+		return ((ProtocolNode) pElement2).getStep() - ((ProtocolNode) pElement1).getStep();
+	    }
+	};
     }
 }

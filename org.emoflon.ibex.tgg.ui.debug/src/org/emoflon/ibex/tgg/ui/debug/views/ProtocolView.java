@@ -39,6 +39,7 @@ public class ProtocolView extends Composite implements ISharedFocusElement, IVic
 	treeViewer = new TreeViewer(this, SWT.BORDER | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI);
 	treeViewer.setContentProvider(contentManager.getTreeContentManager());
 	treeViewer.setLabelProvider(contentManager.getTreeContentManager().getCellLabelProvider());
+	treeViewer.setComparator(contentManager.getProtocolNodeComparator());
 	treeViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 	treeViewer.setInput("root");
 

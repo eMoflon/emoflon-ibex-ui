@@ -17,6 +17,10 @@ public class ProtocolNode extends TreeNode {
 	changes = pChanges;
     }
 
+    public int getStep() {
+	return step;
+    }
+
     public Set<EObject> getChanges() {
 	return changes;
     }
