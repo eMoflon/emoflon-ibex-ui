@@ -35,8 +35,6 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 	super(pParent, SWT.NONE);
 
 	contentManager = new MatchListContentManager(pRules);
-
-	registerVisualiser(null); // TODO why is this here?
     }
 
     private MatchListView build() {
@@ -93,11 +91,7 @@ public class MatchListView extends Composite implements ISharedFocusElement {
     }
 
     public void registerVisualiser(IVisualiser pVisualiser) {
-	if (pVisualiser == null)
-	    visualiser = new IVisualiser() {
-	    };
-	else
-	    visualiser = pVisualiser;
+	visualiser = pVisualiser;
     }
 
     /**

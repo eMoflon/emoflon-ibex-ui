@@ -1,5 +1,8 @@
 package org.emoflon.ibex.tgg.ui.debug.views;
 
+import java.util.Collection;
+
+import org.eclipse.emf.ecore.EObject;
 import org.emoflon.ibex.tgg.operational.matches.IMatch;
 
 import language.TGGRule;
@@ -10,18 +13,21 @@ public interface IVisualiser {
      * 
      * @param pRuleName the name of the rule to be visualised
      */
-    public default void display(TGGRule pRuleName) {
-	// don't do anything
-    }
+    public void display(TGGRule pRuleName);
 
     /**
      * Called to request the visualisation of a match.
      * 
      * @param pMatch the match to be visualised
      */
-    public default void display(IMatch pMatch) {
-	// don't do anything
-    }
+    public void display(IMatch pMatch);
+
+    /**
+     * Called to request the visualisation of a collection of EObjects.
+     * 
+     * @param pObjectGraph the EObjects to be visualised
+     */
+    public void display(Collection<EObject> pObjectGraph);
 
     /**
      * Called to force a refresh of the currently visualised element.

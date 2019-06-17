@@ -55,6 +55,21 @@ class VictoryPlantUMLGenerator {
 		'''
 	}
 	
+	def static String visualiseObjectGraph(Collection<EObject> eObjects) {
+		'''
+			@startuml
+			«plantUMLPreamble»
+
+			«visualiseEObjectGraph(eObjects.toInvertedMap[
+				val id = labelFor(it) + "_" + indexFor(it)
+				val label = id + " : " + it.eClass.name
+				id->label
+			])»
+			
+			@enduml
+		'''
+	}
+	
 	private def static String plantUMLPreamble(){
 		'''
 			hide empty members

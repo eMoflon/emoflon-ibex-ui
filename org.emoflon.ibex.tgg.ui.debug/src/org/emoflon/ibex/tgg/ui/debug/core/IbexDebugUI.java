@@ -101,6 +101,7 @@ public class IbexDebugUI implements Runnable {
 	mainSashForm.setWeights(new int[] { 30, 70 });
 
 	matchListView.registerVisualiser(matchDisplayView);
+	protocolView.registerVisualiser(matchDisplayView);
 
 	controller = new UIController(matchListView, protocolView);
 

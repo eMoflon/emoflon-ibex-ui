@@ -3,6 +3,7 @@ package org.emoflon.ibex.tgg.ui.debug.views;
 import java.util.Collection;
 import java.util.HashSet;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -29,8 +30,6 @@ public class ProtocolView extends Composite implements ISharedFocusElement, IVic
 	super(pParent, SWT.NONE);
 
 	contentManager = new ProtocolContentManager();
-
-	registerVisualiser(null); // TODO why is this here?
     }
 
     private ProtocolView build() {
@@ -51,11 +50,11 @@ public class ProtocolView extends Composite implements ISharedFocusElement, IVic
 		    sharedFocusElements.forEach(ISharedFocusElement::focusRemoved);
 
 		if (pEvent.getSelection() instanceof IStructuredSelection) {
-
-		    // TODO
-		    Object selectedElement = pEvent.getStructuredSelection().getFirstElement();
-		    if (selectedElement instanceof ProtocolNode) {
-		    }
+		    Collection<EObject> objectGraph = new HashSet<>();
+		    for (Object element : pEvent.getStructuredSelection().toList())
+			if (element instanceof ProtocolNode)
+			    objectGraph.addAll(((ProtocolNode) element).getChanges());
+		    visualiser.display(objectGraph);
 		}
 	    }
 	});
@@ -69,11 +68,7 @@ public class ProtocolView extends Composite implements ISharedFocusElement, IVic
     }
 
     public void registerVisualiser(IVisualiser pVisualiser) {
-	if (pVisualiser == null)
-	    visualiser = new IVisualiser() {
-	    };
-	else
-	    visualiser = pVisualiser;
+	visualiser = pVisualiser;
     }
 
     @Override
