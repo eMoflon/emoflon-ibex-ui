@@ -89,6 +89,10 @@ public class IbexDebugUI implements Runnable {
 	protocolView = ProtocolView.create(leftPanelSashForm, dataProvider.getAllRules());
 	protocolView.setLayoutData(new GridData(GridData.FILL_BOTH));
 
+	// TODO this is ugly, find a better solution
+	matchListView.registerSharedFocus(protocolView);
+	protocolView.registerSharedFocus(matchListView);
+
 	leftPanelSashForm.setWeights(new int[] { 60, 40 });
 
 	matchDisplayView = MatchDisplayView.create(mainSashForm, dataProvider, userOptionsManager);

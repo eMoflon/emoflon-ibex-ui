@@ -1,6 +1,7 @@
 package org.emoflon.ibex.tgg.ui.debug.views;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -12,9 +13,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.emoflon.ibex.tgg.operational.monitoring.VictoryDataPackage;
 import org.emoflon.ibex.tgg.ui.debug.core.IVictoryDataConsumer;
-import org.emoflon.ibex.tgg.ui.debug.views.treeContent.matchList.MatchNode;
-import org.emoflon.ibex.tgg.ui.debug.views.treeContent.matchList.RuleNode;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.protocol.ProtocolContentManager;
+import org.emoflon.ibex.tgg.ui.debug.views.treeContent.protocol.ProtocolNode;
 
 import language.TGGRule;
 
@@ -36,7 +36,7 @@ public class ProtocolView extends Composite implements ISharedFocusElement, IVic
     private ProtocolView build() {
 	setLayout(new GridLayout());
 
-	treeViewer = new TreeViewer(this, SWT.BORDER | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.SINGLE);
+	treeViewer = new TreeViewer(this, SWT.BORDER | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI);
 	treeViewer.setContentProvider(contentManager.getTreeContentManager());
 	treeViewer.setLabelProvider(contentManager.getTreeContentManager().getCellLabelProvider());
 	treeViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -45,13 +45,16 @@ public class ProtocolView extends Composite implements ISharedFocusElement, IVic
 	treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 	    @Override
 	    public void selectionChanged(SelectionChangedEvent pEvent) {
+
+		if (!pEvent.getSelection().isEmpty())
+		    sharedFocusElements.forEach(ISharedFocusElement::focusRemoved);
+
 		if (pEvent.getSelection() instanceof IStructuredSelection) {
+
+		    // TODO
 		    Object selectedElement = pEvent.getStructuredSelection().getFirstElement();
-		    if (selectedElement instanceof MatchNode) {
-			visualiser.display(((MatchNode) selectedElement).getMatch());
-			return;
-		    } else if (selectedElement instanceof RuleNode)
-			visualiser.display(((RuleNode) selectedElement).getRule());
+		    if (selectedElement instanceof ProtocolNode) {
+		    }
 		}
 	    }
 	});
@@ -78,7 +81,7 @@ public class ProtocolView extends Composite implements ISharedFocusElement, IVic
 	treeViewer.refresh();
     }
 
-    private Collection<ISharedFocusElement> sharedFocusElements;
+    private Collection<ISharedFocusElement> sharedFocusElements = new HashSet<>();
 
     @Override
     public void focusRemoved() {
