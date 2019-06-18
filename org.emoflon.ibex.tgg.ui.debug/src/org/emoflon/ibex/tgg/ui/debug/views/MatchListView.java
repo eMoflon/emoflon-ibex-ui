@@ -14,6 +14,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.emoflon.ibex.tgg.operational.matches.IMatch;
+import org.emoflon.ibex.tgg.operational.victory.VictoryMatch;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.matchList.MatchListContentManager;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.matchList.MatchNode;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.matchList.RuleNode;
@@ -24,7 +25,7 @@ public class MatchListView extends Composite {
 
     private IVisualiser visualiser;
 
-//    private Tree treeView;
+    // private Tree treeView;
     private TreeViewer treeViewer;
     private MatchListContentManager contentManager;
     private Button applyButton;
@@ -54,7 +55,7 @@ public class MatchListView extends Composite {
 		if (pEvent.getSelection() instanceof IStructuredSelection) {
 		    Object selectedElement = pEvent.getStructuredSelection().getFirstElement();
 		    if (selectedElement instanceof MatchNode) {
-			visualiser.display(((MatchNode) selectedElement).getMatch());
+			visualiser.display(((MatchNode) selectedElement).getMatch().getIMatch());
 			applyButton.setEnabled(true);
 			return;
 		    } else if (selectedElement instanceof RuleNode)
@@ -74,7 +75,7 @@ public class MatchListView extends Composite {
 
 		if (selection instanceof MatchNode) {
 		    synchronized (chosenMatch) {
-			chosenMatch[0] = ((MatchNode) selection).getMatch();
+			chosenMatch[0] = ((MatchNode) selection).getMatch().getIMatch();
 			chosenMatch.notify();
 		    }
 		}
@@ -100,9 +101,10 @@ public class MatchListView extends Composite {
     /**
      * Populates the list-view with the given collection of matches.
      * 
-     * @param pMatches the collection of matches to populate the list-view with
+     * @param pMatches
+     *            the collection of matches to populate the list-view with
      */
-    public void populate(Collection<IMatch> pMatches) {
+    public void populate(Collection<VictoryMatch> pMatches) {
 	applyButton.setEnabled(false);
 	contentManager.populate(pMatches);
 	treeViewer.refresh();
