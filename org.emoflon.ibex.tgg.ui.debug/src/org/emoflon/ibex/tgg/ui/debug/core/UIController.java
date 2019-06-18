@@ -1,8 +1,8 @@
 package org.emoflon.ibex.tgg.ui.debug.core;
 
 import org.emoflon.ibex.tgg.operational.matches.IMatch;
-import org.emoflon.ibex.tgg.operational.victory.IbexController;
-import org.emoflon.ibex.tgg.operational.victory.VictoryDataPackage;
+import org.emoflon.ibex.tgg.operational.monitoring.IbexController;
+import org.emoflon.ibex.tgg.operational.monitoring.VictoryDataPackage;
 import org.emoflon.ibex.tgg.ui.debug.views.MatchListView;
 
 public class UIController extends IbexController {

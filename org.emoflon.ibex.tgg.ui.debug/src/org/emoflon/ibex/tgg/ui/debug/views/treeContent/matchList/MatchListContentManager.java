@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.emoflon.ibex.tgg.operational.victory.VictoryMatch;
+import org.emoflon.ibex.tgg.operational.monitoring.VictoryMatch;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeContentManager;
 
 import com.google.common.collect.Maps;

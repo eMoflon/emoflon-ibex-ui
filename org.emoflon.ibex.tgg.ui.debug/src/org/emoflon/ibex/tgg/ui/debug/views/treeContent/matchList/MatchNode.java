@@ -2,7 +2,7 @@ package org.emoflon.ibex.tgg.ui.debug.views.treeContent.matchList;
 
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.emoflon.ibex.tgg.operational.victory.VictoryMatch;
+import org.emoflon.ibex.tgg.operational.monitoring.VictoryMatch;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeNode;
 
 public class MatchNode extends TreeNode {
