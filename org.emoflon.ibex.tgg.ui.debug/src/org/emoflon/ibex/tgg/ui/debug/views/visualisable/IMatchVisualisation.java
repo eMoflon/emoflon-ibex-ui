@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import org.eclipse.emf.ecore.EObject;
 import org.emoflon.ibex.tgg.operational.matches.IMatch;
-import org.emoflon.ibex.tgg.operational.monitoring.IVictoryDataProvider;
+import org.emoflon.ibex.tgg.operational.victory.IVictoryDataProvider;
 import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions;
 import org.emoflon.ibex.tgg.ui.debug.plantuml.VictoryPlantUMLGenerator;
 
