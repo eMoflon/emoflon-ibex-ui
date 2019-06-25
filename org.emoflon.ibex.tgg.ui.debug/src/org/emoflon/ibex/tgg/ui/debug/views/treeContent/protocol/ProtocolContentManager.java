@@ -2,11 +2,10 @@ package org.emoflon.ibex.tgg.ui.debug.views.treeContent.protocol;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
+import org.emoflon.ibex.tgg.operational.monitoring.data.ProtocolStep;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeContentManager;
 
 public class ProtocolContentManager {
@@ -19,7 +18,7 @@ public class ProtocolContentManager {
 	protocolNodes = new LinkedList<>();
     }
 
-    public void populate(List<Set<EObject>> pProtocol) {
+    public void populate(List<ProtocolStep> pProtocol) {
 	// TODO perhaps a more elaborate handling is required here
 	// this currently relies on new changes constantly showing up
 

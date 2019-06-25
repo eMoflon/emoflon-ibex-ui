@@ -55,7 +55,7 @@ class VictoryPlantUMLGenerator {
 		'''
 	}
 	
-	def static String visualiseObjectGraph(Collection<EObject> eObjects) {
+	def static String visualiseObjectGraph(Collection<EObject> eObjects, Collection<EObject> corrElements) {
 		'''
 			@startuml
 			«plantUMLPreamble»

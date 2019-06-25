@@ -145,8 +145,8 @@ public class MatchDisplayView extends Composite implements IVisualiser {
     }
 
     @Override
-    public void display(Collection<EObject> pObjectGraph) {
-	currentElement = new ObjectGraphVisualisation(pObjectGraph);
+    public void display(Collection<EObject> pObjectGraph, Collection<EObject> pCorrElements) {
+	currentElement = new ObjectGraphVisualisation(pObjectGraph, pCorrElements);
 	refresh();
     }
 

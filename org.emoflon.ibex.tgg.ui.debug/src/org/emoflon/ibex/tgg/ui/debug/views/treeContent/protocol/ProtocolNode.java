@@ -1,33 +1,42 @@
 package org.emoflon.ibex.tgg.ui.debug.views.treeContent.protocol;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.emoflon.ibex.tgg.operational.monitoring.data.ProtocolStep;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeNode;
 
 public class ProtocolNode extends TreeNode {
 
-    private int step;
-    private Set<EObject> changes;
+    private int index;
+    private ProtocolStep step;
 
-    public ProtocolNode(int pStep, Set<EObject> pChanges) {
+    public ProtocolNode(int pIndex, ProtocolStep pStep) {
+	index = pIndex;
 	step = pStep;
-	changes = pChanges;
     }
 
     public int getStep() {
-	return step;
+	return index;
     }
 
-    public Set<EObject> getChanges() {
+    public Set<EObject> getModelChanges() {
+	Set<EObject> changes = new HashSet<EObject>();
+	changes.addAll(step.getSrcElements());
+	changes.addAll(step.getTrgElements());
 	return changes;
+    }
+
+    public Set<EObject> getCorrChanges() {
+	return step.getCorrElements();
     }
 
     @Override
     protected String getLabel() {
-	return "Protocol step #" + step;
+	return "Protocol step #" + index;
     }
 
     @Override

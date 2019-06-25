@@ -51,10 +51,14 @@ public class ProtocolView extends Composite implements ISharedFocusElement, IVic
 
 		if (pEvent.getSelection() instanceof IStructuredSelection) {
 		    Collection<EObject> objectGraph = new HashSet<>();
+		    Collection<EObject> corrElements = new HashSet<>();
 		    for (Object element : pEvent.getStructuredSelection().toList())
-			if (element instanceof ProtocolNode)
-			    objectGraph.addAll(((ProtocolNode) element).getChanges());
-		    visualiser.display(objectGraph);
+			if (element instanceof ProtocolNode) {
+			    ProtocolNode node = (ProtocolNode) element;
+			    objectGraph.addAll(node.getModelChanges());
+			    corrElements.addAll(node.getCorrChanges());
+			}
+		    visualiser.display(objectGraph, corrElements);
 		}
 	    }
 	});

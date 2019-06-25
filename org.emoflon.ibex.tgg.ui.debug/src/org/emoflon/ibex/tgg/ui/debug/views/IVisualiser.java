@@ -27,7 +27,7 @@ public interface IVisualiser {
      * 
      * @param pObjectGraph the EObjects to be visualised
      */
-    public void display(Collection<EObject> pObjectGraph);
+    public void display(Collection<EObject> pObjectGraph, Collection<EObject> pCorrElements);
 
     /**
      * Called to force a refresh of the currently visualised element.
