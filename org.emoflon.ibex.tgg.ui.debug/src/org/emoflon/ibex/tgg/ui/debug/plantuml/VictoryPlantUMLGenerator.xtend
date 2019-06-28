@@ -33,11 +33,15 @@ class VictoryPlantUMLGenerator {
 		val paramToNodeMap = match.parameterNames.toInvertedMap[param | rule.nodes.findFirst[node | param === node.name]]
 		val paramToNodeIdMap = paramToNodeMap.mapValues[idForNode(it)]
 		val nonCorrParamToEObjectMap = match.parameterNames.filter[paramToNodeMap.get(it).domainType !== DomainType.CORR].toInvertedMap[match.get(it) as EObject]
-		val eObjectMapping = nonCorrParamToEObjectMap.values.toInvertedMap[
+		val nonCorrEObjectMapping = nonCorrParamToEObjectMap.values.toInvertedMap[
 			val id = labelFor(it) + "_" + indexFor(it)
 			val label = id + " : " + it.eClass.name
 			id->label
 		]
+		
+		val corrEdges = match.parameterNames.filter[paramToNodeMap.get(it).domainType === DomainType.CORR]
+											.map[match.get(it) as EObject]
+											.map[(it.eGet(it.eClass.getEStructuralFeature("source")) as EObject -> it.eGet(it.eClass.getEStructuralFeature("target")) as EObject) -> it.eClass.name]
 		
 		'''
 			@startuml
@@ -45,10 +49,10 @@ class VictoryPlantUMLGenerator {
 			
 			«visualiseRule(rule, true, userOptions.displayFullRuleForMatches, userOptions.op)»
 			
-			«visualiseEObjectGraph(eObjectMapping)»
+			«visualiseEObjectGraph(nonCorrEObjectMapping, corrEdges)»
 			
 			«FOR String param : nonCorrParamToEObjectMap.keySet»
-				«paramToNodeIdMap.get(param)» #.[#Blue]..# «eObjectMapping.get(nonCorrParamToEObjectMap.get(param)).key»
+				«paramToNodeIdMap.get(param)» #.[#Blue]..# «nonCorrEObjectMapping.get(nonCorrParamToEObjectMap.get(param)).key»
 			«ENDFOR»
 			
 			@enduml
@@ -64,6 +68,11 @@ class VictoryPlantUMLGenerator {
 				val id = labelFor(it) + "_" + indexFor(it)
 				val label = id + " : " + it.eClass.name
 				id->label
+			],
+			corrElements.map[
+				(it.eGet(it.eClass.getEStructuralFeature("source")) as EObject 
+					-> it.eGet(it.eClass.getEStructuralFeature("target")) as EObject)
+				 		-> it.eClass.name
 			])»
 			
 			@enduml
@@ -137,7 +146,7 @@ class VictoryPlantUMLGenerator {
 		'''
 	}
 	
-	private def static String visualiseEObjectGraph(Map<EObject, Pair<String, String>> eObjectMapping) {
+	private def static String visualiseEObjectGraph(Map<EObject, Pair<String, String>> eObjectMapping, Iterable<Pair<Pair<EObject, EObject>, String>> corrEdges) {
 		'''
 		together {
 			«FOR object: eObjectMapping.keySet»
@@ -153,6 +162,12 @@ class VictoryPlantUMLGenerator {
 					«ENDIF»
 				«ENDFOR»
 			«ENDFOR»
+			
+			«IF corrEdges !== null»
+				«FOR edge : corrEdges»
+					«eObjectMapping.get(edge.key.key).key» ... «eObjectMapping.get(edge.key.value).key» : «edge.value»
+				«ENDFOR»
+			«ENDIF»
 		}
 		'''
 	}
