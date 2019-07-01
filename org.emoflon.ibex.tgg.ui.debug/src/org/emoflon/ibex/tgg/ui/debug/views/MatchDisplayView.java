@@ -2,11 +2,9 @@ package org.emoflon.ibex.tgg.ui.debug.views;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -20,6 +18,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.emoflon.ibex.tgg.operational.matches.IMatch;
 import org.emoflon.ibex.tgg.operational.monitoring.IVictoryDataProvider;
+import org.emoflon.ibex.tgg.operational.monitoring.data.TGGObjectGraph;
 import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.IMatchVisualisation;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.ObjectGraphVisualisation;
@@ -145,8 +144,8 @@ public class MatchDisplayView extends Composite implements IVisualiser {
     }
 
     @Override
-    public void display(Collection<EObject> pObjectGraph, Collection<EObject> pCorrElements) {
-	currentElement = new ObjectGraphVisualisation(pObjectGraph, pCorrElements);
+    public void display(TGGObjectGraph pObjectGraph) {
+	currentElement = new ObjectGraphVisualisation(pObjectGraph);
 	refresh();
     }
 

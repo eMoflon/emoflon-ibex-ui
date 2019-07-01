@@ -2,8 +2,8 @@ package org.emoflon.ibex.tgg.ui.debug.views;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -13,6 +13,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.emoflon.ibex.tgg.operational.monitoring.VictoryDataPackage;
+import org.emoflon.ibex.tgg.operational.monitoring.data.TGGObjectGraphBuilder;
 import org.emoflon.ibex.tgg.ui.debug.core.IVictoryDataConsumer;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.protocol.ProtocolContentManager;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.protocol.ProtocolNode;
@@ -46,19 +47,25 @@ public class ProtocolView extends Composite implements ISharedFocusElement, IVic
 	    @Override
 	    public void selectionChanged(SelectionChangedEvent pEvent) {
 
-		if (!pEvent.getSelection().isEmpty())
+		if (pEvent.getSelection().isEmpty())
+		    return;
+		else
 		    sharedFocusElements.forEach(ISharedFocusElement::focusRemoved);
 
 		if (pEvent.getSelection() instanceof IStructuredSelection) {
-		    Collection<EObject> objectGraph = new HashSet<>();
-		    Collection<EObject> corrElements = new HashSet<>();
-		    for (Object element : pEvent.getStructuredSelection().toList())
-			if (element instanceof ProtocolNode) {
-			    ProtocolNode node = (ProtocolNode) element;
-			    objectGraph.addAll(node.getModelChanges());
-			    corrElements.addAll(node.getCorrChanges());
-			}
-		    visualiser.display(objectGraph, corrElements);
+		    @SuppressWarnings("unchecked")
+		    List<Object> selection = pEvent.getStructuredSelection().toList();
+
+		    if (selection.size() == 1)
+			visualiser.display(((ProtocolNode) selection.get(0)).getModelChanges());
+		    else {
+			TGGObjectGraphBuilder builder = new TGGObjectGraphBuilder();
+			for (Object element : selection)
+			    if (element instanceof ProtocolNode)
+				builder.add(((ProtocolNode) element).getModelChanges());
+			visualiser.display(builder.build());
+		    }
+
 		}
 	    }
 	});

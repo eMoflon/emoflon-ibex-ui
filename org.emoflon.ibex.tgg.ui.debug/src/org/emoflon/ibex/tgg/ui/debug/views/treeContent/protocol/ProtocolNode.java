@@ -1,12 +1,9 @@
 package org.emoflon.ibex.tgg.ui.debug.views.treeContent.protocol;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.emoflon.ibex.tgg.operational.monitoring.data.ProtocolStep;
+import org.emoflon.ibex.tgg.operational.monitoring.data.TGGObjectGraph;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeNode;
 
 public class ProtocolNode extends TreeNode {
@@ -23,15 +20,8 @@ public class ProtocolNode extends TreeNode {
 	return index;
     }
 
-    public Set<EObject> getModelChanges() {
-	Set<EObject> changes = new HashSet<EObject>();
-	changes.addAll(step.getSrcElements());
-	changes.addAll(step.getTrgElements());
-	return changes;
-    }
-
-    public Set<EObject> getCorrChanges() {
-	return step.getCorrElements();
+    public TGGObjectGraph getModelChanges() {
+	return step.getObjectGraph();
     }
 
     @Override

@@ -12,6 +12,7 @@ import org.eclipse.emf.ecore.EAttribute
 import org.eclipse.emf.ecore.EObject
 import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions
 import org.emoflon.ibex.tgg.ui.debug.options.IBeXOp
+import org.emoflon.ibex.tgg.operational.monitoring.data.TGGObjectGraph
 
 class VictoryPlantUMLGenerator {
 	
@@ -32,12 +33,10 @@ class VictoryPlantUMLGenerator {
 		
 		val paramToNodeMap = match.parameterNames.toInvertedMap[param | rule.nodes.findFirst[node | param === node.name]]
 		val paramToNodeIdMap = paramToNodeMap.mapValues[idForNode(it)]
-		val nonCorrParamToEObjectMap = match.parameterNames.filter[paramToNodeMap.get(it).domainType !== DomainType.CORR].toInvertedMap[match.get(it) as EObject]
-		val nonCorrEObjectMapping = nonCorrParamToEObjectMap.values.toInvertedMap[
-			val id = labelFor(it) + "_" + indexFor(it)
-			val label = id + " : " + it.eClass.name
-			id->label
-		]
+		val srcParamToEObjectMap = match.parameterNames.filter[paramToNodeMap.get(it).domainType === DomainType.SRC].toInvertedMap[match.get(it) as EObject]
+		val trgParamToEObjectMap = match.parameterNames.filter[paramToNodeMap.get(it).domainType === DomainType.TRG].toInvertedMap[match.get(it) as EObject]
+		val nonCorrParamToEObjectMap = srcParamToEObjectMap.union(trgParamToEObjectMap)
+		val nonCorrEObjectMapping = mapEObjects(nonCorrParamToEObjectMap.values)
 		
 		val corrEdges = match.parameterNames.filter[paramToNodeMap.get(it).domainType === DomainType.CORR]
 											.map[match.get(it) as EObject]
@@ -49,7 +48,7 @@ class VictoryPlantUMLGenerator {
 			
 			«visualiseRule(rule, true, userOptions.displayFullRuleForMatches, userOptions.op)»
 			
-			«visualiseEObjectGraph(nonCorrEObjectMapping, corrEdges)»
+			«visualiseEObjectGraph(mapEObjects(srcParamToEObjectMap.values), mapEObjects(trgParamToEObjectMap.values), corrEdges)»
 			
 			«FOR String param : nonCorrParamToEObjectMap.keySet»
 				«paramToNodeIdMap.get(param)» #.[#Blue]..# «nonCorrEObjectMapping.get(nonCorrParamToEObjectMap.get(param)).key»
@@ -59,21 +58,19 @@ class VictoryPlantUMLGenerator {
 		'''
 	}
 	
-	def static String visualiseObjectGraph(Collection<EObject> eObjects, Collection<EObject> corrElements) {
+	def static String visualiseObjectGraph(TGGObjectGraph eObjects) {
 		'''
 			@startuml
 			«plantUMLPreamble»
 
-			«visualiseEObjectGraph(eObjects.toInvertedMap[
-				val id = labelFor(it) + "_" + indexFor(it)
-				val label = id + " : " + it.eClass.name
-				id->label
-			],
-			corrElements.map[
-				(it.eGet(it.eClass.getEStructuralFeature("source")) as EObject 
-					-> it.eGet(it.eClass.getEStructuralFeature("target")) as EObject)
-				 		-> it.eClass.name
-			])»
+			«visualiseEObjectGraph(
+				mapEObjects(eObjects.srcElements),
+				mapEObjects(eObjects.trgElements),
+				eObjects.corrElements.map[
+					(it.eGet(it.eClass.getEStructuralFeature("source")) as EObject 
+						-> it.eGet(it.eClass.getEStructuralFeature("target")) as EObject)
+				 			-> it.eClass.name
+				])»
 			
 			@enduml
 		'''
@@ -95,7 +92,15 @@ class VictoryPlantUMLGenerator {
 				BackgroundColor<<SRC>> LightYellow
 				BackgroundColor<<CORR>> LightCyan 
 				ArrowColor Black
-			}	
+			}
+
+			skinparam object {
+				BorderColor Black
+				BackgroundColor<<TRG>> MistyRose
+				BackgroundColor<<SRC>> LightYellow
+				BackgroundColor<<CORR>> LightCyan 
+				ArrowColor Black
+			}
 		'''
 	}
 	
@@ -146,30 +151,47 @@ class VictoryPlantUMLGenerator {
 		'''
 	}
 	
-	private def static String visualiseEObjectGraph(Map<EObject, Pair<String, String>> eObjectMapping, Iterable<Pair<Pair<EObject, EObject>, String>> corrEdges) {
+	private def static String visualiseEObjectGraph(Map<EObject, Pair<String, String>> srcObjectMapping, Map<EObject, Pair<String, String>> trgObjectMapping, Iterable<Pair<Pair<EObject, EObject>, String>> corrEdges) {
 		'''
 		together {
-			«FOR object: eObjectMapping.keySet»
-				object "«eObjectMapping.get(object).value»" as «eObjectMapping.get(object).key» <<BLACK>> <<SRC>> {
-					«FOR EAttribute attr : object.eClass.EAttributes»
-						«attr.EType.name» «attr.name» «object.eGet(attr)»
-					«ENDFOR»
-				}
-				
-				«FOR contentObject : object.eContents»
-					«IF eObjectMapping.containsKey(contentObject)»
-						«eObjectMapping.get(object).key» --> «eObjectMapping.get(contentObject).key» : «contentObject.eContainingFeature.name»
-					«ENDIF»
-				«ENDFOR»
-			«ENDFOR»
+			«visualiseEObjectGroup(srcObjectMapping, "<<SRC>>")»
+			«visualiseEObjectGroup(trgObjectMapping, "<<TRG>>")»
 			
 			«IF corrEdges !== null»
 				«FOR edge : corrEdges»
-					«eObjectMapping.get(edge.key.key).key» ... «eObjectMapping.get(edge.key.value).key» : «edge.value»
+					«srcObjectMapping.get(edge.key.key).key» ... «trgObjectMapping.get(edge.key.value).key» : «edge.value»
 				«ENDFOR»
 			«ENDIF»
 		}
 		'''
+	}
+	
+	private def static String visualiseEObjectGroup(Map<EObject, Pair<String, String>> eObjectMapping, String colorDefinitions) {
+		'''
+			together {
+				«FOR object: eObjectMapping.keySet»
+					object "«eObjectMapping.get(object).value»" as «eObjectMapping.get(object).key» «colorDefinitions» {
+						«FOR EAttribute attr : object.eClass.EAttributes»
+							«attr.EType.name» «attr.name» «object.eGet(attr)»
+						«ENDFOR»
+					}
+					
+					«FOR contentObject : object.eContents»
+						«IF eObjectMapping.containsKey(contentObject)»
+							«eObjectMapping.get(object).key» --> «eObjectMapping.get(contentObject).key» : «contentObject.eContainingFeature.name»
+						«ENDIF»
+					«ENDFOR»
+				«ENDFOR»
+			}
+		'''
+	}
+	
+	private def static Map<EObject, Pair<String, String>> mapEObjects(Collection<EObject> eObjects) {
+		eObjects.toInvertedMap[
+				val id = labelFor(it) + "_" + indexFor(it)
+				val label = id + " : " + it.eClass.name
+				id->label
+			]
 	}
 	
 	private def static String labelFor(EObject object) {
