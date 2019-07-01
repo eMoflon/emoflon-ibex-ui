@@ -175,7 +175,9 @@ class VictoryPlantUMLGenerator {
 							«attr.EType.name» «attr.name» «object.eGet(attr)»
 						«ENDFOR»
 					}
-					
+				«ENDFOR»
+				
+				«FOR object: eObjectMapping.keySet»
 					«FOR contentObject : object.eContents»
 						«IF eObjectMapping.containsKey(contentObject)»
 							«eObjectMapping.get(object).key» --> «eObjectMapping.get(contentObject).key» : «contentObject.eContainingFeature.name»
