@@ -1,14 +1,9 @@
 package org.emoflon.ibex.tgg.ui.debug.views;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
-
-import javax.management.InvalidAttributeValueException;
-import javax.swing.JComboBox;
+import java.util.Map; 
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;

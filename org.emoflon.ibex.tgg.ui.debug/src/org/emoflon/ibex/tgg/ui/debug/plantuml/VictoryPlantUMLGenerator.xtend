@@ -14,7 +14,6 @@ import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions
 import org.emoflon.ibex.tgg.ui.debug.options.IBeXOp
 import org.emoflon.ibex.tgg.operational.monitoring.data.TGGObjectGraph
 import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager.VisualizationLabelOptions
-import org.apache.commons.lang3.StringUtils
 
 class VictoryPlantUMLGenerator {
 	
