@@ -1,7 +1,6 @@
 package org.emoflon.ibex.tgg.ui.debug.views;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map; 
 
@@ -21,6 +20,7 @@ import org.eclipse.swt.widgets.Label;
 import org.emoflon.ibex.tgg.operational.matches.IMatch;
 import org.emoflon.ibex.tgg.operational.monitoring.IVictoryDataProvider;
 import org.emoflon.ibex.tgg.operational.monitoring.data.TGGObjectGraph;
+import org.emoflon.ibex.tgg.ui.debug.core.IbexDebugUI;
 import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager;
 import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager.VisualizationLabelOptions;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.IMatchVisualisation;
@@ -129,11 +129,7 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 		saveModelsButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent pSelectionEvent) {
-				try {
-					dataProvider.saveModels();
-				} catch (IOException e) {
-					throw new IllegalArgumentException("Save Models has a problem.");
-				}
+				    	SaveDialog.build(IbexDebugUI.getDisplay().getActiveShell(), dataProvider);
 			}
 		});
 
