@@ -18,8 +18,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.emoflon.ibex.tgg.operational.matches.IMatch;
 import org.emoflon.ibex.tgg.operational.monitoring.IVictoryDataProvider;
+import org.emoflon.ibex.tgg.operational.monitoring.data.TGGObjectGraph;
 import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.IMatchVisualisation;
+import org.emoflon.ibex.tgg.ui.debug.views.visualisable.ObjectGraphVisualisation;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.TGGRuleVisualisation;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.VisualisableElement;
 
@@ -138,6 +140,12 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 
 	currentElement = matchElementMap.get(pMatch);
 
+	refresh();
+    }
+
+    @Override
+    public void display(TGGObjectGraph pObjectGraph) {
+	currentElement = new ObjectGraphVisualisation(pObjectGraph);
 	refresh();
     }
 

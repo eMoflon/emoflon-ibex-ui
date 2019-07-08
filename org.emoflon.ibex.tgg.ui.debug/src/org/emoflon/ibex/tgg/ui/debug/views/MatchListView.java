@@ -1,6 +1,7 @@
 package org.emoflon.ibex.tgg.ui.debug.views;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -21,11 +22,10 @@ import org.emoflon.ibex.tgg.ui.debug.views.treeContent.matchList.RuleNode;
 
 import language.TGGRule;
 
-public class MatchListView extends Composite {
+public class MatchListView extends Composite implements ISharedFocusElement {
 
     private IVisualiser visualiser;
 
-    // private Tree treeView;
     private TreeViewer treeViewer;
     private MatchListContentManager contentManager;
     private Button applyButton;
@@ -36,8 +36,6 @@ public class MatchListView extends Composite {
 	super(pParent, SWT.NONE);
 
 	contentManager = new MatchListContentManager(pRules);
-
-	registerVisualiser(null); // TODO why is this here?
     }
 
     private MatchListView build() {
@@ -52,18 +50,21 @@ public class MatchListView extends Composite {
 	treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 	    @Override
 	    public void selectionChanged(SelectionChangedEvent pEvent) {
+
+		applyButton.setEnabled(false);
+
+		if (!pEvent.getSelection().isEmpty())
+		    sharedFocusElements.forEach(ISharedFocusElement::focusRemoved);
+
 		if (pEvent.getSelection() instanceof IStructuredSelection) {
 		    Object selectedElement = pEvent.getStructuredSelection().getFirstElement();
 		    if (selectedElement instanceof MatchNode) {
 			VictoryMatch match = ((MatchNode) selectedElement).getMatch();
 			visualiser.display(match.getIMatch());
 			applyButton.setEnabled(!match.isBlocked());
-			return;
 		    } else if (selectedElement instanceof RuleNode)
 			visualiser.display(((RuleNode) selectedElement).getRule());
 		}
-
-		applyButton.setEnabled(false);
 	    }
 	});
 
@@ -92,11 +93,7 @@ public class MatchListView extends Composite {
     }
 
     public void registerVisualiser(IVisualiser pVisualiser) {
-	if (pVisualiser == null)
-	    visualiser = new IVisualiser() {
-	    };
-	else
-	    visualiser = pVisualiser;
+	visualiser = pVisualiser;
     }
 
     /**
@@ -131,5 +128,17 @@ public class MatchListView extends Composite {
 	    chosenMatch[0] = null;
 	    return match;
 	}
+    }
+
+    private Collection<ISharedFocusElement> sharedFocusElements = new HashSet<>();
+
+    @Override
+    public void focusRemoved() {
+	treeViewer.setSelection(null);
+    }
+
+    @Override
+    public void registerSharedFocus(ISharedFocusElement pSharedFocusElement) {
+	sharedFocusElements.add(pSharedFocusElement);
     }
 }

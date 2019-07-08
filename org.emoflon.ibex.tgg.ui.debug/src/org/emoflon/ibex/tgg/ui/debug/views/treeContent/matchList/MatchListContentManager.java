@@ -2,6 +2,7 @@ package org.emoflon.ibex.tgg.ui.debug.views.treeContent.matchList;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.emoflon.ibex.tgg.operational.monitoring.VictoryMatch;
@@ -40,10 +41,14 @@ public class MatchListContentManager {
 	    return;
 	}
 
-	for (VictoryMatch existingMatch : matchNodes.keySet())
+	Iterator<VictoryMatch> existingMatchesIterator = matchNodes.keySet().iterator();
+	while (existingMatchesIterator.hasNext()) {
+	    VictoryMatch existingMatch = existingMatchesIterator.next();
 	    if (!pMatches.contains(existingMatch)) {
-		matchNodes.remove(existingMatch).removeFromParent();
+		matchNodes.get(existingMatch).removeFromParent();
+		existingMatchesIterator.remove();
 	    }
+	}
 
 	for (RuleNode rule : ruleNodes.values())
 	    rule.setBold(false);
