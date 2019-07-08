@@ -14,6 +14,7 @@ import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions
 import org.emoflon.ibex.tgg.ui.debug.options.IBeXOp
 import org.emoflon.ibex.tgg.operational.monitoring.data.TGGObjectGraph
 import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager.VisualizationLabelOptions
+import org.apache.commons.lang3.StringUtils
 
 class VictoryPlantUMLGenerator {
 	
@@ -233,8 +234,8 @@ class VictoryPlantUMLGenerator {
 	
 	private def static String getLabel(String name, VisualizationLabelOptions labelOptions) {
 		switch(labelOptions) {
-			case FULLNAME: ': "«name»"'
-			case ABBREVIATED : ': "«StringUtils.abbreviateMiddle(name, "...", 10)»"'
+			case FULLNAME: ''': "«name»"'''
+			case ABBREVIATED : ''': "«StringUtils.abbreviateMiddle(name, "...", 10)»"'''
 			case NONE: ''
 		}
 	}
