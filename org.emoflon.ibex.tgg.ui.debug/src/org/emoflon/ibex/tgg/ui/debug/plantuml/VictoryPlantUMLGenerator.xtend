@@ -13,6 +13,8 @@ import org.eclipse.emf.ecore.EObject
 import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions
 import org.emoflon.ibex.tgg.ui.debug.options.IBeXOp
 import org.emoflon.ibex.tgg.operational.monitoring.data.TGGObjectGraph
+import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager.VisualizationLabelOptions
+import org.apache.commons.lang3.StringUtils
 
 class VictoryPlantUMLGenerator {
 	
@@ -28,7 +30,7 @@ class VictoryPlantUMLGenerator {
 			@startuml
 			«plantUMLPreamble»
 
-			«visualiseRule(rule, false, true, userOptions.op)»
+			«visualiseRule(rule, false, true, userOptions.op, userOptions.corrLabelVisualization)»
 			
 			@enduml
 		'''
@@ -53,9 +55,9 @@ class VictoryPlantUMLGenerator {
 			@startuml
 			«plantUMLPreamble»
 			
-			«visualiseRule(rule, true, userOptions.displayFullRuleForMatches, userOptions.op)»
+			«visualiseRule(rule, true, userOptions.displayFullRuleForMatches, userOptions.op, userOptions.corrLabelVisualization)»
 			
-			«visualiseEObjectGraph(mapEObjects(srcParamToEObjectMap.values), mapEObjects(trgParamToEObjectMap.values), corrEdges)»
+			«visualiseEObjectGraph(mapEObjects(srcParamToEObjectMap.values), mapEObjects(trgParamToEObjectMap.values), corrEdges, userOptions.corrLabelVisualization)»
 			
 			«FOR String param : nonCorrParamToEObjectMap.keySet»
 				«paramToNodeIdMap.get(param)» #.[#Blue]..# «nonCorrEObjectMapping.get(nonCorrParamToEObjectMap.get(param)).key»
@@ -65,7 +67,7 @@ class VictoryPlantUMLGenerator {
 		'''
 	}
 	
-	def static String visualiseObjectGraph(TGGObjectGraph eObjects) {
+	def static String visualiseObjectGraph(TGGObjectGraph eObjects, VisualizationLabelOptions corrLabelVisualizationOption) {
 		'''
 			@startuml
 			«plantUMLPreamble»
@@ -77,7 +79,7 @@ class VictoryPlantUMLGenerator {
 					(it.eGet(it.eClass.getEStructuralFeature("source")) as EObject 
 						-> it.eGet(it.eClass.getEStructuralFeature("target")) as EObject)
 				 			-> it.eClass.name
-				])»
+				], corrLabelVisualizationOption)»
 			
 			@enduml
 		'''
@@ -111,7 +113,7 @@ class VictoryPlantUMLGenerator {
 		'''
 	}
 	
-	private def static String visualiseRule(TGGRule rule, boolean groupFullRule, boolean showCreated, IBeXOp op) {
+	private def static String visualiseRule(TGGRule rule, boolean groupFullRule, boolean showCreated, IBeXOp op, VisualizationLabelOptions corrLabelVisualizationOption) {
 		
 		val nodeGroupMap = rule.nodes.groupBy[it.domainType]
 		val nodeIdMap = rule.nodes.toInvertedMap[idForNode]
@@ -143,7 +145,7 @@ class VictoryPlantUMLGenerator {
 				«FOR node : nodeGroupMap.get(DomainType.CORR)»
 					«val corrNode = node as TGGRuleCorr»
 					«IF showCreated || corrNode.bindingType !== BindingType.CREATE»
-						«visualiseRuleCorrEdge(nodeIdMap.get(corrNode.source), nodeIdMap.get(corrNode.target), corrNode.type.name, corrNode.bindingType === BindingType.CREATE)»
+						«visualiseRuleCorrEdge(nodeIdMap.get(corrNode.source), nodeIdMap.get(corrNode.target), corrNode.type.name, corrNode.bindingType === BindingType.CREATE, corrLabelVisualizationOption)»
 					«ENDIF»
 				«ENDFOR»
 			«ENDIF»
@@ -158,7 +160,7 @@ class VictoryPlantUMLGenerator {
 		'''
 	}
 	
-	private def static String visualiseEObjectGraph(Map<EObject, Pair<String, String>> srcObjectMapping, Map<EObject, Pair<String, String>> trgObjectMapping, Iterable<Pair<Pair<EObject, EObject>, String>> corrEdges) {
+	private def static String visualiseEObjectGraph(Map<EObject, Pair<String, String>> srcObjectMapping, Map<EObject, Pair<String, String>> trgObjectMapping, Iterable<Pair<Pair<EObject, EObject>, String>> corrEdges, VisualizationLabelOptions corrLabelVisualizationOption) {
 		'''
 		together {
 			«visualiseEObjectGroup(srcObjectMapping, "<<SRC>>")»
@@ -166,7 +168,7 @@ class VictoryPlantUMLGenerator {
 			
 			«IF corrEdges !== null»
 				«FOR edge : corrEdges»
-					«srcObjectMapping.get(edge.key.key).key» ... «trgObjectMapping.get(edge.key.value).key» : «edge.value»
+					«srcObjectMapping.get(edge.key.key).key» ... «trgObjectMapping.get(edge.key.value).key» «getLabel(edge.value, corrLabelVisualizationOption)»
 				«ENDFOR»
 			«ENDIF»
 		}
@@ -230,8 +232,8 @@ class VictoryPlantUMLGenerator {
 		'''«srcNodeId» -«colorDefinitions»-> «trgNodeId» : "«edgeId»"'''
 	}
 	
-	private def static String visualiseRuleCorrEdge(String srcNodeId, String trgNodeId, String edgeId, boolean bindingTypeCreate) {
-		'''«srcNodeId» ...«IF (bindingTypeCreate)»[#«createColor»]«ENDIF» «trgNodeId» : "«edgeId»"'''
+	private def static String visualiseRuleCorrEdge(String srcNodeId, String trgNodeId, String edgeId, boolean bindingTypeCreate, VisualizationLabelOptions corrLabelVisualizationOption) {
+		'''«srcNodeId» ...«IF (bindingTypeCreate)»[#«createColor»]«ENDIF» «trgNodeId» «getLabel(edgeId, corrLabelVisualizationOption)»'''
 	}
 	
 	private def static String idForNode(TGGRuleNode node) {
@@ -247,7 +249,14 @@ class VictoryPlantUMLGenerator {
 			else
 				bindingColor = createColor
 		'''[#«bindingColor»]'''
-		
+	}
+
+	private def static String getLabel(String name, VisualizationLabelOptions labelOptions) {
+		switch(labelOptions) {
+			case FULLNAME: ''': "«name»"'''
+			case ABBREVIATED : ''': "«StringUtils.abbreviateMiddle(name, "...", 10)»"'''
+			case NONE: ''
+		}
 	}
 	
 	private def static String getColorDefinitions(BindingType binding, DomainType domain, IBeXOp op) {
