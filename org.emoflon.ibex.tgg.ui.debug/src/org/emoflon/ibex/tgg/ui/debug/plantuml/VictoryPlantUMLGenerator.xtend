@@ -161,7 +161,7 @@ class VictoryPlantUMLGenerator {
 			
 			«IF corrEdges !== null»
 				«FOR edge : corrEdges»
-					«srcObjectMapping.get(edge.key.key).key» ... «trgObjectMapping.get(edge.key.value).key» : «getLabel(edge.value, corrLabelVisualizationOption)»
+					«srcObjectMapping.get(edge.key.key).key» ... «trgObjectMapping.get(edge.key.value).key» «getLabel(edge.value, corrLabelVisualizationOption)»
 				«ENDFOR»
 			«ENDIF»
 		}
