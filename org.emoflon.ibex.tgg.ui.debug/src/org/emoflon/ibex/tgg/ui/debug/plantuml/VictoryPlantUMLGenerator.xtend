@@ -234,9 +234,9 @@ class VictoryPlantUMLGenerator {
 	
 	private def static String getLabel(String name, VisualizationLabelOptions labelOptions) {
 		switch(labelOptions) {
-			case FULLNAME: ''': "«name»"'''
-			case ABBREVIATED : ''': "«StringUtils.abbreviateMiddle(name, "...", 10)»""'''
-			case NONE: ''''''
+			case FULLNAME: ': "«name»"'
+			case ABBREVIATED : ': "«StringUtils.abbreviateMiddle(name, "...", 10)»"'
+			case NONE: ''
 		}
 	}
 	
