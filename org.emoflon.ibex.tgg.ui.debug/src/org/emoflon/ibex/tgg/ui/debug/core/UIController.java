@@ -10,36 +10,36 @@ import org.emoflon.ibex.tgg.ui.debug.views.MatchListView;
 
 public class UIController extends IbexController {
 
-    private MatchListView matchListView; // TODO convert to interface
-    private List<IVictoryDataConsumer> dataConsumers;
+	private MatchListView matchListView; // TODO convert to interface
+	private List<IVictoryDataConsumer> dataConsumers;
 
-    public UIController(MatchListView pMatchListView, IVictoryDataConsumer... pDataConsumers) {
-	dataConsumers = Arrays.asList(pDataConsumers);
-	matchListView = pMatchListView;
-    }
+	public UIController(MatchListView pMatchListView, IVictoryDataConsumer... pDataConsumers) {
+		dataConsumers = Arrays.asList(pDataConsumers);
+		matchListView = pMatchListView;
+	}
 
-    @Override
-    public void update(ObservableEvent eventType, Object... additionalInformation) {
-	// CONCURRENCY: Ibex thread only
+	@Override
+	public void update(ObservableEvent eventType, Object... additionalInformation) {
+		// CONCURRENCY: Ibex thread only
 
-	// TODO implement
-    }
+		// TODO implement
+	}
 
-    @Override
-    public IMatch chooseOneMatch(VictoryDataPackage pDataPackage) {
-	// CONCURRENCY: Ibex thread only
+	@Override
+	public IMatch chooseOneMatch(VictoryDataPackage pDataPackage) {
+		// CONCURRENCY: Ibex thread only
 
-	IbexDebugUI.getDisplay().syncExec(() -> dataConsumers.forEach(consumer -> consumer.accept(pDataPackage)));
-	IbexDebugUI.getDisplay().syncExec(() -> matchListView.populate(pDataPackage.getMatches()));
+		IbexDebugUI.getDisplay().syncExec(() -> dataConsumers.forEach(consumer -> consumer.accept(pDataPackage)));
+		IbexDebugUI.getDisplay().syncExec(() -> matchListView.populate(pDataPackage.getMatches()));
 
-	return matchListView.getChosenMatch();
-    }
+		return matchListView.getChosenMatch();
+	}
 
-    @Override
-    protected int getRequestedMatchCount() {
+	@Override
+	protected int getRequestedMatchCount() {
 
-	// TODO implement actual user-specified setting
+		// TODO implement actual user-specified setting
 
-	return 100;
-    }
+		return 100;
+	}
 }
