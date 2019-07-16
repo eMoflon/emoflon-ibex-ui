@@ -2,10 +2,10 @@ package org.emoflon.ibex.tgg.ui.debug.views.treeContent.matchList;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
-import org.emoflon.ibex.tgg.operational.matches.IMatch;
-import org.emoflon.ibex.tgg.operational.monitoring.VictoryDataPackage;
+import org.emoflon.ibex.tgg.operational.monitoring.VictoryMatch;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeContentManager;
 
 import com.google.common.collect.Maps;
@@ -19,7 +19,7 @@ public class MatchListContentManager {
     private Map<String, TGGRule> rules;
 
     private Map<String, RuleNode> ruleNodes;
-    private Map<IMatch, MatchNode> matchNodes;
+    private Map<VictoryMatch, MatchNode> matchNodes;
 
     public MatchListContentManager(Collection<TGGRule> pRules) {
 	rules = Maps.uniqueIndex(pRules, rule -> rule.getName());
@@ -34,29 +34,30 @@ public class MatchListContentManager {
 	matchNodes = new HashMap<>();
     }
 
-    public void populate(VictoryDataPackage pDataPackage) {
+    public void populate(Collection<VictoryMatch> pMatches) {
 
-	Collection<IMatch> matches = pDataPackage.getMatches().keySet();
-
-	if (matches == null || matches.isEmpty()) {
+	if (pMatches == null || pMatches.isEmpty()) {
 	    // TODO what happens when there are no matches?
 	    return;
 	}
 
-	for (IMatch existingMatch : matchNodes.keySet())
-	    if (!matches.contains(existingMatch)) {
-		matchNodes.remove(existingMatch).removeFromParent();
+	Iterator<VictoryMatch> existingMatchesIterator = matchNodes.keySet().iterator();
+	while (existingMatchesIterator.hasNext()) {
+	    VictoryMatch existingMatch = existingMatchesIterator.next();
+	    if (!pMatches.contains(existingMatch)) {
+		matchNodes.get(existingMatch).removeFromParent();
+		existingMatchesIterator.remove();
 	    }
+	}
 
 	for (RuleNode rule : ruleNodes.values())
 	    rule.setBold(false);
 
-	for (IMatch match : matches) {
+	for (VictoryMatch match : pMatches) {
 	    if (!matchNodes.containsKey(match)) {
-		String matchName = pDataPackage.getMatches().get(match);
-		MatchNode node = new MatchNode(match, matchName == null ? match.getPatternName() : matchName);
+		MatchNode node = new MatchNode(match);
 		matchNodes.put(match, node);
-		RuleNode rule = ruleNodes.get(match.getRuleName());
+		RuleNode rule = ruleNodes.get(match.getIMatch().getRuleName());
 		rule.addChild(node);
 		rule.setBold(true);
 	    }

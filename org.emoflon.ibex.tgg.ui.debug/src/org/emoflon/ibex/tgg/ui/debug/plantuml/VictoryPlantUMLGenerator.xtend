@@ -12,15 +12,25 @@ import org.eclipse.emf.ecore.EAttribute
 import org.eclipse.emf.ecore.EObject
 import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions
 import org.emoflon.ibex.tgg.ui.debug.options.IBeXOp
+import org.emoflon.ibex.tgg.operational.monitoring.data.TGGObjectGraph
+import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager.VisualizationLabelOptions
+import org.apache.commons.lang3.StringUtils
 
 class VictoryPlantUMLGenerator {
+	
+	static val createColor = "SpringGreen"
+	static val contextColor = "Black"
+	static val translateColor = "LightSlateGray"
+	static val srcColor = "LightYellow"
+	static val trgColor = "MistyRose"
+	static val corrColor = "LightCyan"
 	
 	def static String visualiseTGGRule(TGGRule rule, IUserOptions userOptions) {
 		'''
 			@startuml
 			«plantUMLPreamble»
 
-			«visualiseRule(rule, false, true, userOptions.op)»
+			«visualiseRule(rule, false, true, userOptions.op, userOptions.corrLabelVisualization)»
 			
 			@enduml
 		'''
@@ -32,24 +42,44 @@ class VictoryPlantUMLGenerator {
 		
 		val paramToNodeMap = match.parameterNames.toInvertedMap[param | rule.nodes.findFirst[node | param === node.name]]
 		val paramToNodeIdMap = paramToNodeMap.mapValues[idForNode(it)]
-		val nonCorrParamToEObjectMap = match.parameterNames.filter[paramToNodeMap.get(it).domainType !== DomainType.CORR].toInvertedMap[match.get(it) as EObject]
-		val eObjectMapping = nonCorrParamToEObjectMap.values.toInvertedMap[
-			val id = labelFor(it) + "_" + indexFor(it)
-			val label = id + " : " + it.eClass.name
-			id->label
-		]
+		val srcParamToEObjectMap = match.parameterNames.filter[paramToNodeMap.get(it).domainType === DomainType.SRC].toInvertedMap[match.get(it) as EObject]
+		val trgParamToEObjectMap = match.parameterNames.filter[paramToNodeMap.get(it).domainType === DomainType.TRG].toInvertedMap[match.get(it) as EObject]
+		val nonCorrParamToEObjectMap = srcParamToEObjectMap.union(trgParamToEObjectMap)
+		val nonCorrEObjectMapping = mapEObjects(nonCorrParamToEObjectMap.values)
+		
+		val corrEdges = match.parameterNames.filter[paramToNodeMap.get(it).domainType === DomainType.CORR]
+											.map[match.get(it) as EObject]
+											.map[(it.eGet(it.eClass.getEStructuralFeature("source")) as EObject -> it.eGet(it.eClass.getEStructuralFeature("target")) as EObject) -> it.eClass.name]
 		
 		'''
 			@startuml
 			«plantUMLPreamble»
 			
-			«visualiseRule(rule, true, userOptions.displayFullRuleForMatches, userOptions.op)»
+			«visualiseRule(rule, true, userOptions.displayFullRuleForMatches, userOptions.op, userOptions.corrLabelVisualization)»
 			
-			«visualiseEObjectGraph(eObjectMapping)»
+			«visualiseEObjectGraph(mapEObjects(srcParamToEObjectMap.values), mapEObjects(trgParamToEObjectMap.values), corrEdges, userOptions.corrLabelVisualization)»
 			
 			«FOR String param : nonCorrParamToEObjectMap.keySet»
-				«paramToNodeIdMap.get(param)» #.[#Blue]..# «eObjectMapping.get(nonCorrParamToEObjectMap.get(param)).key»
+				«paramToNodeIdMap.get(param)» #.[#Blue]..# «nonCorrEObjectMapping.get(nonCorrParamToEObjectMap.get(param)).key»
 			«ENDFOR»
+			
+			@enduml
+		'''
+	}
+	
+	def static String visualiseObjectGraph(TGGObjectGraph eObjects, VisualizationLabelOptions corrLabelVisualizationOption) {
+		'''
+			@startuml
+			«plantUMLPreamble»
+
+			«visualiseEObjectGraph(
+				mapEObjects(eObjects.srcElements),
+				mapEObjects(eObjects.trgElements),
+				eObjects.corrElements.map[
+					(it.eGet(it.eClass.getEStructuralFeature("source")) as EObject 
+						-> it.eGet(it.eClass.getEStructuralFeature("target")) as EObject)
+				 			-> it.eClass.name
+				], corrLabelVisualizationOption)»
 			
 			@enduml
 		'''
@@ -64,18 +94,26 @@ class VictoryPlantUMLGenerator {
 			skinparam shadowing false
 			
 			skinparam class {
-				BorderColor<<CREATE>> SpringGreen
-				BorderColor<<TRANSLATE>> Gold
-				BorderColor<<OTHER>> Black
-				BackgroundColor<<TRG>> MistyRose
-				BackgroundColor<<SRC>> LightYellow
-				BackgroundColor<<CORR>> LightCyan 
-				ArrowColor Black
-			}	
+				BorderColor<<CREATE>> «createColor»
+				BorderColor<<TRANSLATE>> «translateColor»
+				BorderColor<<OTHER>> «contextColor»
+				BackgroundColor<<TRG>> «trgColor»
+				BackgroundColor<<SRC>> «srcColor»
+				BackgroundColor<<CORR>> «corrColor»
+				ArrowColor «contextColor»
+			}
+
+			skinparam object {
+				BorderColor «contextColor»
+				BackgroundColor<<TRG>> «trgColor»
+				BackgroundColor<<SRC>> «srcColor»
+				BackgroundColor<<CORR>> «corrColor» 
+				ArrowColor «contextColor»
+			}
 		'''
 	}
 	
-	private def static String visualiseRule(TGGRule rule, boolean groupFullRule, boolean showCreated, IBeXOp op) {
+	private def static String visualiseRule(TGGRule rule, boolean groupFullRule, boolean showCreated, IBeXOp op, VisualizationLabelOptions corrLabelVisualizationOption) {
 		
 		val nodeGroupMap = rule.nodes.groupBy[it.domainType]
 		val nodeIdMap = rule.nodes.toInvertedMap[idForNode]
@@ -107,14 +145,14 @@ class VictoryPlantUMLGenerator {
 				«FOR node : nodeGroupMap.get(DomainType.CORR)»
 					«val corrNode = node as TGGRuleCorr»
 					«IF showCreated || corrNode.bindingType !== BindingType.CREATE»
-						«visualiseRuleCorrEdge(nodeIdMap.get(corrNode.source), nodeIdMap.get(corrNode.target), corrNode.type.name, corrNode.bindingType === BindingType.CREATE)»
+						«visualiseRuleCorrEdge(nodeIdMap.get(corrNode.source), nodeIdMap.get(corrNode.target), corrNode.type.name, corrNode.bindingType === BindingType.CREATE, corrLabelVisualizationOption)»
 					«ENDIF»
 				«ENDFOR»
 			«ENDIF»
 			
 			«FOR edge : rule.edges»
 				«IF edge.domainType !== DomainType.CORR && (showCreated || edge.bindingType !== BindingType.CREATE)»
-					«visualiseRuleEdge(nodeIdMap.get(edge.srcNode), nodeIdMap.get(edge.trgNode), edge.type.name, edge.bindingType === BindingType.CREATE)»
+					«visualiseRuleEdge(nodeIdMap.get(edge.srcNode), nodeIdMap.get(edge.trgNode), edge.type.name, getColorDefinitionsForEdge(edge.bindingType, edge.domainType, op))»
 				«ENDIF»
 			«ENDFOR»
 			
@@ -122,24 +160,49 @@ class VictoryPlantUMLGenerator {
 		'''
 	}
 	
-	private def static String visualiseEObjectGraph(Map<EObject, Pair<String, String>> eObjectMapping) {
+	private def static String visualiseEObjectGraph(Map<EObject, Pair<String, String>> srcObjectMapping, Map<EObject, Pair<String, String>> trgObjectMapping, Iterable<Pair<Pair<EObject, EObject>, String>> corrEdges, VisualizationLabelOptions corrLabelVisualizationOption) {
 		'''
 		together {
-			«FOR object: eObjectMapping.keySet»
-				object "«eObjectMapping.get(object).value»" as «eObjectMapping.get(object).key» <<BLACK>> <<SRC>> {
-					«FOR EAttribute attr : object.eClass.EAttributes»
-						«attr.EType.name» «attr.name» «object.eGet(attr)»
-					«ENDFOR»
-				}
-				
-				«FOR contentObject : object.eContents»
-					«IF eObjectMapping.containsKey(contentObject)»
-						«eObjectMapping.get(object).key» --> «eObjectMapping.get(contentObject).key» : «contentObject.eContainingFeature.name»
-					«ENDIF»
+			«visualiseEObjectGroup(srcObjectMapping, "<<SRC>>")»
+			«visualiseEObjectGroup(trgObjectMapping, "<<TRG>>")»
+			
+			«IF corrEdges !== null»
+				«FOR edge : corrEdges»
+					«srcObjectMapping.get(edge.key.key).key» ... «trgObjectMapping.get(edge.key.value).key» «getLabel(edge.value, corrLabelVisualizationOption)»
 				«ENDFOR»
-			«ENDFOR»
+			«ENDIF»
 		}
 		'''
+	}
+	
+	private def static String visualiseEObjectGroup(Map<EObject, Pair<String, String>> eObjectMapping, String colorDefinitions) {
+		'''
+			together {
+				«FOR object: eObjectMapping.keySet»
+					object "«eObjectMapping.get(object).value»" as «eObjectMapping.get(object).key» «colorDefinitions» {
+						«FOR EAttribute attr : object.eClass.EAttributes»
+							«attr.EType.name» «attr.name» «object.eGet(attr)»
+						«ENDFOR»
+					}
+				«ENDFOR»
+				
+				«FOR object: eObjectMapping.keySet»
+					«FOR contentObject : object.eContents»
+						«IF eObjectMapping.containsKey(contentObject)»
+							«eObjectMapping.get(object).key» --> «eObjectMapping.get(contentObject).key» : «contentObject.eContainingFeature.name»
+						«ENDIF»
+					«ENDFOR»
+				«ENDFOR»
+			}
+		'''
+	}
+	
+	private def static Map<EObject, Pair<String, String>> mapEObjects(Collection<EObject> eObjects) {
+		eObjects.toInvertedMap[
+				val id = labelFor(it) + "_" + indexFor(it)
+				val label = id + " : " + it.eClass.name
+				id->label
+			]
 	}
 	
 	private def static String labelFor(EObject object) {
@@ -164,16 +227,36 @@ class VictoryPlantUMLGenerator {
 		'''class «ruleId» «colorDefinitions»'''
 	}
 
-	private def static String visualiseRuleEdge(String srcNodeId, String trgNodeId, String edgeId, boolean bindingTypeCreate) {
-		'''«srcNodeId» -«IF (bindingTypeCreate)»[#SpringGreen]«ENDIF»-> «trgNodeId» : "«edgeId»"'''
+	private def static String visualiseRuleEdge(String srcNodeId, String trgNodeId, String edgeId, String colorDefinitions) {
+		
+		'''«srcNodeId» -«colorDefinitions»-> «trgNodeId» : "«edgeId»"'''
 	}
 	
-	private def static String visualiseRuleCorrEdge(String srcNodeId, String trgNodeId, String edgeId, boolean bindingTypeCreate) {
-		'''«srcNodeId» ...«IF (bindingTypeCreate)»[#SpringGreen]«ENDIF» «trgNodeId» : "«edgeId»"'''
+	private def static String visualiseRuleCorrEdge(String srcNodeId, String trgNodeId, String edgeId, boolean bindingTypeCreate, VisualizationLabelOptions corrLabelVisualizationOption) {
+		'''«srcNodeId» ...«IF (bindingTypeCreate)»[#«createColor»]«ENDIF» «trgNodeId» «getLabel(edgeId, corrLabelVisualizationOption)»'''
 	}
 	
 	private def static String idForNode(TGGRuleNode node) {
 		'''"«node.name» : «node.type.name»"'''
+	}
+	
+	private def static String getColorDefinitionsForEdge(BindingType binding, DomainType domain, IBeXOp op) {
+		var bindingColor = contextColor
+		if(binding === BindingType.CREATE)
+			if((op === IBeXOp.INITIAL_FWD && domain === DomainType.SRC)
+				|| (op === IBeXOp.INITIAL_BWD && domain === DomainType.TRG))
+					bindingColor = translateColor
+			else
+				bindingColor = createColor
+		'''[#«bindingColor»]'''
+	}
+
+	private def static String getLabel(String name, VisualizationLabelOptions labelOptions) {
+		switch(labelOptions) {
+			case FULLNAME: ''': "«name»"'''
+			case ABBREVIATED : ''': "«StringUtils.abbreviateMiddle(name, "...", 10)»"'''
+			case NONE: ''
+		}
 	}
 	
 	private def static String getColorDefinitions(BindingType binding, DomainType domain, IBeXOp op) {
