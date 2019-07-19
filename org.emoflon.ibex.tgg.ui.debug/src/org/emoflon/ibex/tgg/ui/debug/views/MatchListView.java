@@ -1,7 +1,12 @@
 package org.emoflon.ibex.tgg.ui.debug.views;
 
 import java.util.Collection;
+import java.util.HashSet;
 
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -9,70 +14,72 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
 import org.emoflon.ibex.tgg.operational.matches.IMatch;
+import org.emoflon.ibex.tgg.operational.monitoring.VictoryMatch;
+import org.emoflon.ibex.tgg.ui.debug.views.treeContent.matchList.MatchListContentManager;
+import org.emoflon.ibex.tgg.ui.debug.views.treeContent.matchList.MatchNode;
+import org.emoflon.ibex.tgg.ui.debug.views.treeContent.matchList.RuleNode;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
+import language.TGGRule;
 
-public class MatchListView extends Composite {
+public class MatchListView extends Composite implements ISharedFocusElement {
 
     private IVisualiser visualiser;
 
-    private Tree treeView;
+    private TreeViewer treeViewer;
+    private MatchListContentManager contentManager;
     private Button applyButton;
-
-    private final BiMap<String, TreeItem> ruleItems;
-    private final BiMap<IMatch, TreeItem> matchItems;
 
     private IMatch[] chosenMatch = new IMatch[1];
 
-    private MatchListView(Composite pParent) {
+    private MatchListView(Composite pParent, Collection<TGGRule> pRules) {
 	super(pParent, SWT.NONE);
 
-	registerVisualiser(null);
-
-	ruleItems = HashBiMap.create();
-	matchItems = HashBiMap.create();
+	contentManager = new MatchListContentManager(pRules);
     }
 
     private MatchListView build() {
 	setLayout(new GridLayout());
 
-	treeView = new Tree(this, SWT.BORDER | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.SINGLE);
-	treeView.setLayoutData(new GridData(GridData.FILL_BOTH));
+	treeViewer = new TreeViewer(this, SWT.BORDER | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.SINGLE);
+	treeViewer.setContentProvider(contentManager.getTreeContentManager());
+	treeViewer.setLabelProvider(contentManager.getTreeContentManager().getCellLabelProvider());
+	treeViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
+	treeViewer.setInput("root");
 
-	treeView.addSelectionListener(new SelectionAdapter() {
+	treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 	    @Override
-	    public void widgetSelected(SelectionEvent pSelectionEvent) {
+	    public void selectionChanged(SelectionChangedEvent pEvent) {
 
-		TreeItem selectedItem = treeView.getSelection()[0];
-		applyButton.setEnabled(matchItems.containsValue(selectedItem));
+		applyButton.setEnabled(false);
 
-		if (ruleItems.containsValue(selectedItem))
-		    visualiser.display(ruleItems.inverse().get(selectedItem));
-		else if (matchItems.containsValue(selectedItem))
-		    visualiser.display(matchItems.inverse().get(selectedItem));
+		if (!pEvent.getSelection().isEmpty())
+		    sharedFocusElements.forEach(ISharedFocusElement::focusRemoved);
 
+		if (pEvent.getSelection() instanceof IStructuredSelection) {
+		    Object selectedElement = pEvent.getStructuredSelection().getFirstElement();
+		    if (selectedElement instanceof MatchNode) {
+			VictoryMatch match = ((MatchNode) selectedElement).getMatch();
+			visualiser.display(match.getIMatch());
+			applyButton.setEnabled(!match.isBlocked());
+		    } else if (selectedElement instanceof RuleNode)
+			visualiser.display(((RuleNode) selectedElement).getRule());
+		}
 	    }
 	});
-	treeView.pack();
 
 	applyButton = new Button(this, SWT.PUSH);
-	applyButton.setText("Apply match");
-	applyButton.setLayoutData(new GridData()); // TODO
+	applyButton.setText("Apply");
 	applyButton.addSelectionListener(new SelectionAdapter() {
 	    @Override
 	    public void widgetSelected(SelectionEvent pSelectionEvent) {
+		Object selection = treeViewer.getStructuredSelection().getFirstElement();
 
-		TreeItem selectedItem = treeView.getSelection()[0];
-		if (!matchItems.containsValue(selectedItem))
-		    ; // TODO error -> why was the apply button even enabled?
-
-		synchronized (chosenMatch) {
-		    chosenMatch[0] = matchItems.inverse().get(selectedItem);
-		    chosenMatch.notify();
+		if (selection instanceof MatchNode) {
+		    synchronized (chosenMatch) {
+			chosenMatch[0] = ((MatchNode) selection).getMatch().getIMatch();
+			chosenMatch.notify();
+		    }
 		}
 	    }
 	});
@@ -81,16 +88,12 @@ public class MatchListView extends Composite {
 	return this;
     }
 
-    public static MatchListView create(Composite pParent) {
-	return new MatchListView(pParent).build();
+    public static MatchListView create(Composite pParent, Collection<TGGRule> pRules) {
+	return new MatchListView(pParent, pRules).build();
     }
 
     public void registerVisualiser(IVisualiser pVisualiser) {
-	if (pVisualiser == null)
-	    visualiser = new IVisualiser() {
-	    };
-	else
-	    visualiser = pVisualiser;
+	visualiser = pVisualiser;
     }
 
     /**
@@ -99,26 +102,10 @@ public class MatchListView extends Composite {
      * @param pMatches
      *            the collection of matches to populate the list-view with
      */
-    public void populate(Collection<IMatch> pMatches) {
-	treeView.removeAll();
-	ruleItems.clear();
-	matchItems.clear();
+    public void populate(Collection<VictoryMatch> pMatches) {
 	applyButton.setEnabled(false);
-
-	if (pMatches == null)
-	    return;
-
-	for (IMatch match : pMatches) {
-	    String ruleName = match.getRuleName();
-	    if (!ruleItems.containsKey(ruleName)) {
-		TreeItem ruleItem = new TreeItem(treeView, SWT.NONE);
-		ruleItem.setText(ruleName);
-		ruleItems.put(ruleName, ruleItem);
-	    }
-	    TreeItem matchItem = new TreeItem(ruleItems.get(ruleName), SWT.NONE);
-	    matchItem.setText(match.getPatternName());
-	    matchItems.put(match, matchItem);
-	}
+	contentManager.populate(pMatches);
+	treeViewer.refresh();
     }
 
     /**
@@ -138,5 +125,17 @@ public class MatchListView extends Composite {
 	    chosenMatch[0] = null;
 	    return match;
 	}
+    }
+
+    private Collection<ISharedFocusElement> sharedFocusElements = new HashSet<>();
+
+    @Override
+    public void focusRemoved() {
+	treeViewer.setSelection(null);
+    }
+
+    @Override
+    public void registerSharedFocus(ISharedFocusElement pSharedFocusElement) {
+	sharedFocusElements.add(pSharedFocusElement);
     }
 }

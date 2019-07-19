@@ -12,6 +12,7 @@ import org.emoflon.ibex.tgg.ui.debug.options.IBeXOp;
 import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager;
 import org.emoflon.ibex.tgg.ui.debug.views.MatchDisplayView;
 import org.emoflon.ibex.tgg.ui.debug.views.MatchListView;
+import org.emoflon.ibex.tgg.ui.debug.views.ProtocolView;
 
 public class IbexDebugUI implements Runnable {
 
@@ -50,6 +51,7 @@ public class IbexDebugUI implements Runnable {
     private UIController controller;
     private IVictoryDataProvider dataProvider;
     private MatchListView matchListView;
+    private ProtocolView protocolView;
     private MatchDisplayView matchDisplayView;
     private UserOptionsManager userOptionsManager;
 
@@ -69,24 +71,40 @@ public class IbexDebugUI implements Runnable {
     }
 
     private void initUI(Shell pShell) {
-	GridLayout layout = new GridLayout(2, false);
-	pShell.setLayout(layout);
+	pShell.setLayout(new GridLayout());
 
-	SashForm sashForm = new SashForm(pShell, SWT.HORIZONTAL);
-	sashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
-	sashForm.setBackground(display.getSystemColor(SWT.COLOR_GRAY));
+	SashForm mainSashForm = new SashForm(pShell, SWT.HORIZONTAL);
+	mainSashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
+	mainSashForm.setLayout(new GridLayout());
+	mainSashForm.setBackground(display.getSystemColor(SWT.COLOR_GRAY));
 
-	matchListView = MatchListView.create(sashForm);
+	SashForm leftPanelSashForm = new SashForm(mainSashForm, SWT.VERTICAL);
+	leftPanelSashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
+	leftPanelSashForm.setLayout(new GridLayout());
+	leftPanelSashForm.setBackground(display.getSystemColor(SWT.COLOR_GRAY));
+
+	matchListView = MatchListView.create(leftPanelSashForm, dataProvider.getAllRules());
 	matchListView.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-	matchDisplayView = MatchDisplayView.create(sashForm, dataProvider, userOptionsManager);
+	protocolView = ProtocolView.create(leftPanelSashForm, dataProvider.getAllRules());
+	protocolView.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+	// TODO this is ugly, find a better solution
+	matchListView.registerSharedFocus(protocolView);
+	protocolView.registerSharedFocus(matchListView);
+
+	leftPanelSashForm.setWeights(new int[] { 60, 40 });
+
+	matchDisplayView = MatchDisplayView.create(mainSashForm, dataProvider, userOptionsManager);
 	matchDisplayView.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-	sashForm.setWeights(new int[] { 30, 70 });
+	mainSashForm.setWeights(new int[] { 30, 70 });
 
 	matchListView.registerVisualiser(matchDisplayView);
+	protocolView.registerVisualiser(matchDisplayView);
 
-	controller = new UIController(matchListView);
+	controller = new UIController(matchListView, protocolView);
+
 	synchronized (this) {
 	    notify();
 	}
