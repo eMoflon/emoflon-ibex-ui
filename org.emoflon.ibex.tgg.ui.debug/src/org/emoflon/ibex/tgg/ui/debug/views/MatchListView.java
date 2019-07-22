@@ -39,12 +39,14 @@ public class MatchListView extends Composite implements ISharedFocusElement {
     }
 
     private MatchListView build() {
-	setLayout(new GridLayout());
+	setLayout(new GridLayout(3, false));
 
 	treeViewer = new TreeViewer(this, SWT.BORDER | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.SINGLE);
 	treeViewer.setContentProvider(contentManager.getTreeContentManager());
 	treeViewer.setLabelProvider(contentManager.getTreeContentManager().getCellLabelProvider());
-	treeViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
+	GridData gridData = new GridData(GridData.FILL_BOTH);
+	gridData.horizontalSpan = 3;
+	treeViewer.getControl().setLayoutData(gridData);
 	treeViewer.setInput("root");
 
 	treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -81,6 +83,24 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 			chosenMatch.notify();
 		    }
 		}
+	    }
+	});
+
+	Button collapseAllButton = new Button(this, SWT.PUSH);
+	collapseAllButton.setText("Collapse All");
+	collapseAllButton.addSelectionListener(new SelectionAdapter() {
+	    @Override
+	    public void widgetSelected(SelectionEvent pSelectionEvent) {
+		treeViewer.collapseAll();
+	    }
+	});
+
+	Button expandAllButton = new Button(this, SWT.PUSH);
+	expandAllButton.setText("Expand All");
+	expandAllButton.addSelectionListener(new SelectionAdapter() {
+	    @Override
+	    public void widgetSelected(SelectionEvent pSelectionEvent) {
+		treeViewer.expandAll();
 	    }
 	});
 
