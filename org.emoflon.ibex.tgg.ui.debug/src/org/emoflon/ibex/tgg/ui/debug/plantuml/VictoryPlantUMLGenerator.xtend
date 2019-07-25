@@ -15,6 +15,8 @@ import org.emoflon.ibex.tgg.ui.debug.options.IBeXOp
 import org.emoflon.ibex.tgg.operational.monitoring.data.TGGObjectGraph
 import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager.VisualizationLabelOptions
 import org.apache.commons.lang3.StringUtils
+import org.emoflon.ibex.tgg.operational.monitoring.IVictoryDataProvider
+import java.util.List
 
 class VictoryPlantUMLGenerator {
 	
@@ -36,7 +38,7 @@ class VictoryPlantUMLGenerator {
 		'''
 	}
 	
-	def static String visualiseMatch(IMatch match, TGGRule rule, Collection<EObject> matchNeighborhood, IUserOptions userOptions) {
+	def static String visualiseMatch(IMatch match, TGGRule rule, IUserOptions userOptions, IVictoryDataProvider dataProvider) {
 		
 		// TODO implement usage of actual match neighborhood
 		
@@ -51,13 +53,19 @@ class VictoryPlantUMLGenerator {
 											.map[match.get(it) as EObject]
 											.map[(it.eGet(it.eClass.getEStructuralFeature("source")) as EObject -> it.eGet(it.eClass.getEStructuralFeature("target")) as EObject) -> it.eClass.name]
 		
+		
+		val srcEObjects = srcParamToEObjectMap.values // dataProvider.getMatchNeighbourhoods(srcParamToEObjectMap.values, userOptions.neighborhoodSize) 
+		val trgEObjects = trgParamToEObjectMap.values // dataProvider.getMatchNeighbourhoods(trgParamToEObjectMap.values, userOptions.neighborhoodSize)
+		// TODO insert collections into graph code when done
+		// TODO can we deal with corrs in this context?
+		
 		'''
 			@startuml
 			«plantUMLPreamble»
 			
 			«visualiseRule(rule, true, userOptions.displayFullRuleForMatches, userOptions.op, userOptions.corrLabelVisualization)»
 			
-			«visualiseEObjectGraph(mapEObjects(srcParamToEObjectMap.values), mapEObjects(trgParamToEObjectMap.values), corrEdges, userOptions.corrLabelVisualization)»
+			«visualiseEObjectGraph(mapEObjects(srcEObjects), mapEObjects(trgEObjects), corrEdges, userOptions.corrLabelVisualization)»
 			
 			«FOR String param : nonCorrParamToEObjectMap.keySet»
 				«paramToNodeIdMap.get(param)» #.[#Blue]..# «nonCorrEObjectMapping.get(nonCorrParamToEObjectMap.get(param)).key»
@@ -67,14 +75,14 @@ class VictoryPlantUMLGenerator {
 		'''
 	}
 	
-	def static String visualiseObjectGraph(TGGObjectGraph eObjects, VisualizationLabelOptions corrLabelVisualizationOption) {
+	def static String visualiseObjectGraph(TGGObjectGraph eObjects, VisualizationLabelOptions corrLabelVisualizationOption, IVictoryDataProvider dataProvider) {
 		'''
 			@startuml
 			«plantUMLPreamble»
 
 			«visualiseEObjectGraph(
-				mapEObjects(eObjects.srcElements),
-				mapEObjects(eObjects.trgElements),
+				mapEObjects(eObjects.srcElements), //dataProvider.getMatchNeighbourhoods(eObjects.srcElements, userOptions.neighborhoodSize)
+				mapEObjects(eObjects.trgElements), //dataProvider.getMatchNeighbourhoods(eObjects.trgElements, userOptions.neighborhoodSize)
 				eObjects.corrElements.map[
 					(it.eGet(it.eClass.getEStructuralFeature("source")) as EObject 
 						-> it.eGet(it.eClass.getEStructuralFeature("target")) as EObject)
@@ -271,5 +279,4 @@ class VictoryPlantUMLGenerator {
 		
 		'''<<«bindingColour»>> <<«domain»>>'''
 	}
-
 }

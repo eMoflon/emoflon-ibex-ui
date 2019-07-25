@@ -195,7 +195,7 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 
 	@Override
 	public void display(TGGObjectGraph pObjectGraph) {
-		currentElement = new ObjectGraphVisualisation(pObjectGraph);
+		currentElement = new ObjectGraphVisualisation(pObjectGraph, dataProvider);
 		refresh();
 	}
 
