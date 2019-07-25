@@ -6,8 +6,8 @@ public class UserOptionsManager implements IUserOptions {
 
 	private boolean displayFullRuleForMatches = false;
 	private final IBeXOp op;
-
 	private VisualizationLabelOptions corrLabelVisualization = VisualizationLabelOptions.ABBREVIATED;
+	private int neighborhoodSize = 0;
 
 	public UserOptionsManager(IBeXOp pOp) {
 		op = pOp;
@@ -56,5 +56,16 @@ public class UserOptionsManager implements IUserOptions {
 
 	public enum VisualizationLabelOptions {
 		FULLNAME, ABBREVIATED, NONE
+	}
+
+	public int getNeighborhoodSize() {
+	    return neighborhoodSize;
+	}
+	
+	public void setNeighborhoodSize(int pSize) {
+	    if(neighborhoodSize != pSize) {
+		neighborhoodSize = pSize;
+		isInvalid=true;
+	    }
 	}
 }

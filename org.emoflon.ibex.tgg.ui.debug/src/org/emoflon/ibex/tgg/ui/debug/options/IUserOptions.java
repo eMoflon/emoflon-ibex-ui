@@ -12,4 +12,6 @@ public interface IUserOptions {
      * @return the visualization option for correspondence labels
      */
     public VisualizationLabelOptions getCorrLabelVisualization();
+
+    public int getNeighborhoodSize();
 }
