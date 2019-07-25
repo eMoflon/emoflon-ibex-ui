@@ -1,8 +1,10 @@
 package org.emoflon.ibex.tgg.ui.debug.views.treeContent.matchList;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.emoflon.ibex.tgg.operational.monitoring.VictoryMatch;
+import org.emoflon.ibex.tgg.ui.debug.core.IbexDebugUI;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeNode;
 
 public class MatchNode extends TreeNode {
@@ -19,7 +21,7 @@ public class MatchNode extends TreeNode {
 
     @Override
     protected String getLabel() {
-	return match.getName();
+	return match.getName() + (match.isBlocked() ? "[" + match.getBlockingReason() + "]" : "");
     }
 
     @Override
@@ -29,7 +31,10 @@ public class MatchNode extends TreeNode {
 
     @Override
     protected Color getForeground() {
-	return null;
+	if (match.isBlocked())
+	    return IbexDebugUI.getDisplay().getSystemColor(SWT.COLOR_RED);
+	else
+	    return null;
     }
 
     @Override

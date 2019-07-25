@@ -7,7 +7,7 @@ public class UserOptionsManager implements IUserOptions {
 	private boolean displayFullRuleForMatches = false;
 	private final IBeXOp op;
 
-	private VisualizationLabelOptions corrLabelVisualization = VisualizationLabelOptions.NONE;
+	private VisualizationLabelOptions corrLabelVisualization = VisualizationLabelOptions.ABBREVIATED;
 
 	public UserOptionsManager(IBeXOp pOp) {
 		op = pOp;

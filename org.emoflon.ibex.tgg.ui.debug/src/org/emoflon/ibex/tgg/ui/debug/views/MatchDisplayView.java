@@ -78,7 +78,7 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 			}
 		});
 
-		Combo selectCorrVisualizationComboBox = new Combo(buttonRow, SWT.NONE);
+		Combo selectCorrVisualizationComboBox = new Combo(buttonRow, SWT.READ_ONLY);
 		toggleFullRuleVisButton.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
 		final String[] corrVisualizationOptions = new String[] { "Show Corr Labels", "Show abbreviated Corr Labels",
 				"Hide Corr Labels" };
@@ -88,12 +88,14 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 		switch (userOptionsManager.getCorrLabelVisualization()) {
 		case FULLNAME:
 			selectCorrVisualizationComboBox.select(0);
+			break;
 		case ABBREVIATED:
 			selectCorrVisualizationComboBox.select(1);
+			break;
 		case NONE:
 			selectCorrVisualizationComboBox.select(2);
+			break;
 		}
-		selectCorrVisualizationComboBox.select(2);
 		selectCorrVisualizationComboBox.addSelectionListener(new SelectionListener() {
 
 			private VisualizationLabelOptions getSelectedVisualization(String selectedVisualization) {

@@ -18,6 +18,13 @@ import org.apache.commons.lang3.StringUtils
 
 class VictoryPlantUMLGenerator {
 	
+	static val createColor = "SpringGreen"
+	static val contextColor = "Black"
+	static val translateColor = "LightSlateGray"
+	static val srcColor = "LightYellow"
+	static val trgColor = "MistyRose"
+	static val corrColor = "LightCyan"
+	
 	def static String visualiseTGGRule(TGGRule rule, IUserOptions userOptions) {
 		'''
 			@startuml
@@ -87,21 +94,21 @@ class VictoryPlantUMLGenerator {
 			skinparam shadowing false
 			
 			skinparam class {
-				BorderColor<<CREATE>> SpringGreen
-				BorderColor<<TRANSLATE>> Gold
-				BorderColor<<OTHER>> Black
-				BackgroundColor<<TRG>> MistyRose
-				BackgroundColor<<SRC>> LightYellow
-				BackgroundColor<<CORR>> LightCyan 
-				ArrowColor Black
+				BorderColor<<CREATE>> «createColor»
+				BorderColor<<TRANSLATE>> «translateColor»
+				BorderColor<<OTHER>> «contextColor»
+				BackgroundColor<<TRG>> «trgColor»
+				BackgroundColor<<SRC>> «srcColor»
+				BackgroundColor<<CORR>> «corrColor»
+				ArrowColor «contextColor»
 			}
 
 			skinparam object {
-				BorderColor Black
-				BackgroundColor<<TRG>> MistyRose
-				BackgroundColor<<SRC>> LightYellow
-				BackgroundColor<<CORR>> LightCyan 
-				ArrowColor Black
+				BorderColor «contextColor»
+				BackgroundColor<<TRG>> «trgColor»
+				BackgroundColor<<SRC>> «srcColor»
+				BackgroundColor<<CORR>> «corrColor» 
+				ArrowColor «contextColor»
 			}
 		'''
 	}
@@ -145,7 +152,7 @@ class VictoryPlantUMLGenerator {
 			
 			«FOR edge : rule.edges»
 				«IF edge.domainType !== DomainType.CORR && (showCreated || edge.bindingType !== BindingType.CREATE)»
-					«visualiseRuleEdge(nodeIdMap.get(edge.srcNode), nodeIdMap.get(edge.trgNode), edge.type.name, edge.bindingType === BindingType.CREATE)»
+					«visualiseRuleEdge(nodeIdMap.get(edge.srcNode), nodeIdMap.get(edge.trgNode), edge.type.name, getColorDefinitionsForEdge(edge.bindingType, edge.domainType, op))»
 				«ENDIF»
 			«ENDFOR»
 			
@@ -161,7 +168,7 @@ class VictoryPlantUMLGenerator {
 			
 			«IF corrEdges !== null»
 				«FOR edge : corrEdges»
-					«srcObjectMapping.get(edge.key.key).key» ... «trgObjectMapping.get(edge.key.value).key» : «getLabel(edge.value, corrLabelVisualizationOption)»
+					«srcObjectMapping.get(edge.key.key).key» ... «trgObjectMapping.get(edge.key.value).key» «getLabel(edge.value, corrLabelVisualizationOption)»
 				«ENDFOR»
 			«ENDIF»
 		}
@@ -220,18 +227,30 @@ class VictoryPlantUMLGenerator {
 		'''class «ruleId» «colorDefinitions»'''
 	}
 
-	private def static String visualiseRuleEdge(String srcNodeId, String trgNodeId, String edgeId, boolean bindingTypeCreate) {
-		'''«srcNodeId» -«IF (bindingTypeCreate)»[#SpringGreen]«ENDIF»-> «trgNodeId» : "«edgeId»"'''
+	private def static String visualiseRuleEdge(String srcNodeId, String trgNodeId, String edgeId, String colorDefinitions) {
+		
+		'''«srcNodeId» -«colorDefinitions»-> «trgNodeId» : "«edgeId»"'''
 	}
 	
 	private def static String visualiseRuleCorrEdge(String srcNodeId, String trgNodeId, String edgeId, boolean bindingTypeCreate, VisualizationLabelOptions corrLabelVisualizationOption) {
-		'''«srcNodeId» ...«IF (bindingTypeCreate)»[#SpringGreen]«ENDIF» «trgNodeId» «getLabel(edgeId, corrLabelVisualizationOption)»'''
+		'''«srcNodeId» ...«IF (bindingTypeCreate)»[#«createColor»]«ENDIF» «trgNodeId» «getLabel(edgeId, corrLabelVisualizationOption)»'''
 	}
 	
 	private def static String idForNode(TGGRuleNode node) {
 		'''"«node.name» : «node.type.name»"'''
 	}
 	
+	private def static String getColorDefinitionsForEdge(BindingType binding, DomainType domain, IBeXOp op) {
+		var bindingColor = contextColor
+		if(binding === BindingType.CREATE)
+			if((op === IBeXOp.INITIAL_FWD && domain === DomainType.SRC)
+				|| (op === IBeXOp.INITIAL_BWD && domain === DomainType.TRG))
+					bindingColor = translateColor
+			else
+				bindingColor = createColor
+		'''[#«bindingColor»]'''
+	}
+
 	private def static String getLabel(String name, VisualizationLabelOptions labelOptions) {
 		switch(labelOptions) {
 			case FULLNAME: ''': "«name»"'''
