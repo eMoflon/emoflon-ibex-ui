@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Scale;
 import org.emoflon.ibex.tgg.operational.matches.IMatch;
 import org.emoflon.ibex.tgg.operational.monitoring.IVictoryDataProvider;
 import org.emoflon.ibex.tgg.operational.monitoring.data.TGGObjectGraph;
@@ -65,7 +66,7 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 
 	Composite buttonRow = new Composite(this, SWT.NONE);
 	buttonRow.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-	buttonRow.setLayout(new GridLayout(4, false));
+	buttonRow.setLayout(new GridLayout(5, false));
 
 	Button toggleFullRuleVisButton = new Button(buttonRow, SWT.TOGGLE);
 	toggleFullRuleVisButton.setText("Full Vis");
@@ -79,7 +80,7 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	});
 
 	Combo selectCorrVisualizationComboBox = new Combo(buttonRow, SWT.READ_ONLY);
-	toggleFullRuleVisButton.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
+	toggleFullRuleVisButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 	final String[] corrVisualizationOptions = new String[] { "Show Corr Labels", "Show abbreviated Corr Labels",
 		"Hide Corr Labels" };
 	for (String option : corrVisualizationOptions) {
@@ -122,6 +123,18 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 		userOptionsManager
 			.setCorrLabelVisualization(getSelectedVisualization(selectCorrVisualizationComboBox.getText()));
 		refresh();
+	    }
+	});
+
+	Scale neighborhoodScale = new Scale(buttonRow, SWT.HORIZONTAL);
+	neighborhoodScale.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+	neighborhoodScale.setMinimum(0);
+	neighborhoodScale.setPageIncrement(1);
+	neighborhoodScale.setMaximum(3);
+	neighborhoodScale.addSelectionListener(new SelectionAdapter() {
+	    @Override
+	    public void widgetSelected(SelectionEvent pSelectionEvent) {
+		userOptionsManager.setNeighborhoodSize(neighborhoodScale.getSelection());
 	    }
 	});
 
