@@ -7,16 +7,16 @@ import org.emoflon.ibex.tgg.ui.debug.plantuml.VictoryPlantUMLGenerator;
 
 public class ObjectGraphVisualisation extends VisualisableElement {
 
-	private TGGObjectGraph objectGraph;
-	private IVictoryDataProvider dataProvider;
+    private TGGObjectGraph objectGraph;
+    private IVictoryDataProvider dataProvider;
 
-	public ObjectGraphVisualisation(TGGObjectGraph pObjectGraph, IVictoryDataProvider pDataProvider) {
-		objectGraph = pObjectGraph;
-		dataProvider = pDataProvider;
-	}
+    public ObjectGraphVisualisation(TGGObjectGraph pObjectGraph, IVictoryDataProvider pDataProvider) {
+	objectGraph = pObjectGraph;
+	dataProvider = pDataProvider;
+    }
 
-	@Override
-	protected String generateVisualisationString() {
-		return VictoryPlantUMLGenerator.visualiseObjectGraph(objectGraph, VisualizationLabelOptions.NONE, dataProvider);
-	}
+    @Override
+    protected String generateVisualisationString() {
+	return VictoryPlantUMLGenerator.visualiseObjectGraph(objectGraph, VisualizationLabelOptions.NONE, dataProvider);
+    }
 }
