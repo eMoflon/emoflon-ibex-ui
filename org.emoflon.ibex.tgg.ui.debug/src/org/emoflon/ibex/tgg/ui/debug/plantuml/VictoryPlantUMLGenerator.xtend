@@ -15,6 +15,7 @@ import org.emoflon.ibex.tgg.ui.debug.options.IBeXOp
 import org.emoflon.ibex.tgg.operational.monitoring.data.TGGObjectGraph
 import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager.VisualizationLabelOptions
 import org.apache.commons.lang3.StringUtils
+import java.util.ArrayList
 
 class VictoryPlantUMLGenerator {
 
@@ -81,7 +82,7 @@ class VictoryPlantUMLGenerator {
 			«plantUMLPreamble»
 			«visualiseRule(rule, true, userOptions.displayFullRuleForMatches, userOptions.displaySrcContextForMatches, userOptions.displayTrgContextForMatches, userOptions.displayCorrContextForMatches, userOptions, nodeIdMap)»
 			«IF noteText != ""»
-				note AS n0
+				note as n0
 					«noteText»
 				end note
 			«ENDIF»
@@ -153,15 +154,20 @@ class VictoryPlantUMLGenerator {
 	}
 
 	private def static String visualiseRule(TGGRule rule, boolean groupFullRule, boolean showCreated, boolean showSrc, boolean showTrg, boolean showCorr, IUserOptions userOptions, Map<TGGRuleNode, String> nodeIdMap) {
+		
 
 		val nodeGroupMap = rule.nodes.groupBy[it.domainType]
+		val hasCorrNodes = nodeGroupMap.containsKey(DomainType.CORR);
+		val srcNodesConnectedByCorr = if(hasCorrNodes) nodeGroupMap.get(DomainType.CORR).filter[(showCreated || it.bindingType !== BindingType.CREATE)].map[(it as TGGRuleCorr).source].toList else new ArrayList
+		val trgNodesConnectedByCorr =  if(hasCorrNodes) nodeGroupMap.get(DomainType.CORR).filter[(showCreated || it.bindingType !== BindingType.CREATE)].map[(it as TGGRuleCorr).target].toList else new ArrayList
+		
 		'''
 			«IF groupFullRule»together {«ENDIF»
 			
-			«IF nodeGroupMap.containsKey(DomainType.SRC) && showSrc»
+			«IF nodeGroupMap.containsKey(DomainType.SRC)»
 				together {
 					«FOR node : nodeGroupMap.get(DomainType.SRC)»
-						«IF showCreated || node.bindingType !== BindingType.CREATE»
+						«IF (showSrc && (showCreated || node.bindingType !== BindingType.CREATE)) || (showCorr && srcNodesConnectedByCorr.contains(node))»
 							«visualiseRuleNode(
 								nodeIdMap.get(node), 
 								org.emoflon.ibex.tgg.ui.debug.plantuml.VictoryPlantUMLGenerator.getNodeLabel(node.name, node.type.name, userOptions.nodeLabelVisualization), 
@@ -172,10 +178,10 @@ class VictoryPlantUMLGenerator {
 				}
 			«ENDIF»
 			
-			«IF nodeGroupMap.containsKey(DomainType.TRG) && showTrg»
+			«IF nodeGroupMap.containsKey(DomainType.TRG)»
 				together {
 					«FOR node : nodeGroupMap.get(DomainType.TRG)»
-						«IF showCreated || node.bindingType !== BindingType.CREATE»
+						«IF (showTrg && (showCreated || node.bindingType !== BindingType.CREATE)) || (showCorr && trgNodesConnectedByCorr.contains(node))»
 							«visualiseRuleNode(
 								nodeIdMap.get(node), 
 								org.emoflon.ibex.tgg.ui.debug.plantuml.VictoryPlantUMLGenerator.getNodeLabel(node.name, node.type.name, userOptions.nodeLabelVisualization), 
@@ -186,7 +192,7 @@ class VictoryPlantUMLGenerator {
 				}
 			«ENDIF»
 			
-			«IF nodeGroupMap.containsKey(DomainType.CORR) && showCorr && showSrc && showTrg»
+			«IF nodeGroupMap.containsKey(DomainType.CORR) && showCorr»
 				«FOR node : nodeGroupMap.get(DomainType.CORR)»
 					«val corrNode = node as TGGRuleCorr»
 					«IF showCreated || corrNode.bindingType !== BindingType.CREATE»
