@@ -56,20 +56,43 @@ class VictoryPlantUMLGenerator {
 			(it.eGet(it.eClass.getEStructuralFeature("source")) as EObject ->
 				it.eGet(it.eClass.getEStructuralFeature("target")) as EObject) -> it.eClass.name
 		]
+		
+		val noteText = 
+		'''
+			«IF srcParamToEObjectMap.empty && trgParamToEObjectMap.empty && !userOptions.displayFullRuleForMatches»
+				Rule application does not require context.
+			«ENDIF»
+			«IF !userOptions.displayFullRuleForMatches»
+				Created elements are hidden.
+			«ENDIF»
+			«IF !userOptions.displaySrcContextForMatches»
+				SRC elements are hidden.
+			«ENDIF»
+			«IF !userOptions.displayTrgContextForMatches»
+				TRG elements are hidden.
+			«ENDIF»
+			«IF !userOptions.displayCorrContextForMatches»
+				CORR elements are hidden.
+			«ENDIF»
+		'''
 
 		'''
 			@startuml
 			«plantUMLPreamble»
-			
 			«visualiseRule(rule, true, userOptions.displayFullRuleForMatches, userOptions.displaySrcContextForMatches, userOptions.displayTrgContextForMatches, userOptions.displayCorrContextForMatches, userOptions, nodeIdMap)»
-			
+			«IF noteText != ""»
+				note AS n0
+					«noteText»
+				end note
+			«ENDIF»
 			«visualiseEObjectGraph(
-				mapEObjects(srcParamToEObjectMap.values, userOptions.nodeLabelVisualization), 
-				mapEObjects(trgParamToEObjectMap.values, userOptions.nodeLabelVisualization), 
-				corrEdges, 
-				userOptions.displayFullRuleForMatches, userOptions.displaySrcContextForMatches, userOptions.displayTrgContextForMatches, userOptions.displayCorrContextForMatches,
-				userOptions 
-			)»
+							mapEObjects(srcParamToEObjectMap.values, userOptions.nodeLabelVisualization), 
+							mapEObjects(trgParamToEObjectMap.values, userOptions.nodeLabelVisualization), 
+							corrEdges, 
+							userOptions.displayFullRuleForMatches, userOptions.displaySrcContextForMatches, userOptions.displayTrgContextForMatches, userOptions.displayCorrContextForMatches,
+							userOptions 
+						)»
+			
 			
 			«FOR String param : nonCorrParamToEObjectMap.keySet»
 				«IF (paramToNodeMap.get(param).domainType === DomainType.SRC && userOptions.displaySrcContextForMatches)
