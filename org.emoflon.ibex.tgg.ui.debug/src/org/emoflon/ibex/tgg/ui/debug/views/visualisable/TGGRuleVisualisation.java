@@ -1,5 +1,10 @@
 package org.emoflon.ibex.tgg.ui.debug.views.visualisable;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions;
 import org.emoflon.ibex.tgg.ui.debug.plantuml.VictoryPlantUMLGenerator;
 
@@ -20,7 +25,18 @@ public class TGGRuleVisualisation extends VisualisableElement {
     }
 
     @Override
-    protected String generateVisualisationString() {
-	return VictoryPlantUMLGenerator.visualiseTGGRule(rule, userOptions);
+    protected String generateVisualisationString() { 
+    	String plantUmlString = VictoryPlantUMLGenerator.visualiseTGGRule(rule, userOptions);
+    	
+//    	try {
+//    		File temp = File.createTempFile("plantUml", ".txt");
+//    		BufferedWriter bw = new BufferedWriter(new FileWriter(temp));
+//    	    bw.write(plantUmlString);
+//    	    bw.close();
+//    	    System.out.println("Done");
+//    	}catch(IOException e){
+//    		e.printStackTrace();
+//    	}
+    	return plantUmlString;
     }
 }
