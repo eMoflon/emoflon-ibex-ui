@@ -21,7 +21,7 @@ class VictoryPlantUMLGenerator {
 
 	static val createColor = "SpringGreen"
 	static val contextColor = "Black"
-	static val translateColor = "LightSlateGray"
+	static val translateColor = "Gainsboro"
 	static val srcColor = "LightYellow"
 	static val trgColor = "MistyRose"
 	static val corrColor = "LightCyan"
