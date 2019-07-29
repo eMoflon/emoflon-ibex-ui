@@ -17,40 +17,45 @@ import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager.VisualizationLab
 import org.apache.commons.lang3.StringUtils
 
 class VictoryPlantUMLGenerator {
-	
+
 	static val createColor = "SpringGreen"
 	static val contextColor = "Black"
 	static val translateColor = "Gainsboro"
 	static val srcColor = "LightYellow"
 	static val trgColor = "MistyRose"
 	static val corrColor = "LightCyan"
-	
+
 	def static String visualiseTGGRule(TGGRule rule, IUserOptions userOptions) {
 		'''
 			@startuml
 			«plantUMLPreamble»
-
+			
 			«visualiseRule(rule, false, true, userOptions.op, userOptions.corrLabelVisualization)»
 			
 			@enduml
 		'''
 	}
-	
-	def static String visualiseMatch(IMatch match, TGGRule rule, Collection<EObject> matchNeighborhood, IUserOptions userOptions) {
-		
+
+	def static String visualiseMatch(IMatch match, TGGRule rule, Collection<EObject> matchNeighborhood,
+		IUserOptions userOptions) {
+
 		// TODO implement usage of actual match neighborhood
-		
-		val paramToNodeMap = match.parameterNames.toInvertedMap[param | rule.nodes.findFirst[node | param === node.name]]
+		val paramToNodeMap = match.parameterNames.toInvertedMap[param|rule.nodes.findFirst[node|param === node.name]]
 		val paramToNodeIdMap = paramToNodeMap.mapValues[idForNode(it)]
-		val srcParamToEObjectMap = match.parameterNames.filter[paramToNodeMap.get(it).domainType === DomainType.SRC].toInvertedMap[match.get(it) as EObject]
-		val trgParamToEObjectMap = match.parameterNames.filter[paramToNodeMap.get(it).domainType === DomainType.TRG].toInvertedMap[match.get(it) as EObject]
+		val srcParamToEObjectMap = match.parameterNames.filter[paramToNodeMap.get(it).domainType === DomainType.SRC].
+			toInvertedMap[match.get(it) as EObject]
+		val trgParamToEObjectMap = match.parameterNames.filter[paramToNodeMap.get(it).domainType === DomainType.TRG].
+			toInvertedMap[match.get(it) as EObject]
 		val nonCorrParamToEObjectMap = srcParamToEObjectMap.union(trgParamToEObjectMap)
 		val nonCorrEObjectMapping = mapEObjects(nonCorrParamToEObjectMap.values)
-		
-		val corrEdges = match.parameterNames.filter[paramToNodeMap.get(it).domainType === DomainType.CORR]
-											.map[match.get(it) as EObject]
-											.map[(it.eGet(it.eClass.getEStructuralFeature("source")) as EObject -> it.eGet(it.eClass.getEStructuralFeature("target")) as EObject) -> it.eClass.name]
-		
+
+		val corrEdges = match.parameterNames.filter[paramToNodeMap.get(it).domainType === DomainType.CORR].map [
+			match.get(it) as EObject
+		].map [
+			(it.eGet(it.eClass.getEStructuralFeature("source")) as EObject ->
+				it.eGet(it.eClass.getEStructuralFeature("target")) as EObject) -> it.eClass.name
+		]
+
 		'''
 			@startuml
 			«plantUMLPreamble»
@@ -66,12 +71,13 @@ class VictoryPlantUMLGenerator {
 			@enduml
 		'''
 	}
-	
-	def static String visualiseObjectGraph(TGGObjectGraph eObjects, VisualizationLabelOptions corrLabelVisualizationOption) {
+
+	def static String visualiseObjectGraph(TGGObjectGraph eObjects,
+		VisualizationLabelOptions corrLabelVisualizationOption) {
 		'''
 			@startuml
 			«plantUMLPreamble»
-
+			
 			«visualiseEObjectGraph(
 				mapEObjects(eObjects.srcElements),
 				mapEObjects(eObjects.trgElements),
@@ -84,8 +90,8 @@ class VictoryPlantUMLGenerator {
 			@enduml
 		'''
 	}
-	
-	private def static String plantUMLPreamble(){
+
+	private def static String plantUMLPreamble() {
 		'''
 			hide empty members
 			hide circle
@@ -102,7 +108,7 @@ class VictoryPlantUMLGenerator {
 				BackgroundColor<<CORR>> «corrColor»
 				ArrowColor «contextColor»
 			}
-
+			
 			skinparam object {
 				BorderColor «contextColor»
 				BackgroundColor<<TRG>> «trgColor»
@@ -112,12 +118,13 @@ class VictoryPlantUMLGenerator {
 			}
 		'''
 	}
-	
-	private def static String visualiseRule(TGGRule rule, boolean groupFullRule, boolean showCreated, IBeXOp op, VisualizationLabelOptions corrLabelVisualizationOption) {
-		
+
+	private def static String visualiseRule(TGGRule rule, boolean groupFullRule, boolean showCreated, IBeXOp op,
+		VisualizationLabelOptions corrLabelVisualizationOption) {
+
 		val nodeGroupMap = rule.nodes.groupBy[it.domainType]
 		val nodeIdMap = rule.nodes.toInvertedMap[idForNode]
-		
+
 		'''
 			«IF groupFullRule»together {«ENDIF»
 			
@@ -159,26 +166,29 @@ class VictoryPlantUMLGenerator {
 			«IF groupFullRule»}«ENDIF»
 		'''
 	}
-	
-	private def static String visualiseEObjectGraph(Map<EObject, Pair<String, String>> srcObjectMapping, Map<EObject, Pair<String, String>> trgObjectMapping, Iterable<Pair<Pair<EObject, EObject>, String>> corrEdges, VisualizationLabelOptions corrLabelVisualizationOption) {
-		'''
-		together {
-			«visualiseEObjectGroup(srcObjectMapping, "<<SRC>>")»
-			«visualiseEObjectGroup(trgObjectMapping, "<<TRG>>")»
-			
-			«IF corrEdges !== null»
-				«FOR edge : corrEdges»
-					«srcObjectMapping.get(edge.key.key).key» ... «trgObjectMapping.get(edge.key.value).key» «getLabel(edge.value, corrLabelVisualizationOption)»
-				«ENDFOR»
-			«ENDIF»
-		}
-		'''
-	}
-	
-	private def static String visualiseEObjectGroup(Map<EObject, Pair<String, String>> eObjectMapping, String colorDefinitions) {
+
+	private def static String visualiseEObjectGraph(Map<EObject, Pair<String, String>> srcObjectMapping,
+		Map<EObject, Pair<String, String>> trgObjectMapping, Iterable<Pair<Pair<EObject, EObject>, String>> corrEdges,
+		VisualizationLabelOptions corrLabelVisualizationOption) {
 		'''
 			together {
-				«FOR object: eObjectMapping.keySet»
+				«visualiseEObjectGroup(srcObjectMapping, "<<SRC>>")»
+				«visualiseEObjectGroup(trgObjectMapping, "<<TRG>>")»
+				
+				«IF corrEdges !== null»
+					«FOR edge : corrEdges»
+						«srcObjectMapping.get(edge.key.key).key» ... «trgObjectMapping.get(edge.key.value).key» «getLabel(edge.value, corrLabelVisualizationOption)»
+					«ENDFOR»
+				«ENDIF»
+			}
+		'''
+	}
+
+	private def static String visualiseEObjectGroup(Map<EObject, Pair<String, String>> eObjectMapping,
+		String colorDefinitions) {
+		'''
+			together {
+				«FOR object : eObjectMapping.keySet»
 					object "«eObjectMapping.get(object).value»" as «eObjectMapping.get(object).key» «colorDefinitions» {
 						«FOR EAttribute attr : object.eClass.EAttributes»
 							«attr.EType.name» «attr.name» «object.eGet(attr)»
@@ -186,7 +196,7 @@ class VictoryPlantUMLGenerator {
 					}
 				«ENDFOR»
 				
-				«FOR object: eObjectMapping.keySet»
+				«FOR object : eObjectMapping.keySet»
 					«FOR contentObject : object.eContents»
 						«IF eObjectMapping.containsKey(contentObject)»
 							«eObjectMapping.get(object).key» --> «eObjectMapping.get(contentObject).key» : «contentObject.eContainingFeature.name»
@@ -196,17 +206,17 @@ class VictoryPlantUMLGenerator {
 			}
 		'''
 	}
-	
+
 	private def static Map<EObject, Pair<String, String>> mapEObjects(Collection<EObject> eObjects) {
-		eObjects.toInvertedMap[
-				val id = labelFor(it) + "_" + indexFor(it)
-				val label = id + " : " + it.eClass.name
-				id->label
-			]
+		eObjects.toInvertedMap [
+			val id = labelFor(it) + "_" + indexFor(it)
+			val label = id + " : " + it.eClass.name
+			id -> label
+		]
 	}
-	
+
 	private def static String labelFor(EObject object) {
-		if(object.eContainingFeature() !== null) {
+		if (object.eContainingFeature() !== null) {
 			return object.eContainingFeature().getName();
 		} else {
 			return "root";
@@ -216,59 +226,63 @@ class VictoryPlantUMLGenerator {
 	private def static String indexFor(EObject object) {
 		if (object.eContainer() === null) {
 			val resource = object.eResource()
-			return resource.getResourceSet().getResources().indexOf(resource) + "_" + resource.getContents().indexOf(object)
+			return resource.getResourceSet().getResources().indexOf(resource) + "_" +
+				resource.getContents().indexOf(object)
 		} else {
 			val container = object.eContainer()
 			return indexFor(container) + "_" + container.eContents().indexOf(object)
 		}
 	}
-	
+
 	private def static String visualiseRuleNode(String ruleId, String colorDefinitions) {
 		'''class «ruleId» «colorDefinitions»'''
 	}
 
-	private def static String visualiseRuleEdge(String srcNodeId, String trgNodeId, String edgeId, String colorDefinitions) {
-		
+	private def static String visualiseRuleEdge(String srcNodeId, String trgNodeId, String edgeId,
+		String colorDefinitions) {
+
 		'''«srcNodeId» -«colorDefinitions»-> «trgNodeId» : "«edgeId»"'''
 	}
-	
-	private def static String visualiseRuleCorrEdge(String srcNodeId, String trgNodeId, String edgeId, boolean bindingTypeCreate, VisualizationLabelOptions corrLabelVisualizationOption) {
+
+	private def static String visualiseRuleCorrEdge(String srcNodeId, String trgNodeId, String edgeId,
+		boolean bindingTypeCreate, VisualizationLabelOptions corrLabelVisualizationOption) {
 		'''«srcNodeId» ...«IF (bindingTypeCreate)»[#«createColor»]«ENDIF» «trgNodeId» «getLabel(edgeId, corrLabelVisualizationOption)»'''
 	}
-	
+
 	private def static String idForNode(TGGRuleNode node) {
 		'''"«node.name» : «node.type.name»"'''
 	}
-	
+
 	private def static String getColorDefinitionsForEdge(BindingType binding, DomainType domain, IBeXOp op) {
 		var bindingColor = contextColor
-		if(binding === BindingType.CREATE)
-			if((op === IBeXOp.INITIAL_FWD && domain === DomainType.SRC)
-				|| (op === IBeXOp.INITIAL_BWD && domain === DomainType.TRG))
-					bindingColor = translateColor
+		if (binding === BindingType.CREATE)
+			if ((op === IBeXOp.INITIAL_FWD && domain === DomainType.SRC) ||
+				(op === IBeXOp.INITIAL_BWD && domain === DomainType.TRG))
+				bindingColor = translateColor
 			else
 				bindingColor = createColor
 		'''[#«bindingColor»]'''
 	}
 
 	private def static String getLabel(String name, VisualizationLabelOptions labelOptions) {
-		switch(labelOptions) {
+		switch (labelOptions) {
 			case FULLNAME: ''': "«name»"'''
-			case ABBREVIATED : ''': "«StringUtils.abbreviateMiddle(name, "...", 10)»"'''
-			case NONE: ''
+			case ABBREVIATED: ''': "«StringUtils.abbreviateMiddle(name, "...", 10)»"'''
+			case NONE:
+				''
 		}
 	}
-	
+
 	private def static String getColorDefinitions(BindingType binding, DomainType domain, IBeXOp op) {
-		
+
 		var bindingColour = "OTHER"
-		if(binding === BindingType.CREATE)
-			if((op === IBeXOp.INITIAL_FWD && domain === DomainType.SRC)
-				|| (op === IBeXOp.INITIAL_BWD && domain === DomainType.TRG))
-					bindingColour = "TRANSLATE"
+		if (binding === BindingType.CREATE)
+			if ((op === IBeXOp.INITIAL_FWD && domain === DomainType.SRC) ||
+				(op === IBeXOp.INITIAL_BWD && domain === DomainType.TRG))
+				bindingColour = "TRANSLATE"
 			else
 				bindingColour = "CREATE"
-		
+
 		'''<<«bindingColour»>> <<«domain»>>'''
 	}
 
