@@ -57,9 +57,8 @@ class VictoryPlantUMLGenerator {
 			(it.eGet(it.eClass.getEStructuralFeature("source")) as EObject ->
 				it.eGet(it.eClass.getEStructuralFeature("target")) as EObject) -> it.eClass.name
 		]
-		
-		val noteText = 
-		'''
+
+		val noteText = '''
 			«IF srcParamToEObjectMap.empty && trgParamToEObjectMap.empty && !userOptions.displayFullRuleForMatches»
 				Rule application does not require context.
 			«ENDIF»
@@ -98,7 +97,7 @@ class VictoryPlantUMLGenerator {
 			«FOR String param : nonCorrParamToEObjectMap.keySet»
 				«IF (paramToNodeMap.get(param).domainType === DomainType.SRC && userOptions.displaySrcContextForMatches)
 					|| (paramToNodeMap.get(param).domainType === DomainType.TRG && userOptions.displayTrgContextForMatches)»
-				«nodeIdMap.get(paramToNodeMap.get(param))» #.[#Blue]..# «nonCorrEObjectMapping.get(nonCorrParamToEObjectMap.get(param)).key»
+					«nodeIdMap.get(paramToNodeMap.get(param))» #.[#Blue]..# «nonCorrEObjectMapping.get(nonCorrParamToEObjectMap.get(param)).key»
 				«ENDIF»
 			«ENDFOR»
 			
@@ -106,8 +105,7 @@ class VictoryPlantUMLGenerator {
 		'''
 	}
 
-	def static String visualiseObjectGraph(TGGObjectGraph eObjects,
-		IUserOptions userOptions) {
+	def static String visualiseObjectGraph(TGGObjectGraph eObjects, IUserOptions userOptions) {
 		'''
 			@startuml
 			«plantUMLPreamble»
@@ -153,14 +151,18 @@ class VictoryPlantUMLGenerator {
 		'''
 	}
 
-	private def static String visualiseRule(TGGRule rule, boolean groupFullRule, boolean showCreated, boolean showSrc, boolean showTrg, boolean showCorr, IUserOptions userOptions, Map<TGGRuleNode, String> nodeIdMap) {
-		
+	private def static String visualiseRule(TGGRule rule, boolean groupFullRule, boolean showCreated, boolean showSrc,
+		boolean showTrg, boolean showCorr, IUserOptions userOptions, Map<TGGRuleNode, String> nodeIdMap) {
 
 		val nodeGroupMap = rule.nodes.groupBy[it.domainType]
 		val hasCorrNodes = nodeGroupMap.containsKey(DomainType.CORR);
-		val srcNodesConnectedByCorr = if(hasCorrNodes) nodeGroupMap.get(DomainType.CORR).filter[(showCreated || it.bindingType !== BindingType.CREATE)].map[(it as TGGRuleCorr).source].toList else new ArrayList
-		val trgNodesConnectedByCorr =  if(hasCorrNodes) nodeGroupMap.get(DomainType.CORR).filter[(showCreated || it.bindingType !== BindingType.CREATE)].map[(it as TGGRuleCorr).target].toList else new ArrayList
-		
+		val srcNodesConnectedByCorr = if(hasCorrNodes) nodeGroupMap.get(DomainType.CORR).filter [
+				(showCreated || it.bindingType !== BindingType.CREATE)
+			].map[(it as TGGRuleCorr).source].toList else new ArrayList
+		val trgNodesConnectedByCorr = if(hasCorrNodes) nodeGroupMap.get(DomainType.CORR).filter [
+				(showCreated || it.bindingType !== BindingType.CREATE)
+			].map[(it as TGGRuleCorr).target].toList else new ArrayList
+
 		'''
 			«IF groupFullRule»together {«ENDIF»
 			
@@ -226,8 +228,7 @@ class VictoryPlantUMLGenerator {
 
 	private def static String visualiseEObjectGraph(Map<EObject, Pair<String, String>> srcObjectMapping,
 		Map<EObject, Pair<String, String>> trgObjectMapping, Iterable<Pair<Pair<EObject, EObject>, String>> corrEdges,
-		boolean showCreated, boolean showSrc, boolean showTrg, boolean showCorr,
-		IUserOptions userOptions) {
+		boolean showCreated, boolean showSrc, boolean showTrg, boolean showCorr, IUserOptions userOptions) {
 		'''
 			together {
 				«IF showSrc»«visualiseEObjectGroup(srcObjectMapping, "<<SRC>>")»«ENDIF»
@@ -265,10 +266,12 @@ class VictoryPlantUMLGenerator {
 		'''
 	}
 
-	private def static Map<EObject, Pair<String, String>> mapEObjects(Collection<EObject> eObjects, VisualizationLabelOptions nodeLabelVisualizationOptions) {
+	private def static Map<EObject, Pair<String, String>> mapEObjects(Collection<EObject> eObjects,
+		VisualizationLabelOptions nodeLabelVisualizationOptions) {
 		eObjects.toInvertedMap [
 			val id = labelFor(it) + "_" + indexFor(it)
-			val label = org.emoflon.ibex.tgg.ui.debug.plantuml.VictoryPlantUMLGenerator.getNodeLabel(id, it.eClass.name, nodeLabelVisualizationOptions)
+			val label = org.emoflon.ibex.tgg.ui.debug.plantuml.VictoryPlantUMLGenerator.getNodeLabel(id, it.eClass.name,
+				nodeLabelVisualizationOptions)
 			id -> label
 		]
 	}
@@ -311,7 +314,8 @@ class VictoryPlantUMLGenerator {
 		'''«node.type.name»_«java.util.UUID.randomUUID().toString().replace("-","_")»'''
 	}
 
-	private def static String getColorDefinitionsForEdge(BindingType binding, DomainType domain, IUserOptions userOptions) {
+	private def static String getColorDefinitionsForEdge(BindingType binding, DomainType domain,
+		IUserOptions userOptions) {
 		var bindingColor = contextColor
 		if (binding === BindingType.CREATE)
 			if ((userOptions.op === IBeXOp.INITIAL_FWD && domain === DomainType.SRC) ||
@@ -323,27 +327,27 @@ class VictoryPlantUMLGenerator {
 	}
 
 	private def static String getEdgeLabel(String name, VisualizationLabelOptions labelOptions) {
-		if(labelOptions == VisualizationLabelOptions.NONE) {
+		if (labelOptions == VisualizationLabelOptions.NONE) {
 			''
 		} else {
 			''': «getAbbreviatedName(name, labelOptions)»'''
 		}
 	}
-	
+
 	private def static String getNodeLabel(String name, String type, VisualizationLabelOptions labelOptions) {
-		if(labelOptions == VisualizationLabelOptions.NONE) {
-			'''«getAbbreviatedName(name, labelOptions)» : «getAbbreviatedName(type, VisualizationLabelOptions.ABBREVIATED)»'''	
+		if (labelOptions == VisualizationLabelOptions.NONE) {
+			'''«getAbbreviatedName(name, labelOptions)» : «getAbbreviatedName(type, VisualizationLabelOptions.ABBREVIATED)»'''
 		} else {
 			'''«getAbbreviatedName(name, labelOptions)» : «getAbbreviatedName(type, labelOptions)»'''
 		}
-		
+
 	}
-	
+
 	private def static String getAbbreviatedName(String name, VisualizationLabelOptions labelOptions) {
 		switch (labelOptions) {
-			case FULLNAME: '''«name»'''
-			case ABBREVIATED: '''«StringUtils.abbreviateMiddle(name, "...", 10)»'''
-			case NONE: ''
+			case FULLNAME: return '''«name»'''
+			case ABBREVIATED: return '''«StringUtils.abbreviateMiddle(name, "...", 10)»'''
+			case NONE: return ''''''
 		}
 	}
 
