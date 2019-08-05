@@ -211,7 +211,7 @@ class VictoryPlantUMLGenerator {
 			
 			«FOR edge : rule.edges»
 				«IF (edge.domainType == DomainType.SRC && showSrc && (showCreated || edge.bindingType !== BindingType.CREATE || isToBeTranslatedElement(edge.bindingType, edge.domainType, userOptions.op)))
-					|| ((edge.domainType == DomainType.TRG && showTrg && (showCreated || edge.bindingType !== BindingType.CREATE) || isToBeTranslatedElement(edge.bindingType, edge.domainType, userOptions.op)))»
+					|| (edge.domainType == DomainType.TRG && showTrg && (showCreated || edge.bindingType !== BindingType.CREATE || isToBeTranslatedElement(edge.bindingType, edge.domainType, userOptions.op)))»
 					«visualiseRuleEdge(
 						nodeIdMap.get(edge.srcNode), 
 						nodeIdMap.get(edge.trgNode), 
@@ -229,12 +229,29 @@ class VictoryPlantUMLGenerator {
 	private def static String visualiseEObjectGraph(Map<EObject, Pair<String, String>> srcObjectMapping,
 		Map<EObject, Pair<String, String>> trgObjectMapping, Iterable<Pair<Pair<EObject, EObject>, String>> corrEdges,
 		boolean showCreated, boolean showSrc, boolean showTrg, boolean showCorr, IUserOptions userOptions) {
+		
+		val srcObjectConnectedByCorr = corrEdges.map[edge | edge.key.key];
+		val trgObjectConnectedByCorr = corrEdges.map[edge | edge.key.value];
+		val srcCorrConnectedObjectMapping = srcObjectMapping.filter[p1, p2| srcObjectConnectedByCorr.toList.contains(p1)]
+		val trgCorrConnectedObjectMapping = trgObjectMapping.filter[p1, p2| trgObjectConnectedByCorr.toList.contains(p1)]
 		'''
 			together {
-				«IF showSrc»«visualiseEObjectGroup(srcObjectMapping, "<<SRC>>")»«ENDIF»
-				«IF showTrg»«visualiseEObjectGroup(trgObjectMapping, "<<TRG>>")»«ENDIF»
+				«IF showSrc»
+					«visualiseEObjectGroup(srcObjectMapping, "<<SRC>>")»
+				«ELSE»
+					«IF showCorr»
+					«visualiseEObjectGroup(srcCorrConnectedObjectMapping, "<<SRC>>")»
+					«ENDIF»
+				«ENDIF»
+				«IF showTrg»
+					«visualiseEObjectGroup(trgObjectMapping, "<<TRG>>")»
+				«ELSE»
+					«IF showCorr»
+						«visualiseEObjectGroup(trgCorrConnectedObjectMapping, "<<TRG>>")»
+					«ENDIF»
+				«ENDIF»
 				
-				«IF corrEdges !== null && showCorr && showSrc && showTrg»
+				«IF corrEdges !== null && showCorr»
 					«FOR edge : corrEdges»
 						«srcObjectMapping.get(edge.key.key).key» ... «trgObjectMapping.get(edge.key.value).key» «getEdgeLabel(edge.value, userOptions.corrLabelVisualization)»
 					«ENDFOR»
