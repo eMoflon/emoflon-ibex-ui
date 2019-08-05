@@ -16,6 +16,9 @@ import org.emoflon.ibex.tgg.operational.monitoring.data.TGGObjectGraph
 import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager.VisualizationLabelOptions
 import org.apache.commons.lang3.StringUtils
 import java.util.ArrayList
+import org.eclipse.emf.ecore.EReference
+import java.util.HashMap
+import org.eclipse.emf.ecore.util.EContentsEList
 
 class VictoryPlantUMLGenerator {
 
@@ -278,9 +281,26 @@ class VictoryPlantUMLGenerator {
 							«eObjectMapping.get(object).key» --> «eObjectMapping.get(contentObject).key» : «contentObject.eContainingFeature.name»
 						«ENDIF»
 					«ENDFOR»
+					«FOR crossReference : object.crossReferences.entrySet»
+						«IF eObjectMapping.containsKey(crossReference.key)»
+							«eObjectMapping.get(object).key» --> «eObjectMapping.get(crossReference.key).key» : «crossReference.value.name»
+						«ENDIF»
+					«ENDFOR»
 				«ENDFOR»
 			}
 		'''
+	}
+	
+	private def static Map<EObject,EReference> getCrossReferences(EObject object) {
+		var map = new HashMap<EObject, EReference>();
+		var featureIterator = object.eCrossReferences().iterator() as EContentsEList.FeatureIterator<EObject>
+		while(featureIterator.hasNext) {
+			var eObject = featureIterator.next() as EObject;
+	    	var eReference = featureIterator.feature() as EReference;
+	    	map.put(eObject, eReference)
+		}
+		
+		return map;		
 	}
 
 	private def static Map<EObject, Pair<String, String>> mapEObjects(Collection<EObject> eObjects,
