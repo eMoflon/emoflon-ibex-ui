@@ -1,9 +1,5 @@
 package org.emoflon.ibex.tgg.ui.debug.views.visualisable;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Collection;
 
 import org.eclipse.emf.ecore.EObject;
@@ -35,17 +31,7 @@ public class IMatchVisualisation extends VisualisableElement {
 	Collection<EObject> matchNeighborhood = dataProvider.getMatchNeighbourhood(match, 1);
 
 	String plantUmlString = VictoryPlantUMLGenerator.visualiseMatch(match, rule, matchNeighborhood, userOptions);
-	
-//	try {
-//		File temp = File.createTempFile("plantUml", ".txt");
-//		BufferedWriter bw = new BufferedWriter(new FileWriter(temp));
-//	    bw.write(plantUmlString);
-//	    bw.close();
-//	    System.out.println("Done");
-//	}catch(IOException e){
-//		e.printStackTrace();
-//	}
-	
+
 	return plantUmlString;
     }
 

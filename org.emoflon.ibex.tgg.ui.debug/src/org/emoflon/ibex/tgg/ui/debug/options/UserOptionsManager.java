@@ -5,11 +5,11 @@ public class UserOptionsManager implements IUserOptions {
     private boolean isInvalid = false;
 
     private boolean displayFullRuleForMatches = false;
-    
+
     private boolean displaySrcContextForMatches = true;
     private boolean displayTrgContextForMatches = true;
     private boolean displayCorrContextForMatches = true;
-    
+
     private final IBeXOp op;
 
     private VisualizationLabelOptions corrLabelVisualization = VisualizationLabelOptions.ABBREVIATED;
@@ -54,8 +54,8 @@ public class UserOptionsManager implements IUserOptions {
     }
 
     /**
-     * @param corrLabelVisualization
-     *            the visualization option for correspondence labels
+     * @param corrLabelVisualization the visualization option for correspondence
+     *                               labels
      */
     public void setCorrLabelVisualization(VisualizationLabelOptions corrLabelVisualization) {
 	if (this.corrLabelVisualization != corrLabelVisualization) {
@@ -63,7 +63,7 @@ public class UserOptionsManager implements IUserOptions {
 	    isInvalid = true;
 	}
     }
-    
+
     /**
      * @return the visualization option for edge labels
      */
@@ -73,8 +73,7 @@ public class UserOptionsManager implements IUserOptions {
     }
 
     /**
-     * @param nodeLabelVisualization
-     *            the visualization option for node labels
+     * @param nodeLabelVisualization the visualization option for node labels
      */
     public void setEdgeLabelVisualization(VisualizationLabelOptions edgeLabelVisualization) {
 	if (this.edgeLabelVisualization != edgeLabelVisualization) {
@@ -82,7 +81,7 @@ public class UserOptionsManager implements IUserOptions {
 	    isInvalid = true;
 	}
     }
-    
+
     /**
      * @return the visualization option for node labels
      */
@@ -92,8 +91,7 @@ public class UserOptionsManager implements IUserOptions {
     }
 
     /**
-     * @param nodeLabelVisualization
-     *            the visualization option for node labels
+     * @param nodeLabelVisualization the visualization option for node labels
      */
     public void setNodeLabelVisualization(VisualizationLabelOptions nodeLabelVisualization) {
 	if (this.nodeLabelVisualization != nodeLabelVisualization) {
@@ -103,60 +101,60 @@ public class UserOptionsManager implements IUserOptions {
     }
 
     /**
-	 * @return the displaySrcContextForMatches
-	 */
+     * @return the displaySrcContextForMatches
+     */
     @Override
-	public boolean displaySrcContextForMatches() {
-		return displaySrcContextForMatches;
-	}
+    public boolean displaySrcContextForMatches() {
+	return displaySrcContextForMatches;
+    }
 
-	/**
-	 * @param displaySrcContextForMatches the displaySrcContextForMatches to set
-	 */
-	public void setDisplaySrcContextForMatches(boolean displaySrcContextForMatches) {
-		if(this.displaySrcContextForMatches != displaySrcContextForMatches) {
-			this.displaySrcContextForMatches = displaySrcContextForMatches;
-			this.isInvalid = true;
-		}
+    /**
+     * @param displaySrcContextForMatches the displaySrcContextForMatches to set
+     */
+    public void setDisplaySrcContextForMatches(boolean displaySrcContextForMatches) {
+	if (this.displaySrcContextForMatches != displaySrcContextForMatches) {
+	    this.displaySrcContextForMatches = displaySrcContextForMatches;
+	    this.isInvalid = true;
 	}
+    }
 
-	/**
-	 * @return the displayTrgContextForMatches
-	 */
-	@Override
-	public boolean displayTrgContextForMatches() {
-		return displayTrgContextForMatches;
-	}
+    /**
+     * @return the displayTrgContextForMatches
+     */
+    @Override
+    public boolean displayTrgContextForMatches() {
+	return displayTrgContextForMatches;
+    }
 
-	/**
-	 * @param displayTrgContextForMatches the displayTrgContextForMatches to set
-	 */
-	public void setDisplayTrgContextForMatches(boolean displayTrgContextForMatches) {
-		if(this.displayTrgContextForMatches != displayTrgContextForMatches) {
-			this.displayTrgContextForMatches = displayTrgContextForMatches;
-			isInvalid = true;
-		}
+    /**
+     * @param displayTrgContextForMatches the displayTrgContextForMatches to set
+     */
+    public void setDisplayTrgContextForMatches(boolean displayTrgContextForMatches) {
+	if (this.displayTrgContextForMatches != displayTrgContextForMatches) {
+	    this.displayTrgContextForMatches = displayTrgContextForMatches;
+	    isInvalid = true;
 	}
-	
-	/**
-	 * @return the displayTrgContextForMatches
-	 */
-	@Override
-	public boolean displayCorrContextForMatches() {
-		return displayCorrContextForMatches;
-	}
+    }
 
-	/**
-	 * @param displayTrgContextForMatches the displayTrgContextForMatches to set
-	 */
-	public void setDisplayCorrContextForMatches(boolean displayCorrContextForMatches) {
-		if(this.displayCorrContextForMatches != displayCorrContextForMatches) {
-			this.displayCorrContextForMatches = displayCorrContextForMatches;
-			isInvalid = true;
-		}
-	}
+    /**
+     * @return the displayTrgContextForMatches
+     */
+    @Override
+    public boolean displayCorrContextForMatches() {
+	return displayCorrContextForMatches;
+    }
 
-	public enum VisualizationLabelOptions {
+    /**
+     * @param displayTrgContextForMatches the displayTrgContextForMatches to set
+     */
+    public void setDisplayCorrContextForMatches(boolean displayCorrContextForMatches) {
+	if (this.displayCorrContextForMatches != displayCorrContextForMatches) {
+	    this.displayCorrContextForMatches = displayCorrContextForMatches;
+	    isInvalid = true;
+	}
+    }
+
+    public enum VisualizationLabelOptions {
 	FULLNAME, ABBREVIATED, NONE
     }
 }

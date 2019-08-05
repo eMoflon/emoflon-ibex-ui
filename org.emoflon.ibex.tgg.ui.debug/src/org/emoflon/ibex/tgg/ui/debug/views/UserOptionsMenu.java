@@ -52,7 +52,7 @@ public class UserOptionsMenu {
 
 	fullRuleVisButton = new Button(panel, SWT.CHECK);
 	fullRuleVisButton.setText("Display created elements in match");
-	fullRuleVisButton.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
+	fullRuleVisButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 	fullRuleVisButton.addSelectionListener(new SelectionAdapter() {
 	    @Override
 	    public void widgetSelected(SelectionEvent pSelectionEvent) {
@@ -60,10 +60,10 @@ public class UserOptionsMenu {
 		matchDisplayView.refresh();
 	    }
 	});
-	
+
 	displaySrcButton = new Button(panel, SWT.CHECK);
 	displaySrcButton.setText("Display src elements in match");
-	displaySrcButton.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
+	displaySrcButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 	displaySrcButton.setSelection(userOptionsManager.displaySrcContextForMatches());
 	displaySrcButton.addSelectionListener(new SelectionAdapter() {
 	    @Override
@@ -72,10 +72,10 @@ public class UserOptionsMenu {
 		matchDisplayView.refresh();
 	    }
 	});
-	
+
 	displayTrgButton = new Button(panel, SWT.CHECK);
 	displayTrgButton.setText("Display trg elements in match");
-	displayTrgButton.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
+	displayTrgButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 	displayTrgButton.setSelection(userOptionsManager.displayTrgContextForMatches());
 	displayTrgButton.addSelectionListener(new SelectionAdapter() {
 	    @Override
@@ -84,11 +84,10 @@ public class UserOptionsMenu {
 		matchDisplayView.refresh();
 	    }
 	});
-	
-	
+
 	displayCorrButton = new Button(panel, SWT.CHECK);
 	displayCorrButton.setText("Display corr elements in match");
-	displayCorrButton.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
+	displayCorrButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 	displayCorrButton.setSelection(userOptionsManager.displayCorrContextForMatches());
 	displayCorrButton.addSelectionListener(new SelectionAdapter() {
 	    @Override
@@ -99,7 +98,7 @@ public class UserOptionsMenu {
 	});
 
 	corrVisCombo = new Combo(panel, SWT.READ_ONLY);
-	corrVisCombo.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
+	corrVisCombo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 	final String[] corrVisualizationOptions = new String[] { "Show Corr Labels", "Show abbreviated Corr Labels",
 		"Hide Corr Labels" };
 	for (String option : corrVisualizationOptions) {
@@ -142,23 +141,23 @@ public class UserOptionsMenu {
 		matchDisplayView.refresh();
 	    }
 	});
-	
+
 	edgeVisCombo = new Combo(panel, SWT.READ_ONLY);
-	edgeVisCombo.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
+	edgeVisCombo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 	final String[] edgeVisualizationOptions = new String[] { "Show Edge Labels", "Show abbreviated Edge Labels",
 		"Hide Edge Labels" };
 	for (String option : edgeVisualizationOptions) {
-		edgeVisCombo.add(option);
+	    edgeVisCombo.add(option);
 	}
 	switch (userOptionsManager.getEdgeLabelVisualization()) {
 	case FULLNAME:
-		edgeVisCombo.select(0);
+	    edgeVisCombo.select(0);
 	    break;
 	case ABBREVIATED:
-		edgeVisCombo.select(1);
+	    edgeVisCombo.select(1);
 	    break;
 	case NONE:
-		edgeVisCombo.select(2);
+	    edgeVisCombo.select(2);
 	    break;
 	}
 	edgeVisCombo.addSelectionListener(new SelectionListener() {
@@ -187,23 +186,23 @@ public class UserOptionsMenu {
 		matchDisplayView.refresh();
 	    }
 	});
-	
+
 	nodeVisCombo = new Combo(panel, SWT.READ_ONLY);
-	nodeVisCombo.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
+	nodeVisCombo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 	final String[] nodeVisualizationOptions = new String[] { "Show Node Labels", "Show abbreviated Node Labels",
 		"Hide Node Labels" };
 	for (String option : nodeVisualizationOptions) {
-		nodeVisCombo.add(option);
+	    nodeVisCombo.add(option);
 	}
 	switch (userOptionsManager.getNodeLabelVisualization()) {
 	case FULLNAME:
-		nodeVisCombo.select(0);
+	    nodeVisCombo.select(0);
 	    break;
 	case ABBREVIATED:
-		nodeVisCombo.select(1);
+	    nodeVisCombo.select(1);
 	    break;
 	case NONE:
-		nodeVisCombo.select(2);
+	    nodeVisCombo.select(2);
 	    break;
 	}
 	nodeVisCombo.addSelectionListener(new SelectionListener() {
