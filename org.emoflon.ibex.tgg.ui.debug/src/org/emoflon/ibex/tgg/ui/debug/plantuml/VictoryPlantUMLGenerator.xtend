@@ -167,7 +167,7 @@ class VictoryPlantUMLGenerator {
 			«IF nodeGroupMap.containsKey(DomainType.SRC)»
 				together {
 					«FOR node : nodeGroupMap.get(DomainType.SRC)»
-						«IF (showSrc && (showCreated || node.bindingType !== BindingType.CREATE)) || (showCorr && srcNodesConnectedByCorr.contains(node))»
+						«IF (showSrc && (showCreated || node.bindingType !== BindingType.CREATE || isToBeTranslatedElement(node.bindingType, node.domainType, userOptions.op))) || (showCorr && srcNodesConnectedByCorr.contains(node))»
 							«visualiseRuleNode(
 								nodeIdMap.get(node), 
 								org.emoflon.ibex.tgg.ui.debug.plantuml.VictoryPlantUMLGenerator.getNodeLabel(node.name, node.type.name, userOptions.nodeLabelVisualization), 
@@ -181,7 +181,7 @@ class VictoryPlantUMLGenerator {
 			«IF nodeGroupMap.containsKey(DomainType.TRG)»
 				together {
 					«FOR node : nodeGroupMap.get(DomainType.TRG)»
-						«IF (showTrg && (showCreated || node.bindingType !== BindingType.CREATE)) || (showCorr && trgNodesConnectedByCorr.contains(node))»
+						«IF (showTrg && (showCreated || node.bindingType !== BindingType.CREATE || isToBeTranslatedElement(node.bindingType, node.domainType, userOptions.op))) || (showCorr && trgNodesConnectedByCorr.contains(node))»
 							«visualiseRuleNode(
 								nodeIdMap.get(node), 
 								org.emoflon.ibex.tgg.ui.debug.plantuml.VictoryPlantUMLGenerator.getNodeLabel(node.name, node.type.name, userOptions.nodeLabelVisualization), 
@@ -195,7 +195,7 @@ class VictoryPlantUMLGenerator {
 			«IF nodeGroupMap.containsKey(DomainType.CORR) && showCorr»
 				«FOR node : nodeGroupMap.get(DomainType.CORR)»
 					«val corrNode = node as TGGRuleCorr»
-					«IF showCreated || corrNode.bindingType !== BindingType.CREATE»
+					«IF showCreated || corrNode.bindingType !== BindingType.CREATE || isToBeTranslatedElement(node.bindingType, node.domainType, userOptions.op)»
 						«visualiseRuleCorrEdge(
 							nodeIdMap.get(corrNode.source), 
 							nodeIdMap.get(corrNode.target), 
@@ -208,8 +208,8 @@ class VictoryPlantUMLGenerator {
 			«ENDIF»
 			
 			«FOR edge : rule.edges»
-				«IF (edge.domainType == DomainType.SRC && showSrc && (showCreated || edge.bindingType !== BindingType.CREATE))
-					|| ((edge.domainType == DomainType.TRG && showTrg && (showCreated || edge.bindingType !== BindingType.CREATE)))»
+				«IF (edge.domainType == DomainType.SRC && showSrc && (showCreated || edge.bindingType !== BindingType.CREATE || isToBeTranslatedElement(edge.bindingType, edge.domainType, userOptions.op)))
+					|| ((edge.domainType == DomainType.TRG && showTrg && (showCreated || edge.bindingType !== BindingType.CREATE) || isToBeTranslatedElement(edge.bindingType, edge.domainType, userOptions.op)))»
 					«visualiseRuleEdge(
 						nodeIdMap.get(edge.srcNode), 
 						nodeIdMap.get(edge.trgNode), 
@@ -312,13 +312,13 @@ class VictoryPlantUMLGenerator {
 	}
 
 	private def static String getColorDefinitionsForEdge(BindingType binding, DomainType domain, IUserOptions userOptions) {
-		var bindingColor = contextColor
-		if (binding === BindingType.CREATE)
-			if ((userOptions.op === IBeXOp.INITIAL_FWD && domain === DomainType.SRC) ||
-				(userOptions.op === IBeXOp.INITIAL_BWD && domain === DomainType.TRG))
-				bindingColor = translateColor
-			else
-				bindingColor = createColor
+		var bindingColor = if(isToBeTranslatedElement(binding, domain, userOptions.op)) {
+			translateColor
+		} else if (binding === BindingType.CREATE) {
+			createColor
+		} else {
+			contextColor
+		}
 		'''[#«bindingColor»]'''
 	}
 
@@ -349,15 +349,21 @@ class VictoryPlantUMLGenerator {
 
 	private def static String getColorDefinitions(BindingType binding, DomainType domain, IBeXOp op) {
 
-		var bindingColour = "OTHER"
-		if (binding === BindingType.CREATE)
-			if ((op === IBeXOp.INITIAL_FWD && domain === DomainType.SRC) ||
-				(op === IBeXOp.INITIAL_BWD && domain === DomainType.TRG))
-				bindingColour = "TRANSLATE"
-			else
-				bindingColour = "CREATE"
+		var bindingColor = if(isToBeTranslatedElement(binding, domain, op)) {
+			"TRANSLATE"
+		} else if (binding === BindingType.CREATE) {
+			"CREATE"
+		} else {
+			"OTHER"
+		}
 
-		'''<<«bindingColour»>> <<«domain»>>'''
+		'''<<«bindingColor»>> <<«domain»>>'''
+	}
+	
+	private def static boolean isToBeTranslatedElement(BindingType binding, DomainType domain, IBeXOp op) {
+		return binding === BindingType.CREATE && 
+			((op === IBeXOp.INITIAL_FWD && domain === DomainType.SRC)  ||
+				(op === IBeXOp.INITIAL_BWD && domain === DomainType.TRG))
 	}
 
 }
