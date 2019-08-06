@@ -9,21 +9,17 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Scale;
 import org.emoflon.ibex.tgg.operational.matches.IMatch;
 import org.emoflon.ibex.tgg.operational.monitoring.IVictoryDataProvider;
 import org.emoflon.ibex.tgg.operational.monitoring.data.TGGObjectGraph;
 import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager;
-import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager.VisualizationLabelOptions;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.IMatchVisualisation;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.ObjectGraphVisualisation;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.TGGRuleVisualisation;
@@ -35,6 +31,7 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 
     private IVictoryDataProvider dataProvider;
     private UserOptionsManager userOptionsManager;
+    private UserOptionsMenu userOptionsMenu;
 
     private ScrolledComposite imageScroller;
     private Label imageContainer;
@@ -66,75 +63,15 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 
 	Composite buttonRow = new Composite(this, SWT.NONE);
 	buttonRow.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-	buttonRow.setLayout(new GridLayout(5, false));
+	buttonRow.setLayout(new GridLayout(3, false));
 
-	Button toggleFullRuleVisButton = new Button(buttonRow, SWT.TOGGLE);
-	toggleFullRuleVisButton.setText("Full Vis");
-	toggleFullRuleVisButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-	toggleFullRuleVisButton.addSelectionListener(new SelectionAdapter() {
+	Button userOptionsMenuButton = new Button(buttonRow, SWT.PUSH);
+	userOptionsMenuButton.setText("Open User Options Menu");
+	userOptionsMenuButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+	userOptionsMenuButton.addSelectionListener(new SelectionAdapter() {
 	    @Override
 	    public void widgetSelected(SelectionEvent pSelectionEvent) {
-		userOptionsManager.setDisplayFullRuleForMatches(toggleFullRuleVisButton.getSelection());
-		refresh();
-	    }
-	});
-
-	Combo selectCorrVisualizationComboBox = new Combo(buttonRow, SWT.READ_ONLY);
-	toggleFullRuleVisButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-	final String[] corrVisualizationOptions = new String[] { "Show Corr Labels", "Show abbreviated Corr Labels",
-		"Hide Corr Labels" };
-	for (String option : corrVisualizationOptions) {
-	    selectCorrVisualizationComboBox.add(option);
-	}
-	switch (userOptionsManager.getCorrLabelVisualization()) {
-	case FULLNAME:
-	    selectCorrVisualizationComboBox.select(0);
-	    break;
-	case ABBREVIATED:
-	    selectCorrVisualizationComboBox.select(1);
-	    break;
-	case NONE:
-	    selectCorrVisualizationComboBox.select(2);
-	    break;
-	}
-	selectCorrVisualizationComboBox.addSelectionListener(new SelectionListener() {
-
-	    private VisualizationLabelOptions getSelectedVisualization(String selectedVisualization) {
-		if (selectedVisualization.equals(corrVisualizationOptions[0])) {
-		    return VisualizationLabelOptions.FULLNAME;
-		} else if (selectedVisualization.equals(corrVisualizationOptions[1])) {
-		    return VisualizationLabelOptions.ABBREVIATED;
-		} else if (selectedVisualization.equals(corrVisualizationOptions[2])) {
-		    return VisualizationLabelOptions.NONE;
-		} else {
-		    throw new RuntimeException("Unknown visualization option: " + selectedVisualization);
-		}
-	    }
-
-	    @Override
-	    public void widgetSelected(SelectionEvent e) {
-		userOptionsManager
-			.setCorrLabelVisualization(getSelectedVisualization(selectCorrVisualizationComboBox.getText()));
-		refresh();
-	    }
-
-	    @Override
-	    public void widgetDefaultSelected(SelectionEvent e) {
-		userOptionsManager
-			.setCorrLabelVisualization(getSelectedVisualization(selectCorrVisualizationComboBox.getText()));
-		refresh();
-	    }
-	});
-
-	Scale neighborhoodScale = new Scale(buttonRow, SWT.HORIZONTAL);
-	neighborhoodScale.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-	neighborhoodScale.setMinimum(0);
-	neighborhoodScale.setPageIncrement(1);
-	neighborhoodScale.setMaximum(3);
-	neighborhoodScale.addSelectionListener(new SelectionAdapter() {
-	    @Override
-	    public void widgetSelected(SelectionEvent pSelectionEvent) {
-		userOptionsManager.setNeighborhoodSize(neighborhoodScale.getSelection());
+		userOptionsMenu.show();
 	    }
 	});
 
@@ -161,6 +98,9 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 		System.exit(0);
 	    }
 	});
+
+	userOptionsMenu = new UserOptionsMenu(userOptionsManager, this);
+	userOptionsMenu.build(getShell());
 
 	pack();
 	return this;
@@ -206,7 +146,7 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 
     @Override
     public void display(TGGObjectGraph pObjectGraph) {
-	currentElement = new ObjectGraphVisualisation(pObjectGraph, dataProvider);
+	currentElement = new ObjectGraphVisualisation(pObjectGraph, userOptionsManager, dataProvider);
 	refresh();
     }
 

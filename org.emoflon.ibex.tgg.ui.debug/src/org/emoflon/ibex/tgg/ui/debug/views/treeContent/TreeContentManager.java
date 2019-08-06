@@ -69,9 +69,7 @@ public class TreeContentManager implements ITreeContentProvider, IStyledLabelPro
 
     @Override
     public void addListener(ILabelProviderListener listener) {
-
-	System.out.println("Something tried to register a listener");
-
+	// TODO do we need to do anything with this listener?
     }
 
     @Override

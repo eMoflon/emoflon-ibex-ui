@@ -3,6 +3,8 @@ package org.emoflon.ibex.tgg.ui.debug.views;
 import java.util.Collection;
 import java.util.HashSet;
 
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -69,6 +71,14 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 		}
 	    }
 	});
+	treeViewer.addDoubleClickListener(new IDoubleClickListener() {
+	    @Override
+	    public void doubleClick(DoubleClickEvent pEvent) {
+		Object selection = treeViewer.getStructuredSelection().getFirstElement();
+		if (selection instanceof MatchNode)
+		    applyMatch((MatchNode) selection);
+	    }
+	});
 
 	applyButton = new Button(this, SWT.PUSH);
 	applyButton.setText("Apply");
@@ -76,13 +86,8 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 	    @Override
 	    public void widgetSelected(SelectionEvent pSelectionEvent) {
 		Object selection = treeViewer.getStructuredSelection().getFirstElement();
-
-		if (selection instanceof MatchNode) {
-		    synchronized (chosenMatch) {
-			chosenMatch[0] = ((MatchNode) selection).getMatch().getIMatch();
-			chosenMatch.notify();
-		    }
-		}
+		if (selection instanceof MatchNode)
+		    applyMatch((MatchNode) selection);
 	    }
 	});
 
@@ -119,8 +124,7 @@ public class MatchListView extends Composite implements ISharedFocusElement {
     /**
      * Populates the list-view with the given collection of matches.
      * 
-     * @param pMatches
-     *            the collection of matches to populate the list-view with
+     * @param pMatches the collection of matches to populate the list-view with
      */
     public void populate(Collection<VictoryMatch> pMatches) {
 	applyButton.setEnabled(false);
@@ -157,5 +161,12 @@ public class MatchListView extends Composite implements ISharedFocusElement {
     @Override
     public void registerSharedFocus(ISharedFocusElement pSharedFocusElement) {
 	sharedFocusElements.add(pSharedFocusElement);
+    }
+
+    private void applyMatch(MatchNode pMatchNode) {
+	synchronized (chosenMatch) {
+	    chosenMatch[0] = pMatchNode.getMatch().getIMatch();
+	    chosenMatch.notify();
+	}
     }
 }
