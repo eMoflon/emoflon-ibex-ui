@@ -141,6 +141,8 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	    matchElementMap.put(pMatch, matchElement);
 	}
 
+	currentElement = matchElementMap.get(pMatch);
+
 	refresh();
     }
 
