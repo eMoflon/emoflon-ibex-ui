@@ -3,7 +3,6 @@ package org.emoflon.ibex.tgg.ui.debug.views;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.layout.GridData;
@@ -99,137 +98,41 @@ public class UserOptionsMenu {
 	    }
 	});
 
-	corrVisCombo = new Combo(panel, SWT.READ_ONLY);
-	corrVisCombo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-	final String[] corrVisualizationOptions = new String[] { "Show Corr Labels", "Show abbreviated Corr Labels",
-		"Hide Corr Labels" };
-	for (String option : corrVisualizationOptions) {
-	    corrVisCombo.add(option);
-	}
-	switch (userOptionsManager.getCorrLabelVisualization()) {
-	case FULLNAME:
-	    corrVisCombo.select(0);
-	    break;
-	case ABBREVIATED:
-	    corrVisCombo.select(1);
-	    break;
-	case NONE:
-	    corrVisCombo.select(2);
-	    break;
-	}
-	corrVisCombo.addSelectionListener(new SelectionListener() {
-
-	    private VisualizationLabelOptions getSelectedVisualization(String selectedVisualization) {
-		if (selectedVisualization.equals(corrVisualizationOptions[0])) {
-		    return VisualizationLabelOptions.FULLNAME;
-		} else if (selectedVisualization.equals(corrVisualizationOptions[1])) {
-		    return VisualizationLabelOptions.ABBREVIATED;
-		} else if (selectedVisualization.equals(corrVisualizationOptions[2])) {
-		    return VisualizationLabelOptions.NONE;
-		} else {
-		    throw new RuntimeException("Unknown visualization option: " + selectedVisualization);
-		}
-	    }
-
-	    @Override
-	    public void widgetSelected(SelectionEvent e) {
-		userOptionsManager.setCorrLabelVisualization(getSelectedVisualization(corrVisCombo.getText()));
-		matchDisplayView.refresh();
-	    }
-
-	    @Override
-	    public void widgetDefaultSelected(SelectionEvent e) {
-		userOptionsManager.setCorrLabelVisualization(getSelectedVisualization(corrVisCombo.getText()));
-		matchDisplayView.refresh();
-	    }
-	});
-
 	edgeVisCombo = new Combo(panel, SWT.READ_ONLY);
 	edgeVisCombo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-	final String[] edgeVisualizationOptions = new String[] { "Show Edge Labels", "Show abbreviated Edge Labels",
-		"Hide Edge Labels" };
-	for (String option : edgeVisualizationOptions) {
+	for (String option : VisualizationLabelOptions.getOptionNames(VisualizationLabelOptions.EDGE))
 	    edgeVisCombo.add(option);
-	}
-	switch (userOptionsManager.getEdgeLabelVisualization()) {
-	case FULLNAME:
-	    edgeVisCombo.select(0);
-	    break;
-	case ABBREVIATED:
-	    edgeVisCombo.select(1);
-	    break;
-	case NONE:
-	    edgeVisCombo.select(2);
-	    break;
-	}
-	edgeVisCombo.addSelectionListener(new SelectionListener() {
-
-	    private VisualizationLabelOptions getSelectedVisualization(String selectedVisualization) {
-		if (selectedVisualization.equals(edgeVisualizationOptions[0])) {
-		    return VisualizationLabelOptions.FULLNAME;
-		} else if (selectedVisualization.equals(edgeVisualizationOptions[1])) {
-		    return VisualizationLabelOptions.ABBREVIATED;
-		} else if (selectedVisualization.equals(edgeVisualizationOptions[2])) {
-		    return VisualizationLabelOptions.NONE;
-		} else {
-		    throw new RuntimeException("Unknown visualization option: " + selectedVisualization);
-		}
-	    }
-
+	edgeVisCombo.select(userOptionsManager.getEdgeLabelVisualization().ordinal());
+	edgeVisCombo.addSelectionListener(new SelectionAdapter() {
 	    @Override
 	    public void widgetSelected(SelectionEvent e) {
-		userOptionsManager.setEdgeLabelVisualization(getSelectedVisualization(edgeVisCombo.getText()));
-		matchDisplayView.refresh();
-	    }
-
-	    @Override
-	    public void widgetDefaultSelected(SelectionEvent e) {
-		userOptionsManager.setEdgeLabelVisualization(getSelectedVisualization(edgeVisCombo.getText()));
+		userOptionsManager.setEdgeLabelVisualization(VisualizationLabelOptions.get(edgeVisCombo.getText()));
 		matchDisplayView.refresh();
 	    }
 	});
 
 	nodeVisCombo = new Combo(panel, SWT.READ_ONLY);
 	nodeVisCombo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-	final String[] nodeVisualizationOptions = new String[] { "Show Node Labels", "Show abbreviated Node Labels",
-		"Hide Node Labels" };
-	for (String option : nodeVisualizationOptions) {
+	for (String option : VisualizationLabelOptions.getOptionNames(VisualizationLabelOptions.NODE))
 	    nodeVisCombo.add(option);
-	}
-	switch (userOptionsManager.getNodeLabelVisualization()) {
-	case FULLNAME:
-	    nodeVisCombo.select(0);
-	    break;
-	case ABBREVIATED:
-	    nodeVisCombo.select(1);
-	    break;
-	case NONE:
-	    nodeVisCombo.select(2);
-	    break;
-	}
-	nodeVisCombo.addSelectionListener(new SelectionListener() {
-
-	    private VisualizationLabelOptions getSelectedVisualization(String selectedVisualization) {
-		if (selectedVisualization.equals(nodeVisualizationOptions[0])) {
-		    return VisualizationLabelOptions.FULLNAME;
-		} else if (selectedVisualization.equals(nodeVisualizationOptions[1])) {
-		    return VisualizationLabelOptions.ABBREVIATED;
-		} else if (selectedVisualization.equals(nodeVisualizationOptions[2])) {
-		    return VisualizationLabelOptions.NONE;
-		} else {
-		    throw new RuntimeException("Unknown visualization option: " + selectedVisualization);
-		}
-	    }
-
+	nodeVisCombo.select(userOptionsManager.getNodeLabelVisualization().ordinal());
+	nodeVisCombo.addSelectionListener(new SelectionAdapter() {
 	    @Override
 	    public void widgetSelected(SelectionEvent e) {
-		userOptionsManager.setNodeLabelVisualization(getSelectedVisualization(nodeVisCombo.getText()));
+		userOptionsManager.setNodeLabelVisualization(VisualizationLabelOptions.get(nodeVisCombo.getText()));
 		matchDisplayView.refresh();
 	    }
+	});
 
+	corrVisCombo = new Combo(panel, SWT.READ_ONLY);
+	corrVisCombo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+	for (String option : VisualizationLabelOptions.getOptionNames(VisualizationLabelOptions.CORR))
+	    corrVisCombo.add(option);
+	corrVisCombo.select(userOptionsManager.getCorrLabelVisualization().ordinal());
+	corrVisCombo.addSelectionListener(new SelectionAdapter() {
 	    @Override
-	    public void widgetDefaultSelected(SelectionEvent e) {
-		userOptionsManager.setNodeLabelVisualization(getSelectedVisualization(nodeVisCombo.getText()));
+	    public void widgetSelected(SelectionEvent e) {
+		userOptionsManager.setCorrLabelVisualization(VisualizationLabelOptions.get(corrVisCombo.getText()));
 		matchDisplayView.refresh();
 	    }
 	});

@@ -155,7 +155,35 @@ public class UserOptionsManager implements IUserOptions {
     }
 
     public enum VisualizationLabelOptions {
-	FULLNAME, ABBREVIATED, NONE
+	FULLNAME("Show Edge Labels", "Show Node Labels", "Show Corr Labels"), //
+	ABBREVIATED("Show Abbreviated Edge Labels", "Show Abbreviated Node Labels", "Show Abbreviated Corr Labels"), //
+	NONE("Hide Edge Labels", "Hide Node Labels", "Hide Corr Labels");
+
+	public static final int EDGE = 0;
+	public static final int NODE = 1;
+	public static final int CORR = 2;
+
+	private String[] optionNames;
+
+	private VisualizationLabelOptions(String... pOptionNames) {
+	    optionNames = pOptionNames;
+	}
+
+	public static String[] getOptionNames(int pOptionIndex) {
+	    String[] optionNames = new String[values().length];
+	    for (int i = 0; i < values().length; i++)
+		optionNames[i] = values()[i].optionNames[pOptionIndex];
+	    return optionNames;
+	}
+
+	public static VisualizationLabelOptions get(String pOptionName) {
+	    for (VisualizationLabelOptions labelOption : values())
+		for (String optionName : labelOption.optionNames)
+		    if (optionName.equals(pOptionName))
+			return labelOption;
+
+	    throw new IllegalArgumentException("Unknown visualization option: " + pOptionName);
+	}
     }
 
     public int getNeighborhoodSize() {
