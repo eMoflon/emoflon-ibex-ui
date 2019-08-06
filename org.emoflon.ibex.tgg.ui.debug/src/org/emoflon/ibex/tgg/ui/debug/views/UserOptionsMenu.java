@@ -243,6 +243,7 @@ public class UserOptionsMenu {
 	    @Override
 	    public void widgetSelected(SelectionEvent pSelectionEvent) {
 		userOptionsManager.setNeighborhoodSize(neighborhoodScale.getSelection());
+		matchDisplayView.refresh();
 	    }
 	});
 
