@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.Label;
 import org.emoflon.ibex.tgg.operational.matches.IMatch;
 import org.emoflon.ibex.tgg.operational.monitoring.IVictoryDataProvider;
 import org.emoflon.ibex.tgg.operational.monitoring.data.TGGObjectGraph;
+import org.emoflon.ibex.tgg.ui.debug.core.IbexDebugUI;
 import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.IMatchVisualisation;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.ObjectGraphVisualisation;
@@ -63,7 +64,7 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 
 	Composite buttonRow = new Composite(this, SWT.NONE);
 	buttonRow.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-	buttonRow.setLayout(new GridLayout(3, false));
+	buttonRow.setLayout(new GridLayout(4, false));
 
 	Button userOptionsMenuButton = new Button(buttonRow, SWT.PUSH);
 	userOptionsMenuButton.setText("Open User Options Menu");
@@ -89,13 +90,17 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	    }
 	});
 
+	Button restartCheck = new Button(buttonRow, SWT.CHECK);
+	restartCheck.setText("Restart");
+	restartCheck.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
+
 	Button terminateButton = new Button(buttonRow, SWT.PUSH);
 	terminateButton.setText("Quit Debugger");
 	terminateButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
 	terminateButton.addSelectionListener(new SelectionAdapter() {
 	    @Override
 	    public void widgetSelected(SelectionEvent pSelectionEvent) {
-		System.exit(0);
+		IbexDebugUI.exit(restartCheck.getSelection());
 	    }
 	});
 
