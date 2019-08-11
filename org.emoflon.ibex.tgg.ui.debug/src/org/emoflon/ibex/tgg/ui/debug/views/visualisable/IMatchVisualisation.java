@@ -1,8 +1,5 @@
 package org.emoflon.ibex.tgg.ui.debug.views.visualisable;
 
-import java.util.Collection;
-
-import org.eclipse.emf.ecore.EObject;
 import org.emoflon.ibex.tgg.operational.matches.IMatch;
 import org.emoflon.ibex.tgg.operational.monitoring.IVictoryDataProvider;
 import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions;
@@ -28,9 +25,7 @@ public class IMatchVisualisation extends VisualisableElement {
 	if (rule == null)
 	    throw new IllegalArgumentException("Unknown rule");
 
-	Collection<EObject> matchNeighborhood = dataProvider.getMatchNeighbourhood(match, 1);
-
-	return VictoryPlantUMLGenerator.visualiseMatch(match, rule, matchNeighborhood, userOptions);
+	return VictoryPlantUMLGenerator.visualiseMatch(match, rule, userOptions, dataProvider);
     }
 
 }

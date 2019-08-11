@@ -21,6 +21,8 @@ public class TGGRuleVisualisation extends VisualisableElement {
 
     @Override
     protected String generateVisualisationString() {
-	return VictoryPlantUMLGenerator.visualiseTGGRule(rule, userOptions);
+	String plantUmlString = VictoryPlantUMLGenerator.visualiseTGGRule(rule, userOptions);
+
+	return plantUmlString;
     }
 }
