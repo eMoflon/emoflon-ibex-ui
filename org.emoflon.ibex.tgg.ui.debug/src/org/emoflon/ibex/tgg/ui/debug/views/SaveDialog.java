@@ -25,10 +25,6 @@ public class SaveDialog {
 	panel.setLayout(new GridLayout());
 
 	String[][] defaultSaveData = pDataProvider.getDefaultSaveData();
-	defaultSaveData = new String[][] { new String[] { "src/path/", "src", ".model" }, //
-		new String[] { "trg/path/", "trg", ".model" }, //
-		new String[] { "corr/path/", "corr", ".model" }, //
-		new String[] { "protocol/path/", "protocol", ".model" } };
 
 	LocationSelector srcSelector = new LocationSelector(panel, defaultSaveData[0][0], defaultSaveData[0][1],
 		defaultSaveData[0][2]).build(dialogShell);
