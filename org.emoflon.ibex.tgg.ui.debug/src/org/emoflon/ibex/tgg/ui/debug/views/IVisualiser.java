@@ -1,7 +1,7 @@
 package org.emoflon.ibex.tgg.ui.debug.views;
 
 import org.emoflon.ibex.tgg.operational.matches.IMatch;
-import org.emoflon.ibex.tgg.operational.monitoring.data.TGGObjectGraph;
+import org.emoflon.ibex.tgg.operational.monitoring.data.Graph;
 
 import language.TGGRule;
 
@@ -28,7 +28,7 @@ public interface IVisualiser {
      * @param pObjectGraph
      *            the EObjects to be visualised
      */
-    public void display(TGGObjectGraph pObjectGraph);
+    public void display(Graph pObjectGraph);
 
     /**
      * Called to force a refresh of the currently visualised element.

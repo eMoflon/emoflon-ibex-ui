@@ -2,8 +2,8 @@ package org.emoflon.ibex.tgg.ui.debug.views.treeContent.protocol;
 
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.emoflon.ibex.tgg.operational.monitoring.data.Graph;
 import org.emoflon.ibex.tgg.operational.monitoring.data.ProtocolStep;
-import org.emoflon.ibex.tgg.operational.monitoring.data.TGGObjectGraph;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeNode;
 
 public class ProtocolNode extends TreeNode {
@@ -20,7 +20,7 @@ public class ProtocolNode extends TreeNode {
 	return index;
     }
 
-    public TGGObjectGraph getModelChanges() {
+    public Graph getModelChanges() {
 	return step.getObjectGraph();
     }
 

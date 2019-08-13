@@ -12,7 +12,7 @@ import org.eclipse.emf.ecore.EAttribute
 import org.eclipse.emf.ecore.EObject
 import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions
 import org.emoflon.ibex.tgg.ui.debug.options.IBeXOp
-import org.emoflon.ibex.tgg.operational.monitoring.data.TGGObjectGraph
+import org.emoflon.ibex.tgg.operational.monitoring.data.Graph
 import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager.VisualizationLabelOptions
 import org.apache.commons.lang3.StringUtils
 import org.emoflon.ibex.tgg.operational.monitoring.IVictoryDataProvider
@@ -111,7 +111,7 @@ class VictoryPlantUMLGenerator {
 		'''
 	}
 
-	def static String visualiseObjectGraph(TGGObjectGraph eObjects, IUserOptions userOptions, IVictoryDataProvider dataProvider) {
+	def static String visualiseObjectGraph(Graph eObjects, IUserOptions userOptions, IVictoryDataProvider dataProvider) {
 		'''
 			@startuml
 			«plantUMLPreamble»

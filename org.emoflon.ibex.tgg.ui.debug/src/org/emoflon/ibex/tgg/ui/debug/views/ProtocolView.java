@@ -13,7 +13,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.emoflon.ibex.tgg.operational.monitoring.VictoryDataPackage;
-import org.emoflon.ibex.tgg.operational.monitoring.data.TGGObjectGraphBuilder;
+import org.emoflon.ibex.tgg.operational.monitoring.data.GraphBuilder;
 import org.emoflon.ibex.tgg.ui.debug.core.IVictoryDataConsumer;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.protocol.ProtocolContentManager;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.protocol.ProtocolNode;
@@ -59,10 +59,10 @@ public class ProtocolView extends Composite implements ISharedFocusElement, IVic
 		    if (selection.size() == 1)
 			visualiser.display(((ProtocolNode) selection.get(0)).getModelChanges());
 		    else {
-			TGGObjectGraphBuilder builder = new TGGObjectGraphBuilder();
+			GraphBuilder builder = new GraphBuilder();
 			for (Object element : selection)
 			    if (element instanceof ProtocolNode)
-				builder.add(((ProtocolNode) element).getModelChanges());
+				builder.addGraph(((ProtocolNode) element).getModelChanges());
 			visualiser.display(builder.build());
 		    }
 
