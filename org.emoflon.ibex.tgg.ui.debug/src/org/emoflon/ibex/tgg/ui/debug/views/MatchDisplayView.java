@@ -162,6 +162,8 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	if (userOptionsManager.isInvalid()) {
 	    ruleElementMap.values().forEach(VisualisableElement::invalidate);
 	    matchElementMap.values().forEach(VisualisableElement::invalidate);
+	    if (currentElement instanceof ObjectGraphVisualisation)
+		currentElement.invalidate();
 	    userOptionsManager.revalidate();
 	}
 
