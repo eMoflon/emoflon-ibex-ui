@@ -10,6 +10,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Shell;
 import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager;
@@ -36,7 +37,7 @@ public class UserOptionsMenu {
     }
 
     public void build(Shell pParentShell) {
-	menuShell = new Shell(pParentShell, SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM | SWT.ON_TOP);
+	menuShell = new Shell(pParentShell, SWT.DIALOG_TRIM | SWT.ON_TOP);
 	menuShell.setText("User Options Menu");
 	menuShell.setLayout(new GridLayout());
 	menuShell.addShellListener(new ShellAdapter() {
@@ -137,8 +138,16 @@ public class UserOptionsMenu {
 	    }
 	});
 
-	neighborhoodScale = new Scale(panel, SWT.HORIZONTAL);
-	neighborhoodScale.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+	Composite neighborhoodOption = new Composite(panel, SWT.NONE);
+	neighborhoodOption.setLayout(new GridLayout(2, false));
+	neighborhoodOption.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+
+	Label neighborhoodLabel = new Label(neighborhoodOption, SWT.NONE);
+	neighborhoodLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+	neighborhoodLabel.setText("Neighborhood size:");
+
+	neighborhoodScale = new Scale(neighborhoodOption, SWT.HORIZONTAL);
+	neighborhoodScale.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
 	neighborhoodScale.setMinimum(0);
 	neighborhoodScale.setPageIncrement(1);
 	neighborhoodScale.setMaximum(3);

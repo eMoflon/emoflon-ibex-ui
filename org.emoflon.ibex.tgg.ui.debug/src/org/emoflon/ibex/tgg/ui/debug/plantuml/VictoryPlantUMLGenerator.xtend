@@ -59,7 +59,7 @@ class VictoryPlantUMLGenerator {
 		].map [
 			(it.eGet(it.eClass.getEStructuralFeature("source")) as EObject ->
 				it.eGet(it.eClass.getEStructuralFeature("target")) as EObject) -> it.eClass.name
-		]
+		].toList
 
 		val srcEObjects = dataProvider.getMatchNeighbourhoods(srcParamToEObjectMap.values, userOptions.neighborhoodSize)
 		val trgEObjects = dataProvider.getMatchNeighbourhoods(trgParamToEObjectMap.values, userOptions.neighborhoodSize)
@@ -102,7 +102,8 @@ class VictoryPlantUMLGenerator {
 			
 			«FOR String param : nonCorrParamToEObjectMap.keySet»
 				«IF (paramToNodeMap.get(param).domainType === DomainType.SRC && userOptions.displaySrcContextForMatches)
-					|| (paramToNodeMap.get(param).domainType === DomainType.TRG && userOptions.displayTrgContextForMatches)»
+					|| (paramToNodeMap.get(param).domainType === DomainType.TRG && userOptions.displayTrgContextForMatches)
+					|| (userOptions.displayCorrContextForMatches && corrEdges.exists[e|e.key.key === srcParamToEObjectMap.get(param) || e.key.value == trgParamToEObjectMap.get(param)])»
 					«nodeIdMap.get(paramToNodeMap.get(param))» #.[#Blue]..# «nonCorrEObjectMapping.get(nonCorrParamToEObjectMap.get(param)).key»
 				«ENDIF»
 			«ENDFOR»
