@@ -1,6 +1,7 @@
 package org.emoflon.ibex.tgg.ui.debug.views;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -80,7 +81,16 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	saveModelsButton.addSelectionListener(new SelectionAdapter() {
 	    @Override
 	    public void widgetSelected(SelectionEvent pSelectionEvent) {
-		ModelLocationDialog.build(IbexDebugUI.getDisplay().getActiveShell(), dataProvider);
+		new ModelLocationDialog(
+			new String[] { "src model save location", "trg model save location", "corr model save location",
+				"protocol save location" },
+			dataProvider.getDefaultSaveData(), "Save All", saveLocations -> {
+			    try {
+				dataProvider.saveModels(saveLocations);
+			    } catch (IOException pIOE) {
+				// TODO what to do here?
+			    }
+			}).build(IbexDebugUI.getDisplay().getActiveShell());
 	    }
 	});
 
