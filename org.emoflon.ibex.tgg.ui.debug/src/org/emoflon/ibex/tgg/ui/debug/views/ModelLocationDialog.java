@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.emoflon.ibex.tgg.operational.monitoring.IVictoryDataProvider;
 
-public class SaveDialog {
+public class ModelLocationDialog {
     public static void build(Shell pParentShell, IVictoryDataProvider pDataProvider) {
 	Shell dialogShell = new Shell(pParentShell, SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM | SWT.ON_TOP);
 

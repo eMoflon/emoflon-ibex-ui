@@ -80,7 +80,7 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	saveModelsButton.addSelectionListener(new SelectionAdapter() {
 	    @Override
 	    public void widgetSelected(SelectionEvent pSelectionEvent) {
-		SaveDialog.build(IbexDebugUI.getDisplay().getActiveShell(), dataProvider);
+		ModelLocationDialog.build(IbexDebugUI.getDisplay().getActiveShell(), dataProvider);
 	    }
 	});
 
