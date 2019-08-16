@@ -20,6 +20,7 @@ import org.emoflon.ibex.tgg.operational.matches.IMatch;
 import org.emoflon.ibex.tgg.operational.monitoring.IVictoryDataProvider;
 import org.emoflon.ibex.tgg.operational.monitoring.data.TGGObjectGraph;
 import org.emoflon.ibex.tgg.ui.debug.core.IbexDebugUI;
+import org.emoflon.ibex.tgg.ui.debug.core.ModelLocationDialog;
 import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.IMatchVisualisation;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.ObjectGraphVisualisation;

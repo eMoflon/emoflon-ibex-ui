@@ -1,4 +1,4 @@
-package org.emoflon.ibex.tgg.ui.debug.views;
+package org.emoflon.ibex.tgg.ui.debug.core;
 
 import java.util.function.Consumer;
 
