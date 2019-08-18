@@ -64,34 +64,55 @@ class VictoryPlantUMLGenerator {
 		val srcEObjects = dataProvider.getMatchNeighbourhoods(srcParamToEObjectMap.values, userOptions.neighborhoodSize)
 		val trgEObjects = dataProvider.getMatchNeighbourhoods(trgParamToEObjectMap.values, userOptions.neighborhoodSize)
 		// TODO can we deal with corrs in this context?
-
-		val noteText = '''
+		
+		val srcContextVisible = !srcParamToEObjectMap.empty && userOptions.displaySrcContextForMatches
+		val trgContextVisible = !trgParamToEObjectMap.empty && userOptions.displayTrgContextForMatches
+		val corrContextVisible = !corrEdges.empty && (userOptions.displayCorrContextForMatches || userOptions.displaySrcContextForMatches || userOptions.displayTrgContextForMatches)
+		
+		val titleText = '''
+			title
+			Match for rule «rule.name»
 			«IF srcParamToEObjectMap.empty && trgParamToEObjectMap.empty && !userOptions.displayFullRuleForMatches»
-				Rule application does not require context.
+				«"\n\n"»Rule application does not require context.«"\n\n"»
+			«ELSE»
+				«IF !srcContextVisible && !trgContextVisible && !corrContextVisible»
+					«"\n\n"»All available context elements are hidden.«"\n\n"»
+				«ENDIF»
 			«ENDIF»
+			endtitle
+		'''
+		
+		val footerText = '''
+			center footer
 			«IF !userOptions.displayFullRuleForMatches»
 				Created elements are hidden.
+			«ELSE»
+				Created elements are shown.
 			«ENDIF»
 			«IF !userOptions.displaySrcContextForMatches»
 				SRC elements are hidden.
+			«ELSE»
+				SRC elements are shown.
 			«ENDIF»
 			«IF !userOptions.displayTrgContextForMatches»
 				TRG elements are hidden.
+			«ELSE»
+				TRG elements are shown.
 			«ENDIF»
 			«IF !userOptions.displayCorrContextForMatches»
 				CORR elements are hidden.
+			«ELSE»
+				CORR elements are shown.
 			«ENDIF»
+			endfooter
 		'''
 		
 		'''
 			@startuml
 			«plantUMLPreamble»
 			«visualiseRule(rule, true, userOptions.displayFullRuleForMatches, userOptions.displaySrcContextForMatches, userOptions.displayTrgContextForMatches, userOptions.displayCorrContextForMatches, userOptions, nodeIdMap)»
-			«IF noteText != ""»
-				note as n0
-					«noteText»
-				end note
-			«ENDIF»
+			«titleText»
+			«footerText»
 			«visualiseEObjectGraph(
 							mapEObjects(srcEObjects, userOptions.nodeLabelVisualization), 
 							mapEObjects(trgEObjects, userOptions.nodeLabelVisualization), 
