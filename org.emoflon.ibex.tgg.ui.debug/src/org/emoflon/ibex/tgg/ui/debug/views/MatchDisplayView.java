@@ -16,8 +16,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.emoflon.ibex.tgg.operational.matches.IMatch;
-import org.emoflon.ibex.tgg.operational.monitoring.IVictoryDataProvider;
+//import org.emoflon.ibex.tgg.operational.matches.IMatch;
+import org.emoflon.ibex.tgg.ui.debug.api.IMatchVictory;
+import org.emoflon.ibex.tgg.ui.debug.api.IVictoryDataProvider;
 import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.IMatchVisualisation;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.TGGRuleVisualisation;
@@ -109,7 +110,7 @@ public class MatchDisplayView extends Composite implements IVisualiser {
      */
 
     private Map<String, VisualisableElement> ruleElementMap = new HashMap<>();
-    private Map<IMatch, VisualisableElement> matchElementMap = new HashMap<>();
+    private Map<IMatchVictory, VisualisableElement> matchElementMap = new HashMap<>();
 
     private VisualisableElement currentElement;
 
@@ -128,7 +129,7 @@ public class MatchDisplayView extends Composite implements IVisualiser {
     }
 
     @Override
-    public void display(IMatch pMatch) {
+    public void display(IMatchVictory pMatch) {
 
 	if (!matchElementMap.containsKey(pMatch)) {
 	    VisualisableElement matchElement = new IMatchVisualisation(pMatch, dataProvider, userOptionsManager);

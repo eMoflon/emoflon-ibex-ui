@@ -11,7 +11,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
-import org.emoflon.ibex.tgg.operational.matches.IMatch;
+//import org.emoflon.ibex.tgg.operational.matches.IMatch;
+import org.emoflon.ibex.tgg.ui.debug.api.IMatchVictory;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -24,9 +25,9 @@ public class MatchListView extends Composite {
     private Button applyButton;
 
     private final BiMap<String, TreeItem> ruleItems;
-    private final BiMap<IMatch, TreeItem> matchItems;
+    private final BiMap<IMatchVictory, TreeItem> matchItems;
 
-    private IMatch[] chosenMatch = new IMatch[1];
+    private IMatchVictory[] chosenMatch = new IMatchVictory[1];
 
     private MatchListView(Composite pParent) {
 	super(pParent, SWT.NONE);
@@ -99,16 +100,17 @@ public class MatchListView extends Composite {
      * @param pMatches
      *            the collection of matches to populate the list-view with
      */
-    public void populate(Collection<IMatch> pMatches) {
+    public void populate(Collection<IMatchVictory> pMatches) {
 	treeView.removeAll();
 	ruleItems.clear();
 	matchItems.clear();
 	applyButton.setEnabled(false);
+	
 
 	if (pMatches == null)
 	    return;
 
-	for (IMatch match : pMatches) {
+	for (IMatchVictory match : pMatches) {
 	    String ruleName = match.getRuleName();
 	    if (!ruleItems.containsKey(ruleName)) {
 		TreeItem ruleItem = new TreeItem(treeView, SWT.NONE);
@@ -126,15 +128,16 @@ public class MatchListView extends Composite {
      * 
      * @return the match chosen by the user
      */
-    public IMatch getChosenMatch() {
+    public IMatchVictory getChosenMatch() {
 	synchronized (chosenMatch) {
 	    while (chosenMatch[0] == null)
 		try {
-		    chosenMatch.wait();
+			//specific wait period should be removed
+		    chosenMatch.wait(1000);
 		} catch (InterruptedException pIE) {
 		    // TODO calling thread was interrupted. What now..?
 		}
-	    IMatch match = chosenMatch[0];
+	    IMatchVictory match = chosenMatch[0];
 	    chosenMatch[0] = null;
 	    return match;
 	}

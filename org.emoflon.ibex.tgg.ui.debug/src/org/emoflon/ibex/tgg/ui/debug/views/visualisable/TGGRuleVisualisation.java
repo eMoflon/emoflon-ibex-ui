@@ -1,20 +1,21 @@
 package org.emoflon.ibex.tgg.ui.debug.views.visualisable;
 
+import org.emoflon.ibex.tgg.ui.debug.api.IRule;
 import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions;
 import org.emoflon.ibex.tgg.ui.debug.plantuml.VictoryPlantUMLGenerator;
 
-import language.TGGRule;
+//import language.TGGRule;
 
 public class TGGRuleVisualisation extends VisualisableElement {
 
-    private TGGRule rule;
+    private IRule rule;
     private IUserOptions userOptions;
 
-    public TGGRuleVisualisation(TGGRule pRule, IUserOptions pUserOptions) {
-	if (pRule == null)
+    public TGGRuleVisualisation(IRule iRuleAdapter, IUserOptions pUserOptions) {
+	if (iRuleAdapter == null)
 	    throw new IllegalArgumentException("Unknown rule");
 
-	rule = pRule;
+	rule = iRuleAdapter;
 
 	userOptions = pUserOptions;
     }
