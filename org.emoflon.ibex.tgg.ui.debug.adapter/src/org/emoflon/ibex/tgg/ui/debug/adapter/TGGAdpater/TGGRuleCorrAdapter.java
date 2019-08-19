@@ -10,8 +10,9 @@ public class TGGRuleCorrAdapter extends RuleNodeAdapter implements IRuleCorr{
 
 	private TGGRuleCorr corrNode;
 
-	public TGGRuleCorrAdapter(TGGRuleCorr corrNode) {
-		super(corrNode);
+	public TGGRuleCorrAdapter(TGGRuleCorr pCorrNode) {
+		super(pCorrNode);
+		corrNode = pCorrNode;
 
 	}
 

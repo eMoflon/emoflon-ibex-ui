@@ -9,6 +9,7 @@ import org.emoflon.ibex.tgg.ui.debug.api.IRuleEdge;
 import org.emoflon.ibex.tgg.ui.debug.api.IRuleNode;
 
 
+import language.TGGRuleCorr;
 
 public class RuleAdapter implements IRule {
 
@@ -22,10 +23,15 @@ public class RuleAdapter implements IRule {
 	@Override
 	public List<IRuleNode> getNodes() {
 
-		return rule.getNodes()//
-				.stream()//
-				.map(m -> new RuleNodeAdapter(m))
-				.collect(Collectors.toList());
+	List<IRuleNode> nodes = rule.getNodes().stream()//
+		.filter(rule -> !(rule instanceof TGGRuleCorr))//
+		.map(rule -> new RuleNodeAdapter(rule))//
+		.collect(Collectors.toList());
+	nodes.addAll(rule.getNodes().stream()//
+		.filter(rule -> rule instanceof TGGRuleCorr)//
+		.map(corr -> new TGGRuleCorrAdapter((TGGRuleCorr) corr))//
+		.collect(Collectors.toList()));
+	return nodes;
 	}
 
 	@Override
