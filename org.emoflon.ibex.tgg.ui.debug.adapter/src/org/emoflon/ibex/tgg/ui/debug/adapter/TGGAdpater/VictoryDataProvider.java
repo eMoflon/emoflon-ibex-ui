@@ -25,9 +25,9 @@ import org.emoflon.ibex.tgg.ui.debug.api.IObject;
 import org.emoflon.ibex.tgg.ui.debug.api.IRule;
 import org.emoflon.ibex.tgg.ui.debug.api.IRuleNode;
 import org.emoflon.ibex.tgg.ui.debug.api.IVictoryDataProvider;
-import org.emoflon.ibex.tgg.ui.debug.enums.VictoryBindingType;
-import org.emoflon.ibex.tgg.ui.debug.enums.VictoryDomainType;
 import org.apache.commons.io.FilenameUtils;
+import org.emoflon.ibex.tgg.ui.debug.api.enums.VictoryBindingType;
+import org.emoflon.ibex.tgg.ui.debug.api.enums.VictoryDomainType;
 
 public class VictoryDataProvider implements IVictoryDataProvider {
 

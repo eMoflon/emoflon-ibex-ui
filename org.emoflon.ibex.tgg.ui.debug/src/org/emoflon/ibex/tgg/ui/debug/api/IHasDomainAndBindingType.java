@@ -1,7 +1,7 @@
 package org.emoflon.ibex.tgg.ui.debug.api;
 
-import org.emoflon.ibex.tgg.ui.debug.enums.VictoryBindingType;
-import org.emoflon.ibex.tgg.ui.debug.enums.VictoryDomainType;
+import org.emoflon.ibex.tgg.ui.debug.api.enums.VictoryBindingType;
+import org.emoflon.ibex.tgg.ui.debug.api.enums.VictoryDomainType;
 
 public interface IHasDomainAndBindingType {
 	

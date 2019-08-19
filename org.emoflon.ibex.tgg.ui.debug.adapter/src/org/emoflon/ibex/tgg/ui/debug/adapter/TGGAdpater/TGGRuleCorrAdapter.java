@@ -2,8 +2,8 @@ package org.emoflon.ibex.tgg.ui.debug.adapter.TGGAdpater;
 
 import org.emoflon.ibex.tgg.ui.debug.api.IRuleCorr;
 import org.emoflon.ibex.tgg.ui.debug.api.IRuleNode;
-import org.emoflon.ibex.tgg.ui.debug.enums.VictoryBindingType;
-import org.emoflon.ibex.tgg.ui.debug.enums.VictoryDomainType;
+import org.emoflon.ibex.tgg.ui.debug.api.enums.VictoryBindingType;
+import org.emoflon.ibex.tgg.ui.debug.api.enums.VictoryDomainType;
 import language.TGGRuleCorr;
 
 public class TGGRuleCorrAdapter extends RuleNodeAdapter implements IRuleCorr{

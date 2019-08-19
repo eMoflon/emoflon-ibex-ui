@@ -1,6 +1,6 @@
 package org.emoflon.ibex.tgg.ui.debug.adapter.TGGAdpater;
 
-import org.emoflon.ibex.tgg.ui.debug.enums.VictoryDomainType;
+import org.emoflon.ibex.tgg.ui.debug.api.enums.VictoryDomainType;
 
 import language.DomainType;
 

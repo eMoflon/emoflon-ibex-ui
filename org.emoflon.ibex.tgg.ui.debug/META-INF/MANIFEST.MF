@@ -10,8 +10,9 @@ Bundle-ManifestVersion: 2
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
 Export-Package: org.emoflon.ibex.tgg.ui.debug.api,
+ org.emoflon.ibex.tgg.ui.debug.api.enums,
+ org.emoflon.ibex.tgg.ui.debug.api.impl,
  org.emoflon.ibex.tgg.ui.debug.core,
- org.emoflon.ibex.tgg.ui.debug.enums,
  org.emoflon.ibex.tgg.ui.debug.options,
  org.emoflon.ibex.tgg.ui.debug.views
 Automatic-Module-Name: org.emoflon.ibex.tgg.ide
