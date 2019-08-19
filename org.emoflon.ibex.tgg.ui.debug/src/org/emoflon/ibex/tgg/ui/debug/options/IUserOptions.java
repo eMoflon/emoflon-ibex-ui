@@ -12,4 +12,22 @@ public interface IUserOptions {
      * @return the visualization option for correspondence labels
      */
     public VisualizationLabelOptions getCorrLabelVisualization();
+
+    public int getNeighborhoodSize();
+
+    /**
+     * @return the visualization option for edge labels
+     */
+    public VisualizationLabelOptions getEdgeLabelVisualization();
+
+    /**
+     * @return the visualization option for node labels
+     */
+    public VisualizationLabelOptions getNodeLabelVisualization();
+
+    public boolean displayTrgContextForMatches();
+
+    public boolean displaySrcContextForMatches();
+
+    public boolean displayCorrContextForMatches();
 }

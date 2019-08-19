@@ -14,9 +14,13 @@ import org.emoflon.ibex.tgg.ui.debug.views.MatchDisplayView;
 import org.emoflon.ibex.tgg.ui.debug.views.MatchListView;
 import org.emoflon.ibex.tgg.ui.debug.views.ProtocolView;
 
-public class IbexDebugUI implements Runnable {
+public class IbexDebugUI {
 
+    private static IbexDebugUI instance;
+    
     private static Display display;
+    private Shell shell;
+    private boolean exitCode;
 
     private IbexDebugUI(IVictoryDataProvider pDataProvider, IBeXOp pOp) {
 	dataProvider = pDataProvider;
@@ -38,8 +42,11 @@ public class IbexDebugUI implements Runnable {
      * @return the IBeX debugging UI that was created
      */
     public static IbexDebugUI create(IVictoryDataProvider pDataProvider, IBeXOp pOp) {
+	if(instance != null)
+	    throw new IllegalStateException("UI was already created");
+	
 	Thread.currentThread().setName("IbexDebugUI - SWT UI thread");
-	return new IbexDebugUI(pDataProvider, pOp);
+	return instance = new IbexDebugUI(pDataProvider, pOp);
     }
 
     public static Display getDisplay() {
@@ -55,10 +62,9 @@ public class IbexDebugUI implements Runnable {
     private MatchDisplayView matchDisplayView;
     private UserOptionsManager userOptionsManager;
 
-    @Override
-    public void run() {
+    public boolean run() {
 	display = new Display();
-	Shell shell = new Shell(display);
+	shell = new Shell(display);
 
 	initUI(shell);
 
@@ -67,9 +73,16 @@ public class IbexDebugUI implements Runnable {
 	    if (!display.readAndDispatch())
 		display.sleep();
 	display.dispose();
-	System.exit(0);
+	
+	return exitCode;
     }
-
+    
+    public static void exit(boolean pRestart) {
+	instance.exitCode = pRestart;
+	instance.shell.dispose();
+	instance = null;
+    }
+    
     private void initUI(Shell pShell) {
 	pShell.setLayout(new GridLayout());
 
