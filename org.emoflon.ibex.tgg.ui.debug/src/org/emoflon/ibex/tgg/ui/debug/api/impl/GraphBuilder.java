@@ -8,9 +8,7 @@ import org.emoflon.ibex.tgg.ui.debug.api.Graph;
 import org.emoflon.ibex.tgg.ui.debug.api.Node;
 
 public class GraphBuilder {
-    private Collection<Node> src = new HashSet<>();
-    private Collection<Node> trg = new HashSet<>();
-    private Collection<Edge> corr = new HashSet<>();
+    private Collection<Node> nodes = new HashSet<>();
     private Collection<Edge> edges = new HashSet<>();
 
     public GraphBuilder() {
@@ -21,40 +19,18 @@ public class GraphBuilder {
     }
 
     public GraphBuilder addGraph(Graph pGraph) {
-	src.addAll(pGraph.getSrc());
-	trg.addAll(pGraph.getTrg());
-	corr.addAll(pGraph.getCorr());
+	nodes.addAll(pGraph.getNodes());
 	edges.addAll(pGraph.getEdges());
 	return this;
     }
 
-    public GraphBuilder addSrcNode(Node pNode) {
-	src.add(pNode);
+    public GraphBuilder addNode(Node pNode) {
+	nodes.add(pNode);
 	return this;
     }
 
-    public GraphBuilder addSrcNodes(Collection<Node> pNodes) {
-	src.addAll(pNodes);
-	return this;
-    }
-
-    public GraphBuilder addTrgNode(Node pNode) {
-	trg.add(pNode);
-	return this;
-    }
-
-    public GraphBuilder addTrgNodes(Collection<Node> pNodes) {
-	trg.addAll(pNodes);
-	return this;
-    }
-
-    public GraphBuilder addCorrEdge(Edge pEdge) {
-	corr.add(pEdge);
-	return this;
-    }
-
-    public GraphBuilder addCorrEdges(Collection<Edge> pEdges) {
-	corr.addAll(pEdges);
+    public GraphBuilder addNodes(Collection<Node> pNodes) {
+	nodes.addAll(pNodes);
 	return this;
     }
 
@@ -69,6 +45,6 @@ public class GraphBuilder {
     }
 
     public GraphImpl build() {
-	return new GraphImpl(src, trg, corr, edges);
+	return new GraphImpl(nodes, edges);
     }
 }

@@ -4,11 +4,7 @@ import java.util.Collection;
 
 public interface Graph {
 
-    public Collection<Node> getSrc();
-
-    public Collection<Node> getTrg();
-
-    public Collection<Edge> getCorr();
+    public Collection<Node> getNodes();
 
     public Collection<Edge> getEdges();
 }
