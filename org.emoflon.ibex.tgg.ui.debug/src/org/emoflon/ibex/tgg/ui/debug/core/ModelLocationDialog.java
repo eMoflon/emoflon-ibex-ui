@@ -92,7 +92,7 @@ public class ModelLocationDialog {
 
 	    location = new Text(this, SWT.SINGLE);
 	    location.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-	    location.setText(defaultDirectory + defaultName + fileExtension);
+	    location.setText(defaultDirectory + defaultName + "." + fileExtension);
 	    location.setMessage(selectorHint);
 
 	    Button selectButton = new Button(this, SWT.PUSH);
@@ -109,7 +109,7 @@ public class ModelLocationDialog {
 
 		    String result = dialog.open();
 		    if (result != null)
-			location.setText(result);
+			location.setText(result + "." + fileExtension);
 		}
 	    });
 
