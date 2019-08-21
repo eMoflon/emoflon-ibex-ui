@@ -1,7 +1,6 @@
 package org.emoflon.ibex.tgg.ui.debug.adapter.TGGAdpater;
 
-import org.emoflon.ibex.tgg.ui.debug.enums.VictoryBindingType;
-
+import org.emoflon.ibex.tgg.ui.debug.api.enums.VictoryBindingType;
 
 import language.BindingType;
 

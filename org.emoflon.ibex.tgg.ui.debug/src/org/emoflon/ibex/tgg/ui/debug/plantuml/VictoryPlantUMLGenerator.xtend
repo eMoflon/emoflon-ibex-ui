@@ -4,8 +4,8 @@ import java.util.Collection
 import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions
 import org.emoflon.ibex.tgg.ui.debug.options.IBeXOp
 import org.emoflon.ibex.tgg.ui.debug.api.IObject
-import org.emoflon.ibex.tgg.ui.debug.enums.VictoryBindingType
-import org.emoflon.ibex.tgg.ui.debug.enums.VictoryDomainType
+import org.emoflon.ibex.tgg.ui.debug.api.enums.VictoryBindingType
+import org.emoflon.ibex.tgg.ui.debug.api.enums.VictoryDomainType
 import org.emoflon.ibex.tgg.ui.debug.api.IAttribute
 import org.emoflon.ibex.tgg.ui.debug.api.IRuleCorr
 import org.emoflon.ibex.tgg.ui.debug.api.IMatchVictory
