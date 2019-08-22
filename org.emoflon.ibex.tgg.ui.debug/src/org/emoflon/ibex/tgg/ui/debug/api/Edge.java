@@ -1,7 +1,7 @@
 package org.emoflon.ibex.tgg.ui.debug.api;
 
 import org.emoflon.ibex.tgg.ui.debug.api.enums.EdgeType;
-import org.emoflon.ibex.tgg.ui.debug.api.enums.BindingType;
+import org.emoflon.ibex.tgg.ui.debug.api.enums.Action;
 
 public interface Edge {
 
@@ -13,5 +13,5 @@ public interface Edge {
 
     public EdgeType getType();
 
-    public BindingType getBindingType();
+    public Action getAction();
 }
