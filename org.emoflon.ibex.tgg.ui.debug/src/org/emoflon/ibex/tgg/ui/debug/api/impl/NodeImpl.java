@@ -4,16 +4,16 @@ import java.util.Collection;
 
 import org.emoflon.ibex.tgg.ui.debug.api.Node;
 import org.emoflon.ibex.tgg.ui.debug.api.enums.Action;
-import org.emoflon.ibex.tgg.ui.debug.api.enums.DomainType;
+import org.emoflon.ibex.tgg.ui.debug.api.enums.Domain;
 
 public class NodeImpl implements Node {
     private String type;
     private String name;
-    private DomainType domain;
+    private Domain domain;
     private Action action;
     private Collection<String> attributes;
 
-    public NodeImpl(String pType, String pLabel, DomainType pDomain, Collection<String> pAttributes) {
+    public NodeImpl(String pType, String pLabel, Domain pDomain, Collection<String> pAttributes) {
 	type = pType;
 	name = pLabel;
 	domain = pDomain;
@@ -36,11 +36,11 @@ public class NodeImpl implements Node {
 	name = pName;
     }
 
-    public DomainType getDomain() {
+    public Domain getDomain() {
 	return domain;
     }
 
-    public void setDomain(DomainType pDomain) {
+    public void setDomain(Domain pDomain) {
 	domain = pDomain;
     }
 
