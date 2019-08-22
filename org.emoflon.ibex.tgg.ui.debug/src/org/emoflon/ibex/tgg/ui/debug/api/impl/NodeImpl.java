@@ -7,13 +7,13 @@ import org.emoflon.ibex.tgg.ui.debug.api.enums.DomainType;
 
 public class NodeImpl implements Node {
     private String type;
-    private String label;
+    private String name;
     private DomainType domain;
     private Collection<String> attributes;
 
     public NodeImpl(String pType, String pLabel, DomainType pDomain, Collection<String> pAttributes) {
 	type = pType;
-	label = pLabel;
+	name = pLabel;
 	domain = pDomain;
 	attributes = pAttributes;
     }
@@ -26,12 +26,12 @@ public class NodeImpl implements Node {
 	type = pType;
     }
 
-    public String getLabel() {
-	return label;
+    public String getName() {
+	return name;
     }
 
-    public void setLabel(String pLabel) {
-	label = pLabel;
+    public void setName(String pName) {
+	name = pName;
     }
 
     public DomainType getDomain() {
