@@ -6,11 +6,6 @@ Bundle-Vendor: eMoflon::IBeX Developers
 Require-Bundle: net.sourceforge.plantuml.lib;visibility:=reexport,
  com.google.guava,
  org.eclipse.swt;visibility:=reexport,
- org.emoflon.ibex.tgg.core.language,
- org.emoflon.ibex.tgg.editor,
- org.emoflon.ibex.tgg.ide,
- org.moflon.core.ui;visibility:=reexport,
- org.emoflon.ibex.tgg.core.runtime,
  org.eclipse.jface;visibility:=reexport,
  org.eclipse.equinox.common;visibility:=reexport
 Bundle-ManifestVersion: 2
