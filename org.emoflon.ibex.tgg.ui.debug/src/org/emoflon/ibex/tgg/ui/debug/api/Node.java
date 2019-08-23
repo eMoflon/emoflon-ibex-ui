@@ -6,7 +6,6 @@ import org.emoflon.ibex.tgg.ui.debug.api.enums.Action;
 import org.emoflon.ibex.tgg.ui.debug.api.enums.Domain;
 
 public interface Node {
-
     public String getType();
 
     public String getName();
