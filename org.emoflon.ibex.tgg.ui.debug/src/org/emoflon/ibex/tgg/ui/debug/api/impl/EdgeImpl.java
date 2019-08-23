@@ -3,14 +3,14 @@ package org.emoflon.ibex.tgg.ui.debug.api.impl;
 import org.emoflon.ibex.tgg.ui.debug.api.Edge;
 import org.emoflon.ibex.tgg.ui.debug.api.Node;
 import org.emoflon.ibex.tgg.ui.debug.api.enums.EdgeType;
-import org.emoflon.ibex.tgg.ui.debug.api.enums.BindingType;
+import org.emoflon.ibex.tgg.ui.debug.api.enums.Action;
 
 public class EdgeImpl implements Edge {
     private String label;
     private Node srcNode;
     private Node trgNode;
     private EdgeType type;
-    private BindingType bindingType;
+    private Action action;
 
     public EdgeImpl(String pLabel, Node pSrcNode, Node pTrgNode) {
 	label = pLabel;
@@ -50,12 +50,12 @@ public class EdgeImpl implements Edge {
 	type = pType;
     }
 
-    public BindingType getBindingType() {
-	return bindingType;
+    public Action getAction() {
+	return action;
     }
 
-    public void setBindingType(BindingType pBindingType) {
-	bindingType = pBindingType;
+    public void setAction(Action pAction) {
+	action = pAction;
     }
 
 }

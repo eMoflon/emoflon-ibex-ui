@@ -1,5 +1,5 @@
 package org.emoflon.ibex.tgg.ui.debug.api.enums;
 
-public enum DomainType {
+public enum Domain {
     SRC, TRG;
 }

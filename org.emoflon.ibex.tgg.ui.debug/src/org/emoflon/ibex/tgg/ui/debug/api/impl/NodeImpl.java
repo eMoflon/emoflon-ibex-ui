@@ -3,17 +3,19 @@ package org.emoflon.ibex.tgg.ui.debug.api.impl;
 import java.util.Collection;
 
 import org.emoflon.ibex.tgg.ui.debug.api.Node;
-import org.emoflon.ibex.tgg.ui.debug.api.enums.DomainType;
+import org.emoflon.ibex.tgg.ui.debug.api.enums.Action;
+import org.emoflon.ibex.tgg.ui.debug.api.enums.Domain;
 
 public class NodeImpl implements Node {
     private String type;
-    private String label;
-    private DomainType domain;
+    private String name;
+    private Domain domain;
+    private Action action;
     private Collection<String> attributes;
 
-    public NodeImpl(String pType, String pLabel, DomainType pDomain, Collection<String> pAttributes) {
+    public NodeImpl(String pType, String pLabel, Domain pDomain, Collection<String> pAttributes) {
 	type = pType;
-	label = pLabel;
+	name = pLabel;
 	domain = pDomain;
 	attributes = pAttributes;
     }
@@ -26,20 +28,28 @@ public class NodeImpl implements Node {
 	type = pType;
     }
 
-    public String getLabel() {
-	return label;
+    public String getName() {
+	return name;
     }
 
-    public void setLabel(String pLabel) {
-	label = pLabel;
+    public void setName(String pName) {
+	name = pName;
     }
 
-    public DomainType getDomain() {
+    public Domain getDomain() {
 	return domain;
     }
 
-    public void setDomain(DomainType pDomain) {
+    public void setDomain(Domain pDomain) {
 	domain = pDomain;
+    }
+
+    public Action getAction() {
+	return action;
+    }
+
+    public void setAction(Action pAction) {
+	action = pAction;
     }
 
     public Collection<String> getAttributes() {
