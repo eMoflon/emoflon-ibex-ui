@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.emoflon.ibex.tgg.operational.matches.IMatch;
 import org.emoflon.ibex.tgg.operational.monitoring.IbexController;
-import org.emoflon.ibex.tgg.operational.monitoring.VictoryDataPackage;
+import org.emoflon.ibex.tgg.ui.debug.api.DataPackage;
 import org.emoflon.ibex.tgg.ui.debug.views.MatchListView;
 
 public class UIController extends IbexController {
@@ -26,7 +26,7 @@ public class UIController extends IbexController {
     }
 
     @Override
-    public IMatch chooseOneMatch(VictoryDataPackage pDataPackage) {
+    public IMatch chooseOneMatch(DataPackage pDataPackage) {
 	// CONCURRENCY: Ibex thread only
 
 	IbexDebugUI.getDisplay().syncExec(() -> dataConsumers.forEach(consumer -> consumer.accept(pDataPackage)));

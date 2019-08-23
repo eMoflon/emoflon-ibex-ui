@@ -5,25 +5,25 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
-import org.emoflon.ibex.tgg.operational.monitoring.data.ProtocolStep;
+import org.emoflon.ibex.tgg.ui.debug.api.RuleApplication;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeContentManager;
 
 public class ProtocolContentManager {
 
     private TreeContentManager manager = new TreeContentManager();
 
-    private List<ProtocolNode> protocolNodes;
+    private List<RuleApplicationNode> protocolNodes;
 
     public ProtocolContentManager() {
 	protocolNodes = new LinkedList<>();
     }
 
-    public void populate(List<ProtocolStep> pProtocol) {
+    public void populate(List<RuleApplication> pRuleApplications) {
 	// TODO perhaps a more elaborate handling is required here
 	// this currently relies on new changes constantly showing up
 
-	for (int i = protocolNodes.size(); i < pProtocol.size(); i++) {
-	    ProtocolNode node = new ProtocolNode(i, pProtocol.get(i));
+	for (int i = protocolNodes.size(); i < pRuleApplications.size(); i++) {
+	    RuleApplicationNode node = new RuleApplicationNode(i, pRuleApplications.get(i));
 	    protocolNodes.add(node);
 	    manager.getRoot().addChild(node);
 	}
@@ -37,11 +37,11 @@ public class ProtocolContentManager {
 	return new ViewerComparator() {
 	    @Override
 	    public int compare(Viewer pViewer, Object pElement1, Object pElement2) {
-		if (!(pElement1 instanceof ProtocolNode && pElement2 instanceof ProtocolNode))
+		if (!(pElement1 instanceof RuleApplicationNode && pElement2 instanceof RuleApplicationNode))
 		    throw new IllegalStateException(
 			    "Protocol view tree must not contain any elements other than ProtocolNodes");
 
-		return ((ProtocolNode) pElement2).getStep() - ((ProtocolNode) pElement1).getStep();
+		return ((RuleApplicationNode) pElement2).getStep() - ((RuleApplicationNode) pElement1).getStep();
 	    }
 	};
     }

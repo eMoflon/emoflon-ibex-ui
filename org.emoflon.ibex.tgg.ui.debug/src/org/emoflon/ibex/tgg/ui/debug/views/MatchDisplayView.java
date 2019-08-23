@@ -2,6 +2,7 @@ package org.emoflon.ibex.tgg.ui.debug.views;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,29 +17,26 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.emoflon.ibex.tgg.operational.matches.IMatch;
-import org.emoflon.ibex.tgg.operational.monitoring.IVictoryDataProvider;
-import org.emoflon.ibex.tgg.operational.monitoring.data.TGGObjectGraph;
+import org.emoflon.ibex.tgg.ui.debug.api.DataProvider;
+import org.emoflon.ibex.tgg.ui.debug.api.GraphBuilder;
+import org.emoflon.ibex.tgg.ui.debug.api.Match;
+import org.emoflon.ibex.tgg.ui.debug.api.Rule;
+import org.emoflon.ibex.tgg.ui.debug.api.RuleApplication;
 import org.emoflon.ibex.tgg.ui.debug.core.IbexDebugUI;
 import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager;
-import org.emoflon.ibex.tgg.ui.debug.views.visualisable.IMatchVisualisation;
-import org.emoflon.ibex.tgg.ui.debug.views.visualisable.ObjectGraphVisualisation;
-import org.emoflon.ibex.tgg.ui.debug.views.visualisable.TGGRuleVisualisation;
+import org.emoflon.ibex.tgg.ui.debug.views.visualisable.GraphVisualisation;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.VisualisableElement;
-
-import language.TGGRule;
 
 public class MatchDisplayView extends Composite implements IVisualiser {
 
-    private IVictoryDataProvider dataProvider;
+    private DataProvider dataProvider;
     private UserOptionsManager userOptionsManager;
     private UserOptionsMenu userOptionsMenu;
 
     private ScrolledComposite imageScroller;
     private Label imageContainer;
 
-    private MatchDisplayView(Composite parent, IVictoryDataProvider pDataProvider,
-	    UserOptionsManager pUserOptionsManager) {
+    private MatchDisplayView(Composite parent, DataProvider pDataProvider, UserOptionsManager pUserOptionsManager) {
 	super(parent, SWT.NONE);
 
 	dataProvider = pDataProvider;
@@ -111,7 +109,7 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	return this;
     }
 
-    public static MatchDisplayView create(Composite pParent, IVictoryDataProvider pDataProvider,
+    public static MatchDisplayView create(Composite pParent, DataProvider pDataProvider,
 	    UserOptionsManager pUserOptionsManager) {
 	return new MatchDisplayView(pParent, pDataProvider, pUserOptionsManager).build();
     }
@@ -120,49 +118,54 @@ public class MatchDisplayView extends Composite implements IVisualiser {
      * display specific code
      */
 
-    private Map<TGGRule, VisualisableElement> ruleElementMap = new HashMap<>();
-    private Map<IMatch, VisualisableElement> matchElementMap = new HashMap<>();
+    private Map<Rule, VisualisableElement> ruleCache = new HashMap<>();
+    private Map<Match, VisualisableElement> matchCache = new HashMap<>();
+    private Map<Collection<RuleApplication>, VisualisableElement> ruleApplicationCache = new HashMap<>();
 
     private VisualisableElement currentElement;
 
     @Override
-    public void display(TGGRule pRule) {
+    public void display(Rule pRule) {
 
-	if (!ruleElementMap.containsKey(pRule)) {
-	    VisualisableElement ruleElement = new TGGRuleVisualisation(pRule, userOptionsManager);
-	    ruleElementMap.put(pRule, ruleElement);
-	}
+	if (!ruleCache.containsKey(pRule))
+	    ruleCache.put(pRule, new GraphVisualisation(pRule.getGraph(), userOptionsManager, dataProvider));
 
-	currentElement = ruleElementMap.get(pRule);
+	currentElement = ruleCache.get(pRule);
 
 	refresh();
     }
 
     @Override
-    public void display(IMatch pMatch) {
+    public void display(Match pMatch) {
 
-	if (!matchElementMap.containsKey(pMatch)) {
-	    VisualisableElement matchElement = new IMatchVisualisation(pMatch, dataProvider, userOptionsManager);
-	    matchElementMap.put(pMatch, matchElement);
-	}
+	if (!matchCache.containsKey(pMatch))
+	    matchCache.put(pMatch, new GraphVisualisation(pMatch.getGraph(), userOptionsManager, dataProvider));
 
-	currentElement = matchElementMap.get(pMatch);
+	currentElement = matchCache.get(pMatch);
 
 	refresh();
     }
 
     @Override
-    public void display(TGGObjectGraph pObjectGraph) {
-	currentElement = new ObjectGraphVisualisation(pObjectGraph, userOptionsManager, dataProvider);
+    public void display(Collection<RuleApplication> pRuleApplications) {
+
+	if (!ruleApplicationCache.containsKey(pRuleApplications)) {
+	    GraphBuilder builder = new GraphBuilder();
+	    pRuleApplications.forEach((ruleApplication) -> builder.addGraph(ruleApplication.getGraph()));
+	    ruleApplicationCache.put(pRuleApplications,
+		    new GraphVisualisation(builder.build(), userOptionsManager, dataProvider));
+	}
+
+	currentElement = ruleApplicationCache.get(pRuleApplications);
 	refresh();
     }
 
     @Override
     public void refresh() {
 	if (userOptionsManager.isInvalid()) {
-	    ruleElementMap.values().forEach(VisualisableElement::invalidate);
-	    matchElementMap.values().forEach(VisualisableElement::invalidate);
-	    if (currentElement instanceof ObjectGraphVisualisation)
+	    ruleCache.values().forEach(VisualisableElement::invalidate);
+	    matchCache.values().forEach(VisualisableElement::invalidate);
+	    if (currentElement instanceof GraphVisualisation)
 		currentElement.invalidate();
 	    userOptionsManager.revalidate();
 	}

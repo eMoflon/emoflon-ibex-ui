@@ -1,34 +1,44 @@
 package org.emoflon.ibex.tgg.ui.debug.adapter.TGGAdpater;
 
-import java.util.Collection;
-
-import org.emoflon.ibex.tgg.operational.matches.IMatch;
+import org.emoflon.ibex.tgg.operational.monitoring.IbexMatch;
+import org.emoflon.ibex.tgg.ui.debug.api.Graph;
 import org.emoflon.ibex.tgg.ui.debug.api.Match;
+import org.emoflon.ibex.tgg.ui.debug.api.Rule;
 
 public class MatchAdapter implements Match {
-    IMatch match;
+    private IbexMatch match;
 
-    public MatchAdapter(IMatch match) {
-	super();
-	this.match = match;
+    public MatchAdapter(IbexMatch pMatch) {
+	match = pMatch;
     }
 
-    public IMatch unWrap() {
-	return this.match;
-    }
-
-    @Override
-    public String getRuleName() {
-	return match.getRuleName();
+    public IbexMatch getWrappedMatch() {
+	return match;
     }
 
     @Override
-    public Collection<String> getParameterNames() {
-	return match.getParameterNames();
+    public String getName() {
+	return match.getName();
     }
 
     @Override
-    public String getPatternName() {
-	return match.getPatternName();
+    public boolean isBlocked() {
+	return match.isBlocked();
+    }
+
+    @Override
+    public String getBlockingReason() {
+	return match.getBlockingReason();
+    }
+
+    @Override
+    public Rule getRule() {
+	return RuleAdapter.getRuleByName(match.getIMatch().getRuleName());
+    }
+
+    @Override
+    public Graph getGraph() {
+	// TODO build graph
+	return null;
     }
 }

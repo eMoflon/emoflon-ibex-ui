@@ -1,39 +1,17 @@
 package org.emoflon.ibex.tgg.ui.debug.views;
 
-import org.emoflon.ibex.tgg.operational.matches.IMatch;
-import org.emoflon.ibex.tgg.operational.monitoring.data.TGGObjectGraph;
+import java.util.Collection;
 
-import language.TGGRule;
+import org.emoflon.ibex.tgg.ui.debug.api.Match;
+import org.emoflon.ibex.tgg.ui.debug.api.Rule;
+import org.emoflon.ibex.tgg.ui.debug.api.RuleApplication;
 
 public interface IVisualiser {
-    /**
-     * Called to request the visualisation of a TGG rule.
-     * 
-     * @param pRuleName
-     *            the name of the rule to be visualised
-     */
-    public void display(TGGRule pRuleName);
+    public void display(Rule pRule);
 
-    /**
-     * Called to request the visualisation of a match.
-     * 
-     * @param pMatch
-     *            the match to be visualised
-     */
-    public void display(IMatch pMatch);
+    public void display(Match pMatch);
 
-    /**
-     * Called to request the visualisation of a collection of EObjects.
-     * 
-     * @param pObjectGraph
-     *            the EObjects to be visualised
-     */
-    public void display(TGGObjectGraph pObjectGraph);
+    public void display(Collection<RuleApplication> pRuleApplications);
 
-    /**
-     * Called to force a refresh of the currently visualised element.
-     */
-    public default void refresh() {
-	// don't do anything
-    }
+    public void refresh();
 }

@@ -1,11 +1,13 @@
 package org.emoflon.ibex.tgg.ui.debug.api;
 
-import java.util.Collection;
-
 public interface Match {
-    String getRuleName();
+    public String getName();
 
-    Collection<String> getParameterNames();
+    public boolean isBlocked();
 
-    String getPatternName();
+    public String getBlockingReason();
+
+    public Rule getRule();
+
+    public Graph getGraph();
 }

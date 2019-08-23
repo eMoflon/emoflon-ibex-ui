@@ -3,21 +3,20 @@ package org.emoflon.ibex.tgg.ui.debug.views.treeContent.matchList;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.emoflon.ibex.tgg.ui.debug.api.Rule;
 import org.emoflon.ibex.tgg.ui.debug.core.IbexDebugUI;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeNode;
 
-import language.TGGRule;
-
 public class RuleNode extends TreeNode {
 
-    private TGGRule rule;
+    private Rule rule;
     private boolean markBold;
 
-    protected RuleNode(TGGRule pRule) {
+    protected RuleNode(Rule pRule) {
 	rule = pRule;
     }
 
-    public TGGRule getRule() {
+    public Rule getRule() {
 	return rule;
     }
 

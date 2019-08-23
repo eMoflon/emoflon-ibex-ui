@@ -12,13 +12,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.emoflon.ibex.tgg.operational.monitoring.VictoryDataPackage;
-import org.emoflon.ibex.tgg.operational.monitoring.data.TGGObjectGraphBuilder;
+import org.emoflon.ibex.tgg.ui.debug.api.DataPackage;
+import org.emoflon.ibex.tgg.ui.debug.api.Rule;
+import org.emoflon.ibex.tgg.ui.debug.api.RuleApplication;
 import org.emoflon.ibex.tgg.ui.debug.core.IVictoryDataConsumer;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.protocol.ProtocolContentManager;
-import org.emoflon.ibex.tgg.ui.debug.views.treeContent.protocol.ProtocolNode;
-
-import language.TGGRule;
+import org.emoflon.ibex.tgg.ui.debug.views.treeContent.protocol.RuleApplicationNode;
 
 public class ProtocolView extends Composite implements ISharedFocusElement, IVictoryDataConsumer {
 
@@ -27,7 +26,7 @@ public class ProtocolView extends Composite implements ISharedFocusElement, IVic
     private TreeViewer treeViewer;
     private ProtocolContentManager contentManager;
 
-    private ProtocolView(Composite pParent, Collection<TGGRule> pRules) {
+    private ProtocolView(Composite pParent, Collection<Rule> pRules) {
 	super(pParent, SWT.NONE);
 
 	contentManager = new ProtocolContentManager();
@@ -56,25 +55,21 @@ public class ProtocolView extends Composite implements ISharedFocusElement, IVic
 		    @SuppressWarnings("unchecked")
 		    List<Object> selection = pEvent.getStructuredSelection().toList();
 
-		    if (selection.size() == 1)
-			visualiser.display(((ProtocolNode) selection.get(0)).getModelChanges());
-		    else {
-			TGGObjectGraphBuilder builder = new TGGObjectGraphBuilder();
-			for (Object element : selection)
-			    if (element instanceof ProtocolNode)
-				builder.add(((ProtocolNode) element).getModelChanges());
-			visualiser.display(builder.build());
-		    }
-
+		    Collection<RuleApplication> ruleApplications = new HashSet<>();
+		    for (Object element : selection)
+			if (element instanceof RuleApplicationNode)
+			    ruleApplications.add(((RuleApplicationNode) element).getModelChanges());
+		    visualiser.display(ruleApplications);
 		}
 	    }
 	});
 
 	pack();
 	return this;
+
     }
 
-    public static ProtocolView create(Composite pParent, Collection<TGGRule> pRules) {
+    public static ProtocolView create(Composite pParent, Collection<Rule> pRules) {
 	return new ProtocolView(pParent, pRules).build();
     }
 
@@ -83,8 +78,8 @@ public class ProtocolView extends Composite implements ISharedFocusElement, IVic
     }
 
     @Override
-    public void accept(VictoryDataPackage pDataPackage) {
-	contentManager.populate(pDataPackage.getProtocol());
+    public void accept(DataPackage pDataPackage) {
+	contentManager.populate(pDataPackage.getRuleApplications());
 	treeViewer.refresh();
     }
 

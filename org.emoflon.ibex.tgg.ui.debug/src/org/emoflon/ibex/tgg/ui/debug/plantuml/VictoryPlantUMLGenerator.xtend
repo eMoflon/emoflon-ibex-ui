@@ -12,7 +12,6 @@ import org.eclipse.emf.ecore.EAttribute
 import org.eclipse.emf.ecore.EObject
 import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions
 import org.emoflon.ibex.tgg.ui.debug.options.IBeXOp
-import org.emoflon.ibex.tgg.operational.monitoring.data.TGGObjectGraph
 import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager.VisualizationLabelOptions
 import org.apache.commons.lang3.StringUtils
 import org.emoflon.ibex.tgg.operational.monitoring.IVictoryDataProvider
@@ -20,6 +19,8 @@ import java.util.ArrayList
 import org.eclipse.emf.ecore.EReference
 import java.util.HashMap
 import org.eclipse.emf.ecore.util.EContentsEList
+import org.emoflon.ibex.tgg.ui.debug.api.Graph
+import org.emoflon.ibex.tgg.ui.debug.api.DataProvider
 
 class VictoryPlantUMLGenerator {
 
@@ -112,7 +113,7 @@ class VictoryPlantUMLGenerator {
 		'''
 	}
 
-	def static String visualiseObjectGraph(TGGObjectGraph eObjects, IUserOptions userOptions, IVictoryDataProvider dataProvider) {
+	def static String visualise(Graph eObjects, IUserOptions userOptions, DataProvider dataProvider) {
 		'''
 			@startuml
 			«plantUMLPreamble»

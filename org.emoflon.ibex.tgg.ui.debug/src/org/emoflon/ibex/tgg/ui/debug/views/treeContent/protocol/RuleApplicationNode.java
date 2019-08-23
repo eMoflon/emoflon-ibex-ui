@@ -2,26 +2,25 @@ package org.emoflon.ibex.tgg.ui.debug.views.treeContent.protocol;
 
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.emoflon.ibex.tgg.operational.monitoring.data.ProtocolStep;
-import org.emoflon.ibex.tgg.operational.monitoring.data.TGGObjectGraph;
+import org.emoflon.ibex.tgg.ui.debug.api.RuleApplication;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeNode;
 
-public class ProtocolNode extends TreeNode {
+public class RuleApplicationNode extends TreeNode {
 
     private int index;
-    private ProtocolStep step;
+    private RuleApplication ruleApplication;
 
-    public ProtocolNode(int pIndex, ProtocolStep pStep) {
+    public RuleApplicationNode(int pIndex, RuleApplication pStep) {
 	index = pIndex;
-	step = pStep;
+	ruleApplication = pStep;
     }
 
     public int getStep() {
 	return index;
     }
 
-    public TGGObjectGraph getModelChanges() {
-	return step.getObjectGraph();
+    public RuleApplication getModelChanges() {
+	return ruleApplication;
     }
 
     @Override

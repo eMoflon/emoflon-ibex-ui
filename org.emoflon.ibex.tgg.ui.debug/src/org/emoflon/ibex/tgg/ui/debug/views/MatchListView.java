@@ -16,13 +16,11 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.emoflon.ibex.tgg.operational.matches.IMatch;
-import org.emoflon.ibex.tgg.operational.monitoring.VictoryMatch;
+import org.emoflon.ibex.tgg.ui.debug.api.Match;
+import org.emoflon.ibex.tgg.ui.debug.api.Rule;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.matchList.MatchListContentManager;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.matchList.MatchNode;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.matchList.RuleNode;
-
-import language.TGGRule;
 
 public class MatchListView extends Composite implements ISharedFocusElement {
 
@@ -32,9 +30,9 @@ public class MatchListView extends Composite implements ISharedFocusElement {
     private MatchListContentManager contentManager;
     private Button applyButton;
 
-    private IMatch[] chosenMatch = new IMatch[1];
+    private Match[] chosenMatch = new Match[1];
 
-    private MatchListView(Composite pParent, Collection<TGGRule> pRules) {
+    private MatchListView(Composite pParent, Collection<Rule> pRules) {
 	super(pParent, SWT.NONE);
 
 	contentManager = new MatchListContentManager(pRules);
@@ -63,8 +61,8 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 		if (pEvent.getSelection() instanceof IStructuredSelection) {
 		    Object selectedElement = pEvent.getStructuredSelection().getFirstElement();
 		    if (selectedElement instanceof MatchNode) {
-			VictoryMatch match = ((MatchNode) selectedElement).getMatch();
-			visualiser.display(match.getIMatch());
+			Match match = ((MatchNode) selectedElement).getMatch();
+			visualiser.display(match);
 			applyButton.setEnabled(!match.isBlocked());
 		    } else if (selectedElement instanceof RuleNode)
 			visualiser.display(((RuleNode) selectedElement).getRule());
@@ -113,7 +111,7 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 	return this;
     }
 
-    public static MatchListView create(Composite pParent, Collection<TGGRule> pRules) {
+    public static MatchListView create(Composite pParent, Collection<Rule> pRules) {
 	return new MatchListView(pParent, pRules).build();
     }
 
@@ -124,9 +122,10 @@ public class MatchListView extends Composite implements ISharedFocusElement {
     /**
      * Populates the list-view with the given collection of matches.
      * 
-     * @param pMatches the collection of matches to populate the list-view with
+     * @param pMatches
+     *            the collection of matches to populate the list-view with
      */
-    public void populate(Collection<VictoryMatch> pMatches) {
+    public void populate(Collection<Match> pMatches) {
 	applyButton.setEnabled(false);
 	contentManager.populate(pMatches);
 	treeViewer.refresh();
@@ -137,7 +136,7 @@ public class MatchListView extends Composite implements ISharedFocusElement {
      * 
      * @return the match chosen by the user
      */
-    public IMatch getChosenMatch() {
+    public Match getChosenMatch() {
 	synchronized (chosenMatch) {
 	    while (chosenMatch[0] == null)
 		try {
@@ -145,7 +144,7 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 		} catch (InterruptedException pIE) {
 		    // TODO calling thread was interrupted. What now..?
 		}
-	    IMatch match = chosenMatch[0];
+	    Match match = chosenMatch[0];
 	    chosenMatch[0] = null;
 	    return match;
 	}
@@ -165,7 +164,7 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 
     private void applyMatch(MatchNode pMatchNode) {
 	synchronized (chosenMatch) {
-	    chosenMatch[0] = pMatchNode.getMatch().getIMatch();
+	    chosenMatch[0] = pMatchNode.getMatch();
 	    chosenMatch.notify();
 	}
     }

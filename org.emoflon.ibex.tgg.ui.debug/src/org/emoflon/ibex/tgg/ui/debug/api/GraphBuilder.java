@@ -1,11 +1,9 @@
-package org.emoflon.ibex.tgg.ui.debug.api.impl;
+package org.emoflon.ibex.tgg.ui.debug.api;
 
 import java.util.Collection;
 import java.util.HashSet;
 
-import org.emoflon.ibex.tgg.ui.debug.api.Edge;
-import org.emoflon.ibex.tgg.ui.debug.api.Graph;
-import org.emoflon.ibex.tgg.ui.debug.api.Node;
+import org.emoflon.ibex.tgg.ui.debug.api.impl.GraphImpl;
 
 public class GraphBuilder {
     private Collection<Node> nodes = new HashSet<>();
