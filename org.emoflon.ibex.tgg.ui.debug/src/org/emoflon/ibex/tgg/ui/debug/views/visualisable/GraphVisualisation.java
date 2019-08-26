@@ -3,7 +3,7 @@ package org.emoflon.ibex.tgg.ui.debug.views.visualisable;
 import org.emoflon.ibex.tgg.ui.debug.api.DataProvider;
 import org.emoflon.ibex.tgg.ui.debug.api.Graph;
 import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions;
-import org.emoflon.ibex.tgg.ui.debug.plantuml.VictoryPlantUMLGenerator;
+import org.emoflon.ibex.tgg.ui.debug.plantuml.PlantUMLGenerator;
 
 public class GraphVisualisation extends VisualisableElement {
 
@@ -19,6 +19,6 @@ public class GraphVisualisation extends VisualisableElement {
 
     @Override
     protected String generateVisualisationString() {
-	return VictoryPlantUMLGenerator.visualise(graph, userOptions, dataProvider);
+	return PlantUMLGenerator.visualise(graph, userOptions, dataProvider);
     }
 }
