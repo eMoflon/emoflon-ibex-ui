@@ -4,7 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.emoflon.ibex.tgg.ui.debug.api.Rule;
-import org.emoflon.ibex.tgg.ui.debug.core.IbexDebugUI;
+import org.emoflon.ibex.tgg.ui.debug.core.VictoryUI;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeNode;
 
 public class RuleNode extends TreeNode {
@@ -43,7 +43,7 @@ public class RuleNode extends TreeNode {
     @Override
     protected Color getBackground() {
 	if (!hasChildren())
-	    return IbexDebugUI.getDisplay().getSystemColor(SWT.COLOR_GRAY);
+	    return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_GRAY);
 	else
 	    return null;
     }

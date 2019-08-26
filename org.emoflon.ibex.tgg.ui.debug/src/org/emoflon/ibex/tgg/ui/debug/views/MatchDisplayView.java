@@ -18,17 +18,18 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.emoflon.ibex.tgg.ui.debug.api.DataProvider;
-import org.emoflon.ibex.tgg.ui.debug.api.GraphBuilder;
 import org.emoflon.ibex.tgg.ui.debug.api.Match;
 import org.emoflon.ibex.tgg.ui.debug.api.Rule;
 import org.emoflon.ibex.tgg.ui.debug.api.RuleApplication;
-import org.emoflon.ibex.tgg.ui.debug.core.IbexDebugUI;
+import org.emoflon.ibex.tgg.ui.debug.api.impl.GraphBuilder;
+import org.emoflon.ibex.tgg.ui.debug.core.IExitCodeReceiver;
 import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.GraphVisualisation;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.VisualisableElement;
 
 public class MatchDisplayView extends Composite implements IVisualiser {
 
+    private IExitCodeReceiver exitCodeReceiver;
     private DataProvider dataProvider;
     private UserOptionsManager userOptionsManager;
     private UserOptionsMenu userOptionsMenu;
@@ -36,9 +37,11 @@ public class MatchDisplayView extends Composite implements IVisualiser {
     private ScrolledComposite imageScroller;
     private Label imageContainer;
 
-    private MatchDisplayView(Composite parent, DataProvider pDataProvider, UserOptionsManager pUserOptionsManager) {
+    private MatchDisplayView(Composite parent, IExitCodeReceiver pExitCodeReceiver, DataProvider pDataProvider,
+	    UserOptionsManager pUserOptionsManager) {
 	super(parent, SWT.NONE);
 
+	exitCodeReceiver = pExitCodeReceiver;
 	dataProvider = pDataProvider;
 	userOptionsManager = pUserOptionsManager;
     }
@@ -98,7 +101,7 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	terminateButton.addSelectionListener(new SelectionAdapter() {
 	    @Override
 	    public void widgetSelected(SelectionEvent pSelectionEvent) {
-		IbexDebugUI.exit(restartCheck.getSelection());
+		exitCodeReceiver.exit(restartCheck.getSelection());
 	    }
 	});
 
@@ -109,9 +112,9 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	return this;
     }
 
-    public static MatchDisplayView create(Composite pParent, DataProvider pDataProvider,
-	    UserOptionsManager pUserOptionsManager) {
-	return new MatchDisplayView(pParent, pDataProvider, pUserOptionsManager).build();
+    public static MatchDisplayView create(Composite pParent, IExitCodeReceiver pExitCodeReceiver,
+	    DataProvider pDataProvider, UserOptionsManager pUserOptionsManager) {
+	return new MatchDisplayView(pParent, pExitCodeReceiver, pDataProvider, pUserOptionsManager).build();
     }
 
     /*

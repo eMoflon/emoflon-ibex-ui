@@ -10,24 +10,14 @@ public class UserOptionsManager implements IUserOptions {
     private boolean displayTrgContextForMatches = true;
     private boolean displayCorrContextForMatches = true;
 
-    private final IBeXOp op;
     private VisualizationLabelOptions corrLabelVisualization = VisualizationLabelOptions.ABBREVIATED;
     private VisualizationLabelOptions edgeLabelVisualization = VisualizationLabelOptions.ABBREVIATED;
     private VisualizationLabelOptions nodeLabelVisualization = VisualizationLabelOptions.ABBREVIATED;
     private int neighborhoodSize = 0;
 
-    public UserOptionsManager(IBeXOp pOp) {
-	op = pOp;
-    }
-
     @Override
     public boolean displayFullRuleForMatches() {
 	return displayFullRuleForMatches;
-    }
-
-    @Override
-    public IBeXOp getOp() {
-	return op;
     }
 
     public void setDisplayFullRuleForMatches(boolean pDisplayFullRuleForMatches) {

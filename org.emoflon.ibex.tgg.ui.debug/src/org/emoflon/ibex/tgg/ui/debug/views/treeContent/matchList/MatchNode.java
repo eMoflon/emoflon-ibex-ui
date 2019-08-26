@@ -4,7 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.emoflon.ibex.tgg.ui.debug.api.Match;
-import org.emoflon.ibex.tgg.ui.debug.core.IbexDebugUI;
+import org.emoflon.ibex.tgg.ui.debug.core.VictoryUI;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeNode;
 
 public class MatchNode extends TreeNode {
@@ -32,7 +32,7 @@ public class MatchNode extends TreeNode {
     @Override
     protected Color getForeground() {
 	if (match.isBlocked())
-	    return IbexDebugUI.getDisplay().getSystemColor(SWT.COLOR_RED);
+	    return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_RED);
 	else
 	    return null;
     }

@@ -12,14 +12,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.emoflon.ibex.tgg.ui.debug.api.DataPackage;
 import org.emoflon.ibex.tgg.ui.debug.api.Rule;
 import org.emoflon.ibex.tgg.ui.debug.api.RuleApplication;
-import org.emoflon.ibex.tgg.ui.debug.core.IVictoryDataConsumer;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.protocol.ProtocolContentManager;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.protocol.RuleApplicationNode;
 
-public class ProtocolView extends Composite implements ISharedFocusElement, IVictoryDataConsumer {
+public class ProtocolView extends Composite implements ISharedFocusElement {
 
     private IVisualiser visualiser;
 
@@ -77,9 +75,8 @@ public class ProtocolView extends Composite implements ISharedFocusElement, IVic
 	visualiser = pVisualiser;
     }
 
-    @Override
-    public void accept(DataPackage pDataPackage) {
-	contentManager.populate(pDataPackage.getRuleApplications());
+    public void populate(List<RuleApplication> pRuleApplications) {
+	contentManager.populate(pRuleApplications);
 	treeViewer.refresh();
     }
 

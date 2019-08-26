@@ -13,7 +13,6 @@ Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
 Export-Package: org.emoflon.ibex.tgg.ui.debug.api,
  org.emoflon.ibex.tgg.ui.debug.api.enums,
- org.emoflon.ibex.tgg.ui.debug.core,
- org.emoflon.ibex.tgg.ui.debug.options
+ org.emoflon.ibex.tgg.ui.debug.api.impl
 Automatic-Module-Name: org.emoflon.ibex.tgg.ide
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

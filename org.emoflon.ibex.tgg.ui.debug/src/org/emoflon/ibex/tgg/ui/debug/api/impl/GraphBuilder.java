@@ -1,12 +1,14 @@
-package org.emoflon.ibex.tgg.ui.debug.api;
+package org.emoflon.ibex.tgg.ui.debug.api.impl;
 
 import java.util.Collection;
 import java.util.HashSet;
 
-import org.emoflon.ibex.tgg.ui.debug.api.impl.GraphImpl;
+import org.emoflon.ibex.tgg.ui.debug.api.Edge;
+import org.emoflon.ibex.tgg.ui.debug.api.Graph;
+import org.emoflon.ibex.tgg.ui.debug.api.Node;
 
 public class GraphBuilder {
-    private Collection<Node> nodes = new HashSet<>();
+    private Collection<Collection<Node>> nodes = new HashSet<>();
     private Collection<Edge> edges = new HashSet<>();
 
     public GraphBuilder() {
@@ -22,13 +24,8 @@ public class GraphBuilder {
 	return this;
     }
 
-    public GraphBuilder addNode(Node pNode) {
-	nodes.add(pNode);
-	return this;
-    }
-
-    public GraphBuilder addNodes(Collection<Node> pNodes) {
-	nodes.addAll(pNodes);
+    public GraphBuilder addNodeGroup(Collection<Node> pNodeGroup) {
+	nodes.add(pNodeGroup);
 	return this;
     }
 

@@ -11,7 +11,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.TextStyle;
-import org.emoflon.ibex.tgg.ui.debug.core.IbexDebugUI;
+import org.emoflon.ibex.tgg.ui.debug.core.VictoryUI;
 
 public abstract class TreeNode {
     private String font = "Monospaced";
@@ -50,7 +50,7 @@ public abstract class TreeNode {
 	    @Override
 	    public void applyStyles(TextStyle pTextStyle) {
 		pTextStyle.font = FontDescriptor.createFrom(new FontData(font, fontSize, fontStyle))
-			.createFont(IbexDebugUI.getDisplay());
+			.createFont(VictoryUI.getDisplay());
 	    }
 	});
     }

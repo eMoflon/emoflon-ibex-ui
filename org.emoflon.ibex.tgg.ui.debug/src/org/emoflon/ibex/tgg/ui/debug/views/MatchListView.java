@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.emoflon.ibex.tgg.ui.debug.api.Match;
 import org.emoflon.ibex.tgg.ui.debug.api.Rule;
+import org.emoflon.ibex.tgg.ui.debug.api.Victory;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.matchList.MatchListContentManager;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.matchList.MatchNode;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.matchList.RuleNode;
@@ -74,7 +75,7 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 	    public void doubleClick(DoubleClickEvent pEvent) {
 		Object selection = treeViewer.getStructuredSelection().getFirstElement();
 		if (selection instanceof MatchNode)
-		    applyMatch((MatchNode) selection);
+		    Victory.setSelectedMatch(((MatchNode) selection).getMatch());
 	    }
 	});
 
@@ -85,7 +86,7 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 	    public void widgetSelected(SelectionEvent pSelectionEvent) {
 		Object selection = treeViewer.getStructuredSelection().getFirstElement();
 		if (selection instanceof MatchNode)
-		    applyMatch((MatchNode) selection);
+		    Victory.setSelectedMatch(((MatchNode) selection).getMatch());
 	    }
 	});
 
@@ -160,12 +161,5 @@ public class MatchListView extends Composite implements ISharedFocusElement {
     @Override
     public void registerSharedFocus(ISharedFocusElement pSharedFocusElement) {
 	sharedFocusElements.add(pSharedFocusElement);
-    }
-
-    private void applyMatch(MatchNode pMatchNode) {
-	synchronized (chosenMatch) {
-	    chosenMatch[0] = pMatchNode.getMatch();
-	    chosenMatch.notify();
-	}
     }
 }

@@ -1,12 +1,53 @@
 package org.emoflon.ibex.tgg.ui.debug.api;
 
+import org.emoflon.ibex.tgg.ui.debug.core.VictoryUI;
+
 public final class Victory {
+    private static VictoryUI ui;
+    private static final Match[] selectedMatch = new Match[1];
+
     public static void create(DataProvider pDataProvider) {
-	// TODO
+
+	if (ui != null)
+	    throw new IllegalStateException("Victory has already been initialised yet.");
+
+	ui = new VictoryUI(pDataProvider);
     }
 
-    public Match selectMatch(DataPackage pDataPackage) {
-	// TODO needs to block the calling thread until the user selects a match
-	return null;
+    public static boolean run() {
+	return ui.run();
+    }
+
+    public static Match selectMatch(DataPackage pDataPackage) {
+	// CONCURRENCY: This method is only called by the match-providing thread
+
+	if (ui == null)
+	    throw new IllegalStateException("Victory has not been initialised yet.");
+
+	// TODO what happens if the match-provider calls this before the UI has its run
+	// method called?
+	// Does the Display queue up this call until it starts reading and dispatching
+	// events?
+	// Or does everything crash and burn?
+	VictoryUI.getDisplay().syncExec(() -> ui.accept(pDataPackage));
+
+	synchronized (selectedMatch) {
+	    while (selectedMatch[0] == null)
+		try {
+		    selectedMatch.wait();
+		} catch (InterruptedException pIE) {
+		    // TODO calling thread was interrupted. What now..?
+		}
+	    Match match = selectedMatch[0];
+	    selectedMatch[0] = null;
+	    return match;
+	}
+    }
+
+    public static void setSelectedMatch(Match pMatch) {
+	synchronized (selectedMatch) {
+	    selectedMatch[0] = pMatch;
+	    selectedMatch.notify();
+	}
     }
 }
