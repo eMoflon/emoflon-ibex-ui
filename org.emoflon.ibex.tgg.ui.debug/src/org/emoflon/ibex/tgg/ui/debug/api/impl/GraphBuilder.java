@@ -8,7 +8,7 @@ import org.emoflon.ibex.tgg.ui.debug.api.Graph;
 import org.emoflon.ibex.tgg.ui.debug.api.Node;
 
 public class GraphBuilder {
-    private Collection<Collection<Node>> nodes = new HashSet<>();
+    private Collection<Node> nodes = new HashSet<>();
     private Collection<Edge> edges = new HashSet<>();
 
     public GraphBuilder() {
@@ -24,7 +24,7 @@ public class GraphBuilder {
 	return this;
     }
 
-    public GraphBuilder addNodeGroup(Collection<Node> pNodeGroup) {
+    public GraphBuilder addNode(Node pNodeGroup) {
 	nodes.add(pNodeGroup);
 	return this;
     }
