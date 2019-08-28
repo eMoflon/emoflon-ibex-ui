@@ -1,6 +1,6 @@
 package org.emoflon.ibex.tgg.ui.debug.api.impl;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.emoflon.ibex.tgg.ui.debug.api.Node;
 import org.emoflon.ibex.tgg.ui.debug.api.enums.Action;
@@ -11,9 +11,9 @@ public class NodeImpl implements Node {
     private String name;
     private Domain domain;
     private Action action;
-    private Collection<String> attributes;
+    private List<String> attributes;
 
-    public NodeImpl(String pType, String pLabel, Domain pDomain, Collection<String> pAttributes) {
+    public NodeImpl(String pType, String pLabel, Domain pDomain, List<String> pAttributes) {
 	type = pType;
 	name = pLabel;
 	domain = pDomain;
@@ -52,11 +52,11 @@ public class NodeImpl implements Node {
 	action = pAction;
     }
 
-    public Collection<String> getAttributes() {
+    public List<String> getAttributes() {
 	return attributes;
     }
 
-    public void setAttributes(Collection<String> pAttributes) {
+    public void setAttributes(List<String> pAttributes) {
 	attributes = pAttributes;
     }
 }

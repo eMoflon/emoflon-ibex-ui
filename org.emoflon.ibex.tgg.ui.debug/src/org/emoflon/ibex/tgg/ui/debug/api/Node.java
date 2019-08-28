@@ -1,6 +1,6 @@
 package org.emoflon.ibex.tgg.ui.debug.api;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.emoflon.ibex.tgg.ui.debug.api.enums.Action;
 import org.emoflon.ibex.tgg.ui.debug.api.enums.Domain;
@@ -14,5 +14,5 @@ public interface Node {
 
     public Action getAction();
 
-    public Collection<String> getAttributes();
+    public List<String> getAttributes();
 }
