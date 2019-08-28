@@ -2,13 +2,11 @@ package org.emoflon.ibex.tgg.ui.debug.adapter.TGGAdpater;
 
 import org.emoflon.ibex.tgg.ui.debug.api.Edge;
 import org.emoflon.ibex.tgg.ui.debug.api.Node;
+import org.emoflon.ibex.tgg.ui.debug.api.enums.Action;
+import org.emoflon.ibex.tgg.ui.debug.api.enums.EdgeType;
 
 import language.DomainType;
 import language.TGGRuleEdge;
-
-import org.emoflon.ibex.tgg.ui.debug.api.enums.EdgeType;
-import org.emoflon.ibex.tgg.ui.debug.api.enums.Action;
-import org.emoflon.ibex.tgg.ui.debug.api.enums.Domain;
 
 public class TGGRuleEdgeAdapter implements Edge {
 
@@ -21,12 +19,12 @@ public class TGGRuleEdgeAdapter implements Edge {
 
     @Override
     public Node getSrcNode() {
-	return new NodeAdapter(edge.getSrcNode());
+	return TGGRuleNodeAdapter.adapt(edge.getSrcNode());
     }
 
     @Override
     public Node getTrgNode() {
-	return new NodeAdapter(edge.getTrgNode());
+	return TGGRuleNodeAdapter.adapt(edge.getTrgNode());
     }
 
     @Override
@@ -36,7 +34,6 @@ public class TGGRuleEdgeAdapter implements Edge {
 
     @Override
     public EdgeType getType() {
-
 	if (edge.getDomainType() == DomainType.CORR) {
 	    return EdgeType.CORR;
 	} else if (edge.getDomainType() == DomainType.SRC || edge.getDomainType() == DomainType.TRG) {

@@ -41,7 +41,7 @@ public class RuleAdapter implements Rule {
 	/* Adds nodes to the graph */
 	Collection<Node> nodes = rule.getNodes()//
 		.stream()//
-		.map(m -> new NodeAdapter(m)).collect(Collectors.toList());
+		.map(m -> TGGRuleNodeAdapter.adapt(m)).collect(Collectors.toList());
 	nodes.stream().forEach((n) -> graphBuilder.addNode(n));
 
     }
