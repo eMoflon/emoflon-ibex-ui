@@ -19,6 +19,8 @@ public class GraphBuilder {
     }
 
     public GraphBuilder addGraph(Graph pGraph) {
+	if (pGraph == null)
+	    return this;
 	nodes.addAll(pGraph.getNodes());
 	edges.addAll(pGraph.getEdges());
 	return this;
