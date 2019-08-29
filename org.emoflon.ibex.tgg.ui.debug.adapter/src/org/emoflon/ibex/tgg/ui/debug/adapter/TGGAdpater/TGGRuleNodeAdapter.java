@@ -1,6 +1,7 @@
 package org.emoflon.ibex.tgg.ui.debug.adapter.TGGAdpater;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +13,7 @@ import language.TGGRuleNode;
 
 public class TGGRuleNodeAdapter implements Node {
 
-    private static Map<TGGRuleNode, TGGRuleNodeAdapter> wrappers;
+    private static Map<TGGRuleNode, TGGRuleNodeAdapter> wrappers = new HashMap<>();
 
     public static TGGRuleNodeAdapter adapt(TGGRuleNode pRuleNode) {
 	if (!wrappers.containsKey(pRuleNode))

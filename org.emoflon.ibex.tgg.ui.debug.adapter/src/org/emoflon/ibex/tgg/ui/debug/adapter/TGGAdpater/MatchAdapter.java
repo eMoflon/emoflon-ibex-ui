@@ -33,7 +33,7 @@ public class MatchAdapter implements Match {
 
     @Override
     public Rule getRule() {
-	return RuleAdapter.getRuleByName(match.getIMatch().getRuleName());
+	return TGGRuleAdapter.getRuleByName(match.getIMatch().getRuleName());
     }
 
     @Override
