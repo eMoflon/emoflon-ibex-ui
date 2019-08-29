@@ -5,10 +5,10 @@ import org.emoflon.ibex.tgg.ui.debug.api.Graph;
 import org.emoflon.ibex.tgg.ui.debug.api.Match;
 import org.emoflon.ibex.tgg.ui.debug.api.Rule;
 
-public class MatchAdapter implements Match {
+public class IbexMatchAdapter implements Match {
     private IbexMatch match;
 
-    public MatchAdapter(IbexMatch pMatch) {
+    public IbexMatchAdapter(IbexMatch pMatch) {
 	match = pMatch;
     }
 

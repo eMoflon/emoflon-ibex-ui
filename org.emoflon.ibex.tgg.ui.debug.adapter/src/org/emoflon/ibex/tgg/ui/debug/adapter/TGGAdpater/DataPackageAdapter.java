@@ -14,7 +14,7 @@ public class DataPackageAdapter implements DataPackage {
 
     public DataPackageAdapter(org.emoflon.ibex.tgg.operational.monitoring.DataPackage pDataPackage) {
 	matches = pDataPackage.getMatches().stream()//
-		.map((match) -> new MatchAdapter(match))//
+		.map((match) -> new IbexMatchAdapter(match))//
 		.collect(Collectors.toSet());
 	ruleApplications = pDataPackage.getProtocol().stream()//
 		.map((step) -> new RuleApplicationAdapter(step))//

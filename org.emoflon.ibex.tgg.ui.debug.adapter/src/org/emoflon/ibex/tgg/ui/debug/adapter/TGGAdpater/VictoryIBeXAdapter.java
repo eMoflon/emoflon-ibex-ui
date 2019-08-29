@@ -32,8 +32,8 @@ public class VictoryIBeXAdapter extends IbexController implements DataProvider {
     @Override
     public IMatch chooseOneMatch(DataPackage pDataPackage) {
 	Match chosenMatch = Victory.selectMatch(new DataPackageAdapter(pDataPackage));
-	if (chosenMatch instanceof MatchAdapter)
-	    return ((MatchAdapter) chosenMatch).getWrappedMatch().getIMatch();
+	if (chosenMatch instanceof IbexMatchAdapter)
+	    return ((IbexMatchAdapter) chosenMatch).getWrappedMatch().getIMatch();
 	else
 	    throw new IllegalStateException(
 		    "Victory returned something that wasn't a MatchAdapter. Something must have gone terribly wrong.");
