@@ -14,10 +14,10 @@ public class DataPackageAdapter implements DataPackage {
 
     public DataPackageAdapter(org.emoflon.ibex.tgg.operational.monitoring.DataPackage pDataPackage) {
 	matches = pDataPackage.getMatches().stream()//
-		.map((match) -> new IbexMatchAdapter(match))//
+		.map((match) -> IbexMatchAdapter.adapt(match))//
 		.collect(Collectors.toSet());
 	ruleApplications = pDataPackage.getProtocol().stream()//
-		.map((step) -> new RuleApplicationAdapter(step))//
+		.map((step) -> RuleApplicationAdapter.adapt(step))//
 		.collect(Collectors.toList());
     }
 
