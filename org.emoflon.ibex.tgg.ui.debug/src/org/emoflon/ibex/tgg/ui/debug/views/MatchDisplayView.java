@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
@@ -18,13 +19,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.emoflon.ibex.tgg.ui.debug.api.DataProvider;
+import org.emoflon.ibex.tgg.ui.debug.api.Graph;
 import org.emoflon.ibex.tgg.ui.debug.api.Match;
 import org.emoflon.ibex.tgg.ui.debug.api.Rule;
 import org.emoflon.ibex.tgg.ui.debug.api.RuleApplication;
-import org.emoflon.ibex.tgg.ui.debug.api.impl.GraphBuilder;
 import org.emoflon.ibex.tgg.ui.debug.core.IExitCodeReceiver;
 import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.GraphVisualisation;
+import org.emoflon.ibex.tgg.ui.debug.views.visualisable.MultiGraphVisualisation;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.VisualisableElement;
 
 public class MatchDisplayView extends Composite implements IVisualiser {
@@ -141,8 +143,12 @@ public class MatchDisplayView extends Composite implements IVisualiser {
     @Override
     public void display(Match pMatch) {
 
-	if (!matchCache.containsKey(pMatch))
-	    matchCache.put(pMatch, new GraphVisualisation(pMatch.getGraph(), userOptionsManager, dataProvider));
+	if (!matchCache.containsKey(pMatch)) {
+	    Collection<Graph> graphs = new HashSet<>();
+	    graphs.add(pMatch.getGraph());
+	    graphs.add(pMatch.getRule().getGraph());
+	    matchCache.put(pMatch, new MultiGraphVisualisation(graphs, userOptionsManager, dataProvider));
+	}
 
 	currentElement = matchCache.get(pMatch);
 
@@ -153,10 +159,10 @@ public class MatchDisplayView extends Composite implements IVisualiser {
     public void display(Collection<RuleApplication> pRuleApplications) {
 
 	if (!ruleApplicationCache.containsKey(pRuleApplications)) {
-	    GraphBuilder builder = new GraphBuilder();
-	    pRuleApplications.forEach((ruleApplication) -> builder.addGraph(ruleApplication.getGraph()));
+	    Collection<Graph> graphs = new HashSet<>();
+	    pRuleApplications.forEach((ruleApplication) -> graphs.add(ruleApplication.getGraph()));
 	    ruleApplicationCache.put(pRuleApplications,
-		    new GraphVisualisation(builder.build(), userOptionsManager, dataProvider));
+		    new MultiGraphVisualisation(graphs, userOptionsManager, dataProvider));
 	}
 
 	currentElement = ruleApplicationCache.get(pRuleApplications);
