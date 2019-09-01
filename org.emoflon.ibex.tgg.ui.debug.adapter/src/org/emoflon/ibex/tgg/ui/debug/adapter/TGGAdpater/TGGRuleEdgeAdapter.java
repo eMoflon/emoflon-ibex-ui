@@ -1,18 +1,30 @@
 package org.emoflon.ibex.tgg.ui.debug.adapter.TGGAdpater;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.emoflon.ibex.tgg.ui.debug.api.Edge;
 import org.emoflon.ibex.tgg.ui.debug.api.Node;
 import org.emoflon.ibex.tgg.ui.debug.api.enums.Action;
 import org.emoflon.ibex.tgg.ui.debug.api.enums.EdgeType;
 
-import language.DomainType;
 import language.TGGRuleEdge;
 
 public class TGGRuleEdgeAdapter implements Edge {
 
+    private static Map<TGGRuleEdge, TGGRuleEdgeAdapter> wrappers = new HashMap<>();
+
+    public static TGGRuleEdgeAdapter adapt(TGGRuleEdge pProtocolStep) {
+	if (!wrappers.containsKey(pProtocolStep))
+	    wrappers.put(pProtocolStep, new TGGRuleEdgeAdapter(pProtocolStep));
+	return wrappers.get(pProtocolStep);
+    }
+
+    // ----------
+
     private TGGRuleEdge edge;
 
-    public TGGRuleEdgeAdapter(TGGRuleEdge pEdge) {
+    private TGGRuleEdgeAdapter(TGGRuleEdge pEdge) {
 	edge = pEdge;
 
     }
@@ -34,20 +46,11 @@ public class TGGRuleEdgeAdapter implements Edge {
 
     @Override
     public EdgeType getType() {
-	if (edge.getDomainType() == DomainType.CORR) {
-	    return EdgeType.CORR;
-	} else if (edge.getDomainType() == DomainType.SRC || edge.getDomainType() == DomainType.TRG) {
-	    return EdgeType.NORMAL;
-	}
-	// TODO: should some condition be checked here?
-	else {
-	    return EdgeType.MATCH;
-	}
-
+	return EdgeType.NORMAL;
     }
 
     @Override
     public Action getAction() {
-	return EnumAdapt.adaptBindingType(edge.getBindingType());
+	return EnumAdapt.adaptBindingType(edge.getBindingType()); // TODO different actions depending on OPs
     }
 }

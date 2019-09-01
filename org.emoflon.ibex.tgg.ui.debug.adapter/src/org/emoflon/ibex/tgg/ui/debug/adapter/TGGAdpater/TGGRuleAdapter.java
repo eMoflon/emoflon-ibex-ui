@@ -4,15 +4,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import org.emoflon.ibex.tgg.ui.debug.api.Edge;
 import org.emoflon.ibex.tgg.ui.debug.api.Graph;
-import org.emoflon.ibex.tgg.ui.debug.api.Node;
 import org.emoflon.ibex.tgg.ui.debug.api.Rule;
 import org.emoflon.ibex.tgg.ui.debug.api.impl.GraphBuilder;
 
+import language.DomainType;
 import language.TGGRule;
+import language.TGGRuleCorr;
 
 public class TGGRuleAdapter implements Rule {
 
@@ -35,22 +34,30 @@ public class TGGRuleAdapter implements Rule {
     }
 
     private TGGRule rule;
-    private GraphBuilder graphBuilder;
+    private Graph graph;
 
     private TGGRuleAdapter(TGGRule pRule) {
 	rule = pRule;
-	graphBuilder = new GraphBuilder();
-	/* Adds edges to the graph */
-	Collection<Edge> edges = rule.getEdges()//
-		.stream()//
-		.map(m -> new TGGRuleEdgeAdapter(m)).collect(Collectors.toList());
-	graphBuilder.addEdges(edges);
-	/* Adds nodes to the graph */
-	Collection<Node> nodes = rule.getNodes()//
-		.stream()//
-		.map(m -> TGGRuleNodeAdapter.adapt(m)).collect(Collectors.toList());
-	nodes.stream().forEach((n) -> graphBuilder.addNode(n));
+	GraphBuilder graphBuilder = new GraphBuilder();
 
+	// Add nodes to the graph
+	rule.getNodes().stream()//
+		.filter(node -> !DomainType.CORR.equals(node.getDomainType()))//
+		.map(node -> TGGRuleNodeAdapter.adapt(node))//
+		.forEach(node -> graphBuilder.addNode(node));
+
+	// Add corr edges to the graph
+	rule.getNodes().stream()//
+		.filter(node -> DomainType.CORR.equals(node.getDomainType()))//
+		.map(node -> TGGRuleCorrAdapter.adapt((TGGRuleCorr) node))//
+		.forEach(corr -> graphBuilder.addEdge(corr));
+
+	// Add regular edges to the graph
+	rule.getEdges().stream()//
+		.map(edge -> TGGRuleEdgeAdapter.adapt(edge))//
+		.forEach(edge -> graphBuilder.addEdge(edge));
+
+	graph = graphBuilder.build();
     }
 
     @Override
@@ -60,7 +67,6 @@ public class TGGRuleAdapter implements Rule {
 
     @Override
     public Graph getGraph() {
-	// TODO build graph
-	return null;
+	return graph;
     }
 }
