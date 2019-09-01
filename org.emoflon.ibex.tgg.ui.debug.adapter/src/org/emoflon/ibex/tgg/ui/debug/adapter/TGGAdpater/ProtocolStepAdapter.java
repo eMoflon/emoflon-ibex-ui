@@ -8,13 +8,13 @@ import org.emoflon.ibex.tgg.ui.debug.api.Graph;
 import org.emoflon.ibex.tgg.ui.debug.api.RuleApplication;
 import org.emoflon.ibex.tgg.ui.debug.api.impl.GraphBuilder;
 
-public class RuleApplicationAdapter implements RuleApplication {
+public class ProtocolStepAdapter implements RuleApplication {
 
-    private static Map<ProtocolStep, RuleApplicationAdapter> wrappers = new HashMap<>();
+    private static Map<ProtocolStep, ProtocolStepAdapter> wrappers = new HashMap<>();
 
-    public static RuleApplicationAdapter adapt(ProtocolStep pProtocolStep) {
+    public static ProtocolStepAdapter adapt(ProtocolStep pProtocolStep) {
 	if (!wrappers.containsKey(pProtocolStep))
-	    wrappers.put(pProtocolStep, new RuleApplicationAdapter(pProtocolStep));
+	    wrappers.put(pProtocolStep, new ProtocolStepAdapter(pProtocolStep));
 	return wrappers.get(pProtocolStep);
     }
 
@@ -23,13 +23,13 @@ public class RuleApplicationAdapter implements RuleApplication {
     private int index;
     private Graph graph;
 
-    private RuleApplicationAdapter(ProtocolStep pProtocolStep) {
+    private ProtocolStepAdapter(ProtocolStep pProtocolStep) {
 	index = pProtocolStep.getIndex();
 	GraphBuilder builder = new GraphBuilder();
 	// TODO build graph
     }
 
-    public RuleApplicationAdapter(int pIndex, Graph pObjectGraph) {
+    public ProtocolStepAdapter(int pIndex, Graph pObjectGraph) {
 	index = pIndex;
 	graph = pObjectGraph;
     }

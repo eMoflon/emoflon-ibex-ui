@@ -17,7 +17,7 @@ public class DataPackageAdapter implements DataPackage {
 		.map((match) -> IbexMatchAdapter.adapt(match))//
 		.collect(Collectors.toSet());
 	ruleApplications = pDataPackage.getProtocol().stream()//
-		.map((step) -> RuleApplicationAdapter.adapt(step))//
+		.map((step) -> ProtocolStepAdapter.adapt(step))//
 		.collect(Collectors.toList());
     }
 
