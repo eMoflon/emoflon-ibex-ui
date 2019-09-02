@@ -8,6 +8,7 @@ import org.emoflon.ibex.tgg.ui.debug.api.Node;
 import org.emoflon.ibex.tgg.ui.debug.api.enums.Action;
 import org.emoflon.ibex.tgg.ui.debug.api.enums.EdgeType;
 
+import language.BindingType;
 import language.TGGRuleEdge;
 
 public class TGGRuleEdgeAdapter implements Edge {
@@ -51,6 +52,10 @@ public class TGGRuleEdgeAdapter implements Edge {
 
     @Override
     public Action getAction() {
-	return EnumAdapt.adaptBindingType(edge.getBindingType()); // TODO different actions depending on OPs
+	// TODO different actions depending on OPs
+	if (BindingType.CREATE.equals(edge.getBindingType()))
+	    return Action.CREATE;
+	else
+	    return Action.CONTEXT;
     }
 }

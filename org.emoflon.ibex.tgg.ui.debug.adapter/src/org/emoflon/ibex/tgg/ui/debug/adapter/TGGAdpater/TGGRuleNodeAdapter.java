@@ -9,6 +9,7 @@ import org.emoflon.ibex.tgg.ui.debug.api.Node;
 import org.emoflon.ibex.tgg.ui.debug.api.enums.Action;
 import org.emoflon.ibex.tgg.ui.debug.api.enums.Domain;
 
+import language.DomainType;
 import language.TGGRuleNode;
 
 public class TGGRuleNodeAdapter implements Node {
@@ -31,7 +32,10 @@ public class TGGRuleNodeAdapter implements Node {
 
     @Override
     public Domain getDomain() {
-	return EnumAdapt.adaptDomainType(node.getDomainType());
+	if (DomainType.SRC.equals(node.getDomainType()))
+	    return Domain.SRC;
+	else
+	    return Domain.TRG;
     }
 
     @Override
