@@ -16,10 +16,14 @@ public class EObjectAdapter implements Node {
 
     private static Map<EObject, EObjectAdapter> wrappers = new HashMap<>();
 
-    public static EObjectAdapter adapt(EObject pProtocolStep, Domain pDomain) {
-	if (!wrappers.containsKey(pProtocolStep))
-	    wrappers.put(pProtocolStep, new EObjectAdapter(pProtocolStep, pDomain));
-	return wrappers.get(pProtocolStep);
+    public static EObjectAdapter get(EObject pEObject) {
+	return wrappers.get(pEObject);
+    }
+
+    public static EObjectAdapter adapt(EObject pEObject, Domain pDomain) {
+	if (!wrappers.containsKey(pEObject))
+	    wrappers.put(pEObject, new EObjectAdapter(pEObject, pDomain));
+	return wrappers.get(pEObject);
     }
 
     // ----------
@@ -36,22 +40,20 @@ public class EObjectAdapter implements Node {
 
 	label = pObject.eContainingFeature() != null ? object.eContainingFeature().getName() : "root";
 
+	if (pObject.eContainer() == null) {
+	    Resource resource = pObject.eResource();
+	    index = resource.getResourceSet().getResources().indexOf(resource) + "_"
+		    + resource.getContents().indexOf(pObject);
+	} else {
+	    EObject container = pObject.eContainer();
+	    index = EObjectAdapter.adapt(container, domain).getIndex() + "_" + container.eContents().indexOf(pObject);
+	}
+
 	domain = pDomain;
 
 	attributes = new ArrayList<>();
 	for (EAttribute attr : object.eClass().getEAttributes())
-	    attributes.add(attr.getEType().getName() + attr.getName() + object.eGet(attr));
-    }
-
-    private String indexFor(EObject pObject) {
-	if (pObject.eContainer() == null) {
-	    Resource resource = pObject.eResource();
-	    return resource.getResourceSet().getResources().indexOf(resource) + "_"
-		    + resource.getContents().indexOf(pObject);
-	} else {
-	    EObject container = pObject.eContainer();
-	    return indexFor(container) + "_" + container.eContents().indexOf(pObject);
-	}
+	    attributes.add(attr.getEType().getName() + " " + attr.getName() + " = " + object.eGet(attr));
     }
 
     public String getIndex() {
@@ -65,10 +67,7 @@ public class EObjectAdapter implements Node {
 
     @Override
     public String getName() {
-	// id = label + index
-	// id + type
-
-	return null;
+	return label + "_" + index + " : " + object.eClass().getName();
     }
 
     @Override
