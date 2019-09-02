@@ -7,6 +7,7 @@ import org.emoflon.ibex.tgg.operational.monitoring.IbexMatch;
 import org.emoflon.ibex.tgg.ui.debug.api.Graph;
 import org.emoflon.ibex.tgg.ui.debug.api.Match;
 import org.emoflon.ibex.tgg.ui.debug.api.Rule;
+import org.emoflon.ibex.tgg.ui.debug.api.impl.GraphBuilder;
 
 public class IbexMatchAdapter implements Match {
 
@@ -53,6 +54,6 @@ public class IbexMatchAdapter implements Match {
     @Override
     public Graph getGraph() {
 	// TODO build graph
-	return null;
+	return new GraphBuilder().build();
     }
 }

@@ -26,7 +26,8 @@ public class ProtocolStepAdapter implements RuleApplication {
     private ProtocolStepAdapter(ProtocolStep pProtocolStep) {
 	index = pProtocolStep.getIndex();
 	GraphBuilder builder = new GraphBuilder();
-	// TODO build graph
+
+	graph = builder.build();
     }
 
     public ProtocolStepAdapter(int pIndex, Graph pObjectGraph) {
