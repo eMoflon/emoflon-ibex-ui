@@ -54,6 +54,7 @@ public class TGGRuleAdapter implements Rule {
 
 	// Add regular edges to the graph
 	rule.getEdges().stream()//
+		.filter(edge -> !DomainType.CORR.equals(edge.getDomainType()))//
 		.map(edge -> TGGRuleEdgeAdapter.adapt(edge))//
 		.forEach(edge -> graphBuilder.addEdge(edge));
 
