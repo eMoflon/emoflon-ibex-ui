@@ -3,6 +3,7 @@ package org.emoflon.ibex.tgg.ui.debug.adapter.TGGAdpater;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import org.emoflon.ibex.tgg.ui.debug.api.Graph;
@@ -36,21 +37,33 @@ public class TGGRuleAdapter implements Rule {
     private TGGRule rule;
     private Graph graph;
 
+    private Collection<TGGRuleNodeAdapter> nodes;
+    private Collection<TGGRuleCorrAdapter> corrs;
+
     private TGGRuleAdapter(TGGRule pRule) {
 	rule = pRule;
 	GraphBuilder graphBuilder = new GraphBuilder();
+
+	nodes = new HashSet<>();
+	corrs = new HashSet<>();
 
 	// Add nodes to the graph
 	rule.getNodes().stream()//
 		.filter(node -> !DomainType.CORR.equals(node.getDomainType()))//
 		.map(node -> TGGRuleNodeAdapter.adapt(node))//
-		.forEach(node -> graphBuilder.addNode(node));
+		.forEach(node -> {
+		    graphBuilder.addNode(node);
+		    nodes.add(node);
+		});
 
 	// Add corr edges to the graph
 	rule.getNodes().stream()//
 		.filter(node -> DomainType.CORR.equals(node.getDomainType()))//
 		.map(node -> TGGRuleCorrAdapter.adapt((TGGRuleCorr) node))//
-		.forEach(corr -> graphBuilder.addEdge(corr));
+		.forEach(corr -> {
+		    graphBuilder.addEdge(corr);
+		    corrs.add(corr);
+		});
 
 	// Add regular edges to the graph
 	rule.getEdges().stream()//
@@ -59,6 +72,8 @@ public class TGGRuleAdapter implements Rule {
 		.forEach(edge -> graphBuilder.addEdge(edge));
 
 	graph = graphBuilder.build();
+	nodes = Collections.unmodifiableCollection(nodes);
+	corrs = Collections.unmodifiableCollection(corrs);
     }
 
     @Override
@@ -69,5 +84,13 @@ public class TGGRuleAdapter implements Rule {
     @Override
     public Graph getGraph() {
 	return graph;
+    }
+
+    public Collection<TGGRuleNodeAdapter> getNodes() {
+	return nodes;
+    }
+
+    public Collection<TGGRuleCorrAdapter> getCorrs() {
+	return corrs;
     }
 }

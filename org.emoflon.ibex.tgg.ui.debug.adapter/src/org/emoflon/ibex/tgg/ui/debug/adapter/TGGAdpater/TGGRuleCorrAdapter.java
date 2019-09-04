@@ -57,4 +57,7 @@ public class TGGRuleCorrAdapter implements Edge {
 	    return Action.CONTEXT;
     }
 
+    public String getName() {
+	return corr.getName();
+    }
 }
