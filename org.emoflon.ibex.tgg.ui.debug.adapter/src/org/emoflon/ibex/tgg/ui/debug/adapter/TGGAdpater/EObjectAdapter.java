@@ -1,6 +1,7 @@
 package org.emoflon.ibex.tgg.ui.debug.adapter.TGGAdpater;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.emoflon.ibex.tgg.ui.debug.api.Node;
 import org.emoflon.ibex.tgg.ui.debug.api.enums.Action;
 import org.emoflon.ibex.tgg.ui.debug.api.enums.Domain;
+import org.emoflon.ibex.tgg.ui.debug.api.enums.EdgeType;
+import org.emoflon.ibex.tgg.ui.debug.api.impl.GraphBuilder;
 
 public class EObjectAdapter implements Node {
 
@@ -83,5 +86,31 @@ public class EObjectAdapter implements Node {
     @Override
     public List<String> getAttributes() {
 	return attributes;
+    }
+
+    public static void constructGraphDomain(GraphBuilder pBuilder, Domain pDomain, Collection<EObject> pDomainObjects) {
+	for (EObject object : pDomainObjects) {
+	    pBuilder.addNode(EObjectAdapter.adapt(object, pDomain));
+	    for (EObject contentObject : object.eContents()) {
+		pBuilder.addEdge(contentObject.eContainingFeature().getName(), EObjectAdapter.get(object),
+			EObjectAdapter.adapt(contentObject, pDomain), EdgeType.NORMAL, Action.CONTEXT);
+	    }
+	    for (EObject crossReference : object.eCrossReferences()) {
+		pBuilder.addEdge(crossReference.eContainingFeature().getName(), EObjectAdapter.get(object),
+			EObjectAdapter.adapt(crossReference, pDomain), EdgeType.NORMAL, Action.CONTEXT);
+	    }
+	}
+    }
+
+    public static void constructCorrEdges(GraphBuilder pBuilder, Collection<EObject> pCorrObjects) {
+	for (EObject corrObject : pCorrObjects) {
+	    pBuilder.addEdge(":" + corrObject.eClass().getName(), //
+		    EObjectAdapter.adapt((EObject) corrObject.eGet(corrObject.eClass().getEStructuralFeature("source")),
+			    Domain.SRC), //
+		    EObjectAdapter.adapt((EObject) corrObject.eGet(corrObject.eClass().getEStructuralFeature("target")),
+			    Domain.TRG), //
+		    EdgeType.CORR, //
+		    Action.CONTEXT);
+	}
     }
 }
