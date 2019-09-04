@@ -39,7 +39,7 @@ public class IbexMatchAdapter implements Match {
 	match = pMatch;
     }
 
-    private IbexMatchAdapter(IMatch pMatch, TGGRule rule) {
+    private IbexMatchAdapter(IMatch pMatch) {
 	iMatch = pMatch;
 	GraphBuilder graphBuilder = new GraphBuilder();
 	Map<String, TGGRuleNode> paramToNodeMap = new HashMap<String, TGGRuleNode>();
