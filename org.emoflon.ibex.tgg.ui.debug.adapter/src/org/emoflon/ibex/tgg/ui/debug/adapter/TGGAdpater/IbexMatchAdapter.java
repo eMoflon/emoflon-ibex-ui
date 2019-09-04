@@ -2,10 +2,8 @@ package org.emoflon.ibex.tgg.ui.debug.adapter.TGGAdpater;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.emoflon.ibex.tgg.operational.matches.IMatch;
 import org.emoflon.ibex.tgg.operational.monitoring.IbexMatch;
 import org.emoflon.ibex.tgg.ui.debug.api.Graph;
@@ -17,7 +15,6 @@ import org.emoflon.ibex.tgg.ui.debug.api.enums.EdgeType;
 import org.emoflon.ibex.tgg.ui.debug.api.impl.GraphBuilder;
 
 import language.DomainType;
-import language.TGGRule;
 import language.TGGRuleNode;
 
 public class IbexMatchAdapter implements Match {
@@ -33,16 +30,14 @@ public class IbexMatchAdapter implements Match {
     // ----------
 
     private IbexMatch match;
-    private IMatch iMatch;
 
     private IbexMatchAdapter(IbexMatch pMatch) {
 	match = pMatch;
-    }
-
-    private IbexMatchAdapter(IMatch pMatch) {
-	iMatch = pMatch;
+	IMatch iMatch = pMatch.getIMatch();
 	GraphBuilder graphBuilder = new GraphBuilder();
 	Map<String, TGGRuleNode> paramToNodeMap = new HashMap<String, TGGRuleNode>();
+
+	// TODO this won't work, you need to build this mapping yourself
 	paramToNodeMap.putAll((Map<? extends String, ? extends TGGRuleNode>) iMatch.getParameterNames());
 
 	for (Map.Entry<String, TGGRuleNode> entry : paramToNodeMap.entrySet()) {
