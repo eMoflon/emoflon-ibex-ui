@@ -2,7 +2,9 @@ package org.emoflon.ibex.tgg.ui.debug.adapter.TGGAdpater;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
 import org.emoflon.ibex.tgg.operational.matches.IMatch;
@@ -15,124 +17,84 @@ import org.emoflon.ibex.tgg.ui.debug.api.enums.Domain;
 import org.emoflon.ibex.tgg.ui.debug.api.enums.EdgeType;
 import org.emoflon.ibex.tgg.ui.debug.api.impl.GraphBuilder;
 
-import language.DomainType;
-import language.TGGRule;
-import language.TGGRuleNode;
-
 public class IbexMatchAdapter implements Match {
 
-	private static Map<IbexMatch, IbexMatchAdapter> wrappers = new HashMap<>();
+    private static Map<IbexMatch, IbexMatchAdapter> wrappers = new HashMap<>();
 
-	public static IbexMatchAdapter adapt(IbexMatch pMatch) {
-		if (!wrappers.containsKey(pMatch))
-			wrappers.put(pMatch, new IbexMatchAdapter(pMatch));
-		return wrappers.get(pMatch);
-	}
+    public static IbexMatchAdapter adapt(IbexMatch pMatch) {
+	if (!wrappers.containsKey(pMatch))
+	    wrappers.put(pMatch, new IbexMatchAdapter(pMatch));
+	return wrappers.get(pMatch);
+    }
 
-	// ----------
+    // ----------
 
-	private IbexMatch match;
+    private IbexMatch match;
+    private Graph graph;
 
-	private IbexMatchAdapter(IbexMatch pMatch) {
-		match = pMatch;
-		IMatch iMatch = pMatch.getIMatch();
-		GraphBuilder graphBuilder = new GraphBuilder();
-		TGGRuleAdapter rule = TGGRuleAdapter.getRuleByName(iMatch.getRuleName());
-		Map<String, TGGRuleNodeAdapter> paramToNodeMap = new HashMap<String, TGGRuleNodeAdapter>();
-		Collection<String> parameterNames = iMatch.getParameterNames();
-		for (String param : parameterNames) {
-			TGGRuleNodeAdapter node = rule.getNodes().stream().filter(n -> n.getName().equals(param)).findFirst()
-					.orElse(null);
-			paramToNodeMap.put(param, node);
-		}
+    private IbexMatchAdapter(IbexMatch pMatch) {
+	match = pMatch;
+	IMatch iMatch = pMatch.getIMatch();
+	GraphBuilder graphBuilder = new GraphBuilder();
+	TGGRuleAdapter rule = TGGRuleAdapter.getRuleByName(iMatch.getRuleName());
 
-		for (Map.Entry<String, TGGRuleNodeAdapter> entry : paramToNodeMap.entrySet()) {
-			TGGRuleNodeAdapter ruleNode = entry.getValue();
-			if (ruleNode.getDomain().equals(Domain.SRC)) {
+	Map<EObject, TGGRuleNodeAdapter> modelObjectToRuleNodeMap = new HashMap<>();
+	rule.getNodes().forEach(node -> {
+	    if (iMatch.getParameterNames().contains(node.getName()))
+		modelObjectToRuleNodeMap.put((EObject) iMatch.get(node.getName()), node);
+	});
 
-				EObject obj = (EObject) iMatch.get(entry.getKey());
-				graphBuilder.addNode(EObjectAdapter.adapt(obj, Domain.SRC));
+	Collection<EObject> srcObjects = new HashSet<>();
+	Collection<EObject> trgObjects = new HashSet<>();
+	modelObjectToRuleNodeMap.forEach((modelNode, ruleNode) -> {
+	    switch (ruleNode.getDomain()) {
+	    case SRC:
+		srcObjects.add(modelNode);
+		break;
+	    case TRG:
+		trgObjects.add(modelNode);
+	    }
+	});
+	EObjectAdapter.constructGraphDomain(graphBuilder, Domain.SRC, srcObjects);
+	EObjectAdapter.constructGraphDomain(graphBuilder, Domain.TRG, trgObjects);
 
-			} else if (ruleNode.getDomain().equals(Domain.TRG)) {
+	EObjectAdapter.constructCorrEdges(graphBuilder, rule.getCorrs().stream()//
+		.filter(corr -> iMatch.getParameterNames().contains(corr.getName()))//
+		.map(corr -> (EObject) iMatch.get(corr.getName()))//
+		.collect(Collectors.toSet()));
 
-				EObject obj = (EObject) iMatch.get(entry.getKey());
-				graphBuilder.addNode(EObjectAdapter.adapt(obj, Domain.TRG));
-			} else {
+	modelObjectToRuleNodeMap.forEach((modelNode, ruleNode) -> graphBuilder.addEdge("", ruleNode,
+		EObjectAdapter.get(modelNode), EdgeType.MATCH, Action.CONTEXT));
 
-				EObject obj = (EObject) iMatch.get(entry.getKey());
-				graphBuilder.addEdge(":" + obj.eClass().getName(), //
-						EObjectAdapter.adapt((EObject) obj.eGet(obj.eClass().getEStructuralFeature("source")),
-								Domain.SRC), //
-						EObjectAdapter.adapt((EObject) obj.eGet(obj.eClass().getEStructuralFeature("target")),
-								Domain.TRG), //
-						EdgeType.CORR, //
-						Action.CONTEXT);
-			}
-		}
-	}
+	graph = graphBuilder.build();
+    }
 
-	// Alternate implementation using TGGIbex elements
+    public IbexMatch getWrappedMatch() {
+	return match;
+    }
 
-	/*
-	 * private IbexMatchAdapter(IbexMatch pMatch) { match = pMatch; IMatch iMatch =
-	 * pMatch.getIMatch(); GraphBuilder graphBuilder = new GraphBuilder(); TGGRule
-	 * rule = TGGRuleAdapter.getRuleByName(iMatch.getRuleName()).getWrappedRule();
-	 * Map<String, TGGRuleNode> paramToNodeMap = new HashMap<String, TGGRuleNode>();
-	 * Collection<String> parameterNames = iMatch.getParameterNames(); for (String
-	 * param : parameterNames) { TGGRuleNode node =
-	 * rule.getNodes().stream().filter(n ->
-	 * n.getName().equals(param)).findFirst().orElse(null);
-	 * paramToNodeMap.put(param, node); }
-	 * 
-	 * 
-	 * 
-	 * for (Map.Entry<String, TGGRuleNode> entry : paramToNodeMap.entrySet()) {
-	 * TGGRuleNode ruleNode = entry.getValue(); if
-	 * (ruleNode.getDomainType().equals(DomainType.SRC)) {
-	 * 
-	 * EObject obj = (EObject) iMatch.get(entry.getKey());
-	 * graphBuilder.addNode(EObjectAdapter.adapt(obj, Domain.SRC));
-	 * 
-	 * } else if (ruleNode.getDomainType().equals(DomainType.TRG)) {
-	 * 
-	 * EObject obj = (EObject) iMatch.get(entry.getKey());
-	 * graphBuilder.addNode(EObjectAdapter.adapt(obj, Domain.TRG)); } else {
-	 * 
-	 * EObject obj = (EObject) iMatch.get(entry.getKey()); graphBuilder.addEdge(":"
-	 * + obj.eClass().getName(), // EObjectAdapter.adapt((EObject)
-	 * obj.eGet(obj.eClass().getEStructuralFeature("source")), Domain.SRC), //
-	 * EObjectAdapter.adapt((EObject)
-	 * obj.eGet(obj.eClass().getEStructuralFeature("target")), Domain.TRG), //
-	 * EdgeType.CORR, // Action.CONTEXT); } } }
-	 */
+    @Override
+    public String getName() {
+	return match.getName();
+    }
 
-	public IbexMatch getWrappedMatch() {
-		return match;
-	}
+    @Override
+    public boolean isBlocked() {
+	return match.isBlocked();
+    }
 
-	@Override
-	public String getName() {
-		return match.getName();
-	}
+    @Override
+    public String getBlockingReason() {
+	return match.getBlockingReason();
+    }
 
-	@Override
-	public boolean isBlocked() {
-		return match.isBlocked();
-	}
+    @Override
+    public Rule getRule() {
+	return TGGRuleAdapter.getRuleByName(match.getIMatch().getRuleName());
+    }
 
-	@Override
-	public String getBlockingReason() {
-		return match.getBlockingReason();
-	}
-
-	@Override
-	public Rule getRule() {
-		return TGGRuleAdapter.getRuleByName(match.getIMatch().getRuleName());
-	}
-
-	@Override
-	public Graph getGraph() {
-		// TODO build graph
-		return new GraphBuilder().build();
-	}
+    @Override
+    public Graph getGraph() {
+	return graph;
+    }
 }
