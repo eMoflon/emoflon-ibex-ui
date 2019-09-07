@@ -15,6 +15,8 @@ public class UserOptionsManager implements IUserOptions {
     private VisualizationLabelOptions nodeLabelVisualization = VisualizationLabelOptions.ABBREVIATED;
     private int neighborhoodSize = 0;
 
+    public static final int MAX_NEIGHBOURHOOD_SIZE = 3;
+
     @Override
     public boolean displayFullRuleForMatches() {
 	return displayFullRuleForMatches;
@@ -181,7 +183,7 @@ public class UserOptionsManager implements IUserOptions {
     }
 
     public void setNeighborhoodSize(int pSize) {
-	if (neighborhoodSize != pSize) {
+	if (neighborhoodSize != pSize && pSize >= 0 && pSize <= MAX_NEIGHBOURHOOD_SIZE) {
 	    neighborhoodSize = pSize;
 	    isInvalid = true;
 	}
