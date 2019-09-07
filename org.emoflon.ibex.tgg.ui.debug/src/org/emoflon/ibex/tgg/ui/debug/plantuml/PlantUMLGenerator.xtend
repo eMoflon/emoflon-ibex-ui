@@ -75,6 +75,7 @@ class PlantUMLGenerator {
 				«IF !nodesToIDsGlobal.empty && srcNodes.values.flatten.empty && trgNodes.values.flatten.empty»
 					All elements of the graph are hidden according to visualization options.
 				«ENDIF»
+					
 				endheader
 			'''
 		'''
@@ -111,6 +112,7 @@ class PlantUMLGenerator {
 				«IF !graph.nodes.empty && srcNodes.empty && trgNodes.empty»
 					All elements of the graph are hidden according to visualization options.
 				«ENDIF»
+					
 				endheader
 			'''
 		'''
@@ -128,7 +130,7 @@ class PlantUMLGenerator {
 	
 	private def static String visualise(Map<Node, String> nodesToIDs, Iterable<Node> srcNodes, Iterable<Node> trgNodes, Iterable<Edge> corrEdges, Iterable<Edge> normalEdges, IUserOptions userOptions) {
 		'''
-			together{
+			together {
 				«srcNodes.toInvertedMap[n | nodesToIDs.get(n)].visualizeNodeGroup(userOptions.nodeLabelVisualization)»
 				«trgNodes.toInvertedMap[n | nodesToIDs.get(n)].visualizeNodeGroup(userOptions.nodeLabelVisualization)»
 				«normalEdges.visualizeEdges(nodesToIDs, userOptions.edgeLabelVisualization)»
@@ -184,7 +186,7 @@ class PlantUMLGenerator {
 		
 		val label = e.getEdgeLabel(edgeLabelOptions)
 
-		val arrowWithColor = '''«arrow.charAt(0)»#[«color»]«arrow.substring(1)»''' 
+		val arrowWithColor = '''«arrow.charAt(0)»[#«color»]«arrow.substring(1)»''' 
 		'''«nodesToIDs.get(e.srcNode)» «arrowWithColor» «nodesToIDs.get(e.trgNode)» : "«label»"'''
 	}
 	
