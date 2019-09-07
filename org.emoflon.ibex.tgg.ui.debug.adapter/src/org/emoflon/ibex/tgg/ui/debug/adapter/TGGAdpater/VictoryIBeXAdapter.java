@@ -5,7 +5,9 @@ import java.util.Collection;
 
 import org.emoflon.ibex.tgg.operational.matches.IMatch;
 import org.emoflon.ibex.tgg.operational.monitoring.DataPackage;
+import org.emoflon.ibex.tgg.operational.monitoring.IVictoryDataProvider;
 import org.emoflon.ibex.tgg.operational.monitoring.IbexController;
+import org.emoflon.ibex.tgg.operational.monitoring.VictoryDataProvider;
 import org.emoflon.ibex.tgg.operational.strategies.OperationalStrategy;
 import org.emoflon.ibex.tgg.ui.debug.api.DataProvider;
 import org.emoflon.ibex.tgg.ui.debug.api.Match;
@@ -17,12 +19,15 @@ public class VictoryIBeXAdapter extends IbexController implements DataProvider {
     public static VictoryIBeXAdapter create(OperationalStrategy pOperationalStrategy) {
 	pOperationalStrategy.getOptions().flattenedTGG().getRules().forEach(TGGRuleAdapter::adapt);
 
-	VictoryIBeXAdapter adapter = new VictoryIBeXAdapter();
+	VictoryIBeXAdapter adapter = new VictoryIBeXAdapter(pOperationalStrategy);
 	Victory.create(adapter);
 	return adapter;
     }
 
-    private VictoryIBeXAdapter() {
+    private IVictoryDataProvider dataProvider;
+
+    private VictoryIBeXAdapter(OperationalStrategy pOperationalStrategy) {
+	dataProvider = new VictoryDataProvider(pOperationalStrategy);
     }
 
     public boolean runUI() {
@@ -40,18 +45,12 @@ public class VictoryIBeXAdapter extends IbexController implements DataProvider {
     }
 
     @Override
-    protected int getRequestedMatchCount() {
-	// TODO
-	return 0;
-    }
-
-    @Override
     public Collection<Rule> getAllRules() {
 	return TGGRuleAdapter.getAllRules();
     }
 
     @Override
     public void saveModels() throws IOException {
-	// TODO implement
+	dataProvider.saveModels();
     }
 }
