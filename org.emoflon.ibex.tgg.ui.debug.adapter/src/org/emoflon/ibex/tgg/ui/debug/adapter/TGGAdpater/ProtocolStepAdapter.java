@@ -21,25 +21,32 @@ public class ProtocolStepAdapter implements RuleApplication {
 
     // ----------
 
-    private int index;
-    private Graph graph;
+    private ProtocolStep protocolStep;
+    private Map<Integer, Graph> graphs = new HashMap<>();
 
     private ProtocolStepAdapter(ProtocolStep pProtocolStep) {
-	index = pProtocolStep.getIndex();
-	GraphBuilder builder = new GraphBuilder();
-
-	EObjectAdapter.constructGraphDomain(builder, Domain.SRC, pProtocolStep.getObjectGraph().getSrcElements());
-	EObjectAdapter.constructGraphDomain(builder, Domain.TRG, pProtocolStep.getObjectGraph().getTrgElements());
-	EObjectAdapter.constructCorrEdges(builder, pProtocolStep.getObjectGraph().getCorrElements());
-
-	graph = builder.build();
+	protocolStep = pProtocolStep;
     }
 
     public int getIndex() {
-	return index;
+	return protocolStep.getIndex();
     }
 
-    public Graph getGraph() {
-	return graph;
+    public Graph getGraph(int pNeighbourhoodSize) {
+	if (!graphs.containsKey(pNeighbourhoodSize))
+	    buildGraph(pNeighbourhoodSize);
+	return graphs.get(pNeighbourhoodSize);
+    }
+
+    private void buildGraph(int pNeighbourhoodSize) {
+	GraphBuilder builder = new GraphBuilder();
+
+	EObjectAdapter.constructGraphDomain(builder, Domain.SRC, VictoryIBeXAdapter
+		.getNeighbourhood(protocolStep.getObjectGraph().getSrcElements(), pNeighbourhoodSize));
+	EObjectAdapter.constructGraphDomain(builder, Domain.TRG, VictoryIBeXAdapter
+		.getNeighbourhood(protocolStep.getObjectGraph().getTrgElements(), pNeighbourhoodSize));
+	EObjectAdapter.constructCorrEdges(builder, protocolStep.getObjectGraph().getCorrElements());
+
+	graphs.put(pNeighbourhoodSize, builder.build());
     }
 }

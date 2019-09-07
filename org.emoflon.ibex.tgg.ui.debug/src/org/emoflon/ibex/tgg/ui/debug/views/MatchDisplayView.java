@@ -160,7 +160,8 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 
 	if (!ruleApplicationCache.containsKey(pRuleApplications)) {
 	    Collection<Graph> graphs = new HashSet<>();
-	    pRuleApplications.forEach((ruleApplication) -> graphs.add(ruleApplication.getGraph()));
+	    pRuleApplications.forEach((ruleApplication) -> graphs
+		    .add(ruleApplication.getGraph(userOptionsManager.getNeighborhoodSize())));
 	    ruleApplicationCache.put(pRuleApplications,
 		    new MultiGraphVisualisation(graphs, userOptionsManager, dataProvider));
 	}
