@@ -145,7 +145,7 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 
 	if (!matchCache.containsKey(pMatch)) {
 	    Collection<Graph> graphs = new HashSet<>();
-	    graphs.add(pMatch.getGraph());
+	    graphs.add(pMatch.getGraph(userOptionsManager.getNeighborhoodSize()));
 	    graphs.add(pMatch.getRule().getGraph());
 	    matchCache.put(pMatch, new MultiGraphVisualisation(graphs, userOptionsManager, dataProvider));
 	}

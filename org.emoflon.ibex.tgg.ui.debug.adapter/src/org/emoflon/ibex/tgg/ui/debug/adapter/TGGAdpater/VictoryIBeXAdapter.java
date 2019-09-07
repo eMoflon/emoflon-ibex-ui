@@ -3,6 +3,7 @@ package org.emoflon.ibex.tgg.ui.debug.adapter.TGGAdpater;
 import java.io.IOException;
 import java.util.Collection;
 
+import org.eclipse.emf.ecore.EObject;
 import org.emoflon.ibex.tgg.operational.matches.IMatch;
 import org.emoflon.ibex.tgg.operational.monitoring.DataPackage;
 import org.emoflon.ibex.tgg.operational.monitoring.IVictoryDataProvider;
@@ -19,15 +20,19 @@ public class VictoryIBeXAdapter extends IbexController implements DataProvider {
     public static VictoryIBeXAdapter create(OperationalStrategy pOperationalStrategy) {
 	pOperationalStrategy.getOptions().flattenedTGG().getRules().forEach(TGGRuleAdapter::adapt);
 
-	VictoryIBeXAdapter adapter = new VictoryIBeXAdapter(pOperationalStrategy);
+	dataProvider = new VictoryDataProvider(pOperationalStrategy);
+	VictoryIBeXAdapter adapter = new VictoryIBeXAdapter();
 	Victory.create(adapter);
 	return adapter;
     }
 
-    private IVictoryDataProvider dataProvider;
+    public static Collection<EObject> getNeighbourhood(Collection<EObject> pNodes, int pNeighbourhoodSize) {
+	return dataProvider.getMatchNeighbourhoods(pNodes, pNeighbourhoodSize);
+    }
 
-    private VictoryIBeXAdapter(OperationalStrategy pOperationalStrategy) {
-	dataProvider = new VictoryDataProvider(pOperationalStrategy);
+    private static IVictoryDataProvider dataProvider;
+
+    private VictoryIBeXAdapter() {
     }
 
     public boolean runUI() {

@@ -9,5 +9,5 @@ public interface Match {
 
     public Rule getRule();
 
-    public Graph getGraph();
+    public Graph getGraph(int pNeighbourhoodSize);
 }

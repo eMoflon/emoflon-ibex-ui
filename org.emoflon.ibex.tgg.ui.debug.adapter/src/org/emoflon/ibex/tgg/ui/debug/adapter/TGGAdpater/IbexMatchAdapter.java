@@ -30,43 +30,10 @@ public class IbexMatchAdapter implements Match {
     // ----------
 
     private IbexMatch match;
-    private Graph graph;
+    private Map<Integer, Graph> graphs = new HashMap<>();
 
     private IbexMatchAdapter(IbexMatch pMatch) {
 	match = pMatch;
-	IMatch iMatch = pMatch.getIMatch();
-	GraphBuilder graphBuilder = new GraphBuilder();
-	TGGRuleAdapter rule = TGGRuleAdapter.getRuleByName(iMatch.getRuleName());
-
-	Map<EObject, TGGRuleNodeAdapter> modelObjectToRuleNodeMap = new HashMap<>();
-	rule.getNodes().forEach(node -> {
-	    if (iMatch.getParameterNames().contains(node.getName()))
-		modelObjectToRuleNodeMap.put((EObject) iMatch.get(node.getName()), node);
-	});
-
-	Collection<EObject> srcObjects = new HashSet<>();
-	Collection<EObject> trgObjects = new HashSet<>();
-	modelObjectToRuleNodeMap.forEach((modelNode, ruleNode) -> {
-	    switch (ruleNode.getDomain()) {
-	    case SRC:
-		srcObjects.add(modelNode);
-		break;
-	    case TRG:
-		trgObjects.add(modelNode);
-	    }
-	});
-	EObjectAdapter.constructGraphDomain(graphBuilder, Domain.SRC, srcObjects);
-	EObjectAdapter.constructGraphDomain(graphBuilder, Domain.TRG, trgObjects);
-
-	EObjectAdapter.constructCorrEdges(graphBuilder, rule.getCorrs().stream()//
-		.filter(corr -> iMatch.getParameterNames().contains(corr.getName()))//
-		.map(corr -> (EObject) iMatch.get(corr.getName()))//
-		.collect(Collectors.toSet()));
-
-	modelObjectToRuleNodeMap.forEach((modelNode, ruleNode) -> graphBuilder.addEdge("", ruleNode,
-		EObjectAdapter.get(modelNode), EdgeType.MATCH, Action.CONTEXT));
-
-	graph = graphBuilder.build();
     }
 
     public IbexMatch getWrappedMatch() {
@@ -94,7 +61,48 @@ public class IbexMatchAdapter implements Match {
     }
 
     @Override
-    public Graph getGraph() {
-	return graph;
+    public Graph getGraph(int pNeighbourhoodSize) {
+	if (!graphs.containsKey(pNeighbourhoodSize))
+	    buildGraph(pNeighbourhoodSize);
+	return graphs.get(pNeighbourhoodSize);
+    }
+
+    private void buildGraph(int pNeighbourhoodSize) {
+	IMatch iMatch = match.getIMatch();
+	GraphBuilder graphBuilder = new GraphBuilder();
+	TGGRuleAdapter rule = TGGRuleAdapter.getRuleByName(iMatch.getRuleName());
+
+	Map<EObject, TGGRuleNodeAdapter> modelObjectToRuleNodeMap = new HashMap<>();
+	rule.getNodes().forEach(node -> {
+	    if (iMatch.getParameterNames().contains(node.getName()))
+		modelObjectToRuleNodeMap.put((EObject) iMatch.get(node.getName()), node);
+	});
+
+	Collection<EObject> srcObjects = new HashSet<>();
+	Collection<EObject> trgObjects = new HashSet<>();
+	modelObjectToRuleNodeMap.forEach((modelNode, ruleNode) -> {
+	    switch (ruleNode.getDomain()) {
+	    case SRC:
+		srcObjects.add(modelNode);
+		break;
+	    case TRG:
+		trgObjects.add(modelNode);
+	    }
+	});
+	srcObjects.addAll(VictoryIBeXAdapter.getNeighbourhood(srcObjects, pNeighbourhoodSize));
+	trgObjects.addAll(VictoryIBeXAdapter.getNeighbourhood(trgObjects, pNeighbourhoodSize));
+
+	EObjectAdapter.constructGraphDomain(graphBuilder, Domain.SRC, srcObjects);
+	EObjectAdapter.constructGraphDomain(graphBuilder, Domain.TRG, trgObjects);
+
+	EObjectAdapter.constructCorrEdges(graphBuilder, rule.getCorrs().stream()//
+		.filter(corr -> iMatch.getParameterNames().contains(corr.getName()))//
+		.map(corr -> (EObject) iMatch.get(corr.getName()))//
+		.collect(Collectors.toSet()));
+
+	modelObjectToRuleNodeMap.forEach((modelNode, ruleNode) -> graphBuilder.addEdge("", ruleNode,
+		EObjectAdapter.get(modelNode), EdgeType.MATCH, Action.CONTEXT));
+
+	graphs.put(pNeighbourhoodSize, graphBuilder.build());
     }
 }
