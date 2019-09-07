@@ -29,10 +29,11 @@ public class MatchListContentManager {
 
     public void populate(Collection<Match> pMatches) {
 
-	if (pMatches == null || pMatches.isEmpty()) {
-	    // TODO what happens when there are no matches?
+	for (RuleNode rule : ruleNodes.values())
+	    rule.setBold(false);
+
+	if (pMatches == null || pMatches.isEmpty())
 	    return;
-	}
 
 	Iterator<Match> existingMatchesIterator = matchNodes.keySet().iterator();
 	while (existingMatchesIterator.hasNext()) {
@@ -42,9 +43,6 @@ public class MatchListContentManager {
 		existingMatchesIterator.remove();
 	    }
 	}
-
-	for (RuleNode rule : ruleNodes.values())
-	    rule.setBold(false);
 
 	for (Match match : pMatches) {
 	    if (!matchNodes.containsKey(match)) {

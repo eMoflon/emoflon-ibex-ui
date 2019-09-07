@@ -52,7 +52,6 @@ public class TGGRuleEdgeAdapter implements Edge {
 
     @Override
     public Action getAction() {
-	// TODO different actions depending on OPs
 	if (BindingType.CREATE.equals(edge.getBindingType()))
 	    return Action.CREATE;
 	else

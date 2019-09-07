@@ -31,7 +31,7 @@ public class TGGRuleCorrAdapter implements Edge {
 
     @Override
     public String getLabel() {
-	return corr.getType().getName(); // TODO add colon in front to clarify it's a type?
+	return ":" + corr.getType().getName();
     }
 
     @Override

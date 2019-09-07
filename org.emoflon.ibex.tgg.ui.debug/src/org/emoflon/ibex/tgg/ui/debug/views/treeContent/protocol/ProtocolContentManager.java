@@ -19,9 +19,6 @@ public class ProtocolContentManager {
     }
 
     public void populate(List<RuleApplication> pRuleApplications) {
-	// TODO perhaps a more elaborate handling is required here
-	// this currently relies on new changes constantly showing up
-
 	for (int i = protocolNodes.size(); i < pRuleApplications.size(); i++) {
 	    RuleApplicationNode node = new RuleApplicationNode(i, pRuleApplications.get(i));
 	    protocolNodes.add(node);

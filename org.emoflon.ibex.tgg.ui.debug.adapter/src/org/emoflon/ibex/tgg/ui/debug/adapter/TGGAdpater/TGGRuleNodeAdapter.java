@@ -9,6 +9,7 @@ import org.emoflon.ibex.tgg.ui.debug.api.Node;
 import org.emoflon.ibex.tgg.ui.debug.api.enums.Action;
 import org.emoflon.ibex.tgg.ui.debug.api.enums.Domain;
 
+import language.BindingType;
 import language.DomainType;
 import language.TGGRuleNode;
 
@@ -58,7 +59,9 @@ public class TGGRuleNodeAdapter implements Node {
 
     @Override
     public Action getAction() {
-	// TODO Auto-generated method stub
-	return null;
+	if (BindingType.CONTEXT.equals(node.getBindingType()))
+	    return Action.CONTEXT;
+	else
+	    return Action.CREATE;
     }
 }
