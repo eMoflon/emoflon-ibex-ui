@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.emoflon.ibex.tgg.ui.debug.api.Graph;
 import org.emoflon.ibex.tgg.ui.debug.api.Rule;
+import org.emoflon.ibex.tgg.ui.debug.api.enums.Domain;
 import org.emoflon.ibex.tgg.ui.debug.api.impl.GraphBuilder;
 
 import language.DomainType;
@@ -26,9 +27,9 @@ public class TGGRuleAdapter implements Rule {
 		return Collections.unmodifiableCollection(rulesByName.values());
 	}
 
-	public static TGGRuleAdapter adapt(TGGRule pRule) {
+	public static TGGRuleAdapter adapt(TGGRule pRule, IBeXOperation pOperationType) {
 		if (!rulesByName.containsKey(pRule.getName())) {
-			TGGRuleAdapter rule = new TGGRuleAdapter(pRule);
+			TGGRuleAdapter rule = new TGGRuleAdapter(pRule, pOperationType); 
 			rulesByName.put(rule.getName(), rule);
 		}
 		return rulesByName.get(pRule.getName());
@@ -40,7 +41,7 @@ public class TGGRuleAdapter implements Rule {
 	private Collection<TGGRuleNodeAdapter> nodes;
 	private Collection<TGGRuleCorrAdapter> corrs;
 
-	private TGGRuleAdapter(TGGRule pRule) {
+	private TGGRuleAdapter(TGGRule pRule, IBeXOperation pOperationType) {
 		rule = pRule;
 		GraphBuilder graphBuilder = new GraphBuilder();
 
@@ -49,8 +50,15 @@ public class TGGRuleAdapter implements Rule {
 
 		// Add nodes to the graph
 		rule.getNodes().stream()//
-				.filter(node -> !DomainType.CORR.equals(node.getDomainType()))//
-				.map(node -> TGGRuleNodeAdapter.adapt(node))//
+				.filter(node -> DomainType.SRC.equals(node.getDomainType()))//
+				.map(node -> TGGRuleNodeAdapter.adapt(node, Domain.SRC, pOperationType))//
+				.forEach(node -> {
+					graphBuilder.addNode(node);
+					nodes.add(node);
+				});
+		rule.getNodes().stream()//
+				.filter(node -> DomainType.TRG.equals(node.getDomainType()))//
+				.map(node -> TGGRuleNodeAdapter.adapt(node, Domain.TRG, pOperationType))//
 				.forEach(node -> {
 					graphBuilder.addNode(node);
 					nodes.add(node);
@@ -67,8 +75,12 @@ public class TGGRuleAdapter implements Rule {
 
 		// Add regular edges to the graph
 		rule.getEdges().stream()//
-				.filter(edge -> !DomainType.CORR.equals(edge.getDomainType()))//
-				.map(edge -> TGGRuleEdgeAdapter.adapt(edge))//
+				.filter(edge -> DomainType.SRC.equals(edge.getDomainType()))//
+				.map(edge -> TGGRuleEdgeAdapter.adapt(edge, Domain.SRC, pOperationType))//
+				.forEach(edge -> graphBuilder.addEdge(edge));
+		rule.getEdges().stream()//
+				.filter(edge -> DomainType.TRG.equals(edge.getDomainType()))//
+				.map(edge -> TGGRuleEdgeAdapter.adapt(edge, Domain.TRG, pOperationType))//
 				.forEach(edge -> graphBuilder.addEdge(edge));
 
 		graph = graphBuilder.build();

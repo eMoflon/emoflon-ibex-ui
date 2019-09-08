@@ -17,18 +17,27 @@ public class TGGRuleNodeAdapter implements Node {
 
     private static Map<TGGRuleNode, TGGRuleNodeAdapter> wrappers = new HashMap<>();
 
-    public static TGGRuleNodeAdapter adapt(TGGRuleNode pRuleNode) {
+    public static TGGRuleNodeAdapter adapt(TGGRuleNode pRuleNode, Domain pDomain, IBeXOperation pOperationType) {
 	if (!wrappers.containsKey(pRuleNode))
-	    wrappers.put(pRuleNode, new TGGRuleNodeAdapter(pRuleNode));
+	    wrappers.put(pRuleNode, new TGGRuleNodeAdapter(pRuleNode, pDomain, pOperationType));
 	return wrappers.get(pRuleNode);
     }
 
     // ----------
 
     private TGGRuleNode node;
+    private Action action;
 
-    private TGGRuleNodeAdapter(TGGRuleNode pNode) {
+    private TGGRuleNodeAdapter(TGGRuleNode pNode, Domain pDomain, IBeXOperation pOperationType) {
 	node = pNode;
+
+	if (!BindingType.CREATE.equals(node.getBindingType()))
+	    action = Action.CONTEXT;
+	else if ((Domain.SRC.equals(pDomain) && IBeXOperation.FWD.equals(pOperationType)) || //
+		(Domain.TRG.equals(pDomain) && IBeXOperation.BWD.equals(pOperationType)))
+	    action = Action.TRANSLATE;
+	else
+	    action = Action.CREATE;
     }
 
     @Override
@@ -59,9 +68,6 @@ public class TGGRuleNodeAdapter implements Node {
 
     @Override
     public Action getAction() {
-	if (BindingType.CONTEXT.equals(node.getBindingType()))
-	    return Action.CONTEXT;
-	else
-	    return Action.CREATE;
+	return action;
     }
 }
