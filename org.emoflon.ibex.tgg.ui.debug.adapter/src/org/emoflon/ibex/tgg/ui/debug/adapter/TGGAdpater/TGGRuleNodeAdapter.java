@@ -18,8 +18,17 @@ public class TGGRuleNodeAdapter implements Node {
     private static Map<TGGRuleNode, TGGRuleNodeAdapter> wrappers = new HashMap<>();
 
     public static TGGRuleNodeAdapter adapt(TGGRuleNode pRuleNode, Domain pDomain, IBeXOperation pOperationType) {
+	if (wrappers.containsKey(pRuleNode))
+	    throw new IllegalStateException("The specified rule has already been adapted.");
+
+	TGGRuleNodeAdapter adapter = new TGGRuleNodeAdapter(pRuleNode, pDomain, pOperationType);
+	wrappers.put(pRuleNode, adapter);
+	return adapter;
+    }
+
+    public static TGGRuleNodeAdapter get(TGGRuleNode pRuleNode) {
 	if (!wrappers.containsKey(pRuleNode))
-	    wrappers.put(pRuleNode, new TGGRuleNodeAdapter(pRuleNode, pDomain, pOperationType));
+	    throw new IllegalStateException("The specified rule has not been adapted yet.");
 	return wrappers.get(pRuleNode);
     }
 

@@ -41,12 +41,12 @@ public class TGGRuleEdgeAdapter implements Edge {
 
     @Override
     public Node getSrcNode() {
-	return TGGRuleNodeAdapter.adapt(edge.getSrcNode(), null, null); // TODO
+	return TGGRuleNodeAdapter.get(edge.getSrcNode());
     }
 
     @Override
     public Node getTrgNode() {
-	return TGGRuleNodeAdapter.adapt(edge.getTrgNode(), null, null); // TODO
+	return TGGRuleNodeAdapter.get(edge.getTrgNode());
     }
 
     @Override

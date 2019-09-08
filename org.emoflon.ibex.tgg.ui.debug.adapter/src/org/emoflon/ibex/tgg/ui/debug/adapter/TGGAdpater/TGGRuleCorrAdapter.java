@@ -36,12 +36,12 @@ public class TGGRuleCorrAdapter implements Edge {
 
     @Override
     public Node getSrcNode() {
-	return TGGRuleNodeAdapter.adapt(corr.getSource(), null, null); // TODO
+	return TGGRuleNodeAdapter.get(corr.getSource());
     }
 
     @Override
     public Node getTrgNode() {
-	return TGGRuleNodeAdapter.adapt(corr.getTarget(), null, null); // TODO
+	return TGGRuleNodeAdapter.get(corr.getTarget());
     }
 
     @Override
