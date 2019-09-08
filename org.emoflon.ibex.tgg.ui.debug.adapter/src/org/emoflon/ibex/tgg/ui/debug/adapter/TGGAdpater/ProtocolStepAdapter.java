@@ -1,15 +1,21 @@
 package org.emoflon.ibex.tgg.ui.debug.adapter.TGGAdpater;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.emoflon.ibex.tgg.operational.monitoring.data.ProtocolStep;
+import org.emoflon.ibex.tgg.operational.monitoring.data.TGGObjectGraph;
+import org.emoflon.ibex.tgg.operational.monitoring.data.TGGObjectGraphBuilder;
 import org.emoflon.ibex.tgg.ui.debug.api.Graph;
 import org.emoflon.ibex.tgg.ui.debug.api.RuleApplication;
+import org.emoflon.ibex.tgg.ui.debug.api.RuleApplicationMerger;
 import org.emoflon.ibex.tgg.ui.debug.api.enums.Domain;
 import org.emoflon.ibex.tgg.ui.debug.api.impl.GraphBuilder;
 
 public class ProtocolStepAdapter implements RuleApplication {
+
+    private static ProtocolStepMerger protocolStepMerger = new ProtocolStepMerger();
 
     private static Map<ProtocolStep, ProtocolStepAdapter> wrappers = new HashMap<>();
 
@@ -22,7 +28,6 @@ public class ProtocolStepAdapter implements RuleApplication {
     // ----------
 
     private ProtocolStep protocolStep;
-    private Map<Integer, Graph> graphs = new HashMap<>();
 
     private ProtocolStepAdapter(ProtocolStep pProtocolStep) {
 	protocolStep = pProtocolStep;
@@ -32,21 +37,31 @@ public class ProtocolStepAdapter implements RuleApplication {
 	return protocolStep.getIndex();
     }
 
-    public Graph getGraph(int pNeighbourhoodSize) {
-	if (!graphs.containsKey(pNeighbourhoodSize))
-	    buildGraph(pNeighbourhoodSize);
-	return graphs.get(pNeighbourhoodSize);
+    public RuleApplicationMerger getMerger() {
+	return protocolStepMerger;
     }
 
-    private void buildGraph(int pNeighbourhoodSize) {
-	GraphBuilder builder = new GraphBuilder();
+    private static class ProtocolStepMerger implements RuleApplicationMerger {
+	@Override
+	public Graph getMergedGraph(Collection<RuleApplication> pRuleApplications, int pNeighbourhoodSize) {
 
-	EObjectAdapter.constructGraphDomain(builder, Domain.SRC, VictoryIBeXAdapter
-		.getNeighbourhood(protocolStep.getObjectGraph().getSrcElements(), pNeighbourhoodSize));
-	EObjectAdapter.constructGraphDomain(builder, Domain.TRG, VictoryIBeXAdapter
-		.getNeighbourhood(protocolStep.getObjectGraph().getTrgElements(), pNeighbourhoodSize));
-	EObjectAdapter.constructCorrEdges(builder, protocolStep.getObjectGraph().getCorrElements());
+	    TGGObjectGraphBuilder objectGraphBuilder = new TGGObjectGraphBuilder();
+	    for (RuleApplication ruleApplication : pRuleApplications) {
+		if (!(ruleApplication instanceof ProtocolStepAdapter))
+		    throw new IllegalStateException(
+			    "This merger only supports RuleApplications of type ProtocolStepAdapter.");
 
-	graphs.put(pNeighbourhoodSize, builder.build());
+		objectGraphBuilder.add(((ProtocolStepAdapter) ruleApplication).protocolStep.getObjectGraph());
+	    }
+	    TGGObjectGraph objectGraph = objectGraphBuilder.build();
+
+	    GraphBuilder builder = new GraphBuilder();
+	    EObjectAdapter.constructGraphDomain(builder, Domain.SRC,
+		    VictoryIBeXAdapter.getNeighbourhood(objectGraph.getSrcElements(), pNeighbourhoodSize));
+	    EObjectAdapter.constructGraphDomain(builder, Domain.TRG,
+		    VictoryIBeXAdapter.getNeighbourhood(objectGraph.getTrgElements(), pNeighbourhoodSize));
+	    EObjectAdapter.constructCorrEdges(builder, objectGraph.getCorrElements());
+	    return builder.build();
+	}
     }
 }

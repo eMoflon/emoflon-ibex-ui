@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
@@ -19,14 +18,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.emoflon.ibex.tgg.ui.debug.api.DataProvider;
-import org.emoflon.ibex.tgg.ui.debug.api.Graph;
 import org.emoflon.ibex.tgg.ui.debug.api.Match;
 import org.emoflon.ibex.tgg.ui.debug.api.Rule;
 import org.emoflon.ibex.tgg.ui.debug.api.RuleApplication;
 import org.emoflon.ibex.tgg.ui.debug.core.IExitCodeReceiver;
 import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager;
-import org.emoflon.ibex.tgg.ui.debug.views.visualisable.GraphVisualisation;
-import org.emoflon.ibex.tgg.ui.debug.views.visualisable.MultiGraphVisualisation;
+import org.emoflon.ibex.tgg.ui.debug.views.visualisable.MatchVisualisation;
+import org.emoflon.ibex.tgg.ui.debug.views.visualisable.RuleApplicationVisualisation;
+import org.emoflon.ibex.tgg.ui.debug.views.visualisable.RuleVisualisation;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.VisualisableElement;
 
 public class MatchDisplayView extends Composite implements IVisualiser {
@@ -133,7 +132,7 @@ public class MatchDisplayView extends Composite implements IVisualiser {
     public void display(Rule pRule) {
 
 	if (!ruleCache.containsKey(pRule))
-	    ruleCache.put(pRule, new GraphVisualisation(pRule.getGraph(), userOptionsManager, dataProvider));
+	    ruleCache.put(pRule, new RuleVisualisation(pRule, userOptionsManager, dataProvider));
 
 	currentElement = ruleCache.get(pRule);
 
@@ -143,12 +142,8 @@ public class MatchDisplayView extends Composite implements IVisualiser {
     @Override
     public void display(Match pMatch) {
 
-	if (!matchCache.containsKey(pMatch)) {
-	    Collection<Graph> graphs = new HashSet<>();
-	    graphs.add(pMatch.getGraph(userOptionsManager.getNeighborhoodSize()));
-	    graphs.add(pMatch.getRule().getGraph());
-	    matchCache.put(pMatch, new MultiGraphVisualisation(graphs, userOptionsManager, dataProvider));
-	}
+	if (!matchCache.containsKey(pMatch))
+	    matchCache.put(pMatch, new MatchVisualisation(pMatch, userOptionsManager, dataProvider));
 
 	currentElement = matchCache.get(pMatch);
 
@@ -158,13 +153,9 @@ public class MatchDisplayView extends Composite implements IVisualiser {
     @Override
     public void display(Collection<RuleApplication> pRuleApplications) {
 
-	if (!ruleApplicationCache.containsKey(pRuleApplications)) {
-	    Collection<Graph> graphs = new HashSet<>();
-	    pRuleApplications.forEach((ruleApplication) -> graphs
-		    .add(ruleApplication.getGraph(userOptionsManager.getNeighborhoodSize())));
+	if (!ruleApplicationCache.containsKey(pRuleApplications))
 	    ruleApplicationCache.put(pRuleApplications,
-		    new MultiGraphVisualisation(graphs, userOptionsManager, dataProvider));
-	}
+		    new RuleApplicationVisualisation(pRuleApplications, userOptionsManager, dataProvider));
 
 	currentElement = ruleApplicationCache.get(pRuleApplications);
 	refresh();
@@ -175,8 +166,8 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	if (userOptionsManager.isInvalid()) {
 	    ruleCache.values().forEach(VisualisableElement::invalidate);
 	    matchCache.values().forEach(VisualisableElement::invalidate);
-	    if (currentElement instanceof GraphVisualisation)
-		currentElement.invalidate();
+	    ruleApplicationCache.values().forEach(VisualisableElement::invalidate);
+	    currentElement.invalidate();
 	    userOptionsManager.revalidate();
 	}
 
