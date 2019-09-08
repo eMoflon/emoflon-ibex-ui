@@ -178,6 +178,8 @@ public class MatchListView extends Composite implements ISharedFocusElement {
     private void applyMatch(MatchNode pMatchNode) {
 		synchronized (chosenMatch) {
 		    Victory.setSelectedMatch(pMatchNode.getMatch());
+		    RuleNode ruleNode = (RuleNode) pMatchNode.getParent();
+		    ruleNode.increaseTimesApplied();
 		    chosenMatch.notify();
 		}
     }

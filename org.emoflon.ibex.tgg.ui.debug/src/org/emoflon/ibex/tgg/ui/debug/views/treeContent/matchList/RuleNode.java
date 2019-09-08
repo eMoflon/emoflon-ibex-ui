@@ -11,6 +11,8 @@ public class RuleNode extends TreeNode {
 
     private Rule rule;
     private boolean markBold;
+    
+    private int timesApplied = 0;
 
     protected RuleNode(Rule pRule) {
 	rule = pRule;
@@ -27,7 +29,7 @@ public class RuleNode extends TreeNode {
     @Override
     protected String getLabel() {
 	setFontStyle(markBold ? SWT.BOLD : SWT.NORMAL);
-	return rule.getName() + " (" + getChildren().size() + ")";
+	return rule.getName() + " (matches: " + getChildren().size() + ", applied matches: "+timesApplied +")";
     }
 
     @Override
@@ -37,14 +39,41 @@ public class RuleNode extends TreeNode {
 
     @Override
     protected Color getForeground() {
-	return null;
+    	if (!hasChildren()) {
+    		if(timesApplied > 0) {
+    			return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_WHITE);
+    		}
+    		return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_WHITE);
+        }
+    	else {
+    		if(timesApplied > 0) {
+    			return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_BLACK);
+    		}
+    		return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_BLACK);
+        }
     }
 
     @Override
     protected Color getBackground() {
-	if (!hasChildren())
-	    return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_GRAY);
-	else
-	    return null;
+		if (!hasChildren()) {
+			if(timesApplied > 0) {
+				return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_DARK_GRAY);
+			}
+			return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_WIDGET_DARK_SHADOW);
+	    }
+		else {
+			if(timesApplied > 0) {
+				return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_WHITE);
+			}
+			return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW);
+	    }
     }
+
+	public int getTimesApplied() {
+		return timesApplied;
+	}
+
+	public void increaseTimesApplied() {
+		this.timesApplied++;
+	}
 }
