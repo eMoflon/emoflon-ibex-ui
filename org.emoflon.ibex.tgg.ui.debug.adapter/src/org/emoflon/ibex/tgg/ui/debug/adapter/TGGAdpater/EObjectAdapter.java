@@ -40,6 +40,7 @@ public class EObjectAdapter implements Node {
 
     private EObjectAdapter(EObject pObject, Domain pDomain) {
 	object = pObject;
+	domain = pDomain;
 
 	label = pObject.eContainingFeature() != null ? object.eContainingFeature().getName() : "root";
 
@@ -51,8 +52,6 @@ public class EObjectAdapter implements Node {
 	    EObject container = pObject.eContainer();
 	    index = EObjectAdapter.adapt(container, domain).getIndex() + "_" + container.eContents().indexOf(pObject);
 	}
-
-	domain = pDomain;
 
 	attributes = new ArrayList<>();
 	for (EAttribute attr : object.eClass().getEAttributes())
