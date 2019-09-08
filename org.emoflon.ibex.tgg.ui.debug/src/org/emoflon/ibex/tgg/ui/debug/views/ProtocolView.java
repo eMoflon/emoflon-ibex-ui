@@ -74,6 +74,11 @@ public class ProtocolView extends Composite implements ISharedFocusElement {
     public void registerVisualiser(IVisualiser pVisualiser) {
 	visualiser = pVisualiser;
     }
+    
+    public void highlight(String ruleName) {
+    	contentManager.highlight(ruleName);
+    	treeViewer.refresh();
+    }
 
     public void populate(List<RuleApplication> pRuleApplications) {
 	contentManager.populate(pRuleApplications);

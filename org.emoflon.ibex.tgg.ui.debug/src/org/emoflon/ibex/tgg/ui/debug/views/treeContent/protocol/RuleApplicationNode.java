@@ -1,5 +1,6 @@
 package org.emoflon.ibex.tgg.ui.debug.views.treeContent.protocol;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.emoflon.ibex.tgg.ui.debug.api.RuleApplication;
@@ -9,6 +10,7 @@ public class RuleApplicationNode extends TreeNode {
 
     private int index;
     private RuleApplication ruleApplication;
+    private boolean markBold = false;
 
     public RuleApplicationNode(int pIndex, RuleApplication pStep) {
 	index = pIndex;
@@ -18,6 +20,10 @@ public class RuleApplicationNode extends TreeNode {
     public int getStep() {
 	return index;
     }
+    
+    public void setBold(boolean pBold) {
+    	markBold = pBold;
+    }
 
     public RuleApplication getModelChanges() {
 	return ruleApplication;
@@ -25,7 +31,8 @@ public class RuleApplicationNode extends TreeNode {
 
     @Override
     protected String getLabel() {
-	return "Protocol step #" + index;
+    	setFontStyle(markBold ? SWT.BOLD : SWT.NORMAL);
+    	return "Rule application #" + index + ": "+ruleApplication.getRuleName();
     }
 
     @Override

@@ -64,4 +64,10 @@ public class ProtocolStepAdapter implements RuleApplication {
 	    return builder.build();
 	}
     }
+
+	@Override
+	public String getRuleName() {
+		// TODO return name of protocol step
+		return "<Rule name not provided>";
+	}
 }

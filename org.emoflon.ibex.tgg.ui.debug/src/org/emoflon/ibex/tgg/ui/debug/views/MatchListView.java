@@ -34,6 +34,8 @@ public class MatchListView extends Composite implements ISharedFocusElement {
     private TreeViewer treeViewer;
     private MatchListContentManager contentManager;
     private Button applyButton;
+    
+    private ProtocolView protocolView;
 
     private Match[] chosenMatch = new Match[1];
 
@@ -59,10 +61,12 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 	    public void selectionChanged(SelectionChangedEvent pEvent) {
 
 		applyButton.setEnabled(false);
+		protocolView.highlight(null);
 
-		if (!pEvent.getSelection().isEmpty())
-		    sharedFocusElements.forEach(ISharedFocusElement::focusRemoved);
-
+		if (!pEvent.getSelection().isEmpty()) {
+			sharedFocusElements.forEach(ISharedFocusElement::focusRemoved);
+		}
+		    
 		if (pEvent.getSelection() instanceof IStructuredSelection) {
 		    Object selectedElement = pEvent.getStructuredSelection().getFirstElement();
 		    if (selectedElement instanceof MatchNode) {
@@ -70,6 +74,7 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 				visualiser.display(match);
 				applyButton.setEnabled(!match.isBlocked());
 		    } else if (selectedElement instanceof RuleNode) {
+		    	protocolView.highlight(((RuleNode) selectedElement).getRule().getName());
 		    	visualiser.display(((RuleNode) selectedElement).getRule());
 		    	List<TreeNode> matchNodes = ((RuleNode) selectedElement).getChildren().stream().filter(c -> c instanceof MatchNode && !((MatchNode) c).getMatch().isBlocked()).collect(Collectors.toList());
 		    	applyButton.setEnabled(!matchNodes.isEmpty());
@@ -193,5 +198,12 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 			int i = new Random().nextInt(matchNodes.size());
 			applyMatch(((MatchNode) matchNodes.get(i)));
 		}
+	}
+
+	/**
+	 * @param protocolView the protocolView to set
+	 */
+	public void setProtocolView(ProtocolView protocolView) {
+		this.protocolView = protocolView;
 	}
 }

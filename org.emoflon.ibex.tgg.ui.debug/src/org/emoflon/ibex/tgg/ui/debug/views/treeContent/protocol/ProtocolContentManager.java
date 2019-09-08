@@ -7,6 +7,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.emoflon.ibex.tgg.ui.debug.api.RuleApplication;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeContentManager;
+import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeNode;
 
 public class ProtocolContentManager {
 
@@ -24,6 +25,20 @@ public class ProtocolContentManager {
 	    protocolNodes.add(node);
 	    manager.getRoot().addChild(node);
 	}
+    }
+    
+    public void highlight(String ruleName) {
+    	for(TreeNode node : manager.getRoot().getChildren()) {
+    		if(!(node instanceof RuleApplicationNode)) {
+    			continue;
+    		}
+    		RuleApplicationNode ruleNode = (RuleApplicationNode) node;
+    		if(ruleName != null && ruleNode.getModelChanges().getRuleName().equals(ruleName)) {
+    			ruleNode.setBold(true);
+    		} else {
+    			ruleNode.setBold(false);
+    		}
+    	}
     }
 
     public TreeContentManager getTreeContentManager() {

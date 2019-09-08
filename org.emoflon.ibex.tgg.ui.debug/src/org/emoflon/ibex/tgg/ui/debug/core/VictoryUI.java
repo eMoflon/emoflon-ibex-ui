@@ -62,6 +62,8 @@ public class VictoryUI implements IExitCodeReceiver, Consumer<DataPackage> {
 
 	protocolView = ProtocolView.create(leftPanelSashForm, dataProvider.getAllRules());
 	protocolView.setLayoutData(new GridData(GridData.FILL_BOTH));
+	
+	matchListView.setProtocolView(protocolView);
 
 	matchListView.registerSharedFocus(protocolView);
 	protocolView.registerSharedFocus(matchListView);
