@@ -4,6 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.emoflon.ibex.tgg.ui.debug.api.RuleApplication;
+import org.emoflon.ibex.tgg.ui.debug.core.VictoryUI;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeNode;
 
 public class RuleApplicationNode extends TreeNode {
@@ -11,6 +12,7 @@ public class RuleApplicationNode extends TreeNode {
     private int index;
     private RuleApplication ruleApplication;
     private boolean markBold = false;
+    private boolean highlighted = false;
 
     public RuleApplicationNode(int pIndex, RuleApplication pStep) {
 	index = pIndex;
@@ -23,6 +25,10 @@ public class RuleApplicationNode extends TreeNode {
     
     public void setBold(boolean pBold) {
     	markBold = pBold;
+    }
+    
+    public void highlight(boolean highlighted) {
+    	this.highlighted = highlighted;
     }
 
     public RuleApplication getModelChanges() {
@@ -47,6 +53,9 @@ public class RuleApplicationNode extends TreeNode {
 
     @Override
     protected Color getBackground() {
-	return null;
+    	if(highlighted) {
+    		return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW);
+    	}
+    	return null;
     }
 }

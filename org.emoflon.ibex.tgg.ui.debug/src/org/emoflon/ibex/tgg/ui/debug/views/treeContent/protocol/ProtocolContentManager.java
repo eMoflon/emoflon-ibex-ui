@@ -34,9 +34,9 @@ public class ProtocolContentManager {
     		}
     		RuleApplicationNode ruleNode = (RuleApplicationNode) node;
     		if(ruleName != null && ruleNode.getModelChanges().getRuleName().equals(ruleName)) {
-    			ruleNode.setBold(true);
+    			ruleNode.highlight(true);
     		} else {
-    			ruleNode.setBold(false);
+    			ruleNode.highlight(false);
     		}
     	}
     }
