@@ -42,7 +42,7 @@ public class TGGRuleEdgeAdapter implements Edge {
 
     @Override
     public String getLabel() {
-	return edge.getName();
+	return edge.getType().getName();
     }
 
     @Override
