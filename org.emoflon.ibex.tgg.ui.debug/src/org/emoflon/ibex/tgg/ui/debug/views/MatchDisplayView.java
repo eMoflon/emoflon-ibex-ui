@@ -92,17 +92,23 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	    }
 	});
 
-	Button restartCheck = new Button(buttonRow, SWT.CHECK);
-	restartCheck.setText("Restart");
-	restartCheck.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
+	Button restartButton = new Button(buttonRow, SWT.PUSH);
+	restartButton.setText("Restart");
+	restartButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
+	restartButton.addSelectionListener(new SelectionAdapter() {
+	    @Override
+	    public void widgetSelected(SelectionEvent pSelectionEvent) {
+		exitCodeReceiver.exit(true);
+	    }
+	});
 
 	Button terminateButton = new Button(buttonRow, SWT.PUSH);
-	terminateButton.setText("Quit Debugger");
+	terminateButton.setText("Quit");
 	terminateButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
 	terminateButton.addSelectionListener(new SelectionAdapter() {
 	    @Override
 	    public void widgetSelected(SelectionEvent pSelectionEvent) {
-		exitCodeReceiver.exit(restartCheck.getSelection());
+		exitCodeReceiver.exit(false);
 	    }
 	});
 
