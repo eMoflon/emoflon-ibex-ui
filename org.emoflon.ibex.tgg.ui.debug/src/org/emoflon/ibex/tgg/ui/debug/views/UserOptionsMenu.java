@@ -48,7 +48,7 @@ public class UserOptionsMenu {
 
     public void build(Shell pParentShell) {
 	menuShell = new Shell(pParentShell, SWT.DIALOG_TRIM | SWT.ON_TOP);
-	menuShell.setText("User Options Menu");
+	menuShell.setText("User Options");
 	menuShell.setLayout(new GridLayout());
 	menuShell.addShellListener(new ShellAdapter() {
 	    @Override
@@ -65,10 +65,10 @@ public class UserOptionsMenu {
 	Group graphElementsGroup = new Group(panel, SWT.NONE);
 	graphElementsGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
 	graphElementsGroup.setLayout(new GridLayout());
-	graphElementsGroup.setText("Show/Hide parts of the graph");
+	graphElementsGroup.setText("Show Graph Elements");
 
 	displayCreatedElementsButton = new Button(graphElementsGroup, SWT.CHECK);
-	displayCreatedElementsButton.setText("Created elements");
+	displayCreatedElementsButton.setText("Created Elements");
 	displayCreatedElementsButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 	displayCreatedElementsButton.addSelectionListener(new SelectionAdapter() {
 	    @Override
@@ -79,7 +79,7 @@ public class UserOptionsMenu {
 	});
 
 	displaySrcButton = new Button(graphElementsGroup, SWT.CHECK);
-	displaySrcButton.setText("SRC elements");
+	displaySrcButton.setText("SRC Elements");
 	displaySrcButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 	displaySrcButton.setSelection(userOptionsManager.displaySrcContextForMatches());
 	displaySrcButton.addSelectionListener(new SelectionAdapter() {
@@ -91,7 +91,7 @@ public class UserOptionsMenu {
 	});
 
 	displayTrgButton = new Button(graphElementsGroup, SWT.CHECK);
-	displayTrgButton.setText("TRG elements");
+	displayTrgButton.setText("TRG Elements");
 	displayTrgButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 	displayTrgButton.setSelection(userOptionsManager.displayTrgContextForMatches());
 	displayTrgButton.addSelectionListener(new SelectionAdapter() {
@@ -103,7 +103,7 @@ public class UserOptionsMenu {
 	});
 
 	displayCorrButton = new Button(graphElementsGroup, SWT.CHECK);
-	displayCorrButton.setText("CORR elements");
+	displayCorrButton.setText("CORR Elements");
 	displayCorrButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 	displayCorrButton.setSelection(userOptionsManager.displayCorrContextForMatches());
 	displayCorrButton.addSelectionListener(new SelectionAdapter() {
@@ -117,10 +117,10 @@ public class UserOptionsMenu {
 	Group edgeLabelGroup = new Group(panel, SWT.NONE);
 	edgeLabelGroup.setLayout(new GridLayout());
 	edgeLabelGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
-	edgeLabelGroup.setText("Edge labels");
+	edgeLabelGroup.setText("Edge Labels");
 	
 	edgeLabelCeckBox = new Button(edgeLabelGroup, SWT.CHECK);
-	edgeLabelCeckBox.setText("Display edge labels");
+	edgeLabelCeckBox.setText("Show Edge Labels");
 	edgeLabelCeckBox.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 	edgeLabelCeckBox.setSelection(userOptionsManager.getEdgeLabelVisualization() != VisualizationLabelOptions.NONE);
 	edgeLabelCeckBox.addSelectionListener(new SelectionAdapter() {
@@ -184,7 +184,7 @@ public class UserOptionsMenu {
 	corrLabelGroup.setText("Correspondence Edge Labels");
 	
 	corrLabelCeckBox = new Button(corrLabelGroup, SWT.CHECK);
-	corrLabelCeckBox.setText("Display corr labels");
+	corrLabelCeckBox.setText("Show CORR Labels");
 	corrLabelCeckBox.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 	corrLabelCeckBox.setSelection(userOptionsManager.getCorrLabelVisualization() != VisualizationLabelOptions.NONE);
 	corrLabelCeckBox.addSelectionListener(new SelectionAdapter() {
@@ -248,7 +248,7 @@ public class UserOptionsMenu {
 	nodeLabelGroup.setText("Node Labels");
 	
 	nodeLabelCeckBox = new Button(nodeLabelGroup, SWT.CHECK);
-	nodeLabelCeckBox.setText("Display node labels");
+	nodeLabelCeckBox.setText("Show Node Labels");
 	nodeLabelCeckBox.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 	nodeLabelCeckBox.setSelection(userOptionsManager.getNodeLabelVisualization() != VisualizationLabelOptions.NONE);
 	nodeLabelCeckBox.addSelectionListener(new SelectionAdapter() {
@@ -309,7 +309,7 @@ public class UserOptionsMenu {
 	Group neighborhoodOption = new Group(panel, SWT.NONE);
 	neighborhoodOption.setLayout(new GridLayout(2, false));
 	neighborhoodOption.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-	neighborhoodOption.setText("Graph neighborhood");
+	neighborhoodOption.setText("Graph Neighborhood");
 
 	Label neighborhoodLabel = new Label(neighborhoodOption, SWT.NONE);
 	neighborhoodLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));

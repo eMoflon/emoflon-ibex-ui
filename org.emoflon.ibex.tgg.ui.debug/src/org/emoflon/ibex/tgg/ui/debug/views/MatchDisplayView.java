@@ -69,7 +69,7 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	buttonRow.setLayout(new GridLayout(4, false));
 
 	Button userOptionsMenuButton = new Button(buttonRow, SWT.PUSH);
-	userOptionsMenuButton.setText("Open User Options Menu");
+	userOptionsMenuButton.setText("User Options");
 	userOptionsMenuButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 	userOptionsMenuButton.addSelectionListener(new SelectionAdapter() {
 	    @Override
