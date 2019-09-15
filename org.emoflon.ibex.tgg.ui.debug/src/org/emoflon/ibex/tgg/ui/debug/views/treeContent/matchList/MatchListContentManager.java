@@ -29,9 +29,6 @@ public class MatchListContentManager {
 
     public void populate(Collection<Match> pMatches) {
 
-	for (RuleNode rule : ruleNodes.values())
-	    rule.setBold(false);
-
 	if (pMatches == null || pMatches.isEmpty())
 	    return;
 
@@ -50,7 +47,6 @@ public class MatchListContentManager {
 		matchNodes.put(match, node);
 		RuleNode rule = ruleNodes.get(match.getRule());
 		rule.addChild(node);
-		rule.setBold(true);
 	    }
 	}
     }

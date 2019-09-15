@@ -10,7 +10,6 @@ import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeNode;
 public class RuleNode extends TreeNode {
 
     private Rule rule;
-    private boolean markBold;
     
     private int timesApplied = 0;
 
@@ -22,14 +21,16 @@ public class RuleNode extends TreeNode {
 	return rule;
     }
 
-    public void setBold(boolean pBold) {
-	markBold = pBold;
-    }
-
     @Override
     protected String getLabel() {
-	setFontStyle(markBold ? SWT.BOLD : SWT.NORMAL);
-	return rule.getName() + " (matches: " + getChildren().size() + ", applied matches: "+timesApplied +")";
+    	this.setStrikethrough(!hasChildren() && !(timesApplied > 0));
+    	
+    	if(hasChildren() && !(timesApplied > 0)) {
+    		setFontStyle(SWT.BOLD);
+    	} else {
+    		setFontStyle(SWT.NORMAL);
+    	}
+		return rule.getName() + " (matches: " + getChildren().size() + ", applied matches: "+timesApplied +")";
     }
 
     @Override
@@ -39,34 +40,21 @@ public class RuleNode extends TreeNode {
 
     @Override
     protected Color getForeground() {
-    	if (!hasChildren()) {
-    		if(timesApplied > 0) {
-    			return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_WHITE);
-    		}
-    		return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_WHITE);
-        }
-    	else {
-    		if(timesApplied > 0) {
+    	if (hasChildren()) {
     			return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_BLACK);
-    		}
-    		return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_BLACK);
+		}
+    	else {
+    		return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_WHITE);
         }
     }
 
     @Override
     protected Color getBackground() {
-		if (!hasChildren()) {
-			if(timesApplied > 0) {
-				return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_DARK_GRAY);
-			}
-			return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_WIDGET_DARK_SHADOW);
-	    }
-		else {
-			if(timesApplied > 0) {
-				return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_WHITE);
-			}
-			return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW);
-	    }
+    	if(hasChildren()) {
+    		return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_WHITE);
+    	} else {
+    		return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_DARK_GRAY);
+    	}
     }
 
 	public int getTimesApplied() {

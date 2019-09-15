@@ -17,6 +17,7 @@ public abstract class TreeNode {
     private String font = "Monospaced";
     private int fontSize = 10;
     private int fontStyle = SWT.NORMAL;
+    private boolean strikethrough = false;
 
     private TreeNode parent;
     private Collection<TreeNode> children = new HashSet<>();
@@ -49,8 +50,9 @@ public abstract class TreeNode {
 	return new StyledString(getLabel(), new Styler() {
 	    @Override
 	    public void applyStyles(TextStyle pTextStyle) {
-		pTextStyle.font = FontDescriptor.createFrom(new FontData(font, fontSize, fontStyle))
-			.createFont(VictoryUI.getDisplay());
+	    	pTextStyle.font = FontDescriptor.createFrom(new FontData(font, fontSize, fontStyle))
+	    			.createFont(VictoryUI.getDisplay());
+	    	pTextStyle.strikeout = strikethrough;
 	    }
 	});
     }
@@ -67,7 +69,11 @@ public abstract class TreeNode {
 	fontStyle = pFontStyle;
     }
 
-    protected abstract String getLabel();
+	public void setStrikethrough(boolean strikethrough) {
+		this.strikethrough = strikethrough;
+	}
+
+	protected abstract String getLabel();
 
     protected abstract Image getImage();
 
