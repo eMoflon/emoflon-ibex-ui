@@ -53,7 +53,6 @@ public abstract class VisualisableElement {
 	try {
 	    new SourceStringReader(visualisationString).outputImage(outputStream);
 	} catch (IOException pIOE) {
-	    // TODO what do I do here?
 	}
 	image = outputStream.toByteArray();
     }

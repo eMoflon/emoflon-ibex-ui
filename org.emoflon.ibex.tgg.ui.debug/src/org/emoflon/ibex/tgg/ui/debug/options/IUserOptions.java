@@ -6,8 +6,6 @@ public interface IUserOptions {
 
     public boolean displayFullRuleForMatches();
 
-    public IBeXOp getOp();
-
     /**
      * @return the visualization option for correspondence labels
      */

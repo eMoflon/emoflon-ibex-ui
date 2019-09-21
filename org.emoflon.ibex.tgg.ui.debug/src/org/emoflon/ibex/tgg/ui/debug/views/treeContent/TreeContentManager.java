@@ -69,7 +69,6 @@ public class TreeContentManager implements ITreeContentProvider, IStyledLabelPro
 
     @Override
     public void addListener(ILabelProviderListener listener) {
-	// TODO do we need to do anything with this listener?
     }
 
     @Override
@@ -79,8 +78,6 @@ public class TreeContentManager implements ITreeContentProvider, IStyledLabelPro
 
     @Override
     public void removeListener(ILabelProviderListener listener) {
-	// TODO Auto-generated method stub
-
     }
 
     @Override

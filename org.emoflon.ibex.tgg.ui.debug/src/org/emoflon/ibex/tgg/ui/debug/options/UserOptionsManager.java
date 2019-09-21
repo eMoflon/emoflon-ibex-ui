@@ -10,24 +10,16 @@ public class UserOptionsManager implements IUserOptions {
     private boolean displayTrgContextForMatches = true;
     private boolean displayCorrContextForMatches = true;
 
-    private final IBeXOp op;
     private VisualizationLabelOptions corrLabelVisualization = VisualizationLabelOptions.ABBREVIATED;
     private VisualizationLabelOptions edgeLabelVisualization = VisualizationLabelOptions.ABBREVIATED;
     private VisualizationLabelOptions nodeLabelVisualization = VisualizationLabelOptions.ABBREVIATED;
     private int neighborhoodSize = 0;
 
-    public UserOptionsManager(IBeXOp pOp) {
-	op = pOp;
-    }
+    public static final int MAX_NEIGHBOURHOOD_SIZE = 3;
 
     @Override
     public boolean displayFullRuleForMatches() {
 	return displayFullRuleForMatches;
-    }
-
-    @Override
-    public IBeXOp getOp() {
-	return op;
     }
 
     public void setDisplayFullRuleForMatches(boolean pDisplayFullRuleForMatches) {
@@ -191,7 +183,7 @@ public class UserOptionsManager implements IUserOptions {
     }
 
     public void setNeighborhoodSize(int pSize) {
-	if (neighborhoodSize != pSize) {
+	if (neighborhoodSize != pSize && pSize >= 0 && pSize <= MAX_NEIGHBOURHOOD_SIZE) {
 	    neighborhoodSize = pSize;
 	    isInvalid = true;
 	}
