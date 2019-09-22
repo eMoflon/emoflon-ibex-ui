@@ -74,6 +74,8 @@ public abstract class TreeNode {
 	}
 
 	protected abstract String getLabel();
+	
+	protected abstract String getToolTip();
 
     protected abstract Image getImage();
 
@@ -123,6 +125,11 @@ public abstract class TreeNode {
 	@Override
 	protected Color getBackground() {
 	    return null;
+	}
+
+	@Override
+	protected String getToolTip() {
+		return null;
 	}
     }
 }

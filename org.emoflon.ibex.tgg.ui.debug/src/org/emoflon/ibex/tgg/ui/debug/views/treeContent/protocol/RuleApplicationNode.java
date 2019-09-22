@@ -5,6 +5,8 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.emoflon.ibex.tgg.ui.debug.api.RuleApplication;
 import org.emoflon.ibex.tgg.ui.debug.core.VictoryUI;
+import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions;
+import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions.ToolTipOption;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeNode;
 
 public class RuleApplicationNode extends TreeNode {
@@ -13,10 +15,12 @@ public class RuleApplicationNode extends TreeNode {
     private RuleApplication ruleApplication;
     private boolean markBold = false;
     private boolean highlighted = false;
+    private final IUserOptions userOptions;
 
-    public RuleApplicationNode(int pIndex, RuleApplication pStep) {
-	index = pIndex;
-	ruleApplication = pStep;
+    public RuleApplicationNode(int pIndex, RuleApplication pStep, IUserOptions userOptions) {
+		index = pIndex;
+		ruleApplication = pStep;
+		this.userOptions = userOptions;
     }
 
     public int getStep() {
@@ -58,4 +62,14 @@ public class RuleApplicationNode extends TreeNode {
     	}
     	return null;
     }
+
+	@Override
+	protected String getToolTip() {
+		if(userOptions.getToolTipSetting() == ToolTipOption.NONE)
+			return "";
+		String toolTip = "Rule application of rule \""+ruleApplication.getRuleName()+"\".";
+		if(userOptions.getToolTipSetting() == ToolTipOption.FULL)
+			toolTip += " Select one or multiple rule applications to see them in the right panel.";
+		return toolTip;
+	}
 }

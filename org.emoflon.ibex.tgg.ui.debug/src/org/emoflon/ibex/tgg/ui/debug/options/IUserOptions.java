@@ -28,4 +28,12 @@ public interface IUserOptions {
     public boolean displaySrcContextForMatches();
 
     public boolean displayCorrContextForMatches();
+    
+    public ToolTipOption getToolTipSetting();
+    
+    public enum ToolTipOption {
+    	FULL,
+    	MINIMAL,
+    	NONE
+    }
 }

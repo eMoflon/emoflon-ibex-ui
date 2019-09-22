@@ -336,6 +336,19 @@ public class UserOptionsMenu {
     }
 
     public void show() {
-	menuShell.setVisible(true);
+		displayCreatedElementsButton.setToolTipText(ToolTips.USEROPTION_SHOW_ELEMENTS.getDescription(userOptionsManager.getToolTipSetting()));
+		displayCorrButton.setToolTipText(ToolTips.USEROPTION_SHOW_ELEMENTS.getDescription(userOptionsManager.getToolTipSetting()));
+		displaySrcButton.setToolTipText(ToolTips.USEROPTION_SHOW_ELEMENTS.getDescription(userOptionsManager.getToolTipSetting()));
+		displayTrgButton.setToolTipText(ToolTips.USEROPTION_SHOW_ELEMENTS.getDescription(userOptionsManager.getToolTipSetting()));
+		corrLabelCeckBox.setToolTipText(ToolTips.USEROPTION_SHOW_ELEMENTS.getDescription(userOptionsManager.getToolTipSetting()));
+		corrLabelAbbrRadioButton.setToolTipText(ToolTips.USEROPTION_SHOW_ELEMENTS.getDescription(userOptionsManager.getToolTipSetting()));
+		corrLabelFullRadioButton.setToolTipText(ToolTips.USEROPTION_SHOW_ELEMENTS.getDescription(userOptionsManager.getToolTipSetting()));
+		edgeLabelAbbrRadioButton.setToolTipText(ToolTips.USEROPTION_SHOW_ELEMENTS.getDescription(userOptionsManager.getToolTipSetting()));
+		edgeLabelCeckBox.setToolTipText(ToolTips.USEROPTION_SHOW_ELEMENTS.getDescription(userOptionsManager.getToolTipSetting()));
+		edgeLabelFullRadioButton.setToolTipText(ToolTips.USEROPTION_SHOW_ELEMENTS.getDescription(userOptionsManager.getToolTipSetting()));
+		nodeLabelAbbrRadioButton.setToolTipText(ToolTips.USEROPTION_SHOW_ELEMENTS.getDescription(userOptionsManager.getToolTipSetting()));
+		nodeLabelCeckBox.setToolTipText(ToolTips.USEROPTION_SHOW_ELEMENTS.getDescription(userOptionsManager.getToolTipSetting()));
+		nodeLabelFullRadioButton.setToolTipText(ToolTips.USEROPTION_SHOW_ELEMENTS.getDescription(userOptionsManager.getToolTipSetting()));
+    	menuShell.setVisible(true);
     }
 }
