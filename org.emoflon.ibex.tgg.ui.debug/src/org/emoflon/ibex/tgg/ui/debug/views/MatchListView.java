@@ -226,7 +226,7 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 	}
     
     public void updateToolTips() {
-    	this.setToolTipText(ToolTips.MATCHLIST_TREE.getDescription(userOptions.getToolTipSetting()));
+    	treeViewer.getControl().setToolTipText(ToolTips.MATCHLIST_TREE.getDescription(userOptions.getToolTipSetting()));
     	applyButton.setToolTipText(ToolTips.MATCHLIST_APPLY_BUTTON.getDescription(userOptions.getToolTipSetting()));
     	collapseAllButton.setToolTipText(ToolTips.MATCHLIST_COLLAPSE_BUTTON.getDescription(userOptions.getToolTipSetting()));
     	expandAllButton.setToolTipText(ToolTips.MATCHLIST_EXPAND_BUTTON.getDescription(userOptions.getToolTipSetting()));
