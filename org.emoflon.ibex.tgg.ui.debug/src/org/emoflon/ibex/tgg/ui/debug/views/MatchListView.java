@@ -152,6 +152,7 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 	    }
 	});
 
+	this.updateToolTips();
 	pack();
 	return this;
     }

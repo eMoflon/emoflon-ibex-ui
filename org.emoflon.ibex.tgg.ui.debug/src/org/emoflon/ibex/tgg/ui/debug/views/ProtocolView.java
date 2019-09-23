@@ -64,6 +64,7 @@ public class ProtocolView extends Composite implements ISharedFocusElement {
 	    }
 	});
 
+	this.updateToolTips();
 	pack();
 	return this;
 
@@ -100,7 +101,7 @@ public class ProtocolView extends Composite implements ISharedFocusElement {
     }
     
     public void updateToolTips() {
-    	this.setToolTipText(ToolTips.PROTOCOL_VIEW.getDescription(userOptions.getToolTipSetting()));
+    	treeViewer.getControl().setToolTipText(ToolTips.PROTOCOL_VIEW.getDescription(userOptions.getToolTipSetting()));
     }
 
 }
