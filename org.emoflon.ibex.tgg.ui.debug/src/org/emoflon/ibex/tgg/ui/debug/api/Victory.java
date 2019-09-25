@@ -15,7 +15,9 @@ public final class Victory {
     }
 
     public static boolean run() {
-	return ui.run();
+	boolean exitCode = ui.run();
+	ui = null;
+	return exitCode;
     }
 
     public static Match selectMatch(DataPackage pDataPackage) {
