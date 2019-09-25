@@ -26,6 +26,7 @@ import org.emoflon.ibex.tgg.ui.debug.api.Match;
 import org.emoflon.ibex.tgg.ui.debug.api.Rule;
 import org.emoflon.ibex.tgg.ui.debug.api.Victory;
 import org.emoflon.ibex.tgg.ui.debug.core.VictoryUI;
+import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeNode;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.matchList.MatchListContentManager;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.matchList.MatchNode;
@@ -42,11 +43,20 @@ public class MatchListView extends Composite implements ISharedFocusElement {
     private ProtocolView protocolView;
 
     private Match[] chosenMatch = new Match[1];
+    
+    private Collection<ISharedFocusElement> sharedFocusElements = new HashSet<>();
 
-    private MatchListView(Composite pParent, Collection<Rule> pRules) {
-	super(pParent, SWT.NONE);
+	private Button expandAllButton;
 
-	contentManager = new MatchListContentManager(pRules);
+	private Button collapseAllButton;
+	
+	private final IUserOptions userOptions;
+
+    private MatchListView(Composite pParent, Collection<Rule> pRules, IUserOptions userOptions) {
+		super(pParent, SWT.NONE);
+		
+		this.userOptions = userOptions;
+		contentManager = new MatchListContentManager(pRules, userOptions);
     }
 
     private MatchListView build() {
@@ -57,7 +67,7 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 	c.setLayout(new GridLayout(2, false));
 	
 	Font font = FontDescriptor.createFrom(new FontData("Monospaced", 10, SWT.BOLD)).createFont(VictoryUI.getDisplay());
-	Button expandAllButton = new Button(c, SWT.PUSH);
+	expandAllButton = new Button(c, SWT.PUSH);
 	expandAllButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
 	expandAllButton.setText(" + ");
 	expandAllButton.setSize(15, 15);
@@ -69,7 +79,7 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 	    }
 	});
 	
-	Button collapseAllButton = new Button(c, SWT.PUSH);
+	collapseAllButton = new Button(c, SWT.PUSH);
 	collapseAllButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
 	collapseAllButton.setText(" - ");
 	collapseAllButton.setSize(15, 15);
@@ -142,12 +152,13 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 	    }
 	});
 
+	this.updateToolTips();
 	pack();
 	return this;
     }
 
-    public static MatchListView create(Composite pParent, Collection<Rule> pRules) {
-	return new MatchListView(pParent, pRules).build();
+    public static MatchListView create(Composite pParent, Collection<Rule> pRules, IUserOptions userOptions) {
+	return new MatchListView(pParent, pRules, userOptions).build();
     }
 
     public void registerVisualiser(IVisualiser pVisualiser) {
@@ -185,8 +196,6 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 	}
     }
 
-    private Collection<ISharedFocusElement> sharedFocusElements = new HashSet<>();
-
     @Override
     public void focusRemoved() {
 	treeViewer.setSelection(null);
@@ -216,6 +225,13 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 			applyMatch(((MatchNode) matchNodes.get(i)));
 		}
 	}
+    
+    public void updateToolTips() {
+    	treeViewer.getControl().setToolTipText(ToolTips.MATCHLIST_TREE.getDescription(userOptions.getToolTipSetting()));
+    	applyButton.setToolTipText(ToolTips.MATCHLIST_APPLY_BUTTON.getDescription(userOptions.getToolTipSetting()));
+    	collapseAllButton.setToolTipText(ToolTips.MATCHLIST_COLLAPSE_BUTTON.getDescription(userOptions.getToolTipSetting()));
+    	expandAllButton.setToolTipText(ToolTips.MATCHLIST_EXPAND_BUTTON.getDescription(userOptions.getToolTipSetting()));
+    }
 
 	/**
 	 * @param protocolView the protocolView to set

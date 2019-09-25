@@ -14,6 +14,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.emoflon.ibex.tgg.ui.debug.api.Rule;
 import org.emoflon.ibex.tgg.ui.debug.api.RuleApplication;
+import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.protocol.ProtocolContentManager;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.protocol.RuleApplicationNode;
 
@@ -23,11 +24,12 @@ public class ProtocolView extends Composite implements ISharedFocusElement {
 
     private TreeViewer treeViewer;
     private ProtocolContentManager contentManager;
+    private final IUserOptions userOptions;
 
-    private ProtocolView(Composite pParent, Collection<Rule> pRules) {
-	super(pParent, SWT.NONE);
-
-	contentManager = new ProtocolContentManager();
+    private ProtocolView(Composite pParent, Collection<Rule> pRules, IUserOptions userOptions) {
+		super(pParent, SWT.NONE);
+		this.userOptions = userOptions;
+		contentManager = new ProtocolContentManager(userOptions);
     }
 
     private ProtocolView build() {
@@ -62,13 +64,14 @@ public class ProtocolView extends Composite implements ISharedFocusElement {
 	    }
 	});
 
+	this.updateToolTips();
 	pack();
 	return this;
 
     }
 
-    public static ProtocolView create(Composite pParent, Collection<Rule> pRules) {
-	return new ProtocolView(pParent, pRules).build();
+    public static ProtocolView create(Composite pParent, Collection<Rule> pRules, IUserOptions userOptions) {
+	return new ProtocolView(pParent, pRules, userOptions).build();
     }
 
     public void registerVisualiser(IVisualiser pVisualiser) {
@@ -95,6 +98,10 @@ public class ProtocolView extends Composite implements ISharedFocusElement {
     @Override
     public void registerSharedFocus(ISharedFocusElement pSharedFocusElement) {
 	sharedFocusElements.add(pSharedFocusElement);
+    }
+    
+    public void updateToolTips() {
+    	treeViewer.getControl().setToolTipText(ToolTips.PROTOCOL_VIEW.getDescription(userOptions.getToolTipSetting()));
     }
 
 }

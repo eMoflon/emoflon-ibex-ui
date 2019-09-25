@@ -14,6 +14,8 @@ public class UserOptionsManager implements IUserOptions {
     private VisualizationLabelOptions edgeLabelVisualization = VisualizationLabelOptions.ABBREVIATED;
     private VisualizationLabelOptions nodeLabelVisualization = VisualizationLabelOptions.ABBREVIATED;
     private int neighborhoodSize = 0;
+    
+    private ToolTipOption toolTipSetting = ToolTipOption.MINIMAL;
 
     public static final int MAX_NEIGHBOURHOOD_SIZE = 3;
 
@@ -188,4 +190,18 @@ public class UserOptionsManager implements IUserOptions {
 	    isInvalid = true;
 	}
     }
+
+	/**
+	 * @return the toolTipSetting
+	 */
+	public ToolTipOption getToolTipSetting() {
+		return toolTipSetting;
+	}
+
+	/**
+	 * @param toolTipSetting the toolTipSetting to set
+	 */
+	public void setToolTipSetting(ToolTipOption toolTipSetting) {
+		this.toolTipSetting = toolTipSetting;
+	}
 }

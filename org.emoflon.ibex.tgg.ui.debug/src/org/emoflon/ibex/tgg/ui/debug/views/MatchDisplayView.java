@@ -37,6 +37,16 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 
     private ScrolledComposite imageScroller;
     private Label imageContainer;
+    
+    private Map<Rule, VisualisableElement> ruleCache = new HashMap<>();
+    private Map<Match, VisualisableElement> matchCache = new HashMap<>();
+    private Map<Collection<RuleApplication>, VisualisableElement> ruleApplicationCache = new HashMap<>();
+
+    private VisualisableElement currentElement;
+	private Button userOptionsMenuButton;
+	private Button saveModelsButton;
+	private Button restartButton;
+	private Button terminateButton;
 
     private MatchDisplayView(Composite parent, IExitCodeReceiver pExitCodeReceiver, DataProvider pDataProvider,
 	    UserOptionsManager pUserOptionsManager) {
@@ -68,7 +78,7 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	buttonRow.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 	buttonRow.setLayout(new GridLayout(4, false));
 
-	Button userOptionsMenuButton = new Button(buttonRow, SWT.PUSH);
+	userOptionsMenuButton = new Button(buttonRow, SWT.PUSH);
 	userOptionsMenuButton.setText("User Options");
 	userOptionsMenuButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 	userOptionsMenuButton.addSelectionListener(new SelectionAdapter() {
@@ -78,7 +88,7 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	    }
 	});
 
-	Button saveModelsButton = new Button(buttonRow, SWT.PUSH);
+	saveModelsButton = new Button(buttonRow, SWT.PUSH);
 	saveModelsButton.setText("Save Models");
 	saveModelsButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
 	saveModelsButton.addSelectionListener(new SelectionAdapter() {
@@ -92,7 +102,7 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	    }
 	});
 
-	Button restartButton = new Button(buttonRow, SWT.PUSH);
+	restartButton = new Button(buttonRow, SWT.PUSH);
 	restartButton.setText("Restart");
 	restartButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
 	restartButton.addSelectionListener(new SelectionAdapter() {
@@ -102,7 +112,7 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	    }
 	});
 
-	Button terminateButton = new Button(buttonRow, SWT.PUSH);
+	terminateButton = new Button(buttonRow, SWT.PUSH);
 	terminateButton.setText("Quit");
 	terminateButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
 	terminateButton.addSelectionListener(new SelectionAdapter() {
@@ -114,7 +124,7 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 
 	userOptionsMenu = new UserOptionsMenu(userOptionsManager, this);
 	userOptionsMenu.build(getShell());
-
+	this.updateToolTips();
 	pack();
 	return this;
     }
@@ -128,11 +138,6 @@ public class MatchDisplayView extends Composite implements IVisualiser {
      * display specific code
      */
 
-    private Map<Rule, VisualisableElement> ruleCache = new HashMap<>();
-    private Map<Match, VisualisableElement> matchCache = new HashMap<>();
-    private Map<Collection<RuleApplication>, VisualisableElement> ruleApplicationCache = new HashMap<>();
-
-    private VisualisableElement currentElement;
 
     @Override
     public void display(Rule pRule) {
@@ -169,15 +174,23 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 
     @Override
     public void refresh() {
-	if (userOptionsManager.isInvalid()) {
-	    ruleCache.values().forEach(VisualisableElement::invalidate);
-	    matchCache.values().forEach(VisualisableElement::invalidate);
-	    ruleApplicationCache.values().forEach(VisualisableElement::invalidate);
-	    currentElement.invalidate();
-	    userOptionsManager.revalidate();
-	}
-
-	displayImage(currentElement.getImage());
+		if (userOptionsManager.isInvalid()) {
+		    ruleCache.values().forEach(VisualisableElement::invalidate);
+		    matchCache.values().forEach(VisualisableElement::invalidate);
+		    ruleApplicationCache.values().forEach(VisualisableElement::invalidate);
+		    currentElement.invalidate();
+		    userOptionsManager.revalidate();
+		}
+	
+		displayImage(currentElement.getImage());
+    }
+    
+    public void updateToolTips() {
+    	userOptionsMenuButton.setToolTipText(ToolTips.MATCHDISPLAY_USEROPTION_BUTTON.getDescription(userOptionsManager.getToolTipSetting()));
+    	terminateButton.setToolTipText(ToolTips.MATCHDISPLAY_TERMINATE_BUTTON.getDescription(userOptionsManager.getToolTipSetting()));
+    	restartButton.setToolTipText(ToolTips.MATCHDISPLAY_RESTART_BUTTON.getDescription(userOptionsManager.getToolTipSetting()));
+    	saveModelsButton.setToolTipText(ToolTips.MATCHDISPLAY_SAVE_MODELS_BUTTON.getDescription(userOptionsManager.getToolTipSetting()));
+    	imageContainer.setToolTipText(ToolTips.MATCHDISPLAY_IMAGECONTAINER.getDescription(userOptionsManager.getToolTipSetting()));
     }
 
     private void displayImage(byte[] pImageData) {

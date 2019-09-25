@@ -4,13 +4,14 @@ import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.jface.viewers.IToolTipProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeNode.TreeRootNode;
 
-public class TreeContentManager implements ITreeContentProvider, IStyledLabelProvider, IColorProvider {
+public class TreeContentManager implements ITreeContentProvider, IStyledLabelProvider, IColorProvider, IToolTipProvider {
 
     private TreeRootNode root = new TreeRootNode();
 
@@ -19,7 +20,7 @@ public class TreeContentManager implements ITreeContentProvider, IStyledLabelPro
     }
 
     public DelegatingStyledCellLabelProvider getCellLabelProvider() {
-	return new DelegatingStyledCellLabelProvider(this);
+    	return new DelegatingStyledCellLabelProvider(this);
     }
 
     /*
@@ -95,6 +96,14 @@ public class TreeContentManager implements ITreeContentProvider, IStyledLabelPro
 	else
 	    throw new IllegalStateException("Tree must not contain any elements other than TreeNodes");
     }
+    
+    @Override
+	public String getToolTipText(Object pElement) {
+    	if (pElement instanceof TreeNode)
+    	    return ((TreeNode) pElement).getToolTip();
+    	else
+    	    throw new IllegalStateException("Tree must not contain any elements other than TreeNodes");
+	}
 
     /*
      * IColorProvider methods

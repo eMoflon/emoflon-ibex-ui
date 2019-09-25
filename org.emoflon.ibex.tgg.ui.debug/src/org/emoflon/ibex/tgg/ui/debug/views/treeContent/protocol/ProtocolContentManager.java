@@ -6,6 +6,7 @@ import java.util.List;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.emoflon.ibex.tgg.ui.debug.api.RuleApplication;
+import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeContentManager;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeNode;
 
@@ -14,14 +15,16 @@ public class ProtocolContentManager {
     private TreeContentManager manager = new TreeContentManager();
 
     private List<RuleApplicationNode> protocolNodes;
+    private final IUserOptions userOptions;
 
-    public ProtocolContentManager() {
-	protocolNodes = new LinkedList<>();
+    public ProtocolContentManager(IUserOptions userOptions) {
+    	this.userOptions = userOptions;
+    	protocolNodes = new LinkedList<>();
     }
 
     public void populate(List<RuleApplication> pRuleApplications) {
 	for (int i = protocolNodes.size(); i < pRuleApplications.size(); i++) {
-	    RuleApplicationNode node = new RuleApplicationNode(i, pRuleApplications.get(i));
+	    RuleApplicationNode node = new RuleApplicationNode(i, pRuleApplications.get(i), userOptions);
 	    protocolNodes.add(node);
 	    manager.getRoot().addChild(node);
 	}

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.emoflon.ibex.tgg.ui.debug.api.Match;
 import org.emoflon.ibex.tgg.ui.debug.api.Rule;
+import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeContentManager;
 
 public class MatchListContentManager {
@@ -15,16 +16,18 @@ public class MatchListContentManager {
 
     private Map<Rule, RuleNode> ruleNodes;
     private Map<Match, MatchNode> matchNodes;
+    private final IUserOptions userOptions;
 
-    public MatchListContentManager(Collection<Rule> pRules) {
-	ruleNodes = new HashMap<>();
-	pRules.forEach((rule) -> {
-	    RuleNode node = new RuleNode(rule);
-	    ruleNodes.put(rule, node);
-	    manager.getRoot().addChild(node);
-	});
-
-	matchNodes = new HashMap<>();
+    public MatchListContentManager(Collection<Rule> pRules, IUserOptions userOptions) {
+    	this.userOptions = userOptions;
+		ruleNodes = new HashMap<>();
+		pRules.forEach((rule) -> {
+		    RuleNode node = new RuleNode(rule, userOptions);
+		    ruleNodes.put(rule, node);
+		    manager.getRoot().addChild(node);
+		});
+	
+		matchNodes = new HashMap<>();
     }
 
     public void populate(Collection<Match> pMatches) {
@@ -43,7 +46,7 @@ public class MatchListContentManager {
 
 	for (Match match : pMatches) {
 	    if (!matchNodes.containsKey(match)) {
-		MatchNode node = new MatchNode(match);
+		MatchNode node = new MatchNode(match, userOptions);
 		matchNodes.put(match, node);
 		RuleNode rule = ruleNodes.get(match.getRule());
 		rule.addChild(node);
