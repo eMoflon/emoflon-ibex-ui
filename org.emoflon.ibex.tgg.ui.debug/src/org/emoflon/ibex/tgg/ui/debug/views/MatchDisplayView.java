@@ -50,13 +50,13 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	private Button restartButton;
 	private Button terminateButton;
 
-	private MatchDisplayView(Composite parent, IExitCodeReceiver pExitCodeReceiver, DataProvider pDataProvider,
-			UserOptionsManager pUserOptionsManager) {
+	private MatchDisplayView(Composite parent, IExitCodeReceiver exitCodeReceiver, DataProvider dataProvider,
+			UserOptionsManager userOptionsManager) {
 		super(parent, SWT.NONE);
 
-		exitCodeReceiver = pExitCodeReceiver;
-		dataProvider = pDataProvider;
-		userOptionsManager = pUserOptionsManager;
+		this.exitCodeReceiver = exitCodeReceiver;
+		this.dataProvider = dataProvider;
+		this.userOptionsManager = userOptionsManager;
 	}
 
 	private MatchDisplayView build() {
@@ -139,9 +139,9 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 		return this;
 	}
 
-	public static MatchDisplayView create(Composite pParent, IExitCodeReceiver pExitCodeReceiver,
-			DataProvider pDataProvider, UserOptionsManager pUserOptionsManager) {
-		return new MatchDisplayView(pParent, pExitCodeReceiver, pDataProvider, pUserOptionsManager).build();
+	public static MatchDisplayView create(Composite parent, IExitCodeReceiver exitCodeReceiver,
+			DataProvider dataProvider, UserOptionsManager userOptionsManager) {
+		return new MatchDisplayView(parent, exitCodeReceiver, dataProvider, userOptionsManager).build();
 	}
 
 	/*
@@ -149,35 +149,35 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	 */
 
 	@Override
-	public void display(Rule pRule) {
+	public void display(Rule rule) {
 
-		if (!ruleCache.containsKey(pRule))
-			ruleCache.put(pRule, new RuleVisualisation(pRule, userOptionsManager, dataProvider));
+		if (!ruleCache.containsKey(rule))
+			ruleCache.put(rule, new RuleVisualisation(rule, userOptionsManager, dataProvider));
 
-		currentElement = ruleCache.get(pRule);
-
-		refresh();
-	}
-
-	@Override
-	public void display(Match pMatch) {
-
-		if (!matchCache.containsKey(pMatch))
-			matchCache.put(pMatch, new MatchVisualisation(pMatch, userOptionsManager, dataProvider));
-
-		currentElement = matchCache.get(pMatch);
+		currentElement = ruleCache.get(rule);
 
 		refresh();
 	}
 
 	@Override
-	public void display(Collection<RuleApplication> pRuleApplications) {
+	public void display(Match match) {
 
-		if (!ruleApplicationCache.containsKey(pRuleApplications))
-			ruleApplicationCache.put(pRuleApplications,
-					new RuleApplicationVisualisation(pRuleApplications, userOptionsManager, dataProvider));
+		if (!matchCache.containsKey(match))
+			matchCache.put(match, new MatchVisualisation(match, userOptionsManager, dataProvider));
 
-		currentElement = ruleApplicationCache.get(pRuleApplications);
+		currentElement = matchCache.get(match);
+
+		refresh();
+	}
+
+	@Override
+	public void display(Collection<RuleApplication> ruleApplications) {
+
+		if (!ruleApplicationCache.containsKey(ruleApplications))
+			ruleApplicationCache.put(ruleApplications,
+					new RuleApplicationVisualisation(ruleApplications, userOptionsManager, dataProvider));
+
+		currentElement = ruleApplicationCache.get(ruleApplications);
 		refresh();
 	}
 
@@ -210,8 +210,8 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 				ToolTips.MATCHDISPLAY_IMAGECONTAINER.getDescription(userOptionsManager.getToolTipSetting()));
 	}
 
-	private void displayImage(byte[] pImageData) {
-		Image image = new Image(Display.getCurrent(), new ByteArrayInputStream(pImageData));
+	private void displayImage(byte[] imageData) {
+		Image image = new Image(Display.getCurrent(), new ByteArrayInputStream(imageData));
 		imageScroller.setMinSize(image.getBounds().width, image.getBounds().height);
 		imageContainer.setImage(image);
 	}

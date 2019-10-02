@@ -17,9 +17,9 @@ public class RuleApplicationNode extends TreeNode {
 	private boolean highlighted = false;
 	private final IUserOptions userOptions;
 
-	public RuleApplicationNode(int pIndex, RuleApplication pStep, IUserOptions userOptions) {
-		index = pIndex;
-		ruleApplication = pStep;
+	public RuleApplicationNode(int index, RuleApplication step, IUserOptions userOptions) {
+		this.index = index;
+		this.ruleApplication = step;
 		this.userOptions = userOptions;
 	}
 
@@ -27,8 +27,8 @@ public class RuleApplicationNode extends TreeNode {
 		return index;
 	}
 
-	public void setBold(boolean pBold) {
-		markBold = pBold;
+	public void setBold(boolean bold) {
+		markBold = bold;
 	}
 
 	public void highlight(boolean highlighted) {

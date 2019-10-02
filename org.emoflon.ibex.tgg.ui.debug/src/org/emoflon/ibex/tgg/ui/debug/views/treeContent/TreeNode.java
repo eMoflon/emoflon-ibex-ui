@@ -22,18 +22,18 @@ public abstract class TreeNode {
 	private TreeNode parent;
 	private Collection<TreeNode> children = new HashSet<>();
 
-	public void addChild(TreeNode pNode) {
-		if (pNode.parent != null)
+	public void addChild(TreeNode node) {
+		if (node.parent != null)
 			throw new IllegalStateException("The specified node is already the child of another node");
 
-		children.add(pNode);
-		pNode.parent = this;
+		children.add(node);
+		node.parent = this;
 	}
 
-	public void removeChild(TreeNode pNode) {
-		if (children.contains(pNode)) {
-			children.remove(pNode);
-			pNode.parent = null;
+	public void removeChild(TreeNode node) {
+		if (children.contains(node)) {
+			children.remove(node);
+			node.parent = null;
 		}
 	}
 
@@ -61,12 +61,12 @@ public abstract class TreeNode {
 		font = pFont;
 	}
 
-	public void setFontSize(int pFontSize) {
-		fontSize = pFontSize;
+	public void setFontSize(int fontSize) {
+		this.fontSize = fontSize;
 	}
 
-	public void setFontStyle(int pFontStyle) {
-		fontStyle = pFontStyle;
+	public void setFontStyle(int fontStyle) {
+		this.fontStyle = fontStyle;
 	}
 
 	public void setStrikethrough(boolean strikethrough) {

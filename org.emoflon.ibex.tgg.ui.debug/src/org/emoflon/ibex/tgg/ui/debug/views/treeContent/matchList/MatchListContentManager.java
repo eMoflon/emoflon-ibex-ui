@@ -18,10 +18,10 @@ public class MatchListContentManager {
 	private Map<Match, MatchNode> matchNodes;
 	private final IUserOptions userOptions;
 
-	public MatchListContentManager(Collection<Rule> pRules, IUserOptions userOptions) {
+	public MatchListContentManager(Collection<Rule> rules, IUserOptions userOptions) {
 		this.userOptions = userOptions;
 		ruleNodes = new HashMap<>();
-		pRules.forEach((rule) -> {
+		rules.forEach((rule) -> {
 			RuleNode node = new RuleNode(rule, userOptions);
 			ruleNodes.put(rule, node);
 			manager.getRoot().addChild(node);
@@ -30,21 +30,21 @@ public class MatchListContentManager {
 		matchNodes = new HashMap<>();
 	}
 
-	public void populate(Collection<Match> pMatches) {
+	public void populate(Collection<Match> matches) {
 
-		if (pMatches == null || pMatches.isEmpty())
+		if (matches == null || matches.isEmpty())
 			return;
 
 		Iterator<Match> existingMatchesIterator = matchNodes.keySet().iterator();
 		while (existingMatchesIterator.hasNext()) {
 			Match existingMatch = existingMatchesIterator.next();
-			if (!pMatches.contains(existingMatch)) {
+			if (!matches.contains(existingMatch)) {
 				matchNodes.get(existingMatch).removeFromParent();
 				existingMatchesIterator.remove();
 			}
 		}
 
-		for (Match match : pMatches) {
+		for (Match match : matches) {
 			if (!matchNodes.containsKey(match)) {
 				MatchNode node = new MatchNode(match, userOptions);
 				matchNodes.put(match, node);

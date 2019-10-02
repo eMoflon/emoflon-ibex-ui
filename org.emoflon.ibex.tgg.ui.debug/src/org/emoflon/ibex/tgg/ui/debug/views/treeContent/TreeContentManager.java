@@ -29,33 +29,33 @@ public class TreeContentManager
 	 */
 
 	@Override
-	public Object[] getElements(Object pInputElement) {
-		if (pInputElement instanceof TreeNode)
-			return ((TreeNode) pInputElement).getChildren().toArray();
+	public Object[] getElements(Object inputElement) {
+		if (inputElement instanceof TreeNode)
+			return ((TreeNode) inputElement).getChildren().toArray();
 		else
 			return root.getChildren().toArray();
 	}
 
 	@Override
-	public Object[] getChildren(Object pParentElement) {
-		if (pParentElement instanceof TreeNode)
-			return ((TreeNode) pParentElement).getChildren().toArray();
+	public Object[] getChildren(Object parentElement) {
+		if (parentElement instanceof TreeNode)
+			return ((TreeNode) parentElement).getChildren().toArray();
 		else
 			throw new IllegalStateException("Tree must not contain any elements other than TreeNodes");
 	}
 
 	@Override
-	public Object getParent(Object pElement) {
-		if (pElement instanceof TreeNode)
-			return ((TreeNode) pElement).getParent();
+	public Object getParent(Object element) {
+		if (element instanceof TreeNode)
+			return ((TreeNode) element).getParent();
 		else
 			throw new IllegalStateException("Tree must not contain any elements other than TreeNodes");
 	}
 
 	@Override
-	public boolean hasChildren(Object pElement) {
-		if (pElement instanceof TreeNode)
-			return ((TreeNode) pElement).hasChildren();
+	public boolean hasChildren(Object element) {
+		if (element instanceof TreeNode)
+			return ((TreeNode) element).hasChildren();
 		else
 			throw new IllegalStateException("Tree must not contain any elements other than TreeNodes");
 	}
@@ -83,25 +83,25 @@ public class TreeContentManager
 	}
 
 	@Override
-	public Image getImage(Object pElement) {
-		if (pElement instanceof TreeNode)
-			return ((TreeNode) pElement).getImage();
+	public Image getImage(Object element) {
+		if (element instanceof TreeNode)
+			return ((TreeNode) element).getImage();
 		else
 			throw new IllegalStateException("Tree must not contain any elements other than TreeNodes");
 	}
 
 	@Override
-	public StyledString getStyledText(Object pElement) {
-		if (pElement instanceof TreeNode)
-			return ((TreeNode) pElement).getCellLabel();
+	public StyledString getStyledText(Object element) {
+		if (element instanceof TreeNode)
+			return ((TreeNode) element).getCellLabel();
 		else
 			throw new IllegalStateException("Tree must not contain any elements other than TreeNodes");
 	}
 
 	@Override
-	public String getToolTipText(Object pElement) {
-		if (pElement instanceof TreeNode)
-			return ((TreeNode) pElement).getToolTip();
+	public String getToolTipText(Object element) {
+		if (element instanceof TreeNode)
+			return ((TreeNode) element).getToolTip();
 		else
 			throw new IllegalStateException("Tree must not contain any elements other than TreeNodes");
 	}
@@ -111,17 +111,17 @@ public class TreeContentManager
 	 */
 
 	@Override
-	public Color getForeground(Object pElement) {
-		if (pElement instanceof TreeNode)
-			return ((TreeNode) pElement).getForeground();
+	public Color getForeground(Object element) {
+		if (element instanceof TreeNode)
+			return ((TreeNode) element).getForeground();
 		else
 			throw new IllegalStateException("Tree must not contain any elements other than TreeNodes");
 	}
 
 	@Override
-	public Color getBackground(Object pElement) {
-		if (pElement instanceof TreeNode)
-			return ((TreeNode) pElement).getBackground();
+	public Color getBackground(Object element) {
+		if (element instanceof TreeNode)
+			return ((TreeNode) element).getBackground();
 		else
 			throw new IllegalStateException("Tree must not contain any elements other than TreeNodes");
 	}

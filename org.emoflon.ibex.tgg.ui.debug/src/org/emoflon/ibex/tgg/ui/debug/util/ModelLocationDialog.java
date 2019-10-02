@@ -18,15 +18,15 @@ public class ModelLocationDialog {
 	private String[][] defaultLocationData;
 	private Consumer<String[]> buttonAction;
 
-	public ModelLocationDialog(String[] pSelectorHints, String[][] pDefaultLocationData, String pButtonText,
-			Consumer<String[]> pButtonAction) {
-		selectorHints = pSelectorHints;
-		defaultLocationData = pDefaultLocationData;
-		buttonAction = pButtonAction;
+	public ModelLocationDialog(String[] selectorHints, String[][] defaultLocationData, String pButtonText,
+			Consumer<String[]> buttonAction) {
+		this.selectorHints = selectorHints;
+		this.defaultLocationData = defaultLocationData;
+		this.buttonAction = buttonAction;
 	}
 
-	public void build(Shell pParentShell) {
-		Shell dialogShell = new Shell(pParentShell, SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM | SWT.ON_TOP);
+	public void build(Shell parentShell) {
+		Shell dialogShell = new Shell(parentShell, SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM | SWT.ON_TOP);
 
 		dialogShell.setLayout(new GridLayout());
 
@@ -78,16 +78,16 @@ public class ModelLocationDialog {
 
 		private Text location;
 
-		private LocationSelector(Composite pParent, String pSelectorHint, String pDefaultDirectory, String pDefaultName,
-				String pFileExtension) {
-			super(pParent, SWT.NONE);
-			selectorHint = pSelectorHint;
-			defaultDirectory = pDefaultDirectory;
-			defaultName = pDefaultName;
-			fileExtension = pFileExtension;
+		private LocationSelector(Composite parent, String selectorHint, String defaultDirectory, String defaultName,
+				String fileExtension) {
+			super(parent, SWT.NONE);
+			this.selectorHint = selectorHint;
+			this.defaultDirectory = defaultDirectory;
+			this.defaultName = defaultName;
+			this.fileExtension = fileExtension;
 		}
 
-		private LocationSelector build(Shell pParentShell) {
+		private LocationSelector build(Shell parentShell) {
 			setLayout(new GridLayout(2, false));
 
 			location = new Text(this, SWT.SINGLE);
@@ -100,7 +100,7 @@ public class ModelLocationDialog {
 			selectButton.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent pEvent) {
-					FileDialog dialog = new FileDialog(pParentShell, SWT.SAVE);
+					FileDialog dialog = new FileDialog(parentShell, SWT.SAVE);
 					dialog.setFilterPath(defaultDirectory);
 					dialog.setFileName(defaultName);
 					dialog.setFilterExtensions(new String[] { fileExtension });

@@ -22,9 +22,9 @@ public class ProtocolContentManager {
 		protocolNodes = new LinkedList<>();
 	}
 
-	public void populate(List<RuleApplication> pRuleApplications) {
-		for (int i = protocolNodes.size(); i < pRuleApplications.size(); i++) {
-			RuleApplicationNode node = new RuleApplicationNode(i, pRuleApplications.get(i), userOptions);
+	public void populate(List<RuleApplication> ruleApplications) {
+		for (int i = protocolNodes.size(); i < ruleApplications.size(); i++) {
+			RuleApplicationNode node = new RuleApplicationNode(i, ruleApplications.get(i), userOptions);
 			protocolNodes.add(node);
 			manager.getRoot().addChild(node);
 		}

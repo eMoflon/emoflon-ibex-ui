@@ -16,8 +16,8 @@ public class RuleNode extends TreeNode {
 
 	private int timesApplied = 0;
 
-	protected RuleNode(Rule pRule, IUserOptions userOptions) {
-		rule = pRule;
+	protected RuleNode(Rule rule, IUserOptions userOptions) {
+		this.rule = rule;
 		this.userOptions = userOptions;
 	}
 

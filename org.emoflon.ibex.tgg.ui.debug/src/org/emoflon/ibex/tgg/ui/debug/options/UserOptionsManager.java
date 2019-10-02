@@ -24,9 +24,9 @@ public class UserOptionsManager implements IUserOptions {
 		return displayFullRuleForMatches;
 	}
 
-	public void setDisplayFullRuleForMatches(boolean pDisplayFullRuleForMatches) {
-		if (displayFullRuleForMatches != pDisplayFullRuleForMatches) {
-			displayFullRuleForMatches = pDisplayFullRuleForMatches;
+	public void setDisplayFullRuleForMatches(boolean displayFullRuleForMatches) {
+		if (this.displayFullRuleForMatches != displayFullRuleForMatches) {
+			this.displayFullRuleForMatches = displayFullRuleForMatches;
 			isInvalid = true;
 		}
 	}
@@ -184,9 +184,9 @@ public class UserOptionsManager implements IUserOptions {
 		return neighborhoodSize;
 	}
 
-	public void setNeighborhoodSize(int pSize) {
-		if (neighborhoodSize != pSize && pSize >= 0 && pSize <= MAX_NEIGHBOURHOOD_SIZE) {
-			neighborhoodSize = pSize;
+	public void setNeighborhoodSize(int size) {
+		if (neighborhoodSize != size && size >= 0 && size <= MAX_NEIGHBOURHOOD_SIZE) {
+			neighborhoodSize = size;
 			isInvalid = true;
 		}
 	}

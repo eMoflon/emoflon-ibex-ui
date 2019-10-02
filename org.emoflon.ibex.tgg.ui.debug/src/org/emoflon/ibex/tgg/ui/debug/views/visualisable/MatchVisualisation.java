@@ -15,10 +15,10 @@ public class MatchVisualisation extends VisualisableElement {
 	private IUserOptions userOptions;
 	private DataProvider dataProvider;
 
-	public MatchVisualisation(Match pMatch, IUserOptions pUserOptions, DataProvider pDataProvider) {
-		match = pMatch;
-		userOptions = pUserOptions;
-		dataProvider = pDataProvider;
+	public MatchVisualisation(Match match, IUserOptions userOptions, DataProvider dataProvider) {
+		this.match = match;
+		this.userOptions = userOptions;
+		this.dataProvider = dataProvider;
 	}
 
 	@Override

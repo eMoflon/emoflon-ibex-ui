@@ -12,7 +12,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.emoflon.ibex.tgg.ui.debug.api.Rule;
 import org.emoflon.ibex.tgg.ui.debug.api.RuleApplication;
 import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.protocol.ProtocolContentManager;
@@ -26,8 +25,8 @@ public class ProtocolView extends Composite implements ISharedFocusElement {
 	private ProtocolContentManager contentManager;
 	private final IUserOptions userOptions;
 
-	private ProtocolView(Composite pParent, Collection<Rule> pRules, IUserOptions userOptions) {
-		super(pParent, SWT.NONE);
+	private ProtocolView(Composite parent, IUserOptions userOptions) {
+		super(parent, SWT.NONE);
 		this.userOptions = userOptions;
 		contentManager = new ProtocolContentManager(userOptions);
 	}
@@ -70,12 +69,12 @@ public class ProtocolView extends Composite implements ISharedFocusElement {
 
 	}
 
-	public static ProtocolView create(Composite pParent, Collection<Rule> pRules, IUserOptions userOptions) {
-		return new ProtocolView(pParent, pRules, userOptions).build();
+	public static ProtocolView create(Composite parent, IUserOptions userOptions) {
+		return new ProtocolView(parent, userOptions).build();
 	}
 
-	public void registerVisualiser(IVisualiser pVisualiser) {
-		visualiser = pVisualiser;
+	public void registerVisualiser(IVisualiser visualiser) {
+		this.visualiser = visualiser;
 	}
 
 	public void highlight(String ruleName) {
@@ -83,8 +82,8 @@ public class ProtocolView extends Composite implements ISharedFocusElement {
 		treeViewer.refresh();
 	}
 
-	public void populate(List<RuleApplication> pRuleApplications) {
-		contentManager.populate(pRuleApplications);
+	public void populate(List<RuleApplication> ruleApplications) {
+		contentManager.populate(ruleApplications);
 		treeViewer.refresh();
 	}
 
@@ -96,8 +95,8 @@ public class ProtocolView extends Composite implements ISharedFocusElement {
 	}
 
 	@Override
-	public void registerSharedFocus(ISharedFocusElement pSharedFocusElement) {
-		sharedFocusElements.add(pSharedFocusElement);
+	public void registerSharedFocus(ISharedFocusElement sharedFocusElement) {
+		sharedFocusElements.add(sharedFocusElement);
 	}
 
 	public void updateToolTips() {

@@ -14,11 +14,11 @@ public class RuleApplicationVisualisation extends VisualisableElement {
 	private IUserOptions userOptions;
 	private DataProvider dataProvider;
 
-	public RuleApplicationVisualisation(Collection<RuleApplication> pRuleApplications, IUserOptions pUserOptions,
-			DataProvider pDataProvider) {
-		ruleApplications = pRuleApplications;
-		userOptions = pUserOptions;
-		dataProvider = pDataProvider;
+	public RuleApplicationVisualisation(Collection<RuleApplication> ruleApplications, IUserOptions userOptions,
+			DataProvider dataProvider) {
+		this.ruleApplications = ruleApplications;
+		this.userOptions = userOptions;
+		this.dataProvider = dataProvider;
 	}
 
 	@Override

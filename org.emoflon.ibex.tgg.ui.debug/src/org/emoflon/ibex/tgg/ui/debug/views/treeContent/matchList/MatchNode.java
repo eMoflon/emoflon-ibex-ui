@@ -14,8 +14,8 @@ public class MatchNode extends TreeNode {
 	private Match match;
 	private final IUserOptions userOptions;
 
-	protected MatchNode(Match pMatch, IUserOptions userOptions) {
-		match = pMatch;
+	protected MatchNode(Match match, IUserOptions userOptions) {
+		this.match = match;
 		this.userOptions = userOptions;
 	}
 

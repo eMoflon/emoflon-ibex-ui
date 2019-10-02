@@ -41,13 +41,13 @@ public class UserOptionsMenu {
 
 	private Scale neighborhoodScale;
 
-	public UserOptionsMenu(UserOptionsManager pUserOptionsManager, MatchDisplayView pMatchDisplayView) {
-		userOptionsManager = pUserOptionsManager;
-		matchDisplayView = pMatchDisplayView;
+	public UserOptionsMenu(UserOptionsManager userOptionsManager, MatchDisplayView matchDisplayView) {
+		this.userOptionsManager = userOptionsManager;
+		this.matchDisplayView = matchDisplayView;
 	}
 
-	public void build(Shell pParentShell) {
-		menuShell = new Shell(pParentShell, SWT.DIALOG_TRIM | SWT.ON_TOP);
+	public void build(Shell parentShell) {
+		menuShell = new Shell(parentShell, SWT.DIALOG_TRIM | SWT.ON_TOP);
 		menuShell.setText("User Options");
 		menuShell.setLayout(new GridLayout());
 		menuShell.addShellListener(new ShellAdapter() {

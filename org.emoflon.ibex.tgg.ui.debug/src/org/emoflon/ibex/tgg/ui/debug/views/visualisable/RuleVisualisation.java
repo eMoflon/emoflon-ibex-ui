@@ -11,10 +11,10 @@ public class RuleVisualisation extends VisualisableElement {
 	private IUserOptions userOptions;
 	private DataProvider dataProvider;
 
-	public RuleVisualisation(Rule pRule, IUserOptions pUserOptions, DataProvider pDataProvider) {
-		rule = pRule;
-		userOptions = pUserOptions;
-		dataProvider = pDataProvider;
+	public RuleVisualisation(Rule rule, IUserOptions userOptions, DataProvider dataProvider) {
+		this.rule = rule;
+		this.userOptions = userOptions;
+		this.dataProvider = dataProvider;
 	}
 
 	@Override

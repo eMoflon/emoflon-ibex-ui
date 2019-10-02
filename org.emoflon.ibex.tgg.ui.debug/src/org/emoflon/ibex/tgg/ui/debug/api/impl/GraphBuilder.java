@@ -20,30 +20,30 @@ public class GraphBuilder {
 	public GraphBuilder() {
 	}
 
-	public GraphBuilder(Graph pGraph) {
-		addGraph(pGraph);
+	public GraphBuilder(Graph graph) {
+		addGraph(graph);
 	}
 
-	public GraphBuilder addGraph(Graph pGraph) {
-		if (pGraph == null)
+	public GraphBuilder addGraph(Graph graph) {
+		if (graph == null)
 			return this;
-		nodes.addAll(pGraph.getNodes());
-		edges.addAll(pGraph.getEdges());
+		nodes.addAll(graph.getNodes());
+		edges.addAll(graph.getEdges());
 		return this;
 	}
 
-	public GraphBuilder addNode(Node pNodeGroup) {
-		nodes.add(pNodeGroup);
+	public GraphBuilder addNode(Node nodeGroup) {
+		nodes.add(nodeGroup);
 		return this;
 	}
 
-	public GraphBuilder addEdge(Edge pEdge) {
-		edges.add(pEdge);
+	public GraphBuilder addEdge(Edge edge) {
+		edges.add(edge);
 		return this;
 	}
 
-	public void addEdge(String pLabel, Node pSrcNode, Node pTrgNode, EdgeType pType, Action pAction) {
-		addEdge(new EdgeImpl(pLabel, pSrcNode, pTrgNode, pType, pAction));
+	public void addEdge(String label, Node srcNode, Node trgNode, EdgeType type, Action action) {
+		addEdge(new EdgeImpl(label, srcNode, trgNode, type, action));
 	}
 
 	public GraphImpl build() {

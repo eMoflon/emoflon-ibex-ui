@@ -7,5 +7,5 @@ import java.util.Collection;
  * single Graph for joint visualization.
  */
 public interface RuleApplicationMerger {
-	public Graph getMergedGraph(Collection<RuleApplication> pRuleApplications, int pNeighbourhoodSize);
+	public Graph getMergedGraph(Collection<RuleApplication> ruleApplications, int neighbourhoodSize);
 }

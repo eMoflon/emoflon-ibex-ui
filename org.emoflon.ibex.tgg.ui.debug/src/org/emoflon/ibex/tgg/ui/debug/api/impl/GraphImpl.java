@@ -15,9 +15,9 @@ public class GraphImpl implements Graph {
 	private Collection<Node> nodes;
 	private Collection<Edge> edges;
 
-	GraphImpl(Collection<Node> pNodes, Collection<Edge> pEdges) {
-		nodes = Collections.unmodifiableCollection(pNodes);
-		edges = Collections.unmodifiableCollection(pEdges);
+	GraphImpl(Collection<Node> nodes, Collection<Edge> edges) {
+		this.nodes = Collections.unmodifiableCollection(nodes);
+		this.edges = Collections.unmodifiableCollection(edges);
 	}
 
 	public Collection<Node> getNodes() {

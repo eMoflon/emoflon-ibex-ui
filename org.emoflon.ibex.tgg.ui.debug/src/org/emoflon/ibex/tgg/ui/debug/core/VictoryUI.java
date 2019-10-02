@@ -42,8 +42,8 @@ public class VictoryUI implements IExitCodeReceiver, Consumer<DataPackage> {
 	private MatchDisplayView matchDisplayView;
 	private UserOptionsManager userOptionsManager;
 
-	public VictoryUI(DataProvider pDataProvider) {
-		dataProvider = pDataProvider;
+	public VictoryUI(DataProvider dataProvider) {
+		this.dataProvider = dataProvider;
 		userOptionsManager = new UserOptionsManager();
 
 		initUI();
@@ -70,7 +70,7 @@ public class VictoryUI implements IExitCodeReceiver, Consumer<DataPackage> {
 		matchListView = MatchListView.create(leftPanelSashForm, dataProvider.getAllRules(), userOptionsManager);
 		matchListView.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		protocolView = ProtocolView.create(leftPanelSashForm, dataProvider.getAllRules(), userOptionsManager);
+		protocolView = ProtocolView.create(leftPanelSashForm, userOptionsManager);
 		protocolView.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		matchListView.setProtocolView(protocolView);
@@ -168,15 +168,15 @@ public class VictoryUI implements IExitCodeReceiver, Consumer<DataPackage> {
 		return exitCode;
 	}
 
-	public void exit(boolean pRestart) {
-		exitCode = pRestart;
+	public void exit(boolean restart) {
+		exitCode = restart;
 		shell.dispose();
 	}
 
 	@Override
-	public void accept(DataPackage pDataPackage) {
-		matchListView.populate(pDataPackage.getMatches());
-		protocolView.populate(pDataPackage.getRuleApplications());
+	public void accept(DataPackage dataPackage) {
+		matchListView.populate(dataPackage.getMatches());
+		protocolView.populate(dataPackage.getRuleApplications());
 	}
 
 	public Match getSelectedMatch() {

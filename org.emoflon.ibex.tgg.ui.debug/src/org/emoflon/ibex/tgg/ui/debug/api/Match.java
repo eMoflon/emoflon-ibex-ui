@@ -13,5 +13,5 @@ public interface Match {
 
 	public Rule getRule();
 
-	public Graph getGraph(int pNeighbourhoodSize);
+	public Graph getGraph(int neighbourhoodSize);
 }

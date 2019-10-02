@@ -16,12 +16,12 @@ public class EdgeImpl implements Edge {
 	private EdgeType type;
 	private Action action;
 
-	EdgeImpl(String pLabel, Node pSrcNode, Node pTrgNode, EdgeType pType, Action pAction) {
-		label = pLabel;
-		srcNode = pSrcNode;
-		trgNode = pTrgNode;
-		type = pType;
-		action = pAction;
+	EdgeImpl(String label, Node srcNode, Node trgNode, EdgeType type, Action action) {
+		this.label = label;
+		this.srcNode = srcNode;
+		this.trgNode = trgNode;
+		this.type = type;
+		this.action = action;
 	}
 
 	public String getLabel() {

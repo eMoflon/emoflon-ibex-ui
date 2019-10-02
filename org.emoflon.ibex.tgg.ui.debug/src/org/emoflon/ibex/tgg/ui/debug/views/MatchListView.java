@@ -52,11 +52,11 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 
 	private final IUserOptions userOptions;
 
-	private MatchListView(Composite pParent, Collection<Rule> pRules, IUserOptions userOptions) {
-		super(pParent, SWT.NONE);
+	private MatchListView(Composite parent, Collection<Rule> rules, IUserOptions userOptions) {
+		super(parent, SWT.NONE);
 
 		this.userOptions = userOptions;
-		contentManager = new MatchListContentManager(pRules, userOptions);
+		contentManager = new MatchListContentManager(rules, userOptions);
 	}
 
 	private MatchListView build() {
@@ -159,12 +159,12 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 		return this;
 	}
 
-	public static MatchListView create(Composite pParent, Collection<Rule> pRules, IUserOptions userOptions) {
-		return new MatchListView(pParent, pRules, userOptions).build();
+	public static MatchListView create(Composite parent, Collection<Rule> rules, IUserOptions userOptions) {
+		return new MatchListView(parent, rules, userOptions).build();
 	}
 
-	public void registerVisualiser(IVisualiser pVisualiser) {
-		visualiser = pVisualiser;
+	public void registerVisualiser(IVisualiser visualiser) {
+		this.visualiser = visualiser;
 	}
 
 	/**
@@ -172,9 +172,9 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 	 * 
 	 * @param pMatches the collection of matches to populate the list-view with
 	 */
-	public void populate(Collection<Match> pMatches) {
+	public void populate(Collection<Match> matches) {
 		applyButton.setEnabled(false);
-		contentManager.populate(pMatches);
+		contentManager.populate(matches);
 		treeViewer.refresh();
 	}
 
@@ -203,14 +203,14 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 	}
 
 	@Override
-	public void registerSharedFocus(ISharedFocusElement pSharedFocusElement) {
-		sharedFocusElements.add(pSharedFocusElement);
+	public void registerSharedFocus(ISharedFocusElement sharedFocusElement) {
+		sharedFocusElements.add(sharedFocusElement);
 	}
 
-	private void applyMatch(MatchNode pMatchNode) {
+	private void applyMatch(MatchNode matchNode) {
 		synchronized (chosenMatch) {
-			Victory.setSelectedMatch(pMatchNode.getMatch());
-			RuleNode ruleNode = (RuleNode) pMatchNode.getParent();
+			Victory.setSelectedMatch(matchNode.getMatch());
+			RuleNode ruleNode = (RuleNode) matchNode.getParent();
 			ruleNode.increaseTimesApplied();
 			chosenMatch.notify();
 		}

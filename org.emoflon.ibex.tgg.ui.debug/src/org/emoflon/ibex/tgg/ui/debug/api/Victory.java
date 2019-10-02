@@ -10,12 +10,12 @@ public final class Victory {
 	private static VictoryUI ui;
 	private static final Match[] selectedMatch = new Match[1];
 
-	public static void create(DataProvider pDataProvider) {
+	public static void create(DataProvider dataProvider) {
 
 		if (ui != null)
 			throw new IllegalStateException("Victory has already been initialised yet.");
 
-		ui = new VictoryUI(pDataProvider);
+		ui = new VictoryUI(dataProvider);
 	}
 
 	public static boolean run() {
@@ -24,7 +24,7 @@ public final class Victory {
 		return exitCode;
 	}
 
-	public static Match selectMatch(DataPackage pDataPackage) {
+	public static Match selectMatch(DataPackage dataPackage) {
 		// CONCURRENCY: This method is only called by the match-providing thread
 
 		if (ui == null)
@@ -35,7 +35,7 @@ public final class Victory {
 		// Does the Display queue up this call until it starts reading and dispatching
 		// events?
 		// Or does everything crash and burn?
-		VictoryUI.getDisplay().syncExec(() -> ui.accept(pDataPackage));
+		VictoryUI.getDisplay().syncExec(() -> ui.accept(dataPackage));
 
 		synchronized (selectedMatch) {
 			while (selectedMatch[0] == null)
@@ -50,9 +50,9 @@ public final class Victory {
 		}
 	}
 
-	public static void setSelectedMatch(Match pMatch) {
+	public static void setSelectedMatch(Match match) {
 		synchronized (selectedMatch) {
-			selectedMatch[0] = pMatch;
+			selectedMatch[0] = match;
 			selectedMatch.notify();
 		}
 	}
