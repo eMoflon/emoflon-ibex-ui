@@ -174,6 +174,9 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 
     @Override
     public void refresh() {
+		if(currentElement == null)
+		    return;
+	
 		if (userOptionsManager.isInvalid()) {
 		    ruleCache.values().forEach(VisualisableElement::invalidate);
 		    matchCache.values().forEach(VisualisableElement::invalidate);
