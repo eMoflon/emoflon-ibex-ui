@@ -56,7 +56,13 @@ public class VictoryIBeXAdapter extends IbexController implements DataProvider {
     }
 
     @Override
-    public void saveModels() throws IOException {
-	dataProvider.saveModels();
+    public void saveModels(String[] pSaveLocations) throws IOException {
+	dataProvider.saveModels(pSaveLocations);
     }
+
+    @Override
+    public String[][] getDefaultSaveData() {
+	return dataProvider.getDefaultSaveData();
+    }
+
 }
