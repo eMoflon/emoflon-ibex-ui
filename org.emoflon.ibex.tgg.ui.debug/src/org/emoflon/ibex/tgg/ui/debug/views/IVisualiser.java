@@ -7,11 +7,11 @@ import org.emoflon.ibex.tgg.ui.debug.api.Rule;
 import org.emoflon.ibex.tgg.ui.debug.api.RuleApplication;
 
 public interface IVisualiser {
-    public void display(Rule pRule);
+	public void display(Rule pRule);
 
-    public void display(Match pMatch);
+	public void display(Match pMatch);
 
-    public void display(Collection<RuleApplication> pRuleApplications);
+	public void display(Collection<RuleApplication> pRuleApplications);
 
-    public void refresh();
+	public void refresh();
 }

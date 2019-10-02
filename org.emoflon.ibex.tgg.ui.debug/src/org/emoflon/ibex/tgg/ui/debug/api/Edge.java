@@ -8,13 +8,13 @@ import org.emoflon.ibex.tgg.ui.debug.api.enums.EdgeType;
  * visualization by Victory.
  */
 public interface Edge {
-    public String getLabel();
+	public String getLabel();
 
-    public Node getSrcNode();
+	public Node getSrcNode();
 
-    public Node getTrgNode();
+	public Node getTrgNode();
 
-    public EdgeType getType();
+	public EdgeType getType();
 
-    public Action getAction();
+	public Action getAction();
 }

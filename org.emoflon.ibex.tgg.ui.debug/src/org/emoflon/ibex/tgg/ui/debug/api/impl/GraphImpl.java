@@ -12,19 +12,19 @@ import org.emoflon.ibex.tgg.ui.debug.api.Node;
  * {@link GraphBuilder}.
  */
 public class GraphImpl implements Graph {
-    private Collection<Node> nodes;
-    private Collection<Edge> edges;
+	private Collection<Node> nodes;
+	private Collection<Edge> edges;
 
-    GraphImpl(Collection<Node> pNodes, Collection<Edge> pEdges) {
-	nodes = Collections.unmodifiableCollection(pNodes);
-	edges = Collections.unmodifiableCollection(pEdges);
-    }
+	GraphImpl(Collection<Node> pNodes, Collection<Edge> pEdges) {
+		nodes = Collections.unmodifiableCollection(pNodes);
+		edges = Collections.unmodifiableCollection(pEdges);
+	}
 
-    public Collection<Node> getNodes() {
-	return nodes;
-    }
+	public Collection<Node> getNodes() {
+		return nodes;
+	}
 
-    public Collection<Edge> getEdges() {
-	return edges;
-    }
+	public Collection<Edge> getEdges() {
+		return edges;
+	}
 }

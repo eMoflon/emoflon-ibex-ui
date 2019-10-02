@@ -11,64 +11,64 @@ import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeNode;
 
 public class RuleApplicationNode extends TreeNode {
 
-    private int index;
-    private RuleApplication ruleApplication;
-    private boolean markBold = false;
-    private boolean highlighted = false;
-    private final IUserOptions userOptions;
+	private int index;
+	private RuleApplication ruleApplication;
+	private boolean markBold = false;
+	private boolean highlighted = false;
+	private final IUserOptions userOptions;
 
-    public RuleApplicationNode(int pIndex, RuleApplication pStep, IUserOptions userOptions) {
+	public RuleApplicationNode(int pIndex, RuleApplication pStep, IUserOptions userOptions) {
 		index = pIndex;
 		ruleApplication = pStep;
 		this.userOptions = userOptions;
-    }
+	}
 
-    public int getStep() {
-	return index;
-    }
-    
-    public void setBold(boolean pBold) {
-    	markBold = pBold;
-    }
-    
-    public void highlight(boolean highlighted) {
-    	this.highlighted = highlighted;
-    }
+	public int getStep() {
+		return index;
+	}
 
-    public RuleApplication getModelChanges() {
-	return ruleApplication;
-    }
+	public void setBold(boolean pBold) {
+		markBold = pBold;
+	}
 
-    @Override
-    protected String getLabel() {
-    	setFontStyle(markBold ? SWT.BOLD : SWT.NORMAL);
-    	return "Rule application #" + index + ": "+ruleApplication.getRuleName();
-    }
+	public void highlight(boolean highlighted) {
+		this.highlighted = highlighted;
+	}
 
-    @Override
-    protected Image getImage() {
-	return null;
-    }
+	public RuleApplication getModelChanges() {
+		return ruleApplication;
+	}
 
-    @Override
-    protected Color getForeground() {
-	return null;
-    }
+	@Override
+	protected String getLabel() {
+		setFontStyle(markBold ? SWT.BOLD : SWT.NORMAL);
+		return "Rule application #" + index + ": " + ruleApplication.getRuleName();
+	}
 
-    @Override
-    protected Color getBackground() {
-    	if(highlighted) {
-    		return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW);
-    	}
-    	return null;
-    }
+	@Override
+	protected Image getImage() {
+		return null;
+	}
+
+	@Override
+	protected Color getForeground() {
+		return null;
+	}
+
+	@Override
+	protected Color getBackground() {
+		if (highlighted) {
+			return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW);
+		}
+		return null;
+	}
 
 	@Override
 	protected String getToolTip() {
-		if(userOptions.getToolTipSetting() == ToolTipOption.NONE)
+		if (userOptions.getToolTipSetting() == ToolTipOption.NONE)
 			return "";
-		String toolTip = "Rule application of rule \""+ruleApplication.getRuleName()+"\".";
-		if(userOptions.getToolTipSetting() == ToolTipOption.FULL)
+		String toolTip = "Rule application of rule \"" + ruleApplication.getRuleName() + "\".";
+		if (userOptions.getToolTipSetting() == ToolTipOption.FULL)
 			toolTip += " Select one or multiple rule applications to see them in the right panel.";
 		return toolTip;
 	}

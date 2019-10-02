@@ -10,13 +10,13 @@ import org.emoflon.ibex.tgg.ui.debug.api.enums.Domain;
  * visualization by Victory.
  */
 public interface Node {
-    public String getType();
+	public String getType();
 
-    public String getName();
+	public String getName();
 
-    public Domain getDomain();
+	public Domain getDomain();
 
-    public Action getAction();
+	public Action getAction();
 
-    public List<String> getAttributes();
+	public List<String> getAttributes();
 }

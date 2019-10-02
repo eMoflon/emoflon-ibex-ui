@@ -20,88 +20,88 @@ import org.emoflon.ibex.tgg.ui.debug.views.treeContent.protocol.RuleApplicationN
 
 public class ProtocolView extends Composite implements ISharedFocusElement {
 
-    private IVisualiser visualiser;
+	private IVisualiser visualiser;
 
-    private TreeViewer treeViewer;
-    private ProtocolContentManager contentManager;
-    private final IUserOptions userOptions;
+	private TreeViewer treeViewer;
+	private ProtocolContentManager contentManager;
+	private final IUserOptions userOptions;
 
-    private ProtocolView(Composite pParent, Collection<Rule> pRules, IUserOptions userOptions) {
+	private ProtocolView(Composite pParent, Collection<Rule> pRules, IUserOptions userOptions) {
 		super(pParent, SWT.NONE);
 		this.userOptions = userOptions;
 		contentManager = new ProtocolContentManager(userOptions);
-    }
+	}
 
-    private ProtocolView build() {
-	setLayout(new GridLayout());
+	private ProtocolView build() {
+		setLayout(new GridLayout());
 
-	treeViewer = new TreeViewer(this, SWT.BORDER | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI);
-	treeViewer.setContentProvider(contentManager.getTreeContentManager());
-	treeViewer.setLabelProvider(contentManager.getTreeContentManager().getCellLabelProvider());
-	treeViewer.setComparator(contentManager.getProtocolNodeComparator());
-	treeViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
-	treeViewer.setInput("root");
+		treeViewer = new TreeViewer(this, SWT.BORDER | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI);
+		treeViewer.setContentProvider(contentManager.getTreeContentManager());
+		treeViewer.setLabelProvider(contentManager.getTreeContentManager().getCellLabelProvider());
+		treeViewer.setComparator(contentManager.getProtocolNodeComparator());
+		treeViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
+		treeViewer.setInput("root");
 
-	treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-	    @Override
-	    public void selectionChanged(SelectionChangedEvent pEvent) {
+		treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
+			public void selectionChanged(SelectionChangedEvent pEvent) {
 
-		if (pEvent.getSelection().isEmpty())
-		    return;
-		else
-		    sharedFocusElements.forEach(ISharedFocusElement::focusRemoved);
+				if (pEvent.getSelection().isEmpty())
+					return;
+				else
+					sharedFocusElements.forEach(ISharedFocusElement::focusRemoved);
 
-		if (pEvent.getSelection() instanceof IStructuredSelection) {
-		    @SuppressWarnings("unchecked")
-		    List<Object> selection = pEvent.getStructuredSelection().toList();
+				if (pEvent.getSelection() instanceof IStructuredSelection) {
+					@SuppressWarnings("unchecked")
+					List<Object> selection = pEvent.getStructuredSelection().toList();
 
-		    Collection<RuleApplication> ruleApplications = new HashSet<>();
-		    for (Object element : selection)
-			if (element instanceof RuleApplicationNode)
-			    ruleApplications.add(((RuleApplicationNode) element).getModelChanges());
-		    visualiser.display(ruleApplications);
-		}
-	    }
-	});
+					Collection<RuleApplication> ruleApplications = new HashSet<>();
+					for (Object element : selection)
+						if (element instanceof RuleApplicationNode)
+							ruleApplications.add(((RuleApplicationNode) element).getModelChanges());
+					visualiser.display(ruleApplications);
+				}
+			}
+		});
 
-	this.updateToolTips();
-	pack();
-	return this;
+		this.updateToolTips();
+		pack();
+		return this;
 
-    }
+	}
 
-    public static ProtocolView create(Composite pParent, Collection<Rule> pRules, IUserOptions userOptions) {
-	return new ProtocolView(pParent, pRules, userOptions).build();
-    }
+	public static ProtocolView create(Composite pParent, Collection<Rule> pRules, IUserOptions userOptions) {
+		return new ProtocolView(pParent, pRules, userOptions).build();
+	}
 
-    public void registerVisualiser(IVisualiser pVisualiser) {
-	visualiser = pVisualiser;
-    }
-    
-    public void highlight(String ruleName) {
-    	contentManager.highlight(ruleName);
-    	treeViewer.refresh();
-    }
+	public void registerVisualiser(IVisualiser pVisualiser) {
+		visualiser = pVisualiser;
+	}
 
-    public void populate(List<RuleApplication> pRuleApplications) {
-	contentManager.populate(pRuleApplications);
-	treeViewer.refresh();
-    }
+	public void highlight(String ruleName) {
+		contentManager.highlight(ruleName);
+		treeViewer.refresh();
+	}
 
-    private Collection<ISharedFocusElement> sharedFocusElements = new HashSet<>();
+	public void populate(List<RuleApplication> pRuleApplications) {
+		contentManager.populate(pRuleApplications);
+		treeViewer.refresh();
+	}
 
-    @Override
-    public void focusRemoved() {
-	treeViewer.setSelection(null);
-    }
+	private Collection<ISharedFocusElement> sharedFocusElements = new HashSet<>();
 
-    @Override
-    public void registerSharedFocus(ISharedFocusElement pSharedFocusElement) {
-	sharedFocusElements.add(pSharedFocusElement);
-    }
-    
-    public void updateToolTips() {
-    	treeViewer.getControl().setToolTipText(ToolTips.PROTOCOL_VIEW.getDescription(userOptions.getToolTipSetting()));
-    }
+	@Override
+	public void focusRemoved() {
+		treeViewer.setSelection(null);
+	}
+
+	@Override
+	public void registerSharedFocus(ISharedFocusElement pSharedFocusElement) {
+		sharedFocusElements.add(pSharedFocusElement);
+	}
+
+	public void updateToolTips() {
+		treeViewer.getControl().setToolTipText(ToolTips.PROTOCOL_VIEW.getDescription(userOptions.getToolTipSetting()));
+	}
 
 }

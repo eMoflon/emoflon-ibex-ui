@@ -11,49 +11,49 @@ import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeNode;
 
 public class MatchNode extends TreeNode {
 
-    private Match match;
-    private final IUserOptions userOptions;
+	private Match match;
+	private final IUserOptions userOptions;
 
-    protected MatchNode(Match pMatch, IUserOptions userOptions) {
-    	match = pMatch;
-    	this.userOptions = userOptions;
-    }
+	protected MatchNode(Match pMatch, IUserOptions userOptions) {
+		match = pMatch;
+		this.userOptions = userOptions;
+	}
 
-    public Match getMatch() {
-	return match;
-    }
+	public Match getMatch() {
+		return match;
+	}
 
-    @Override
-    protected String getLabel() {
-	return match.getName() + (match.isBlocked() ? "[" + match.getBlockingReason() + "]" : "");
-    }
+	@Override
+	protected String getLabel() {
+		return match.getName() + (match.isBlocked() ? "[" + match.getBlockingReason() + "]" : "");
+	}
 
-    @Override
-    protected Image getImage() {
-	return null;
-    }
+	@Override
+	protected Image getImage() {
+		return null;
+	}
 
-    @Override
-    protected Color getForeground() {
-	if (match.isBlocked())
-	    return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_RED);
-	else
-	    return null;
-    }
+	@Override
+	protected Color getForeground() {
+		if (match.isBlocked())
+			return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_RED);
+		else
+			return null;
+	}
 
-    @Override
-    protected Color getBackground() {
-	return null;
-    }
+	@Override
+	protected Color getBackground() {
+		return null;
+	}
 
 	@Override
 	protected String getToolTip() {
-		if(userOptions.getToolTipSetting() == ToolTipOption.NONE)
+		if (userOptions.getToolTipSetting() == ToolTipOption.NONE)
 			return "";
-		String toolTip = "Match \""+match.getName()+"\". ";
-		if(match.isBlocked())
-			toolTip += "This match is blocked. Reason: "+match.getBlockingReason();
-		else if(userOptions.getToolTipSetting() == ToolTipOption.FULL)
+		String toolTip = "Match \"" + match.getName() + "\". ";
+		if (match.isBlocked())
+			toolTip += "This match is blocked. Reason: " + match.getBlockingReason();
+		else if (userOptions.getToolTipSetting() == ToolTipOption.FULL)
 			toolTip += "Double click to apply the match. Select to display the match in the right panel.";
 		return toolTip;
 	}

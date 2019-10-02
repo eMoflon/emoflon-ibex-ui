@@ -11,21 +11,21 @@ import org.emoflon.ibex.tgg.ui.debug.plantuml.PlantUMLGenerator;
 
 public class MatchVisualisation extends VisualisableElement {
 
-    private Match match;
-    private IUserOptions userOptions;
-    private DataProvider dataProvider;
+	private Match match;
+	private IUserOptions userOptions;
+	private DataProvider dataProvider;
 
-    public MatchVisualisation(Match pMatch, IUserOptions pUserOptions, DataProvider pDataProvider) {
-	match = pMatch;
-	userOptions = pUserOptions;
-	dataProvider = pDataProvider;
-    }
+	public MatchVisualisation(Match pMatch, IUserOptions pUserOptions, DataProvider pDataProvider) {
+		match = pMatch;
+		userOptions = pUserOptions;
+		dataProvider = pDataProvider;
+	}
 
-    @Override
-    protected String generateVisualisationString() {
-	Collection<Graph> graphs = new HashSet<>();
-	graphs.add(match.getGraph(userOptions.getNeighborhoodSize()));
-	graphs.add(match.getRule().getGraph());
-	return PlantUMLGenerator.visualise(graphs, userOptions, dataProvider);
-    }
+	@Override
+	protected String generateVisualisationString() {
+		Collection<Graph> graphs = new HashSet<>();
+		graphs.add(match.getGraph(userOptions.getNeighborhoodSize()));
+		graphs.add(match.getRule().getGraph());
+		return PlantUMLGenerator.visualise(graphs, userOptions, dataProvider);
+	}
 }

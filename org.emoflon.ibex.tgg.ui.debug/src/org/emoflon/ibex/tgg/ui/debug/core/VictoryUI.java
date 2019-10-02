@@ -28,158 +28,158 @@ import org.emoflon.ibex.tgg.ui.debug.views.ProtocolView;
 
 public class VictoryUI implements IExitCodeReceiver, Consumer<DataPackage> {
 
-    private static Display display;
+	private static Display display;
 
-    public static Display getDisplay() {
-	return display;
-    }
+	public static Display getDisplay() {
+		return display;
+	}
 
-    private Shell shell;
-    private boolean exitCode;
-    private DataProvider dataProvider;
-    private MatchListView matchListView;
-    private ProtocolView protocolView;
-    private MatchDisplayView matchDisplayView;
-    private UserOptionsManager userOptionsManager;
+	private Shell shell;
+	private boolean exitCode;
+	private DataProvider dataProvider;
+	private MatchListView matchListView;
+	private ProtocolView protocolView;
+	private MatchDisplayView matchDisplayView;
+	private UserOptionsManager userOptionsManager;
 
-    public VictoryUI(DataProvider pDataProvider) {
-	dataProvider = pDataProvider;
-	userOptionsManager = new UserOptionsManager();
+	public VictoryUI(DataProvider pDataProvider) {
+		dataProvider = pDataProvider;
+		userOptionsManager = new UserOptionsManager();
 
-	initUI();
-    }
+		initUI();
+	}
 
-    private void initUI() {
-	Thread.currentThread().setName("Victory-UI thread");
+	private void initUI() {
+		Thread.currentThread().setName("Victory-UI thread");
 
-	display = new Display();
-	shell = new Shell(display);
+		display = new Display();
+		shell = new Shell(display);
 
-	shell.setLayout(new GridLayout());
-	
-	SashForm mainSashForm = new SashForm(shell, SWT.HORIZONTAL);
-	mainSashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
-	mainSashForm.setLayout(new GridLayout());
-	mainSashForm.setBackground(display.getSystemColor(SWT.COLOR_GRAY));
+		shell.setLayout(new GridLayout());
 
-	SashForm leftPanelSashForm = new SashForm(mainSashForm, SWT.VERTICAL);
-	leftPanelSashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
-	leftPanelSashForm.setLayout(new GridLayout());
-	leftPanelSashForm.setBackground(display.getSystemColor(SWT.COLOR_GRAY));
+		SashForm mainSashForm = new SashForm(shell, SWT.HORIZONTAL);
+		mainSashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
+		mainSashForm.setLayout(new GridLayout());
+		mainSashForm.setBackground(display.getSystemColor(SWT.COLOR_GRAY));
 
-	matchListView = MatchListView.create(leftPanelSashForm, dataProvider.getAllRules(), userOptionsManager);
-	matchListView.setLayoutData(new GridData(GridData.FILL_BOTH));
+		SashForm leftPanelSashForm = new SashForm(mainSashForm, SWT.VERTICAL);
+		leftPanelSashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
+		leftPanelSashForm.setLayout(new GridLayout());
+		leftPanelSashForm.setBackground(display.getSystemColor(SWT.COLOR_GRAY));
 
-	protocolView = ProtocolView.create(leftPanelSashForm, dataProvider.getAllRules(), userOptionsManager);
-	protocolView.setLayoutData(new GridData(GridData.FILL_BOTH));
-	
-	matchListView.setProtocolView(protocolView);
+		matchListView = MatchListView.create(leftPanelSashForm, dataProvider.getAllRules(), userOptionsManager);
+		matchListView.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-	matchListView.registerSharedFocus(protocolView);
-	protocolView.registerSharedFocus(matchListView);
+		protocolView = ProtocolView.create(leftPanelSashForm, dataProvider.getAllRules(), userOptionsManager);
+		protocolView.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-	leftPanelSashForm.setWeights(new int[] { 60, 40 });
+		matchListView.setProtocolView(protocolView);
 
-	matchDisplayView = MatchDisplayView.create(mainSashForm, this, dataProvider, userOptionsManager);
-	matchDisplayView.setLayoutData(new GridData(GridData.FILL_BOTH));
+		matchListView.registerSharedFocus(protocolView);
+		protocolView.registerSharedFocus(matchListView);
 
-	mainSashForm.setWeights(new int[] { 30, 70 });
+		leftPanelSashForm.setWeights(new int[] { 60, 40 });
 
-	matchListView.registerVisualiser(matchDisplayView);
-	protocolView.registerVisualiser(matchDisplayView);
-	
-	Menu menuBar = new Menu(shell, SWT.BAR);
-	shell.setMenuBar(menuBar);
-	
-	MenuItem helpMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
-	helpMenuHeader.setText("&Help");
+		matchDisplayView = MatchDisplayView.create(mainSashForm, this, dataProvider, userOptionsManager);
+		matchDisplayView.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-	Menu helpMenu = new Menu(shell, SWT.DROP_DOWN);
-	helpMenuHeader.setMenu(helpMenu);
+		mainSashForm.setWeights(new int[] { 30, 70 });
 
-	MenuItem helpOpenHandbookItem = new MenuItem(helpMenu, SWT.PUSH);
-	helpOpenHandbookItem.setText("&Open Handbook");
-	helpOpenHandbookItem.addSelectionListener(new SelectionListener() {
+		matchListView.registerVisualiser(matchDisplayView);
+		protocolView.registerVisualiser(matchDisplayView);
 
-	    @Override
-	    public void widgetSelected(SelectionEvent e) {
-		if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-		    try {
-			Desktop.getDesktop().browse(new URI(
-				"https://docs.google.com/document/d/1eKiEVsrNf-GLORP2BFzLK5-s8YoumV1yxY-L7IWfdxM/edit?usp=sharing"));
-		    } catch (IOException e1) {
-			e1.printStackTrace();
-		    } catch (URISyntaxException e1) {
-			e1.printStackTrace();
-		    }
-		}
-	    }
+		Menu menuBar = new Menu(shell, SWT.BAR);
+		shell.setMenuBar(menuBar);
 
-	    @Override
-	    public void widgetDefaultSelected(SelectionEvent e) {
-	    }
-	});
-	MenuItem helpToolTipsItem = new MenuItem(helpMenu, SWT.CASCADE);
-	helpToolTipsItem.setText("&Tooltips");
+		MenuItem helpMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
+		helpMenuHeader.setText("&Help");
 
-	Menu helpToolTipsMenu = new Menu(helpMenu);
-	helpToolTipsItem.setMenu(helpToolTipsMenu);
+		Menu helpMenu = new Menu(shell, SWT.DROP_DOWN);
+		helpMenuHeader.setMenu(helpMenu);
 
-	MenuItem helpToolTipsOff = new MenuItem(helpToolTipsMenu, SWT.RADIO);
-	helpToolTipsOff.setText("Show no tooltips");
-	helpToolTipsOff.setSelection(userOptionsManager.getToolTipSetting() == ToolTipOption.NONE);
-	MenuItem helpToolTipsMinimal = new MenuItem(helpToolTipsMenu, SWT.RADIO);
-	helpToolTipsMinimal.setText("Show minimal tooltips");
-	helpToolTipsMinimal.setSelection(userOptionsManager.getToolTipSetting() == ToolTipOption.MINIMAL);
-	MenuItem helpToolTipsFull = new MenuItem(helpToolTipsMenu, SWT.RADIO);
-	helpToolTipsFull.setText("Show full tooltips");
-	helpToolTipsFull.setSelection(userOptionsManager.getToolTipSetting() == ToolTipOption.FULL);
+		MenuItem helpOpenHandbookItem = new MenuItem(helpMenu, SWT.PUSH);
+		helpOpenHandbookItem.setText("&Open Handbook");
+		helpOpenHandbookItem.addSelectionListener(new SelectionListener() {
 
-	SelectionListener tooltipSelectionListener = new SelectionAdapter() {
-	    @Override
-	    public void widgetSelected(SelectionEvent pSelectionEvent) {
-		ToolTipOption selectedToolTipSetting;
-		if (pSelectionEvent.getSource() == helpToolTipsFull)
-		    selectedToolTipSetting = ToolTipOption.FULL;
-		else if (pSelectionEvent.getSource() == helpToolTipsMinimal)
-		    selectedToolTipSetting = ToolTipOption.MINIMAL;
-		else
-		    selectedToolTipSetting = ToolTipOption.NONE;
-		if (userOptionsManager.getToolTipSetting() != selectedToolTipSetting) {
-		    userOptionsManager.setToolTipSetting(selectedToolTipSetting);
-		    matchDisplayView.updateToolTips();
-		    matchListView.updateToolTips();
-		}
-	    }
-	};
-	helpToolTipsFull.addSelectionListener(tooltipSelectionListener);
-	helpToolTipsMinimal.addSelectionListener(tooltipSelectionListener);
-	helpToolTipsOff.addSelectionListener(tooltipSelectionListener);
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+					try {
+						Desktop.getDesktop().browse(new URI(
+								"https://docs.google.com/document/d/1eKiEVsrNf-GLORP2BFzLK5-s8YoumV1yxY-L7IWfdxM/edit?usp=sharing"));
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					} catch (URISyntaxException e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
 
-    }
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+		MenuItem helpToolTipsItem = new MenuItem(helpMenu, SWT.CASCADE);
+		helpToolTipsItem.setText("&Tooltips");
 
-    public boolean run() {
-	shell.open();
-	while (!shell.isDisposed())
-	    if (!display.readAndDispatch())
-		display.sleep();
-	display.dispose();
+		Menu helpToolTipsMenu = new Menu(helpMenu);
+		helpToolTipsItem.setMenu(helpToolTipsMenu);
 
-	return exitCode;
-    }
+		MenuItem helpToolTipsOff = new MenuItem(helpToolTipsMenu, SWT.RADIO);
+		helpToolTipsOff.setText("Show no tooltips");
+		helpToolTipsOff.setSelection(userOptionsManager.getToolTipSetting() == ToolTipOption.NONE);
+		MenuItem helpToolTipsMinimal = new MenuItem(helpToolTipsMenu, SWT.RADIO);
+		helpToolTipsMinimal.setText("Show minimal tooltips");
+		helpToolTipsMinimal.setSelection(userOptionsManager.getToolTipSetting() == ToolTipOption.MINIMAL);
+		MenuItem helpToolTipsFull = new MenuItem(helpToolTipsMenu, SWT.RADIO);
+		helpToolTipsFull.setText("Show full tooltips");
+		helpToolTipsFull.setSelection(userOptionsManager.getToolTipSetting() == ToolTipOption.FULL);
 
-    public void exit(boolean pRestart) {
-	exitCode = pRestart;
-	shell.dispose();
-    }
+		SelectionListener tooltipSelectionListener = new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent pSelectionEvent) {
+				ToolTipOption selectedToolTipSetting;
+				if (pSelectionEvent.getSource() == helpToolTipsFull)
+					selectedToolTipSetting = ToolTipOption.FULL;
+				else if (pSelectionEvent.getSource() == helpToolTipsMinimal)
+					selectedToolTipSetting = ToolTipOption.MINIMAL;
+				else
+					selectedToolTipSetting = ToolTipOption.NONE;
+				if (userOptionsManager.getToolTipSetting() != selectedToolTipSetting) {
+					userOptionsManager.setToolTipSetting(selectedToolTipSetting);
+					matchDisplayView.updateToolTips();
+					matchListView.updateToolTips();
+				}
+			}
+		};
+		helpToolTipsFull.addSelectionListener(tooltipSelectionListener);
+		helpToolTipsMinimal.addSelectionListener(tooltipSelectionListener);
+		helpToolTipsOff.addSelectionListener(tooltipSelectionListener);
 
-    @Override
-    public void accept(DataPackage pDataPackage) {
-	matchListView.populate(pDataPackage.getMatches());
-	protocolView.populate(pDataPackage.getRuleApplications());
-    }
+	}
 
-    public Match getSelectedMatch() {
-	return matchListView.getChosenMatch();
-    }
+	public boolean run() {
+		shell.open();
+		while (!shell.isDisposed())
+			if (!display.readAndDispatch())
+				display.sleep();
+		display.dispose();
+
+		return exitCode;
+	}
+
+	public void exit(boolean pRestart) {
+		exitCode = pRestart;
+		shell.dispose();
+	}
+
+	@Override
+	public void accept(DataPackage pDataPackage) {
+		matchListView.populate(pDataPackage.getMatches());
+		protocolView.populate(pDataPackage.getRuleApplications());
+	}
+
+	public Match getSelectedMatch() {
+		return matchListView.getChosenMatch();
+	}
 }

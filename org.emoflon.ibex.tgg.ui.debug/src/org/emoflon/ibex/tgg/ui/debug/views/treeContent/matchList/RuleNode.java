@@ -11,55 +11,54 @@ import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeNode;
 
 public class RuleNode extends TreeNode {
 
-    private Rule rule;
-    private final IUserOptions userOptions;
-    
-    private int timesApplied = 0;
+	private Rule rule;
+	private final IUserOptions userOptions;
 
-    protected RuleNode(Rule pRule, IUserOptions userOptions) {
-    	rule = pRule;
-    	this.userOptions = userOptions;
-    }
+	private int timesApplied = 0;
 
-    public Rule getRule() {
-	return rule;
-    }
+	protected RuleNode(Rule pRule, IUserOptions userOptions) {
+		rule = pRule;
+		this.userOptions = userOptions;
+	}
 
-    @Override
-    protected String getLabel() {
-    	this.setStrikethrough(!hasChildren() && !(timesApplied > 0));
-    	
-    	if(hasChildren() && !(timesApplied > 0)) {
-    		setFontStyle(SWT.BOLD);
-    	} else {
-    		setFontStyle(SWT.NORMAL);
-    	}
-		return rule.getName() + " (matches: " + getChildren().size() + ", applied matches: "+timesApplied +")";
-    }
+	public Rule getRule() {
+		return rule;
+	}
 
-    @Override
-    protected Image getImage() {
-	return null;
-    }
+	@Override
+	protected String getLabel() {
+		this.setStrikethrough(!hasChildren() && !(timesApplied > 0));
 
-    @Override
-    protected Color getForeground() {
-    	if (hasChildren()) {
-    			return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_BLACK);
+		if (hasChildren() && !(timesApplied > 0)) {
+			setFontStyle(SWT.BOLD);
+		} else {
+			setFontStyle(SWT.NORMAL);
 		}
-    	else {
-    		return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_WHITE);
-        }
-    }
+		return rule.getName() + " (matches: " + getChildren().size() + ", applied matches: " + timesApplied + ")";
+	}
 
-    @Override
-    protected Color getBackground() {
-    	if(hasChildren()) {
-    		return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_WHITE);
-    	} else {
-    		return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_DARK_GRAY);
-    	}
-    }
+	@Override
+	protected Image getImage() {
+		return null;
+	}
+
+	@Override
+	protected Color getForeground() {
+		if (hasChildren()) {
+			return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_BLACK);
+		} else {
+			return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_WHITE);
+		}
+	}
+
+	@Override
+	protected Color getBackground() {
+		if (hasChildren()) {
+			return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_WHITE);
+		} else {
+			return VictoryUI.getDisplay().getSystemColor(SWT.COLOR_DARK_GRAY);
+		}
+	}
 
 	public int getTimesApplied() {
 		return timesApplied;
@@ -71,19 +70,19 @@ public class RuleNode extends TreeNode {
 
 	@Override
 	protected String getToolTip() {
-		if(userOptions.getToolTipSetting() == ToolTipOption.NONE) {
+		if (userOptions.getToolTipSetting() == ToolTipOption.NONE) {
 			return "";
 		}
-		String toolTip = "Rule "+getRule().getName()+": ";
-		if(this.hasChildren())
-			toolTip += "This rule currently has "+this.getChildren().size()+" matches ";
+		String toolTip = "Rule " + getRule().getName() + ": ";
+		if (this.hasChildren())
+			toolTip += "This rule currently has " + this.getChildren().size() + " matches ";
 		else
 			toolTip += "This rule currently has no matches ";
-		if(timesApplied >= 0)
-			toolTip += "and has been applied "+timesApplied+" before.";
+		if (timesApplied >= 0)
+			toolTip += "and has been applied " + timesApplied + " before.";
 		else
 			toolTip += "and has never been applied yet.";
-		if(this.hasChildren() && this.userOptions.getToolTipSetting() == ToolTipOption.FULL) {
+		if (this.hasChildren() && this.userOptions.getToolTipSetting() == ToolTipOption.FULL) {
 			toolTip += " Double click to apply a random match. Select to display the rule in the right panel.";
 		}
 		return toolTip;

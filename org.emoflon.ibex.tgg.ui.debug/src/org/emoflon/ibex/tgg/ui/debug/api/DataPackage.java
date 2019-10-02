@@ -8,7 +8,7 @@ import java.util.List;
  * selection step to the user.
  */
 public interface DataPackage {
-    public Collection<Match> getMatches();
+	public Collection<Match> getMatches();
 
-    public List<RuleApplication> getRuleApplications();
+	public List<RuleApplication> getRuleApplications();
 }

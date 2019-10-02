@@ -7,7 +7,7 @@ import java.util.Collection;
  * {@link Edge}.
  */
 public interface Graph {
-    public Collection<Node> getNodes();
+	public Collection<Node> getNodes();
 
-    public Collection<Edge> getEdges();
+	public Collection<Edge> getEdges();
 }

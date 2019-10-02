@@ -4,36 +4,34 @@ import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager.VisualizationLab
 
 public interface IUserOptions {
 
-    public boolean displayFullRuleForMatches();
+	public boolean displayFullRuleForMatches();
 
-    /**
-     * @return the visualization option for correspondence labels
-     */
-    public VisualizationLabelOptions getCorrLabelVisualization();
+	/**
+	 * @return the visualization option for correspondence labels
+	 */
+	public VisualizationLabelOptions getCorrLabelVisualization();
 
-    public int getNeighborhoodSize();
+	public int getNeighborhoodSize();
 
-    /**
-     * @return the visualization option for edge labels
-     */
-    public VisualizationLabelOptions getEdgeLabelVisualization();
+	/**
+	 * @return the visualization option for edge labels
+	 */
+	public VisualizationLabelOptions getEdgeLabelVisualization();
 
-    /**
-     * @return the visualization option for node labels
-     */
-    public VisualizationLabelOptions getNodeLabelVisualization();
+	/**
+	 * @return the visualization option for node labels
+	 */
+	public VisualizationLabelOptions getNodeLabelVisualization();
 
-    public boolean displayTrgContextForMatches();
+	public boolean displayTrgContextForMatches();
 
-    public boolean displaySrcContextForMatches();
+	public boolean displaySrcContextForMatches();
 
-    public boolean displayCorrContextForMatches();
-    
-    public ToolTipOption getToolTipSetting();
-    
-    public enum ToolTipOption {
-    	FULL,
-    	MINIMAL,
-    	NONE
-    }
+	public boolean displayCorrContextForMatches();
+
+	public ToolTipOption getToolTipSetting();
+
+	public enum ToolTipOption {
+		FULL, MINIMAL, NONE
+	}
 }

@@ -14,122 +14,122 @@ import org.eclipse.swt.graphics.TextStyle;
 import org.emoflon.ibex.tgg.ui.debug.core.VictoryUI;
 
 public abstract class TreeNode {
-    private String font = "Monospaced";
-    private int fontSize = 10;
-    private int fontStyle = SWT.NORMAL;
-    private boolean strikethrough = false;
+	private String font = "Monospaced";
+	private int fontSize = 10;
+	private int fontStyle = SWT.NORMAL;
+	private boolean strikethrough = false;
 
-    private TreeNode parent;
-    private Collection<TreeNode> children = new HashSet<>();
+	private TreeNode parent;
+	private Collection<TreeNode> children = new HashSet<>();
 
-    public void addChild(TreeNode pNode) {
-	if (pNode.parent != null)
-	    throw new IllegalStateException("The specified node is already the child of another node");
+	public void addChild(TreeNode pNode) {
+		if (pNode.parent != null)
+			throw new IllegalStateException("The specified node is already the child of another node");
 
-	children.add(pNode);
-	pNode.parent = this;
-    }
-
-    public void removeChild(TreeNode pNode) {
-	if (children.contains(pNode)) {
-	    children.remove(pNode);
-	    pNode.parent = null;
+		children.add(pNode);
+		pNode.parent = this;
 	}
-    }
 
-    public void clearChildren() {
-	for (TreeNode child : children)
-	    removeChild(child);
-    }
+	public void removeChild(TreeNode pNode) {
+		if (children.contains(pNode)) {
+			children.remove(pNode);
+			pNode.parent = null;
+		}
+	}
 
-    public void removeFromParent() {
-	parent.removeChild(this);
-    }
+	public void clearChildren() {
+		for (TreeNode child : children)
+			removeChild(child);
+	}
 
-    public final StyledString getCellLabel() {
-	return new StyledString(getLabel(), new Styler() {
-	    @Override
-	    public void applyStyles(TextStyle pTextStyle) {
-	    	pTextStyle.font = FontDescriptor.createFrom(new FontData(font, fontSize, fontStyle))
-	    			.createFont(VictoryUI.getDisplay());
-	    	pTextStyle.strikeout = strikethrough;
-	    }
-	});
-    }
+	public void removeFromParent() {
+		parent.removeChild(this);
+	}
 
-    public void setFont(String pFont) {
-	font = pFont;
-    }
+	public final StyledString getCellLabel() {
+		return new StyledString(getLabel(), new Styler() {
+			@Override
+			public void applyStyles(TextStyle pTextStyle) {
+				pTextStyle.font = FontDescriptor.createFrom(new FontData(font, fontSize, fontStyle))
+						.createFont(VictoryUI.getDisplay());
+				pTextStyle.strikeout = strikethrough;
+			}
+		});
+	}
 
-    public void setFontSize(int pFontSize) {
-	fontSize = pFontSize;
-    }
+	public void setFont(String pFont) {
+		font = pFont;
+	}
 
-    public void setFontStyle(int pFontStyle) {
-	fontStyle = pFontStyle;
-    }
+	public void setFontSize(int pFontSize) {
+		fontSize = pFontSize;
+	}
+
+	public void setFontStyle(int pFontStyle) {
+		fontStyle = pFontStyle;
+	}
 
 	public void setStrikethrough(boolean strikethrough) {
 		this.strikethrough = strikethrough;
 	}
 
 	protected abstract String getLabel();
-	
+
 	protected abstract String getToolTip();
 
-    protected abstract Image getImage();
+	protected abstract Image getImage();
 
-    protected abstract Color getForeground();
+	protected abstract Color getForeground();
 
-    protected abstract Color getBackground();
+	protected abstract Color getBackground();
 
-    /**
-     * Called when this node is disposed. Specifically intended to dispose of any
-     * image resources that might have been cached by a subclass.<br>
-     * Recursively calls this method on its children. Any subclasses that override
-     * this method must take care to call this implementation at some point.
-     */
-    protected void dispose() {
-	for (TreeNode child : children)
-	    child.dispose();
-    }
-
-    public TreeNode getParent() {
-	return parent;
-    }
-
-    public Collection<TreeNode> getChildren() {
-	return children;
-    }
-
-    public boolean hasChildren() {
-	return !children.isEmpty();
-    }
-
-    public final static class TreeRootNode extends TreeNode {
-	@Override
-	public String getLabel() {
-	    return null;
+	/**
+	 * Called when this node is disposed. Specifically intended to dispose of any
+	 * image resources that might have been cached by a subclass.<br>
+	 * Recursively calls this method on its children. Any subclasses that override
+	 * this method must take care to call this implementation at some point.
+	 */
+	protected void dispose() {
+		for (TreeNode child : children)
+			child.dispose();
 	}
 
-	@Override
-	public Image getImage() {
-	    return null;
+	public TreeNode getParent() {
+		return parent;
 	}
 
-	@Override
-	protected Color getForeground() {
-	    return null;
+	public Collection<TreeNode> getChildren() {
+		return children;
 	}
 
-	@Override
-	protected Color getBackground() {
-	    return null;
+	public boolean hasChildren() {
+		return !children.isEmpty();
 	}
 
-	@Override
-	protected String getToolTip() {
-		return null;
+	public final static class TreeRootNode extends TreeNode {
+		@Override
+		public String getLabel() {
+			return null;
+		}
+
+		@Override
+		public Image getImage() {
+			return null;
+		}
+
+		@Override
+		protected Color getForeground() {
+			return null;
+		}
+
+		@Override
+		protected Color getBackground() {
+			return null;
+		}
+
+		@Override
+		protected String getToolTip() {
+			return null;
+		}
 	}
-    }
 }

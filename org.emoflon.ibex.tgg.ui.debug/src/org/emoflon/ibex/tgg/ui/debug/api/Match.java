@@ -5,13 +5,13 @@ package org.emoflon.ibex.tgg.ui.debug.api;
  * by Victory.
  */
 public interface Match {
-    public String getName();
+	public String getName();
 
-    public boolean isBlocked();
+	public boolean isBlocked();
 
-    public String getBlockingReason();
+	public String getBlockingReason();
 
-    public Rule getRule();
+	public Rule getRule();
 
-    public Graph getGraph(int pNeighbourhoodSize);
+	public Graph getGraph(int pNeighbourhoodSize);
 }

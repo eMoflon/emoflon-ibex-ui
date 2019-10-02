@@ -8,9 +8,9 @@ import java.util.Collection;
  * of the regular match selection workflow.
  */
 public interface DataProvider {
-    public Collection<Rule> getAllRules();
+	public Collection<Rule> getAllRules();
 
-    public void saveModels(String[] saveLocations) throws IOException;
+	public void saveModels(String[] saveLocations) throws IOException;
 
-    public String[][] getDefaultSaveData();
+	public String[][] getDefaultSaveData();
 }

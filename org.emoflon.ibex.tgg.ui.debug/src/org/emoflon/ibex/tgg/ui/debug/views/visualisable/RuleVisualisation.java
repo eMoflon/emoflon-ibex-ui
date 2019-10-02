@@ -7,18 +7,18 @@ import org.emoflon.ibex.tgg.ui.debug.plantuml.PlantUMLGenerator;
 
 public class RuleVisualisation extends VisualisableElement {
 
-    private Rule rule;
-    private IUserOptions userOptions;
-    private DataProvider dataProvider;
+	private Rule rule;
+	private IUserOptions userOptions;
+	private DataProvider dataProvider;
 
-    public RuleVisualisation(Rule pRule, IUserOptions pUserOptions, DataProvider pDataProvider) {
-	rule = pRule;
-	userOptions = pUserOptions;
-	dataProvider = pDataProvider;
-    }
+	public RuleVisualisation(Rule pRule, IUserOptions pUserOptions, DataProvider pDataProvider) {
+		rule = pRule;
+		userOptions = pUserOptions;
+		dataProvider = pDataProvider;
+	}
 
-    @Override
-    protected String generateVisualisationString() {
-	return PlantUMLGenerator.visualise(rule.getGraph(), userOptions, dataProvider);
-    }
+	@Override
+	protected String generateVisualisationString() {
+		return PlantUMLGenerator.visualise(rule.getGraph(), userOptions, dataProvider);
+	}
 }
