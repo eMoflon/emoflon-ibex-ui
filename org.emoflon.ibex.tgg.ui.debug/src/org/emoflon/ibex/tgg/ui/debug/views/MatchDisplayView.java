@@ -22,6 +22,7 @@ import org.emoflon.ibex.tgg.ui.debug.api.Match;
 import org.emoflon.ibex.tgg.ui.debug.api.Rule;
 import org.emoflon.ibex.tgg.ui.debug.api.RuleApplication;
 import org.emoflon.ibex.tgg.ui.debug.core.IExitCodeReceiver;
+import org.emoflon.ibex.tgg.ui.debug.core.VictoryUI;
 import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager;
 import org.emoflon.ibex.tgg.ui.debug.util.ModelLocationDialog;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.MatchVisualisation;
@@ -107,7 +108,7 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 			    } catch (IOException e) {
 				throw new IllegalArgumentException("Save Models has a problem.");
 			    }
-			});
+			}).build(VictoryUI.getDisplay().getActiveShell());
 	    }
 	});
 
