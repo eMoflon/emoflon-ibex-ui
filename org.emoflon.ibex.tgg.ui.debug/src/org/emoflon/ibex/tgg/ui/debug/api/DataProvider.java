@@ -6,5 +6,7 @@ import java.util.Collection;
 public interface DataProvider {
     public Collection<Rule> getAllRules();
 
-    public void saveModels() throws IOException;
+    public void saveModels(String[] saveLocations) throws IOException;
+
+    public String[][] getDefaultSaveData();
 }

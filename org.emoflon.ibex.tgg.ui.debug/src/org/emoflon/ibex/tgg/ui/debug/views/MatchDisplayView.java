@@ -23,6 +23,7 @@ import org.emoflon.ibex.tgg.ui.debug.api.Rule;
 import org.emoflon.ibex.tgg.ui.debug.api.RuleApplication;
 import org.emoflon.ibex.tgg.ui.debug.core.IExitCodeReceiver;
 import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager;
+import org.emoflon.ibex.tgg.ui.debug.util.ModelLocationDialog;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.MatchVisualisation;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.RuleApplicationVisualisation;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.RuleVisualisation;
@@ -94,11 +95,19 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	saveModelsButton.addSelectionListener(new SelectionAdapter() {
 	    @Override
 	    public void widgetSelected(SelectionEvent pSelectionEvent) {
-		try {
-		    dataProvider.saveModels();
-		} catch (IOException e) {
-		    throw new IllegalArgumentException("Save Models has a problem.");
-		}
+		new ModelLocationDialog(new String[] { "src model save location", //
+			"trg model save location", //
+			"corr model save location", //
+			"protocol save location" }, //
+			dataProvider.getDefaultSaveData(), //
+			"Save All", //
+			saveLocations -> {
+			    try {
+				dataProvider.saveModels(saveLocations);
+			    } catch (IOException e) {
+				throw new IllegalArgumentException("Save Models has a problem.");
+			    }
+			});
 	    }
 	});
 
