@@ -17,96 +17,96 @@ import language.TGGRuleCorr;
 
 public class TGGRuleAdapter implements Rule {
 
-    private static Map<String, TGGRuleAdapter> rulesByName = new HashMap<>();
+	private static Map<String, TGGRuleAdapter> rulesByName = new HashMap<>();
 
-    public static TGGRuleAdapter getRuleByName(String pRuleName) {
-	return rulesByName.get(pRuleName);
-    }
-
-    public static Collection<Rule> getAllRules() {
-	return Collections.unmodifiableCollection(rulesByName.values());
-    }
-
-    public static TGGRuleAdapter adapt(TGGRule pRule, IBeXOperation pOperationType) {
-	if (!rulesByName.containsKey(pRule.getName())) {
-	    TGGRuleAdapter rule = new TGGRuleAdapter(pRule, pOperationType);
-	    rulesByName.put(rule.getName(), rule);
+	public static TGGRuleAdapter getRuleByName(String pRuleName) {
+		return rulesByName.get(pRuleName);
 	}
-	return rulesByName.get(pRule.getName());
-    }
 
-    private TGGRule rule;
-    private Graph graph;
+	public static Collection<Rule> getAllRules() {
+		return Collections.unmodifiableCollection(rulesByName.values());
+	}
 
-    private Collection<TGGRuleNodeAdapter> nodes;
-    private Collection<TGGRuleCorrAdapter> corrs;
+	public static TGGRuleAdapter adapt(TGGRule pRule, IBeXOperation pOperationType) {
+		if (!rulesByName.containsKey(pRule.getName())) {
+			TGGRuleAdapter rule = new TGGRuleAdapter(pRule, pOperationType);
+			rulesByName.put(rule.getName(), rule);
+		}
+		return rulesByName.get(pRule.getName());
+	}
 
-    private TGGRuleAdapter(TGGRule pRule, IBeXOperation pOperationType) {
-	rule = pRule;
-	GraphBuilder graphBuilder = new GraphBuilder();
+	private TGGRule rule;
+	private Graph graph;
 
-	nodes = new HashSet<>();
-	corrs = new HashSet<>();
+	private Collection<TGGRuleNodeAdapter> nodes;
+	private Collection<TGGRuleCorrAdapter> corrs;
 
-	// Add nodes to the graph
-	rule.getNodes().stream()//
-		.filter(node -> DomainType.SRC.equals(node.getDomainType()))//
-		.map(node -> TGGRuleNodeAdapter.adapt(node, Domain.SRC, pOperationType))//
-		.forEach(node -> {
-		    graphBuilder.addNode(node);
-		    nodes.add(node);
-		});
-	rule.getNodes().stream()//
-		.filter(node -> DomainType.TRG.equals(node.getDomainType()))//
-		.map(node -> TGGRuleNodeAdapter.adapt(node, Domain.TRG, pOperationType))//
-		.forEach(node -> {
-		    graphBuilder.addNode(node);
-		    nodes.add(node);
-		});
+	private TGGRuleAdapter(TGGRule pRule, IBeXOperation pOperationType) {
+		rule = pRule;
+		GraphBuilder graphBuilder = new GraphBuilder();
 
-	// Add corr edges to the graph
-	rule.getNodes().stream()//
-		.filter(node -> DomainType.CORR.equals(node.getDomainType()))//
-		.map(node -> TGGRuleCorrAdapter.adapt((TGGRuleCorr) node))//
-		.forEach(corr -> {
-		    graphBuilder.addEdge(corr);
-		    corrs.add(corr);
-		});
+		nodes = new HashSet<>();
+		corrs = new HashSet<>();
 
-	// Add regular edges to the graph
-	rule.getEdges().stream()//
-		.filter(edge -> DomainType.SRC.equals(edge.getDomainType()))//
-		.map(edge -> TGGRuleEdgeAdapter.adapt(edge, Domain.SRC, pOperationType))//
-		.forEach(edge -> graphBuilder.addEdge(edge));
-	rule.getEdges().stream()//
-		.filter(edge -> DomainType.TRG.equals(edge.getDomainType()))//
-		.map(edge -> TGGRuleEdgeAdapter.adapt(edge, Domain.TRG, pOperationType))//
-		.forEach(edge -> graphBuilder.addEdge(edge));
+		// Add nodes to the graph
+		rule.getNodes().stream()//
+				.filter(node -> DomainType.SRC.equals(node.getDomainType()))//
+				.map(node -> TGGRuleNodeAdapter.adapt(node, Domain.SRC, pOperationType))//
+				.forEach(node -> {
+					graphBuilder.addNode(node);
+					nodes.add(node);
+				});
+		rule.getNodes().stream()//
+				.filter(node -> DomainType.TRG.equals(node.getDomainType()))//
+				.map(node -> TGGRuleNodeAdapter.adapt(node, Domain.TRG, pOperationType))//
+				.forEach(node -> {
+					graphBuilder.addNode(node);
+					nodes.add(node);
+				});
 
-	graph = graphBuilder.build();
-	nodes = Collections.unmodifiableCollection(nodes);
-	corrs = Collections.unmodifiableCollection(corrs);
-    }
+		// Add corr edges to the graph
+		rule.getNodes().stream()//
+				.filter(node -> DomainType.CORR.equals(node.getDomainType()))//
+				.map(node -> TGGRuleCorrAdapter.adapt((TGGRuleCorr) node))//
+				.forEach(corr -> {
+					graphBuilder.addEdge(corr);
+					corrs.add(corr);
+				});
 
-    public TGGRule getWrappedRule() {
-	return rule;
-    }
+		// Add regular edges to the graph
+		rule.getEdges().stream()//
+				.filter(edge -> DomainType.SRC.equals(edge.getDomainType()))//
+				.map(edge -> TGGRuleEdgeAdapter.adapt(edge, Domain.SRC, pOperationType))//
+				.forEach(edge -> graphBuilder.addEdge(edge));
+		rule.getEdges().stream()//
+				.filter(edge -> DomainType.TRG.equals(edge.getDomainType()))//
+				.map(edge -> TGGRuleEdgeAdapter.adapt(edge, Domain.TRG, pOperationType))//
+				.forEach(edge -> graphBuilder.addEdge(edge));
 
-    @Override
-    public String getName() {
-	return rule.getName();
-    }
+		graph = graphBuilder.build();
+		nodes = Collections.unmodifiableCollection(nodes);
+		corrs = Collections.unmodifiableCollection(corrs);
+	}
 
-    @Override
-    public Graph getGraph() {
-	return graph;
-    }
+	public TGGRule getWrappedRule() {
+		return rule;
+	}
 
-    public Collection<TGGRuleNodeAdapter> getNodes() {
-	return nodes;
-    }
+	@Override
+	public String getName() {
+		return rule.getName();
+	}
 
-    public Collection<TGGRuleCorrAdapter> getCorrs() {
-	return corrs;
-    }
+	@Override
+	public Graph getGraph() {
+		return graph;
+	}
+
+	public Collection<TGGRuleNodeAdapter> getNodes() {
+		return nodes;
+	}
+
+	public Collection<TGGRuleCorrAdapter> getCorrs() {
+		return corrs;
+	}
 }
