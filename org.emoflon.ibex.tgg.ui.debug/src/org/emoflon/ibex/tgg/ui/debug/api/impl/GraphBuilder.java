@@ -9,6 +9,10 @@ import org.emoflon.ibex.tgg.ui.debug.api.Node;
 import org.emoflon.ibex.tgg.ui.debug.api.enums.Action;
 import org.emoflon.ibex.tgg.ui.debug.api.enums.EdgeType;
 
+/**
+ * Builds a {@link Graph} object from the provided {@link Node}s and
+ * {@link Edge}s. Can also be used to merge multiple Graphs into a single one.
+ */
 public class GraphBuilder {
     private Collection<Node> nodes = new HashSet<>();
     private Collection<Edge> edges = new HashSet<>();

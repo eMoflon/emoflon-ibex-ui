@@ -2,6 +2,10 @@ package org.emoflon.ibex.tgg.ui.debug.api;
 
 import org.emoflon.ibex.tgg.ui.debug.core.VictoryUI;
 
+/**
+ * The main interaction point for any adapter to use Victory. Provides static
+ * methods for initializing the Victory UI and interacting with it.
+ */
 public final class Victory {
     private static VictoryUI ui;
     private static final Match[] selectedMatch = new Match[1];
