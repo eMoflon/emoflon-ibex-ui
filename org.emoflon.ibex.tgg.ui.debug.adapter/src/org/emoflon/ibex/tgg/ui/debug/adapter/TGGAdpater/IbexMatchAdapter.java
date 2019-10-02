@@ -21,10 +21,10 @@ public class IbexMatchAdapter implements Match {
 
 	private static Map<IbexMatch, IbexMatchAdapter> wrappers = new HashMap<>();
 
-	public static IbexMatchAdapter adapt(IbexMatch pMatch) {
-		if (!wrappers.containsKey(pMatch))
-			wrappers.put(pMatch, new IbexMatchAdapter(pMatch));
-		return wrappers.get(pMatch);
+	public static IbexMatchAdapter adapt(IbexMatch match) {
+		if (!wrappers.containsKey(match))
+			wrappers.put(match, new IbexMatchAdapter(match));
+		return wrappers.get(match);
 	}
 
 	// ----------
@@ -32,8 +32,8 @@ public class IbexMatchAdapter implements Match {
 	private IbexMatch match;
 	private Map<Integer, Graph> graphs = new HashMap<>();
 
-	private IbexMatchAdapter(IbexMatch pMatch) {
-		match = pMatch;
+	private IbexMatchAdapter(IbexMatch match) {
+		this.match = match;
 	}
 
 	public IbexMatch getWrappedMatch() {
@@ -61,13 +61,13 @@ public class IbexMatchAdapter implements Match {
 	}
 
 	@Override
-	public Graph getGraph(int pNeighbourhoodSize) {
-		if (!graphs.containsKey(pNeighbourhoodSize))
-			buildGraph(pNeighbourhoodSize);
-		return graphs.get(pNeighbourhoodSize);
+	public Graph getGraph(int neighbourhoodSize) {
+		if (!graphs.containsKey(neighbourhoodSize))
+			buildGraph(neighbourhoodSize);
+		return graphs.get(neighbourhoodSize);
 	}
 
-	private void buildGraph(int pNeighbourhoodSize) {
+	private void buildGraph(int neighbourhoodSize) {
 		IMatch iMatch = match.getIMatch();
 		GraphBuilder graphBuilder = new GraphBuilder();
 		TGGRuleAdapter rule = TGGRuleAdapter.getRuleByName(iMatch.getRuleName());
@@ -89,8 +89,8 @@ public class IbexMatchAdapter implements Match {
 				trgObjects.add(modelNode);
 			}
 		});
-		srcObjects.addAll(VictoryIBeXAdapter.getNeighbourhood(srcObjects, pNeighbourhoodSize));
-		trgObjects.addAll(VictoryIBeXAdapter.getNeighbourhood(trgObjects, pNeighbourhoodSize));
+		srcObjects.addAll(VictoryIBeXAdapter.getNeighbourhood(srcObjects, neighbourhoodSize));
+		trgObjects.addAll(VictoryIBeXAdapter.getNeighbourhood(trgObjects, neighbourhoodSize));
 
 		EObjectAdapter.constructGraphDomain(graphBuilder, Domain.SRC, srcObjects);
 		EObjectAdapter.constructGraphDomain(graphBuilder, Domain.TRG, trgObjects);
@@ -103,6 +103,6 @@ public class IbexMatchAdapter implements Match {
 		modelObjectToRuleNodeMap.forEach((modelNode, ruleNode) -> graphBuilder.addEdge("", ruleNode,
 				EObjectAdapter.get(modelNode), EdgeType.MATCH, Action.CONTEXT));
 
-		graphs.put(pNeighbourhoodSize, graphBuilder.build());
+		graphs.put(neighbourhoodSize, graphBuilder.build());
 	}
 }

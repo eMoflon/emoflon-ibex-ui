@@ -16,10 +16,10 @@ public class TGGRuleEdgeAdapter implements Edge {
 
 	private static Map<TGGRuleEdge, TGGRuleEdgeAdapter> wrappers = new HashMap<>();
 
-	public static TGGRuleEdgeAdapter adapt(TGGRuleEdge pRuleEdge, Domain pDomain, IBeXOperation pOperationType) {
-		if (!wrappers.containsKey(pRuleEdge))
-			wrappers.put(pRuleEdge, new TGGRuleEdgeAdapter(pRuleEdge, pDomain, pOperationType));
-		return wrappers.get(pRuleEdge);
+	public static TGGRuleEdgeAdapter adapt(TGGRuleEdge ruleEdge, Domain domain, IBeXOperation operationType) {
+		if (!wrappers.containsKey(ruleEdge))
+			wrappers.put(ruleEdge, new TGGRuleEdgeAdapter(ruleEdge, domain, operationType));
+		return wrappers.get(ruleEdge);
 	}
 
 	// ----------
@@ -27,13 +27,13 @@ public class TGGRuleEdgeAdapter implements Edge {
 	private TGGRuleEdge edge;
 	private Action action;
 
-	private TGGRuleEdgeAdapter(TGGRuleEdge pEdge, Domain pDomain, IBeXOperation pOperationType) {
-		edge = pEdge;
+	private TGGRuleEdgeAdapter(TGGRuleEdge ruleEdge, Domain domain, IBeXOperation operationType) {
+		edge = ruleEdge;
 
 		if (!BindingType.CREATE.equals(edge.getBindingType()))
 			action = Action.CONTEXT;
-		else if ((Domain.SRC.equals(pDomain) && IBeXOperation.FWD.equals(pOperationType)) || //
-				(Domain.TRG.equals(pDomain) && IBeXOperation.BWD.equals(pOperationType)))
+		else if ((Domain.SRC.equals(domain) && IBeXOperation.FWD.equals(operationType)) || //
+				(Domain.TRG.equals(domain) && IBeXOperation.BWD.equals(operationType)))
 			action = Action.TRANSLATE;
 		else
 			action = Action.CREATE;

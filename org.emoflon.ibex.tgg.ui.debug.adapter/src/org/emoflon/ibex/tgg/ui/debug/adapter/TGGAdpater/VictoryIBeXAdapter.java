@@ -17,18 +17,18 @@ import org.emoflon.ibex.tgg.ui.debug.api.Victory;
 
 public class VictoryIBeXAdapter extends IbexController implements DataProvider {
 
-	public static VictoryIBeXAdapter create(OperationalStrategy pOperationalStrategy, IBeXOperation pOperationType) {
-		pOperationalStrategy.getOptions().flattenedTGG().getRules()
-				.forEach(rule -> TGGRuleAdapter.adapt(rule, pOperationType));
+	public static VictoryIBeXAdapter create(OperationalStrategy operationalStrategy, IBeXOperation operationType) {
+		operationalStrategy.getOptions().flattenedTGG().getRules()
+				.forEach(rule -> TGGRuleAdapter.adapt(rule, operationType));
 
-		dataProvider = new VictoryDataProvider(pOperationalStrategy);
+		dataProvider = new VictoryDataProvider(operationalStrategy);
 		VictoryIBeXAdapter adapter = new VictoryIBeXAdapter();
 		Victory.create(adapter);
 		return adapter;
 	}
 
-	public static Collection<EObject> getNeighbourhood(Collection<EObject> pNodes, int pNeighbourhoodSize) {
-		return dataProvider.getMatchNeighbourhoods(pNodes, pNeighbourhoodSize);
+	public static Collection<EObject> getNeighbourhood(Collection<EObject> nodes, int neighbourhoodSize) {
+		return dataProvider.getMatchNeighbourhoods(nodes, neighbourhoodSize);
 	}
 
 	private static IVictoryDataProvider dataProvider;
@@ -41,8 +41,8 @@ public class VictoryIBeXAdapter extends IbexController implements DataProvider {
 	}
 
 	@Override
-	public IMatch chooseOneMatch(DataPackage pDataPackage) {
-		Match chosenMatch = Victory.selectMatch(new DataPackageAdapter(pDataPackage));
+	public IMatch chooseOneMatch(DataPackage dataPackage) {
+		Match chosenMatch = Victory.selectMatch(new DataPackageAdapter(dataPackage));
 		if (chosenMatch instanceof IbexMatchAdapter)
 			return ((IbexMatchAdapter) chosenMatch).getWrappedMatch().getIMatch();
 		else
@@ -56,8 +56,8 @@ public class VictoryIBeXAdapter extends IbexController implements DataProvider {
 	}
 
 	@Override
-	public void saveModels(String[] pSaveLocations) throws IOException {
-		dataProvider.saveModels(pSaveLocations);
+	public void saveModels(String[] saveLocations) throws IOException {
+		dataProvider.saveModels(saveLocations);
 	}
 
 	@Override

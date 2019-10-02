@@ -15,18 +15,18 @@ public class TGGRuleCorrAdapter implements Edge {
 
 	private static Map<TGGRuleCorr, TGGRuleCorrAdapter> wrappers = new HashMap<>();
 
-	public static TGGRuleCorrAdapter adapt(TGGRuleCorr pProtocolStep) {
-		if (!wrappers.containsKey(pProtocolStep))
-			wrappers.put(pProtocolStep, new TGGRuleCorrAdapter(pProtocolStep));
-		return wrappers.get(pProtocolStep);
+	public static TGGRuleCorrAdapter adapt(TGGRuleCorr protocolStep) {
+		if (!wrappers.containsKey(protocolStep))
+			wrappers.put(protocolStep, new TGGRuleCorrAdapter(protocolStep));
+		return wrappers.get(protocolStep);
 	}
 
 	// ----------
 
 	private TGGRuleCorr corr;
 
-	private TGGRuleCorrAdapter(TGGRuleCorr pCorr) {
-		corr = pCorr;
+	private TGGRuleCorrAdapter(TGGRuleCorr ruleCorr) {
+		corr = ruleCorr;
 	}
 
 	@Override

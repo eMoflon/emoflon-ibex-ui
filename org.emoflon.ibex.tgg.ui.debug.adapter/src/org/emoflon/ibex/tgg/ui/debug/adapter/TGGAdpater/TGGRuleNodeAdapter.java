@@ -17,19 +17,19 @@ public class TGGRuleNodeAdapter implements Node {
 
 	private static Map<TGGRuleNode, TGGRuleNodeAdapter> wrappers = new HashMap<>();
 
-	public static TGGRuleNodeAdapter adapt(TGGRuleNode pRuleNode, Domain pDomain, IBeXOperation pOperationType) {
-		if (wrappers.containsKey(pRuleNode))
+	public static TGGRuleNodeAdapter adapt(TGGRuleNode ruleNode, Domain domain, IBeXOperation operationType) {
+		if (wrappers.containsKey(ruleNode))
 			throw new IllegalStateException("The specified rule has already been adapted.");
 
-		TGGRuleNodeAdapter adapter = new TGGRuleNodeAdapter(pRuleNode, pDomain, pOperationType);
-		wrappers.put(pRuleNode, adapter);
+		TGGRuleNodeAdapter adapter = new TGGRuleNodeAdapter(ruleNode, domain, operationType);
+		wrappers.put(ruleNode, adapter);
 		return adapter;
 	}
 
-	public static TGGRuleNodeAdapter get(TGGRuleNode pRuleNode) {
-		if (!wrappers.containsKey(pRuleNode))
+	public static TGGRuleNodeAdapter get(TGGRuleNode ruleNode) {
+		if (!wrappers.containsKey(ruleNode))
 			throw new IllegalStateException("The specified rule has not been adapted yet.");
-		return wrappers.get(pRuleNode);
+		return wrappers.get(ruleNode);
 	}
 
 	// ----------
@@ -37,13 +37,13 @@ public class TGGRuleNodeAdapter implements Node {
 	private TGGRuleNode node;
 	private Action action;
 
-	private TGGRuleNodeAdapter(TGGRuleNode pNode, Domain pDomain, IBeXOperation pOperationType) {
-		node = pNode;
+	private TGGRuleNodeAdapter(TGGRuleNode ruleNode, Domain domain, IBeXOperation operationType) {
+		node = ruleNode;
 
 		if (!BindingType.CREATE.equals(node.getBindingType()))
 			action = Action.CONTEXT;
-		else if ((Domain.SRC.equals(pDomain) && IBeXOperation.FWD.equals(pOperationType)) || //
-				(Domain.TRG.equals(pDomain) && IBeXOperation.BWD.equals(pOperationType)))
+		else if ((Domain.SRC.equals(domain) && IBeXOperation.FWD.equals(operationType)) || //
+				(Domain.TRG.equals(domain) && IBeXOperation.BWD.equals(operationType)))
 			action = Action.TRANSLATE;
 		else
 			action = Action.CREATE;
