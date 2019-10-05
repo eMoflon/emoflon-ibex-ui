@@ -13,8 +13,8 @@ public class RuleNode extends TreeNode {
 
 	private Rule rule;
 	private final IUserOptions userOptions;
-
 	private int timesApplied = 0;
+	private boolean hasBreakpoint;
 
 	protected RuleNode(Rule rule, IUserOptions userOptions) {
 		this.rule = rule;
@@ -34,7 +34,8 @@ public class RuleNode extends TreeNode {
 		} else {
 			setFontStyle(SWT.NORMAL);
 		}
-		return rule.getName() + " (matches: " + getChildren().size() + ", applied matches: " + timesApplied + ")";
+		return (hasBreakpoint ? "(B) " : "") + rule.getName() + " (matches: " + getChildren().size()
+				+ ", applied matches: " + timesApplied + ")";
 	}
 
 	@Override
@@ -86,5 +87,13 @@ public class RuleNode extends TreeNode {
 			toolTip += " Double click to apply a random match. Select to display the rule in the right panel.";
 		}
 		return toolTip;
+	}
+
+	public void toggleBreakpoint() {
+		hasBreakpoint = !hasBreakpoint;
+	}
+
+	public boolean hasBreakpoint() {
+		return hasBreakpoint;
 	}
 }

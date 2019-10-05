@@ -67,7 +67,7 @@ public class VictoryUI implements IExitCodeReceiver, Consumer<DataPackage> {
 		leftPanelSashForm.setLayout(new GridLayout());
 		leftPanelSashForm.setBackground(display.getSystemColor(SWT.COLOR_GRAY));
 
-		matchListView = MatchListView.create(leftPanelSashForm, dataProvider.getAllRules(), userOptionsManager);
+		matchListView = MatchListView.create(leftPanelSashForm, userOptionsManager, dataProvider);
 		matchListView.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		protocolView = ProtocolView.create(leftPanelSashForm, userOptionsManager);

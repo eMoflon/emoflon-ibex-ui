@@ -14,6 +14,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MenuDetectEvent;
+import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
@@ -22,8 +24,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.emoflon.ibex.tgg.ui.debug.api.DataProvider;
 import org.emoflon.ibex.tgg.ui.debug.api.Match;
-import org.emoflon.ibex.tgg.ui.debug.api.Rule;
 import org.emoflon.ibex.tgg.ui.debug.api.Victory;
 import org.emoflon.ibex.tgg.ui.debug.core.VictoryUI;
 import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions;
@@ -35,28 +37,24 @@ import org.emoflon.ibex.tgg.ui.debug.views.treeContent.matchList.RuleNode;
 public class MatchListView extends Composite implements ISharedFocusElement {
 
 	private IVisualiser visualiser;
+	private DataProvider dataProvider;
 
 	private TreeViewer treeViewer;
 	private MatchListContentManager contentManager;
 	private Button applyButton;
-
 	private ProtocolView protocolView;
-
 	private Match[] chosenMatch = new Match[1];
-
 	private Collection<ISharedFocusElement> sharedFocusElements = new HashSet<>();
-
 	private Button expandAllButton;
-
 	private Button collapseAllButton;
-
 	private final IUserOptions userOptions;
 
-	private MatchListView(Composite parent, Collection<Rule> rules, IUserOptions userOptions) {
+	private MatchListView(Composite parent, IUserOptions userOptions, DataProvider dataProvider) {
 		super(parent, SWT.NONE);
 
 		this.userOptions = userOptions;
-		contentManager = new MatchListContentManager(rules, userOptions);
+		this.dataProvider = dataProvider;
+		contentManager = new MatchListContentManager(dataProvider.getAllRules(), userOptions);
 	}
 
 	private MatchListView build() {
@@ -140,6 +138,21 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 				}
 			}
 		});
+		treeViewer.getControl().addMenuDetectListener(new MenuDetectListener() {
+			@Override
+			public void menuDetected(MenuDetectEvent mde) {
+				Object selection = treeViewer.getStructuredSelection().getFirstElement();
+				if (selection instanceof RuleNode) {
+					RuleNode ruleNode = (RuleNode) selection;
+					if (ruleNode.hasBreakpoint())
+						dataProvider.removeBreakpoint(ruleNode.getRule());
+					else
+						dataProvider.addBreakpoint(ruleNode.getRule());
+					ruleNode.toggleBreakpoint();
+					treeViewer.refresh();
+				}
+			}
+		});
 
 		applyButton = new Button(this, SWT.PUSH);
 		applyButton.setText("Apply");
@@ -159,8 +172,8 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 		return this;
 	}
 
-	public static MatchListView create(Composite parent, Collection<Rule> rules, IUserOptions userOptions) {
-		return new MatchListView(parent, rules, userOptions).build();
+	public static MatchListView create(Composite parent, IUserOptions userOptions, DataProvider dataProvider) {
+		return new MatchListView(parent, userOptions, dataProvider).build();
 	}
 
 	public void registerVisualiser(IVisualiser visualiser) {
