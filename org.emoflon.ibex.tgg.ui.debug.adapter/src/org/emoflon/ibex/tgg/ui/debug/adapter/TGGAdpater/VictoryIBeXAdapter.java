@@ -65,4 +65,14 @@ public class VictoryIBeXAdapter extends IbexController implements DataProvider {
 		return dataProvider.getDefaultSaveData();
 	}
 
+	@Override
+	public void addBreakpoint(Rule pRule) {
+	    // TODO implement
+	}
+
+	@Override
+	public void removeBreakpoint(Rule pRule) {
+	    // TODO implement
+	}
+
 }

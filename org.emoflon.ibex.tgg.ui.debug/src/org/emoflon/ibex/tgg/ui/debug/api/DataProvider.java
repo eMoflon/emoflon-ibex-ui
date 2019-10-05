@@ -13,4 +13,8 @@ public interface DataProvider {
 	public void saveModels(String[] saveLocations) throws IOException;
 
 	public String[][] getDefaultSaveData();
+
+    public void addBreakpoint(Rule pRule);
+
+    public void removeBreakpoint(Rule pRule);
 }
