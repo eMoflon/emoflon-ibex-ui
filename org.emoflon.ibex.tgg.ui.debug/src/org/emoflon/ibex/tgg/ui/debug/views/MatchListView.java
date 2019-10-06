@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -16,16 +15,15 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.emoflon.ibex.tgg.ui.debug.api.Match;
 import org.emoflon.ibex.tgg.ui.debug.api.Rule;
 import org.emoflon.ibex.tgg.ui.debug.api.Victory;
-import org.emoflon.ibex.tgg.ui.debug.core.VictoryUI;
 import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeNode;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.matchList.MatchListContentManager;
@@ -39,6 +37,7 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 	private TreeViewer treeViewer;
 	private MatchListContentManager contentManager;
 	private Button applyButton;
+	private MenuItem applyItem;
 
 	private ProtocolView protocolView;
 
@@ -46,9 +45,9 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 
 	private Collection<ISharedFocusElement> sharedFocusElements = new HashSet<>();
 
-	private Button expandAllButton;
+	private MenuItem expandAllItem;
 
-	private Button collapseAllButton;
+	private MenuItem collapseAllItem;
 
 	private final IUserOptions userOptions;
 
@@ -61,37 +60,6 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 
 	private MatchListView build() {
 		setLayout(new GridLayout(1, false));
-
-		Composite c = new Composite(this, SWT.NORMAL);
-		c.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
-		c.setLayout(new GridLayout(2, false));
-
-		Font font = FontDescriptor.createFrom(new FontData("Monospaced", 10, SWT.BOLD))
-				.createFont(VictoryUI.getDisplay());
-		expandAllButton = new Button(c, SWT.PUSH);
-		expandAllButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
-		expandAllButton.setText(" + ");
-		expandAllButton.setSize(15, 15);
-		expandAllButton.setFont(font);
-		expandAllButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent pSelectionEvent) {
-				treeViewer.expandAll();
-			}
-		});
-
-		collapseAllButton = new Button(c, SWT.PUSH);
-		collapseAllButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
-		collapseAllButton.setText(" - ");
-		collapseAllButton.setSize(15, 15);
-		collapseAllButton.setFont(font);
-		collapseAllButton.setAlignment(SWT.CENTER);
-		collapseAllButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent pSelectionEvent) {
-				treeViewer.collapseAll();
-			}
-		});
 
 		treeViewer = new TreeViewer(this, SWT.BORDER | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.SINGLE);
 		treeViewer.setContentProvider(contentManager.getTreeContentManager());
@@ -118,6 +86,7 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 						Match match = ((MatchNode) selectedElement).getMatch();
 						visualiser.display(match);
 						applyButton.setEnabled(!match.isBlocked());
+						applyItem.setEnabled(!match.isBlocked());
 					} else if (selectedElement instanceof RuleNode) {
 						protocolView.highlight(((RuleNode) selectedElement).getRule().getName());
 						visualiser.display(((RuleNode) selectedElement).getRule());
@@ -125,6 +94,7 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 								.filter(c -> c instanceof MatchNode && !((MatchNode) c).getMatch().isBlocked())
 								.collect(Collectors.toList());
 						applyButton.setEnabled(!matchNodes.isEmpty());
+						applyItem.setEnabled(!matchNodes.isEmpty());
 					}
 				}
 			}
@@ -140,10 +110,38 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 				}
 			}
 		});
+		
+		final Menu treeMenu = new Menu(treeViewer.getTree());
+		treeViewer.getTree().setMenu(treeMenu);
+		expandAllItem = new MenuItem(treeMenu, SWT.PUSH);
+		expandAllItem.setText("Expand All");
+		expandAllItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent pSelectionEvent) {
+				treeViewer.expandAll();
+			}
+		});
+		collapseAllItem = new MenuItem(treeMenu, SWT.PUSH);
+		collapseAllItem.setText("Collapse All");
+		collapseAllItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent pSelectionEvent) {
+				treeViewer.collapseAll();
+			}
+		});
+		
+		applyItem = new MenuItem(treeMenu, SWT.PUSH);
+		applyItem.setText("Apply");
+		
+		Composite c = new Composite(this, SWT.NORMAL);
+		c.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
+		c.setLayout(new GridLayout(3, false));
 
-		applyButton = new Button(this, SWT.PUSH);
+		applyButton = new Button(c, SWT.PUSH);
 		applyButton.setText("Apply");
-		applyButton.addSelectionListener(new SelectionAdapter() {
+		applyButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+		
+		SelectionAdapter applySelectionAdapter = new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent pSelectionEvent) {
 				Object selection = treeViewer.getStructuredSelection().getFirstElement();
@@ -152,8 +150,10 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 				else if (selection instanceof RuleNode)
 					applyRandomMatch((RuleNode) selection);
 			}
-		});
-
+		};
+		applyButton.addSelectionListener(applySelectionAdapter);
+		applyItem.addSelectionListener(applySelectionAdapter);
+		
 		this.updateToolTips();
 		pack();
 		return this;
@@ -174,8 +174,24 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 	 */
 	public void populate(Collection<Match> matches) {
 		applyButton.setEnabled(false);
+		applyItem.setEnabled(false);
 		contentManager.populate(matches);
 		treeViewer.refresh();
+		Object selectedElement = treeViewer.getStructuredSelection().getFirstElement();
+		if(selectedElement != null) {
+			if (selectedElement instanceof MatchNode) {
+				Match match = ((MatchNode) selectedElement).getMatch();
+				applyButton.setEnabled(!match.isBlocked());
+				applyItem.setEnabled(!match.isBlocked());
+			} else if (selectedElement instanceof RuleNode) {
+				protocolView.highlight(((RuleNode) selectedElement).getRule().getName());
+				List<TreeNode> matchNodes = ((RuleNode) selectedElement).getChildren().stream()
+						.filter(c -> c instanceof MatchNode && !((MatchNode) c).getMatch().isBlocked())
+						.collect(Collectors.toList());
+				applyButton.setEnabled(!matchNodes.isEmpty());
+				applyItem.setEnabled(!matchNodes.isEmpty());
+			}
+		}
 	}
 
 	/**
@@ -232,9 +248,10 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 	public void updateToolTips() {
 		treeViewer.getControl().setToolTipText(ToolTips.MATCHLIST_TREE.getDescription(userOptions.getToolTipSetting()));
 		applyButton.setToolTipText(ToolTips.MATCHLIST_APPLY_BUTTON.getDescription(userOptions.getToolTipSetting()));
-		collapseAllButton
+		applyItem.setToolTipText(ToolTips.MATCHLIST_APPLY_BUTTON.getDescription(userOptions.getToolTipSetting()));
+		collapseAllItem
 				.setToolTipText(ToolTips.MATCHLIST_COLLAPSE_BUTTON.getDescription(userOptions.getToolTipSetting()));
-		expandAllButton
+		expandAllItem
 				.setToolTipText(ToolTips.MATCHLIST_EXPAND_BUTTON.getDescription(userOptions.getToolTipSetting()));
 	}
 
