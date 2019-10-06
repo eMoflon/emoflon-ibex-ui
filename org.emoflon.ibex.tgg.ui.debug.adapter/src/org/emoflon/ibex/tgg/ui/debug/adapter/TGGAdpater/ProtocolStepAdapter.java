@@ -56,6 +56,8 @@ public class ProtocolStepAdapter implements RuleApplication {
 			Collection<EObject> srcElements = null;
 			Collection<EObject> trgElements = null;
 			Collection<EObject> corrElements = null;
+			Collection<EObject> matchSrcElements = null;
+			Collection<EObject> matchTrgElements = null;
 			String ruleName = "";
 
 			for (RuleApplication ruleApplication : pRuleApplications) {
@@ -67,13 +69,19 @@ public class ProtocolStepAdapter implements RuleApplication {
 				srcElements = ((ProtocolStepAdapter) ruleApplication).protocolStep.getSrcElements();
 				trgElements = ((ProtocolStepAdapter) ruleApplication).protocolStep.getTrgElements();
 				corrElements = ((ProtocolStepAdapter) ruleApplication).protocolStep.getCorrElements();
+				matchSrcElements = ((ProtocolStepAdapter) ruleApplication).protocolStep.getMatchSrcElements();
+				matchTrgElements = ((ProtocolStepAdapter) ruleApplication).protocolStep.getMatchTrgElements();
 				ruleName = ((ProtocolStepAdapter) ruleApplication).protocolStep.getRuleName();
 			}
-
-			TGGObjectGraph objectGraph = VictoryIBeXAdapter.getNeighbourhood(index, srcElements, trgElements, corrElements, pNeighbourhoodSize, ruleName);
+			
+			Collection<EObject> nSrcElements = VictoryIBeXAdapter.getNeighbourhood(matchSrcElements, pNeighbourhoodSize - 1);
+			Collection<EObject> nTrgElements = VictoryIBeXAdapter.getNeighbourhood(matchTrgElements, pNeighbourhoodSize - 1);
+			
+			TGGObjectGraph objectGraph = VictoryIBeXAdapter.cTGGObjectGraph(index, srcElements, trgElements, corrElements, ruleName);
 						
 			GraphBuilder builder = new GraphBuilder();
 			Collection<Node> nodes = new HashSet<>();
+
 			for (org.emoflon.ibex.tgg.operational.monitoring.data.Node n : objectGraph.getNodes()) {
 				Node nn = convertNode(n);
 				nodes.add(nn);
@@ -90,6 +98,28 @@ public class ProtocolStepAdapter implements RuleApplication {
 				builder.addEdge(convertEdge(e, s, t));
 			}
 
+			for (EObject en : nSrcElements) {
+				Node nn = convertNode(VictoryIBeXAdapter.gNode(en, "SRC"));
+				
+				Node s = nodes.stream().filter(n -> n.getName().equals(nn.getName())
+						&& n.getDomain().equals(nn.getDomain())).findFirst().orElseGet(() -> nn);
+				
+				nodes.add(s);
+				builder.addNode(s);	
+				
+			}
+			
+			for (EObject en : nTrgElements) {
+				Node nn = convertNode(VictoryIBeXAdapter.gNode(en, "TRG"));
+				
+				Node s = nodes.stream().filter(n -> n.getName().equals(nn.getName())
+						&& n.getDomain().equals(nn.getDomain())).findFirst().orElseGet(() -> nn);
+				
+				nodes.add(s);
+				builder.addNode(s);	
+				
+			}			
+			
 			return builder.build();
 		}
 	}

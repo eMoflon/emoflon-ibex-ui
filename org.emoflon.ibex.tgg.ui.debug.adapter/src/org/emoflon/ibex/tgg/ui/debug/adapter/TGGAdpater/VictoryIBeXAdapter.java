@@ -9,6 +9,9 @@ import org.emoflon.ibex.tgg.operational.monitoring.DataPackage;
 import org.emoflon.ibex.tgg.operational.monitoring.IVictoryDataProvider;
 import org.emoflon.ibex.tgg.operational.monitoring.IbexController;
 import org.emoflon.ibex.tgg.operational.monitoring.VictoryDataProvider;
+import org.emoflon.ibex.tgg.operational.monitoring.data.Action;
+import org.emoflon.ibex.tgg.operational.monitoring.data.Domain;
+import org.emoflon.ibex.tgg.operational.monitoring.data.Node;
 import org.emoflon.ibex.tgg.operational.monitoring.data.TGGObjectGraph;
 import org.emoflon.ibex.tgg.operational.strategies.OperationalStrategy;
 import org.emoflon.ibex.tgg.ui.debug.api.DataProvider;
@@ -33,18 +36,14 @@ public class VictoryIBeXAdapter extends IbexController implements DataProvider {
 		return dataProvider.getMatchNeighbourhoods(pNodes, pNeighbourhoodSize);
 	}
 
-	public static TGGObjectGraph getNeighbourhood(int index, Collection<EObject> pSrcElements, Collection<EObject> pTrgElements,
-			Collection<EObject> pCorrElements, int pNeighbourhoodSize, String ruleName) {
-				
-		System.out.println("pSrcElements before: " + pSrcElements.size());
-		System.out.println("pTrgElements before: " + pTrgElements.size());
+	public static TGGObjectGraph cTGGObjectGraph(int index, Collection<EObject> pSrcElements, Collection<EObject> pTrgElements,
+			Collection<EObject> pCorrElements, String ruleName) {
 		
-//		pSrcElements = dataProvider.getMatchNeighbourhoods(pSrcElements, pNeighbourhoodSize);
-//		pTrgElements = dataProvider.getMatchNeighbourhoods(pTrgElements, pNeighbourhoodSize);
-		
-		System.out.println("pSrcElements after: " + pSrcElements.size());
-		System.out.println("pTrgElements after: " + pTrgElements.size());
 		return adapter.constructTGGObjectGraph(index, pSrcElements, pTrgElements, pCorrElements, ruleName);
+	}
+	
+	public static Node gNode(EObject pNode, String pDomain) {
+		return adapter.generateNode(pNode, Domain.valueOf(pDomain), Action.CONTEXT);
 	}
 
 	private static IVictoryDataProvider dataProvider;
