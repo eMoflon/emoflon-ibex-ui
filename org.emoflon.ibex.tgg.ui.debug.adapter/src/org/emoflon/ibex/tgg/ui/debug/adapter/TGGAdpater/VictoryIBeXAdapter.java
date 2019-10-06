@@ -33,15 +33,18 @@ public class VictoryIBeXAdapter extends IbexController implements DataProvider {
 		return dataProvider.getMatchNeighbourhoods(pNodes, pNeighbourhoodSize);
 	}
 
-	public static TGGObjectGraph getNeighbourhood(Collection<EObject> pSrcElements, Collection<EObject> pTrgElements,
-			Collection<EObject> pCorrElements, int pNeighbourhoodSize) {
+	public static TGGObjectGraph getNeighbourhood(int index, Collection<EObject> pSrcElements, Collection<EObject> pTrgElements,
+			Collection<EObject> pCorrElements, int pNeighbourhoodSize, String ruleName) {
 				
-		pSrcElements = dataProvider.getMatchNeighbourhoods(pSrcElements, pNeighbourhoodSize);
-		pTrgElements = dataProvider.getMatchNeighbourhoods(pTrgElements, pNeighbourhoodSize);
+		System.out.println("pSrcElements before: " + pSrcElements.size());
+		System.out.println("pTrgElements before: " + pTrgElements.size());
 		
-		System.out.println("pSrcElements: " + pSrcElements.size());
-		System.out.println("pTrgElements: " + pTrgElements.size());
-		return adapter.constructTGGObjectGraph(pSrcElements, pTrgElements, pCorrElements);
+//		pSrcElements = dataProvider.getMatchNeighbourhoods(pSrcElements, pNeighbourhoodSize);
+//		pTrgElements = dataProvider.getMatchNeighbourhoods(pTrgElements, pNeighbourhoodSize);
+		
+		System.out.println("pSrcElements after: " + pSrcElements.size());
+		System.out.println("pTrgElements after: " + pTrgElements.size());
+		return adapter.constructTGGObjectGraph(index, pSrcElements, pTrgElements, pCorrElements, ruleName);
 	}
 
 	private static IVictoryDataProvider dataProvider;

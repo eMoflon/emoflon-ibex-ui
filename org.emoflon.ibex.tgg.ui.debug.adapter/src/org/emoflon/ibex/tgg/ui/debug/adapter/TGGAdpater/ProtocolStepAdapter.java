@@ -52,21 +52,25 @@ public class ProtocolStepAdapter implements RuleApplication {
 		@Override
 		public Graph getMergedGraph(Collection<RuleApplication> pRuleApplications, int pNeighbourhoodSize) {
 
+			int index = -1;
 			Collection<EObject> srcElements = null;
 			Collection<EObject> trgElements = null;
 			Collection<EObject> corrElements = null;
+			String ruleName = "";
 
 			for (RuleApplication ruleApplication : pRuleApplications) {
 				if (!(ruleApplication instanceof ProtocolStepAdapter))
 					throw new IllegalStateException(
 							"This merger only supports RuleApplications of type ProtocolStepAdapter.");
 
+				index = ((ProtocolStepAdapter) ruleApplication).protocolStep.getIndex();
 				srcElements = ((ProtocolStepAdapter) ruleApplication).protocolStep.getSrcElements();
 				trgElements = ((ProtocolStepAdapter) ruleApplication).protocolStep.getTrgElements();
 				corrElements = ((ProtocolStepAdapter) ruleApplication).protocolStep.getCorrElements();
+				ruleName = ((ProtocolStepAdapter) ruleApplication).protocolStep.getRuleName();
 			}
 
-			TGGObjectGraph objectGraph = VictoryIBeXAdapter.getNeighbourhood(srcElements, trgElements, corrElements, pNeighbourhoodSize);
+			TGGObjectGraph objectGraph = VictoryIBeXAdapter.getNeighbourhood(index, srcElements, trgElements, corrElements, pNeighbourhoodSize, ruleName);
 						
 			GraphBuilder builder = new GraphBuilder();
 			Collection<Node> nodes = new HashSet<>();
