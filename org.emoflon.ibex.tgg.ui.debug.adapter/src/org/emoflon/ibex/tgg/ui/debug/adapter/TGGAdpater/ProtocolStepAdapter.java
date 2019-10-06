@@ -58,6 +58,7 @@ public class ProtocolStepAdapter implements RuleApplication {
 			Collection<EObject> corrElements = null;
 			Collection<EObject> matchSrcElements = null;
 			Collection<EObject> matchTrgElements = null;
+			Collection<EObject> matchCorrElements = null;
 			String ruleName = "";
 
 			for (RuleApplication ruleApplication : pRuleApplications) {
@@ -71,6 +72,7 @@ public class ProtocolStepAdapter implements RuleApplication {
 				corrElements = ((ProtocolStepAdapter) ruleApplication).protocolStep.getCorrElements();
 				matchSrcElements = ((ProtocolStepAdapter) ruleApplication).protocolStep.getMatchSrcElements();
 				matchTrgElements = ((ProtocolStepAdapter) ruleApplication).protocolStep.getMatchTrgElements();
+				matchCorrElements = ((ProtocolStepAdapter) ruleApplication).protocolStep.getMatchCorrElements();
 				ruleName = ((ProtocolStepAdapter) ruleApplication).protocolStep.getRuleName();
 			}
 			
@@ -101,9 +103,12 @@ public class ProtocolStepAdapter implements RuleApplication {
 			for (EObject en : nSrcElements) {
 				Node nn = convertNode(VictoryIBeXAdapter.gNode(en, "SRC"));
 				
-				Node s = nodes.stream().filter(n -> n.getName().equals(nn.getName())
-						&& n.getDomain().equals(nn.getDomain())).findFirst().orElseGet(() -> nn);
-				
+				Node s = nodes.stream().filter(
+						n -> n.getName().equals(nn.getName()) &&
+						n.getDomain().equals(nn.getDomain()) &&
+						n.getType().equals(nn.getType()) 
+				).findFirst().orElseGet(() -> nn);	
+
 				nodes.add(s);
 				builder.addNode(s);	
 				
@@ -112,14 +117,43 @@ public class ProtocolStepAdapter implements RuleApplication {
 			for (EObject en : nTrgElements) {
 				Node nn = convertNode(VictoryIBeXAdapter.gNode(en, "TRG"));
 				
-				Node s = nodes.stream().filter(n -> n.getName().equals(nn.getName())
-						&& n.getDomain().equals(nn.getDomain())).findFirst().orElseGet(() -> nn);
+				Node s = nodes.stream().filter(
+						n -> n.getName().equals(nn.getName()) &&
+						n.getDomain().equals(nn.getDomain()) &&
+						n.getType().equals(nn.getType()) 
+				).findFirst().orElseGet(() -> nn);				
 				
 				nodes.add(s);
 				builder.addNode(s);	
 				
-			}			
+			}	
 			
+			if (pNeighbourhoodSize > 0) {
+				for (EObject en : matchCorrElements) {
+					EObject sne = (EObject) en.eGet(en.eClass().getEStructuralFeature("source"));
+					EObject tne = (EObject) en.eGet(en.eClass().getEStructuralFeature("target"));
+					Node sn = convertNode(VictoryIBeXAdapter.gNode(sne, "SRC"));
+					Node tn = convertNode(VictoryIBeXAdapter.gNode(tne, "TRG"));
+					
+					Node s = nodes.stream().filter(
+							n -> n.getName().equals(sn.getName()) &&
+							n.getDomain().equals(sn.getDomain()) &&
+							n.getType().equals(sn.getType()) 
+					).findFirst().orElseGet(() -> sn);
+					
+	
+					Node t = nodes.stream().filter(
+							n -> n.getName().equals(tn.getName()) &&
+							n.getDomain().equals(tn.getDomain()) &&
+							n.getType().equals(tn.getType()) 
+					).findFirst().orElseGet(() -> tn);
+					
+					
+					EdgeImpl e = new EdgeImpl("", s, t, EdgeType.CORR, Action.CONTEXT);
+					builder.addEdge(e);
+				}
+				
+			}
 			return builder.build();
 		}
 	}
