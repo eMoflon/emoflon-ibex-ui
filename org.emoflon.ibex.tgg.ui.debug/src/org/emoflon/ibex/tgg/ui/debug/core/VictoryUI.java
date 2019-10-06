@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.emoflon.ibex.tgg.ui.debug.api.DataPackage;
 import org.emoflon.ibex.tgg.ui.debug.api.DataProvider;
 import org.emoflon.ibex.tgg.ui.debug.api.Match;
+import org.emoflon.ibex.tgg.ui.debug.api.Victory;
 import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions.ToolTipOption;
 import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager;
 import org.emoflon.ibex.tgg.ui.debug.views.MatchDisplayView;
@@ -34,6 +35,7 @@ public class VictoryUI implements IExitCodeReceiver, Consumer<DataPackage> {
 		return display;
 	}
 
+	private Victory victory;
 	private Shell shell;
 	private boolean exitCode;
 	private DataProvider dataProvider;
@@ -42,7 +44,8 @@ public class VictoryUI implements IExitCodeReceiver, Consumer<DataPackage> {
 	private MatchDisplayView matchDisplayView;
 	private UserOptionsManager userOptionsManager;
 
-	public VictoryUI(DataProvider dataProvider) {
+	public VictoryUI(Victory victory, DataProvider dataProvider) {
+		this.victory = victory;
 		this.dataProvider = dataProvider;
 		userOptionsManager = new UserOptionsManager();
 
@@ -67,7 +70,8 @@ public class VictoryUI implements IExitCodeReceiver, Consumer<DataPackage> {
 		leftPanelSashForm.setLayout(new GridLayout());
 		leftPanelSashForm.setBackground(display.getSystemColor(SWT.COLOR_GRAY));
 
-		matchListView = MatchListView.create(leftPanelSashForm, dataProvider.getAllRules(), userOptionsManager);
+		matchListView = MatchListView.create(leftPanelSashForm, dataProvider.getAllRules(), userOptionsManager,
+				victory);
 		matchListView.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		protocolView = ProtocolView.create(leftPanelSashForm, userOptionsManager);

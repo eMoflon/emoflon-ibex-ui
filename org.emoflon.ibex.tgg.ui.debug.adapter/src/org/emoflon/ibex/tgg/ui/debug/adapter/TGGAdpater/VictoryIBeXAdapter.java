@@ -22,8 +22,9 @@ public class VictoryIBeXAdapter extends IbexController implements DataProvider {
 				.forEach(rule -> TGGRuleAdapter.adapt(rule, operationType));
 
 		dataProvider = new VictoryDataProvider(operationalStrategy);
-		VictoryIBeXAdapter adapter = new VictoryIBeXAdapter();
-		Victory.create(adapter);
+		Victory victory = new Victory();
+		VictoryIBeXAdapter adapter = new VictoryIBeXAdapter(victory);
+		victory.create(adapter);
 		return adapter;
 	}
 
@@ -33,16 +34,19 @@ public class VictoryIBeXAdapter extends IbexController implements DataProvider {
 
 	private static IVictoryDataProvider dataProvider;
 
-	private VictoryIBeXAdapter() {
+	private Victory victory;
+
+	private VictoryIBeXAdapter(Victory victory) {
+		this.victory = victory;
 	}
 
 	public boolean runUI() {
-		return Victory.run();
+		return victory.run();
 	}
 
 	@Override
 	public IMatch chooseOneMatch(DataPackage dataPackage) {
-		Match chosenMatch = Victory.selectMatch(new DataPackageAdapter(dataPackage));
+		Match chosenMatch = victory.selectMatch(new DataPackageAdapter(dataPackage));
 		if (chosenMatch instanceof IbexMatchAdapter)
 			return ((IbexMatchAdapter) chosenMatch).getWrappedMatch().getIMatch();
 		else

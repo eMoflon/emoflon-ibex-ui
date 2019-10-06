@@ -32,28 +32,23 @@ import org.emoflon.ibex.tgg.ui.debug.views.treeContent.matchList.RuleNode;
 
 public class MatchListView extends Composite implements ISharedFocusElement {
 
+	private Victory victory;
 	private IVisualiser visualiser;
-
 	private TreeViewer treeViewer;
 	private MatchListContentManager contentManager;
 	private Button applyButton;
 	private MenuItem applyItem;
-
 	private ProtocolView protocolView;
-
 	private Match[] chosenMatch = new Match[1];
-
 	private Collection<ISharedFocusElement> sharedFocusElements = new HashSet<>();
-
 	private MenuItem expandAllItem;
-
 	private MenuItem collapseAllItem;
-
 	private final IUserOptions userOptions;
 
-	private MatchListView(Composite parent, Collection<Rule> rules, IUserOptions userOptions) {
+	private MatchListView(Composite parent, Collection<Rule> rules, IUserOptions userOptions, Victory victory) {
 		super(parent, SWT.NONE);
 
+		this.victory = victory;
 		this.userOptions = userOptions;
 		contentManager = new MatchListContentManager(rules, userOptions);
 	}
@@ -110,7 +105,7 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 				}
 			}
 		});
-		
+
 		final Menu treeMenu = new Menu(treeViewer.getTree());
 		treeViewer.getTree().setMenu(treeMenu);
 		expandAllItem = new MenuItem(treeMenu, SWT.PUSH);
@@ -129,10 +124,10 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 				treeViewer.collapseAll();
 			}
 		});
-		
+
 		applyItem = new MenuItem(treeMenu, SWT.PUSH);
 		applyItem.setText("Apply");
-		
+
 		Composite c = new Composite(this, SWT.NORMAL);
 		c.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
 		c.setLayout(new GridLayout(3, false));
@@ -140,7 +135,7 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 		applyButton = new Button(c, SWT.PUSH);
 		applyButton.setText("Apply");
 		applyButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-		
+
 		SelectionAdapter applySelectionAdapter = new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent pSelectionEvent) {
@@ -153,14 +148,15 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 		};
 		applyButton.addSelectionListener(applySelectionAdapter);
 		applyItem.addSelectionListener(applySelectionAdapter);
-		
+
 		this.updateToolTips();
 		pack();
 		return this;
 	}
 
-	public static MatchListView create(Composite parent, Collection<Rule> rules, IUserOptions userOptions) {
-		return new MatchListView(parent, rules, userOptions).build();
+	public static MatchListView create(Composite parent, Collection<Rule> rules, IUserOptions userOptions,
+			Victory victory) {
+		return new MatchListView(parent, rules, userOptions, victory).build();
 	}
 
 	public void registerVisualiser(IVisualiser visualiser) {
@@ -225,7 +221,7 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 
 	private void applyMatch(MatchNode matchNode) {
 		synchronized (chosenMatch) {
-			Victory.setSelectedMatch(matchNode.getMatch());
+			victory.setSelectedMatch(matchNode.getMatch());
 			RuleNode ruleNode = (RuleNode) matchNode.getParent();
 			ruleNode.increaseTimesApplied();
 			chosenMatch.notify();
