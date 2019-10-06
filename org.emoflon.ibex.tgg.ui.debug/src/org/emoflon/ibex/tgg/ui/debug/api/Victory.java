@@ -10,17 +10,27 @@ public final class Victory {
 	private VictoryUI ui;
 	private final Match[] selectedMatch = new Match[1];
 
-	public void create(DataProvider dataProvider) {
-
+	@SuppressWarnings("deprecation")
+	public boolean run(DataProvider dataProvider, Runnable matchProvider) {
 		if (ui != null)
-			throw new IllegalStateException("Victory has already been initialised yet.");
-
+			throw new IllegalStateException("Victory has already been initialised.");
 		ui = new VictoryUI(this, dataProvider);
-	}
 
-	public boolean run() {
+		Thread matchProviderThread = new Thread(matchProvider);
+		matchProviderThread.start();
+
 		boolean exitCode = ui.run();
 		ui = null;
+
+		if (matchProviderThread.isAlive())
+			try {
+				matchProviderThread.join(500);
+			} catch (InterruptedException pIE) {
+			} finally {
+				if (matchProviderThread.isAlive())
+					matchProviderThread.stop();
+			}
+
 		return exitCode;
 	}
 

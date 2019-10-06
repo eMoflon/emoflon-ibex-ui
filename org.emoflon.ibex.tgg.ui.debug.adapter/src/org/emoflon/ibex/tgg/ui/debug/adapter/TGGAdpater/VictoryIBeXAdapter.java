@@ -22,10 +22,7 @@ public class VictoryIBeXAdapter extends IbexController implements DataProvider {
 				.forEach(rule -> TGGRuleAdapter.adapt(rule, operationType));
 
 		dataProvider = new VictoryDataProvider(operationalStrategy);
-		Victory victory = new Victory();
-		VictoryIBeXAdapter adapter = new VictoryIBeXAdapter(victory);
-		victory.create(adapter);
-		return adapter;
+		return new VictoryIBeXAdapter();
 	}
 
 	public static Collection<EObject> getNeighbourhood(Collection<EObject> nodes, int neighbourhoodSize) {
@@ -36,12 +33,12 @@ public class VictoryIBeXAdapter extends IbexController implements DataProvider {
 
 	private Victory victory;
 
-	private VictoryIBeXAdapter(Victory victory) {
-		this.victory = victory;
+	private VictoryIBeXAdapter() {
+		victory = new Victory();
 	}
 
-	public boolean runUI() {
-		return victory.run();
+	public boolean run(Runnable matchProvider) {
+		return victory.run(this, matchProvider);
 	}
 
 	@Override
