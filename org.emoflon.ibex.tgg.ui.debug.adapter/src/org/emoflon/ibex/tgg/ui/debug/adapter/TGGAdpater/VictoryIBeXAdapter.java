@@ -9,6 +9,7 @@ import org.emoflon.ibex.tgg.operational.monitoring.DataPackage;
 import org.emoflon.ibex.tgg.operational.monitoring.IVictoryDataProvider;
 import org.emoflon.ibex.tgg.operational.monitoring.IbexController;
 import org.emoflon.ibex.tgg.operational.monitoring.VictoryDataProvider;
+import org.emoflon.ibex.tgg.operational.monitoring.data.TGGObjectGraph;
 import org.emoflon.ibex.tgg.operational.strategies.OperationalStrategy;
 import org.emoflon.ibex.tgg.ui.debug.api.DataProvider;
 import org.emoflon.ibex.tgg.ui.debug.api.Match;
@@ -16,47 +17,59 @@ import org.emoflon.ibex.tgg.ui.debug.api.Rule;
 import org.emoflon.ibex.tgg.ui.debug.api.Victory;
 
 public class VictoryIBeXAdapter extends IbexController implements DataProvider {
+	public static VictoryIBeXAdapter adapter;
 
-    public static VictoryIBeXAdapter create(OperationalStrategy pOperationalStrategy, IBeXOperation pOperationType) {
-	pOperationalStrategy.getOptions().flattenedTGG().getRules()
-		.forEach(rule -> TGGRuleAdapter.adapt(rule, pOperationType));
+	public static VictoryIBeXAdapter create(OperationalStrategy pOperationalStrategy, IBeXOperation pOperationType) {
+		pOperationalStrategy.getOptions().flattenedTGG().getRules()
+				.forEach(rule -> TGGRuleAdapter.adapt(rule, pOperationType));
 
-	dataProvider = new VictoryDataProvider(pOperationalStrategy);
-	VictoryIBeXAdapter adapter = new VictoryIBeXAdapter();
-	Victory.create(adapter);
-	return adapter;
-    }
+		dataProvider = new VictoryDataProvider(pOperationalStrategy);
+		adapter = new VictoryIBeXAdapter();
+		Victory.create(adapter);
+		return adapter;
+	}
 
-    public static Collection<EObject> getNeighbourhood(Collection<EObject> pNodes, int pNeighbourhoodSize) {
-	return dataProvider.getMatchNeighbourhoods(pNodes, pNeighbourhoodSize);
-    }
+	public static Collection<EObject> getNeighbourhood(Collection<EObject> pNodes, int pNeighbourhoodSize) {
+		return dataProvider.getMatchNeighbourhoods(pNodes, pNeighbourhoodSize);
+	}
 
-    private static IVictoryDataProvider dataProvider;
+	public static TGGObjectGraph getNeighbourhood(Collection<EObject> pSrcElements, Collection<EObject> pTrgElements,
+			Collection<EObject> pCorrElements, int pNeighbourhoodSize) {
+				
+		pSrcElements = dataProvider.getMatchNeighbourhoods(pSrcElements, pNeighbourhoodSize);
+		pTrgElements = dataProvider.getMatchNeighbourhoods(pTrgElements, pNeighbourhoodSize);
+		
+		System.out.println("pSrcElements: " + pSrcElements.size());
+		System.out.println("pTrgElements: " + pTrgElements.size());
+		return adapter.constructTGGObjectGraph(pSrcElements, pTrgElements, pCorrElements);
+	}
 
-    private VictoryIBeXAdapter() {
-    }
+	private static IVictoryDataProvider dataProvider;
 
-    public boolean runUI() {
-	return Victory.run();
-    }
+	private VictoryIBeXAdapter() {
+	}
 
-    @Override
-    public IMatch chooseOneMatch(DataPackage pDataPackage) {
-	Match chosenMatch = Victory.selectMatch(new DataPackageAdapter(pDataPackage));
-	if (chosenMatch instanceof IbexMatchAdapter)
-	    return ((IbexMatchAdapter) chosenMatch).getWrappedMatch().getIMatch();
-	else
-	    throw new IllegalStateException(
-		    "Victory returned something that wasn't a MatchAdapter. Something must have gone terribly wrong.");
-    }
+	public boolean runUI() {
+		return Victory.run();
+	}
 
-    @Override
-    public Collection<Rule> getAllRules() {
-	return TGGRuleAdapter.getAllRules();
-    }
+	@Override
+	public IMatch chooseOneMatch(DataPackage pDataPackage) {
+		Match chosenMatch = Victory.selectMatch(new DataPackageAdapter(pDataPackage));
+		if (chosenMatch instanceof IbexMatchAdapter)
+			return ((IbexMatchAdapter) chosenMatch).getWrappedMatch().getIMatch();
+		else
+			throw new IllegalStateException(
+					"Victory returned something that wasn't a MatchAdapter. Something must have gone terribly wrong.");
+	}
 
-    @Override
-    public void saveModels() throws IOException {
-	dataProvider.saveModels();
-    }
+	@Override
+	public Collection<Rule> getAllRules() {
+		return TGGRuleAdapter.getAllRules();
+	}
+
+	@Override
+	public void saveModels() throws IOException {
+		dataProvider.saveModels();
+	}
 }

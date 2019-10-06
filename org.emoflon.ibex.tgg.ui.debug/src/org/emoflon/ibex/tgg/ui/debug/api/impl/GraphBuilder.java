@@ -45,4 +45,8 @@ public class GraphBuilder {
     public GraphImpl build() {
 	return new GraphImpl(nodes, edges);
     }
+    
+    public Collection<Node> getNodes() {
+    	return nodes;
+    }
 }
