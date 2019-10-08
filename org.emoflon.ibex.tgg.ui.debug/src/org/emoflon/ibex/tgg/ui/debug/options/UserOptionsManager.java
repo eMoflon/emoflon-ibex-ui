@@ -4,7 +4,7 @@ public class UserOptionsManager implements IUserOptions {
 
 	private boolean isInvalid = false;
 
-	private boolean displayFullRuleForMatches = false;
+	private boolean displayFullRuleForMatches = true;
 
 	private boolean displaySrcContextForMatches = true;
 	private boolean displayTrgContextForMatches = true;
