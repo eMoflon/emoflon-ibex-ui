@@ -25,9 +25,9 @@ public class EObjectAdapter implements Node {
 		return wrappers.get(eObject);
 	}
 
-	public static EObjectAdapter adapt(EObject eObject, Domain domain, Action action) {
+	public static EObjectAdapter adapt(EObject eObject, Domain domain) {
 		if (!wrappers.containsKey(eObject))
-			wrappers.put(eObject, new EObjectAdapter(eObject, domain, action));
+			wrappers.put(eObject, new EObjectAdapter(eObject, domain));
 		return wrappers.get(eObject);
 	}
 
@@ -41,11 +41,11 @@ public class EObjectAdapter implements Node {
 	private Action action;
 	private List<String> attributes;
 
-	private EObjectAdapter(EObject eObject, Domain domain, Action action) {
+	private EObjectAdapter(EObject eObject, Domain domain) {
 		object = eObject;
 		this.domain = domain;
-		this.action = action;
-
+		this.action = Action.CONTEXT;
+		
 		label = eObject.eContainingFeature() != null ? object.eContainingFeature().getName() : "root";
 
 		if (eObject.eContainer() == null) {
@@ -54,7 +54,7 @@ public class EObjectAdapter implements Node {
 					+ resource.getContents().indexOf(eObject);
 		} else {
 			EObject container = eObject.eContainer();
-			index = EObjectAdapter.adapt(container, domain, Action.CONTEXT).getIndex() + "_" + container.eContents().indexOf(eObject);
+			index = EObjectAdapter.adapt(container, domain).getIndex() + "_" + container.eContents().indexOf(eObject);
 		}
 
 		attributes = new ArrayList<>();
@@ -97,30 +97,33 @@ public class EObjectAdapter implements Node {
 
 	public static void constructGraphDomain(GraphBuilder builder, Domain domain, Collection<EObject> domainObjects) {
 		for (EObject object : domainObjects) {
-			builder.addNode(EObjectAdapter.adapt(object, domain, Action.CONTEXT));
+			builder.addNode(EObjectAdapter.adapt(object, domain));
 			for (EObject contentObject : object.eContents()) {
 				builder.addEdge(contentObject.eContainingFeature().getName(), EObjectAdapter.get(object),
-						EObjectAdapter.adapt(contentObject, domain, Action.CONTEXT), EdgeType.NORMAL, Action.CONTEXT);
+						EObjectAdapter.adapt(contentObject, domain), EdgeType.NORMAL, Action.CONTEXT);
 			}
 			for (EObject crossReference : object.eCrossReferences()) {
 				builder.addEdge(crossReference.eContainingFeature().getName(), EObjectAdapter.get(object),
-						EObjectAdapter.adapt(crossReference, domain, Action.CONTEXT), EdgeType.NORMAL, Action.CONTEXT);
+						EObjectAdapter.adapt(crossReference, domain), EdgeType.NORMAL, Action.CONTEXT);
 			}
 		}
 	}
 
 	public static void constructGraphDomain(GraphBuilder builder, Domain domain, Collection<EObject> domainObjects, TGGRuleAdapter rule, Boolean neighborhood) {
 		for (EObject object : domainObjects) {
-			EObjectAdapter src = EObjectAdapter.adapt(object, domain, Action.CONTEXT);
+			EObjectAdapter src = EObjectAdapter.adapt(object, domain);
+			
 			Optional<TGGRuleNodeAdapter> srcn = rule.getNodes().stream().filter(n -> n.getType().equals(src.getType()) && n.getDomain().equals(src.getDomain())).findFirst();
 			if (!neighborhood) {
 				if (srcn.isPresent()) {
 					src.setAction(srcn.get().getAction());
 				}
+			} else {
+				src.setAction(Action.CONTEXT);
 			}
 			builder.addNode(src);
 			for (EObject contentObject : object.eContents()) {
-				EObjectAdapter trg = EObjectAdapter.adapt(contentObject, domain, Action.CONTEXT);
+				EObjectAdapter trg = EObjectAdapter.adapt(contentObject, domain);
 				Action action = Action.CONTEXT;
 				EdgeType edgeType = EdgeType.NORMAL;
 				
@@ -142,7 +145,6 @@ public class EObjectAdapter implements Node {
 							}
 						}
 					}
-
 				}
 				
 				builder.addEdge(contentObject.eContainingFeature().getName(), src, trg, edgeType, action);
@@ -150,7 +152,7 @@ public class EObjectAdapter implements Node {
 			for (EObject crossReference : object.eCrossReferences()) {
 				Action action = Action.CONTEXT;
 				EdgeType edgeType = EdgeType.NORMAL;
-				EObjectAdapter trg = EObjectAdapter.adapt(crossReference, domain, Action.CONTEXT);
+				EObjectAdapter trg = EObjectAdapter.adapt(crossReference, domain);
 				
 				if (!neighborhood) {
 					Optional<TGGRuleNodeAdapter> trgn = rule.getNodes().stream().filter(n -> n.getType().equals(trg.getType()) && n.getDomain().equals(trg.getDomain())).findFirst();
@@ -183,9 +185,9 @@ public class EObjectAdapter implements Node {
 		for (EObject corrObject : corrObjects) {
 			builder.addEdge(":" + corrObject.eClass().getName(), //
 					EObjectAdapter.adapt((EObject) corrObject.eGet(corrObject.eClass().getEStructuralFeature("source")),
-							Domain.SRC, Action.CONTEXT), //
+							Domain.SRC), //
 					EObjectAdapter.adapt((EObject) corrObject.eGet(corrObject.eClass().getEStructuralFeature("target")),
-							Domain.TRG, Action.CONTEXT), //
+							Domain.TRG), //
 					EdgeType.CORR, //
 					Action.CONTEXT);
 		}
@@ -196,9 +198,8 @@ public class EObjectAdapter implements Node {
 			Action action = Action.CONTEXT;
 			EdgeType edgeType = EdgeType.NORMAL;
 			
-			EObjectAdapter src = EObjectAdapter.adapt((EObject) corrObject.eGet(corrObject.eClass().getEStructuralFeature("source")), Domain.SRC, Action.CONTEXT);
-			EObjectAdapter trg = EObjectAdapter.adapt((EObject) corrObject.eGet(corrObject.eClass().getEStructuralFeature("target")),
-					Domain.TRG, Action.CONTEXT);
+			EObjectAdapter src = EObjectAdapter.adapt((EObject) corrObject.eGet(corrObject.eClass().getEStructuralFeature("source")), Domain.SRC);
+			EObjectAdapter trg = EObjectAdapter.adapt((EObject) corrObject.eGet(corrObject.eClass().getEStructuralFeature("target")), Domain.TRG);
 			
 			Optional<TGGRuleNodeAdapter> srcn = rule.getNodes().stream().filter(n -> n.getType().equals(src.getType()) && n.getDomain().equals(src.getDomain())).findFirst();
 			if (srcn.isPresent()) {
