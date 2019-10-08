@@ -2,6 +2,7 @@ package org.emoflon.ibex.tgg.ui.debug.api.impl;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 
 import org.emoflon.ibex.tgg.ui.debug.api.Edge;
 import org.emoflon.ibex.tgg.ui.debug.api.Graph;
@@ -43,7 +44,13 @@ public class GraphBuilder {
 	}
 
 	public void addEdge(String label, Node srcNode, Node trgNode, EdgeType type, Action action) {
-		addEdge(new EdgeImpl(label, srcNode, trgNode, type, action));
+		Optional<Edge> edge = edges.stream().filter(e-> e.getSrcNode().equals(srcNode) && e.getTrgNode().equals(trgNode)).findFirst();
+		if (!edge.isPresent()) {
+			addEdge(new EdgeImpl(label, srcNode, trgNode, type, action));	
+		} else if (action == Action.CREATE && edge.get().getAction() != Action.CREATE) {
+			edges.remove(edge.get());
+			addEdge(new EdgeImpl(label, srcNode, trgNode, type, action));
+		}
 	}
 
 	public GraphImpl build() {

@@ -89,8 +89,8 @@ public class IbexMatchAdapter implements Match {
 				trgObjects.add(modelNode);
 			}
 		});
-		srcObjects.addAll(VictoryIBeXAdapter.getNeighbourhood(srcObjects, neighbourhoodSize));
-		trgObjects.addAll(VictoryIBeXAdapter.getNeighbourhood(trgObjects, neighbourhoodSize));
+		srcObjects.addAll(VictoryIBeXAdapter.getNeighbourhood(srcObjects, neighbourhoodSize, true));
+		trgObjects.addAll(VictoryIBeXAdapter.getNeighbourhood(trgObjects, neighbourhoodSize, true));
 
 		EObjectAdapter.constructGraphDomain(graphBuilder, Domain.SRC, srcObjects);
 		EObjectAdapter.constructGraphDomain(graphBuilder, Domain.TRG, trgObjects);

@@ -25,8 +25,8 @@ public class VictoryIBeXAdapter extends IbexController implements DataProvider {
 		return new VictoryIBeXAdapter();
 	}
 
-	public static Collection<EObject> getNeighbourhood(Collection<EObject> nodes, int neighbourhoodSize) {
-		return dataProvider.getMatchNeighbourhoods(nodes, neighbourhoodSize);
+	public static Collection<EObject> getNeighbourhood(Collection<EObject> nodes, int neighbourhoodSize, boolean merge) {
+		return dataProvider.getMatchNeighbourhoods(nodes, neighbourhoodSize, merge);
 	}
 
 	private static IVictoryDataProvider dataProvider;

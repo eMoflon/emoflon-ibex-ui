@@ -109,64 +109,71 @@ public class EObjectAdapter implements Node {
 		}
 	}
 
-	public static void constructGraphDomain(GraphBuilder builder, Domain domain, Collection<EObject> domainObjects, TGGRuleAdapter rule) {
+	public static void constructGraphDomain(GraphBuilder builder, Domain domain, Collection<EObject> domainObjects, TGGRuleAdapter rule, Boolean neighborhood) {
 		for (EObject object : domainObjects) {
 			EObjectAdapter src = EObjectAdapter.adapt(object, domain, Action.CONTEXT);
 			Optional<TGGRuleNodeAdapter> srcn = rule.getNodes().stream().filter(n -> n.getType().equals(src.getType()) && n.getDomain().equals(src.getDomain())).findFirst();
-			if (srcn.isPresent()) {
-				src.setAction(srcn.get().getAction());
+			if (!neighborhood) {
+				if (srcn.isPresent()) {
+					src.setAction(srcn.get().getAction());
+				}
 			}
 			builder.addNode(src);
 			for (EObject contentObject : object.eContents()) {
 				EObjectAdapter trg = EObjectAdapter.adapt(contentObject, domain, Action.CONTEXT);
-				Optional<TGGRuleNodeAdapter> trgn = rule.getNodes().stream().filter(n -> n.getType().equals(trg.getType()) && n.getDomain().equals(trg.getDomain())).findFirst();
-
 				Action action = Action.CONTEXT;
 				EdgeType edgeType = EdgeType.NORMAL;
-
-				if (trgn.isPresent()) {
-					trg.setAction(trgn.get().getAction());
-					
-					if (srcn.isPresent()) {
-						Optional<Edge> edge = rule.getGraph().getEdges().stream().filter(e ->
-							!e.getType().equals(EdgeType.CORR) &&
-							e.getSrcNode().equals(srcn.get()) &&
-							e.getTrgNode().equals(trgn.get()))
-						.findFirst();
+				
+				if (!neighborhood) {
+					Optional<TGGRuleNodeAdapter> trgn = rule.getNodes().stream().filter(n -> n.getType().equals(trg.getType()) && n.getDomain().equals(trg.getDomain())).findFirst();
+					if (trgn.isPresent()) {
+						trg.setAction(trgn.get().getAction());
 						
-						if (edge.isPresent()) {
-							action = edge.get().getAction(); 
-							edgeType = edge.get().getType();
+						if (srcn.isPresent()) {
+							Optional<Edge> edge = rule.getGraph().getEdges().stream().filter(e ->
+								!e.getType().equals(EdgeType.CORR) &&
+								e.getSrcNode().equals(srcn.get()) &&
+								e.getTrgNode().equals(trgn.get()))
+							.findFirst();
+							
+							if (edge.isPresent()) {
+								action = edge.get().getAction(); 
+								edgeType = edge.get().getType();
+							}
 						}
 					}
+
 				}
-				 
+				
 				builder.addEdge(contentObject.eContainingFeature().getName(), src, trg, edgeType, action);
 			}
 			for (EObject crossReference : object.eCrossReferences()) {
-				EObjectAdapter trg = EObjectAdapter.adapt(crossReference, domain, Action.CONTEXT);
-				Optional<TGGRuleNodeAdapter> trgn = rule.getNodes().stream().filter(n -> n.getType().equals(trg.getType()) && n.getDomain().equals(trg.getDomain())).findFirst();
-
 				Action action = Action.CONTEXT;
 				EdgeType edgeType = EdgeType.NORMAL;
-
-				if (trgn.isPresent()) {
-					trg.setAction(trgn.get().getAction());
-					
-					if (srcn.isPresent()) {
-						Optional<Edge> edge = rule.getGraph().getEdges().stream().filter(e ->
-							!e.getType().equals(EdgeType.CORR) &&
-							e.getSrcNode().equals(srcn.get()) &&
-							e.getTrgNode().equals(trgn.get()))
-						.findFirst();
+				EObjectAdapter trg = EObjectAdapter.adapt(crossReference, domain, Action.CONTEXT);
+				
+				if (!neighborhood) {
+					Optional<TGGRuleNodeAdapter> trgn = rule.getNodes().stream().filter(n -> n.getType().equals(trg.getType()) && n.getDomain().equals(trg.getDomain())).findFirst();
+	
+					if (trgn.isPresent()) {
+						trg.setAction(trgn.get().getAction());
 						
-						if (edge.isPresent()) {
-							action = edge.get().getAction(); 
-							edgeType = edge.get().getType();
+						if (srcn.isPresent()) {
+							Optional<Edge> edge = rule.getGraph().getEdges().stream().filter(e ->
+								!e.getType().equals(EdgeType.CORR) &&
+								e.getSrcNode().equals(srcn.get()) &&
+								e.getTrgNode().equals(trgn.get()))
+							.findFirst();
+							
+							if (edge.isPresent()) {
+								action = edge.get().getAction(); 
+								edgeType = edge.get().getType();
+							}
 						}
 					}
+															
 				}
-				
+
 				builder.addEdge(crossReference.eContainingFeature().getName(), src, trg, edgeType, action);
 			}
 		}
