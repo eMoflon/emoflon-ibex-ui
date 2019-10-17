@@ -17,46 +17,53 @@ import org.emoflon.ibex.tgg.ui.debug.api.Victory;
 
 public class VictoryIBeXAdapter extends IbexController implements DataProvider {
 
-    public static VictoryIBeXAdapter create(OperationalStrategy pOperationalStrategy, IBeXOperation pOperationType) {
-	pOperationalStrategy.getOptions().flattenedTGG().getRules()
-		.forEach(rule -> TGGRuleAdapter.adapt(rule, pOperationType));
+	public static VictoryIBeXAdapter create(OperationalStrategy operationalStrategy, IBeXOperation operationType) {
+		operationalStrategy.getOptions().flattenedTGG().getRules()
+				.forEach(rule -> TGGRuleAdapter.adapt(rule, operationType));
 
-	dataProvider = new VictoryDataProvider(pOperationalStrategy);
-	VictoryIBeXAdapter adapter = new VictoryIBeXAdapter();
-	Victory.create(adapter);
-	return adapter;
-    }
+		dataProvider = new VictoryDataProvider(operationalStrategy);
+		return new VictoryIBeXAdapter();
+	}
 
-    public static Collection<EObject> getNeighbourhood(Collection<EObject> pNodes, int pNeighbourhoodSize) {
-	return dataProvider.getMatchNeighbourhoods(pNodes, pNeighbourhoodSize);
-    }
+	public static Collection<EObject> getNeighbourhood(Collection<EObject> nodes, int neighbourhoodSize) {
+		return dataProvider.getMatchNeighbourhoods(nodes, neighbourhoodSize);
+	}
 
-    private static IVictoryDataProvider dataProvider;
+	private static IVictoryDataProvider dataProvider;
 
-    private VictoryIBeXAdapter() {
-    }
+	private Victory victory;
 
-    public boolean runUI() {
-	return Victory.run();
-    }
+	private VictoryIBeXAdapter() {
+		victory = new Victory();
+	}
 
-    @Override
-    public IMatch chooseOneMatch(DataPackage pDataPackage) {
-	Match chosenMatch = Victory.selectMatch(new DataPackageAdapter(pDataPackage));
-	if (chosenMatch instanceof IbexMatchAdapter)
-	    return ((IbexMatchAdapter) chosenMatch).getWrappedMatch().getIMatch();
-	else
-	    throw new IllegalStateException(
-		    "Victory returned something that wasn't a MatchAdapter. Something must have gone terribly wrong.");
-    }
+	public boolean run(Runnable matchProvider) {
+		return victory.run(this, matchProvider);
+	}
 
-    @Override
-    public Collection<Rule> getAllRules() {
-	return TGGRuleAdapter.getAllRules();
-    }
+	@Override
+	public IMatch chooseOneMatch(DataPackage dataPackage) {
+		Match chosenMatch = victory.selectMatch(new DataPackageAdapter(dataPackage));
+		if (chosenMatch instanceof IbexMatchAdapter)
+			return ((IbexMatchAdapter) chosenMatch).getWrappedMatch().getIMatch();
+		else
+			throw new IllegalStateException(
+					"Victory returned something that wasn't a MatchAdapter. Something must have gone terribly wrong.");
+	}
 
-    @Override
-    public void saveModels() throws IOException {
-	dataProvider.saveModels();
-    }
+	@Override
+	public Collection<Rule> getAllRules() {
+		return TGGRuleAdapter.getAllRules();
+	}
+
+	@Override
+	public void saveModels(String[] saveLocations) throws IOException {
+		dataProvider.saveModels(saveLocations);
+	}
+
+	@Override
+	public String[][] getDefaultSaveData() {
+		return dataProvider.getDefaultSaveData();
+	}
+
 }

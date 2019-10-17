@@ -15,59 +15,58 @@ import org.emoflon.ibex.tgg.ui.debug.api.impl.GraphBuilder;
 
 public class ProtocolStepAdapter implements RuleApplication {
 
-    private static ProtocolStepMerger protocolStepMerger = new ProtocolStepMerger();
+	private static ProtocolStepMerger protocolStepMerger = new ProtocolStepMerger();
 
-    private static Map<ProtocolStep, ProtocolStepAdapter> wrappers = new HashMap<>();
+	private static Map<ProtocolStep, ProtocolStepAdapter> wrappers = new HashMap<>();
 
-    public static ProtocolStepAdapter adapt(ProtocolStep pProtocolStep) {
-	if (!wrappers.containsKey(pProtocolStep))
-	    wrappers.put(pProtocolStep, new ProtocolStepAdapter(pProtocolStep));
-	return wrappers.get(pProtocolStep);
-    }
-
-    // ----------
-
-    private ProtocolStep protocolStep;
-
-    private ProtocolStepAdapter(ProtocolStep pProtocolStep) {
-	protocolStep = pProtocolStep;
-    }
-
-    public int getIndex() {
-	return protocolStep.getIndex();
-    }
-
-    public RuleApplicationMerger getMerger() {
-	return protocolStepMerger;
-    }
-
-    private static class ProtocolStepMerger implements RuleApplicationMerger {
-	@Override
-	public Graph getMergedGraph(Collection<RuleApplication> pRuleApplications, int pNeighbourhoodSize) {
-
-	    TGGObjectGraphBuilder objectGraphBuilder = new TGGObjectGraphBuilder();
-	    for (RuleApplication ruleApplication : pRuleApplications) {
-		if (!(ruleApplication instanceof ProtocolStepAdapter))
-		    throw new IllegalStateException(
-			    "This merger only supports RuleApplications of type ProtocolStepAdapter.");
-
-		objectGraphBuilder.add(((ProtocolStepAdapter) ruleApplication).protocolStep.getObjectGraph());
-	    }
-	    TGGObjectGraph objectGraph = objectGraphBuilder.build();
-
-	    GraphBuilder builder = new GraphBuilder();
-	    EObjectAdapter.constructGraphDomain(builder, Domain.SRC,
-		    VictoryIBeXAdapter.getNeighbourhood(objectGraph.getSrcElements(), pNeighbourhoodSize));
-	    EObjectAdapter.constructGraphDomain(builder, Domain.TRG,
-		    VictoryIBeXAdapter.getNeighbourhood(objectGraph.getTrgElements(), pNeighbourhoodSize));
-	    EObjectAdapter.constructCorrEdges(builder, objectGraph.getCorrElements());
-	    return builder.build();
+	public static ProtocolStepAdapter adapt(ProtocolStep protocolStep) {
+		if (!wrappers.containsKey(protocolStep))
+			wrappers.put(protocolStep, new ProtocolStepAdapter(protocolStep));
+		return wrappers.get(protocolStep);
 	}
-    }
+
+	// ----------
+
+	private ProtocolStep protocolStep;
+
+	private ProtocolStepAdapter(ProtocolStep protocolStep) {
+		this.protocolStep = protocolStep;
+	}
+
+	public int getIndex() {
+		return protocolStep.getIndex();
+	}
+
+	public RuleApplicationMerger getMerger() {
+		return protocolStepMerger;
+	}
+
+	private static class ProtocolStepMerger implements RuleApplicationMerger {
+		@Override
+		public Graph getMergedGraph(Collection<RuleApplication> ruleApplications, int neighbourhoodSize) {
+
+			TGGObjectGraphBuilder objectGraphBuilder = new TGGObjectGraphBuilder();
+			for (RuleApplication ruleApplication : ruleApplications) {
+				if (!(ruleApplication instanceof ProtocolStepAdapter))
+					throw new IllegalStateException(
+							"This merger only supports RuleApplications of type ProtocolStepAdapter.");
+
+				objectGraphBuilder.add(((ProtocolStepAdapter) ruleApplication).protocolStep.getObjectGraph());
+			}
+			TGGObjectGraph objectGraph = objectGraphBuilder.build();
+
+			GraphBuilder builder = new GraphBuilder();
+			EObjectAdapter.constructGraphDomain(builder, Domain.SRC,
+					VictoryIBeXAdapter.getNeighbourhood(objectGraph.getSrcElements(), neighbourhoodSize));
+			EObjectAdapter.constructGraphDomain(builder, Domain.TRG,
+					VictoryIBeXAdapter.getNeighbourhood(objectGraph.getTrgElements(), neighbourhoodSize));
+			EObjectAdapter.constructCorrEdges(builder, objectGraph.getCorrElements());
+			return builder.build();
+		}
+	}
 
 	@Override
 	public String getRuleName() {
-		// TODO return name of protocol step
-		return "<Rule name not provided>";
+		return protocolStep.getAppliedRule().getName();
 	}
 }

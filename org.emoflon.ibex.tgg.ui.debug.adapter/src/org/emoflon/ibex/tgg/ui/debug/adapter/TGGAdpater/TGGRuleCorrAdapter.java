@@ -13,51 +13,51 @@ import language.TGGRuleCorr;
 
 public class TGGRuleCorrAdapter implements Edge {
 
-    private static Map<TGGRuleCorr, TGGRuleCorrAdapter> wrappers = new HashMap<>();
+	private static Map<TGGRuleCorr, TGGRuleCorrAdapter> wrappers = new HashMap<>();
 
-    public static TGGRuleCorrAdapter adapt(TGGRuleCorr pProtocolStep) {
-	if (!wrappers.containsKey(pProtocolStep))
-	    wrappers.put(pProtocolStep, new TGGRuleCorrAdapter(pProtocolStep));
-	return wrappers.get(pProtocolStep);
-    }
+	public static TGGRuleCorrAdapter adapt(TGGRuleCorr protocolStep) {
+		if (!wrappers.containsKey(protocolStep))
+			wrappers.put(protocolStep, new TGGRuleCorrAdapter(protocolStep));
+		return wrappers.get(protocolStep);
+	}
 
-    // ----------
+	// ----------
 
-    private TGGRuleCorr corr;
+	private TGGRuleCorr corr;
 
-    private TGGRuleCorrAdapter(TGGRuleCorr pCorr) {
-	corr = pCorr;
-    }
+	private TGGRuleCorrAdapter(TGGRuleCorr ruleCorr) {
+		corr = ruleCorr;
+	}
 
-    @Override
-    public String getLabel() {
-	return ":" + corr.getType().getName();
-    }
+	@Override
+	public String getLabel() {
+		return ":" + corr.getType().getName();
+	}
 
-    @Override
-    public Node getSrcNode() {
-	return TGGRuleNodeAdapter.get(corr.getSource());
-    }
+	@Override
+	public Node getSrcNode() {
+		return TGGRuleNodeAdapter.get(corr.getSource());
+	}
 
-    @Override
-    public Node getTrgNode() {
-	return TGGRuleNodeAdapter.get(corr.getTarget());
-    }
+	@Override
+	public Node getTrgNode() {
+		return TGGRuleNodeAdapter.get(corr.getTarget());
+	}
 
-    @Override
-    public EdgeType getType() {
-	return EdgeType.CORR;
-    }
+	@Override
+	public EdgeType getType() {
+		return EdgeType.CORR;
+	}
 
-    @Override
-    public Action getAction() {
-	if (BindingType.CREATE.equals(corr.getBindingType()))
-	    return Action.CREATE;
-	else
-	    return Action.CONTEXT;
-    }
+	@Override
+	public Action getAction() {
+		if (BindingType.CREATE.equals(corr.getBindingType()))
+			return Action.CREATE;
+		else
+			return Action.CONTEXT;
+	}
 
-    public String getName() {
-	return corr.getName();
-    }
+	public String getName() {
+		return corr.getName();
+	}
 }
