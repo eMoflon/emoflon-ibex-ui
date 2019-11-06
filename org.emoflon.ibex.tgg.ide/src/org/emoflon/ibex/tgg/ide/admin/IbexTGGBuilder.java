@@ -92,10 +92,10 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 			logger.info(getProject().getName() + ": Full build");
 			generateFiles();
 			break;
-		case AUTO_BUILD:
-		case INCREMENTAL_BUILD:
-			generateFilesIfchangeIsRelevant();
-			break;
+//		case AUTO_BUILD:
+//		case INCREMENTAL_BUILD:
+//			generateFilesIfchangeIsRelevant();
+//			break;
 		default:
 			break;
 		}
