@@ -22,7 +22,7 @@ import org.moflon.tgg.mosl.tgg.TggFactory
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
 
 class IbexPlantUMLGenerator {
- 
+  
 	def static String visualiseTGGFile(TripleGraphGrammarFile file, String selected) {
 		val chosenRule = file.rules.filter[r|r.name.equals(selected)]
 		if (chosenRule.length == 1) {

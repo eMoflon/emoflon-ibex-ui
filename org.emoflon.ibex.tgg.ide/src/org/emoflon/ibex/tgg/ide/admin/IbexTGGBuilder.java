@@ -78,6 +78,8 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 
 	public IbexTGGBuilder() {
 		builderExtensions = ExtensionsUtil.collectExtensions(IBUILDER_EXTENSON_ID, "class", BuilderExtension.class);
+//		logger.info(getProject().getName() + ": Available extensions");
+//		builderExtensions.forEach(b -> logger.info("\t-->\t" + b.toString()));
 	}
 
 	@Override
@@ -90,10 +92,10 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 			logger.info(getProject().getName() + ": Full build");
 			generateFiles();
 			break;
-		case AUTO_BUILD:
-		case INCREMENTAL_BUILD:
-			generateFilesIfchangeIsRelevant();
-			break;
+//		case AUTO_BUILD:
+//		case INCREMENTAL_BUILD:
+//			generateFilesIfchangeIsRelevant();
+//			break;
 		default:
 			break;
 		}
@@ -377,7 +379,10 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 
 			@Override
 			public void run() throws Exception {
-				builderExtensions.forEach(builderExt -> builderExt.run(builder, editorModel, flattenedEditorModel));
+				builderExtensions.forEach(builderExt -> {
+//					logger.info("\t--> Running builder extension:\t" + builderExt.toString());
+					builderExt.run(builder, editorModel, flattenedEditorModel);
+				});
 			}
 		};
 		SafeRunner.run(runnable);
