@@ -71,6 +71,7 @@ public class EditorTGGtoFlattenedTGG {
 			return Optional.of(flattened);
 		} catch (Exception e) {
 			logger.error("Unable to flatten " + tgg);
+			e.printStackTrace();
 			return Optional.empty();
 		}
 	}

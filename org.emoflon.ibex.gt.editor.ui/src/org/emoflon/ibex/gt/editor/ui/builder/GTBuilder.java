@@ -2,7 +2,9 @@ package org.emoflon.ibex.gt.editor.ui.builder;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -75,8 +77,25 @@ public class GTBuilder extends IncrementalProjectBuilder {
 	private void incrementalBuild() {
 		log("incremental build");
 		Arrays.stream(getDelta(getProject()).getAffectedChildren())
-				.filter(child -> "src".equals(child.getProjectRelativePath().toString())).findAny()
-				.ifPresent(srcDelta -> buildPackages(getPackagesFromDelta(srcDelta)));
+				.filter(child -> child.getProjectRelativePath().toString().contains("src"))
+				.filter(child -> !child.getProjectRelativePath().toString().contains("src-gen"))
+				.filter(srcDelta -> folderContainsGTModel(srcDelta))
+				.forEach(srcDelta -> buildPackages(getPackagesFromDelta(srcDelta)));
+	}
+	
+	private boolean folderContainsGTModel(IResourceDelta srcDelta) {
+		Queue<IResourceDelta> affectedChildren = new LinkedList<>();
+		affectedChildren.addAll(Arrays.asList(srcDelta.getAffectedChildren()));
+		while(!affectedChildren.isEmpty()) {
+			IResourceDelta child = affectedChildren.poll();
+			if(child.getResource().getType() == IResource.FILE) {
+				if(child.getResource().getProjectRelativePath().toString().contains(".gt"));
+					return true;
+				
+			}
+			affectedChildren.addAll(Arrays.asList(child.getAffectedChildren()));
+		}
+		return false;
 	}
 
 	/**
