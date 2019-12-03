@@ -1,4 +1,4 @@
-package org.emoflon.ibex.tgg.ui.debug.adapter.TGGAdpater;
+package org.emoflon.ibex.tgg.ui.debug.adapter.TGGAdapter;
 
 import java.util.ArrayList;
 import java.util.Collection;

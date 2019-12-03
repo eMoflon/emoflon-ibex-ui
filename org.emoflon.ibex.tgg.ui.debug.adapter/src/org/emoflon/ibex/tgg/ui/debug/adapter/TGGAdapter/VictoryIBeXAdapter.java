@@ -1,4 +1,4 @@
-package org.emoflon.ibex.tgg.ui.debug.adapter.TGGAdpater;
+package org.emoflon.ibex.tgg.ui.debug.adapter.TGGAdapter;
 
 import java.io.IOException;
 import java.util.Collection;

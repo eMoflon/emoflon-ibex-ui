@@ -67,19 +67,22 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	public static final String SRC_FOLDER = "src";
 	public static final String MODEL_FOLDER = "model";
 	public static final String RUN_FILE_PATH_PREFIX = "src/org/emoflon/ibex/tgg/run/";
+	public static final String CONFIG_FILE_PATH_PREFIX = RUN_FILE_PATH_PREFIX + "config/";
 	private static final String IBUILDER_EXTENSON_ID = "org.emoflon.ibex.tgg.ide.IbexTGGBuilderExtension";
 	public static final Logger logger = Logger.getLogger(IbexTGGBuilder.class);
 	private boolean buildIsNecessary = false;
 
 	private Collection<BuilderExtension> builderExtensions;
 
-	// Blackboard for computed results and sharing data between builder extensions
+	// Blackboard for computed results and sharing data between builder
+	// extensions
 	private Map<String, Object> blackboard;
 
 	public IbexTGGBuilder() {
 		builderExtensions = ExtensionsUtil.collectExtensions(IBUILDER_EXTENSON_ID, "class", BuilderExtension.class);
-//		logger.info(getProject().getName() + ": Available extensions");
-//		builderExtensions.forEach(b -> logger.info("\t-->\t" + b.toString()));
+		// logger.info(getProject().getName() + ": Available extensions");
+		// builderExtensions.forEach(b -> logger.info("\t-->\t" +
+		// b.toString()));
 	}
 
 	@Override
@@ -92,10 +95,10 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 			logger.info(getProject().getName() + ": Full build");
 			generateFiles();
 			break;
-//		case AUTO_BUILD:
-//		case INCREMENTAL_BUILD:
-//			generateFilesIfchangeIsRelevant();
-//			break;
+		// case AUTO_BUILD:
+		// case INCREMENTAL_BUILD:
+		// generateFilesIfchangeIsRelevant();
+		// break;
 		default:
 			break;
 		}
@@ -136,8 +139,7 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 		Optional<TripleGraphGrammarFile> flattenedTGGOp = flattener.flatten(editorModel);
 		return flattenedTGGOp.map(flattenedTGG -> {
 			ResourceSet rs = editorModel.eResource().getResourceSet();
-			IFile tggFile = getProject().getFolder(IbexTGGBuilder.MODEL_FOLDER)
-					.getFile(determineNameOfGeneratedFile() + EDITOR_FLATTENED_MODEL_EXTENSION);
+			IFile tggFile = getProject().getFolder(IbexTGGBuilder.MODEL_FOLDER).getFile(determineNameOfGeneratedFile() + EDITOR_FLATTENED_MODEL_EXTENSION);
 			try {
 				saveModelInProject(tggFile, rs, flattenedTGG);
 			} catch (Exception e) {
@@ -153,29 +155,36 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	 * @param fileName
 	 *            The name of the file to be generated
 	 * @param generator
-	 *            A bi-function used to generate the string content of the new file
-	 *            of the form: (project name, file name) -> file contents
+	 *            A bi-function used to generate the string content of the new
+	 *            file of the form: (project name, file name) -> file contents
 	 * @throws CoreException
 	 */
-	public void createDefaultRunFile(String fileName, BiFunction<String, String, String> generator)
-			throws CoreException {
-	establishDefaultRunFile(fileName, false, generator, false);
+	public void createDefaultRunFile(String fileName, BiFunction<String, String, String> generator) throws CoreException {
+		establishDefaultRunFile(fileName, false, generator, false);
 	}
 
-	public void createDefaultDebugRunFile(String fileName, BiFunction<String, String, String> generator)
-	    throws CoreException {
-	establishDefaultRunFile(fileName, true, generator, false);
+	public void createDefaultConfigFile(String fileName, BiFunction<String, String, String> generator) throws CoreException {
+		establishDefaultConfigFile(fileName, generator, false);
 	}
 
-	public void enforceDefaultRunFile(String fileName, BiFunction<String, String, String> generator)
-			throws CoreException {
-	establishDefaultRunFile(fileName, false, generator, true);
+	public void createDefaultDebugRunFile(String fileName, BiFunction<String, String, String> generator) throws CoreException {
+		establishDefaultRunFile(fileName, true, generator, false);
 	}
 
-	public void establishDefaultRunFile(String fileName, boolean debug, BiFunction<String, String, String> generator, Boolean force)
-			throws CoreException {
-	createIfNotExists(RUN_FILE_PATH_PREFIX + determineNameOfGeneratedFile().toLowerCase() + (debug ? "/debug/" : "/"),
-		fileName, ".java", generator, force);
+	public void enforceDefaultRunFile(String fileName, BiFunction<String, String, String> generator) throws CoreException {
+		establishDefaultRunFile(fileName, false, generator, true);
+	}
+
+	public void enforceDefaultConfigFile(String fileName, BiFunction<String, String, String> generator) throws CoreException {
+		establishDefaultConfigFile(fileName, generator, true);
+	}
+
+	public void establishDefaultRunFile(String fileName, boolean debug, BiFunction<String, String, String> generator, Boolean force) throws CoreException {
+		createIfNotExists(RUN_FILE_PATH_PREFIX + determineNameOfGeneratedFile().toLowerCase() + (debug ? "/debug/" : "/"), fileName, ".java", generator, force);
+	}
+
+	public void establishDefaultConfigFile(String fileName, BiFunction<String, String, String> generator, Boolean force) throws CoreException {
+		createIfNotExists(RUN_FILE_PATH_PREFIX + determineNameOfGeneratedFile().toLowerCase() + "/config/", fileName, ".java", generator, force);
 	}
 
 	/**
@@ -188,12 +197,11 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	 * @param fileName
 	 *            The name of the file to be generated
 	 * @param generator
-	 *            A bi-function used to generate the string content of the new file
-	 *            of the form: (project name, file name) -> file contents
+	 *            A bi-function used to generate the string content of the new
+	 *            file of the form: (project name, file name) -> file contents
 	 * @throws CoreException
 	 */
-	public void createIfNotExists(String path, String fileName, String ending,
-			BiFunction<String, String, String> generator, Boolean force) throws CoreException {
+	public void createIfNotExists(String path, String fileName, String ending, BiFunction<String, String, String> generator, Boolean force) throws CoreException {
 		IPath pathToFile = new Path(path + fileName + ending);
 		IFile file = getProject().getFile(pathToFile);
 
@@ -273,8 +281,7 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 				getTGGFileContainingName(next).forEach(f -> {
 					try {
 						IMarker m = f.createMarker(IMarker.PROBLEM);
-						m.setAttribute(IMarker.MESSAGE,
-								"At least one other rule or NAC in your TGG has this name already: " + next);
+						m.setAttribute(IMarker.MESSAGE, "At least one other rule or NAC in your TGG has this name already: " + next);
 						m.setAttribute(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
 						m.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
 					} catch (Exception e) {
@@ -339,8 +346,7 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 		xtextParsedTGG.getSchema().getAttributeCondDefs().addAll(usedAttrCondDefs);
 	}
 
-	private <ACC> void visitAllFiles(ACC accumulator, IFolder root, BiConsumer<IFile, ACC> action)
-			throws CoreException, IOException {
+	private <ACC> void visitAllFiles(ACC accumulator, IFolder root, BiConsumer<IFile, ACC> action) throws CoreException, IOException {
 		for (IResource iResource : root.members()) {
 			if (iResource instanceof IFile) {
 				action.accept((IFile) iResource, accumulator);
@@ -357,20 +363,17 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	}
 
 	private boolean schemaIsOfExpectedType(XtextResource schemaResource) {
-		return schemaResource.getContents().size() == 1
-				&& schemaResource.getContents().get(0) instanceof TripleGraphGrammarFile;
+		return schemaResource.getContents().size() == 1 && schemaResource.getContents().get(0) instanceof TripleGraphGrammarFile;
 	}
 
 	private XtextResource loadSchema(XtextResourceSet resourceSet, IFile schemaFile) throws IOException {
-		XtextResource schemaResource = (XtextResource) resourceSet
-				.createResource(URI.createPlatformResourceURI(schemaFile.getFullPath().toString(), false));
+		XtextResource schemaResource = (XtextResource) resourceSet.createResource(URI.createPlatformResourceURI(schemaFile.getFullPath().toString(), false));
 		schemaResource.load(null);
 		EcoreUtil.resolveAll(resourceSet);
 		return schemaResource;
 	}
 
-	private void generateExtraModels(IbexTGGBuilder builder, TripleGraphGrammarFile editorModel,
-			TripleGraphGrammarFile flattenedEditorModel) {
+	private void generateExtraModels(IbexTGGBuilder builder, TripleGraphGrammarFile editorModel, TripleGraphGrammarFile flattenedEditorModel) {
 		ISafeRunnable runnable = new ISafeRunnable() {
 			@Override
 			public void handleException(Throwable e) {
@@ -380,7 +383,8 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 			@Override
 			public void run() throws Exception {
 				builderExtensions.forEach(builderExt -> {
-//					logger.info("\t--> Running builder extension:\t" + builderExt.toString());
+					// logger.info("\t--> Running builder extension:\t" +
+					// builderExt.toString());
 					builderExt.run(builder, editorModel, flattenedEditorModel);
 				});
 			}
@@ -418,8 +422,7 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	}
 
 	private boolean isTggFileToBeCompiled(IResourceDelta delta) {
-		return delta.getResource().getName().endsWith(TGG_FILE_EXTENSION)
-				&& !delta.getResource().getProjectRelativePath().toString().startsWith("bin/");
+		return delta.getResource().getName().endsWith(TGG_FILE_EXTENSION) && !delta.getResource().getProjectRelativePath().toString().startsWith("bin/");
 	}
 
 	private void performClean() {
@@ -437,10 +440,8 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 		}
 
 		List<String> toDelete = Arrays.asList(//
-				MODEL_FOLDER + "/" + determineNameOfGeneratedFile() + ECORE_FILE_EXTENSION,
-				MODEL_FOLDER + "/" + determineNameOfGeneratedFile() + EDITOR_MODEL_EXTENSION,
-				MODEL_FOLDER + "/" + determineNameOfGeneratedFile() + INTERNAL_TGG_MODEL_EXTENSION,
-				MODEL_FOLDER + "/" + determineNameOfGeneratedFile() + EDITOR_FLATTENED_MODEL_EXTENSION,
+				MODEL_FOLDER + "/" + determineNameOfGeneratedFile() + ECORE_FILE_EXTENSION, MODEL_FOLDER + "/" + determineNameOfGeneratedFile() + EDITOR_MODEL_EXTENSION,
+				MODEL_FOLDER + "/" + determineNameOfGeneratedFile() + INTERNAL_TGG_MODEL_EXTENSION, MODEL_FOLDER + "/" + determineNameOfGeneratedFile() + EDITOR_FLATTENED_MODEL_EXTENSION,
 				MODEL_FOLDER + "/" + determineNameOfGeneratedFile() + INTERNAL_TGG_FLATTENED_MODEL_EXTENSION);
 		toDelete.stream()//
 				.map(f -> getProject().getFile(f))//
