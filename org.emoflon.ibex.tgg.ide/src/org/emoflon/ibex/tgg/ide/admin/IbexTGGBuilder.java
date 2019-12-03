@@ -6,9 +6,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Queue;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
@@ -95,10 +97,10 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 			logger.info(getProject().getName() + ": Full build");
 			generateFiles();
 			break;
-		// case AUTO_BUILD:
-		// case INCREMENTAL_BUILD:
-		// generateFilesIfchangeIsRelevant();
-		// break;
+		 case AUTO_BUILD:
+		 case INCREMENTAL_BUILD:
+			 generateFilesIfchangeIsRelevant();
+			 break;
 		default:
 			break;
 		}
@@ -107,17 +109,34 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	}
 
 	private void generateFilesIfchangeIsRelevant() throws CoreException {
-		IResourceDelta delta = getDelta(getProject());
-
-		if (delta != null)
-			delta.accept(this);
-
-		if (buildIsNecessary) {
-			logger.info(getProject().getName() + ": Incremental build");
-			generateFiles();
-		}
-
+		logger.info("Incremental tgg build - " + getProject().getName());
+	
 		buildIsNecessary = false;
+		Arrays.stream(getDelta(getProject()).getAffectedChildren())
+		.filter(child -> child.getResource().getProject().equals(getProject()))
+		.filter(child -> child.getProjectRelativePath().toString().contains("src"))
+		.filter(child -> !child.getProjectRelativePath().toString().contains("src-gen"))
+		.filter(srcDelta -> folderContainsTGGFiles(srcDelta)).findAny()
+		.ifPresent(x -> buildIsNecessary = true);
+		if(buildIsNecessary) {
+			generateFiles();
+			buildIsNecessary = false;
+		}
+	}
+	
+	private boolean folderContainsTGGFiles(IResourceDelta srcDelta) {
+		Queue<IResourceDelta> affectedChildren = new LinkedList<>();
+		affectedChildren.addAll(Arrays.asList(srcDelta.getAffectedChildren()));
+		while(!affectedChildren.isEmpty()) {
+			IResourceDelta child = affectedChildren.poll();
+			if(child.getResource().getType() == IResource.FILE) {
+				if(child.getResource().getProjectRelativePath().toString().contains(".tgg"));
+					return true;
+				
+			}
+			affectedChildren.addAll(Arrays.asList(child.getAffectedChildren()));
+		}
+		return false;
 	}
 
 	private void generateFiles() {
