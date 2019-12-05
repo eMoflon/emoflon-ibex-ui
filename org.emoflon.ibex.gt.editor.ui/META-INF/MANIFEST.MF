@@ -28,10 +28,16 @@ Require-Bundle: net.sourceforge.plantuml.eclipse,
  org.moflon.core.ui,
  org.moflon.core.utilities
 Import-Package: org.apache.log4j
-Export-Package: org.emoflon.ibex.gt.editor.ui.builder,
+Export-Package: org.emoflon.ibex.gt.editor.ui,
+ org.emoflon.ibex.gt.editor.ui.builder,
  org.emoflon.ibex.gt.editor.ui.contentassist,
+ org.emoflon.ibex.gt.editor.ui.highlighting,
  org.emoflon.ibex.gt.editor.ui.internal,
- org.emoflon.ibex.gt.editor.ui.quickfix
+ org.emoflon.ibex.gt.editor.ui.labeling,
+ org.emoflon.ibex.gt.editor.ui.outline,
+ org.emoflon.ibex.gt.editor.ui.quickfix,
+ org.emoflon.ibex.gt.editor.ui.visualization,
+ org.emoflon.ibex.gt.editor.ui.wizard
 Bundle-Activator: org.emoflon.ibex.gt.editor.ui.internal.EditorActivator
 Automatic-Module-Name: org.emoflon.ibex.gt.editor.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

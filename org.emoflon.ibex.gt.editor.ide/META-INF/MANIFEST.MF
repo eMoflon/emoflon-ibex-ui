@@ -9,8 +9,9 @@ Require-Bundle: org.antlr.runtime;bundle-version="[3.2.0,3.2.1)",
  org.eclipse.xtext.ide,
  org.eclipse.xtext.xbase.ide,
  org.emoflon.ibex.gt.editor
-Export-Package: org.emoflon.ibex.gt.editor.ide.contentassist.antlr.internal,
- org.emoflon.ibex.gt.editor.ide.contentassist.antlr
+Export-Package: org.emoflon.ibex.gt.editor.ide,
+ org.emoflon.ibex.gt.editor.ide.contentassist.antlr,
+ org.emoflon.ibex.gt.editor.ide.contentassist.antlr.internal
 Automatic-Module-Name: org.emoflon.ibex.gt.editor.ide
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 

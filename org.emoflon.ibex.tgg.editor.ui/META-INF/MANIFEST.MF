@@ -23,11 +23,19 @@ Require-Bundle: org.apache.log4j,
  org.emoflon.ibex.tgg.ide,
  org.moflon.core.ui,
  org.moflon.core.utilities
-Export-Package: org.moflon.tgg.mosl.ui.contentassist,
+Export-Package: org.moflon.tgg.mosl.ui,
+ org.moflon.tgg.mosl.ui.contentassist,
  org.moflon.tgg.mosl.ui.contentassist.antlr,
  org.moflon.tgg.mosl.ui.contentassist.antlr.internal,
+ org.moflon.tgg.mosl.ui.highlighting,
+ org.moflon.tgg.mosl.ui.highlighting.exceptions,
+ org.moflon.tgg.mosl.ui.highlighting.rules,
+ org.moflon.tgg.mosl.ui.highlighting.utils,
  org.moflon.tgg.mosl.ui.internal,
- org.moflon.tgg.mosl.ui.quickfix
+ org.moflon.tgg.mosl.ui.labeling,
+ org.moflon.tgg.mosl.ui.outline,
+ org.moflon.tgg.mosl.ui.quickfix,
+ org.moflon.tgg.mosl.ui.wizards
 Bundle-Activator: org.moflon.tgg.mosl.ui.internal.TGGActivator
 Automatic-Module-Name: org.emoflon.ibex.tgg.editor.ui
 Import-Package: org.apache.log4j
