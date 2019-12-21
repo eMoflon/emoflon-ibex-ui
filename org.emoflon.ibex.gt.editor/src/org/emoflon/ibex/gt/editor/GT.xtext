@@ -21,7 +21,8 @@ EditorPattern:
   ('{'
   (nodes+=EditorNode | complexAttributeConstraints+=EditorPatternAttributeCondition)*
   '}')?
-  ('when' conditions+=[EditorCondition] ('||' conditions+=[EditorCondition])*)?;
+  ('when' conditions+=[EditorCondition] ('||' conditions+=[EditorCondition])*)?
+  (stochastic ?='@' probability = EditorProbability)?;
 
 EditorPatternElement:
   EditorNode | EditorPatternAttributeCondition;
@@ -66,7 +67,8 @@ enum EditorRelation:
   SMALLER='<';
 
 EditorExpression:
-  EditorAttributeExpression | EditorLiteralExpression | EditorEnumExpression | EditorParameterExpression;
+  EditorAttributeExpression | EditorLiteralExpression | EditorEnumExpression | 
+  EditorParameterExpression | StochasticFunctionExpression;
 
 EditorAttributeExpression:
   node=[EditorNode] '.' attribute=[ecore::EAttribute];
@@ -133,6 +135,32 @@ enum EditorApplicationConditionType:
 
 EditorBindingExpression:
   ':=' node=[EditorNode];
+
+// stochastic functions
+EditorProbability:
+	{EditorProbability}  (staticProbability = Number) |  StochasticFunction | StochasticAttributeExpression;
+	
+StochasticFunction:
+	functionExpression = StochasticFunctionExpression (parameter = StochasticFunctionAttribute)?;
+
+StochasticFunctionExpression:
+	(operatorRange = StochasticRange)? distribution = StochasticDistribution 
+	"(" mean = StochasticFunctionAttribute "," sd = StochasticFunctionAttribute ")";
+
+enum PossibleStochasticRanges:
+	NEUTRAL | POSITIVE | NEGATIVE;
+	
+enum StochasticRange returns PossibleStochasticRanges:
+	POSITIVE = "+" | NEGATIVE = "-";
+
+enum StochasticDistribution:
+	NORMAL = "N" | EQUAL = "U";	
+	
+StochasticFunctionAttribute:
+	 {StochasticFunctionAttribute} (staticAttribute = Number) | StochasticAttributeExpression;	
+
+StochasticAttributeExpression:
+	  node=[EditorNode] '.' attribute=[ecore::EAttribute];
 
 /*
  * Attribute constraints library

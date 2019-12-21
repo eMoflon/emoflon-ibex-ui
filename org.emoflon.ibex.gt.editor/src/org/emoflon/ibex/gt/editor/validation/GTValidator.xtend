@@ -36,6 +36,13 @@ import org.emoflon.ibex.gt.editor.gT.EditorAttributeConditionType
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeConditionSpecification
 import org.eclipse.emf.common.util.EList
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeConditionParameter
+import org.emoflon.ibex.gt.editor.gT.StochasticAttributeExpression
+import org.eclipse.emf.ecore.EcorePackage
+import org.emoflon.ibex.gt.editor.gT.EditorProbability
+import org.emoflon.ibex.gt.editor.gT.StochasticFunction
+import org.emoflon.ibex.gt.editor.gT.StochasticDistribution
+import org.emoflon.ibex.gt.editor.gT.StochasticFunctionExpression
+import org.emoflon.ibex.gt.editor.gT.PossibleStochasticRanges
 
 /**
  * This class contains custom validation rules.
@@ -242,7 +249,32 @@ class GTValidator extends AbstractGTValidator {
   public static val EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_SPECIFICATION_UNKNOWN_PARAMETER = "Unknown parameter referenced in code fragment: %s"
 
   public static val EDITOR_ATTRIBUTE_CONDITION_PARAMETER_NAME_PATTERN = "[a-zA-z][a-zA-z0-9]*"
+  
+  //stochastic functions error messages
+  public static val PROBABILITY_ON_PATTERN_MESSAGE = "Only rules can have a probability"
+  public static val PROBABILITY_ON_PATTERN = CODE_PREFIX + "probability.onPattern"
+  
+  public static val STATICPROBABILITY_NOT_CORRECT_MESSAGE = "The probability needs to be a number between zero and one"
+  public static val STATICPROBABILITY_NOT_CORRECT = CODE_PREFIX + "probability.staticprobabilityNotCorrect"  
+  
+  public static val PROBABIILITY_NO_RANGE_MESSAGE = "Probabilities can't have a range, only value generators"
+  public static val PROBABILITY_NO_RANGE = CODE_PREFIX + "probability.noRange"
 
+  public static val SD_NEGATIVE_MESSAGE = "The standard deviation needs to be positive"
+  public static val SD_NEGATIVE = CODE_PREFIX + "probability.sdNegative"
+  
+  public static val INTERVALL_INCORRECT_MESSAGE = "The minimum value needs to be smaller than the maximum value"
+  public static val INTERVALL_INCORRECT = CODE_PREFIX + "probability.intervallIncorrect"
+  
+  public static val VALUE_UNDER_ZERO_MESSAGE = "The minimum value of the distribution needs to be positive"
+  public static val VALUE_UNDER_ZERO = CODE_PREFIX + "probability.valueUnderZero"
+  
+  public static val VALUE_OVER_ONE_MESSAGE = "The maximum value of the distribution needs to be lower than one"
+  public static val VALUE_OVER_ONE = CODE_PREFIX + "probability.valueOverOne"
+  
+  public static val PARAMETER_NO_NUMBER_MESSAGE = "The parameter %s.%s is not a numeric value"
+  public static val PARAMETER_NO_NUMBER = CODE_PREFIX + "probability.parameterNoNumber"
+  
   @Check
   def checkFile(EditorGTFile file) {
     // There must be at least one import.
@@ -1097,7 +1129,96 @@ class GTValidator extends AbstractGTValidator {
     }
 
   }
-
+  
+  //stochastic function validation
+  /**
+   * checks if the pattern is a rule
+   */
+  @Check
+  def checkIfProbabilityOnRule(EditorPattern pattern){
+  	if(pattern.stochastic && pattern.type != EditorPatternType.RULE){
+  		error(PROBABILITY_ON_PATTERN_MESSAGE, GTPackage.Literals.EDITOR_PATTERN__PROBABILITY,
+  			pattern.name, PROBABILITY_ON_PATTERN
+  		)
+  	}
+  }
+  /**
+   * checks if the stochastic functions are defined properly; only used when the parameters have
+   * static value; else runtime-checking
+   */
+  @Check
+  def checkStochasticDefinitions(EditorProbability probability){
+  	//checks if the staticprobability is a number between 0 and 1
+  	if(probability.staticProbability !== null){
+  		val value = Double::parseDouble(probability.staticProbability)
+  		if(value < 0.0 || value > 1.0){
+  			error(STATICPROBABILITY_NOT_CORRECT_MESSAGE, 
+  				GTPackage.Literals.EDITOR_PROBABILITY__STATIC_PROBABILITY, 
+  				STATICPROBABILITY_NOT_CORRECT)
+  		}
+  	}
+  	//checks that the probability does not have a range
+  	if(probability instanceof StochasticFunction){
+  		val function = probability as StochasticFunction
+  		if(function.functionExpression.operatorRange != PossibleStochasticRanges.NEUTRAL){
+  			error(PROBABIILITY_NO_RANGE_MESSAGE, 
+  				GTPackage.Literals.STOCHASTIC_FUNCTION__FUNCTION_EXPRESSION,PROBABILITY_NO_RANGE)
+  		}
+  	}
+  }
+  
+  @Check
+  def checkProbabilityFunction(StochasticFunction function){
+  	//if equaldistribution and without parameter => the range needs to be between 0 and 1
+  	if(function.functionExpression.distribution == StochasticDistribution.EQUAL){
+  	  if(function.functionExpression.mean.staticAttribute !== null){
+  		if(Double::parseDouble(function.functionExpression.mean.staticAttribute) < 0.0){
+   		  error(VALUE_UNDER_ZERO_MESSAGE, 
+  		    GTPackage.Literals.STOCHASTIC_FUNCTION__FUNCTION_EXPRESSION, VALUE_UNDER_ZERO)  					
+  		}
+  	  }
+  	  if(function.functionExpression.sd.staticAttribute !== null){
+  	    if(Double::parseDouble(function.functionExpression.sd.staticAttribute) > 1.0){
+  		  error(VALUE_OVER_ONE_MESSAGE, 
+  		 	GTPackage.Literals.STOCHASTIC_FUNCTION__FUNCTION_EXPRESSION, VALUE_OVER_ONE)  				
+  		}  		  	
+  	  }
+  	}
+  }
+  
+  @Check
+  def checksStochasticFunction(StochasticFunctionExpression function){
+  	//if sd of normaldistribution is static => check is sd is positive
+  	if(function.distribution == StochasticDistribution.NORMAL && function.sd.staticAttribute !== null){
+  	  if(Double::parseDouble(function.sd.staticAttribute) <= 0.0) {
+  	    error(SD_NEGATIVE_MESSAGE, GTPackage.Literals.STOCHASTIC_FUNCTION_EXPRESSION__SD, 
+  	    	SD_NEGATIVE)
+  	  }
+  	}
+  	if(function.distribution == StochasticDistribution.EQUAL){
+  		//the minValue needs to be lower than the maxValue
+  		if(function.sd.staticAttribute !== null && function.mean.staticAttribute !== null){
+  			if(Double::parseDouble(function.sd.staticAttribute)
+  				- Double::parseDouble(function.mean.staticAttribute) < 0.0){
+  					error(INTERVALL_INCORRECT_MESSAGE
+  						, GTPackage.Literals.STOCHASTIC_FUNCTION_EXPRESSION__DISTRIBUTION,
+  						INTERVALL_INCORRECT)
+  				}
+  		}
+  	}
+  }
+  /**
+   * checks if the parameter holds a numeric value
+   */
+  @Check
+  def checkIfStochasticAttributeIsParseable(StochasticAttributeExpression attribute){
+  	if(!isParseable(attribute)){
+  		error(String.format(PARAMETER_NO_NUMBER_MESSAGE, attribute.node.name, 
+  			attribute.attribute.name), 
+  			GTPackage.Literals.STOCHASTIC_ATTRIBUTE_EXPRESSION__ATTRIBUTE, PARAMETER_NO_NUMBER)
+  	}
+  }
+  
   def getParameterNames(EList<EditorAttributeConditionParameter> list) {
     return list.map[it.name]
   }
@@ -1124,5 +1245,12 @@ class GTValidator extends AbstractGTValidator {
     }
     return count
   }
-
+  
+  // checks if an attribute is parseable as a number
+  def isParseable(StochasticAttributeExpression attribute){
+  	val type = attribute.attribute.EAttributeType
+  	return type == EcorePackage.Literals.EDOUBLE || type == EcorePackage.Literals.EFLOAT ||
+  	type == EcorePackage.Literals.EINT || type == EcorePackage.Literals.ESHORT || 
+  	type == EcorePackage.Literals.ELONG || type == EcorePackage.Literals.EBYTE
+  	}
 }
