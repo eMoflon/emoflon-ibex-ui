@@ -99,7 +99,7 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 			break;
 		 case AUTO_BUILD:
 		 case INCREMENTAL_BUILD:
-			 generateFilesIfchangeIsRelevant();
+//			 generateFilesIfchangeIsRelevant();
 			 break;
 		default:
 			break;
