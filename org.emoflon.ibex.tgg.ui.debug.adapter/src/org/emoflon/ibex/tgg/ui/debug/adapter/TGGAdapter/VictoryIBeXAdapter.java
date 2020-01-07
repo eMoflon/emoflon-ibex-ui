@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Collection;
 
 import org.eclipse.emf.ecore.EObject;
-import org.emoflon.ibex.tgg.operational.matches.IMatch;
+import org.emoflon.ibex.tgg.operational.matches.ITGGMatch;
 import org.emoflon.ibex.tgg.operational.monitoring.DataPackage;
 import org.emoflon.ibex.tgg.operational.monitoring.IVictoryDataProvider;
 import org.emoflon.ibex.tgg.operational.monitoring.IbexController;
@@ -42,7 +42,7 @@ public class VictoryIBeXAdapter extends IbexController implements DataProvider {
 	}
 
 	@Override
-	public IMatch chooseOneMatch(DataPackage dataPackage) {
+	public ITGGMatch chooseOneMatch(DataPackage dataPackage) {
 		Match chosenMatch = victory.selectMatch(new DataPackageAdapter(dataPackage));
 		if (chosenMatch instanceof IbexMatchAdapter)
 			return ((IbexMatchAdapter) chosenMatch).getWrappedMatch().getIMatch();

@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
-import org.emoflon.ibex.tgg.operational.matches.IMatch;
+import org.emoflon.ibex.tgg.operational.matches.ITGGMatch;
 import org.emoflon.ibex.tgg.operational.monitoring.IbexMatch;
 import org.emoflon.ibex.tgg.ui.debug.api.Graph;
 import org.emoflon.ibex.tgg.ui.debug.api.Match;
@@ -68,7 +68,7 @@ public class IbexMatchAdapter implements Match {
 	}
 
 	private void buildGraph(int neighbourhoodSize) {
-		IMatch iMatch = match.getIMatch();
+		ITGGMatch iMatch = match.getIMatch();
 		GraphBuilder graphBuilder = new GraphBuilder();
 		TGGRuleAdapter rule = TGGRuleAdapter.getRuleByName(iMatch.getRuleName());
 
