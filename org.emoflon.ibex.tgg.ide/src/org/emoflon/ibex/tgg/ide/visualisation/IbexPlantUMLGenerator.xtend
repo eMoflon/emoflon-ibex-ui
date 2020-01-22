@@ -126,14 +126,14 @@ class IbexPlantUMLGenerator {
 			«EMoflonPlantUMLGenerator.plantUMLPreamble»
 			
 			together {
-			«FOR sp : r.sourcePatterns»
-				«visualisePattern(sp, "SRC")»
+				«FOR tp : r.targetPatterns»
+					«visualisePattern(tp, "TRG")»
 			«ENDFOR»
 			}
 			
 			together {
-				«FOR tp : r.targetPatterns»
-					«visualisePattern(tp, "TRG")»
+			«FOR sp : r.sourcePatterns»
+				«visualisePattern(sp, "SRC")»
 			«ENDFOR»
 			}
 			
@@ -147,7 +147,7 @@ class IbexPlantUMLGenerator {
 
 	private def static visualiseCorrs(CorrVariablePattern corr) {
 		'''
-			«idForPattern(corr.source.name, corr.source.type.name)» ...«IF (corr.op !== null)»[#SpringGreen]«ENDIF» «idForPattern(corr.target.name, corr.target.type.name)» : «StringUtils.abbreviate(":" + corr.type.name, 11)»
+			«idForPattern(corr.source.name, corr.source.type.name)» .«IF (corr.op !== null)»[#SpringGreen]«ENDIF» «idForPattern(corr.target.name, corr.target.type.name)» : «StringUtils.abbreviate(":" + corr.type.name, 11)»
 		'''
 	}
 
