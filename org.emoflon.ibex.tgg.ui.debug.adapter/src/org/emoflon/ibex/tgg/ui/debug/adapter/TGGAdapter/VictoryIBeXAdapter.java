@@ -18,7 +18,7 @@ import org.emoflon.ibex.tgg.ui.debug.api.Victory;
 public class VictoryIBeXAdapter extends IbexController implements DataProvider {
 
 	public static VictoryIBeXAdapter create(OperationalStrategy operationalStrategy, IBeXOperation operationType) {
-		operationalStrategy.getOptions().flattenedTGG().getRules()
+		operationalStrategy.getOptions().tgg.flattenedTGG().getRules()
 				.forEach(rule -> TGGRuleAdapter.adapt(rule, operationType));
 
 		dataProvider = new VictoryDataProvider(operationalStrategy);
