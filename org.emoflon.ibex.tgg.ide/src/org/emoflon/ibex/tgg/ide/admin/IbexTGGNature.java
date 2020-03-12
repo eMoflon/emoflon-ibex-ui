@@ -105,7 +105,7 @@ public class IbexTGGNature implements IProjectNature {
 					"org.eclipse.emf.ecore.xmi",
 
 					// Ibex deps
-					"org.emoflon.ibex.common", "org.emoflon.ibex.tgg.core.language", "org.emoflon.ibex.tgg.core.runtime", "org.emoflon.ibex.gt", "org.emoflon.ibex.tgg.ui.debug", "org.emoflon.ibex.tgg.ui.debug.adapter",
+					"org.emoflon.ibex.common", "org.emoflon.ibex.tgg.language", "org.emoflon.ibex.tgg.runtime", "org.emoflon.ibex.tgg.ui.debug", "org.emoflon.ibex.tgg.ui.debug.adapter",
 
 					//Xtend deps
 					"org.eclipse.xtend.lib"

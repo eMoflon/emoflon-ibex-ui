@@ -20,7 +20,7 @@ import org.moflon.tgg.mosl.tgg.Operator
 import org.moflon.tgg.mosl.tgg.Rule
 import org.moflon.tgg.mosl.tgg.TggFactory
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
-
+ 
 class IbexPlantUMLGenerator {
   
 	def static String visualiseTGGFile(TripleGraphGrammarFile file, String selected) {
