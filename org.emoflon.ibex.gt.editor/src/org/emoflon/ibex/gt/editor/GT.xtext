@@ -68,7 +68,7 @@ enum EditorRelation:
 
 EditorExpression:
   EditorAttributeExpression | EditorLiteralExpression | EditorEnumExpression | 
-  EditorParameterExpression | StochasticFunctionExpression;
+  EditorParameterExpression | StochasticFunctionExpression | ArithmeticCalculationExpression;
 
 EditorAttributeExpression:
   node=[EditorNode] '.' attribute=[ecore::EAttribute];
@@ -138,14 +138,14 @@ EditorBindingExpression:
 
 // stochastic functions
 EditorProbability:
-	{EditorProbability}  (staticProbability = Number) |  StochasticFunction | StochasticAttributeExpression;
+	StochasticFunction | ArithmeticExpression;
 	
 StochasticFunction:
-	functionExpression = StochasticFunctionExpression (parameter = StochasticFunctionAttribute)?;
+	functionExpression = StochasticFunctionExpression (parameter = ArithmeticExpression)?;
 
 StochasticFunctionExpression:
 	(operatorRange = StochasticRange)? distribution = StochasticDistribution 
-	"(" mean = StochasticFunctionAttribute "," sd = StochasticFunctionAttribute ")";
+	"(" mean = ArithmeticExpression ( hasSd ?= "," sd = ArithmeticExpression )?")";
 
 enum PossibleStochasticRanges:
 	NEUTRAL | POSITIVE | NEGATIVE;
@@ -154,13 +154,50 @@ enum StochasticRange returns PossibleStochasticRanges:
 	POSITIVE = "+" | NEGATIVE = "-";
 
 enum StochasticDistribution:
-	NORMAL = "N" | EQUAL = "U";	
-	
-StochasticFunctionAttribute:
-	 {StochasticFunctionAttribute} (staticAttribute = Number) | StochasticAttributeExpression;	
+	NORMAL = "N" | UNIFORM = "U" | EXPONENTIAL = "Exp";	
 
-StochasticAttributeExpression:
-	  node=[EditorNode] '.' attribute=[ecore::EAttribute];
+//arithmetic functions
+enum MultOperator:
+	MULTIPLICATION = "*" | DIVISION = "/" | MODULO = "%";
+	
+enum AddOperator:
+	ADDITION = "+" | SUBTRACTION ="-";
+	
+enum AllOneParameterOperators:
+	BRACKET | ROOT | ABSOLUTE | SIN | COS | TAN | E_EXPONENTIAL | LOGARITHMUS | NAT_LOG;
+	
+enum OneParameterOperator returns AllOneParameterOperators:
+	ROOT = "sqrt" | ABSOLUTE = "abs" | SIN = "sin" | COS = "cos" | TAN = "tan" | 
+	E_EXPONENTIAL ="exp" | LOGARITHMUS = "log" | NAT_LOG = "ln";
+
+ArithmeticCalculationExpression:
+	"calc" "("expression = ArithmeticExpression ")" ;
+	
+ArithmeticExpression:
+	AddExpression;
+	
+AddExpression returns ArithmeticExpression:
+	MultExpression ({AddExpression.left = current} addOperator = AddOperator right = MultExpression)*;
+
+MultExpression returns ArithmeticExpression:
+	ExpExpression ({MultExpression.left = current} 
+		multOperator = MultOperator right = ExpExpression)*;
+
+ExpExpression returns ArithmeticExpression:
+	OneParameterArithmetics ({ExpExpression.left = current} "^" right = OneParameterArithmetics)*;
+
+OneParameterArithmetics returns ArithmeticExpression:
+	{OneParameterArithmetics} (negative?="-")? (operator = OneParameterOperator)? "("expression = ArithmeticExpression ")" 
+	| ArithmeticAttribute;
+
+ArithmeticAttribute returns ArithmeticExpression:
+	{ArithmeticAttribute} (staticAttribute = ArithmeticNumber) | ArithmeticNodeAttribute;
+	
+ArithmeticNodeAttribute:
+	 (negative?="-")? node=[EditorNode] '.' attribute=[ecore::EAttribute];
+
+ArithmeticNumber returns ecore::EDouble:
+	 ('-')? INT ('.' INT)?;
 
 /*
  * Attribute constraints library

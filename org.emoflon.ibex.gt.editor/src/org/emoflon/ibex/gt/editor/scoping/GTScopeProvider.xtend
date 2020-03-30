@@ -26,7 +26,7 @@ import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 import org.emoflon.ibex.gt.editor.utils.GTEditorPatternUtils
 import org.emoflon.ibex.gt.editor.utils.GTEnumExpressionHelper
-import org.emoflon.ibex.gt.editor.gT.StochasticAttributeExpression
+import org.emoflon.ibex.gt.editor.gT.ArithmeticNodeAttribute
 
 /**
  * This class contains custom scoping description.
@@ -50,13 +50,13 @@ class GTScopeProvider extends AbstractGTScopeProvider {
       return filterScopeForOtherObjectsFromSamePackage(context, reference)
     }
 	
-	//stochastic attributes
+	//Stochastic attributes
 	if(isNodeOfStochasticAttribute(context, reference)){
-	  return getScopeForStochasticAttributeNode(context as StochasticAttributeExpression)
+	  return getScopeForStochasticAttributeNode(context as ArithmeticNodeAttribute)
 	}
 	
 	if(isAttributeOfStochasticAttribute(context, reference)){
-		return getScopeForStochasticAttribute(context as StochasticAttributeExpression)
+		return getScopeForStochasticAttribute(context as ArithmeticNodeAttribute)
 	}
 	
     // Expressions
@@ -159,13 +159,13 @@ class GTScopeProvider extends AbstractGTScopeProvider {
   }
  
   def isNodeOfStochasticAttribute(EObject context, EReference reference){
-    return (context instanceof StochasticAttributeExpression &&
-      reference == GTPackage.Literals.STOCHASTIC_ATTRIBUTE_EXPRESSION__NODE)	
+    return (context instanceof ArithmeticNodeAttribute &&
+      reference == GTPackage.Literals.ARITHMETIC_NODE_ATTRIBUTE__NODE)	
   }
   
   def isAttributeOfStochasticAttribute(EObject context, EReference reference){
-    return (context instanceof StochasticAttributeExpression &&
-      reference == GTPackage.Literals.STOCHASTIC_ATTRIBUTE_EXPRESSION__ATTRIBUTE)	
+    return (context instanceof ArithmeticNodeAttribute &&
+      reference == GTPackage.Literals.ARITHMETIC_NODE_ATTRIBUTE__ATTRIBUTE)	
   }
   
   def isNodeOfAttributeExpression(EObject context, EReference reference) {
@@ -315,10 +315,10 @@ class GTScopeProvider extends AbstractGTScopeProvider {
   /**
    * get all the possible nodes in the pattern
    */
-  def getScopeForStochasticAttributeNode(StochasticAttributeExpression attribute){
+  def getScopeForStochasticAttributeNode(ArithmeticNodeAttribute attribute){
   	var pattern = attribute.eContainer
   	//searches for EditorPattern Container
-  	if(!(pattern instanceof EditorPattern)){
+  	while(!(pattern instanceof EditorPattern)){
   		pattern = pattern.eContainer
   	}
     val nodes = GTEditorPatternUtils.getAllNodesOfPattern(pattern as EditorPattern, [
@@ -330,7 +330,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
   /**
    * get all the attributes of the node; if the attribute is parseable is checked at the validator
    */
-  def getScopeForStochasticAttribute(StochasticAttributeExpression attribute){
+  def getScopeForStochasticAttribute(ArithmeticNodeAttribute attribute){
      val node = attribute.node 
      if (node === null || node.type === null) {
        return Scopes.scopeFor([])

@@ -61,6 +61,8 @@ public class GTFlattener {
 		flattenedPattern.setAbstract(pattern.isAbstract());
 		flattenedPattern.setType(pattern.getType());
 		flattenedPattern.setName(pattern.getName());
+		flattenedPattern.setProbability(pattern.getProbability());
+		flattenedPattern.setStochastic(pattern.isStochastic());
 		initializeParameters(pattern, superPatterns);
 		initializeNodes(pattern, superPatterns);
 		flattenedPattern.getConditions().addAll(pattern.getConditions());
