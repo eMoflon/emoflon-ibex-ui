@@ -51,7 +51,7 @@ public class EditorTGGtoFlattenedTGG {
 	 * @param tgg The TripleGraphGrammarFile that shall be flattened.
 	 * @return The flattened TripleGraphGrammarFile.
 	 */
-	public Optional<TripleGraphGrammarFile> flatten(TripleGraphGrammarFile tgg) {
+	public Optional<TripleGraphGrammarFile> flatten(TripleGraphGrammarFile tgg) throws Exception {
 		try {
 			TripleGraphGrammarFile flattened = EcoreUtil.copy(tgg);
 			EList<Rule> rules = flattened.getRules();
@@ -70,9 +70,7 @@ public class EditorTGGtoFlattenedTGG {
 
 			return Optional.of(flattened);
 		} catch (Exception e) {
-			logger.error("Unable to flatten " + tgg);
-			e.printStackTrace();
-			return Optional.empty();
+			throw new RuntimeException("Unable to flatten " + tgg + "\nMessage was: "+e.getMessage());
 		}
 	}
 	

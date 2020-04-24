@@ -37,7 +37,7 @@ class IbexPlantUMLGenerator {
 		return '''title I don't know how to visualise "«StringUtils.abbreviate(selected.replaceAll("\\s+",""), 20)»"...'''
 	}
 
-	def static String visualiseNAC(Nac n) {
+	def static String visualiseNAC(Nac n) throws Exception {
 		val file = TggFactory.eINSTANCE.createTripleGraphGrammarFile;
 		file.rules.add(EcoreUtil.copy(n.rule));
 		val flattenedTGG = new EditorTGGtoFlattenedTGG().flatten(file);

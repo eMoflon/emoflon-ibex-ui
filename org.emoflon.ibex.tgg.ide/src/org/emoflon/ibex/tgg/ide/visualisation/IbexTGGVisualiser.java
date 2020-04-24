@@ -69,10 +69,18 @@ public class IbexTGGVisualiser extends EMoflonVisualiser {
 	private Optional<String> maybeVisualiseTGGRule(IEditorPart editor, ISelection selection) {
 		return extractTGGFileFromEditor(editor) //
 				.map(file -> file.getSchema() == null ? file : null) //
-				.map(file -> visualise(file, selection));
+				.map(file -> {
+					try {
+						return visualise(file, selection);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					return null;
+				});
 	}
 
-	public String visualise(TripleGraphGrammarFile file, ISelection selection) {
+	public String visualise(TripleGraphGrammarFile file, ISelection selection) throws Exception {
 		Optional<TripleGraphGrammarFile> flattenedOptional = flatten(file);
 		if (!flattenedOptional.isPresent()) {
 			logger.debug("Unable to visualise " + selection);
@@ -93,7 +101,7 @@ public class IbexTGGVisualiser extends EMoflonVisualiser {
 	}
 
 	private String visualizeSelection(TripleGraphGrammarFile file, TripleGraphGrammarFile flattened,
-			ISelection selection) {
+			ISelection selection) throws Exception {
 		if (selection instanceof TextSelection) {
 			TextSelection textSelection = (TextSelection) selection;
 			int selectionStart = textSelection.getStartLine() + 1;
@@ -138,7 +146,7 @@ public class IbexTGGVisualiser extends EMoflonVisualiser {
 				.orElse(nac);
 	}
 
-	private Optional<TripleGraphGrammarFile> flatten(TripleGraphGrammarFile file) {
+	private Optional<TripleGraphGrammarFile> flatten(TripleGraphGrammarFile file) throws Exception {
 		return new EditorTGGtoFlattenedTGG().flatten(file);
 	}
 

@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.SafeRunner;
+import org.emoflon.ibex.gt.editor.GTStandaloneSetup;
 import org.moflon.core.utilities.ExtensionsUtil;
 
 /**
@@ -51,7 +52,8 @@ public class GTBuilder extends IncrementalProjectBuilder {
 			log("src folder is missing");
 			return null;
 		}
-
+//		GTStandaloneSetup.doSetup();
+		
 		// Run builder extensions for the project.
 		runBuilderExtensions(ext -> ext.run(getProject()));
 
