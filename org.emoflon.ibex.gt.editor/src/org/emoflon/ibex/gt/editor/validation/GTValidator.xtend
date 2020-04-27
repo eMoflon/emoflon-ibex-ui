@@ -36,6 +36,20 @@ import org.emoflon.ibex.gt.editor.gT.EditorAttributeConditionType
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeConditionSpecification
 import org.eclipse.emf.common.util.EList
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeConditionParameter
+import org.emoflon.ibex.gt.editor.gT.StochasticFunction
+import org.emoflon.ibex.gt.editor.gT.StochasticDistribution
+import org.emoflon.ibex.gt.editor.gT.StochasticFunctionExpression
+import org.emoflon.ibex.gt.editor.gT.PossibleStochasticRanges
+import org.emoflon.ibex.gt.editor.gT.ArithmeticExpression
+import org.eclipse.emf.ecore.EcorePackage
+import org.emoflon.ibex.gt.editor.gT.ArithmeticNodeAttribute
+import org.emoflon.ibex.gt.editor.gT.OneParameterArithmetics
+import org.emoflon.ibex.gt.editor.gT.AllOneParameterOperators
+import org.emoflon.ibex.gt.editor.gT.MultExpression
+import org.emoflon.ibex.gt.editor.gT.MultOperator
+import org.emoflon.ibex.gt.editor.gT.AddExpression
+import org.emoflon.ibex.gt.editor.gT.ExpExpression
+import org.emoflon.ibex.gt.editor.utils.GTArithmeticsCalculatorUtil
 
 /**
  * This class contains custom validation rules.
@@ -242,7 +256,56 @@ class GTValidator extends AbstractGTValidator {
   public static val EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_SPECIFICATION_UNKNOWN_PARAMETER = "Unknown parameter referenced in code fragment: %s"
 
   public static val EDITOR_ATTRIBUTE_CONDITION_PARAMETER_NAME_PATTERN = "[a-zA-z][a-zA-z0-9]*"
+  
+  //stochastic functions error messages
+  public static val PROBABILITY_ON_PATTERN_MESSAGE = "Only rules can have a probability"
+  public static val PROBABILITY_ON_PATTERN = CODE_PREFIX + "probability.onPattern"
+  
+  public static val STATICPROBABILITY_NOT_CORRECT_MESSAGE = "The probability needs to be a value between zero and one"
+  public static val STATICPROBABILITY_NOT_CORRECT = CODE_PREFIX + "probability.staticprobabilityNotCorrect"  
+  
+  public static val PROBABIILITY_NO_RANGE_MESSAGE = "Probabilities can't have a range, only value generators"
+  public static val PROBABILITY_NO_RANGE = CODE_PREFIX + "probability.noRange"
 
+  public static val SD_NEGATIVE_MESSAGE = "The standard deviation needs to be positive"
+  public static val SD_NEGATIVE = CODE_PREFIX + "probability.sdNegative"
+ 
+  public static val MEAN_NEGATIVE_MESSAGE = "The mean needs to be positive"
+  public static val MEAN_NEGATIVE = CODE_PREFIX + "probability.meanNegative"
+ 
+  public static val NO_SD_MESSAGE = "The distribution needs a value for the standard deviation"
+  public static val NO_SD = CODE_PREFIX + "probability.noSd"
+
+  public static val HAS_SD_MESSAGE = "The distribution only needs one value"
+  public static val HAS_SD = CODE_PREFIX + "probability.hasSd"
+
+  public static val NO_MAX_VALUE_MESSAGE = "The distribution needs a maximum value"
+  public static val NO_MAX_VALUE = CODE_PREFIX + "probability.noMaxValue"
+  
+  public static val INTERVALL_INCORRECT_MESSAGE = "The minimum value of the distribution needs to be smaller than the maximum value"
+  public static val INTERVALL_INCORRECT = CODE_PREFIX + "probability.intervallIncorrect"
+  
+  public static val VALUE_UNDER_ZERO_MESSAGE = "The minimum value of the distribution needs to be positive"
+  public static val VALUE_UNDER_ZERO = CODE_PREFIX + "probability.valueUnderZero"
+  
+  public static val VALUE_OVER_ONE_MESSAGE = "The maximum value of the distribution needs to be lower than one"
+  public static val VALUE_OVER_ONE = CODE_PREFIX + "probability.valueOverOne"
+
+  public static val NO_ASSIGNMENT_MESSAGE = "Stochastic value generators can only be assigned"
+  public static val NO_ASSIGNMENT = CODE_PREFIX + "probability.valueNotAssigned"
+   
+  public static val PARAMETER_NO_NUMBER_MESSAGE = "The parameter %s.%s does not have a numeric value"
+  public static val PARAMETER_NO_NUMBER = CODE_PREFIX + "probability.parameterNoNumber"
+
+  public static val DIVISION_BY_ZERO_MESSAGE = "division by zero is not possible"
+  public static val DIVISION_BY_ZERO = CODE_PREFIX + "arithmetics.divisionByZero"
+
+  public static val EXPRESSION_ZERO_MESSAGE = "the value in the operation needs to be positive"
+  public static val EXPRESSION_ZERO = CODE_PREFIX + "arithmetics.expressionZero"  
+ 
+  public static val PARAMETER_NEGATIVE_MESSAGE = "operators can't be directly behind each other"
+  public static val PARAMETER_NEGATIVE = CODE_PREFIX + "arithmetics.parameterNegative"  
+  
   @Check
   def checkFile(EditorGTFile file) {
     // There must be at least one import.
@@ -683,7 +746,13 @@ class GTValidator extends AbstractGTValidator {
         )
       }
     }
-
+	//stochastic attributes can only be assigned
+	if(value instanceof StochasticFunctionExpression){
+		if(attributeConstraint.relation != EditorRelation.ASSIGNMENT){
+			error(NO_ASSIGNMENT_MESSAGE, GTPackage.Literals.EDITOR_ATTRIBUTE__VALUE, NO_ASSIGNMENT)
+		}
+	}
+	
     val node = attributeConstraint.eContainer as EditorNode
     if (attributeConstraint.relation == EditorRelation.ASSIGNMENT) {
       if (node.operator == EditorOperator.DELETE) {
@@ -1097,7 +1166,237 @@ class GTValidator extends AbstractGTValidator {
     }
 
   }
+  
+  //stochastic function validation
+  /**
+   * checks if the pattern is a rule
+   */
+  @Check
+  def checkIfProbabilityOnRule(EditorPattern pattern){
+  	if(pattern.stochastic && pattern.type != EditorPatternType.RULE){
+  		error(PROBABILITY_ON_PATTERN_MESSAGE, GTPackage.Literals.EDITOR_PATTERN__PROBABILITY,
+  			pattern.name, PROBABILITY_ON_PATTERN
+  		)
+  	}
+  }
+  /**
+   * checks if the stochastic functions are defined properly; only used when the parameters have
+   * static value; else runtime-checking
+   */
+  @Check
+  def checkStochasticDefinitions(EditorPattern pattern){
+  	if(pattern.isStochastic){
+	  	//checks if the static probability is a number between 0 and 1
+	  	val probability = pattern.probability
+	  	if(probability instanceof ArithmeticExpression){
+	  		try{
+	  			val value = GTArithmeticsCalculatorUtil::getValue(probability)
+	  			if(value < 0.0 || value > 1.0){
+	  				error(STATICPROBABILITY_NOT_CORRECT_MESSAGE, 
+	  					GTPackage.Literals.EDITOR_PATTERN__PROBABILITY, 
+	  					STATICPROBABILITY_NOT_CORRECT)
+	  			}    			
+	  		}
+	  		catch(IllegalArgumentException e){
+	  			// the arithmetic expression has an attribute as a parameter			
+	  		}	
+	  	}
+	  	//checks that the probability does not have a range
+	  	if(probability instanceof StochasticFunction){
+	  		if(probability.functionExpression.operatorRange != PossibleStochasticRanges.NEUTRAL){
+	  			error(PROBABIILITY_NO_RANGE_MESSAGE, 
+	  				GTPackage.Literals.STOCHASTIC_FUNCTION__FUNCTION_EXPRESSION,PROBABILITY_NO_RANGE)
+	  		}
+	  	}  		
+  	}
 
+  }
+  
+  /**
+   * Checks if the probability functions are mathematically defined properly; here the parameter 
+   * is also needed
+   */
+  @Check
+  def checkProbabilityFunction(StochasticFunction function){
+  	//if it is an uniformdistribution and without parameter => the range needs to be between 0 and 1
+  	if(function.functionExpression.distribution == StochasticDistribution.UNIFORM){
+  		try{
+  			val mean = GTArithmeticsCalculatorUtil::getValue(function.functionExpression.mean)
+  			if(mean < 0.0){
+   		 	  error(VALUE_UNDER_ZERO_MESSAGE, 
+  		    	GTPackage.Literals.STOCHASTIC_FUNCTION__FUNCTION_EXPRESSION, VALUE_UNDER_ZERO)  					
+  			} 	  			
+  		}
+		catch(IllegalArgumentException e){	
+		}
+		try{
+			val sd = GTArithmeticsCalculatorUtil::getValue(function.functionExpression.sd)
+			if(sd > 1.0){
+	  		  error(VALUE_OVER_ONE_MESSAGE, 
+	  		 	GTPackage.Literals.STOCHASTIC_FUNCTION__FUNCTION_EXPRESSION, VALUE_OVER_ONE) 				
+			}
+		} catch(IllegalArgumentException e){
+		}
+  	}
+  }
+  
+   /**
+   * Checks if the probability functions are mathematically defined properly
+   */
+  @Check
+  def checksStochasticFunction(StochasticFunctionExpression function){
+  	//if normaldistribution => has sd and when sd is static => sd must be positive
+  	val distribution = function.distribution  	
+  	if(distribution == StochasticDistribution.NORMAL){
+  		if(!function.hasSd)	{
+  			error(NO_SD_MESSAGE, GTPackage.Literals.STOCHASTIC_FUNCTION_EXPRESSION__DISTRIBUTION, 
+  	    			NO_SD)	
+  		}
+  		else{
+  			try{	
+  				val sd = GTArithmeticsCalculatorUtil::getValue(function.sd)
+  				if(distribution == StochasticDistribution.NORMAL){
+  	  				if(sd <= 0.0) {
+  	    				error(SD_NEGATIVE_MESSAGE, GTPackage.Literals.STOCHASTIC_FUNCTION_EXPRESSION__SD, 
+  	    					SD_NEGATIVE)
+  	  				}
+  				} 
+  			} catch(IllegalArgumentException e){
+			}
+  		}
+  	}
+  	if(distribution == StochasticDistribution.UNIFORM){
+  		//the minValue needs to be lower than the maxValue
+  		if(!function.hasSd){
+  			error(NO_MAX_VALUE_MESSAGE, GTPackage.Literals.STOCHASTIC_FUNCTION_EXPRESSION__DISTRIBUTION, 
+  	    	NO_MAX_VALUE)	
+  		}
+  		else{
+	  		try{
+	  			val sd = GTArithmeticsCalculatorUtil::getValue(function.sd)
+	  			val mean = GTArithmeticsCalculatorUtil::getValue(function.mean)
+	  			if(sd - mean < 0.0){
+	  				error(INTERVALL_INCORRECT_MESSAGE
+	  					, GTPackage.Literals.STOCHASTIC_FUNCTION_EXPRESSION__DISTRIBUTION,
+	  					INTERVALL_INCORRECT)
+	  			}  		
+	  		} catch(IllegalArgumentException e){
+			}  			
+  		}
+  	}
+  	//the exponential distribution only has one input value; mean needs to be positive
+  	if(distribution == StochasticDistribution.EXPONENTIAL){
+  		if(function.hasSd){
+  			error(HAS_SD_MESSAGE, GTPackage.Literals.STOCHASTIC_FUNCTION_EXPRESSION__SD, 
+  	    	HAS_SD)  			
+  		}
+  		try{
+  			val mean = GTArithmeticsCalculatorUtil::getValue(function.mean)
+  			if(mean <= 0.0){
+ 	  				error(MEAN_NEGATIVE_MESSAGE
+	  					, GTPackage.Literals.STOCHASTIC_FUNCTION_EXPRESSION__MEAN,
+	  					MEAN_NEGATIVE) 				
+  			}
+  		} catch(IllegalArgumentException e){
+  			
+  		}
+  	}	
+  }
+  
+  /**
+   * Checks if the one parameter calculations are defined properly; the results should not
+   * be infinity or NaN
+   */
+  @Check
+  def checkOneParameterArithmetics(OneParameterArithmetics expression){
+  	var operator = expression.operator
+  	if(operator == AllOneParameterOperators.LOGARITHMUS || 
+  		operator == AllOneParameterOperators.NAT_LOG || operator == AllOneParameterOperators.ROOT){
+  		try{
+  			val value = GTArithmeticsCalculatorUtil::getValue(expression.expression)	
+  			if( value < 0.0 && operator == AllOneParameterOperators.ROOT){
+  				error(EXPRESSION_ZERO_MESSAGE
+	  					, GTPackage.Literals.ONE_PARAMETER_ARITHMETICS__EXPRESSION,
+	  				EXPRESSION_ZERO) 	
+  			}
+  			if(value <= 0.0 && operator != AllOneParameterOperators.ROOT){
+  				error(EXPRESSION_ZERO_MESSAGE
+	  					, GTPackage.Literals.ONE_PARAMETER_ARITHMETICS__EXPRESSION,
+	  				EXPRESSION_ZERO)  	
+  			}
+  		}catch(IllegalArgumentException e){
+  			
+  		}
+  	}
+  }
+  
+  @Check 
+  def divisionByZero(MultExpression expression){
+  	val operator = expression.multOperator
+  	if(operator == MultOperator.DIVISION || operator == MultOperator.MODULO){
+  		try{
+  			val value = GTArithmeticsCalculatorUtil::getValue(expression.right)
+  			if(value == 0.0){
+  				error(DIVISION_BY_ZERO_MESSAGE
+	  					, GTPackage.Literals.MULT_EXPRESSION__RIGHT,
+	  					DIVISION_BY_ZERO) 
+  			}	
+  		} catch (IllegalArgumentException e){
+  			
+  		}
+  	}
+  }
+  
+  @Check
+  def checkExpressionWithNodeAttribute(ArithmeticExpression expression){
+  	if(expression instanceof MultExpression || expression instanceof AddExpression || 
+  		expression instanceof ExpExpression){
+  			
+  			if(expression instanceof MultExpression){
+  				val right = expression.right
+  				if(right instanceof ArithmeticNodeAttribute){
+  					if(right.negative){
+  						error(PARAMETER_NEGATIVE_MESSAGE
+	  					, GTPackage.Literals.MULT_EXPRESSION__RIGHT,
+	  					PARAMETER_NEGATIVE)	
+  					}
+  				}
+  			}
+  			if(expression instanceof AddExpression) {
+  				val right = expression.right
+  				if(right instanceof ArithmeticNodeAttribute){
+  					if(right.negative){
+  						error(PARAMETER_NEGATIVE_MESSAGE
+	  					, GTPackage.Literals.ADD_EXPRESSION__RIGHT,
+	  					PARAMETER_NEGATIVE)	
+  					}
+  				}
+  			}
+  			if(expression instanceof ExpExpression) {
+  				val right = expression.right
+  				if(right instanceof ArithmeticNodeAttribute){
+  					if(right.negative){
+  						error(PARAMETER_NEGATIVE_MESSAGE
+	  					, GTPackage.Literals.EXP_EXPRESSION__RIGHT,
+	  					PARAMETER_NEGATIVE)	
+  					}
+  				}
+  			}  			
+  		}
+  }
+  /**
+   * checks if the parameter holds a numeric value
+   */
+  @Check
+  def checkIfNodeAttributeIsParseable(ArithmeticNodeAttribute attribute){
+  	if(!isParseable(attribute)){
+  		error(String.format(PARAMETER_NO_NUMBER_MESSAGE, attribute.node.name, 
+  			attribute.attribute.name), 
+  			GTPackage.Literals.ARITHMETIC_NODE_ATTRIBUTE__ATTRIBUTE, PARAMETER_NO_NUMBER)
+  	}
+  }
+  
+  
   def getParameterNames(EList<EditorAttributeConditionParameter> list) {
     return list.map[it.name]
   }
@@ -1124,5 +1423,12 @@ class GTValidator extends AbstractGTValidator {
     }
     return count
   }
-
+  
+  // checks if an attribute is parseable as a number
+  def isParseable(ArithmeticNodeAttribute attribute){
+  	val type = attribute.attribute.EAttributeType
+  	return type == EcorePackage.Literals.EDOUBLE || type == EcorePackage.Literals.EFLOAT ||
+  	type == EcorePackage.Literals.EINT || type == EcorePackage.Literals.ESHORT || 
+  	type == EcorePackage.Literals.ELONG || type == EcorePackage.Literals.EBYTE 
+ 	}
 }
