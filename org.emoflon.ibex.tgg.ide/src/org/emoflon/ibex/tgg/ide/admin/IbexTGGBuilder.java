@@ -38,12 +38,16 @@ import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
 import org.eclipse.emf.ecore.xmi.impl.URIHandlerImpl;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
@@ -52,6 +56,7 @@ import org.moflon.core.utilities.ExtensionsUtil;
 import org.moflon.core.utilities.LogUtils;
 import org.moflon.core.utilities.MoflonUtil;
 import org.moflon.core.utilities.WorkspaceHelper;
+import org.moflon.tgg.mosl.TGGStandaloneSetup;
 import org.moflon.tgg.mosl.defaults.AttrCondDefLibraryProvider;
 import org.moflon.tgg.mosl.tgg.AttrCond;
 import org.moflon.tgg.mosl.tgg.AttrCondDef;
@@ -73,6 +78,7 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 	private static final String IBUILDER_EXTENSON_ID = "org.emoflon.ibex.tgg.ide.IbexTGGBuilderExtension";
 	public static final Logger logger = Logger.getLogger(IbexTGGBuilder.class);
 	private boolean buildIsNecessary = false;
+	private boolean failed = false;
 
 	private Collection<BuilderExtension> builderExtensions;
 
@@ -82,9 +88,13 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 
 	public IbexTGGBuilder() {
 		builderExtensions = ExtensionsUtil.collectExtensions(IBUILDER_EXTENSON_ID, "class", BuilderExtension.class);
-		// logger.info(getProject().getName() + ": Available extensions");
-		// builderExtensions.forEach(b -> logger.info("\t-->\t" +
-		// b.toString()));
+	}
+	
+	@Override
+	protected void clean(IProgressMonitor monitor) throws CoreException {
+		// TODO Auto-generated method stub
+		super.clean(monitor);
+		TGGStandaloneSetup.doSetup();
 	}
 
 	@Override
@@ -93,13 +103,16 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 
 		switch (kind) {
 		case CLEAN_BUILD:
+			TGGStandaloneSetup.doSetup();
 		case FULL_BUILD:
 			logger.info(getProject().getName() + ": Full build");
-			generateFiles();
+			if(!generateFiles() && kind != CLEAN_BUILD) {
+				this.build(CLEAN_BUILD, args, monitor);
+			}
 			break;
 		 case AUTO_BUILD:
 		 case INCREMENTAL_BUILD:
-			 generateFilesIfchangeIsRelevant();
+//			 generateFilesIfchangeIsRelevant();
 			 break;
 		default:
 			break;
@@ -139,23 +152,34 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 		return false;
 	}
 
-	private void generateFiles() {
+	private boolean generateFiles() {
 		long tic = System.currentTimeMillis();
-
 		performClean();
 		generateAttrCondLib();
 		generateEditorModel().ifPresent(editorModel//
-		-> generateFlattenedEditorModel(editorModel).ifPresent(flattenedEditorModel//
+		-> generateFlattenedEditorModel(editorModel).ifPresent(flattenedEditorModel// 
 		-> generateExtraModels(this, editorModel, flattenedEditorModel)));
-
+		
+		if(failed) {
+			failed = false;
+			return false;
+		}
+		
 		long toc = System.currentTimeMillis();
-
 		logger.info(getProject().getName() + ": Finished build (" + (toc - tic) / 1000.0 + "s)");
+		return true;
 	}
 
 	private Optional<TripleGraphGrammarFile> generateFlattenedEditorModel(TripleGraphGrammarFile editorModel) {
 		EditorTGGtoFlattenedTGG flattener = new EditorTGGtoFlattenedTGG();
-		Optional<TripleGraphGrammarFile> flattenedTGGOp = flattener.flatten(editorModel);
+		Optional<TripleGraphGrammarFile> flattenedTGGOp = null;
+		try {
+			flattenedTGGOp = flattener.flatten(editorModel);
+		} catch(Exception e) {
+			LogUtils.error(logger, e);
+			failed = true;
+			return Optional.empty();
+		}
 		return flattenedTGGOp.map(flattenedTGG -> {
 			ResourceSet rs = editorModel.eResource().getResourceSet();
 			IFile tggFile = getProject().getFolder(IbexTGGBuilder.MODEL_FOLDER).getFile(determineNameOfGeneratedFile() + EDITOR_FLATTENED_MODEL_EXTENSION);
@@ -243,10 +267,19 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 
 	private Optional<TripleGraphGrammarFile> generateEditorModel() {
 		try {
-			XtextResourceSet resourceSet = new XtextResourceSet();
+			Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("xmi", new XMIResourceFactoryImpl());
+			Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("ecore", new EcoreResourceFactoryImpl());
+			ResourceSet resourceSet = new XtextResourceSet();
+			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("xmi", new XMIResourceFactoryImpl());
+			
 			IFile schemaFile = getProject().getFile(IbexTGGNature.SCHEMA_FILE);
 			if (schemaFile.exists()) {
-				XtextResource schemaResource = loadSchema(resourceSet, schemaFile);
+				Resource schemaResource = loadSchema(resourceSet, schemaFile);
+				ResourceSet resourceSet2 = new ResourceSetImpl();
+				registerMetamodels(resourceSet2, (TripleGraphGrammarFile) schemaResource.getContents().get(0));
+				resourceSet = resourceSet2;
+				schemaResource = loadSchema(resourceSet, schemaFile);
+
 				if (schemaIsOfExpectedType(schemaResource)) {
 					// Load
 					visitAllFiles(resourceSet, getProject().getFolder(SRC_FOLDER), this::loadRules);
@@ -277,6 +310,18 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 		}
 
 		return Optional.empty();
+	}
+	
+	private void registerMetamodels(ResourceSet resourceSet, TripleGraphGrammarFile schema) {
+		org.eclipse.emf.ecore.EPackage.Registry reg = EPackage.Registry.INSTANCE;
+		for(String imp : schema.getImports().stream().map(imp -> imp.getName()).collect(Collectors.toList())) {
+			ResourceSet rmm = new ResourceSetImpl();
+			rmm.getResourceFactoryRegistry().getExtensionToFactoryMap().put("ecore", new EcoreResourceFactoryImpl());
+			Resource modelResource = rmm.getResource(URI.createURI(imp), true);
+			EPackage model = (EPackage)modelResource.getContents().get(0);
+			reg.put(imp, model);
+			resourceSet.getPackageRegistry().put(imp, model);
+		}
 	}
 
 	private String determineNameOfGeneratedFile() {
@@ -331,7 +376,7 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 		}
 	}
 
-	private void collectAllRules(TripleGraphGrammarFile xtextParsedTGG, XtextResourceSet resourceSet) {
+	private void collectAllRules(TripleGraphGrammarFile xtextParsedTGG, ResourceSet resourceSet) {
 		Collection<Resource> resources = resourceSet.getResources();
 		for (Resource resource : resources) {
 			assert (resource.getContents().size() == 1);
@@ -375,17 +420,17 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 		}
 	}
 
-	private void loadRules(IFile file, XtextResourceSet resourceSet) {
+	private void loadRules(IFile file, ResourceSet resourceSet) {
 		if (file.getName().endsWith(TGG_FILE_EXTENSION)) {
 			resourceSet.getResource(URI.createPlatformResourceURI(file.getFullPath().toString(), true), true);
 		}
 	}
 
-	private boolean schemaIsOfExpectedType(XtextResource schemaResource) {
+	private boolean schemaIsOfExpectedType(Resource schemaResource) {
 		return schemaResource.getContents().size() == 1 && schemaResource.getContents().get(0) instanceof TripleGraphGrammarFile;
 	}
 
-	private XtextResource loadSchema(XtextResourceSet resourceSet, IFile schemaFile) throws IOException {
+	private XtextResource loadSchema(ResourceSet resourceSet, IFile schemaFile) throws IOException {
 		XtextResource schemaResource = (XtextResource) resourceSet.createResource(URI.createPlatformResourceURI(schemaFile.getFullPath().toString(), false));
 		schemaResource.load(null);
 		EcoreUtil.resolveAll(resourceSet);

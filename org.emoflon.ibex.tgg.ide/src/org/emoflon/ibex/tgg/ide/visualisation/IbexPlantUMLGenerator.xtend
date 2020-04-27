@@ -20,7 +20,7 @@ import org.moflon.tgg.mosl.tgg.Operator
 import org.moflon.tgg.mosl.tgg.Rule
 import org.moflon.tgg.mosl.tgg.TggFactory
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
-
+ 
 class IbexPlantUMLGenerator {
   
 	def static String visualiseTGGFile(TripleGraphGrammarFile file, String selected) {
@@ -37,7 +37,7 @@ class IbexPlantUMLGenerator {
 		return '''title I don't know how to visualise "«StringUtils.abbreviate(selected.replaceAll("\\s+",""), 20)»"...'''
 	}
 
-	def static String visualiseNAC(Nac n) {
+	def static String visualiseNAC(Nac n) throws Exception {
 		val file = TggFactory.eINSTANCE.createTripleGraphGrammarFile;
 		file.rules.add(EcoreUtil.copy(n.rule));
 		val flattenedTGG = new EditorTGGtoFlattenedTGG().flatten(file);
@@ -126,14 +126,14 @@ class IbexPlantUMLGenerator {
 			«EMoflonPlantUMLGenerator.plantUMLPreamble»
 			
 			together {
-			«FOR sp : r.sourcePatterns»
-				«visualisePattern(sp, "SRC")»
+				«FOR tp : r.targetPatterns»
+					«visualisePattern(tp, "TRG")»
 			«ENDFOR»
 			}
 			
 			together {
-				«FOR tp : r.targetPatterns»
-					«visualisePattern(tp, "TRG")»
+			«FOR sp : r.sourcePatterns»
+				«visualisePattern(sp, "SRC")»
 			«ENDFOR»
 			}
 			
@@ -147,7 +147,7 @@ class IbexPlantUMLGenerator {
 
 	private def static visualiseCorrs(CorrVariablePattern corr) {
 		'''
-			«idForPattern(corr.source.name, corr.source.type.name)» ...«IF (corr.op !== null)»[#SpringGreen]«ENDIF» «idForPattern(corr.target.name, corr.target.type.name)» : «StringUtils.abbreviate(":" + corr.type.name, 11)»
+			«idForPattern(corr.source.name, corr.source.type.name)» .«IF (corr.op !== null)»[#SpringGreen]«ENDIF» «idForPattern(corr.target.name, corr.target.type.name)» : «StringUtils.abbreviate(":" + corr.type.name, 11)»
 		'''
 	}
 
