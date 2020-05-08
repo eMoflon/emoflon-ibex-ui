@@ -10,4 +10,8 @@ public interface BuilderExtension {
 	public default void performClean(IbexTGGBuilder builder) {
 
 	}
+
+	public default int getPriority() {
+		return 0;
+	}
 }

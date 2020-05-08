@@ -446,7 +446,9 @@ public class IbexTGGBuilder extends IncrementalProjectBuilder implements IResour
 
 			@Override
 			public void run() throws Exception {
-				builderExtensions.forEach(builderExt -> {
+				List<BuilderExtension> extensions = builderExtensions.stream().collect(Collectors.toList());
+				extensions.sort((a, b) -> Integer.valueOf(b.getPriority()).compareTo(a.getPriority()));
+				extensions.forEach(builderExt -> {
 					// logger.info("\t--> Running builder extension:\t" +
 					// builderExt.toString());
 					builderExt.run(builder, editorModel, flattenedEditorModel);
