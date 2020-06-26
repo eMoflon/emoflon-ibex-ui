@@ -1,0 +1,9 @@
+grammar org.emoflon.ibex.tgg.integrate.Integrate with org.eclipse.xtext.common.Terminals
+
+generate integrate "http://www.emoflon.org/ibex/tgg/integrate/Integrate"
+
+Model:
+	greetings+=Greeting*;
+	
+Greeting:
+	'Hello' name=ID '!';
