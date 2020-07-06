@@ -73,17 +73,92 @@ public class IntegrateSwitch<T> extends Switch<T>
   {
     switch (classifierID)
     {
-      case IntegratePackage.MODEL:
+      case IntegratePackage.INTEGRATE:
       {
-        Model model = (Model)theEObject;
-        T result = caseModel(model);
+        Integrate integrate = (Integrate)theEObject;
+        T result = caseIntegrate(integrate);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case IntegratePackage.GREETING:
+      case IntegratePackage.IMPORT:
       {
-        Greeting greeting = (Greeting)theEObject;
-        T result = caseGreeting(greeting);
+        Import import_ = (Import)theEObject;
+        T result = caseImport(import_);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case IntegratePackage.CONFLICT_RESOLUTION_STRATEGY:
+      {
+        ConflictResolutionStrategy conflictResolutionStrategy = (ConflictResolutionStrategy)theEObject;
+        T result = caseConflictResolutionStrategy(conflictResolutionStrategy);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case IntegratePackage.VARIABLE:
+      {
+        Variable variable = (Variable)theEObject;
+        T result = caseVariable(variable);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case IntegratePackage.PIPELINE:
+      {
+        Pipeline pipeline = (Pipeline)theEObject;
+        T result = casePipeline(pipeline);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case IntegratePackage.PIPELINE_STAGE:
+      {
+        PipelineStage pipelineStage = (PipelineStage)theEObject;
+        T result = casePipelineStage(pipelineStage);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case IntegratePackage.PIPELINE_FILTER_STAGE:
+      {
+        PipelineFilterStage pipelineFilterStage = (PipelineFilterStage)theEObject;
+        T result = casePipelineFilterStage(pipelineFilterStage);
+        if (result == null) result = casePipelineStage(pipelineFilterStage);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case IntegratePackage.PIPELINE_TYPE_FILTER_STAGE:
+      {
+        PipelineTypeFilterStage pipelineTypeFilterStage = (PipelineTypeFilterStage)theEObject;
+        T result = casePipelineTypeFilterStage(pipelineTypeFilterStage);
+        if (result == null) result = casePipelineFilterStage(pipelineTypeFilterStage);
+        if (result == null) result = casePipelineStage(pipelineTypeFilterStage);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case IntegratePackage.SATISFACTION_RULE:
+      {
+        SatisfactionRule satisfactionRule = (SatisfactionRule)theEObject;
+        T result = caseSatisfactionRule(satisfactionRule);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case IntegratePackage.AND:
+      {
+        And and = (And)theEObject;
+        T result = caseAnd(and);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case IntegratePackage.OR:
+      {
+        Or or = (Or)theEObject;
+        T result = caseOr(or);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case IntegratePackage.COMPARISON:
+      {
+        Comparison comparison = (Comparison)theEObject;
+        T result = caseComparison(comparison);
+        if (result == null) result = caseAnd(comparison);
+        if (result == null) result = caseOr(comparison);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -92,33 +167,193 @@ public class IntegrateSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Model</em>'.
+   * Returns the result of interpreting the object as an instance of '<em>Integrate</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
    * returning a non-null result will terminate the switch.
    * <!-- end-user-doc -->
    * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Model</em>'.
+   * @return the result of interpreting the object as an instance of '<em>Integrate</em>'.
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseModel(Model object)
+  public T caseIntegrate(Integrate object)
   {
     return null;
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Greeting</em>'.
+   * Returns the result of interpreting the object as an instance of '<em>Import</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
    * returning a non-null result will terminate the switch.
    * <!-- end-user-doc -->
    * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Greeting</em>'.
+   * @return the result of interpreting the object as an instance of '<em>Import</em>'.
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseGreeting(Greeting object)
+  public T caseImport(Import object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Conflict Resolution Strategy</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Conflict Resolution Strategy</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseConflictResolutionStrategy(ConflictResolutionStrategy object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Variable</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Variable</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseVariable(Variable object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Pipeline</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Pipeline</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T casePipeline(Pipeline object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Pipeline Stage</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Pipeline Stage</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T casePipelineStage(PipelineStage object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Pipeline Filter Stage</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Pipeline Filter Stage</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T casePipelineFilterStage(PipelineFilterStage object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Pipeline Type Filter Stage</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Pipeline Type Filter Stage</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T casePipelineTypeFilterStage(PipelineTypeFilterStage object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Satisfaction Rule</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Satisfaction Rule</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseSatisfactionRule(SatisfactionRule object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>And</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>And</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseAnd(And object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Or</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Or</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseOr(Or object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Comparison</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Comparison</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseComparison(Comparison object)
   {
     return null;
   }

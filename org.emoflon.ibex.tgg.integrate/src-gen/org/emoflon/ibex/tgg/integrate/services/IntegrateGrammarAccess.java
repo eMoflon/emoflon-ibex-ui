@@ -6,7 +6,10 @@ package org.emoflon.ibex.tgg.integrate.services;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import java.util.List;
+import org.eclipse.xtext.Action;
+import org.eclipse.xtext.Alternatives;
 import org.eclipse.xtext.Assignment;
+import org.eclipse.xtext.CrossReference;
 import org.eclipse.xtext.Grammar;
 import org.eclipse.xtext.GrammarUtil;
 import org.eclipse.xtext.Group;
@@ -21,38 +24,176 @@ import org.eclipse.xtext.service.GrammarProvider;
 @Singleton
 public class IntegrateGrammarAccess extends AbstractGrammarElementFinder {
 	
-	public class ModelElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.integrate.Integrate.Model");
-		private final Assignment cGreetingsAssignment = (Assignment)rule.eContents().get(1);
-		private final RuleCall cGreetingsGreetingParserRuleCall_0 = (RuleCall)cGreetingsAssignment.eContents().get(0);
-		
-		//Model:
-		//	greetings+=Greeting*;
-		@Override public ParserRule getRule() { return rule; }
-		
-		//greetings+=Greeting*
-		public Assignment getGreetingsAssignment() { return cGreetingsAssignment; }
-		
-		//Greeting
-		public RuleCall getGreetingsGreetingParserRuleCall_0() { return cGreetingsGreetingParserRuleCall_0; }
-	}
-	public class GreetingElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.integrate.Integrate.Greeting");
+	public class IntegrateElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.integrate.Integrate.Integrate");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Keyword cHelloKeyword_0 = (Keyword)cGroup.eContents().get(0);
-		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cNameIDTerminalRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
-		private final Keyword cExclamationMarkKeyword_2 = (Keyword)cGroup.eContents().get(2);
+		private final Assignment cImportsAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final RuleCall cImportsImportParserRuleCall_0_0 = (RuleCall)cImportsAssignment_0.eContents().get(0);
+		private final Assignment cConflictResolutionStrategiesAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cConflictResolutionStrategiesConflictResolutionStrategyParserRuleCall_1_0 = (RuleCall)cConflictResolutionStrategiesAssignment_1.eContents().get(0);
 		
-		//Greeting:
-		//	'Hello' name=ID '!';
+		//Integrate:
+		//	imports+=Import*
+		//	conflictResolutionStrategies+=ConflictResolutionStrategy*;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'Hello' name=ID '!'
+		//imports+=Import* conflictResolutionStrategies+=ConflictResolutionStrategy*
 		public Group getGroup() { return cGroup; }
 		
-		//'Hello'
-		public Keyword getHelloKeyword_0() { return cHelloKeyword_0; }
+		//imports+=Import*
+		public Assignment getImportsAssignment_0() { return cImportsAssignment_0; }
+		
+		//Import
+		public RuleCall getImportsImportParserRuleCall_0_0() { return cImportsImportParserRuleCall_0_0; }
+		
+		//conflictResolutionStrategies+=ConflictResolutionStrategy*
+		public Assignment getConflictResolutionStrategiesAssignment_1() { return cConflictResolutionStrategiesAssignment_1; }
+		
+		//ConflictResolutionStrategy
+		public RuleCall getConflictResolutionStrategiesConflictResolutionStrategyParserRuleCall_1_0() { return cConflictResolutionStrategiesConflictResolutionStrategyParserRuleCall_1_0; }
+	}
+	public class ImportElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.integrate.Integrate.Import");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Keyword cImportKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cNameSTRINGTerminalRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
+		
+		//Import:
+		//	'#import' name=STRING;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'#import' name=STRING
+		public Group getGroup() { return cGroup; }
+		
+		//'#import'
+		public Keyword getImportKeyword_0() { return cImportKeyword_0; }
+		
+		//name=STRING
+		public Assignment getNameAssignment_1() { return cNameAssignment_1; }
+		
+		//STRING
+		public RuleCall getNameSTRINGTerminalRuleCall_1_0() { return cNameSTRINGTerminalRuleCall_1_0; }
+	}
+	public class QualifiedNameElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.integrate.Integrate.QualifiedName");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cIDTerminalRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
+		private final Keyword cFullStopKeyword_1_0 = (Keyword)cGroup_1.eContents().get(0);
+		private final RuleCall cIDTerminalRuleCall_1_1 = (RuleCall)cGroup_1.eContents().get(1);
+		
+		//QualifiedName:
+		//	ID ('.' ID)*;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//ID ('.' ID)*
+		public Group getGroup() { return cGroup; }
+		
+		//ID
+		public RuleCall getIDTerminalRuleCall_0() { return cIDTerminalRuleCall_0; }
+		
+		//('.' ID)*
+		public Group getGroup_1() { return cGroup_1; }
+		
+		//'.'
+		public Keyword getFullStopKeyword_1_0() { return cFullStopKeyword_1_0; }
+		
+		//ID
+		public RuleCall getIDTerminalRuleCall_1_1() { return cIDTerminalRuleCall_1_1; }
+	}
+	public class ConflictResolutionStrategyElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.integrate.Integrate.ConflictResolutionStrategy");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Action cConflictResolutionStrategyAction_0 = (Action)cGroup.eContents().get(0);
+		private final Keyword cSolveKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final Keyword cConflictKeyword_2 = (Keyword)cGroup.eContents().get(2);
+		private final Keyword cForKeyword_3 = (Keyword)cGroup.eContents().get(3);
+		private final Keyword cAllKeyword_4 = (Keyword)cGroup.eContents().get(4);
+		private final Keyword cLeftCurlyBracketKeyword_5 = (Keyword)cGroup.eContents().get(5);
+		private final Assignment cVariablesAssignment_6 = (Assignment)cGroup.eContents().get(6);
+		private final RuleCall cVariablesVariableParserRuleCall_6_0 = (RuleCall)cVariablesAssignment_6.eContents().get(0);
+		private final Keyword cSatisfiesKeyword_7 = (Keyword)cGroup.eContents().get(7);
+		private final Keyword cLeftCurlyBracketKeyword_8 = (Keyword)cGroup.eContents().get(8);
+		private final Assignment cRuleAssignment_9 = (Assignment)cGroup.eContents().get(9);
+		private final RuleCall cRuleSatisfactionRuleParserRuleCall_9_0 = (RuleCall)cRuleAssignment_9.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_10 = (Keyword)cGroup.eContents().get(10);
+		private final Keyword cRightCurlyBracketKeyword_11 = (Keyword)cGroup.eContents().get(11);
+		
+		//ConflictResolutionStrategy:
+		//	{ConflictResolutionStrategy} 'solve' 'conflict' 'for' 'all' '{'
+		//	variables+=Variable+
+		//	'satisfies' '{'
+		//	rule=SatisfactionRule
+		//	'}'
+		//	'}';
+		@Override public ParserRule getRule() { return rule; }
+		
+		//{ConflictResolutionStrategy} 'solve' 'conflict' 'for' 'all' '{' variables+=Variable+ 'satisfies' '{'
+		//rule=SatisfactionRule '}' '}'
+		public Group getGroup() { return cGroup; }
+		
+		//{ConflictResolutionStrategy}
+		public Action getConflictResolutionStrategyAction_0() { return cConflictResolutionStrategyAction_0; }
+		
+		//'solve'
+		public Keyword getSolveKeyword_1() { return cSolveKeyword_1; }
+		
+		//'conflict'
+		public Keyword getConflictKeyword_2() { return cConflictKeyword_2; }
+		
+		//'for'
+		public Keyword getForKeyword_3() { return cForKeyword_3; }
+		
+		//'all'
+		public Keyword getAllKeyword_4() { return cAllKeyword_4; }
+		
+		//'{'
+		public Keyword getLeftCurlyBracketKeyword_5() { return cLeftCurlyBracketKeyword_5; }
+		
+		//variables+=Variable+
+		public Assignment getVariablesAssignment_6() { return cVariablesAssignment_6; }
+		
+		//Variable
+		public RuleCall getVariablesVariableParserRuleCall_6_0() { return cVariablesVariableParserRuleCall_6_0; }
+		
+		//'satisfies'
+		public Keyword getSatisfiesKeyword_7() { return cSatisfiesKeyword_7; }
+		
+		//'{'
+		public Keyword getLeftCurlyBracketKeyword_8() { return cLeftCurlyBracketKeyword_8; }
+		
+		//rule=SatisfactionRule
+		public Assignment getRuleAssignment_9() { return cRuleAssignment_9; }
+		
+		//SatisfactionRule
+		public RuleCall getRuleSatisfactionRuleParserRuleCall_9_0() { return cRuleSatisfactionRuleParserRuleCall_9_0; }
+		
+		//'}'
+		public Keyword getRightCurlyBracketKeyword_10() { return cRightCurlyBracketKeyword_10; }
+		
+		//'}'
+		public Keyword getRightCurlyBracketKeyword_11() { return cRightCurlyBracketKeyword_11; }
+	}
+	public class VariableElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.integrate.Integrate.Variable");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Keyword cVarKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cNameIDTerminalRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
+		private final Keyword cEqualsSignKeyword_2 = (Keyword)cGroup.eContents().get(2);
+		private final Assignment cPipelineAssignment_3 = (Assignment)cGroup.eContents().get(3);
+		private final RuleCall cPipelinePipelineParserRuleCall_3_0 = (RuleCall)cPipelineAssignment_3.eContents().get(0);
+		
+		//Variable:
+		//	'var' name=ID '=' pipeline=Pipeline;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'var' name=ID '=' pipeline=Pipeline
+		public Group getGroup() { return cGroup; }
+		
+		//'var'
+		public Keyword getVarKeyword_0() { return cVarKeyword_0; }
 		
 		//name=ID
 		public Assignment getNameAssignment_1() { return cNameAssignment_1; }
@@ -60,13 +201,358 @@ public class IntegrateGrammarAccess extends AbstractGrammarElementFinder {
 		//ID
 		public RuleCall getNameIDTerminalRuleCall_1_0() { return cNameIDTerminalRuleCall_1_0; }
 		
-		//'!'
-		public Keyword getExclamationMarkKeyword_2() { return cExclamationMarkKeyword_2; }
+		//'='
+		public Keyword getEqualsSignKeyword_2() { return cEqualsSignKeyword_2; }
+		
+		//pipeline=Pipeline
+		public Assignment getPipelineAssignment_3() { return cPipelineAssignment_3; }
+		
+		//Pipeline
+		public RuleCall getPipelinePipelineParserRuleCall_3_0() { return cPipelinePipelineParserRuleCall_3_0; }
+	}
+	public class PipelineElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.integrate.Integrate.Pipeline");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Assignment cFirstAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final Alternatives cFirstAlternatives_0_0 = (Alternatives)cFirstAssignment_0.eContents().get(0);
+		private final RuleCall cFirstPipelineStageSrcParserRuleCall_0_0_0 = (RuleCall)cFirstAlternatives_0_0.eContents().get(0);
+		private final RuleCall cFirstPipelineStageTrgParserRuleCall_0_0_1 = (RuleCall)cFirstAlternatives_0_0.eContents().get(1);
+		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
+		private final Keyword cVerticalLineKeyword_1_0 = (Keyword)cGroup_1.eContents().get(0);
+		private final Assignment cNextAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
+		private final RuleCall cNextPipelineStageParserRuleCall_1_1_0 = (RuleCall)cNextAssignment_1_1.eContents().get(0);
+		
+		//Pipeline:
+		//	first=(PipelineStageSrc | PipelineStageTrg) ('|' next+=PipelineStage)*;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//first=(PipelineStageSrc | PipelineStageTrg) ('|' next+=PipelineStage)*
+		public Group getGroup() { return cGroup; }
+		
+		//first=(PipelineStageSrc | PipelineStageTrg)
+		public Assignment getFirstAssignment_0() { return cFirstAssignment_0; }
+		
+		//(PipelineStageSrc | PipelineStageTrg)
+		public Alternatives getFirstAlternatives_0_0() { return cFirstAlternatives_0_0; }
+		
+		//PipelineStageSrc
+		public RuleCall getFirstPipelineStageSrcParserRuleCall_0_0_0() { return cFirstPipelineStageSrcParserRuleCall_0_0_0; }
+		
+		//PipelineStageTrg
+		public RuleCall getFirstPipelineStageTrgParserRuleCall_0_0_1() { return cFirstPipelineStageTrgParserRuleCall_0_0_1; }
+		
+		//('|' next+=PipelineStage)*
+		public Group getGroup_1() { return cGroup_1; }
+		
+		//'|'
+		public Keyword getVerticalLineKeyword_1_0() { return cVerticalLineKeyword_1_0; }
+		
+		//next+=PipelineStage
+		public Assignment getNextAssignment_1_1() { return cNextAssignment_1_1; }
+		
+		//PipelineStage
+		public RuleCall getNextPipelineStageParserRuleCall_1_1_0() { return cNextPipelineStageParserRuleCall_1_1_0; }
+	}
+	public class PipelineStageSrcElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.integrate.Integrate.PipelineStageSrc");
+		private final Keyword cSrcKeyword = (Keyword)rule.eContents().get(1);
+		
+		//PipelineStageSrc:
+		//	'#src';
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'#src'
+		public Keyword getSrcKeyword() { return cSrcKeyword; }
+	}
+	public class PipelineStageTrgElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.integrate.Integrate.PipelineStageTrg");
+		private final Keyword cTrgKeyword = (Keyword)rule.eContents().get(1);
+		
+		//PipelineStageTrg:
+		//	'#trg';
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'#trg'
+		public Keyword getTrgKeyword() { return cTrgKeyword; }
+	}
+	public class PipelineStageElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.integrate.Integrate.PipelineStage");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final RuleCall cPipelineFilterStageParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cPipelineCountStageParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		
+		//PipelineStage:
+		//	PipelineFilterStage | PipelineCountStage;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//PipelineFilterStage | PipelineCountStage
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//PipelineFilterStage
+		public RuleCall getPipelineFilterStageParserRuleCall_0() { return cPipelineFilterStageParserRuleCall_0; }
+		
+		//PipelineCountStage
+		public RuleCall getPipelineCountStageParserRuleCall_1() { return cPipelineCountStageParserRuleCall_1; }
+	}
+	public class PipelineFilterStageElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.integrate.Integrate.PipelineFilterStage");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final RuleCall cPipelineCreatedFilterStageParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cPipelineDeletedFilterStageParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final RuleCall cPipelineTypeFilterStageParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		
+		//PipelineFilterStage:
+		//	PipelineCreatedFilterStage | PipelineDeletedFilterStage | PipelineTypeFilterStage;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//PipelineCreatedFilterStage | PipelineDeletedFilterStage | PipelineTypeFilterStage
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//PipelineCreatedFilterStage
+		public RuleCall getPipelineCreatedFilterStageParserRuleCall_0() { return cPipelineCreatedFilterStageParserRuleCall_0; }
+		
+		//PipelineDeletedFilterStage
+		public RuleCall getPipelineDeletedFilterStageParserRuleCall_1() { return cPipelineDeletedFilterStageParserRuleCall_1; }
+		
+		//PipelineTypeFilterStage
+		public RuleCall getPipelineTypeFilterStageParserRuleCall_2() { return cPipelineTypeFilterStageParserRuleCall_2; }
+	}
+	public class PipelineCreatedFilterStageElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.integrate.Integrate.PipelineCreatedFilterStage");
+		private final Keyword cCreatedKeyword = (Keyword)rule.eContents().get(1);
+		
+		//PipelineCreatedFilterStage:
+		//	'created';
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'created'
+		public Keyword getCreatedKeyword() { return cCreatedKeyword; }
+	}
+	public class PipelineDeletedFilterStageElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.integrate.Integrate.PipelineDeletedFilterStage");
+		private final Keyword cDeletedKeyword = (Keyword)rule.eContents().get(1);
+		
+		//PipelineDeletedFilterStage:
+		//	'deleted';
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'deleted'
+		public Keyword getDeletedKeyword() { return cDeletedKeyword; }
+	}
+	public class PipelineTypeFilterStageElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.integrate.Integrate.PipelineTypeFilterStage");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Keyword cTypeKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Assignment cTypesAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final CrossReference cTypesEClassifierCrossReference_1_0 = (CrossReference)cTypesAssignment_1.eContents().get(0);
+		private final RuleCall cTypesEClassifierIDTerminalRuleCall_1_0_1 = (RuleCall)cTypesEClassifierCrossReference_1_0.eContents().get(1);
+		
+		//PipelineTypeFilterStage:
+		//	'type' types=[ecore::EClassifier];
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'type' types=[ecore::EClassifier]
+		public Group getGroup() { return cGroup; }
+		
+		//'type'
+		public Keyword getTypeKeyword_0() { return cTypeKeyword_0; }
+		
+		//types=[ecore::EClassifier]
+		public Assignment getTypesAssignment_1() { return cTypesAssignment_1; }
+		
+		//[ecore::EClassifier]
+		public CrossReference getTypesEClassifierCrossReference_1_0() { return cTypesEClassifierCrossReference_1_0; }
+		
+		//ID
+		public RuleCall getTypesEClassifierIDTerminalRuleCall_1_0_1() { return cTypesEClassifierIDTerminalRuleCall_1_0_1; }
+	}
+	public class PipelineCountStageElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.integrate.Integrate.PipelineCountStage");
+		private final Keyword cCountKeyword = (Keyword)rule.eContents().get(1);
+		
+		//PipelineCountStage:
+		//	'count';
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'count'
+		public Keyword getCountKeyword() { return cCountKeyword; }
+	}
+	public class SatisfactionRuleElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.integrate.Integrate.SatisfactionRule");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Assignment cFirstRuleAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final RuleCall cFirstRuleComparisonParserRuleCall_0_0 = (RuleCall)cFirstRuleAssignment_0.eContents().get(0);
+		private final Assignment cOtherRulesAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final Alternatives cOtherRulesAlternatives_1_0 = (Alternatives)cOtherRulesAssignment_1.eContents().get(0);
+		private final RuleCall cOtherRulesAndParserRuleCall_1_0_0 = (RuleCall)cOtherRulesAlternatives_1_0.eContents().get(0);
+		private final RuleCall cOtherRulesOrParserRuleCall_1_0_1 = (RuleCall)cOtherRulesAlternatives_1_0.eContents().get(1);
+		
+		//SatisfactionRule:
+		//	firstRule=Comparison otherRules+=(And | Or)*;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//firstRule=Comparison otherRules+=(And | Or)*
+		public Group getGroup() { return cGroup; }
+		
+		//firstRule=Comparison
+		public Assignment getFirstRuleAssignment_0() { return cFirstRuleAssignment_0; }
+		
+		//Comparison
+		public RuleCall getFirstRuleComparisonParserRuleCall_0_0() { return cFirstRuleComparisonParserRuleCall_0_0; }
+		
+		//otherRules+=(And | Or)*
+		public Assignment getOtherRulesAssignment_1() { return cOtherRulesAssignment_1; }
+		
+		//(And | Or)
+		public Alternatives getOtherRulesAlternatives_1_0() { return cOtherRulesAlternatives_1_0; }
+		
+		//And
+		public RuleCall getOtherRulesAndParserRuleCall_1_0_0() { return cOtherRulesAndParserRuleCall_1_0_0; }
+		
+		//Or
+		public RuleCall getOtherRulesOrParserRuleCall_1_0_1() { return cOtherRulesOrParserRuleCall_1_0_1; }
+	}
+	public class AndElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.integrate.Integrate.And");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Keyword cAndKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final RuleCall cComparisonParserRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
+		
+		//And:
+		//	'and' Comparison;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'and' Comparison
+		public Group getGroup() { return cGroup; }
+		
+		//'and'
+		public Keyword getAndKeyword_0() { return cAndKeyword_0; }
+		
+		//Comparison
+		public RuleCall getComparisonParserRuleCall_1() { return cComparisonParserRuleCall_1; }
+	}
+	public class OrElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.integrate.Integrate.Or");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Keyword cOrKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final RuleCall cComparisonParserRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
+		
+		//Or:
+		//	'or' Comparison;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'or' Comparison
+		public Group getGroup() { return cGroup; }
+		
+		//'or'
+		public Keyword getOrKeyword_0() { return cOrKeyword_0; }
+		
+		//Comparison
+		public RuleCall getComparisonParserRuleCall_1() { return cComparisonParserRuleCall_1; }
+	}
+	public class ComparisonElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.integrate.Integrate.Comparison");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Alternatives cAlternatives_0 = (Alternatives)cGroup.eContents().get(0);
+		private final Assignment cV1Assignment_0_0 = (Assignment)cAlternatives_0.eContents().get(0);
+		private final CrossReference cV1VariableCrossReference_0_0_0 = (CrossReference)cV1Assignment_0_0.eContents().get(0);
+		private final RuleCall cV1VariableIDTerminalRuleCall_0_0_0_1 = (RuleCall)cV1VariableCrossReference_0_0_0.eContents().get(1);
+		private final Assignment cN1Assignment_0_1 = (Assignment)cAlternatives_0.eContents().get(1);
+		private final RuleCall cN1INTTerminalRuleCall_0_1_0 = (RuleCall)cN1Assignment_0_1.eContents().get(0);
+		private final Assignment cC1Assignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final Alternatives cC1Alternatives_1_0 = (Alternatives)cC1Assignment_1.eContents().get(0);
+		private final Keyword cC1GreaterThanSignKeyword_1_0_0 = (Keyword)cC1Alternatives_1_0.eContents().get(0);
+		private final Keyword cC1GreaterThanSignEqualsSignKeyword_1_0_1 = (Keyword)cC1Alternatives_1_0.eContents().get(1);
+		private final Keyword cC1LessThanSignKeyword_1_0_2 = (Keyword)cC1Alternatives_1_0.eContents().get(2);
+		private final Keyword cC1LessThanSignEqualsSignKeyword_1_0_3 = (Keyword)cC1Alternatives_1_0.eContents().get(3);
+		private final Alternatives cAlternatives_2 = (Alternatives)cGroup.eContents().get(2);
+		private final Assignment cV2Assignment_2_0 = (Assignment)cAlternatives_2.eContents().get(0);
+		private final CrossReference cV2VariableCrossReference_2_0_0 = (CrossReference)cV2Assignment_2_0.eContents().get(0);
+		private final RuleCall cV2VariableIDTerminalRuleCall_2_0_0_1 = (RuleCall)cV2VariableCrossReference_2_0_0.eContents().get(1);
+		private final Assignment cN2Assignment_2_1 = (Assignment)cAlternatives_2.eContents().get(1);
+		private final RuleCall cN2INTTerminalRuleCall_2_1_0 = (RuleCall)cN2Assignment_2_1.eContents().get(0);
+		
+		//Comparison:
+		//	(v1=[Variable] | n1=INT) c1=('>' | '>=' | '<' | '<=') (v2=[Variable] | n2=INT);
+		@Override public ParserRule getRule() { return rule; }
+		
+		//(v1=[Variable] | n1=INT) c1=('>' | '>=' | '<' | '<=') (v2=[Variable] | n2=INT)
+		public Group getGroup() { return cGroup; }
+		
+		//(v1=[Variable] | n1=INT)
+		public Alternatives getAlternatives_0() { return cAlternatives_0; }
+		
+		//v1=[Variable]
+		public Assignment getV1Assignment_0_0() { return cV1Assignment_0_0; }
+		
+		//[Variable]
+		public CrossReference getV1VariableCrossReference_0_0_0() { return cV1VariableCrossReference_0_0_0; }
+		
+		//ID
+		public RuleCall getV1VariableIDTerminalRuleCall_0_0_0_1() { return cV1VariableIDTerminalRuleCall_0_0_0_1; }
+		
+		//n1=INT
+		public Assignment getN1Assignment_0_1() { return cN1Assignment_0_1; }
+		
+		//INT
+		public RuleCall getN1INTTerminalRuleCall_0_1_0() { return cN1INTTerminalRuleCall_0_1_0; }
+		
+		//c1=('>' | '>=' | '<' | '<=')
+		public Assignment getC1Assignment_1() { return cC1Assignment_1; }
+		
+		//('>' | '>=' | '<' | '<=')
+		public Alternatives getC1Alternatives_1_0() { return cC1Alternatives_1_0; }
+		
+		//'>'
+		public Keyword getC1GreaterThanSignKeyword_1_0_0() { return cC1GreaterThanSignKeyword_1_0_0; }
+		
+		//'>='
+		public Keyword getC1GreaterThanSignEqualsSignKeyword_1_0_1() { return cC1GreaterThanSignEqualsSignKeyword_1_0_1; }
+		
+		//'<'
+		public Keyword getC1LessThanSignKeyword_1_0_2() { return cC1LessThanSignKeyword_1_0_2; }
+		
+		//'<='
+		public Keyword getC1LessThanSignEqualsSignKeyword_1_0_3() { return cC1LessThanSignEqualsSignKeyword_1_0_3; }
+		
+		//(v2=[Variable] | n2=INT)
+		public Alternatives getAlternatives_2() { return cAlternatives_2; }
+		
+		//v2=[Variable]
+		public Assignment getV2Assignment_2_0() { return cV2Assignment_2_0; }
+		
+		//[Variable]
+		public CrossReference getV2VariableCrossReference_2_0_0() { return cV2VariableCrossReference_2_0_0; }
+		
+		//ID
+		public RuleCall getV2VariableIDTerminalRuleCall_2_0_0_1() { return cV2VariableIDTerminalRuleCall_2_0_0_1; }
+		
+		//n2=INT
+		public Assignment getN2Assignment_2_1() { return cN2Assignment_2_1; }
+		
+		//INT
+		public RuleCall getN2INTTerminalRuleCall_2_1_0() { return cN2INTTerminalRuleCall_2_1_0; }
 	}
 	
 	
-	private final ModelElements pModel;
-	private final GreetingElements pGreeting;
+	private final IntegrateElements pIntegrate;
+	private final ImportElements pImport;
+	private final QualifiedNameElements pQualifiedName;
+	private final ConflictResolutionStrategyElements pConflictResolutionStrategy;
+	private final VariableElements pVariable;
+	private final PipelineElements pPipeline;
+	private final PipelineStageSrcElements pPipelineStageSrc;
+	private final PipelineStageTrgElements pPipelineStageTrg;
+	private final PipelineStageElements pPipelineStage;
+	private final PipelineFilterStageElements pPipelineFilterStage;
+	private final PipelineCreatedFilterStageElements pPipelineCreatedFilterStage;
+	private final PipelineDeletedFilterStageElements pPipelineDeletedFilterStage;
+	private final PipelineTypeFilterStageElements pPipelineTypeFilterStage;
+	private final PipelineCountStageElements pPipelineCountStage;
+	private final SatisfactionRuleElements pSatisfactionRule;
+	private final AndElements pAnd;
+	private final OrElements pOr;
+	private final ComparisonElements pComparison;
 	
 	private final Grammar grammar;
 	
@@ -77,8 +563,24 @@ public class IntegrateGrammarAccess extends AbstractGrammarElementFinder {
 			TerminalsGrammarAccess gaTerminals) {
 		this.grammar = internalFindGrammar(grammarProvider);
 		this.gaTerminals = gaTerminals;
-		this.pModel = new ModelElements();
-		this.pGreeting = new GreetingElements();
+		this.pIntegrate = new IntegrateElements();
+		this.pImport = new ImportElements();
+		this.pQualifiedName = new QualifiedNameElements();
+		this.pConflictResolutionStrategy = new ConflictResolutionStrategyElements();
+		this.pVariable = new VariableElements();
+		this.pPipeline = new PipelineElements();
+		this.pPipelineStageSrc = new PipelineStageSrcElements();
+		this.pPipelineStageTrg = new PipelineStageTrgElements();
+		this.pPipelineStage = new PipelineStageElements();
+		this.pPipelineFilterStage = new PipelineFilterStageElements();
+		this.pPipelineCreatedFilterStage = new PipelineCreatedFilterStageElements();
+		this.pPipelineDeletedFilterStage = new PipelineDeletedFilterStageElements();
+		this.pPipelineTypeFilterStage = new PipelineTypeFilterStageElements();
+		this.pPipelineCountStage = new PipelineCountStageElements();
+		this.pSatisfactionRule = new SatisfactionRuleElements();
+		this.pAnd = new AndElements();
+		this.pOr = new OrElements();
+		this.pComparison = new ComparisonElements();
 	}
 	
 	protected Grammar internalFindGrammar(GrammarProvider grammarProvider) {
@@ -108,24 +610,190 @@ public class IntegrateGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	
-	//Model:
-	//	greetings+=Greeting*;
-	public ModelElements getModelAccess() {
-		return pModel;
+	//Integrate:
+	//	imports+=Import*
+	//	conflictResolutionStrategies+=ConflictResolutionStrategy*;
+	public IntegrateElements getIntegrateAccess() {
+		return pIntegrate;
 	}
 	
-	public ParserRule getModelRule() {
-		return getModelAccess().getRule();
+	public ParserRule getIntegrateRule() {
+		return getIntegrateAccess().getRule();
 	}
 	
-	//Greeting:
-	//	'Hello' name=ID '!';
-	public GreetingElements getGreetingAccess() {
-		return pGreeting;
+	//Import:
+	//	'#import' name=STRING;
+	public ImportElements getImportAccess() {
+		return pImport;
 	}
 	
-	public ParserRule getGreetingRule() {
-		return getGreetingAccess().getRule();
+	public ParserRule getImportRule() {
+		return getImportAccess().getRule();
+	}
+	
+	//QualifiedName:
+	//	ID ('.' ID)*;
+	public QualifiedNameElements getQualifiedNameAccess() {
+		return pQualifiedName;
+	}
+	
+	public ParserRule getQualifiedNameRule() {
+		return getQualifiedNameAccess().getRule();
+	}
+	
+	//ConflictResolutionStrategy:
+	//	{ConflictResolutionStrategy} 'solve' 'conflict' 'for' 'all' '{'
+	//	variables+=Variable+
+	//	'satisfies' '{'
+	//	rule=SatisfactionRule
+	//	'}'
+	//	'}';
+	public ConflictResolutionStrategyElements getConflictResolutionStrategyAccess() {
+		return pConflictResolutionStrategy;
+	}
+	
+	public ParserRule getConflictResolutionStrategyRule() {
+		return getConflictResolutionStrategyAccess().getRule();
+	}
+	
+	//Variable:
+	//	'var' name=ID '=' pipeline=Pipeline;
+	public VariableElements getVariableAccess() {
+		return pVariable;
+	}
+	
+	public ParserRule getVariableRule() {
+		return getVariableAccess().getRule();
+	}
+	
+	//Pipeline:
+	//	first=(PipelineStageSrc | PipelineStageTrg) ('|' next+=PipelineStage)*;
+	public PipelineElements getPipelineAccess() {
+		return pPipeline;
+	}
+	
+	public ParserRule getPipelineRule() {
+		return getPipelineAccess().getRule();
+	}
+	
+	//PipelineStageSrc:
+	//	'#src';
+	public PipelineStageSrcElements getPipelineStageSrcAccess() {
+		return pPipelineStageSrc;
+	}
+	
+	public ParserRule getPipelineStageSrcRule() {
+		return getPipelineStageSrcAccess().getRule();
+	}
+	
+	//PipelineStageTrg:
+	//	'#trg';
+	public PipelineStageTrgElements getPipelineStageTrgAccess() {
+		return pPipelineStageTrg;
+	}
+	
+	public ParserRule getPipelineStageTrgRule() {
+		return getPipelineStageTrgAccess().getRule();
+	}
+	
+	//PipelineStage:
+	//	PipelineFilterStage | PipelineCountStage;
+	public PipelineStageElements getPipelineStageAccess() {
+		return pPipelineStage;
+	}
+	
+	public ParserRule getPipelineStageRule() {
+		return getPipelineStageAccess().getRule();
+	}
+	
+	//PipelineFilterStage:
+	//	PipelineCreatedFilterStage | PipelineDeletedFilterStage | PipelineTypeFilterStage;
+	public PipelineFilterStageElements getPipelineFilterStageAccess() {
+		return pPipelineFilterStage;
+	}
+	
+	public ParserRule getPipelineFilterStageRule() {
+		return getPipelineFilterStageAccess().getRule();
+	}
+	
+	//PipelineCreatedFilterStage:
+	//	'created';
+	public PipelineCreatedFilterStageElements getPipelineCreatedFilterStageAccess() {
+		return pPipelineCreatedFilterStage;
+	}
+	
+	public ParserRule getPipelineCreatedFilterStageRule() {
+		return getPipelineCreatedFilterStageAccess().getRule();
+	}
+	
+	//PipelineDeletedFilterStage:
+	//	'deleted';
+	public PipelineDeletedFilterStageElements getPipelineDeletedFilterStageAccess() {
+		return pPipelineDeletedFilterStage;
+	}
+	
+	public ParserRule getPipelineDeletedFilterStageRule() {
+		return getPipelineDeletedFilterStageAccess().getRule();
+	}
+	
+	//PipelineTypeFilterStage:
+	//	'type' types=[ecore::EClassifier];
+	public PipelineTypeFilterStageElements getPipelineTypeFilterStageAccess() {
+		return pPipelineTypeFilterStage;
+	}
+	
+	public ParserRule getPipelineTypeFilterStageRule() {
+		return getPipelineTypeFilterStageAccess().getRule();
+	}
+	
+	//PipelineCountStage:
+	//	'count';
+	public PipelineCountStageElements getPipelineCountStageAccess() {
+		return pPipelineCountStage;
+	}
+	
+	public ParserRule getPipelineCountStageRule() {
+		return getPipelineCountStageAccess().getRule();
+	}
+	
+	//SatisfactionRule:
+	//	firstRule=Comparison otherRules+=(And | Or)*;
+	public SatisfactionRuleElements getSatisfactionRuleAccess() {
+		return pSatisfactionRule;
+	}
+	
+	public ParserRule getSatisfactionRuleRule() {
+		return getSatisfactionRuleAccess().getRule();
+	}
+	
+	//And:
+	//	'and' Comparison;
+	public AndElements getAndAccess() {
+		return pAnd;
+	}
+	
+	public ParserRule getAndRule() {
+		return getAndAccess().getRule();
+	}
+	
+	//Or:
+	//	'or' Comparison;
+	public OrElements getOrAccess() {
+		return pOr;
+	}
+	
+	public ParserRule getOrRule() {
+		return getOrAccess().getRule();
+	}
+	
+	//Comparison:
+	//	(v1=[Variable] | n1=INT) c1=('>' | '>=' | '<' | '<=') (v2=[Variable] | n2=INT);
+	public ComparisonElements getComparisonAccess() {
+		return pComparison;
+	}
+	
+	public ParserRule getComparisonRule() {
+		return getComparisonAccess().getRule();
 	}
 	
 	//terminal ID:

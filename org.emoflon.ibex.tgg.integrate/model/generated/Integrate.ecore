@@ -2,11 +2,49 @@
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="integrate" nsURI="http://www.emoflon.org/ibex/tgg/integrate/Integrate"
     nsPrefix="integrate">
-  <eClassifiers xsi:type="ecore:EClass" name="Model">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="greetings" upperBound="-1"
-        eType="#//Greeting" containment="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Integrate">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="imports" upperBound="-1"
+        eType="#//Import" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="conflictResolutionStrategies"
+        upperBound="-1" eType="#//ConflictResolutionStrategy" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Greeting">
+  <eClassifiers xsi:type="ecore:EClass" name="Import">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ConflictResolutionStrategy">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="variables" upperBound="-1"
+        eType="#//Variable" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rule" eType="#//SatisfactionRule"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Variable">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="pipeline" eType="#//Pipeline"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Pipeline">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="first" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="next" upperBound="-1" eType="#//PipelineStage"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PipelineStage"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PipelineFilterStage" eSuperTypes="#//PipelineStage"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PipelineTypeFilterStage" eSuperTypes="#//PipelineFilterStage">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="types" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EClassifier"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SatisfactionRule">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="firstRule" eType="#//Comparison"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="otherRules" upperBound="-1"
+        eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="And"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Or"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Comparison" eSuperTypes="#//And #//Or">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="v1" eType="#//Variable"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="n1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="c1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="v2" eType="#//Variable"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="n2" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
 </ecore:EPackage>

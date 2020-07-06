@@ -1,9 +1,83 @@
 grammar org.emoflon.ibex.tgg.integrate.Integrate with org.eclipse.xtext.common.Terminals
 
+//import "http://www.moflon.org/ide/tgg/mosl/TGG" as tgg
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
 generate integrate "http://www.emoflon.org/ibex/tgg/integrate/Integrate"
 
-Model:
-	greetings+=Greeting*;
+Integrate:
+	imports+=Import*
+	conflictResolutionStrategies+=ConflictResolutionStrategy*;
 	
-Greeting:
-	'Hello' name=ID '!';
+Import:
+	'#import' name=STRING
+;	
+
+QualifiedName returns ecore::EString:
+	ID ('.' ID)*
+;
+
+ConflictResolutionStrategy:
+	{ConflictResolutionStrategy} 'solve' 'conflict' 'for' 'all' '{'
+		variables+=Variable+
+		'satisfies' '{'
+			rule=SatisfactionRule
+		'}'
+	'}'
+;
+
+Variable:
+	'var' name=ID '=' pipeline=Pipeline
+;
+
+Pipeline:
+	first=(PipelineStageSrc | PipelineStageTrg) ('|' next+=PipelineStage)*
+;
+
+PipelineStageSrc:
+	'#src'
+;
+
+PipelineStageTrg:
+	'#trg'
+;
+
+PipelineStage:
+	PipelineFilterStage | PipelineCountStage
+;
+
+PipelineFilterStage:
+	PipelineCreatedFilterStage | PipelineDeletedFilterStage | PipelineTypeFilterStage
+;
+
+PipelineCreatedFilterStage:
+	'created'
+;
+
+PipelineDeletedFilterStage:
+	'deleted'
+;
+
+PipelineTypeFilterStage:
+	'type' types=[ecore::EClassifier]
+;
+
+PipelineCountStage:
+	'count'
+;
+
+SatisfactionRule:
+	firstRule=Comparison otherRules+=(And|Or)*	
+;
+
+And:
+	'and' Comparison	
+;
+
+Or:
+	'or' Comparison
+;
+
+Comparison:
+	(v1=[Variable] | n1=INT) c1=('>'|'>='|'<'|'<=') (v2=[Variable] | n2=INT)
+;

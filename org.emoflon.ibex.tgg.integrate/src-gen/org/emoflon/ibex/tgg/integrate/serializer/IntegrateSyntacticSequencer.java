@@ -10,6 +10,9 @@ import org.eclipse.xtext.IGrammarAccess;
 import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.serializer.analysis.GrammarAlias.AbstractElementAlias;
+import org.eclipse.xtext.serializer.analysis.GrammarAlias.AlternativeAlias;
+import org.eclipse.xtext.serializer.analysis.GrammarAlias.TokenAlias;
+import org.eclipse.xtext.serializer.analysis.ISyntacticSequencerPDAProvider.ISynNavigable;
 import org.eclipse.xtext.serializer.analysis.ISyntacticSequencerPDAProvider.ISynTransition;
 import org.eclipse.xtext.serializer.sequencer.AbstractSyntacticSequencer;
 import org.emoflon.ibex.tgg.integrate.services.IntegrateGrammarAccess;
@@ -18,17 +21,59 @@ import org.emoflon.ibex.tgg.integrate.services.IntegrateGrammarAccess;
 public class IntegrateSyntacticSequencer extends AbstractSyntacticSequencer {
 
 	protected IntegrateGrammarAccess grammarAccess;
+	protected AbstractElementAlias match_PipelineFilterStage_PipelineCreatedFilterStageParserRuleCall_0_or_PipelineDeletedFilterStageParserRuleCall_1;
+	protected AbstractElementAlias match_PipelineFilterStage_PipelineStage_PipelineCountStageParserRuleCall_1_or_PipelineCreatedFilterStageParserRuleCall_0_or_PipelineDeletedFilterStageParserRuleCall_1;
 	
 	@Inject
 	protected void init(IGrammarAccess access) {
 		grammarAccess = (IntegrateGrammarAccess) access;
+		match_PipelineFilterStage_PipelineCreatedFilterStageParserRuleCall_0_or_PipelineDeletedFilterStageParserRuleCall_1 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getPipelineFilterStageAccess().getPipelineCreatedFilterStageParserRuleCall_0()), new TokenAlias(false, false, grammarAccess.getPipelineFilterStageAccess().getPipelineDeletedFilterStageParserRuleCall_1()));
+		match_PipelineFilterStage_PipelineStage_PipelineCountStageParserRuleCall_1_or_PipelineCreatedFilterStageParserRuleCall_0_or_PipelineDeletedFilterStageParserRuleCall_1 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getPipelineFilterStageAccess().getPipelineCreatedFilterStageParserRuleCall_0()), new TokenAlias(false, false, grammarAccess.getPipelineFilterStageAccess().getPipelineDeletedFilterStageParserRuleCall_1()), new TokenAlias(false, false, grammarAccess.getPipelineStageAccess().getPipelineCountStageParserRuleCall_1()));
 	}
 	
 	@Override
 	protected String getUnassignedRuleCallToken(EObject semanticObject, RuleCall ruleCall, INode node) {
+		if (ruleCall.getRule() == grammarAccess.getPipelineCountStageRule())
+			return getPipelineCountStageToken(semanticObject, ruleCall, node);
+		else if (ruleCall.getRule() == grammarAccess.getPipelineCreatedFilterStageRule())
+			return getPipelineCreatedFilterStageToken(semanticObject, ruleCall, node);
+		else if (ruleCall.getRule() == grammarAccess.getPipelineDeletedFilterStageRule())
+			return getPipelineDeletedFilterStageToken(semanticObject, ruleCall, node);
 		return "";
 	}
 	
+	/**
+	 * PipelineCountStage:
+	 * 	'count'
+	 * ;
+	 */
+	protected String getPipelineCountStageToken(EObject semanticObject, RuleCall ruleCall, INode node) {
+		if (node != null)
+			return getTokenText(node);
+		return "count";
+	}
+	
+	/**
+	 * PipelineCreatedFilterStage:
+	 * 	'created'
+	 * ;
+	 */
+	protected String getPipelineCreatedFilterStageToken(EObject semanticObject, RuleCall ruleCall, INode node) {
+		if (node != null)
+			return getTokenText(node);
+		return "created";
+	}
+	
+	/**
+	 * PipelineDeletedFilterStage:
+	 * 	'deleted'
+	 * ;
+	 */
+	protected String getPipelineDeletedFilterStageToken(EObject semanticObject, RuleCall ruleCall, INode node) {
+		if (node != null)
+			return getTokenText(node);
+		return "deleted";
+	}
 	
 	@Override
 	protected void emitUnassignedTokens(EObject semanticObject, ISynTransition transition, INode fromNode, INode toNode) {
@@ -36,8 +81,34 @@ public class IntegrateSyntacticSequencer extends AbstractSyntacticSequencer {
 		List<INode> transitionNodes = collectNodes(fromNode, toNode);
 		for (AbstractElementAlias syntax : transition.getAmbiguousSyntaxes()) {
 			List<INode> syntaxNodes = getNodesFor(transitionNodes, syntax);
-			acceptNodes(getLastNavigableState(), syntaxNodes);
+			if (match_PipelineFilterStage_PipelineCreatedFilterStageParserRuleCall_0_or_PipelineDeletedFilterStageParserRuleCall_1.equals(syntax))
+				emit_PipelineFilterStage_PipelineCreatedFilterStageParserRuleCall_0_or_PipelineDeletedFilterStageParserRuleCall_1(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_PipelineFilterStage_PipelineStage_PipelineCountStageParserRuleCall_1_or_PipelineCreatedFilterStageParserRuleCall_0_or_PipelineDeletedFilterStageParserRuleCall_1.equals(syntax))
+				emit_PipelineFilterStage_PipelineStage_PipelineCountStageParserRuleCall_1_or_PipelineCreatedFilterStageParserRuleCall_0_or_PipelineDeletedFilterStageParserRuleCall_1(semanticObject, getLastNavigableState(), syntaxNodes);
+			else acceptNodes(getLastNavigableState(), syntaxNodes);
 		}
 	}
 
+	/**
+	 * Ambiguous syntax:
+	 *     PipelineCreatedFilterStage | PipelineDeletedFilterStage
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     (rule start) (ambiguity) (rule start)
+	 */
+	protected void emit_PipelineFilterStage_PipelineCreatedFilterStageParserRuleCall_0_or_PipelineDeletedFilterStageParserRuleCall_1(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     PipelineCountStage | PipelineCreatedFilterStage | PipelineDeletedFilterStage
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     (rule start) (ambiguity) (rule start)
+	 */
+	protected void emit_PipelineFilterStage_PipelineStage_PipelineCountStageParserRuleCall_1_or_PipelineCreatedFilterStageParserRuleCall_0_or_PipelineDeletedFilterStageParserRuleCall_1(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
 }

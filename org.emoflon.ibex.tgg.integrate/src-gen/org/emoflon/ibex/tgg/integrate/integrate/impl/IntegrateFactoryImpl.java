@@ -65,8 +65,18 @@ public class IntegrateFactoryImpl extends EFactoryImpl implements IntegrateFacto
   {
     switch (eClass.getClassifierID())
     {
-      case IntegratePackage.MODEL: return createModel();
-      case IntegratePackage.GREETING: return createGreeting();
+      case IntegratePackage.INTEGRATE: return createIntegrate();
+      case IntegratePackage.IMPORT: return createImport();
+      case IntegratePackage.CONFLICT_RESOLUTION_STRATEGY: return createConflictResolutionStrategy();
+      case IntegratePackage.VARIABLE: return createVariable();
+      case IntegratePackage.PIPELINE: return createPipeline();
+      case IntegratePackage.PIPELINE_STAGE: return createPipelineStage();
+      case IntegratePackage.PIPELINE_FILTER_STAGE: return createPipelineFilterStage();
+      case IntegratePackage.PIPELINE_TYPE_FILTER_STAGE: return createPipelineTypeFilterStage();
+      case IntegratePackage.SATISFACTION_RULE: return createSatisfactionRule();
+      case IntegratePackage.AND: return createAnd();
+      case IntegratePackage.OR: return createOr();
+      case IntegratePackage.COMPARISON: return createComparison();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
     }
@@ -78,10 +88,10 @@ public class IntegrateFactoryImpl extends EFactoryImpl implements IntegrateFacto
    * @generated
    */
   @Override
-  public Model createModel()
+  public Integrate createIntegrate()
   {
-    ModelImpl model = new ModelImpl();
-    return model;
+    IntegrateImpl integrate = new IntegrateImpl();
+    return integrate;
   }
 
   /**
@@ -90,10 +100,130 @@ public class IntegrateFactoryImpl extends EFactoryImpl implements IntegrateFacto
    * @generated
    */
   @Override
-  public Greeting createGreeting()
+  public Import createImport()
   {
-    GreetingImpl greeting = new GreetingImpl();
-    return greeting;
+    ImportImpl import_ = new ImportImpl();
+    return import_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public ConflictResolutionStrategy createConflictResolutionStrategy()
+  {
+    ConflictResolutionStrategyImpl conflictResolutionStrategy = new ConflictResolutionStrategyImpl();
+    return conflictResolutionStrategy;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public Variable createVariable()
+  {
+    VariableImpl variable = new VariableImpl();
+    return variable;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public Pipeline createPipeline()
+  {
+    PipelineImpl pipeline = new PipelineImpl();
+    return pipeline;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public PipelineStage createPipelineStage()
+  {
+    PipelineStageImpl pipelineStage = new PipelineStageImpl();
+    return pipelineStage;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public PipelineFilterStage createPipelineFilterStage()
+  {
+    PipelineFilterStageImpl pipelineFilterStage = new PipelineFilterStageImpl();
+    return pipelineFilterStage;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public PipelineTypeFilterStage createPipelineTypeFilterStage()
+  {
+    PipelineTypeFilterStageImpl pipelineTypeFilterStage = new PipelineTypeFilterStageImpl();
+    return pipelineTypeFilterStage;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public SatisfactionRule createSatisfactionRule()
+  {
+    SatisfactionRuleImpl satisfactionRule = new SatisfactionRuleImpl();
+    return satisfactionRule;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public And createAnd()
+  {
+    AndImpl and = new AndImpl();
+    return and;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public Or createOr()
+  {
+    OrImpl or = new OrImpl();
+    return or;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public Comparison createComparison()
+  {
+    ComparisonImpl comparison = new ComparisonImpl();
+    return comparison;
   }
 
   /**

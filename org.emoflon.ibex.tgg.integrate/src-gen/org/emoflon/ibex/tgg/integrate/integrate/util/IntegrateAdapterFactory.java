@@ -76,14 +76,64 @@ public class IntegrateAdapterFactory extends AdapterFactoryImpl
     new IntegrateSwitch<Adapter>()
     {
       @Override
-      public Adapter caseModel(Model object)
+      public Adapter caseIntegrate(Integrate object)
       {
-        return createModelAdapter();
+        return createIntegrateAdapter();
       }
       @Override
-      public Adapter caseGreeting(Greeting object)
+      public Adapter caseImport(Import object)
       {
-        return createGreetingAdapter();
+        return createImportAdapter();
+      }
+      @Override
+      public Adapter caseConflictResolutionStrategy(ConflictResolutionStrategy object)
+      {
+        return createConflictResolutionStrategyAdapter();
+      }
+      @Override
+      public Adapter caseVariable(Variable object)
+      {
+        return createVariableAdapter();
+      }
+      @Override
+      public Adapter casePipeline(Pipeline object)
+      {
+        return createPipelineAdapter();
+      }
+      @Override
+      public Adapter casePipelineStage(PipelineStage object)
+      {
+        return createPipelineStageAdapter();
+      }
+      @Override
+      public Adapter casePipelineFilterStage(PipelineFilterStage object)
+      {
+        return createPipelineFilterStageAdapter();
+      }
+      @Override
+      public Adapter casePipelineTypeFilterStage(PipelineTypeFilterStage object)
+      {
+        return createPipelineTypeFilterStageAdapter();
+      }
+      @Override
+      public Adapter caseSatisfactionRule(SatisfactionRule object)
+      {
+        return createSatisfactionRuleAdapter();
+      }
+      @Override
+      public Adapter caseAnd(And object)
+      {
+        return createAndAdapter();
+      }
+      @Override
+      public Adapter caseOr(Or object)
+      {
+        return createOrAdapter();
+      }
+      @Override
+      public Adapter caseComparison(Comparison object)
+      {
+        return createComparisonAdapter();
       }
       @Override
       public Adapter defaultCase(EObject object)
@@ -108,31 +158,181 @@ public class IntegrateAdapterFactory extends AdapterFactoryImpl
 
 
   /**
-   * Creates a new adapter for an object of class '{@link org.emoflon.ibex.tgg.integrate.integrate.Model <em>Model</em>}'.
+   * Creates a new adapter for an object of class '{@link org.emoflon.ibex.tgg.integrate.integrate.Integrate <em>Integrate</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see org.emoflon.ibex.tgg.integrate.integrate.Model
+   * @see org.emoflon.ibex.tgg.integrate.integrate.Integrate
    * @generated
    */
-  public Adapter createModelAdapter()
+  public Adapter createIntegrateAdapter()
   {
     return null;
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link org.emoflon.ibex.tgg.integrate.integrate.Greeting <em>Greeting</em>}'.
+   * Creates a new adapter for an object of class '{@link org.emoflon.ibex.tgg.integrate.integrate.Import <em>Import</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see org.emoflon.ibex.tgg.integrate.integrate.Greeting
+   * @see org.emoflon.ibex.tgg.integrate.integrate.Import
    * @generated
    */
-  public Adapter createGreetingAdapter()
+  public Adapter createImportAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.emoflon.ibex.tgg.integrate.integrate.ConflictResolutionStrategy <em>Conflict Resolution Strategy</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.ConflictResolutionStrategy
+   * @generated
+   */
+  public Adapter createConflictResolutionStrategyAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.emoflon.ibex.tgg.integrate.integrate.Variable <em>Variable</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.Variable
+   * @generated
+   */
+  public Adapter createVariableAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.emoflon.ibex.tgg.integrate.integrate.Pipeline <em>Pipeline</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.Pipeline
+   * @generated
+   */
+  public Adapter createPipelineAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.emoflon.ibex.tgg.integrate.integrate.PipelineStage <em>Pipeline Stage</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.PipelineStage
+   * @generated
+   */
+  public Adapter createPipelineStageAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.emoflon.ibex.tgg.integrate.integrate.PipelineFilterStage <em>Pipeline Filter Stage</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.PipelineFilterStage
+   * @generated
+   */
+  public Adapter createPipelineFilterStageAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.emoflon.ibex.tgg.integrate.integrate.PipelineTypeFilterStage <em>Pipeline Type Filter Stage</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.PipelineTypeFilterStage
+   * @generated
+   */
+  public Adapter createPipelineTypeFilterStageAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.emoflon.ibex.tgg.integrate.integrate.SatisfactionRule <em>Satisfaction Rule</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.SatisfactionRule
+   * @generated
+   */
+  public Adapter createSatisfactionRuleAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.emoflon.ibex.tgg.integrate.integrate.And <em>And</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.And
+   * @generated
+   */
+  public Adapter createAndAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.emoflon.ibex.tgg.integrate.integrate.Or <em>Or</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.Or
+   * @generated
+   */
+  public Adapter createOrAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.emoflon.ibex.tgg.integrate.integrate.Comparison <em>Comparison</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.Comparison
+   * @generated
+   */
+  public Adapter createComparisonAdapter()
   {
     return null;
   }

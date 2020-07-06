@@ -7,21 +7,28 @@ import com.google.inject.Inject
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.extensions.InjectionExtension
 import org.eclipse.xtext.testing.util.ParseHelper
-import org.emoflon.ibex.tgg.integrate.integrate.Model
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.^extension.ExtendWith
+import org.emoflon.ibex.tgg.integrate.integrate.Integrate
 
 @ExtendWith(InjectionExtension)
 @InjectWith(IntegrateInjectorProvider)
 class IntegrateParsingTest {
 	@Inject
-	ParseHelper<Model> parseHelper
+	ParseHelper<Integrate> parseHelper
 	
 	@Test
 	def void loadModel() {
 		val result = parseHelper.parse('''
-			Hello Xtext!
+			solve conflict for all  {
+				var srcCount = #src | count
+				var trgCount = #trg | created | count
+				
+				satisfies {
+					srcCount < trgCount and 1 < trgCount or srcCount >= 1002
+				}
+			}
 		''')
 		Assertions.assertNotNull(result)
 		val errors = result.eResource.errors

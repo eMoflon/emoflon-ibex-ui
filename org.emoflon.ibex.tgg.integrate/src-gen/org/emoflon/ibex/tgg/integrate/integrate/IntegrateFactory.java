@@ -24,22 +24,112 @@ public interface IntegrateFactory extends EFactory
   IntegrateFactory eINSTANCE = org.emoflon.ibex.tgg.integrate.integrate.impl.IntegrateFactoryImpl.init();
 
   /**
-   * Returns a new object of class '<em>Model</em>'.
+   * Returns a new object of class '<em>Integrate</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Model</em>'.
+   * @return a new object of class '<em>Integrate</em>'.
    * @generated
    */
-  Model createModel();
+  Integrate createIntegrate();
 
   /**
-   * Returns a new object of class '<em>Greeting</em>'.
+   * Returns a new object of class '<em>Import</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Greeting</em>'.
+   * @return a new object of class '<em>Import</em>'.
    * @generated
    */
-  Greeting createGreeting();
+  Import createImport();
+
+  /**
+   * Returns a new object of class '<em>Conflict Resolution Strategy</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Conflict Resolution Strategy</em>'.
+   * @generated
+   */
+  ConflictResolutionStrategy createConflictResolutionStrategy();
+
+  /**
+   * Returns a new object of class '<em>Variable</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Variable</em>'.
+   * @generated
+   */
+  Variable createVariable();
+
+  /**
+   * Returns a new object of class '<em>Pipeline</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Pipeline</em>'.
+   * @generated
+   */
+  Pipeline createPipeline();
+
+  /**
+   * Returns a new object of class '<em>Pipeline Stage</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Pipeline Stage</em>'.
+   * @generated
+   */
+  PipelineStage createPipelineStage();
+
+  /**
+   * Returns a new object of class '<em>Pipeline Filter Stage</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Pipeline Filter Stage</em>'.
+   * @generated
+   */
+  PipelineFilterStage createPipelineFilterStage();
+
+  /**
+   * Returns a new object of class '<em>Pipeline Type Filter Stage</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Pipeline Type Filter Stage</em>'.
+   * @generated
+   */
+  PipelineTypeFilterStage createPipelineTypeFilterStage();
+
+  /**
+   * Returns a new object of class '<em>Satisfaction Rule</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Satisfaction Rule</em>'.
+   * @generated
+   */
+  SatisfactionRule createSatisfactionRule();
+
+  /**
+   * Returns a new object of class '<em>And</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>And</em>'.
+   * @generated
+   */
+  And createAnd();
+
+  /**
+   * Returns a new object of class '<em>Or</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Or</em>'.
+   * @generated
+   */
+  Or createOr();
+
+  /**
+   * Returns a new object of class '<em>Comparison</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Comparison</em>'.
+   * @generated
+   */
+  Comparison createComparison();
 
   /**
    * Returns the package supported by this factory.

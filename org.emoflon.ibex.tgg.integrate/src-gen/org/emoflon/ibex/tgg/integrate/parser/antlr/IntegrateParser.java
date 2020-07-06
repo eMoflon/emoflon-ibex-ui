@@ -27,7 +27,7 @@ public class IntegrateParser extends AbstractAntlrParser {
 
 	@Override 
 	protected String getDefaultRuleName() {
-		return "Model";
+		return "Integrate";
 	}
 
 	public IntegrateGrammarAccess getGrammarAccess() {

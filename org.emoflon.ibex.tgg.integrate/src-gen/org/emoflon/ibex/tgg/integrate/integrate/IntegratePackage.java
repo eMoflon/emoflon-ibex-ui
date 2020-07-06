@@ -58,42 +58,51 @@ public interface IntegratePackage extends EPackage
   IntegratePackage eINSTANCE = org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl.init();
 
   /**
-   * The meta object id for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.ModelImpl <em>Model</em>}' class.
+   * The meta object id for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.IntegrateImpl <em>Integrate</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.ModelImpl
-   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getModel()
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegrateImpl
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getIntegrate()
    * @generated
    */
-  int MODEL = 0;
+  int INTEGRATE = 0;
 
   /**
-   * The feature id for the '<em><b>Greetings</b></em>' containment reference list.
+   * The feature id for the '<em><b>Imports</b></em>' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int MODEL__GREETINGS = 0;
+  int INTEGRATE__IMPORTS = 0;
 
   /**
-   * The number of structural features of the '<em>Model</em>' class.
+   * The feature id for the '<em><b>Conflict Resolution Strategies</b></em>' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int MODEL_FEATURE_COUNT = 1;
+  int INTEGRATE__CONFLICT_RESOLUTION_STRATEGIES = 1;
 
   /**
-   * The meta object id for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.GreetingImpl <em>Greeting</em>}' class.
+   * The number of structural features of the '<em>Integrate</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.GreetingImpl
-   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getGreeting()
+   * @generated
+   * @ordered
+   */
+  int INTEGRATE_FEATURE_COUNT = 2;
+
+  /**
+   * The meta object id for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.ImportImpl <em>Import</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.ImportImpl
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getImport()
    * @generated
    */
-  int GREETING = 1;
+  int IMPORT = 1;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -102,59 +111,640 @@ public interface IntegratePackage extends EPackage
    * @generated
    * @ordered
    */
-  int GREETING__NAME = 0;
+  int IMPORT__NAME = 0;
 
   /**
-   * The number of structural features of the '<em>Greeting</em>' class.
+   * The number of structural features of the '<em>Import</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int GREETING_FEATURE_COUNT = 1;
-
+  int IMPORT_FEATURE_COUNT = 1;
 
   /**
-   * Returns the meta object for class '{@link org.emoflon.ibex.tgg.integrate.integrate.Model <em>Model</em>}'.
+   * The meta object id for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.ConflictResolutionStrategyImpl <em>Conflict Resolution Strategy</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Model</em>'.
-   * @see org.emoflon.ibex.tgg.integrate.integrate.Model
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.ConflictResolutionStrategyImpl
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getConflictResolutionStrategy()
    * @generated
    */
-  EClass getModel();
+  int CONFLICT_RESOLUTION_STRATEGY = 2;
 
   /**
-   * Returns the meta object for the containment reference list '{@link org.emoflon.ibex.tgg.integrate.integrate.Model#getGreetings <em>Greetings</em>}'.
+   * The feature id for the '<em><b>Variables</b></em>' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the containment reference list '<em>Greetings</em>'.
-   * @see org.emoflon.ibex.tgg.integrate.integrate.Model#getGreetings()
-   * @see #getModel()
    * @generated
+   * @ordered
    */
-  EReference getModel_Greetings();
+  int CONFLICT_RESOLUTION_STRATEGY__VARIABLES = 0;
 
   /**
-   * Returns the meta object for class '{@link org.emoflon.ibex.tgg.integrate.integrate.Greeting <em>Greeting</em>}'.
+   * The feature id for the '<em><b>Rule</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Greeting</em>'.
-   * @see org.emoflon.ibex.tgg.integrate.integrate.Greeting
    * @generated
+   * @ordered
    */
-  EClass getGreeting();
+  int CONFLICT_RESOLUTION_STRATEGY__RULE = 1;
 
   /**
-   * Returns the meta object for the attribute '{@link org.emoflon.ibex.tgg.integrate.integrate.Greeting#getName <em>Name</em>}'.
+   * The number of structural features of the '<em>Conflict Resolution Strategy</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CONFLICT_RESOLUTION_STRATEGY_FEATURE_COUNT = 2;
+
+  /**
+   * The meta object id for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.VariableImpl <em>Variable</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.VariableImpl
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getVariable()
+   * @generated
+   */
+  int VARIABLE = 3;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int VARIABLE__NAME = 0;
+
+  /**
+   * The feature id for the '<em><b>Pipeline</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int VARIABLE__PIPELINE = 1;
+
+  /**
+   * The number of structural features of the '<em>Variable</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int VARIABLE_FEATURE_COUNT = 2;
+
+  /**
+   * The meta object id for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineImpl <em>Pipeline</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineImpl
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getPipeline()
+   * @generated
+   */
+  int PIPELINE = 4;
+
+  /**
+   * The feature id for the '<em><b>First</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PIPELINE__FIRST = 0;
+
+  /**
+   * The feature id for the '<em><b>Next</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PIPELINE__NEXT = 1;
+
+  /**
+   * The number of structural features of the '<em>Pipeline</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PIPELINE_FEATURE_COUNT = 2;
+
+  /**
+   * The meta object id for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineStageImpl <em>Pipeline Stage</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineStageImpl
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getPipelineStage()
+   * @generated
+   */
+  int PIPELINE_STAGE = 5;
+
+  /**
+   * The number of structural features of the '<em>Pipeline Stage</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PIPELINE_STAGE_FEATURE_COUNT = 0;
+
+  /**
+   * The meta object id for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineFilterStageImpl <em>Pipeline Filter Stage</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineFilterStageImpl
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getPipelineFilterStage()
+   * @generated
+   */
+  int PIPELINE_FILTER_STAGE = 6;
+
+  /**
+   * The number of structural features of the '<em>Pipeline Filter Stage</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PIPELINE_FILTER_STAGE_FEATURE_COUNT = PIPELINE_STAGE_FEATURE_COUNT + 0;
+
+  /**
+   * The meta object id for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineTypeFilterStageImpl <em>Pipeline Type Filter Stage</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineTypeFilterStageImpl
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getPipelineTypeFilterStage()
+   * @generated
+   */
+  int PIPELINE_TYPE_FILTER_STAGE = 7;
+
+  /**
+   * The feature id for the '<em><b>Types</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PIPELINE_TYPE_FILTER_STAGE__TYPES = PIPELINE_FILTER_STAGE_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>Pipeline Type Filter Stage</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PIPELINE_TYPE_FILTER_STAGE_FEATURE_COUNT = PIPELINE_FILTER_STAGE_FEATURE_COUNT + 1;
+
+  /**
+   * The meta object id for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.SatisfactionRuleImpl <em>Satisfaction Rule</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.SatisfactionRuleImpl
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getSatisfactionRule()
+   * @generated
+   */
+  int SATISFACTION_RULE = 8;
+
+  /**
+   * The feature id for the '<em><b>First Rule</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int SATISFACTION_RULE__FIRST_RULE = 0;
+
+  /**
+   * The feature id for the '<em><b>Other Rules</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int SATISFACTION_RULE__OTHER_RULES = 1;
+
+  /**
+   * The number of structural features of the '<em>Satisfaction Rule</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int SATISFACTION_RULE_FEATURE_COUNT = 2;
+
+  /**
+   * The meta object id for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.AndImpl <em>And</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.AndImpl
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getAnd()
+   * @generated
+   */
+  int AND = 9;
+
+  /**
+   * The number of structural features of the '<em>And</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int AND_FEATURE_COUNT = 0;
+
+  /**
+   * The meta object id for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.OrImpl <em>Or</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.OrImpl
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getOr()
+   * @generated
+   */
+  int OR = 10;
+
+  /**
+   * The number of structural features of the '<em>Or</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int OR_FEATURE_COUNT = 0;
+
+  /**
+   * The meta object id for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.ComparisonImpl <em>Comparison</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.ComparisonImpl
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getComparison()
+   * @generated
+   */
+  int COMPARISON = 11;
+
+  /**
+   * The feature id for the '<em><b>V1</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int COMPARISON__V1 = AND_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>N1</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int COMPARISON__N1 = AND_FEATURE_COUNT + 1;
+
+  /**
+   * The feature id for the '<em><b>C1</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int COMPARISON__C1 = AND_FEATURE_COUNT + 2;
+
+  /**
+   * The feature id for the '<em><b>V2</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int COMPARISON__V2 = AND_FEATURE_COUNT + 3;
+
+  /**
+   * The feature id for the '<em><b>N2</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int COMPARISON__N2 = AND_FEATURE_COUNT + 4;
+
+  /**
+   * The number of structural features of the '<em>Comparison</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int COMPARISON_FEATURE_COUNT = AND_FEATURE_COUNT + 5;
+
+
+  /**
+   * Returns the meta object for class '{@link org.emoflon.ibex.tgg.integrate.integrate.Integrate <em>Integrate</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Integrate</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.Integrate
+   * @generated
+   */
+  EClass getIntegrate();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link org.emoflon.ibex.tgg.integrate.integrate.Integrate#getImports <em>Imports</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Imports</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.Integrate#getImports()
+   * @see #getIntegrate()
+   * @generated
+   */
+  EReference getIntegrate_Imports();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link org.emoflon.ibex.tgg.integrate.integrate.Integrate#getConflictResolutionStrategies <em>Conflict Resolution Strategies</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Conflict Resolution Strategies</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.Integrate#getConflictResolutionStrategies()
+   * @see #getIntegrate()
+   * @generated
+   */
+  EReference getIntegrate_ConflictResolutionStrategies();
+
+  /**
+   * Returns the meta object for class '{@link org.emoflon.ibex.tgg.integrate.integrate.Import <em>Import</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Import</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.Import
+   * @generated
+   */
+  EClass getImport();
+
+  /**
+   * Returns the meta object for the attribute '{@link org.emoflon.ibex.tgg.integrate.integrate.Import#getName <em>Name</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the attribute '<em>Name</em>'.
-   * @see org.emoflon.ibex.tgg.integrate.integrate.Greeting#getName()
-   * @see #getGreeting()
+   * @see org.emoflon.ibex.tgg.integrate.integrate.Import#getName()
+   * @see #getImport()
    * @generated
    */
-  EAttribute getGreeting_Name();
+  EAttribute getImport_Name();
+
+  /**
+   * Returns the meta object for class '{@link org.emoflon.ibex.tgg.integrate.integrate.ConflictResolutionStrategy <em>Conflict Resolution Strategy</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Conflict Resolution Strategy</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.ConflictResolutionStrategy
+   * @generated
+   */
+  EClass getConflictResolutionStrategy();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link org.emoflon.ibex.tgg.integrate.integrate.ConflictResolutionStrategy#getVariables <em>Variables</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Variables</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.ConflictResolutionStrategy#getVariables()
+   * @see #getConflictResolutionStrategy()
+   * @generated
+   */
+  EReference getConflictResolutionStrategy_Variables();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.emoflon.ibex.tgg.integrate.integrate.ConflictResolutionStrategy#getRule <em>Rule</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Rule</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.ConflictResolutionStrategy#getRule()
+   * @see #getConflictResolutionStrategy()
+   * @generated
+   */
+  EReference getConflictResolutionStrategy_Rule();
+
+  /**
+   * Returns the meta object for class '{@link org.emoflon.ibex.tgg.integrate.integrate.Variable <em>Variable</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Variable</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.Variable
+   * @generated
+   */
+  EClass getVariable();
+
+  /**
+   * Returns the meta object for the attribute '{@link org.emoflon.ibex.tgg.integrate.integrate.Variable#getName <em>Name</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Name</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.Variable#getName()
+   * @see #getVariable()
+   * @generated
+   */
+  EAttribute getVariable_Name();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.emoflon.ibex.tgg.integrate.integrate.Variable#getPipeline <em>Pipeline</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Pipeline</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.Variable#getPipeline()
+   * @see #getVariable()
+   * @generated
+   */
+  EReference getVariable_Pipeline();
+
+  /**
+   * Returns the meta object for class '{@link org.emoflon.ibex.tgg.integrate.integrate.Pipeline <em>Pipeline</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Pipeline</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.Pipeline
+   * @generated
+   */
+  EClass getPipeline();
+
+  /**
+   * Returns the meta object for the attribute '{@link org.emoflon.ibex.tgg.integrate.integrate.Pipeline#getFirst <em>First</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>First</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.Pipeline#getFirst()
+   * @see #getPipeline()
+   * @generated
+   */
+  EAttribute getPipeline_First();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link org.emoflon.ibex.tgg.integrate.integrate.Pipeline#getNext <em>Next</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Next</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.Pipeline#getNext()
+   * @see #getPipeline()
+   * @generated
+   */
+  EReference getPipeline_Next();
+
+  /**
+   * Returns the meta object for class '{@link org.emoflon.ibex.tgg.integrate.integrate.PipelineStage <em>Pipeline Stage</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Pipeline Stage</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.PipelineStage
+   * @generated
+   */
+  EClass getPipelineStage();
+
+  /**
+   * Returns the meta object for class '{@link org.emoflon.ibex.tgg.integrate.integrate.PipelineFilterStage <em>Pipeline Filter Stage</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Pipeline Filter Stage</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.PipelineFilterStage
+   * @generated
+   */
+  EClass getPipelineFilterStage();
+
+  /**
+   * Returns the meta object for class '{@link org.emoflon.ibex.tgg.integrate.integrate.PipelineTypeFilterStage <em>Pipeline Type Filter Stage</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Pipeline Type Filter Stage</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.PipelineTypeFilterStage
+   * @generated
+   */
+  EClass getPipelineTypeFilterStage();
+
+  /**
+   * Returns the meta object for the reference '{@link org.emoflon.ibex.tgg.integrate.integrate.PipelineTypeFilterStage#getTypes <em>Types</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the reference '<em>Types</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.PipelineTypeFilterStage#getTypes()
+   * @see #getPipelineTypeFilterStage()
+   * @generated
+   */
+  EReference getPipelineTypeFilterStage_Types();
+
+  /**
+   * Returns the meta object for class '{@link org.emoflon.ibex.tgg.integrate.integrate.SatisfactionRule <em>Satisfaction Rule</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Satisfaction Rule</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.SatisfactionRule
+   * @generated
+   */
+  EClass getSatisfactionRule();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.emoflon.ibex.tgg.integrate.integrate.SatisfactionRule#getFirstRule <em>First Rule</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>First Rule</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.SatisfactionRule#getFirstRule()
+   * @see #getSatisfactionRule()
+   * @generated
+   */
+  EReference getSatisfactionRule_FirstRule();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link org.emoflon.ibex.tgg.integrate.integrate.SatisfactionRule#getOtherRules <em>Other Rules</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Other Rules</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.SatisfactionRule#getOtherRules()
+   * @see #getSatisfactionRule()
+   * @generated
+   */
+  EReference getSatisfactionRule_OtherRules();
+
+  /**
+   * Returns the meta object for class '{@link org.emoflon.ibex.tgg.integrate.integrate.And <em>And</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>And</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.And
+   * @generated
+   */
+  EClass getAnd();
+
+  /**
+   * Returns the meta object for class '{@link org.emoflon.ibex.tgg.integrate.integrate.Or <em>Or</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Or</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.Or
+   * @generated
+   */
+  EClass getOr();
+
+  /**
+   * Returns the meta object for class '{@link org.emoflon.ibex.tgg.integrate.integrate.Comparison <em>Comparison</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Comparison</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.Comparison
+   * @generated
+   */
+  EClass getComparison();
+
+  /**
+   * Returns the meta object for the reference '{@link org.emoflon.ibex.tgg.integrate.integrate.Comparison#getV1 <em>V1</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the reference '<em>V1</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.Comparison#getV1()
+   * @see #getComparison()
+   * @generated
+   */
+  EReference getComparison_V1();
+
+  /**
+   * Returns the meta object for the attribute '{@link org.emoflon.ibex.tgg.integrate.integrate.Comparison#getN1 <em>N1</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>N1</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.Comparison#getN1()
+   * @see #getComparison()
+   * @generated
+   */
+  EAttribute getComparison_N1();
+
+  /**
+   * Returns the meta object for the attribute '{@link org.emoflon.ibex.tgg.integrate.integrate.Comparison#getC1 <em>C1</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>C1</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.Comparison#getC1()
+   * @see #getComparison()
+   * @generated
+   */
+  EAttribute getComparison_C1();
+
+  /**
+   * Returns the meta object for the reference '{@link org.emoflon.ibex.tgg.integrate.integrate.Comparison#getV2 <em>V2</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the reference '<em>V2</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.Comparison#getV2()
+   * @see #getComparison()
+   * @generated
+   */
+  EReference getComparison_V2();
+
+  /**
+   * Returns the meta object for the attribute '{@link org.emoflon.ibex.tgg.integrate.integrate.Comparison#getN2 <em>N2</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>N2</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.Comparison#getN2()
+   * @see #getComparison()
+   * @generated
+   */
+  EAttribute getComparison_N2();
 
   /**
    * Returns the factory that creates the instances of the model.
@@ -180,32 +770,40 @@ public interface IntegratePackage extends EPackage
   interface Literals
   {
     /**
-     * The meta object literal for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.ModelImpl <em>Model</em>}' class.
+     * The meta object literal for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.IntegrateImpl <em>Integrate</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.ModelImpl
-     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getModel()
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegrateImpl
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getIntegrate()
      * @generated
      */
-    EClass MODEL = eINSTANCE.getModel();
+    EClass INTEGRATE = eINSTANCE.getIntegrate();
 
     /**
-     * The meta object literal for the '<em><b>Greetings</b></em>' containment reference list feature.
+     * The meta object literal for the '<em><b>Imports</b></em>' containment reference list feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference MODEL__GREETINGS = eINSTANCE.getModel_Greetings();
+    EReference INTEGRATE__IMPORTS = eINSTANCE.getIntegrate_Imports();
 
     /**
-     * The meta object literal for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.GreetingImpl <em>Greeting</em>}' class.
+     * The meta object literal for the '<em><b>Conflict Resolution Strategies</b></em>' containment reference list feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.GreetingImpl
-     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getGreeting()
      * @generated
      */
-    EClass GREETING = eINSTANCE.getGreeting();
+    EReference INTEGRATE__CONFLICT_RESOLUTION_STRATEGIES = eINSTANCE.getIntegrate_ConflictResolutionStrategies();
+
+    /**
+     * The meta object literal for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.ImportImpl <em>Import</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.ImportImpl
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getImport()
+     * @generated
+     */
+    EClass IMPORT = eINSTANCE.getImport();
 
     /**
      * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
@@ -213,7 +811,219 @@ public interface IntegratePackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute GREETING__NAME = eINSTANCE.getGreeting_Name();
+    EAttribute IMPORT__NAME = eINSTANCE.getImport_Name();
+
+    /**
+     * The meta object literal for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.ConflictResolutionStrategyImpl <em>Conflict Resolution Strategy</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.ConflictResolutionStrategyImpl
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getConflictResolutionStrategy()
+     * @generated
+     */
+    EClass CONFLICT_RESOLUTION_STRATEGY = eINSTANCE.getConflictResolutionStrategy();
+
+    /**
+     * The meta object literal for the '<em><b>Variables</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference CONFLICT_RESOLUTION_STRATEGY__VARIABLES = eINSTANCE.getConflictResolutionStrategy_Variables();
+
+    /**
+     * The meta object literal for the '<em><b>Rule</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference CONFLICT_RESOLUTION_STRATEGY__RULE = eINSTANCE.getConflictResolutionStrategy_Rule();
+
+    /**
+     * The meta object literal for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.VariableImpl <em>Variable</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.VariableImpl
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getVariable()
+     * @generated
+     */
+    EClass VARIABLE = eINSTANCE.getVariable();
+
+    /**
+     * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute VARIABLE__NAME = eINSTANCE.getVariable_Name();
+
+    /**
+     * The meta object literal for the '<em><b>Pipeline</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference VARIABLE__PIPELINE = eINSTANCE.getVariable_Pipeline();
+
+    /**
+     * The meta object literal for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineImpl <em>Pipeline</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineImpl
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getPipeline()
+     * @generated
+     */
+    EClass PIPELINE = eINSTANCE.getPipeline();
+
+    /**
+     * The meta object literal for the '<em><b>First</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute PIPELINE__FIRST = eINSTANCE.getPipeline_First();
+
+    /**
+     * The meta object literal for the '<em><b>Next</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference PIPELINE__NEXT = eINSTANCE.getPipeline_Next();
+
+    /**
+     * The meta object literal for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineStageImpl <em>Pipeline Stage</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineStageImpl
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getPipelineStage()
+     * @generated
+     */
+    EClass PIPELINE_STAGE = eINSTANCE.getPipelineStage();
+
+    /**
+     * The meta object literal for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineFilterStageImpl <em>Pipeline Filter Stage</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineFilterStageImpl
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getPipelineFilterStage()
+     * @generated
+     */
+    EClass PIPELINE_FILTER_STAGE = eINSTANCE.getPipelineFilterStage();
+
+    /**
+     * The meta object literal for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineTypeFilterStageImpl <em>Pipeline Type Filter Stage</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineTypeFilterStageImpl
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getPipelineTypeFilterStage()
+     * @generated
+     */
+    EClass PIPELINE_TYPE_FILTER_STAGE = eINSTANCE.getPipelineTypeFilterStage();
+
+    /**
+     * The meta object literal for the '<em><b>Types</b></em>' reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference PIPELINE_TYPE_FILTER_STAGE__TYPES = eINSTANCE.getPipelineTypeFilterStage_Types();
+
+    /**
+     * The meta object literal for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.SatisfactionRuleImpl <em>Satisfaction Rule</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.SatisfactionRuleImpl
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getSatisfactionRule()
+     * @generated
+     */
+    EClass SATISFACTION_RULE = eINSTANCE.getSatisfactionRule();
+
+    /**
+     * The meta object literal for the '<em><b>First Rule</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference SATISFACTION_RULE__FIRST_RULE = eINSTANCE.getSatisfactionRule_FirstRule();
+
+    /**
+     * The meta object literal for the '<em><b>Other Rules</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference SATISFACTION_RULE__OTHER_RULES = eINSTANCE.getSatisfactionRule_OtherRules();
+
+    /**
+     * The meta object literal for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.AndImpl <em>And</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.AndImpl
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getAnd()
+     * @generated
+     */
+    EClass AND = eINSTANCE.getAnd();
+
+    /**
+     * The meta object literal for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.OrImpl <em>Or</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.OrImpl
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getOr()
+     * @generated
+     */
+    EClass OR = eINSTANCE.getOr();
+
+    /**
+     * The meta object literal for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.ComparisonImpl <em>Comparison</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.ComparisonImpl
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getComparison()
+     * @generated
+     */
+    EClass COMPARISON = eINSTANCE.getComparison();
+
+    /**
+     * The meta object literal for the '<em><b>V1</b></em>' reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference COMPARISON__V1 = eINSTANCE.getComparison_V1();
+
+    /**
+     * The meta object literal for the '<em><b>N1</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute COMPARISON__N1 = eINSTANCE.getComparison_N1();
+
+    /**
+     * The meta object literal for the '<em><b>C1</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute COMPARISON__C1 = eINSTANCE.getComparison_C1();
+
+    /**
+     * The meta object literal for the '<em><b>V2</b></em>' reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference COMPARISON__V2 = eINSTANCE.getComparison_V2();
+
+    /**
+     * The meta object literal for the '<em><b>N2</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute COMPARISON__N2 = eINSTANCE.getComparison_N2();
 
   }
 
