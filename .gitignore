@@ -1,4 +1,5 @@
 
 **/xtend-gen/
+**/src-gen/
 *.genmodel
 *.plugin.xml_gen
