@@ -43,11 +43,11 @@ PipelineStageTrg:
 ;
 
 PipelineStage:
-	PipelineFilterStage | PipelineCountStage
+	PipelineFilterStage | {PipelineStage} PipelineCountStage
 ;
 
 PipelineFilterStage:
-	PipelineCreatedFilterStage | PipelineDeletedFilterStage | PipelineTypeFilterStage
+	{PipelineFilterStage} PipelineCreatedFilterStage | {PipelineFilterStage} PipelineDeletedFilterStage | PipelineTypeFilterStage
 ;
 
 PipelineCreatedFilterStage:
