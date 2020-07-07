@@ -279,40 +279,66 @@ public class IntegrateGrammarAccess extends AbstractGrammarElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.integrate.Integrate.PipelineStage");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final RuleCall cPipelineFilterStageParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
-		private final RuleCall cPipelineCountStageParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
+		private final Action cPipelineStageAction_1_0 = (Action)cGroup_1.eContents().get(0);
+		private final RuleCall cPipelineCountStageParserRuleCall_1_1 = (RuleCall)cGroup_1.eContents().get(1);
 		
 		//PipelineStage:
-		//	PipelineFilterStage | PipelineCountStage;
+		//	PipelineFilterStage | {PipelineStage} PipelineCountStage;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//PipelineFilterStage | PipelineCountStage
+		//PipelineFilterStage | {PipelineStage} PipelineCountStage
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//PipelineFilterStage
 		public RuleCall getPipelineFilterStageParserRuleCall_0() { return cPipelineFilterStageParserRuleCall_0; }
 		
+		//{PipelineStage} PipelineCountStage
+		public Group getGroup_1() { return cGroup_1; }
+		
+		//{PipelineStage}
+		public Action getPipelineStageAction_1_0() { return cPipelineStageAction_1_0; }
+		
 		//PipelineCountStage
-		public RuleCall getPipelineCountStageParserRuleCall_1() { return cPipelineCountStageParserRuleCall_1; }
+		public RuleCall getPipelineCountStageParserRuleCall_1_1() { return cPipelineCountStageParserRuleCall_1_1; }
 	}
 	public class PipelineFilterStageElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.emoflon.ibex.tgg.integrate.Integrate.PipelineFilterStage");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
-		private final RuleCall cPipelineCreatedFilterStageParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
-		private final RuleCall cPipelineDeletedFilterStageParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
+		private final Action cPipelineFilterStageAction_0_0 = (Action)cGroup_0.eContents().get(0);
+		private final RuleCall cPipelineCreatedFilterStageParserRuleCall_0_1 = (RuleCall)cGroup_0.eContents().get(1);
+		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
+		private final Action cPipelineFilterStageAction_1_0 = (Action)cGroup_1.eContents().get(0);
+		private final RuleCall cPipelineDeletedFilterStageParserRuleCall_1_1 = (RuleCall)cGroup_1.eContents().get(1);
 		private final RuleCall cPipelineTypeFilterStageParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
 		
 		//PipelineFilterStage:
-		//	PipelineCreatedFilterStage | PipelineDeletedFilterStage | PipelineTypeFilterStage;
+		//	{PipelineFilterStage} PipelineCreatedFilterStage | {PipelineFilterStage} PipelineDeletedFilterStage |
+		//	PipelineTypeFilterStage;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//PipelineCreatedFilterStage | PipelineDeletedFilterStage | PipelineTypeFilterStage
+		//{PipelineFilterStage} PipelineCreatedFilterStage | {PipelineFilterStage} PipelineDeletedFilterStage |
+		//PipelineTypeFilterStage
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
+		//{PipelineFilterStage} PipelineCreatedFilterStage
+		public Group getGroup_0() { return cGroup_0; }
+		
+		//{PipelineFilterStage}
+		public Action getPipelineFilterStageAction_0_0() { return cPipelineFilterStageAction_0_0; }
+		
 		//PipelineCreatedFilterStage
-		public RuleCall getPipelineCreatedFilterStageParserRuleCall_0() { return cPipelineCreatedFilterStageParserRuleCall_0; }
+		public RuleCall getPipelineCreatedFilterStageParserRuleCall_0_1() { return cPipelineCreatedFilterStageParserRuleCall_0_1; }
+		
+		//{PipelineFilterStage} PipelineDeletedFilterStage
+		public Group getGroup_1() { return cGroup_1; }
+		
+		//{PipelineFilterStage}
+		public Action getPipelineFilterStageAction_1_0() { return cPipelineFilterStageAction_1_0; }
 		
 		//PipelineDeletedFilterStage
-		public RuleCall getPipelineDeletedFilterStageParserRuleCall_1() { return cPipelineDeletedFilterStageParserRuleCall_1; }
+		public RuleCall getPipelineDeletedFilterStageParserRuleCall_1_1() { return cPipelineDeletedFilterStageParserRuleCall_1_1; }
 		
 		//PipelineTypeFilterStage
 		public RuleCall getPipelineTypeFilterStageParserRuleCall_2() { return cPipelineTypeFilterStageParserRuleCall_2; }
@@ -697,7 +723,7 @@ public class IntegrateGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//PipelineStage:
-	//	PipelineFilterStage | PipelineCountStage;
+	//	PipelineFilterStage | {PipelineStage} PipelineCountStage;
 	public PipelineStageElements getPipelineStageAccess() {
 		return pPipelineStage;
 	}
@@ -707,7 +733,8 @@ public class IntegrateGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//PipelineFilterStage:
-	//	PipelineCreatedFilterStage | PipelineDeletedFilterStage | PipelineTypeFilterStage;
+	//	{PipelineFilterStage} PipelineCreatedFilterStage | {PipelineFilterStage} PipelineDeletedFilterStage |
+	//	PipelineTypeFilterStage;
 	public PipelineFilterStageElements getPipelineFilterStageAccess() {
 		return pPipelineFilterStage;
 	}

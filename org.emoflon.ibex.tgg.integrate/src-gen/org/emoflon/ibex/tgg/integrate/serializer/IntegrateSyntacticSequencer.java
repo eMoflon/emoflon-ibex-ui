@@ -21,14 +21,12 @@ import org.emoflon.ibex.tgg.integrate.services.IntegrateGrammarAccess;
 public class IntegrateSyntacticSequencer extends AbstractSyntacticSequencer {
 
 	protected IntegrateGrammarAccess grammarAccess;
-	protected AbstractElementAlias match_PipelineFilterStage_PipelineCreatedFilterStageParserRuleCall_0_or_PipelineDeletedFilterStageParserRuleCall_1;
-	protected AbstractElementAlias match_PipelineFilterStage_PipelineStage_PipelineCountStageParserRuleCall_1_or_PipelineCreatedFilterStageParserRuleCall_0_or_PipelineDeletedFilterStageParserRuleCall_1;
+	protected AbstractElementAlias match_PipelineFilterStage_PipelineCreatedFilterStageParserRuleCall_0_1_or_PipelineDeletedFilterStageParserRuleCall_1_1;
 	
 	@Inject
 	protected void init(IGrammarAccess access) {
 		grammarAccess = (IntegrateGrammarAccess) access;
-		match_PipelineFilterStage_PipelineCreatedFilterStageParserRuleCall_0_or_PipelineDeletedFilterStageParserRuleCall_1 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getPipelineFilterStageAccess().getPipelineCreatedFilterStageParserRuleCall_0()), new TokenAlias(false, false, grammarAccess.getPipelineFilterStageAccess().getPipelineDeletedFilterStageParserRuleCall_1()));
-		match_PipelineFilterStage_PipelineStage_PipelineCountStageParserRuleCall_1_or_PipelineCreatedFilterStageParserRuleCall_0_or_PipelineDeletedFilterStageParserRuleCall_1 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getPipelineFilterStageAccess().getPipelineCreatedFilterStageParserRuleCall_0()), new TokenAlias(false, false, grammarAccess.getPipelineFilterStageAccess().getPipelineDeletedFilterStageParserRuleCall_1()), new TokenAlias(false, false, grammarAccess.getPipelineStageAccess().getPipelineCountStageParserRuleCall_1()));
+		match_PipelineFilterStage_PipelineCreatedFilterStageParserRuleCall_0_1_or_PipelineDeletedFilterStageParserRuleCall_1_1 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getPipelineFilterStageAccess().getPipelineCreatedFilterStageParserRuleCall_0_1()), new TokenAlias(false, false, grammarAccess.getPipelineFilterStageAccess().getPipelineDeletedFilterStageParserRuleCall_1_1()));
 	}
 	
 	@Override
@@ -81,10 +79,8 @@ public class IntegrateSyntacticSequencer extends AbstractSyntacticSequencer {
 		List<INode> transitionNodes = collectNodes(fromNode, toNode);
 		for (AbstractElementAlias syntax : transition.getAmbiguousSyntaxes()) {
 			List<INode> syntaxNodes = getNodesFor(transitionNodes, syntax);
-			if (match_PipelineFilterStage_PipelineCreatedFilterStageParserRuleCall_0_or_PipelineDeletedFilterStageParserRuleCall_1.equals(syntax))
-				emit_PipelineFilterStage_PipelineCreatedFilterStageParserRuleCall_0_or_PipelineDeletedFilterStageParserRuleCall_1(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if (match_PipelineFilterStage_PipelineStage_PipelineCountStageParserRuleCall_1_or_PipelineCreatedFilterStageParserRuleCall_0_or_PipelineDeletedFilterStageParserRuleCall_1.equals(syntax))
-				emit_PipelineFilterStage_PipelineStage_PipelineCountStageParserRuleCall_1_or_PipelineCreatedFilterStageParserRuleCall_0_or_PipelineDeletedFilterStageParserRuleCall_1(semanticObject, getLastNavigableState(), syntaxNodes);
+			if (match_PipelineFilterStage_PipelineCreatedFilterStageParserRuleCall_0_1_or_PipelineDeletedFilterStageParserRuleCall_1_1.equals(syntax))
+				emit_PipelineFilterStage_PipelineCreatedFilterStageParserRuleCall_0_1_or_PipelineDeletedFilterStageParserRuleCall_1_1(semanticObject, getLastNavigableState(), syntaxNodes);
 			else acceptNodes(getLastNavigableState(), syntaxNodes);
 		}
 	}
@@ -96,18 +92,7 @@ public class IntegrateSyntacticSequencer extends AbstractSyntacticSequencer {
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) (ambiguity) (rule start)
 	 */
-	protected void emit_PipelineFilterStage_PipelineCreatedFilterStageParserRuleCall_0_or_PipelineDeletedFilterStageParserRuleCall_1(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
-		acceptNodes(transition, nodes);
-	}
-	
-	/**
-	 * Ambiguous syntax:
-	 *     PipelineCountStage | PipelineCreatedFilterStage | PipelineDeletedFilterStage
-	 *
-	 * This ambiguous syntax occurs at:
-	 *     (rule start) (ambiguity) (rule start)
-	 */
-	protected void emit_PipelineFilterStage_PipelineStage_PipelineCountStageParserRuleCall_1_or_PipelineCreatedFilterStageParserRuleCall_0_or_PipelineDeletedFilterStageParserRuleCall_1(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+	protected void emit_PipelineFilterStage_PipelineCreatedFilterStageParserRuleCall_0_1_or_PipelineDeletedFilterStageParserRuleCall_1_1(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	

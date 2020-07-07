@@ -20,6 +20,8 @@ import org.emoflon.ibex.tgg.integrate.integrate.Import;
 import org.emoflon.ibex.tgg.integrate.integrate.Integrate;
 import org.emoflon.ibex.tgg.integrate.integrate.IntegratePackage;
 import org.emoflon.ibex.tgg.integrate.integrate.Pipeline;
+import org.emoflon.ibex.tgg.integrate.integrate.PipelineFilterStage;
+import org.emoflon.ibex.tgg.integrate.integrate.PipelineStage;
 import org.emoflon.ibex.tgg.integrate.integrate.PipelineTypeFilterStage;
 import org.emoflon.ibex.tgg.integrate.integrate.SatisfactionRule;
 import org.emoflon.ibex.tgg.integrate.integrate.Variable;
@@ -53,6 +55,12 @@ public class IntegrateSemanticSequencer extends AbstractDelegatingSemanticSequen
 				return; 
 			case IntegratePackage.PIPELINE:
 				sequence_Pipeline(context, (Pipeline) semanticObject); 
+				return; 
+			case IntegratePackage.PIPELINE_FILTER_STAGE:
+				sequence_PipelineFilterStage(context, (PipelineFilterStage) semanticObject); 
+				return; 
+			case IntegratePackage.PIPELINE_STAGE:
+				sequence_PipelineStage(context, (PipelineStage) semanticObject); 
 				return; 
 			case IntegratePackage.PIPELINE_TYPE_FILTER_STAGE:
 				sequence_PipelineTypeFilterStage(context, (PipelineTypeFilterStage) semanticObject); 
@@ -120,6 +128,31 @@ public class IntegrateSemanticSequencer extends AbstractDelegatingSemanticSequen
 	 *     ((imports+=Import+ conflictResolutionStrategies+=ConflictResolutionStrategy+) | conflictResolutionStrategies+=ConflictResolutionStrategy+)?
 	 */
 	protected void sequence_Integrate(ISerializationContext context, Integrate semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     PipelineStage returns PipelineFilterStage
+	 *     PipelineFilterStage returns PipelineFilterStage
+	 *
+	 * Constraint:
+	 *     {PipelineFilterStage}
+	 */
+	protected void sequence_PipelineFilterStage(ISerializationContext context, PipelineFilterStage semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     PipelineStage returns PipelineStage
+	 *
+	 * Constraint:
+	 *     {PipelineStage}
+	 */
+	protected void sequence_PipelineStage(ISerializationContext context, PipelineStage semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

@@ -472,13 +472,22 @@ rulePipelineStage returns [EObject current=null]
 			afterParserOrEnumRuleCall();
 		}
 		    |
-		{
-			newCompositeNode(grammarAccess.getPipelineStageAccess().getPipelineCountStageParserRuleCall_1());
-		}
-		rulePipelineCountStage
-		{
-			afterParserOrEnumRuleCall();
-		}
+		(
+			(
+				{
+					$current = forceCreateModelElement(
+						grammarAccess.getPipelineStageAccess().getPipelineStageAction_1_0(),
+						$current);
+				}
+			)
+			{
+				newCompositeNode(grammarAccess.getPipelineStageAccess().getPipelineCountStageParserRuleCall_1_1());
+			}
+			rulePipelineCountStage
+			{
+				afterParserOrEnumRuleCall();
+			}
+		)
 	)
 ;
 
@@ -498,28 +507,46 @@ rulePipelineFilterStage returns [EObject current=null]
 	leaveRule();
 }:
 	(
-		{
-			newCompositeNode(grammarAccess.getPipelineFilterStageAccess().getPipelineCreatedFilterStageParserRuleCall_0());
-		}
-		rulePipelineCreatedFilterStage
-		{
-			afterParserOrEnumRuleCall();
-		}
+		(
+			(
+				{
+					$current = forceCreateModelElement(
+						grammarAccess.getPipelineFilterStageAccess().getPipelineFilterStageAction_0_0(),
+						$current);
+				}
+			)
+			{
+				newCompositeNode(grammarAccess.getPipelineFilterStageAccess().getPipelineCreatedFilterStageParserRuleCall_0_1());
+			}
+			rulePipelineCreatedFilterStage
+			{
+				afterParserOrEnumRuleCall();
+			}
+		)
 		    |
-		{
-			newCompositeNode(grammarAccess.getPipelineFilterStageAccess().getPipelineDeletedFilterStageParserRuleCall_1());
-		}
-		rulePipelineDeletedFilterStage
-		{
-			afterParserOrEnumRuleCall();
-		}
+		(
+			(
+				{
+					$current = forceCreateModelElement(
+						grammarAccess.getPipelineFilterStageAccess().getPipelineFilterStageAction_1_0(),
+						$current);
+				}
+			)
+			{
+				newCompositeNode(grammarAccess.getPipelineFilterStageAccess().getPipelineDeletedFilterStageParserRuleCall_1_1());
+			}
+			rulePipelineDeletedFilterStage
+			{
+				afterParserOrEnumRuleCall();
+			}
+		)
 		    |
 		{
 			newCompositeNode(grammarAccess.getPipelineFilterStageAccess().getPipelineTypeFilterStageParserRuleCall_2());
 		}
-		this_PipelineTypeFilterStage_2=rulePipelineTypeFilterStage
+		this_PipelineTypeFilterStage_4=rulePipelineTypeFilterStage
 		{
-			$current = $this_PipelineTypeFilterStage_2.current;
+			$current = $this_PipelineTypeFilterStage_4.current;
 			afterParserOrEnumRuleCall();
 		}
 	)

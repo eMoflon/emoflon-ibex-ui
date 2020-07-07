@@ -46,6 +46,9 @@ public class IntegrateParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getVariableAccess().getGroup(), "rule__Variable__Group__0");
 			builder.put(grammarAccess.getPipelineAccess().getGroup(), "rule__Pipeline__Group__0");
 			builder.put(grammarAccess.getPipelineAccess().getGroup_1(), "rule__Pipeline__Group_1__0");
+			builder.put(grammarAccess.getPipelineStageAccess().getGroup_1(), "rule__PipelineStage__Group_1__0");
+			builder.put(grammarAccess.getPipelineFilterStageAccess().getGroup_0(), "rule__PipelineFilterStage__Group_0__0");
+			builder.put(grammarAccess.getPipelineFilterStageAccess().getGroup_1(), "rule__PipelineFilterStage__Group_1__0");
 			builder.put(grammarAccess.getPipelineTypeFilterStageAccess().getGroup(), "rule__PipelineTypeFilterStage__Group__0");
 			builder.put(grammarAccess.getSatisfactionRuleAccess().getGroup(), "rule__SatisfactionRule__Group__0");
 			builder.put(grammarAccess.getAndAccess().getGroup(), "rule__And__Group__0");
