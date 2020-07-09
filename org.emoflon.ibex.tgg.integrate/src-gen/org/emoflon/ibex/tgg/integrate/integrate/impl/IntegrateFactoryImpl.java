@@ -70,13 +70,19 @@ public class IntegrateFactoryImpl extends EFactoryImpl implements IntegrateFacto
       case IntegratePackage.CONFLICT_RESOLUTION_STRATEGY: return createConflictResolutionStrategy();
       case IntegratePackage.VARIABLE: return createVariable();
       case IntegratePackage.PIPELINE: return createPipeline();
+      case IntegratePackage.PIPELINE_STAGE_SRC: return createPipelineStageSrc();
+      case IntegratePackage.PIPELINE_STAGE_TRG: return createPipelineStageTrg();
       case IntegratePackage.PIPELINE_STAGE: return createPipelineStage();
       case IntegratePackage.PIPELINE_FILTER_STAGE: return createPipelineFilterStage();
+      case IntegratePackage.PIPELINE_CREATED_FILTER_STAGE: return createPipelineCreatedFilterStage();
+      case IntegratePackage.PIPELINE_DELETED_FILTER_STAGE: return createPipelineDeletedFilterStage();
       case IntegratePackage.PIPELINE_TYPE_FILTER_STAGE: return createPipelineTypeFilterStage();
+      case IntegratePackage.PIPELINE_COUNT_STAGE: return createPipelineCountStage();
       case IntegratePackage.SATISFACTION_RULE: return createSatisfactionRule();
       case IntegratePackage.AND: return createAnd();
       case IntegratePackage.OR: return createOr();
       case IntegratePackage.COMPARISON: return createComparison();
+      case IntegratePackage.RESOLUTION_STRATEGY: return createResolutionStrategy();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
     }
@@ -148,6 +154,30 @@ public class IntegrateFactoryImpl extends EFactoryImpl implements IntegrateFacto
    * @generated
    */
   @Override
+  public PipelineStageSrc createPipelineStageSrc()
+  {
+    PipelineStageSrcImpl pipelineStageSrc = new PipelineStageSrcImpl();
+    return pipelineStageSrc;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public PipelineStageTrg createPipelineStageTrg()
+  {
+    PipelineStageTrgImpl pipelineStageTrg = new PipelineStageTrgImpl();
+    return pipelineStageTrg;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public PipelineStage createPipelineStage()
   {
     PipelineStageImpl pipelineStage = new PipelineStageImpl();
@@ -172,10 +202,46 @@ public class IntegrateFactoryImpl extends EFactoryImpl implements IntegrateFacto
    * @generated
    */
   @Override
+  public PipelineCreatedFilterStage createPipelineCreatedFilterStage()
+  {
+    PipelineCreatedFilterStageImpl pipelineCreatedFilterStage = new PipelineCreatedFilterStageImpl();
+    return pipelineCreatedFilterStage;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public PipelineDeletedFilterStage createPipelineDeletedFilterStage()
+  {
+    PipelineDeletedFilterStageImpl pipelineDeletedFilterStage = new PipelineDeletedFilterStageImpl();
+    return pipelineDeletedFilterStage;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public PipelineTypeFilterStage createPipelineTypeFilterStage()
   {
     PipelineTypeFilterStageImpl pipelineTypeFilterStage = new PipelineTypeFilterStageImpl();
     return pipelineTypeFilterStage;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public PipelineCountStage createPipelineCountStage()
+  {
+    PipelineCountStageImpl pipelineCountStage = new PipelineCountStageImpl();
+    return pipelineCountStage;
   }
 
   /**
@@ -224,6 +290,18 @@ public class IntegrateFactoryImpl extends EFactoryImpl implements IntegrateFacto
   {
     ComparisonImpl comparison = new ComparisonImpl();
     return comparison;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public ResolutionStrategy createResolutionStrategy()
+  {
+    ResolutionStrategyImpl resolutionStrategy = new ResolutionStrategyImpl();
+    return resolutionStrategy;
   }
 
   /**

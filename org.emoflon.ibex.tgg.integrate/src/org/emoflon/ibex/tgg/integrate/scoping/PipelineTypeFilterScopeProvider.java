@@ -18,6 +18,7 @@ import org.eclipse.xtext.scoping.impl.SimpleScope;
 import org.emoflon.ibex.tgg.integrate.integrate.Import;
 import org.emoflon.ibex.tgg.integrate.integrate.Integrate;
 import org.emoflon.ibex.tgg.integrate.integrate.PipelineTypeFilterStage;
+import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile;
 
 public class PipelineTypeFilterScopeProvider {
 
@@ -26,7 +27,6 @@ public class PipelineTypeFilterScopeProvider {
 		Integrate integrate = getIntegrate(stage);
 		return buildScopeFromImports(integrate.getImports());
 	}
-	
 
 	private Integrate getIntegrate(PipelineTypeFilterStage stage) {
 		return (Integrate) stage.eContainer().eContainer().eContainer().eContainer();
@@ -34,11 +34,18 @@ public class PipelineTypeFilterScopeProvider {
 
 	private IScope buildScopeFromImports(EList<Import> imports) {
 		ResourceSet resourceSet = new ResourceSetImpl();
-		Set<EClassifier> types = imports.stream().map(imp -> URI.createURI(imp.getName())).map(uri -> resourceSet.getResource(uri, true))
+		
+		Set<EClassifier> types = imports.stream()
+				.map(imp -> imp.getRule())
+				.map(rule -> rule.getSchema())
+				.map(schema -> (TripleGraphGrammarFile) schema.eContainer())
+				.flatMap(tggFile -> tggFile.getImports().stream())
+				.map(imp -> URI.createURI(imp.getName()))
+				.map(uri -> resourceSet.getResource(uri, true))
 				.map(resource -> (EPackage) resource.getContents().get(0))
 				.flatMap(pkg -> EcoreUtil2.getAllContentsOfType(pkg, EClassifier.class).stream())
 				.collect(Collectors.toSet());
-		
+
 		return new SimpleScope(
 				Scopes.scopeFor(types), 
 				Scopes.scopedElementsFor(types, new DefaultDeclarativeQualifiedNameProvider()));

@@ -108,6 +108,20 @@ public class IntegrateSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case IntegratePackage.PIPELINE_STAGE_SRC:
+      {
+        PipelineStageSrc pipelineStageSrc = (PipelineStageSrc)theEObject;
+        T result = casePipelineStageSrc(pipelineStageSrc);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case IntegratePackage.PIPELINE_STAGE_TRG:
+      {
+        PipelineStageTrg pipelineStageTrg = (PipelineStageTrg)theEObject;
+        T result = casePipelineStageTrg(pipelineStageTrg);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case IntegratePackage.PIPELINE_STAGE:
       {
         PipelineStage pipelineStage = (PipelineStage)theEObject;
@@ -123,12 +137,38 @@ public class IntegrateSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case IntegratePackage.PIPELINE_CREATED_FILTER_STAGE:
+      {
+        PipelineCreatedFilterStage pipelineCreatedFilterStage = (PipelineCreatedFilterStage)theEObject;
+        T result = casePipelineCreatedFilterStage(pipelineCreatedFilterStage);
+        if (result == null) result = casePipelineFilterStage(pipelineCreatedFilterStage);
+        if (result == null) result = casePipelineStage(pipelineCreatedFilterStage);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case IntegratePackage.PIPELINE_DELETED_FILTER_STAGE:
+      {
+        PipelineDeletedFilterStage pipelineDeletedFilterStage = (PipelineDeletedFilterStage)theEObject;
+        T result = casePipelineDeletedFilterStage(pipelineDeletedFilterStage);
+        if (result == null) result = casePipelineFilterStage(pipelineDeletedFilterStage);
+        if (result == null) result = casePipelineStage(pipelineDeletedFilterStage);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case IntegratePackage.PIPELINE_TYPE_FILTER_STAGE:
       {
         PipelineTypeFilterStage pipelineTypeFilterStage = (PipelineTypeFilterStage)theEObject;
         T result = casePipelineTypeFilterStage(pipelineTypeFilterStage);
         if (result == null) result = casePipelineFilterStage(pipelineTypeFilterStage);
         if (result == null) result = casePipelineStage(pipelineTypeFilterStage);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case IntegratePackage.PIPELINE_COUNT_STAGE:
+      {
+        PipelineCountStage pipelineCountStage = (PipelineCountStage)theEObject;
+        T result = casePipelineCountStage(pipelineCountStage);
+        if (result == null) result = casePipelineStage(pipelineCountStage);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -159,6 +199,13 @@ public class IntegrateSwitch<T> extends Switch<T>
         T result = caseComparison(comparison);
         if (result == null) result = caseAnd(comparison);
         if (result == null) result = caseOr(comparison);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case IntegratePackage.RESOLUTION_STRATEGY:
+      {
+        ResolutionStrategy resolutionStrategy = (ResolutionStrategy)theEObject;
+        T result = caseResolutionStrategy(resolutionStrategy);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -247,6 +294,38 @@ public class IntegrateSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>Pipeline Stage Src</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Pipeline Stage Src</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T casePipelineStageSrc(PipelineStageSrc object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Pipeline Stage Trg</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Pipeline Stage Trg</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T casePipelineStageTrg(PipelineStageTrg object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>Pipeline Stage</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -279,6 +358,38 @@ public class IntegrateSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>Pipeline Created Filter Stage</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Pipeline Created Filter Stage</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T casePipelineCreatedFilterStage(PipelineCreatedFilterStage object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Pipeline Deleted Filter Stage</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Pipeline Deleted Filter Stage</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T casePipelineDeletedFilterStage(PipelineDeletedFilterStage object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>Pipeline Type Filter Stage</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -290,6 +401,22 @@ public class IntegrateSwitch<T> extends Switch<T>
    * @generated
    */
   public T casePipelineTypeFilterStage(PipelineTypeFilterStage object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Pipeline Count Stage</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Pipeline Count Stage</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T casePipelineCountStage(PipelineCountStage object)
   {
     return null;
   }
@@ -354,6 +481,22 @@ public class IntegrateSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseComparison(Comparison object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Resolution Strategy</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Resolution Strategy</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseResolutionStrategy(ResolutionStrategy object)
   {
     return null;
   }

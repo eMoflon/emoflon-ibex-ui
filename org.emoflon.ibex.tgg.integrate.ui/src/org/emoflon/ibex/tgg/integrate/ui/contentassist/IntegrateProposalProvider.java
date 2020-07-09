@@ -3,8 +3,10 @@
  */
 package org.emoflon.ibex.tgg.integrate.ui.contentassist;
 
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.Assignment;
+import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
 import org.moflon.core.utilities.WorkspaceSearch;
@@ -17,10 +19,12 @@ import org.moflon.core.utilities.WorkspaceSearch;
 public class IntegrateProposalProvider extends AbstractIntegrateProposalProvider {
 
 	@Override
-	public void completeImport_Name(EObject model, Assignment assignment, ContentAssistContext context,
+	public void complete_Import(EObject model, RuleCall ruleCall, ContentAssistContext context,
 			ICompletionProposalAcceptor acceptor) {
+
+		
 		WorkspaceSearch.getEcoreURIsInWorkspace(null).stream()
-				.map(uri -> "\"" + uri +"\"")
+				.map(uri -> "\"" + uri + "\"")
 				.map(uri -> createCompletionProposal(uri, context))
 				.forEach(acceptor::accept);
 	}

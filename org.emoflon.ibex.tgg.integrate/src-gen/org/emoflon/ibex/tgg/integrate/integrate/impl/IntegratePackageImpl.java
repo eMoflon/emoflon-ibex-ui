@@ -19,11 +19,19 @@ import org.emoflon.ibex.tgg.integrate.integrate.IntegrateFactory;
 import org.emoflon.ibex.tgg.integrate.integrate.IntegratePackage;
 import org.emoflon.ibex.tgg.integrate.integrate.Or;
 import org.emoflon.ibex.tgg.integrate.integrate.Pipeline;
+import org.emoflon.ibex.tgg.integrate.integrate.PipelineCountStage;
+import org.emoflon.ibex.tgg.integrate.integrate.PipelineCreatedFilterStage;
+import org.emoflon.ibex.tgg.integrate.integrate.PipelineDeletedFilterStage;
 import org.emoflon.ibex.tgg.integrate.integrate.PipelineFilterStage;
 import org.emoflon.ibex.tgg.integrate.integrate.PipelineStage;
+import org.emoflon.ibex.tgg.integrate.integrate.PipelineStageSrc;
+import org.emoflon.ibex.tgg.integrate.integrate.PipelineStageTrg;
 import org.emoflon.ibex.tgg.integrate.integrate.PipelineTypeFilterStage;
+import org.emoflon.ibex.tgg.integrate.integrate.ResolutionStrategy;
 import org.emoflon.ibex.tgg.integrate.integrate.SatisfactionRule;
 import org.emoflon.ibex.tgg.integrate.integrate.Variable;
+
+import org.moflon.tgg.mosl.tgg.TggPackage;
 
 /**
  * <!-- begin-user-doc -->
@@ -73,6 +81,20 @@ public class IntegratePackageImpl extends EPackageImpl implements IntegratePacka
    * <!-- end-user-doc -->
    * @generated
    */
+  private EClass pipelineStageSrcEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass pipelineStageTrgEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   private EClass pipelineStageEClass = null;
 
   /**
@@ -87,7 +109,28 @@ public class IntegratePackageImpl extends EPackageImpl implements IntegratePacka
    * <!-- end-user-doc -->
    * @generated
    */
+  private EClass pipelineCreatedFilterStageEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass pipelineDeletedFilterStageEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   private EClass pipelineTypeFilterStageEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass pipelineCountStageEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -116,6 +159,13 @@ public class IntegratePackageImpl extends EPackageImpl implements IntegratePacka
    * @generated
    */
   private EClass comparisonEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass resolutionStrategyEClass = null;
 
   /**
    * Creates an instance of the model <b>Package</b>, registered with
@@ -165,6 +215,9 @@ public class IntegratePackageImpl extends EPackageImpl implements IntegratePacka
     IntegratePackageImpl theIntegratePackage = registeredIntegratePackage instanceof IntegratePackageImpl ? (IntegratePackageImpl)registeredIntegratePackage : new IntegratePackageImpl();
 
     isInited = true;
+
+    // Initialize simple dependencies
+    TggPackage.eINSTANCE.eClass();
 
     // Create package meta-data objects
     theIntegratePackage.createPackageContents();
@@ -230,9 +283,9 @@ public class IntegratePackageImpl extends EPackageImpl implements IntegratePacka
    * @generated
    */
   @Override
-  public EAttribute getImport_Name()
+  public EReference getImport_Rule()
   {
-    return (EAttribute)importEClass.getEStructuralFeatures().get(0);
+    return (EReference)importEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -266,6 +319,17 @@ public class IntegratePackageImpl extends EPackageImpl implements IntegratePacka
   public EReference getConflictResolutionStrategy_Rule()
   {
     return (EReference)conflictResolutionStrategyEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getConflictResolutionStrategy_ResolutionStrategy()
+  {
+    return (EReference)conflictResolutionStrategyEClass.getEStructuralFeatures().get(2);
   }
 
   /**
@@ -318,9 +382,9 @@ public class IntegratePackageImpl extends EPackageImpl implements IntegratePacka
    * @generated
    */
   @Override
-  public EAttribute getPipeline_First()
+  public EReference getPipeline_First()
   {
-    return (EAttribute)pipelineEClass.getEStructuralFeatures().get(0);
+    return (EReference)pipelineEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -340,9 +404,64 @@ public class IntegratePackageImpl extends EPackageImpl implements IntegratePacka
    * @generated
    */
   @Override
+  public EClass getPipelineStageSrc()
+  {
+    return pipelineStageSrcEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EAttribute getPipelineStageSrc_Name()
+  {
+    return (EAttribute)pipelineStageSrcEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EClass getPipelineStageTrg()
+  {
+    return pipelineStageTrgEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EAttribute getPipelineStageTrg_Name()
+  {
+    return (EAttribute)pipelineStageTrgEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public EClass getPipelineStage()
   {
     return pipelineStageEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EAttribute getPipelineStage_Name()
+  {
+    return (EAttribute)pipelineStageEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -362,6 +481,28 @@ public class IntegratePackageImpl extends EPackageImpl implements IntegratePacka
    * @generated
    */
   @Override
+  public EClass getPipelineCreatedFilterStage()
+  {
+    return pipelineCreatedFilterStageEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EClass getPipelineDeletedFilterStage()
+  {
+    return pipelineDeletedFilterStageEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public EClass getPipelineTypeFilterStage()
   {
     return pipelineTypeFilterStageEClass;
@@ -373,9 +514,20 @@ public class IntegratePackageImpl extends EPackageImpl implements IntegratePacka
    * @generated
    */
   @Override
-  public EReference getPipelineTypeFilterStage_Types()
+  public EReference getPipelineTypeFilterStage_Type()
   {
     return (EReference)pipelineTypeFilterStageEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EClass getPipelineCountStage()
+  {
+    return pipelineCountStageEClass;
   }
 
   /**
@@ -505,6 +657,28 @@ public class IntegratePackageImpl extends EPackageImpl implements IntegratePacka
    * @generated
    */
   @Override
+  public EClass getResolutionStrategy()
+  {
+    return resolutionStrategyEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EAttribute getResolutionStrategy_Name()
+  {
+    return (EAttribute)resolutionStrategyEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public IntegrateFactory getIntegrateFactory()
   {
     return (IntegrateFactory)getEFactoryInstance();
@@ -535,26 +709,40 @@ public class IntegratePackageImpl extends EPackageImpl implements IntegratePacka
     createEReference(integrateEClass, INTEGRATE__CONFLICT_RESOLUTION_STRATEGIES);
 
     importEClass = createEClass(IMPORT);
-    createEAttribute(importEClass, IMPORT__NAME);
+    createEReference(importEClass, IMPORT__RULE);
 
     conflictResolutionStrategyEClass = createEClass(CONFLICT_RESOLUTION_STRATEGY);
     createEReference(conflictResolutionStrategyEClass, CONFLICT_RESOLUTION_STRATEGY__VARIABLES);
     createEReference(conflictResolutionStrategyEClass, CONFLICT_RESOLUTION_STRATEGY__RULE);
+    createEReference(conflictResolutionStrategyEClass, CONFLICT_RESOLUTION_STRATEGY__RESOLUTION_STRATEGY);
 
     variableEClass = createEClass(VARIABLE);
     createEAttribute(variableEClass, VARIABLE__NAME);
     createEReference(variableEClass, VARIABLE__PIPELINE);
 
     pipelineEClass = createEClass(PIPELINE);
-    createEAttribute(pipelineEClass, PIPELINE__FIRST);
+    createEReference(pipelineEClass, PIPELINE__FIRST);
     createEReference(pipelineEClass, PIPELINE__NEXT);
 
+    pipelineStageSrcEClass = createEClass(PIPELINE_STAGE_SRC);
+    createEAttribute(pipelineStageSrcEClass, PIPELINE_STAGE_SRC__NAME);
+
+    pipelineStageTrgEClass = createEClass(PIPELINE_STAGE_TRG);
+    createEAttribute(pipelineStageTrgEClass, PIPELINE_STAGE_TRG__NAME);
+
     pipelineStageEClass = createEClass(PIPELINE_STAGE);
+    createEAttribute(pipelineStageEClass, PIPELINE_STAGE__NAME);
 
     pipelineFilterStageEClass = createEClass(PIPELINE_FILTER_STAGE);
 
+    pipelineCreatedFilterStageEClass = createEClass(PIPELINE_CREATED_FILTER_STAGE);
+
+    pipelineDeletedFilterStageEClass = createEClass(PIPELINE_DELETED_FILTER_STAGE);
+
     pipelineTypeFilterStageEClass = createEClass(PIPELINE_TYPE_FILTER_STAGE);
-    createEReference(pipelineTypeFilterStageEClass, PIPELINE_TYPE_FILTER_STAGE__TYPES);
+    createEReference(pipelineTypeFilterStageEClass, PIPELINE_TYPE_FILTER_STAGE__TYPE);
+
+    pipelineCountStageEClass = createEClass(PIPELINE_COUNT_STAGE);
 
     satisfactionRuleEClass = createEClass(SATISFACTION_RULE);
     createEReference(satisfactionRuleEClass, SATISFACTION_RULE__FIRST_RULE);
@@ -570,6 +758,9 @@ public class IntegratePackageImpl extends EPackageImpl implements IntegratePacka
     createEAttribute(comparisonEClass, COMPARISON__C1);
     createEReference(comparisonEClass, COMPARISON__V2);
     createEAttribute(comparisonEClass, COMPARISON__N2);
+
+    resolutionStrategyEClass = createEClass(RESOLUTION_STRATEGY);
+    createEAttribute(resolutionStrategyEClass, RESOLUTION_STRATEGY__NAME);
   }
 
   /**
@@ -596,13 +787,19 @@ public class IntegratePackageImpl extends EPackageImpl implements IntegratePacka
     setNsPrefix(eNS_PREFIX);
     setNsURI(eNS_URI);
 
+    // Obtain other dependent packages
+    TggPackage theTggPackage = (TggPackage)EPackage.Registry.INSTANCE.getEPackage(TggPackage.eNS_URI);
+
     // Create type parameters
 
     // Set bounds for type parameters
 
     // Add supertypes to classes
     pipelineFilterStageEClass.getESuperTypes().add(this.getPipelineStage());
+    pipelineCreatedFilterStageEClass.getESuperTypes().add(this.getPipelineFilterStage());
+    pipelineDeletedFilterStageEClass.getESuperTypes().add(this.getPipelineFilterStage());
     pipelineTypeFilterStageEClass.getESuperTypes().add(this.getPipelineFilterStage());
+    pipelineCountStageEClass.getESuperTypes().add(this.getPipelineStage());
     comparisonEClass.getESuperTypes().add(this.getAnd());
     comparisonEClass.getESuperTypes().add(this.getOr());
 
@@ -612,26 +809,40 @@ public class IntegratePackageImpl extends EPackageImpl implements IntegratePacka
     initEReference(getIntegrate_ConflictResolutionStrategies(), this.getConflictResolutionStrategy(), null, "conflictResolutionStrategies", null, 0, -1, Integrate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(importEClass, Import.class, "Import", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getImport_Name(), ecorePackage.getEString(), "name", null, 0, 1, Import.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getImport_Rule(), theTggPackage.getRule(), null, "rule", null, 0, 1, Import.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(conflictResolutionStrategyEClass, ConflictResolutionStrategy.class, "ConflictResolutionStrategy", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getConflictResolutionStrategy_Variables(), this.getVariable(), null, "variables", null, 0, -1, ConflictResolutionStrategy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getConflictResolutionStrategy_Rule(), this.getSatisfactionRule(), null, "rule", null, 0, 1, ConflictResolutionStrategy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getConflictResolutionStrategy_ResolutionStrategy(), this.getResolutionStrategy(), null, "resolutionStrategy", null, 0, 1, ConflictResolutionStrategy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(variableEClass, Variable.class, "Variable", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getVariable_Name(), ecorePackage.getEString(), "name", null, 0, 1, Variable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getVariable_Pipeline(), this.getPipeline(), null, "pipeline", null, 0, 1, Variable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(pipelineEClass, Pipeline.class, "Pipeline", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getPipeline_First(), ecorePackage.getEString(), "first", null, 0, 1, Pipeline.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getPipeline_First(), ecorePackage.getEObject(), null, "first", null, 0, 1, Pipeline.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getPipeline_Next(), this.getPipelineStage(), null, "next", null, 0, -1, Pipeline.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+    initEClass(pipelineStageSrcEClass, PipelineStageSrc.class, "PipelineStageSrc", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getPipelineStageSrc_Name(), ecorePackage.getEString(), "name", null, 0, 1, PipelineStageSrc.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(pipelineStageTrgEClass, PipelineStageTrg.class, "PipelineStageTrg", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getPipelineStageTrg_Name(), ecorePackage.getEString(), "name", null, 0, 1, PipelineStageTrg.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
     initEClass(pipelineStageEClass, PipelineStage.class, "PipelineStage", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getPipelineStage_Name(), ecorePackage.getEString(), "name", null, 0, 1, PipelineStage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(pipelineFilterStageEClass, PipelineFilterStage.class, "PipelineFilterStage", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
+    initEClass(pipelineCreatedFilterStageEClass, PipelineCreatedFilterStage.class, "PipelineCreatedFilterStage", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+    initEClass(pipelineDeletedFilterStageEClass, PipelineDeletedFilterStage.class, "PipelineDeletedFilterStage", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
     initEClass(pipelineTypeFilterStageEClass, PipelineTypeFilterStage.class, "PipelineTypeFilterStage", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getPipelineTypeFilterStage_Types(), ecorePackage.getEClassifier(), null, "types", null, 0, 1, PipelineTypeFilterStage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getPipelineTypeFilterStage_Type(), ecorePackage.getEClassifier(), null, "type", null, 0, 1, PipelineTypeFilterStage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(pipelineCountStageEClass, PipelineCountStage.class, "PipelineCountStage", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(satisfactionRuleEClass, SatisfactionRule.class, "SatisfactionRule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getSatisfactionRule_FirstRule(), this.getComparison(), null, "firstRule", null, 0, 1, SatisfactionRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -647,6 +858,9 @@ public class IntegratePackageImpl extends EPackageImpl implements IntegratePacka
     initEAttribute(getComparison_C1(), ecorePackage.getEString(), "c1", null, 0, 1, Comparison.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getComparison_V2(), this.getVariable(), null, "v2", null, 0, 1, Comparison.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getComparison_N2(), ecorePackage.getEInt(), "n2", null, 0, 1, Comparison.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(resolutionStrategyEClass, ResolutionStrategy.class, "ResolutionStrategy", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getResolutionStrategy_Name(), ecorePackage.getEString(), "name", null, 0, 1, ResolutionStrategy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     // Create resource
     createResource(eNS_URI);

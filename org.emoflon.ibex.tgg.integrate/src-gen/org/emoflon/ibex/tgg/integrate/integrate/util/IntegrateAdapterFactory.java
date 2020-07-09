@@ -101,6 +101,16 @@ public class IntegrateAdapterFactory extends AdapterFactoryImpl
         return createPipelineAdapter();
       }
       @Override
+      public Adapter casePipelineStageSrc(PipelineStageSrc object)
+      {
+        return createPipelineStageSrcAdapter();
+      }
+      @Override
+      public Adapter casePipelineStageTrg(PipelineStageTrg object)
+      {
+        return createPipelineStageTrgAdapter();
+      }
+      @Override
       public Adapter casePipelineStage(PipelineStage object)
       {
         return createPipelineStageAdapter();
@@ -111,9 +121,24 @@ public class IntegrateAdapterFactory extends AdapterFactoryImpl
         return createPipelineFilterStageAdapter();
       }
       @Override
+      public Adapter casePipelineCreatedFilterStage(PipelineCreatedFilterStage object)
+      {
+        return createPipelineCreatedFilterStageAdapter();
+      }
+      @Override
+      public Adapter casePipelineDeletedFilterStage(PipelineDeletedFilterStage object)
+      {
+        return createPipelineDeletedFilterStageAdapter();
+      }
+      @Override
       public Adapter casePipelineTypeFilterStage(PipelineTypeFilterStage object)
       {
         return createPipelineTypeFilterStageAdapter();
+      }
+      @Override
+      public Adapter casePipelineCountStage(PipelineCountStage object)
+      {
+        return createPipelineCountStageAdapter();
       }
       @Override
       public Adapter caseSatisfactionRule(SatisfactionRule object)
@@ -134,6 +159,11 @@ public class IntegrateAdapterFactory extends AdapterFactoryImpl
       public Adapter caseComparison(Comparison object)
       {
         return createComparisonAdapter();
+      }
+      @Override
+      public Adapter caseResolutionStrategy(ResolutionStrategy object)
+      {
+        return createResolutionStrategyAdapter();
       }
       @Override
       public Adapter defaultCase(EObject object)
@@ -233,6 +263,36 @@ public class IntegrateAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link org.emoflon.ibex.tgg.integrate.integrate.PipelineStageSrc <em>Pipeline Stage Src</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.PipelineStageSrc
+   * @generated
+   */
+  public Adapter createPipelineStageSrcAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.emoflon.ibex.tgg.integrate.integrate.PipelineStageTrg <em>Pipeline Stage Trg</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.PipelineStageTrg
+   * @generated
+   */
+  public Adapter createPipelineStageTrgAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link org.emoflon.ibex.tgg.integrate.integrate.PipelineStage <em>Pipeline Stage</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -263,6 +323,36 @@ public class IntegrateAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link org.emoflon.ibex.tgg.integrate.integrate.PipelineCreatedFilterStage <em>Pipeline Created Filter Stage</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.PipelineCreatedFilterStage
+   * @generated
+   */
+  public Adapter createPipelineCreatedFilterStageAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.emoflon.ibex.tgg.integrate.integrate.PipelineDeletedFilterStage <em>Pipeline Deleted Filter Stage</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.PipelineDeletedFilterStage
+   * @generated
+   */
+  public Adapter createPipelineDeletedFilterStageAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link org.emoflon.ibex.tgg.integrate.integrate.PipelineTypeFilterStage <em>Pipeline Type Filter Stage</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -273,6 +363,21 @@ public class IntegrateAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createPipelineTypeFilterStageAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.emoflon.ibex.tgg.integrate.integrate.PipelineCountStage <em>Pipeline Count Stage</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.PipelineCountStage
+   * @generated
+   */
+  public Adapter createPipelineCountStageAdapter()
   {
     return null;
   }
@@ -333,6 +438,21 @@ public class IntegrateAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createComparisonAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.emoflon.ibex.tgg.integrate.integrate.ResolutionStrategy <em>Resolution Strategy</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.ResolutionStrategy
+   * @generated
+   */
+  public Adapter createResolutionStrategyAdapter()
   {
     return null;
   }

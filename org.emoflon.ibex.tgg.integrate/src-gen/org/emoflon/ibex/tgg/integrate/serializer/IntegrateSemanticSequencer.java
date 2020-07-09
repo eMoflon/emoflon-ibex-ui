@@ -20,9 +20,13 @@ import org.emoflon.ibex.tgg.integrate.integrate.Import;
 import org.emoflon.ibex.tgg.integrate.integrate.Integrate;
 import org.emoflon.ibex.tgg.integrate.integrate.IntegratePackage;
 import org.emoflon.ibex.tgg.integrate.integrate.Pipeline;
-import org.emoflon.ibex.tgg.integrate.integrate.PipelineFilterStage;
-import org.emoflon.ibex.tgg.integrate.integrate.PipelineStage;
+import org.emoflon.ibex.tgg.integrate.integrate.PipelineCountStage;
+import org.emoflon.ibex.tgg.integrate.integrate.PipelineCreatedFilterStage;
+import org.emoflon.ibex.tgg.integrate.integrate.PipelineDeletedFilterStage;
+import org.emoflon.ibex.tgg.integrate.integrate.PipelineStageSrc;
+import org.emoflon.ibex.tgg.integrate.integrate.PipelineStageTrg;
 import org.emoflon.ibex.tgg.integrate.integrate.PipelineTypeFilterStage;
+import org.emoflon.ibex.tgg.integrate.integrate.ResolutionStrategy;
 import org.emoflon.ibex.tgg.integrate.integrate.SatisfactionRule;
 import org.emoflon.ibex.tgg.integrate.integrate.Variable;
 import org.emoflon.ibex.tgg.integrate.services.IntegrateGrammarAccess;
@@ -56,14 +60,26 @@ public class IntegrateSemanticSequencer extends AbstractDelegatingSemanticSequen
 			case IntegratePackage.PIPELINE:
 				sequence_Pipeline(context, (Pipeline) semanticObject); 
 				return; 
-			case IntegratePackage.PIPELINE_FILTER_STAGE:
-				sequence_PipelineFilterStage(context, (PipelineFilterStage) semanticObject); 
+			case IntegratePackage.PIPELINE_COUNT_STAGE:
+				sequence_PipelineCountStage(context, (PipelineCountStage) semanticObject); 
 				return; 
-			case IntegratePackage.PIPELINE_STAGE:
-				sequence_PipelineStage(context, (PipelineStage) semanticObject); 
+			case IntegratePackage.PIPELINE_CREATED_FILTER_STAGE:
+				sequence_PipelineCreatedFilterStage(context, (PipelineCreatedFilterStage) semanticObject); 
+				return; 
+			case IntegratePackage.PIPELINE_DELETED_FILTER_STAGE:
+				sequence_PipelineDeletedFilterStage(context, (PipelineDeletedFilterStage) semanticObject); 
+				return; 
+			case IntegratePackage.PIPELINE_STAGE_SRC:
+				sequence_PipelineStageSrc(context, (PipelineStageSrc) semanticObject); 
+				return; 
+			case IntegratePackage.PIPELINE_STAGE_TRG:
+				sequence_PipelineStageTrg(context, (PipelineStageTrg) semanticObject); 
 				return; 
 			case IntegratePackage.PIPELINE_TYPE_FILTER_STAGE:
 				sequence_PipelineTypeFilterStage(context, (PipelineTypeFilterStage) semanticObject); 
+				return; 
+			case IntegratePackage.RESOLUTION_STRATEGY:
+				sequence_ResolutionStrategy(context, (ResolutionStrategy) semanticObject); 
 				return; 
 			case IntegratePackage.SATISFACTION_RULE:
 				sequence_SatisfactionRule(context, (SatisfactionRule) semanticObject); 
@@ -95,7 +111,7 @@ public class IntegrateSemanticSequencer extends AbstractDelegatingSemanticSequen
 	 *     ConflictResolutionStrategy returns ConflictResolutionStrategy
 	 *
 	 * Constraint:
-	 *     (variables+=Variable+ rule=SatisfactionRule)
+	 *     (variables+=Variable+ rule=SatisfactionRule resolutionStrategy=ResolutionStrategy)
 	 */
 	protected void sequence_ConflictResolutionStrategy(ISerializationContext context, ConflictResolutionStrategy semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -107,15 +123,15 @@ public class IntegrateSemanticSequencer extends AbstractDelegatingSemanticSequen
 	 *     Import returns Import
 	 *
 	 * Constraint:
-	 *     name=STRING
+	 *     rule=[Rule|ID]
 	 */
 	protected void sequence_Import(ISerializationContext context, Import semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, IntegratePackage.Literals.IMPORT__NAME) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, IntegratePackage.Literals.IMPORT__NAME));
+			if (transientValues.isValueTransient(semanticObject, IntegratePackage.Literals.IMPORT__RULE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, IntegratePackage.Literals.IMPORT__RULE));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getImportAccess().getNameSTRINGTerminalRuleCall_1_0(), semanticObject.getName());
+		feeder.accept(grammarAccess.getImportAccess().getRuleRuleIDTerminalRuleCall_1_0_1(), semanticObject.eGet(IntegratePackage.Literals.IMPORT__RULE, false));
 		feeder.finish();
 	}
 	
@@ -134,26 +150,96 @@ public class IntegrateSemanticSequencer extends AbstractDelegatingSemanticSequen
 	
 	/**
 	 * Contexts:
-	 *     PipelineStage returns PipelineFilterStage
-	 *     PipelineFilterStage returns PipelineFilterStage
+	 *     PipelineStage returns PipelineCountStage
+	 *     PipelineCountStage returns PipelineCountStage
 	 *
 	 * Constraint:
-	 *     {PipelineFilterStage}
+	 *     name='count'
 	 */
-	protected void sequence_PipelineFilterStage(ISerializationContext context, PipelineFilterStage semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
+	protected void sequence_PipelineCountStage(ISerializationContext context, PipelineCountStage semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, IntegratePackage.Literals.PIPELINE_STAGE__NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, IntegratePackage.Literals.PIPELINE_STAGE__NAME));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getPipelineCountStageAccess().getNameCountKeyword_0(), semanticObject.getName());
+		feeder.finish();
 	}
 	
 	
 	/**
 	 * Contexts:
-	 *     PipelineStage returns PipelineStage
+	 *     PipelineStage returns PipelineCreatedFilterStage
+	 *     PipelineFilterStage returns PipelineCreatedFilterStage
+	 *     PipelineCreatedFilterStage returns PipelineCreatedFilterStage
 	 *
 	 * Constraint:
-	 *     {PipelineStage}
+	 *     name='created'
 	 */
-	protected void sequence_PipelineStage(ISerializationContext context, PipelineStage semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
+	protected void sequence_PipelineCreatedFilterStage(ISerializationContext context, PipelineCreatedFilterStage semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, IntegratePackage.Literals.PIPELINE_STAGE__NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, IntegratePackage.Literals.PIPELINE_STAGE__NAME));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getPipelineCreatedFilterStageAccess().getNameCreatedKeyword_0(), semanticObject.getName());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     PipelineStage returns PipelineDeletedFilterStage
+	 *     PipelineFilterStage returns PipelineDeletedFilterStage
+	 *     PipelineDeletedFilterStage returns PipelineDeletedFilterStage
+	 *
+	 * Constraint:
+	 *     name='deleted'
+	 */
+	protected void sequence_PipelineDeletedFilterStage(ISerializationContext context, PipelineDeletedFilterStage semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, IntegratePackage.Literals.PIPELINE_STAGE__NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, IntegratePackage.Literals.PIPELINE_STAGE__NAME));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getPipelineDeletedFilterStageAccess().getNameDeletedKeyword_0(), semanticObject.getName());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     PipelineStageSrc returns PipelineStageSrc
+	 *
+	 * Constraint:
+	 *     name='#src'
+	 */
+	protected void sequence_PipelineStageSrc(ISerializationContext context, PipelineStageSrc semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, IntegratePackage.Literals.PIPELINE_STAGE_SRC__NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, IntegratePackage.Literals.PIPELINE_STAGE_SRC__NAME));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getPipelineStageSrcAccess().getNameSrcKeyword_0(), semanticObject.getName());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     PipelineStageTrg returns PipelineStageTrg
+	 *
+	 * Constraint:
+	 *     name='#trg'
+	 */
+	protected void sequence_PipelineStageTrg(ISerializationContext context, PipelineStageTrg semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, IntegratePackage.Literals.PIPELINE_STAGE_TRG__NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, IntegratePackage.Literals.PIPELINE_STAGE_TRG__NAME));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getPipelineStageTrgAccess().getNameTrgKeyword_0(), semanticObject.getName());
+		feeder.finish();
 	}
 	
 	
@@ -164,15 +250,18 @@ public class IntegrateSemanticSequencer extends AbstractDelegatingSemanticSequen
 	 *     PipelineTypeFilterStage returns PipelineTypeFilterStage
 	 *
 	 * Constraint:
-	 *     types=[EClassifier|ID]
+	 *     (name='type' type=[EClassifier|ID])
 	 */
 	protected void sequence_PipelineTypeFilterStage(ISerializationContext context, PipelineTypeFilterStage semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, IntegratePackage.Literals.PIPELINE_TYPE_FILTER_STAGE__TYPES) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, IntegratePackage.Literals.PIPELINE_TYPE_FILTER_STAGE__TYPES));
+			if (transientValues.isValueTransient(semanticObject, IntegratePackage.Literals.PIPELINE_STAGE__NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, IntegratePackage.Literals.PIPELINE_STAGE__NAME));
+			if (transientValues.isValueTransient(semanticObject, IntegratePackage.Literals.PIPELINE_TYPE_FILTER_STAGE__TYPE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, IntegratePackage.Literals.PIPELINE_TYPE_FILTER_STAGE__TYPE));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getPipelineTypeFilterStageAccess().getTypesEClassifierIDTerminalRuleCall_1_0_1(), semanticObject.eGet(IntegratePackage.Literals.PIPELINE_TYPE_FILTER_STAGE__TYPES, false));
+		feeder.accept(grammarAccess.getPipelineTypeFilterStageAccess().getNameTypeKeyword_0_0(), semanticObject.getName());
+		feeder.accept(grammarAccess.getPipelineTypeFilterStageAccess().getTypeEClassifierIDTerminalRuleCall_1_0_1(), semanticObject.eGet(IntegratePackage.Literals.PIPELINE_TYPE_FILTER_STAGE__TYPE, false));
 		feeder.finish();
 	}
 	
@@ -185,6 +274,25 @@ public class IntegrateSemanticSequencer extends AbstractDelegatingSemanticSequen
 	 *     ((first=PipelineStageSrc | first=PipelineStageTrg) next+=PipelineStage*)
 	 */
 	protected void sequence_Pipeline(ISerializationContext context, Pipeline semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     ResolutionStrategy returns ResolutionStrategy
+	 *
+	 * Constraint:
+	 *     (
+	 *         name='actAndLetRepair' | 
+	 *         name='mergeAndPreserve' | 
+	 *         name='preferSource' | 
+	 *         name='preferTarget' | 
+	 *         name='revokeAddition' | 
+	 *         name='revokeDeletion'
+	 *     )
+	 */
+	protected void sequence_ResolutionStrategy(ISerializationContext context, ResolutionStrategy semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

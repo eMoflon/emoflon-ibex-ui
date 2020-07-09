@@ -1,5 +1,6 @@
 grammar org.emoflon.ibex.tgg.integrate.Integrate with org.eclipse.xtext.common.Terminals
 
+import "http://www.moflon.org/ide/tgg/mosl/TGG" as tgg
 import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 
 generate integrate "http://www.emoflon.org/ibex/tgg/integrate/Integrate"
@@ -9,20 +10,16 @@ Integrate:
 	conflictResolutionStrategies+=ConflictResolutionStrategy*;
 	
 Import:
-	'#import' name=STRING
+	'#import' rule=[tgg::Rule]
 ;	
-
-QualifiedName returns ecore::EString:
-	ID ('.' ID)*
-;
 
 ConflictResolutionStrategy:
 	{ConflictResolutionStrategy} 'solve' 'conflict' 'for' 'all' '{'
 		variables+=Variable+
 		'satisfies' '{'
 			rule=SatisfactionRule
-		'}'
-	'}'
+		'}' 
+	'}' 'with' resolutionStrategy=ResolutionStrategy
 ;
 
 Variable:
@@ -34,35 +31,35 @@ Pipeline:
 ;
 
 PipelineStageSrc:
-	'#src'
+	name='#src'
 ;
 
 PipelineStageTrg:
-	'#trg'
+	name='#trg'
 ;
 
 PipelineStage:
-	PipelineFilterStage | {PipelineStage} PipelineCountStage
+	PipelineFilterStage | PipelineCountStage
 ;
 
 PipelineFilterStage:
-	{PipelineFilterStage} PipelineCreatedFilterStage | {PipelineFilterStage} PipelineDeletedFilterStage | PipelineTypeFilterStage
+	PipelineCreatedFilterStage | PipelineDeletedFilterStage | PipelineTypeFilterStage
 ;
 
 PipelineCreatedFilterStage:
-	'created'
+	name='created'
 ;
 
 PipelineDeletedFilterStage:
-	'deleted'
+	name='deleted'
 ;
 
 PipelineTypeFilterStage:
-	'type' type=[ecore::EClassifier]
+	name='type' type=[ecore::EClassifier]
 ;
 
 PipelineCountStage:
-	'count'
+	name='count'
 ;
 
 SatisfactionRule:
@@ -79,4 +76,8 @@ Or:
 
 Comparison:
 	(v1=[Variable] | n1=INT) c1=('>'|'>='|'<'|'<=') (v2=[Variable] | n2=INT)
+;
+
+ResolutionStrategy:
+	name=('actAndLetRepair' | 'mergeAndPreserve' | 'preferSource' | 'preferTarget' | 'revokeAddition' | 'revokeDeletion')
 ;

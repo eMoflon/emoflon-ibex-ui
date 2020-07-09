@@ -105,13 +105,13 @@ public interface IntegratePackage extends EPackage
   int IMPORT = 1;
 
   /**
-   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * The feature id for the '<em><b>Rule</b></em>' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int IMPORT__NAME = 0;
+  int IMPORT__RULE = 0;
 
   /**
    * The number of structural features of the '<em>Import</em>' class.
@@ -151,13 +151,22 @@ public interface IntegratePackage extends EPackage
   int CONFLICT_RESOLUTION_STRATEGY__RULE = 1;
 
   /**
+   * The feature id for the '<em><b>Resolution Strategy</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CONFLICT_RESOLUTION_STRATEGY__RESOLUTION_STRATEGY = 2;
+
+  /**
    * The number of structural features of the '<em>Conflict Resolution Strategy</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int CONFLICT_RESOLUTION_STRATEGY_FEATURE_COUNT = 2;
+  int CONFLICT_RESOLUTION_STRATEGY_FEATURE_COUNT = 3;
 
   /**
    * The meta object id for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.VariableImpl <em>Variable</em>}' class.
@@ -207,7 +216,7 @@ public interface IntegratePackage extends EPackage
   int PIPELINE = 4;
 
   /**
-   * The feature id for the '<em><b>First</b></em>' attribute.
+   * The feature id for the '<em><b>First</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
@@ -234,6 +243,62 @@ public interface IntegratePackage extends EPackage
   int PIPELINE_FEATURE_COUNT = 2;
 
   /**
+   * The meta object id for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineStageSrcImpl <em>Pipeline Stage Src</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineStageSrcImpl
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getPipelineStageSrc()
+   * @generated
+   */
+  int PIPELINE_STAGE_SRC = 5;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PIPELINE_STAGE_SRC__NAME = 0;
+
+  /**
+   * The number of structural features of the '<em>Pipeline Stage Src</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PIPELINE_STAGE_SRC_FEATURE_COUNT = 1;
+
+  /**
+   * The meta object id for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineStageTrgImpl <em>Pipeline Stage Trg</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineStageTrgImpl
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getPipelineStageTrg()
+   * @generated
+   */
+  int PIPELINE_STAGE_TRG = 6;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PIPELINE_STAGE_TRG__NAME = 0;
+
+  /**
+   * The number of structural features of the '<em>Pipeline Stage Trg</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PIPELINE_STAGE_TRG_FEATURE_COUNT = 1;
+
+  /**
    * The meta object id for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineStageImpl <em>Pipeline Stage</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -241,7 +306,16 @@ public interface IntegratePackage extends EPackage
    * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getPipelineStage()
    * @generated
    */
-  int PIPELINE_STAGE = 5;
+  int PIPELINE_STAGE = 7;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PIPELINE_STAGE__NAME = 0;
 
   /**
    * The number of structural features of the '<em>Pipeline Stage</em>' class.
@@ -250,7 +324,7 @@ public interface IntegratePackage extends EPackage
    * @generated
    * @ordered
    */
-  int PIPELINE_STAGE_FEATURE_COUNT = 0;
+  int PIPELINE_STAGE_FEATURE_COUNT = 1;
 
   /**
    * The meta object id for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineFilterStageImpl <em>Pipeline Filter Stage</em>}' class.
@@ -260,7 +334,16 @@ public interface IntegratePackage extends EPackage
    * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getPipelineFilterStage()
    * @generated
    */
-  int PIPELINE_FILTER_STAGE = 6;
+  int PIPELINE_FILTER_STAGE = 8;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PIPELINE_FILTER_STAGE__NAME = PIPELINE_STAGE__NAME;
 
   /**
    * The number of structural features of the '<em>Pipeline Filter Stage</em>' class.
@@ -272,6 +355,62 @@ public interface IntegratePackage extends EPackage
   int PIPELINE_FILTER_STAGE_FEATURE_COUNT = PIPELINE_STAGE_FEATURE_COUNT + 0;
 
   /**
+   * The meta object id for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineCreatedFilterStageImpl <em>Pipeline Created Filter Stage</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineCreatedFilterStageImpl
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getPipelineCreatedFilterStage()
+   * @generated
+   */
+  int PIPELINE_CREATED_FILTER_STAGE = 9;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PIPELINE_CREATED_FILTER_STAGE__NAME = PIPELINE_FILTER_STAGE__NAME;
+
+  /**
+   * The number of structural features of the '<em>Pipeline Created Filter Stage</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PIPELINE_CREATED_FILTER_STAGE_FEATURE_COUNT = PIPELINE_FILTER_STAGE_FEATURE_COUNT + 0;
+
+  /**
+   * The meta object id for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineDeletedFilterStageImpl <em>Pipeline Deleted Filter Stage</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineDeletedFilterStageImpl
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getPipelineDeletedFilterStage()
+   * @generated
+   */
+  int PIPELINE_DELETED_FILTER_STAGE = 10;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PIPELINE_DELETED_FILTER_STAGE__NAME = PIPELINE_FILTER_STAGE__NAME;
+
+  /**
+   * The number of structural features of the '<em>Pipeline Deleted Filter Stage</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PIPELINE_DELETED_FILTER_STAGE_FEATURE_COUNT = PIPELINE_FILTER_STAGE_FEATURE_COUNT + 0;
+
+  /**
    * The meta object id for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineTypeFilterStageImpl <em>Pipeline Type Filter Stage</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -279,16 +418,25 @@ public interface IntegratePackage extends EPackage
    * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getPipelineTypeFilterStage()
    * @generated
    */
-  int PIPELINE_TYPE_FILTER_STAGE = 7;
+  int PIPELINE_TYPE_FILTER_STAGE = 11;
 
   /**
-   * The feature id for the '<em><b>Types</b></em>' reference.
+   * The feature id for the '<em><b>Name</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int PIPELINE_TYPE_FILTER_STAGE__TYPES = PIPELINE_FILTER_STAGE_FEATURE_COUNT + 0;
+  int PIPELINE_TYPE_FILTER_STAGE__NAME = PIPELINE_FILTER_STAGE__NAME;
+
+  /**
+   * The feature id for the '<em><b>Type</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PIPELINE_TYPE_FILTER_STAGE__TYPE = PIPELINE_FILTER_STAGE_FEATURE_COUNT + 0;
 
   /**
    * The number of structural features of the '<em>Pipeline Type Filter Stage</em>' class.
@@ -300,6 +448,34 @@ public interface IntegratePackage extends EPackage
   int PIPELINE_TYPE_FILTER_STAGE_FEATURE_COUNT = PIPELINE_FILTER_STAGE_FEATURE_COUNT + 1;
 
   /**
+   * The meta object id for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineCountStageImpl <em>Pipeline Count Stage</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineCountStageImpl
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getPipelineCountStage()
+   * @generated
+   */
+  int PIPELINE_COUNT_STAGE = 12;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PIPELINE_COUNT_STAGE__NAME = PIPELINE_STAGE__NAME;
+
+  /**
+   * The number of structural features of the '<em>Pipeline Count Stage</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PIPELINE_COUNT_STAGE_FEATURE_COUNT = PIPELINE_STAGE_FEATURE_COUNT + 0;
+
+  /**
    * The meta object id for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.SatisfactionRuleImpl <em>Satisfaction Rule</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -307,7 +483,7 @@ public interface IntegratePackage extends EPackage
    * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getSatisfactionRule()
    * @generated
    */
-  int SATISFACTION_RULE = 8;
+  int SATISFACTION_RULE = 13;
 
   /**
    * The feature id for the '<em><b>First Rule</b></em>' containment reference.
@@ -344,7 +520,7 @@ public interface IntegratePackage extends EPackage
    * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getAnd()
    * @generated
    */
-  int AND = 9;
+  int AND = 14;
 
   /**
    * The number of structural features of the '<em>And</em>' class.
@@ -363,7 +539,7 @@ public interface IntegratePackage extends EPackage
    * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getOr()
    * @generated
    */
-  int OR = 10;
+  int OR = 15;
 
   /**
    * The number of structural features of the '<em>Or</em>' class.
@@ -382,7 +558,7 @@ public interface IntegratePackage extends EPackage
    * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getComparison()
    * @generated
    */
-  int COMPARISON = 11;
+  int COMPARISON = 16;
 
   /**
    * The feature id for the '<em><b>V1</b></em>' reference.
@@ -438,6 +614,34 @@ public interface IntegratePackage extends EPackage
    */
   int COMPARISON_FEATURE_COUNT = AND_FEATURE_COUNT + 5;
 
+  /**
+   * The meta object id for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.ResolutionStrategyImpl <em>Resolution Strategy</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.ResolutionStrategyImpl
+   * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getResolutionStrategy()
+   * @generated
+   */
+  int RESOLUTION_STRATEGY = 17;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RESOLUTION_STRATEGY__NAME = 0;
+
+  /**
+   * The number of structural features of the '<em>Resolution Strategy</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RESOLUTION_STRATEGY_FEATURE_COUNT = 1;
+
 
   /**
    * Returns the meta object for class '{@link org.emoflon.ibex.tgg.integrate.integrate.Integrate <em>Integrate</em>}'.
@@ -482,15 +686,15 @@ public interface IntegratePackage extends EPackage
   EClass getImport();
 
   /**
-   * Returns the meta object for the attribute '{@link org.emoflon.ibex.tgg.integrate.integrate.Import#getName <em>Name</em>}'.
+   * Returns the meta object for the reference '{@link org.emoflon.ibex.tgg.integrate.integrate.Import#getRule <em>Rule</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Name</em>'.
-   * @see org.emoflon.ibex.tgg.integrate.integrate.Import#getName()
+   * @return the meta object for the reference '<em>Rule</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.Import#getRule()
    * @see #getImport()
    * @generated
    */
-  EAttribute getImport_Name();
+  EReference getImport_Rule();
 
   /**
    * Returns the meta object for class '{@link org.emoflon.ibex.tgg.integrate.integrate.ConflictResolutionStrategy <em>Conflict Resolution Strategy</em>}'.
@@ -523,6 +727,17 @@ public interface IntegratePackage extends EPackage
    * @generated
    */
   EReference getConflictResolutionStrategy_Rule();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.emoflon.ibex.tgg.integrate.integrate.ConflictResolutionStrategy#getResolutionStrategy <em>Resolution Strategy</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Resolution Strategy</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.ConflictResolutionStrategy#getResolutionStrategy()
+   * @see #getConflictResolutionStrategy()
+   * @generated
+   */
+  EReference getConflictResolutionStrategy_ResolutionStrategy();
 
   /**
    * Returns the meta object for class '{@link org.emoflon.ibex.tgg.integrate.integrate.Variable <em>Variable</em>}'.
@@ -567,15 +782,15 @@ public interface IntegratePackage extends EPackage
   EClass getPipeline();
 
   /**
-   * Returns the meta object for the attribute '{@link org.emoflon.ibex.tgg.integrate.integrate.Pipeline#getFirst <em>First</em>}'.
+   * Returns the meta object for the containment reference '{@link org.emoflon.ibex.tgg.integrate.integrate.Pipeline#getFirst <em>First</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>First</em>'.
+   * @return the meta object for the containment reference '<em>First</em>'.
    * @see org.emoflon.ibex.tgg.integrate.integrate.Pipeline#getFirst()
    * @see #getPipeline()
    * @generated
    */
-  EAttribute getPipeline_First();
+  EReference getPipeline_First();
 
   /**
    * Returns the meta object for the containment reference list '{@link org.emoflon.ibex.tgg.integrate.integrate.Pipeline#getNext <em>Next</em>}'.
@@ -589,6 +804,48 @@ public interface IntegratePackage extends EPackage
   EReference getPipeline_Next();
 
   /**
+   * Returns the meta object for class '{@link org.emoflon.ibex.tgg.integrate.integrate.PipelineStageSrc <em>Pipeline Stage Src</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Pipeline Stage Src</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.PipelineStageSrc
+   * @generated
+   */
+  EClass getPipelineStageSrc();
+
+  /**
+   * Returns the meta object for the attribute '{@link org.emoflon.ibex.tgg.integrate.integrate.PipelineStageSrc#getName <em>Name</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Name</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.PipelineStageSrc#getName()
+   * @see #getPipelineStageSrc()
+   * @generated
+   */
+  EAttribute getPipelineStageSrc_Name();
+
+  /**
+   * Returns the meta object for class '{@link org.emoflon.ibex.tgg.integrate.integrate.PipelineStageTrg <em>Pipeline Stage Trg</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Pipeline Stage Trg</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.PipelineStageTrg
+   * @generated
+   */
+  EClass getPipelineStageTrg();
+
+  /**
+   * Returns the meta object for the attribute '{@link org.emoflon.ibex.tgg.integrate.integrate.PipelineStageTrg#getName <em>Name</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Name</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.PipelineStageTrg#getName()
+   * @see #getPipelineStageTrg()
+   * @generated
+   */
+  EAttribute getPipelineStageTrg_Name();
+
+  /**
    * Returns the meta object for class '{@link org.emoflon.ibex.tgg.integrate.integrate.PipelineStage <em>Pipeline Stage</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -597,6 +854,17 @@ public interface IntegratePackage extends EPackage
    * @generated
    */
   EClass getPipelineStage();
+
+  /**
+   * Returns the meta object for the attribute '{@link org.emoflon.ibex.tgg.integrate.integrate.PipelineStage#getName <em>Name</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Name</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.PipelineStage#getName()
+   * @see #getPipelineStage()
+   * @generated
+   */
+  EAttribute getPipelineStage_Name();
 
   /**
    * Returns the meta object for class '{@link org.emoflon.ibex.tgg.integrate.integrate.PipelineFilterStage <em>Pipeline Filter Stage</em>}'.
@@ -609,6 +877,26 @@ public interface IntegratePackage extends EPackage
   EClass getPipelineFilterStage();
 
   /**
+   * Returns the meta object for class '{@link org.emoflon.ibex.tgg.integrate.integrate.PipelineCreatedFilterStage <em>Pipeline Created Filter Stage</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Pipeline Created Filter Stage</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.PipelineCreatedFilterStage
+   * @generated
+   */
+  EClass getPipelineCreatedFilterStage();
+
+  /**
+   * Returns the meta object for class '{@link org.emoflon.ibex.tgg.integrate.integrate.PipelineDeletedFilterStage <em>Pipeline Deleted Filter Stage</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Pipeline Deleted Filter Stage</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.PipelineDeletedFilterStage
+   * @generated
+   */
+  EClass getPipelineDeletedFilterStage();
+
+  /**
    * Returns the meta object for class '{@link org.emoflon.ibex.tgg.integrate.integrate.PipelineTypeFilterStage <em>Pipeline Type Filter Stage</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -619,15 +907,25 @@ public interface IntegratePackage extends EPackage
   EClass getPipelineTypeFilterStage();
 
   /**
-   * Returns the meta object for the reference '{@link org.emoflon.ibex.tgg.integrate.integrate.PipelineTypeFilterStage#getTypes <em>Types</em>}'.
+   * Returns the meta object for the reference '{@link org.emoflon.ibex.tgg.integrate.integrate.PipelineTypeFilterStage#getType <em>Type</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the reference '<em>Types</em>'.
-   * @see org.emoflon.ibex.tgg.integrate.integrate.PipelineTypeFilterStage#getTypes()
+   * @return the meta object for the reference '<em>Type</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.PipelineTypeFilterStage#getType()
    * @see #getPipelineTypeFilterStage()
    * @generated
    */
-  EReference getPipelineTypeFilterStage_Types();
+  EReference getPipelineTypeFilterStage_Type();
+
+  /**
+   * Returns the meta object for class '{@link org.emoflon.ibex.tgg.integrate.integrate.PipelineCountStage <em>Pipeline Count Stage</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Pipeline Count Stage</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.PipelineCountStage
+   * @generated
+   */
+  EClass getPipelineCountStage();
 
   /**
    * Returns the meta object for class '{@link org.emoflon.ibex.tgg.integrate.integrate.SatisfactionRule <em>Satisfaction Rule</em>}'.
@@ -747,6 +1045,27 @@ public interface IntegratePackage extends EPackage
   EAttribute getComparison_N2();
 
   /**
+   * Returns the meta object for class '{@link org.emoflon.ibex.tgg.integrate.integrate.ResolutionStrategy <em>Resolution Strategy</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Resolution Strategy</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.ResolutionStrategy
+   * @generated
+   */
+  EClass getResolutionStrategy();
+
+  /**
+   * Returns the meta object for the attribute '{@link org.emoflon.ibex.tgg.integrate.integrate.ResolutionStrategy#getName <em>Name</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Name</em>'.
+   * @see org.emoflon.ibex.tgg.integrate.integrate.ResolutionStrategy#getName()
+   * @see #getResolutionStrategy()
+   * @generated
+   */
+  EAttribute getResolutionStrategy_Name();
+
+  /**
    * Returns the factory that creates the instances of the model.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -806,12 +1125,12 @@ public interface IntegratePackage extends EPackage
     EClass IMPORT = eINSTANCE.getImport();
 
     /**
-     * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+     * The meta object literal for the '<em><b>Rule</b></em>' reference feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute IMPORT__NAME = eINSTANCE.getImport_Name();
+    EReference IMPORT__RULE = eINSTANCE.getImport_Rule();
 
     /**
      * The meta object literal for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.ConflictResolutionStrategyImpl <em>Conflict Resolution Strategy</em>}' class.
@@ -838,6 +1157,14 @@ public interface IntegratePackage extends EPackage
      * @generated
      */
     EReference CONFLICT_RESOLUTION_STRATEGY__RULE = eINSTANCE.getConflictResolutionStrategy_Rule();
+
+    /**
+     * The meta object literal for the '<em><b>Resolution Strategy</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference CONFLICT_RESOLUTION_STRATEGY__RESOLUTION_STRATEGY = eINSTANCE.getConflictResolutionStrategy_ResolutionStrategy();
 
     /**
      * The meta object literal for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.VariableImpl <em>Variable</em>}' class.
@@ -876,12 +1203,12 @@ public interface IntegratePackage extends EPackage
     EClass PIPELINE = eINSTANCE.getPipeline();
 
     /**
-     * The meta object literal for the '<em><b>First</b></em>' attribute feature.
+     * The meta object literal for the '<em><b>First</b></em>' containment reference feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute PIPELINE__FIRST = eINSTANCE.getPipeline_First();
+    EReference PIPELINE__FIRST = eINSTANCE.getPipeline_First();
 
     /**
      * The meta object literal for the '<em><b>Next</b></em>' containment reference list feature.
@@ -890,6 +1217,42 @@ public interface IntegratePackage extends EPackage
      * @generated
      */
     EReference PIPELINE__NEXT = eINSTANCE.getPipeline_Next();
+
+    /**
+     * The meta object literal for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineStageSrcImpl <em>Pipeline Stage Src</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineStageSrcImpl
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getPipelineStageSrc()
+     * @generated
+     */
+    EClass PIPELINE_STAGE_SRC = eINSTANCE.getPipelineStageSrc();
+
+    /**
+     * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute PIPELINE_STAGE_SRC__NAME = eINSTANCE.getPipelineStageSrc_Name();
+
+    /**
+     * The meta object literal for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineStageTrgImpl <em>Pipeline Stage Trg</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineStageTrgImpl
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getPipelineStageTrg()
+     * @generated
+     */
+    EClass PIPELINE_STAGE_TRG = eINSTANCE.getPipelineStageTrg();
+
+    /**
+     * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute PIPELINE_STAGE_TRG__NAME = eINSTANCE.getPipelineStageTrg_Name();
 
     /**
      * The meta object literal for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineStageImpl <em>Pipeline Stage</em>}' class.
@@ -902,6 +1265,14 @@ public interface IntegratePackage extends EPackage
     EClass PIPELINE_STAGE = eINSTANCE.getPipelineStage();
 
     /**
+     * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute PIPELINE_STAGE__NAME = eINSTANCE.getPipelineStage_Name();
+
+    /**
      * The meta object literal for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineFilterStageImpl <em>Pipeline Filter Stage</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -910,6 +1281,26 @@ public interface IntegratePackage extends EPackage
      * @generated
      */
     EClass PIPELINE_FILTER_STAGE = eINSTANCE.getPipelineFilterStage();
+
+    /**
+     * The meta object literal for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineCreatedFilterStageImpl <em>Pipeline Created Filter Stage</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineCreatedFilterStageImpl
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getPipelineCreatedFilterStage()
+     * @generated
+     */
+    EClass PIPELINE_CREATED_FILTER_STAGE = eINSTANCE.getPipelineCreatedFilterStage();
+
+    /**
+     * The meta object literal for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineDeletedFilterStageImpl <em>Pipeline Deleted Filter Stage</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineDeletedFilterStageImpl
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getPipelineDeletedFilterStage()
+     * @generated
+     */
+    EClass PIPELINE_DELETED_FILTER_STAGE = eINSTANCE.getPipelineDeletedFilterStage();
 
     /**
      * The meta object literal for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineTypeFilterStageImpl <em>Pipeline Type Filter Stage</em>}' class.
@@ -922,12 +1313,22 @@ public interface IntegratePackage extends EPackage
     EClass PIPELINE_TYPE_FILTER_STAGE = eINSTANCE.getPipelineTypeFilterStage();
 
     /**
-     * The meta object literal for the '<em><b>Types</b></em>' reference feature.
+     * The meta object literal for the '<em><b>Type</b></em>' reference feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference PIPELINE_TYPE_FILTER_STAGE__TYPES = eINSTANCE.getPipelineTypeFilterStage_Types();
+    EReference PIPELINE_TYPE_FILTER_STAGE__TYPE = eINSTANCE.getPipelineTypeFilterStage_Type();
+
+    /**
+     * The meta object literal for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineCountStageImpl <em>Pipeline Count Stage</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.PipelineCountStageImpl
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getPipelineCountStage()
+     * @generated
+     */
+    EClass PIPELINE_COUNT_STAGE = eINSTANCE.getPipelineCountStage();
 
     /**
      * The meta object literal for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.SatisfactionRuleImpl <em>Satisfaction Rule</em>}' class.
@@ -1024,6 +1425,24 @@ public interface IntegratePackage extends EPackage
      * @generated
      */
     EAttribute COMPARISON__N2 = eINSTANCE.getComparison_N2();
+
+    /**
+     * The meta object literal for the '{@link org.emoflon.ibex.tgg.integrate.integrate.impl.ResolutionStrategyImpl <em>Resolution Strategy</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.ResolutionStrategyImpl
+     * @see org.emoflon.ibex.tgg.integrate.integrate.impl.IntegratePackageImpl#getResolutionStrategy()
+     * @generated
+     */
+    EClass RESOLUTION_STRATEGY = eINSTANCE.getResolutionStrategy();
+
+    /**
+     * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute RESOLUTION_STRATEGY__NAME = eINSTANCE.getResolutionStrategy_Name();
 
   }
 

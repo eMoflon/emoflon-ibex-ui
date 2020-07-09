@@ -24,7 +24,7 @@ public class IntegrateScopeProvider extends AbstractIntegrateScopeProvider {
 	
 	@Override
 	public IScope getScope(EObject context, EReference reference) {
-		if (reference == IntegratePackage.Literals.PIPELINE_TYPE_FILTER_STAGE__TYPES) {
+		if (reference == IntegratePackage.Literals.PIPELINE_TYPE_FILTER_STAGE__TYPE) {
 			return pipelineTypeFilterScopeProvider.provide(context);
 		}
 		

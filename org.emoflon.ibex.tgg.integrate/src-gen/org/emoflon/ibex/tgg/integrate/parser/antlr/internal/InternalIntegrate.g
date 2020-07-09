@@ -139,19 +139,14 @@ ruleImport returns [EObject current=null]
 		}
 		(
 			(
-				lv_name_1_0=RULE_STRING
-				{
-					newLeafNode(lv_name_1_0, grammarAccess.getImportAccess().getNameSTRINGTerminalRuleCall_1_0());
-				}
 				{
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getImportRule());
 					}
-					setWithLastConsumed(
-						$current,
-						"name",
-						lv_name_1_0,
-						"org.eclipse.xtext.common.Terminals.STRING");
+				}
+				otherlv_1=RULE_ID
+				{
+					newLeafNode(otherlv_1, grammarAccess.getImportAccess().getRuleRuleCrossReference_1_0());
 				}
 			)
 		)
@@ -255,6 +250,29 @@ ruleConflictResolutionStrategy returns [EObject current=null]
 		{
 			newLeafNode(otherlv_11, grammarAccess.getConflictResolutionStrategyAccess().getRightCurlyBracketKeyword_11());
 		}
+		otherlv_12='with'
+		{
+			newLeafNode(otherlv_12, grammarAccess.getConflictResolutionStrategyAccess().getWithKeyword_12());
+		}
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getConflictResolutionStrategyAccess().getResolutionStrategyResolutionStrategyParserRuleCall_13_0());
+				}
+				lv_resolutionStrategy_13_0=ruleResolutionStrategy
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getConflictResolutionStrategyRule());
+					}
+					set(
+						$current,
+						"resolutionStrategy",
+						lv_resolutionStrategy_13_0,
+						"org.emoflon.ibex.tgg.integrate.Integrate.ResolutionStrategy");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
 	)
 ;
 
@@ -404,47 +422,65 @@ rulePipeline returns [EObject current=null]
 ;
 
 // Entry rule entryRulePipelineStageSrc
-entryRulePipelineStageSrc returns [String current=null]:
+entryRulePipelineStageSrc returns [EObject current=null]:
 	{ newCompositeNode(grammarAccess.getPipelineStageSrcRule()); }
 	iv_rulePipelineStageSrc=rulePipelineStageSrc
-	{ $current=$iv_rulePipelineStageSrc.current.getText(); }
+	{ $current=$iv_rulePipelineStageSrc.current; }
 	EOF;
 
 // Rule PipelineStageSrc
-rulePipelineStageSrc returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
+rulePipelineStageSrc returns [EObject current=null]
 @init {
 	enterRule();
 }
 @after {
 	leaveRule();
 }:
-	kw='#src'
-	{
-		$current.merge(kw);
-		newLeafNode(kw, grammarAccess.getPipelineStageSrcAccess().getSrcKeyword());
-	}
+	(
+		(
+			lv_name_0_0='#src'
+			{
+				newLeafNode(lv_name_0_0, grammarAccess.getPipelineStageSrcAccess().getNameSrcKeyword_0());
+			}
+			{
+				if ($current==null) {
+					$current = createModelElement(grammarAccess.getPipelineStageSrcRule());
+				}
+				setWithLastConsumed($current, "name", lv_name_0_0, "#src");
+			}
+		)
+	)
 ;
 
 // Entry rule entryRulePipelineStageTrg
-entryRulePipelineStageTrg returns [String current=null]:
+entryRulePipelineStageTrg returns [EObject current=null]:
 	{ newCompositeNode(grammarAccess.getPipelineStageTrgRule()); }
 	iv_rulePipelineStageTrg=rulePipelineStageTrg
-	{ $current=$iv_rulePipelineStageTrg.current.getText(); }
+	{ $current=$iv_rulePipelineStageTrg.current; }
 	EOF;
 
 // Rule PipelineStageTrg
-rulePipelineStageTrg returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
+rulePipelineStageTrg returns [EObject current=null]
 @init {
 	enterRule();
 }
 @after {
 	leaveRule();
 }:
-	kw='#trg'
-	{
-		$current.merge(kw);
-		newLeafNode(kw, grammarAccess.getPipelineStageTrgAccess().getTrgKeyword());
-	}
+	(
+		(
+			lv_name_0_0='#trg'
+			{
+				newLeafNode(lv_name_0_0, grammarAccess.getPipelineStageTrgAccess().getNameTrgKeyword_0());
+			}
+			{
+				if ($current==null) {
+					$current = createModelElement(grammarAccess.getPipelineStageTrgRule());
+				}
+				setWithLastConsumed($current, "name", lv_name_0_0, "#trg");
+			}
+		)
+	)
 ;
 
 // Entry rule entryRulePipelineStage
@@ -472,22 +508,14 @@ rulePipelineStage returns [EObject current=null]
 			afterParserOrEnumRuleCall();
 		}
 		    |
-		(
-			(
-				{
-					$current = forceCreateModelElement(
-						grammarAccess.getPipelineStageAccess().getPipelineStageAction_1_0(),
-						$current);
-				}
-			)
-			{
-				newCompositeNode(grammarAccess.getPipelineStageAccess().getPipelineCountStageParserRuleCall_1_1());
-			}
-			rulePipelineCountStage
-			{
-				afterParserOrEnumRuleCall();
-			}
-		)
+		{
+			newCompositeNode(grammarAccess.getPipelineStageAccess().getPipelineCountStageParserRuleCall_1());
+		}
+		this_PipelineCountStage_1=rulePipelineCountStage
+		{
+			$current = $this_PipelineCountStage_1.current;
+			afterParserOrEnumRuleCall();
+		}
 	)
 ;
 
@@ -507,93 +535,95 @@ rulePipelineFilterStage returns [EObject current=null]
 	leaveRule();
 }:
 	(
-		(
-			(
-				{
-					$current = forceCreateModelElement(
-						grammarAccess.getPipelineFilterStageAccess().getPipelineFilterStageAction_0_0(),
-						$current);
-				}
-			)
-			{
-				newCompositeNode(grammarAccess.getPipelineFilterStageAccess().getPipelineCreatedFilterStageParserRuleCall_0_1());
-			}
-			rulePipelineCreatedFilterStage
-			{
-				afterParserOrEnumRuleCall();
-			}
-		)
+		{
+			newCompositeNode(grammarAccess.getPipelineFilterStageAccess().getPipelineCreatedFilterStageParserRuleCall_0());
+		}
+		this_PipelineCreatedFilterStage_0=rulePipelineCreatedFilterStage
+		{
+			$current = $this_PipelineCreatedFilterStage_0.current;
+			afterParserOrEnumRuleCall();
+		}
 		    |
-		(
-			(
-				{
-					$current = forceCreateModelElement(
-						grammarAccess.getPipelineFilterStageAccess().getPipelineFilterStageAction_1_0(),
-						$current);
-				}
-			)
-			{
-				newCompositeNode(grammarAccess.getPipelineFilterStageAccess().getPipelineDeletedFilterStageParserRuleCall_1_1());
-			}
-			rulePipelineDeletedFilterStage
-			{
-				afterParserOrEnumRuleCall();
-			}
-		)
+		{
+			newCompositeNode(grammarAccess.getPipelineFilterStageAccess().getPipelineDeletedFilterStageParserRuleCall_1());
+		}
+		this_PipelineDeletedFilterStage_1=rulePipelineDeletedFilterStage
+		{
+			$current = $this_PipelineDeletedFilterStage_1.current;
+			afterParserOrEnumRuleCall();
+		}
 		    |
 		{
 			newCompositeNode(grammarAccess.getPipelineFilterStageAccess().getPipelineTypeFilterStageParserRuleCall_2());
 		}
-		this_PipelineTypeFilterStage_4=rulePipelineTypeFilterStage
+		this_PipelineTypeFilterStage_2=rulePipelineTypeFilterStage
 		{
-			$current = $this_PipelineTypeFilterStage_4.current;
+			$current = $this_PipelineTypeFilterStage_2.current;
 			afterParserOrEnumRuleCall();
 		}
 	)
 ;
 
 // Entry rule entryRulePipelineCreatedFilterStage
-entryRulePipelineCreatedFilterStage returns [String current=null]:
+entryRulePipelineCreatedFilterStage returns [EObject current=null]:
 	{ newCompositeNode(grammarAccess.getPipelineCreatedFilterStageRule()); }
 	iv_rulePipelineCreatedFilterStage=rulePipelineCreatedFilterStage
-	{ $current=$iv_rulePipelineCreatedFilterStage.current.getText(); }
+	{ $current=$iv_rulePipelineCreatedFilterStage.current; }
 	EOF;
 
 // Rule PipelineCreatedFilterStage
-rulePipelineCreatedFilterStage returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
+rulePipelineCreatedFilterStage returns [EObject current=null]
 @init {
 	enterRule();
 }
 @after {
 	leaveRule();
 }:
-	kw='created'
-	{
-		$current.merge(kw);
-		newLeafNode(kw, grammarAccess.getPipelineCreatedFilterStageAccess().getCreatedKeyword());
-	}
+	(
+		(
+			lv_name_0_0='created'
+			{
+				newLeafNode(lv_name_0_0, grammarAccess.getPipelineCreatedFilterStageAccess().getNameCreatedKeyword_0());
+			}
+			{
+				if ($current==null) {
+					$current = createModelElement(grammarAccess.getPipelineCreatedFilterStageRule());
+				}
+				setWithLastConsumed($current, "name", lv_name_0_0, "created");
+			}
+		)
+	)
 ;
 
 // Entry rule entryRulePipelineDeletedFilterStage
-entryRulePipelineDeletedFilterStage returns [String current=null]:
+entryRulePipelineDeletedFilterStage returns [EObject current=null]:
 	{ newCompositeNode(grammarAccess.getPipelineDeletedFilterStageRule()); }
 	iv_rulePipelineDeletedFilterStage=rulePipelineDeletedFilterStage
-	{ $current=$iv_rulePipelineDeletedFilterStage.current.getText(); }
+	{ $current=$iv_rulePipelineDeletedFilterStage.current; }
 	EOF;
 
 // Rule PipelineDeletedFilterStage
-rulePipelineDeletedFilterStage returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
+rulePipelineDeletedFilterStage returns [EObject current=null]
 @init {
 	enterRule();
 }
 @after {
 	leaveRule();
 }:
-	kw='deleted'
-	{
-		$current.merge(kw);
-		newLeafNode(kw, grammarAccess.getPipelineDeletedFilterStageAccess().getDeletedKeyword());
-	}
+	(
+		(
+			lv_name_0_0='deleted'
+			{
+				newLeafNode(lv_name_0_0, grammarAccess.getPipelineDeletedFilterStageAccess().getNameDeletedKeyword_0());
+			}
+			{
+				if ($current==null) {
+					$current = createModelElement(grammarAccess.getPipelineDeletedFilterStageRule());
+				}
+				setWithLastConsumed($current, "name", lv_name_0_0, "deleted");
+			}
+		)
+	)
 ;
 
 // Entry rule entryRulePipelineTypeFilterStage
@@ -612,10 +642,20 @@ rulePipelineTypeFilterStage returns [EObject current=null]
 	leaveRule();
 }:
 	(
-		otherlv_0='type'
-		{
-			newLeafNode(otherlv_0, grammarAccess.getPipelineTypeFilterStageAccess().getTypeKeyword_0());
-		}
+		(
+			(
+				lv_name_0_0='type'
+				{
+					newLeafNode(lv_name_0_0, grammarAccess.getPipelineTypeFilterStageAccess().getNameTypeKeyword_0_0());
+				}
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getPipelineTypeFilterStageRule());
+					}
+					setWithLastConsumed($current, "name", lv_name_0_0, "type");
+				}
+			)
+		)
 		(
 			(
 				{
@@ -625,7 +665,7 @@ rulePipelineTypeFilterStage returns [EObject current=null]
 				}
 				otherlv_1=RULE_ID
 				{
-					newLeafNode(otherlv_1, grammarAccess.getPipelineTypeFilterStageAccess().getTypesEClassifierCrossReference_1_0());
+					newLeafNode(otherlv_1, grammarAccess.getPipelineTypeFilterStageAccess().getTypeEClassifierCrossReference_1_0());
 				}
 			)
 		)
@@ -633,25 +673,34 @@ rulePipelineTypeFilterStage returns [EObject current=null]
 ;
 
 // Entry rule entryRulePipelineCountStage
-entryRulePipelineCountStage returns [String current=null]:
+entryRulePipelineCountStage returns [EObject current=null]:
 	{ newCompositeNode(grammarAccess.getPipelineCountStageRule()); }
 	iv_rulePipelineCountStage=rulePipelineCountStage
-	{ $current=$iv_rulePipelineCountStage.current.getText(); }
+	{ $current=$iv_rulePipelineCountStage.current; }
 	EOF;
 
 // Rule PipelineCountStage
-rulePipelineCountStage returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
+rulePipelineCountStage returns [EObject current=null]
 @init {
 	enterRule();
 }
 @after {
 	leaveRule();
 }:
-	kw='count'
-	{
-		$current.merge(kw);
-		newLeafNode(kw, grammarAccess.getPipelineCountStageAccess().getCountKeyword());
-	}
+	(
+		(
+			lv_name_0_0='count'
+			{
+				newLeafNode(lv_name_0_0, grammarAccess.getPipelineCountStageAccess().getNameCountKeyword_0());
+			}
+			{
+				if ($current==null) {
+					$current = createModelElement(grammarAccess.getPipelineCountStageRule());
+				}
+				setWithLastConsumed($current, "name", lv_name_0_0, "count");
+			}
+		)
+	)
 ;
 
 // Entry rule entryRuleSatisfactionRule
@@ -922,6 +971,94 @@ ruleComparison returns [EObject current=null]
 							"org.eclipse.xtext.common.Terminals.INT");
 					}
 				)
+			)
+		)
+	)
+;
+
+// Entry rule entryRuleResolutionStrategy
+entryRuleResolutionStrategy returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getResolutionStrategyRule()); }
+	iv_ruleResolutionStrategy=ruleResolutionStrategy
+	{ $current=$iv_ruleResolutionStrategy.current; }
+	EOF;
+
+// Rule ResolutionStrategy
+ruleResolutionStrategy returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			(
+				lv_name_0_1='actAndLetRepair'
+				{
+					newLeafNode(lv_name_0_1, grammarAccess.getResolutionStrategyAccess().getNameActAndLetRepairKeyword_0_0());
+				}
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getResolutionStrategyRule());
+					}
+					setWithLastConsumed($current, "name", lv_name_0_1, null);
+				}
+				    |
+				lv_name_0_2='mergeAndPreserve'
+				{
+					newLeafNode(lv_name_0_2, grammarAccess.getResolutionStrategyAccess().getNameMergeAndPreserveKeyword_0_1());
+				}
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getResolutionStrategyRule());
+					}
+					setWithLastConsumed($current, "name", lv_name_0_2, null);
+				}
+				    |
+				lv_name_0_3='preferSource'
+				{
+					newLeafNode(lv_name_0_3, grammarAccess.getResolutionStrategyAccess().getNamePreferSourceKeyword_0_2());
+				}
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getResolutionStrategyRule());
+					}
+					setWithLastConsumed($current, "name", lv_name_0_3, null);
+				}
+				    |
+				lv_name_0_4='preferTarget'
+				{
+					newLeafNode(lv_name_0_4, grammarAccess.getResolutionStrategyAccess().getNamePreferTargetKeyword_0_3());
+				}
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getResolutionStrategyRule());
+					}
+					setWithLastConsumed($current, "name", lv_name_0_4, null);
+				}
+				    |
+				lv_name_0_5='revokeAddition'
+				{
+					newLeafNode(lv_name_0_5, grammarAccess.getResolutionStrategyAccess().getNameRevokeAdditionKeyword_0_4());
+				}
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getResolutionStrategyRule());
+					}
+					setWithLastConsumed($current, "name", lv_name_0_5, null);
+				}
+				    |
+				lv_name_0_6='revokeDeletion'
+				{
+					newLeafNode(lv_name_0_6, grammarAccess.getResolutionStrategyAccess().getNameRevokeDeletionKeyword_0_5());
+				}
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getResolutionStrategyRule());
+					}
+					setWithLastConsumed($current, "name", lv_name_0_6, null);
+				}
 			)
 		)
 	)

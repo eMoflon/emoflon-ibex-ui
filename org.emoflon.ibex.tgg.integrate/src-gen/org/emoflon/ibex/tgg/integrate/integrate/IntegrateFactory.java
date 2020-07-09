@@ -69,6 +69,24 @@ public interface IntegrateFactory extends EFactory
   Pipeline createPipeline();
 
   /**
+   * Returns a new object of class '<em>Pipeline Stage Src</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Pipeline Stage Src</em>'.
+   * @generated
+   */
+  PipelineStageSrc createPipelineStageSrc();
+
+  /**
+   * Returns a new object of class '<em>Pipeline Stage Trg</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Pipeline Stage Trg</em>'.
+   * @generated
+   */
+  PipelineStageTrg createPipelineStageTrg();
+
+  /**
    * Returns a new object of class '<em>Pipeline Stage</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -87,6 +105,24 @@ public interface IntegrateFactory extends EFactory
   PipelineFilterStage createPipelineFilterStage();
 
   /**
+   * Returns a new object of class '<em>Pipeline Created Filter Stage</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Pipeline Created Filter Stage</em>'.
+   * @generated
+   */
+  PipelineCreatedFilterStage createPipelineCreatedFilterStage();
+
+  /**
+   * Returns a new object of class '<em>Pipeline Deleted Filter Stage</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Pipeline Deleted Filter Stage</em>'.
+   * @generated
+   */
+  PipelineDeletedFilterStage createPipelineDeletedFilterStage();
+
+  /**
    * Returns a new object of class '<em>Pipeline Type Filter Stage</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -94,6 +130,15 @@ public interface IntegrateFactory extends EFactory
    * @generated
    */
   PipelineTypeFilterStage createPipelineTypeFilterStage();
+
+  /**
+   * Returns a new object of class '<em>Pipeline Count Stage</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Pipeline Count Stage</em>'.
+   * @generated
+   */
+  PipelineCountStage createPipelineCountStage();
 
   /**
    * Returns a new object of class '<em>Satisfaction Rule</em>'.
@@ -130,6 +175,15 @@ public interface IntegrateFactory extends EFactory
    * @generated
    */
   Comparison createComparison();
+
+  /**
+   * Returns a new object of class '<em>Resolution Strategy</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Resolution Strategy</em>'.
+   * @generated
+   */
+  ResolutionStrategy createResolutionStrategy();
 
   /**
    * Returns the package supported by this factory.

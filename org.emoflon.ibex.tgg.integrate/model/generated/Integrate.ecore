@@ -9,12 +9,14 @@
         upperBound="-1" eType="#//ConflictResolutionStrategy" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Import">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rule" eType="ecore:EClass platform:/resource/org.emoflon.ibex.tgg.editor/model/generated/TGG.ecore#//Rule"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ConflictResolutionStrategy">
     <eStructuralFeatures xsi:type="ecore:EReference" name="variables" upperBound="-1"
         eType="#//Variable" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rule" eType="#//SatisfactionRule"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resolutionStrategy" eType="#//ResolutionStrategy"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Variable">
@@ -23,15 +25,27 @@
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Pipeline">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="first" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="first" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="next" upperBound="-1" eType="#//PipelineStage"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="PipelineStage"/>
-  <eClassifiers xsi:type="ecore:EClass" name="PipelineFilterStage" eSuperTypes="#//PipelineStage"/>
-  <eClassifiers xsi:type="ecore:EClass" name="PipelineTypeFilterStage" eSuperTypes="#//PipelineFilterStage">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="types" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EClassifier"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PipelineStageSrc">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PipelineStageTrg">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PipelineStage">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PipelineFilterStage" eSuperTypes="#//PipelineStage"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PipelineCreatedFilterStage" eSuperTypes="#//PipelineFilterStage"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PipelineDeletedFilterStage" eSuperTypes="#//PipelineFilterStage"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PipelineTypeFilterStage" eSuperTypes="#//PipelineFilterStage">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EClassifier"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PipelineCountStage" eSuperTypes="#//PipelineStage"/>
   <eClassifiers xsi:type="ecore:EClass" name="SatisfactionRule">
     <eStructuralFeatures xsi:type="ecore:EReference" name="firstRule" eType="#//Comparison"
         containment="true"/>
@@ -46,5 +60,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="c1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="v2" eType="#//Variable"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="n2" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ResolutionStrategy">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
 </ecore:EPackage>
