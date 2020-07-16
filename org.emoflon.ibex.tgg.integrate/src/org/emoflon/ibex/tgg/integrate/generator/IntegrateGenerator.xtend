@@ -7,6 +7,10 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.AbstractGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
+import org.eclipse.xtext.naming.IQualifiedNameProvider
+import static extension org.eclipse.xtext.EcoreUtil2.*
+import org.emoflon.ibex.tgg.integrate.integrate.ConflictResolutionStrategy
+import javax.inject.Inject
 
 /**
  * Generates code from your model files on save.
@@ -14,12 +18,24 @@ import org.eclipse.xtext.generator.IGeneratorContext
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#code-generation
  */
 class IntegrateGenerator extends AbstractGenerator {
-
-	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
-//		fsa.generateFile('greetings.txt', 'People to greet: ' + 
-//			resource.allContents
-//				.filter(Greeting)
-//				.map[name]
-//				.join(', '))
+		
+		@Inject ConflictResolutionStrategyGenerator conflictResolutionStrategyGenerator;
+		@Extension IQualifiedNameProvider iQualifiedNameProvider;
+		
+		override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
+			fsa.generateFile("Solve.java", '''
+				public class Solve implements org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.util.ISolver {
+					
+					@Override
+					public void sayHello() {
+						System.out.println("Hello from this service!");
+				}
+			''')
+			
+			/*val filename = resource.normalizedURI.lastSegment.replace(".integ", ".java")
+			
+			val crs = resource.allContents
+				.filter(ConflictResolutionStrategy)
+				.map[crs | conflictResolutionStrategyGenerator.compile(crs)]*/
 	}
 }

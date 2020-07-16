@@ -15,17 +15,18 @@ Require-Bundle: org.eclipse.xtext,
  org.eclipse.emf.common,
  org.antlr.runtime;bundle-version="[3.2.0,3.2.1)",
  org.emoflon.ibex.tgg.editor;bundle-version="1.0.0",
- org.moflon.core.utilities;bundle-version="3.0.0"
+ org.moflon.core.utilities;bundle-version="3.0.0",
+ org.emoflon.ibex.tgg.language
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Export-Package: org.emoflon.ibex.tgg.integrate.services,
- org.emoflon.ibex.tgg.integrate.parser.antlr.internal,
- org.emoflon.ibex.tgg.integrate.integrate.util,
- org.emoflon.ibex.tgg.integrate.validation,
- org.emoflon.ibex.tgg.integrate.integrate,
- org.emoflon.ibex.tgg.integrate.serializer,
- org.emoflon.ibex.tgg.integrate.integrate.impl,
- org.emoflon.ibex.tgg.integrate.parser.antlr,
- org.emoflon.ibex.tgg.integrate.scoping,
+Export-Package: org.emoflon.ibex.tgg.integrate,
  org.emoflon.ibex.tgg.integrate.generator,
- org.emoflon.ibex.tgg.integrate
+ org.emoflon.ibex.tgg.integrate.integrate,
+ org.emoflon.ibex.tgg.integrate.integrate.impl,
+ org.emoflon.ibex.tgg.integrate.integrate.util,
+ org.emoflon.ibex.tgg.integrate.parser.antlr,
+ org.emoflon.ibex.tgg.integrate.parser.antlr.internal,
+ org.emoflon.ibex.tgg.integrate.scoping,
+ org.emoflon.ibex.tgg.integrate.serializer,
+ org.emoflon.ibex.tgg.integrate.services,
+ org.emoflon.ibex.tgg.integrate.validation
 Import-Package: org.apache.log4j
