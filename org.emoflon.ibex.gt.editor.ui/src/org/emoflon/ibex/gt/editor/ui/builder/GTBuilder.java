@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IBuildConfiguration;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -32,6 +33,8 @@ public class GTBuilder extends IncrementalProjectBuilder {
 	 * The ID of the GTBuilder.
 	 */
 	public static final String BUILDER_ID = "org.emoflon.ibex.gt.editor.ui.builder";
+	
+	private IProject currentProject;
 
 	/**
 	 * The name of the source folder. The builds are only triggered for changes in
@@ -43,11 +46,46 @@ public class GTBuilder extends IncrementalProjectBuilder {
 	 * the project's source folder.
 	 */
 	private IFolder srcFolder;
+	
+	/**
+	 * Sets the current project. Beware, setting the project on an initialized builder instance could lead to undesirable side effects!
+	 * 
+	 * @param the new project
+	 */
+	public void setProject(IProject project) {
+		currentProject = project;
+	}
+	
+	/**
+	 * Gets the current project. 
+	 * 
+	 * @param (optional) a valid build configuration
+	 * @return Will either return the project contained in a valid build config, if it exists, 
+	 * 	or the value of the currentProject attribute.
+	 */
+	public IProject getProject(IBuildConfiguration buildConfig) {
+		if(buildConfig == null) {
+			return currentProject;
+		} else {
+			return getProject();
+		}
+	}
+	
+	/**
+	 * Allows the external invocation of the build command, bypassing eclipse procedure.
+	 * 
+	 * @param kind The type of build (e.g., Incrematal Build, Full Build etc.)
+	 * @return
+	 * @throws CoreException
+	 */
+	public IProject[] buildManually(final int kind) throws CoreException {
+		return build(kind, null, null);
+	}
 
 	@Override
 	protected IProject[] build(final int kind, final Map<String, String> args, final IProgressMonitor monitor)
 			throws CoreException {
-		srcFolder = getProject().getFolder(SOURCE_FOLDER);
+		srcFolder = getProject(getBuildConfig()).getFolder(SOURCE_FOLDER);
 		if (!srcFolder.exists()) {
 			log("src folder is missing");
 			return null;
@@ -55,7 +93,7 @@ public class GTBuilder extends IncrementalProjectBuilder {
 //		GTStandaloneSetup.doSetup();
 		
 		// Run builder extensions for the project.
-		runBuilderExtensions(ext -> ext.run(getProject()));
+		runBuilderExtensions(ext -> ext.run(getProject(getBuildConfig())));
 
 		// Run builder extensions for each package.
 		switch (kind) {
@@ -78,7 +116,7 @@ public class GTBuilder extends IncrementalProjectBuilder {
 	 */
 	private void incrementalBuild() {
 		log("incremental build");
-		Arrays.stream(getDelta(getProject()).getAffectedChildren())
+		Arrays.stream(getDelta(getProject(getBuildConfig())).getAffectedChildren())
 				.filter(child -> child.getProjectRelativePath().toString().contains("src"))
 				.filter(child -> !child.getProjectRelativePath().toString().contains("src-gen"))
 				.filter(srcDelta -> folderContainsGTModel(srcDelta))
@@ -114,7 +152,7 @@ public class GTBuilder extends IncrementalProjectBuilder {
 	 * @param packages the packages to build
 	 */
 	private void buildPackages(final Set<IPath> packages) {
-		packages.forEach(packagePath -> runBuilderExtensions(ext -> ext.run(getProject(), packagePath)));
+		packages.forEach(packagePath -> runBuilderExtensions(ext -> ext.run(getProject(getBuildConfig()), packagePath)));
 	}
 
 	/**
@@ -143,14 +181,14 @@ public class GTBuilder extends IncrementalProjectBuilder {
 	 * Logs the message on the console.
 	 */
 	private void log(final String message) {
-		Logger.getRootLogger().info(getProject().getName() + ": " + message);
+		Logger.getRootLogger().info(getProject(getBuildConfig()).getName() + ": " + message);
 	}
 
 	/**
 	 * Logs the error message on the console.
 	 */
 	private void logError(final String message) {
-		Logger.getRootLogger().error(getProject().getName() + ": " + message);
+		Logger.getRootLogger().error(getProject(getBuildConfig()).getName() + ": " + message);
 	}
 
 	/**
