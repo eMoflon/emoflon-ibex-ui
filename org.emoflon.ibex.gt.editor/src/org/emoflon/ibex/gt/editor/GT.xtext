@@ -67,11 +67,15 @@ enum EditorRelation:
   SMALLER='<';
 
 EditorExpression:
-  EditorAttributeExpression | EditorLiteralExpression | EditorEnumExpression | 
+  EditorAttributeExpression | EditorLiteralExpression | EditorEnumExpression | EditorCountExpression |
   EditorParameterExpression | StochasticFunctionExpression | ArithmeticCalculationExpression;
 
 EditorAttributeExpression:
   node=[EditorNode] '.' attribute=[ecore::EAttribute];
+  
+EditorCountExpression:
+	'count' '(' invokedPatten = [EditorPattern] ')'
+;
 
 EditorLiteralExpression:
   value=('true' | 'false' | Number) |
@@ -109,7 +113,7 @@ EditorPatternAttributeConstraintPredicate:
   ')';
 
 EditorPatternAttributeConstraintArgument:
-  EditorPatternAttributeConstraintAttributeValueExpression | EditorLiteralExpression | EditorEnumExpression | EditorPatternAttributeConstraintVariableReference | EditorParameterExpression;
+  EditorPatternAttributeConstraintAttributeValueExpression | EditorLiteralExpression |  EditorCountExpression | EditorEnumExpression | EditorPatternAttributeConstraintVariableReference | EditorParameterExpression;
 
 EditorPatternAttributeConstraintAttributeValueExpression:
   editorNode=[EditorNode] '.' attribute=[ecore::EAttribute] (free?="*")?;
@@ -191,7 +195,7 @@ OneParameterArithmetics returns ArithmeticExpression:
 	| ArithmeticAttribute;
 
 ArithmeticAttribute returns ArithmeticExpression:
-	{ArithmeticAttribute} (staticAttribute = ArithmeticNumber) | ArithmeticNodeAttribute;
+	{ArithmeticAttribute} (staticAttribute = ArithmeticNumber) | ArithmeticNodeAttribute | EditorCountExpression;
 	
 ArithmeticNodeAttribute:
 	 (negative?="-")? node=[EditorNode] '.' attribute=[ecore::EAttribute];
