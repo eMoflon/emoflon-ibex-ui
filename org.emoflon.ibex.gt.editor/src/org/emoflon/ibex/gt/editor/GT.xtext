@@ -13,6 +13,7 @@ EditorImport:
   'import' name=STRING;
 
 EditorPattern:
+	(notDisjunct ?= '@notDisjoint')?
   (abstract?='abstract')? type=EditorPatternType name=ID
   ('('
   (parameters+=EditorParameter (',' parameters+=EditorParameter)*)?

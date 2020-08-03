@@ -50,6 +50,7 @@ import org.emoflon.ibex.gt.editor.gT.MultOperator
 import org.emoflon.ibex.gt.editor.gT.AddExpression
 import org.emoflon.ibex.gt.editor.gT.ExpExpression
 import org.emoflon.ibex.gt.editor.utils.GTArithmeticsCalculatorUtil
+import org.emoflon.ibex.gt.editor.utils.GTDisjunctPatternFinder
 
 /**
  * This class contains custom validation rules.
@@ -305,6 +306,9 @@ class GTValidator extends AbstractGTValidator {
  
   public static val PARAMETER_NEGATIVE_MESSAGE = "operators can't be directly behind each other"
   public static val PARAMETER_NEGATIVE = CODE_PREFIX + "arithmetics.parameterNegative"  
+  
+  public static val PATTERN_DISJUNCT_MESSAGE = "the pattern '%s' is disjunct with the subpatterns %s"
+  public static val PATTERN_DISJUNCT = "pattern.isDisjunct"
   
   @Check
   def checkFile(EditorGTFile file) {
@@ -1396,6 +1400,15 @@ class GTValidator extends AbstractGTValidator {
   	}
   }
   
+  @Check
+  def checkIfPatternDisjunct(EditorPattern pattern){
+  	val disjunctPatternFinder = new GTDisjunctPatternFinder(pattern)
+  	if(disjunctPatternFinder.disjunct && !pattern.notDisjunct){
+  		warning(String.format(PATTERN_DISJUNCT_MESSAGE, pattern.name, 
+  			GTDisjunctPatternFinder::getDisjunctPatternFormat(disjunctPatternFinder.subpatterns))
+	  		, GTPackage.Literals.EDITOR_PATTERN__NAME, PATTERN_DISJUNCT)	
+  	}
+  }
   
   def getParameterNames(EList<EditorAttributeConditionParameter> list) {
     return list.map[it.name]
