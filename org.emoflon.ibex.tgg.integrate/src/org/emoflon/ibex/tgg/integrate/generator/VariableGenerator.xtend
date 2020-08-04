@@ -4,7 +4,7 @@ import org.emoflon.ibex.tgg.integrate.integrate.Variable
 
 class VariableGenerator {
 	
-	def compile(Variable variable) {
+	def String compile(Variable variable) {
 	}
 	
 }

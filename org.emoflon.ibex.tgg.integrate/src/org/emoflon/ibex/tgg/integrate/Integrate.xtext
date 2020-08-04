@@ -2,82 +2,71 @@ grammar org.emoflon.ibex.tgg.integrate.Integrate with org.eclipse.xtext.common.T
 
 import "http://www.moflon.org/ide/tgg/mosl/TGG" as tgg
 import "http://www.eclipse.org/emf/2002/Ecore" as ecore
-
 generate integrate "http://www.emoflon.org/ibex/tgg/integrate/Integrate"
 
 Integrate:
+	package=Package
 	imports+=Import*
 	conflictResolutionStrategies+=ConflictResolutionStrategy*;
-	
+
+Package:
+	'package' name=QualifiedName;
+
+QualifiedName:
+	ID ('.' ID)*;
+
 Import:
-	'#import' rule=[tgg::Rule]
-;	
+	'#import' rule=[tgg::Rule];
 
 ConflictResolutionStrategy:
-	{ConflictResolutionStrategy} 'solve' 'conflict' 'for' 'all' '{'
+	'solve' 'conflict' 'for' 'all' '{'
 		variables+=Variable+
 		'satisfies' '{'
 			rule=SatisfactionRule
-		'}' 
-	'}' 'with' resolutionStrategy=ResolutionStrategy
-;
+		'}'
+	'}' 'with' resolutionStrategy=ResolutionStrategy;
 
 Variable:
-	'var' name=ID '=' pipeline=Pipeline
-;
+	'var' name=ID '=' pipeline=Pipeline;
 
 Pipeline:
-	first=(PipelineStageSrc | PipelineStageTrg) ('|' next+=PipelineStage)*
-;
+	first=(PipelineStageSrc | PipelineStageTrg) ('|' next+=PipelineStage)*;
 
 PipelineStageSrc:
-	name='#src'
-;
+	name='#src';
 
 PipelineStageTrg:
-	name='#trg'
-;
+	name='#trg';
 
 PipelineStage:
-	PipelineFilterStage | PipelineCountStage
-;
+	PipelineFilterStage | PipelineCountStage;
 
 PipelineFilterStage:
-	PipelineCreatedFilterStage | PipelineDeletedFilterStage | PipelineTypeFilterStage
-;
+	PipelineCreatedFilterStage | PipelineDeletedFilterStage | PipelineTypeFilterStage;
 
 PipelineCreatedFilterStage:
-	name='created'
-;
+	name='created';
 
 PipelineDeletedFilterStage:
-	name='deleted'
-;
+	name='deleted';
 
 PipelineTypeFilterStage:
-	name='type' type=[ecore::EClassifier]
-;
+	name='type' type=[ecore::EClassifier];
 
 PipelineCountStage:
-	name='count'
-;
+	name='count';
 
 SatisfactionRule:
-	firstRule=Comparison otherRules+=(And|Or)*	
-;
+	firstRule=Comparison otherRules+=(And | Or)*;
 
 And:
-	'and' Comparison	
-;
+	'and' Comparison;
 
 Or:
-	'or' Comparison
-;
+	'or' Comparison;
 
 Comparison:
-	(v1=[Variable] | n1=INT) c1=('>'|'>='|'<'|'<=') (v2=[Variable] | n2=INT)
-;
+	(v1=[Variable] | n1=INT) c1=('>' | '>=' | '<' | '<=') (v2=[Variable] | n2=INT);
 
 ResolutionStrategy:
-	name=('actAndLetRepair' | 'mergeAndPreserve' | 'preferSource' | 'preferTarget' | 'revokeAddition' | 'revokeDeletion')
-;
+	name=('actAndLetRepair' | 'mergeAndPreserve' | 'preferSource' | 'preferTarget' | 'revokeAddition' | 'revokeDeletion');

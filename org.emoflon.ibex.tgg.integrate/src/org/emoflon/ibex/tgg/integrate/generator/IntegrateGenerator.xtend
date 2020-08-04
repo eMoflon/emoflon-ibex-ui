@@ -3,14 +3,24 @@
  */
 package org.emoflon.ibex.tgg.integrate.generator
 
+import java.util.ArrayList
+import java.util.List
+import javax.inject.Inject
+import org.apache.commons.lang3.StringUtils
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.AbstractGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
 import org.eclipse.xtext.naming.IQualifiedNameProvider
+import org.eclipse.xtext.naming.QualifiedName
+import org.emoflon.ibex.tgg.integrate.integrate.Integrate
+import org.emoflon.ibex.tgg.integrate.integrate.impl.IntegrateImpl
+import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.ConflictContainer
+import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.util.CRSContainer
+import org.emoflon.ibex.tgg.operational.strategies.integrate.util.MatchAnalysis
+
 import static extension org.eclipse.xtext.EcoreUtil2.*
-import org.emoflon.ibex.tgg.integrate.integrate.ConflictResolutionStrategy
-import javax.inject.Inject
+import org.emoflon.ibex.tgg.integrate.api.IConflictResolutionStrategy
 
 /**
  * Generates code from your model files on save.
@@ -18,24 +28,72 @@ import javax.inject.Inject
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#code-generation
  */
 class IntegrateGenerator extends AbstractGenerator {
+
+	@Inject ConflictResolutionStrategyGenerator conflictResolutionStrategyGenerator;
+	@Inject extension IQualifiedNameProvider
+
+	final static String CLASS_POSTFIX = "CRSContainer"
+
+	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
+		val integrate = resource.contents.get(0) as IntegrateImpl
+		val packageName = integrate.package.fullyQualifiedName
+		val crsClassNames = integrate.generateCRSClassNames
+
+		generateCRSContainer(integrate, crsClassNames, packageName, resource, fsa);
+		generateCRSImpls(integrate, packageName, crsClassNames,fsa)
+	}
+
+	def generateCRSContainer(Integrate integrate, List<String> crsClassNames, QualifiedName packageName,
+		Resource resource, IFileSystemAccess2 fsa) {
+		val className = getClassPrefix(resource) + CLASS_POSTFIX
+		val filePath = packageName.toString("/") + "/" + className + ".java"
 		
-		@Inject ConflictResolutionStrategyGenerator conflictResolutionStrategyGenerator;
-		@Extension IQualifiedNameProvider iQualifiedNameProvider;
-		
-		override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
-			fsa.generateFile("Solve.java", '''
-				public class Solve implements org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.util.ISolver {
-					
-					@Override
-					public void sayHello() {
-						System.out.println("Hello from this service!");
+		fsa.generateFile(filePath, '''
+			package «packageName»;
+			
+			public class «className» implements «CRSContainer.name»{
+				
+				private final «List.name»<«IConflictResolutionStrategy.name»> crsList;
+				
+				public «className»() {
+					this.crsList = «List.name».of(
+						«FOR crsClassName : crsClassNames SEPARATOR','»
+							new «crsClassName»()
+						«ENDFOR»
+					);
 				}
-			''')
-			
-			/*val filename = resource.normalizedURI.lastSegment.replace(".integ", ".java")
-			
-			val crs = resource.allContents
-				.filter(ConflictResolutionStrategy)
-				.map[crs | conflictResolutionStrategyGenerator.compile(crs)]*/
+					
+				@Override
+				public void solve(«ConflictContainer.name» conflictContainer, «MatchAnalysis.name» matchAnalysis) {
+					for («IConflictResolutionStrategy.name» crs: crsList) {
+						if (crs.canSolve(conflictContainer, matchAnalysis)) {
+							crs.solve(conflictContainer, matchAnalysis);
+							return;
+						}
+					}
+				}
+			}
+		''')
+	}
+
+	def String getClassPrefix(Resource resource) {
+		val prefix = resource.normalizedURI.lastSegment.replace(".integ", "")
+		StringUtils.capitalize(prefix)
+	}
+
+	def List<String> generateCRSClassNames(Integrate integrate) {
+		val classNames = new ArrayList;
+		for (var suffix = 0; suffix < integrate.conflictResolutionStrategies.size; suffix++) {
+			classNames.add('''ConflictResolutionStrategy«suffix+1»''');
+		}
+
+		classNames
+	}
+
+	private def void generateCRSImpls(IntegrateImpl integrate, QualifiedName packageName, List<String> crsClassNames, IFileSystemAccess2 fsa) {
+		for (var crsIndex = 0; crsIndex < integrate.conflictResolutionStrategies.size; crsIndex++) {
+			conflictResolutionStrategyGenerator.doGenerate(integrate.conflictResolutionStrategies.get(crsIndex),
+				packageName, crsClassNames.get(crsIndex), fsa)
+		}
 	}
 }

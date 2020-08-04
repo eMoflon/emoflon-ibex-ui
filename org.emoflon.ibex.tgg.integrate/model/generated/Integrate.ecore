@@ -3,10 +3,15 @@
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="integrate" nsURI="http://www.emoflon.org/ibex/tgg/integrate/Integrate"
     nsPrefix="integrate">
   <eClassifiers xsi:type="ecore:EClass" name="Integrate">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="package" eType="#//Package"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="imports" upperBound="-1"
         eType="#//Import" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="conflictResolutionStrategies"
         upperBound="-1" eType="#//ConflictResolutionStrategy" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Package">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Import">
     <eStructuralFeatures xsi:type="ecore:EReference" name="rule" eType="ecore:EClass platform:/resource/org.emoflon.ibex.tgg.editor/model/generated/TGG.ecore#//Rule"/>
