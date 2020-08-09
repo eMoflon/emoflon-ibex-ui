@@ -20,38 +20,35 @@ Import:
 
 ConflictResolutionStrategy:
 	'solve' 'conflict' 'for' 'all' '{'
-		variables+=Variable+
-		'satisfies' '{'
-			rule=SatisfactionRule
-		'}'
+	variables+=Variable+
+	'satisfies' '{'
+	rule=SatisfactionRule
+	'}'
 	'}' 'with' resolutionStrategy=ResolutionStrategy;
 
 Variable:
 	'var' name=ID '=' pipeline=Pipeline;
 
 Pipeline:
-	first=(PipelineStageSrc | PipelineStageTrg) ('|' next+=PipelineStage)*;
+	start=(PipelineStageSrc | PipelineStageTrg);
 
 PipelineStageSrc:
-	name='#src';
+	name='#src' '|' next=(PipelineFilterStage | PipelineCountStage);
 
 PipelineStageTrg:
-	name='#trg';
-
-PipelineStage:
-	PipelineFilterStage | PipelineCountStage;
+	name='#trg' '|' next=(PipelineFilterStage | PipelineCountStage);
 
 PipelineFilterStage:
 	PipelineCreatedFilterStage | PipelineDeletedFilterStage | PipelineTypeFilterStage;
 
 PipelineCreatedFilterStage:
-	name='created';
+	name='created' '|' next=(PipelineTypeFilterStage | PipelineCountStage);
 
 PipelineDeletedFilterStage:
-	name='deleted';
+	name='deleted' '|' next=(PipelineTypeFilterStage | PipelineCountStage);
 
 PipelineTypeFilterStage:
-	name='type' type=[ecore::EClassifier];
+	name='type' type=[ecore::EClassifier] '|' next=PipelineCountStage;
 
 PipelineCountStage:
 	name='count';
