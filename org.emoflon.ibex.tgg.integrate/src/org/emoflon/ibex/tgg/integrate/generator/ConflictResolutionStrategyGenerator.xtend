@@ -28,7 +28,7 @@ class ConflictResolutionStrategyGenerator {
 					«variableGenerator.generate(variable)»
 				«ENDFOR»
 				
-				return «satisfactionRuleGenerator.generate(strategy.rule)»;
+				return «satisfactionRuleGenerator.generate(strategy.rule, strategy.resolutionStrategy)»;
 				}
 				
 				@Override

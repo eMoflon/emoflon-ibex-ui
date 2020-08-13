@@ -5,15 +5,11 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict;
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.util.ConflictElements;
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.util.ConflictEltFilter;
-import org.emoflon.ibex.tgg.operational.strategies.integrate.util.EltFilter;
-import org.emoflon.ibex.tgg.operational.strategies.integrate.util.TGGMatchUtil;
 
-import language.TGGRuleElement;
 import language.TGGRuleNode;
 
 public class PipelineStageExecuter {
