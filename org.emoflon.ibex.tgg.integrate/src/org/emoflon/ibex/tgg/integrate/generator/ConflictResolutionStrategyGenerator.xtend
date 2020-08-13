@@ -12,6 +12,7 @@ import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict
 class ConflictResolutionStrategyGenerator {
 
 	@Inject VariableGenerator variableGenerator
+	@Inject SatisfactionRuleGenerator satisfactionRuleGenerator
 
 	def doGenerate(ConflictResolutionStrategy strategy, QualifiedName packageName, String className,
 		IFileSystemAccess2 fsa) {
@@ -26,7 +27,8 @@ class ConflictResolutionStrategyGenerator {
 				«FOR variable : strategy.variables»
 					«variableGenerator.generate(variable)»
 				«ENDFOR»
-				return false;
+				
+				return «satisfactionRuleGenerator.generate(strategy.rule)»;
 				}
 				
 				@Override

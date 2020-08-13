@@ -6,7 +6,10 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.EObject;
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict;
+import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.util.ConflictElements;
+import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.util.ConflictEltFilter;
 import org.emoflon.ibex.tgg.operational.strategies.integrate.util.EltFilter;
 import org.emoflon.ibex.tgg.operational.strategies.integrate.util.TGGMatchUtil;
 
@@ -15,34 +18,33 @@ import language.TGGRuleNode;
 
 public class PipelineStageExecuter {
 
-	public static EltFilter executeSrc() {
-		return new EltFilter().src();
+	public static ConflictEltFilter executeSrc() {
+		return new ConflictEltFilter().src();
 	}
 
-	public static EltFilter executeTrg() {
-		return new EltFilter().trg();
+	public static ConflictEltFilter executeTrg() {
+		return new ConflictEltFilter().trg();
 	}
 
-	public static EltFilter executeCreatedFilter(EltFilter filter) {
-		return filter;
+	public static ConflictEltFilter executeCreatedFilter(ConflictEltFilter filter) {
+		return filter.created();
 	}
 
-	public static EltFilter executeDeletedFilter(EltFilter filter) {
-		return filter.delete().deleted();
+	public static ConflictEltFilter executeDeletedFilter(ConflictEltFilter filter) {
+		return filter.deleted();
 	}
 
-	public static Set<TGGRuleElement> executeElementFilter(EltFilter filter, Conflict c) {
-		TGGMatchUtil util = new TGGMatchUtil(c.integrate());
-		return util.getElts(c.getBrokenMatch().getMatch(), filter);
+	public static Set<EObject> executeElementFilter(ConflictEltFilter filter, Conflict c) {
+		ConflictElements filteredElements = new ConflictElements(c, filter, true);
+		return filteredElements.getObjects();
 	}
 
-	public static Set<TGGRuleElement> executeTypeFilter(Set<TGGRuleElement> elements,
-			Collection<EClassifier> typeClassifiers) {
+	public static Set<EObject> executeTypeFilter(Set<EObject> elements,
+			Collection<String> filterClassNames) {
 
-		Set<?> clazzes = typeClassifiers.stream().map(tc -> tc.getInstanceClass()).collect(Collectors.toSet());
 		Predicate<TGGRuleNode> hasType = e -> {
-			Class<?> clazz = e.getType().getInstanceClass();
-			return clazzes.contains(clazz);
+			String name = e.getType().getName();
+			return filterClassNames.contains(name);
 		};
 
 		return elements.stream().filter(e -> e instanceof TGGRuleNode).map(e -> (TGGRuleNode) e).filter(hasType)

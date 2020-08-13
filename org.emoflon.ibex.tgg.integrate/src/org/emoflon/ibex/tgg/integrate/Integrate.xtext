@@ -54,16 +54,22 @@ PipelineCountStage:
 	name='count';
 
 SatisfactionRule:
-	firstRule=Comparison otherRules+=(And | Or)*;
+	firstRule=Comparison otherRules+=Predicate*;
+
+Predicate:
+	(And | Or);
 
 And:
-	'and' Comparison;
+	'and' comparison=Comparison;
 
 Or:
-	'or' Comparison;
+	'or' comparison=Comparison;
+
+Integer returns ecore::EIntegerObject:
+	INT;
 
 Comparison:
-	(v1=[Variable] | n1=INT) c1=('>' | '>=' | '<' | '<=') (v2=[Variable] | n2=INT);
+	(v1=[Variable] | n1=Integer) c1=('>' | '>=' | '<' | '<=') (v2=[Variable] | n2=Integer);
 
 ResolutionStrategy:
 	name=('actAndLetRepair' | 'mergeAndPreserve' | 'preferSource' | 'preferTarget' | 'revokeAddition' | 'revokeDeletion');

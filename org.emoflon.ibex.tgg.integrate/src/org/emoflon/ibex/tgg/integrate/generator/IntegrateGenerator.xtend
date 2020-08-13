@@ -21,6 +21,7 @@ import org.emoflon.ibex.tgg.operational.strategies.integrate.util.MatchAnalysis
 
 import static extension org.eclipse.xtext.EcoreUtil2.*
 import org.emoflon.ibex.tgg.integrate.api.IConflictResolutionStrategy
+import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict
 
 /**
  * Generates code from your model files on save.
@@ -64,10 +65,10 @@ class IntegrateGenerator extends AbstractGenerator {
 				}
 					
 				@Override
-				public void solve(«ConflictContainer.name» conflictContainer, «MatchAnalysis.name» matchAnalysis) {
+				public void solve(«Conflict.name» conflict, «MatchAnalysis.name» matchAnalysis) {
 					for («IConflictResolutionStrategy.name» crs: crsList) {
-						if (crs.canSolve(conflictContainer, matchAnalysis)) {
-							crs.solve(conflictContainer, matchAnalysis);
+						if (crs.canSolve(conflict, matchAnalysis)) {
+							crs.solve(conflict, matchAnalysis);
 							return;
 						}
 					}

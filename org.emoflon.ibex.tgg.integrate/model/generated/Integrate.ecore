@@ -66,16 +66,20 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="firstRule" eType="#//Comparison"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="otherRules" upperBound="-1"
-        eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject" containment="true"/>
+        eType="#//Predicate" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="And"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Or"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Comparison" eSuperTypes="#//And #//Or">
+  <eClassifiers xsi:type="ecore:EClass" name="Predicate">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="comparison" eType="#//Comparison"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="And" eSuperTypes="#//Predicate"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Or" eSuperTypes="#//Predicate"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Comparison">
     <eStructuralFeatures xsi:type="ecore:EReference" name="v1" eType="#//Variable"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="n1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="n1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="c1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="v2" eType="#//Variable"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="n2" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="n2" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ResolutionStrategy">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

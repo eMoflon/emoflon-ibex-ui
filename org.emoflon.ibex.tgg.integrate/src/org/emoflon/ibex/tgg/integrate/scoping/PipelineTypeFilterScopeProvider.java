@@ -1,7 +1,6 @@
 package org.emoflon.ibex.tgg.integrate.scoping;
 
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -21,34 +20,21 @@ import org.eclipse.xtext.scoping.impl.SimpleScope;
 import org.emoflon.ibex.tgg.integrate.integrate.Import;
 import org.emoflon.ibex.tgg.integrate.integrate.Integrate;
 import org.emoflon.ibex.tgg.integrate.integrate.PipelineTypeFilterStage;
+import org.moflon.tgg.mosl.tgg.Rule;
 import org.moflon.tgg.mosl.tgg.Schema;
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile;
+import org.moflon.tgg.mosl.tgg.impl.SchemaImpl;
 
 public class PipelineTypeFilterScopeProvider {
 
 	public IScope provide(EObject context) {
-		PipelineTypeFilterStage stage = (PipelineTypeFilterStage) context;
-		Integrate integrate = getIntegrate(stage);
+		Integrate integrate = EcoreUtil2.getContainerOfType(context, Integrate.class);
 		return buildScopeFromImports(integrate.getImports());
 	}
 
-	private Integrate getIntegrate(PipelineTypeFilterStage stage) {
-		EObject eContainer = stage.eContainer();
-		while (eContainer != null) {
-			if (eContainer instanceof Integrate) {
-				return (Integrate) eContainer;
-			}
-
-			eContainer = eContainer.eContainer();
-		}
-
-		// TODO: Throw meaningful exception
-		throw new RuntimeException();
-	}
-
 	private IScope buildScopeFromImports(EList<Import> imports) {
-		Set<EClassifier> types = imports.stream().map(imp -> imp.getRule()).map(rule -> rule.getSchema())
-				.map(this::getTGGFile)
+		Set<EClassifier> types = imports.stream().map(imp -> imp.getRule())
+				.map(this::getSchema)
 				.flatMap(this::getURIStream)
 				.map(this::getResourceForURI)
 				.map(this::getEPackage)
@@ -59,11 +45,12 @@ public class PipelineTypeFilterScopeProvider {
 				Scopes.scopedElementsFor(types, new DefaultDeclarativeQualifiedNameProvider()));
 	}
 
-	private TripleGraphGrammarFile getTGGFile(Schema schema) {
-		return (TripleGraphGrammarFile) schema.eContainer();
+	private Schema getSchema(Rule rule) {
+		return rule.getSchema();
 	}
 	
-	private Stream<URI> getURIStream(TripleGraphGrammarFile tggFile) {
+	private Stream<URI> getURIStream(Schema schema) {
+		TripleGraphGrammarFile tggFile = EcoreUtil2.getContainerOfType(schema, TripleGraphGrammarFile.class);
 		return tggFile.getImports().stream().map(imp -> URI.createURI(imp.getName()));
 	}
 	
