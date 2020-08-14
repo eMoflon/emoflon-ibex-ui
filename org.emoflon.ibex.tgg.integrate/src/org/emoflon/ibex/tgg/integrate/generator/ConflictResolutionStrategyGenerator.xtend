@@ -1,18 +1,18 @@
 package org.emoflon.ibex.tgg.integrate.generator
 
-import org.emoflon.ibex.tgg.integrate.integrate.ConflictResolutionStrategy
-import org.eclipse.xtext.naming.QualifiedName
-import org.eclipse.xtext.generator.IFileSystemAccess2
-import org.emoflon.ibex.tgg.integrate.api.IConflictResolutionStrategy
-import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.ConflictContainer
-import org.emoflon.ibex.tgg.operational.strategies.integrate.util.MatchAnalysis
 import javax.inject.Inject
+import org.eclipse.xtext.generator.IFileSystemAccess2
+import org.eclipse.xtext.naming.QualifiedName
+import org.emoflon.ibex.tgg.integrate.api.IConflictResolutionStrategy
+import org.emoflon.ibex.tgg.integrate.integrate.ConflictResolutionStrategy
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict
+import org.emoflon.ibex.tgg.operational.strategies.integrate.util.MatchAnalysis
 
 class ConflictResolutionStrategyGenerator {
 
 	@Inject VariableGenerator variableGenerator
 	@Inject SatisfactionRuleGenerator satisfactionRuleGenerator
+	@Inject ResolutionGenerator resolutionGenerator
 
 	def doGenerate(ConflictResolutionStrategy strategy, QualifiedName packageName, String className,
 		IFileSystemAccess2 fsa) {
@@ -28,11 +28,12 @@ class ConflictResolutionStrategyGenerator {
 					«variableGenerator.generate(variable)»
 				«ENDFOR»
 				
-				return «satisfactionRuleGenerator.generate(strategy.rule, strategy.resolutionStrategy)»;
+					return «satisfactionRuleGenerator.generate(strategy.rule, strategy.resolution)»;
 				}
 				
 				@Override
 				public void solve(«Conflict.name» conflict, «MatchAnalysis.name» matchAnalysis) {
+					«resolutionGenerator.generate(strategy.resolution)»
 				}
 			}
 		''')

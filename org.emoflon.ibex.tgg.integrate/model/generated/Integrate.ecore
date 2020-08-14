@@ -21,7 +21,7 @@
         eType="#//Variable" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rule" eType="#//SatisfactionRule"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="resolutionStrategy" eType="#//ResolutionStrategy"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resolution" eType="#//Resolution"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Variable">
@@ -81,7 +81,21 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="v2" eType="#//Variable"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="n2" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Resolution">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="strategy" eType="#//ResolutionStrategy"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="fallback" eType="#//FallbackResolutionStrategy"
+        containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ResolutionStrategy">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FallbackResolutionStrategy" eSuperTypes="#//ResolutionStrategy"/>
+  <eClassifiers xsi:type="ecore:EClass" name="MergeAndPreserveResolutionStrategy"
+      eSuperTypes="#//ResolutionStrategy"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RevokeAdditionResolutionStrategy" eSuperTypes="#//ResolutionStrategy"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RevokeDeletionResolutionStrategy" eSuperTypes="#//ResolutionStrategy"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PreferSourceResolutionStrategy" eSuperTypes="#//FallbackResolutionStrategy"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PreferTargetResolutionStrategy" eSuperTypes="#//FallbackResolutionStrategy"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ContinueResolutionStrategy" eSuperTypes="#//FallbackResolutionStrategy"/>
 </ecore:EPackage>

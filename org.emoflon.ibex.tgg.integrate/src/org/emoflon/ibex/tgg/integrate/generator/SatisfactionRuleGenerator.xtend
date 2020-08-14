@@ -1,42 +1,43 @@
 package org.emoflon.ibex.tgg.integrate.generator
 
-import org.emoflon.ibex.tgg.integrate.api.resolution.ResolutionStrategyApplicationChecker
+import org.emoflon.ibex.tgg.integrate.api.resolution.ResolutionChecker
 import org.emoflon.ibex.tgg.integrate.integrate.And
 import org.emoflon.ibex.tgg.integrate.integrate.Comparison
 import org.emoflon.ibex.tgg.integrate.integrate.Or
 import org.emoflon.ibex.tgg.integrate.integrate.Predicate
-import org.emoflon.ibex.tgg.integrate.integrate.ResolutionStrategy
+import org.emoflon.ibex.tgg.integrate.integrate.Resolution
 import org.emoflon.ibex.tgg.integrate.integrate.SatisfactionRule
 import org.emoflon.ibex.tgg.integrate.integrate.Variable
 
 class SatisfactionRuleGenerator {
 
-	def generate(SatisfactionRule satisfactionRule, ResolutionStrategy resolutionStrategy) {
-		val satisfactionRuleCompiler = new SatisfactionRuleCompiler(satisfactionRule, resolutionStrategy)
+	def generate(SatisfactionRule satisfactionRule, Resolution resolution) {
+		val satisfactionRuleCompiler = new SatisfactionRuleCompiler(satisfactionRule, resolution)
 		satisfactionRuleCompiler.compile()
 	}
 
 	private static class SatisfactionRuleCompiler {
 
 		SatisfactionRule satisfactionRule
-		ResolutionStrategy resolutionStrategy
+		Resolution resolution
 		String result
 
-		new(SatisfactionRule satisfactionRule, ResolutionStrategy resolutionStrategy) {
+		new(SatisfactionRule satisfactionRule, Resolution resolution) {
 			this.satisfactionRule = satisfactionRule
-			this.resolutionStrategy = resolutionStrategy
+			this.resolution = resolution
 			this.result = ""
 		}
 
 		def compile() {
 			satisfactionRule.firstRule.compile
 			satisfactionRule.otherRules.forEach[rule|rule.compile]
-			compileRuleApplicationCheck()
+			compileResolutionCheck
 			result
 		}
 
 		def compile(Comparison comparison) {
-			result += '''«comparison.v1.compile» «comparison.n1.compile» «comparison.c1» «comparison.v2.compile» «comparison.n2.compile»'''
+			result +=
+				'''«comparison.v1.compile» «comparison.n1.compile» «comparison.c1» «comparison.v2.compile» «comparison.n2.compile»'''
 		}
 
 		def String compile(Variable v) {
@@ -63,9 +64,20 @@ class SatisfactionRuleGenerator {
 			result += "||"
 			or.comparison.compile
 		}
-		
-		def compileRuleApplicationCheck() {
-			result += '''&& «ResolutionStrategyApplicationChecker.name».canBeApplied("«resolutionStrategy.name»", conflict)'''
+
+		def compileResolutionCheck() {
+			result += '''&& 
+				«IF resolution.fallback === null»
+				«ResolutionChecker.name».resolutionWillBeExecuted(
+									"«resolution.strategy.name»",
+									conflict)
+				«ELSE»
+				«ResolutionChecker.name».anyResolutionWillBeExecuted(
+					"«resolution.strategy.name»", 
+					"«resolution.fallback.name»", 
+					conflict)
+				«ENDIF»
+			'''
 		}
 	}
 }

@@ -24,7 +24,7 @@ ConflictResolutionStrategy:
 	'satisfies' '{'
 	rule=SatisfactionRule
 	'}'
-	'}' 'with' resolutionStrategy=ResolutionStrategy;
+	'}' 'with' resolution=Resolution;
 
 Variable:
 	'var' name=ID '=' pipeline=Pipeline;
@@ -71,5 +71,34 @@ Integer returns ecore::EIntegerObject:
 Comparison:
 	(v1=[Variable] | n1=Integer) c1=('>' | '>=' | '<' | '<=') (v2=[Variable] | n2=Integer);
 
+Resolution:
+	strategy=ResolutionStrategy ('fallback' fallback=FallbackResolutionStrategy)?;
+
 ResolutionStrategy:
-	name=('actAndLetRepair' | 'mergeAndPreserve' | 'preferSource' | 'preferTarget' | 'revokeAddition' | 'revokeDeletion');
+	MergeAndPreserveResolutionStrategy
+	| RevokeAdditionResolutionStrategy
+	| RevokeDeletionResolutionStrategy
+	| FallbackResolutionStrategy;
+
+FallbackResolutionStrategy:
+	PreferSourceResolutionStrategy
+	| PreferTargetResolutionStrategy
+	| ContinueResolutionStrategy;
+
+MergeAndPreserveResolutionStrategy:
+	name='mergeAndPreserve';
+
+RevokeAdditionResolutionStrategy:
+	name='revokeAddition';
+
+RevokeDeletionResolutionStrategy:
+	name='revokeDeletion';
+
+PreferSourceResolutionStrategy:
+	name='preferSource';
+
+PreferTargetResolutionStrategy:
+	name='preferTarget';
+
+ContinueResolutionStrategy:
+	name='continue';

@@ -3,6 +3,13 @@
  */
 package org.emoflon.ibex.tgg.integrate.validation;
 
+import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.validation.Check;
+import org.emoflon.ibex.tgg.integrate.integrate.FallbackResolutionStrategy;
+import org.emoflon.ibex.tgg.integrate.integrate.IntegratePackage;
+import org.emoflon.ibex.tgg.integrate.integrate.Resolution;
+import org.emoflon.ibex.tgg.integrate.integrate.ResolutionStrategy;
+import org.emoflon.ibex.tgg.integrate.internal.ConflictResolutionStrategyRegistry;
 
 /**
  * This class contains custom validation rules. 
@@ -11,16 +18,30 @@ package org.emoflon.ibex.tgg.integrate.validation;
  */
 public class IntegrateValidator extends AbstractIntegrateValidator {
 	
-//	public static final INVALID_NAME = 'invalidName'
-//
-//	@Check
-//	public void checkGreetingStartsWithCapital(Greeting greeting) {
-//		if (!Character.isUpperCase(greeting.getName().charAt(0))) {
-//			warning("Name should start with a capital",
-//					IntegratePackage.Literals.GREETING__NAME,
-//					INVALID_NAME);
-//		}
-//	}
+	@Check
+	public void checkFallbackStrategyIsProvided(Resolution resolution) {
+		ResolutionStrategy strategy = resolution.getStrategy();
+		FallbackResolutionStrategy fallback = resolution.getFallback();
+		if (strategy != null && strategyNeedsFallback(strategy.getName()) && fallback == null) {
+			error("Chosen resolution strategy needs a fallback strategy", strategy, IntegratePackage.Literals.RESOLUTION_STRATEGY__NAME);
+		}
+	}
 	
+	private boolean strategyNeedsFallback(String strategyName) {
+		return ConflictResolutionStrategyRegistry.RESOLUTION_STRATEGY_NAMES.contains(strategyName);
+	}
+
+	@Check
+	public void checkFallbackStrategyWillNeverBeExecuted(Resolution resolution) {
+		ResolutionStrategy strategy = resolution.getStrategy();
+		FallbackResolutionStrategy fallback = resolution.getFallback();
+		if (strategy != null && strategyIsFallback(strategy.getName()) && fallback != null) {
+			warning("Fallback strategy will never be executed", fallback, IntegratePackage.Literals.RESOLUTION_STRATEGY__NAME);
+		}
+	}
+	
+	private boolean strategyIsFallback(String strategyName) {
+		return ConflictResolutionStrategyRegistry.FALLBACK_STRATEGY_NAMES.contains(strategyName);
+	}
 	
 }
