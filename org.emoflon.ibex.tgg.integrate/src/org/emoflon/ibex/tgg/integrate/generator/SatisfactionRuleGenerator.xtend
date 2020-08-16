@@ -68,14 +68,14 @@ class SatisfactionRuleGenerator {
 		def compileResolutionCheck() {
 			result += '''&& 
 				«IF resolution.fallback === null»
-				«ResolutionChecker.name».resolutionWillBeExecuted(
-									"«resolution.strategy.name»",
-									conflict)
+					«ResolutionChecker.name».resolutionWillBeExecuted(
+										"«resolution.strategy.name»",
+										conflict)
 				«ELSE»
-				«ResolutionChecker.name».anyResolutionWillBeExecuted(
-					"«resolution.strategy.name»", 
-					"«resolution.fallback.name»", 
-					conflict)
+					«ResolutionChecker.name».anyResolutionWillBeExecuted(
+						"«resolution.strategy.name»", 
+						"«resolution.fallback.name»", 
+						conflict)
 				«ENDIF»
 			'''
 		}

@@ -17,10 +17,12 @@ import org.emoflon.ibex.tgg.integrate.api.IConflictResolutionStrategy
 import org.emoflon.ibex.tgg.integrate.integrate.Integrate
 import org.emoflon.ibex.tgg.integrate.integrate.impl.IntegrateImpl
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict
-import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.util.CRSContainer
+import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.util.ConflictResolver
 import org.emoflon.ibex.tgg.operational.strategies.integrate.util.MatchAnalysis
 
 import static extension org.eclipse.xtext.EcoreUtil2.*
+import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.ConflictContainer
+import org.emoflon.ibex.tgg.integrate.api.ConflictContainerProcessor
 
 /**
  * Generates code from your model files on save.
@@ -32,7 +34,7 @@ class IntegrateGenerator extends AbstractGenerator {
 	@Inject ConflictResolutionStrategyGenerator conflictResolutionStrategyGenerator;
 	@Inject extension IQualifiedNameProvider
 
-	final static String CLASS_POSTFIX = "CRSContainer"
+	final static String CLASS_POSTFIX = "ConflictResolver"
 
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		val integrate = resource.contents.get(0) as IntegrateImpl
@@ -51,12 +53,12 @@ class IntegrateGenerator extends AbstractGenerator {
 		fsa.generateFile(filePath, '''
 			package «packageName»;
 			
-			public class «className» implements «CRSContainer.name»{
+			public class «className» implements «ConflictResolver.name»{
 				
-				private final «List.name»<«IConflictResolutionStrategy.name»> crsList;
+				private final «List.name»<«IConflictResolutionStrategy.name»> conflictResolutionStrategies;
 				
 				public «className»() {
-					this.crsList = «List.name».of(
+					this.conflictResolutionStrategies = «List.name».of(
 						«FOR crsClassName : crsClassNames SEPARATOR','»
 							new «crsClassName»()
 						«ENDFOR»
@@ -64,13 +66,8 @@ class IntegrateGenerator extends AbstractGenerator {
 				}
 					
 				@Override
-				public void solve(«Conflict.name» conflict, «MatchAnalysis.name» matchAnalysis) {
-					for («IConflictResolutionStrategy.name» crs: crsList) {
-						if (crs.canSolve(conflict, matchAnalysis)) {
-							crs.solve(conflict, matchAnalysis);
-							return;
-						}
-					}
+				public void resolveConflict(«ConflictContainer.name» conflictContainer) {
+					«ConflictContainerProcessor.name».process(conflictContainer, conflictResolutionStrategies);
 				}
 			}
 		''')
@@ -83,8 +80,8 @@ class IntegrateGenerator extends AbstractGenerator {
 
 	def List<String> generateCRSClassNames(Integrate integrate) {
 		val classNames = new ArrayList;
-		for (var suffix = 0; suffix < integrate.conflictResolutionStrategies.size; suffix++) {
-			classNames.add('''ConflictResolutionStrategy«suffix+1»''');
+		for (var suffix = 1; suffix <= integrate.conflictResolutionStrategies.size; suffix++) {
+			classNames.add('''ConflictResolutionStrategy«suffix»''');
 		}
 
 		classNames

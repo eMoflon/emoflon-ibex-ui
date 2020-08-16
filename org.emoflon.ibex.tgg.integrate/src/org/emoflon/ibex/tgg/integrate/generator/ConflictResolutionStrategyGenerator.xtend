@@ -6,7 +6,6 @@ import org.eclipse.xtext.naming.QualifiedName
 import org.emoflon.ibex.tgg.integrate.api.IConflictResolutionStrategy
 import org.emoflon.ibex.tgg.integrate.integrate.ConflictResolutionStrategy
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict
-import org.emoflon.ibex.tgg.operational.strategies.integrate.util.MatchAnalysis
 
 class ConflictResolutionStrategyGenerator {
 
@@ -23,7 +22,7 @@ class ConflictResolutionStrategyGenerator {
 			public class «className» implements «IConflictResolutionStrategy.name» {
 				
 				@Override
-				public boolean canSolve(«Conflict.name» conflict, «MatchAnalysis.name» matchAnalysis) {
+				public boolean canSolve(«Conflict.name» conflict) {
 				«FOR variable : strategy.variables»
 					«variableGenerator.generate(variable)»
 				«ENDFOR»
@@ -32,7 +31,7 @@ class ConflictResolutionStrategyGenerator {
 				}
 				
 				@Override
-				public void solve(«Conflict.name» conflict, «MatchAnalysis.name» matchAnalysis) {
+				public void solve(«Conflict.name» conflict) {
 					«resolutionGenerator.generate(strategy.resolution)»
 				}
 			}

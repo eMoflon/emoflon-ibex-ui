@@ -51,6 +51,7 @@ public class PipelineTypeFilterScopeProvider {
 	
 	private Stream<URI> getURIStream(Schema schema) {
 		TripleGraphGrammarFile tggFile = EcoreUtil2.getContainerOfType(schema, TripleGraphGrammarFile.class);
+		//EcoreUtil2.resolveAll(tggFile);
 		return tggFile.getImports().stream().map(imp -> URI.createURI(imp.getName()));
 	}
 	
