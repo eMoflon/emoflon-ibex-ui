@@ -2,10 +2,13 @@ package org.emoflon.ibex.gt.editor.utils;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
@@ -15,7 +18,12 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.EcoreUtil2;
+import org.emoflon.ibex.gt.editor.gT.EditorAttribute;
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile;
+import org.emoflon.ibex.gt.editor.gT.EditorNode;
+import org.emoflon.ibex.gt.editor.gT.EditorOperator;
+import org.emoflon.ibex.gt.editor.gT.EditorPattern;
+import org.emoflon.ibex.gt.editor.gT.EditorReference;
 
 /**
  * Utility methods for dealing with meta-models.
@@ -128,5 +136,93 @@ public class GTEditorModelUtils {
 		resource.load(null);
 		EcoreUtil.resolveAll(resourceSet);
 		metaModelResources.put(uri, resource);
+	}
+	
+	/**
+	 * Returns the source node of the editor reference.
+	 * 
+	 * @param editorReference
+	 *            the editor reference
+	 * @return the editor node
+	 */
+	public static EditorNode getSourceNode(final EditorReference editorReference) {
+		return (EditorNode) editorReference.eContainer();
+	}
+
+	/**
+	 * Returns the node of the editor attribute.
+	 * 
+	 * @param editorAttribute
+	 *            the editor attribute
+	 * @return the editor node
+	 */
+	public static EditorNode getNode(final EditorAttribute editorAttribute) {
+		return (EditorNode) editorAttribute.eContainer();
+	}
+
+	/**
+	 * Filters the nodes of the rule for the ones with the given operator.
+	 * 
+	 * @param editorPattern
+	 *            the editor pattern
+	 * @param operators
+	 *            the operators
+	 * @return the stream of nodes, sorted alphabetically by the name
+	 */
+	public static List<EditorNode> getNodesByOperator(final EditorPattern editorPattern,
+			final EditorOperator... operators) {
+		Objects.requireNonNull(editorPattern, "The editor pattern must not be null!");
+		List<EditorOperator> operatorsList = Arrays.asList(operators);
+		return editorPattern.getNodes().stream() //
+				.filter(n -> operatorsList.contains(n.getOperator()))
+				.sorted((a, b) -> a.getName().compareTo(b.getName())) //
+				.collect(Collectors.toList());
+	}
+
+	/**
+	 * Filters the references of the editor pattern for the ones with the given
+	 * operator.
+	 * 
+	 * @param editorPattern
+	 *            the editor pattern
+	 * @param operators
+	 *            the operators
+	 * @return the stream of edges, sorted alphabetically by the type name
+	 */
+	public static List<EditorReference> getReferencesByOperator(final EditorPattern editorPattern,
+			final EditorOperator... operators) {
+		Objects.requireNonNull(editorPattern, "The editor pattern must not be null!");
+		List<EditorOperator> operatorsList = Arrays.asList(operators);
+		return editorPattern.getNodes().stream() //
+				.flatMap(n -> n.getReferences().stream()) //
+				.filter(r -> operatorsList.contains(r.getOperator()))
+				.sorted((a, b) -> getTypeName(a).compareTo(getTypeName(b))) //
+				.collect(Collectors.toList());
+	}
+
+	/**
+	 * Returns the name of the type of the reference.
+	 * 
+	 * @param editorReference
+	 *            the editor reference
+	 * @return the name of the type (or the empty string if the type is
+	 *         <code>null</code>)
+	 */
+	private static String getTypeName(final EditorReference editorReference) {
+		if (editorReference.getType() == null || editorReference.getType().getName() == null) {
+			return "";
+		}
+		return editorReference.getType().getName();
+	}
+
+	/**
+	 * Checks whether a node is local.
+	 * 
+	 * @param editorNode
+	 *            the editor node
+	 * @return <code>true</code> if and only if the node is local
+	 */
+	public static boolean isLocal(final EditorNode editorNode) {
+		return editorNode.getName().startsWith("_");
 	}
 }
