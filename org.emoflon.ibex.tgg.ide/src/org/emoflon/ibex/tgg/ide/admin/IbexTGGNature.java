@@ -34,17 +34,17 @@ public class IbexTGGNature implements IProjectNature {
 	public static final String XTEXT_NATURE_ID = "org.eclipse.xtext.ui.shared.xtextNature";
 	public static final String PLUGIN_NATURE_ID = "org.eclipse.pde.PluginNature";
 	public static final String SCHEMA_FILE = "src/org/emoflon/ibex/tgg/Schema.tgg";
-	private static final String INATURE_EXTENSON_ID = "org.emoflon.ibex.tgg.ide.IbexTGGNatureExtension";
+//	private static final String INATURE_EXTENSON_ID = "org.emoflon.ibex.tgg.ide.IbexTGGNatureExtension";
 
 	private IProject project;
 
 	private static Logger logger = Logger.getLogger(IbexTGGNature.class);
 
-	private final Collection<NatureExtension> natureExtensions;
+//	private final Collection<NatureExtension> natureExtensions;
 
-	public IbexTGGNature() {
-		this.natureExtensions = ExtensionsUtil.collectExtensions(IbexTGGNature.INATURE_EXTENSON_ID, "class", NatureExtension.class);
-	}
+//	public IbexTGGNature() {
+//		this.natureExtensions = ExtensionsUtil.collectExtensions(IbexTGGNature.INATURE_EXTENSON_ID, "class", NatureExtension.class);
+//	}
 
 	@Override
 	public void configure() throws CoreException {
@@ -75,8 +75,8 @@ public class IbexTGGNature implements IProjectNature {
 		this.setUpAsPluginProject();
 		this.setUpAsXtextProject();
 		this.setUpAsIbexProject();
-		for (NatureExtension ne : this.natureExtensions)
-			ne.setUpProject(this.project);
+//		for (NatureExtension ne : this.natureExtensions)
+//			ne.setUpProject(this.project);
 	}
 
 	private void setUpAsJavaProject(final IProject project, final IProgressMonitor monitor) {
