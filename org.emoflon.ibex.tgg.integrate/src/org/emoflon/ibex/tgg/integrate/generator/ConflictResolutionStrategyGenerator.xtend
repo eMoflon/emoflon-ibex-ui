@@ -6,6 +6,7 @@ import org.eclipse.xtext.naming.QualifiedName
 import org.emoflon.ibex.tgg.integrate.api.IConflictResolutionStrategy
 import org.emoflon.ibex.tgg.integrate.integrate.ConflictResolutionStrategy
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict
+import org.apache.commons.lang3.StringUtils
 
 class ConflictResolutionStrategyGenerator {
 
@@ -13,8 +14,8 @@ class ConflictResolutionStrategyGenerator {
 	@Inject SatisfactionRuleGenerator satisfactionRuleGenerator
 	@Inject ResolutionGenerator resolutionGenerator
 
-	def doGenerate(ConflictResolutionStrategy strategy, QualifiedName packageName, String className,
-		IFileSystemAccess2 fsa) {
+	def String doGenerate(ConflictResolutionStrategy strategy, QualifiedName packageName, IFileSystemAccess2 fsa) {
+		val className = StringUtils.capitalize(strategy.name)
 		val fileName = packageName.toString("/") + "/" + className + ".java"
 		fsa.generateFile(fileName, '''
 			package «packageName»;
@@ -36,5 +37,7 @@ class ConflictResolutionStrategyGenerator {
 				}
 			}
 		''')
+		
+		className
 	}
 }

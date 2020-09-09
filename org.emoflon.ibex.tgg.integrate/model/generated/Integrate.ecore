@@ -17,6 +17,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="rule" eType="ecore:EClass platform:/resource/org.emoflon.ibex.tgg.editor/model/generated/TGG.ecore#//Rule"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ConflictResolutionStrategy">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="variables" upperBound="-1"
         eType="#//Variable" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rule" eType="#//SatisfactionRule"

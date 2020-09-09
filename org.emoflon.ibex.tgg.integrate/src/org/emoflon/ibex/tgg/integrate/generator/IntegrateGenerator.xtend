@@ -3,7 +3,6 @@
  */
 package org.emoflon.ibex.tgg.integrate.generator
 
-import java.util.ArrayList
 import java.util.List
 import javax.inject.Inject
 import org.apache.commons.lang3.StringUtils
@@ -37,17 +36,16 @@ class IntegrateGenerator extends AbstractGenerator {
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		val integrate = resource.contents.get(0) as IntegrateImpl
 		val packageName = integrate.package.fullyQualifiedName
-		val crsClassNames = integrate.generateCRSClassNames
 
-		generateCRSContainer(integrate, crsClassNames, packageName, resource, fsa);
-		generateCRSImpls(integrate, packageName, crsClassNames,fsa)
+		val crsClassNames = generateCRSImpls(integrate, packageName, fsa)
+		generateCRSContainer(integrate, packageName, crsClassNames ,resource, fsa);
 	}
 
-	def generateCRSContainer(Integrate integrate, List<String> crsClassNames, QualifiedName packageName,
-		Resource resource, IFileSystemAccess2 fsa) {
+	def generateCRSContainer(Integrate integrate, QualifiedName packageName, List<String> crsClassNames, Resource resource,
+		IFileSystemAccess2 fsa) {
 		val className = getClassPrefix(resource) + CLASS_POSTFIX
 		val filePath = packageName.toString("/") + "/" + className + ".java"
-		
+
 		fsa.generateFile(filePath, '''
 			package «packageName»;
 			
@@ -57,7 +55,7 @@ class IntegrateGenerator extends AbstractGenerator {
 				
 				public «className»() {
 					this.conflictResolutionStrategies = «List.name».of(
-						«FOR crsClassName : crsClassNames SEPARATOR','»
+						«FOR crsClassName : crsClassNames SEPARATOR ','»
 							new «crsClassName»()
 						«ENDFOR»
 					);
@@ -70,25 +68,16 @@ class IntegrateGenerator extends AbstractGenerator {
 			}
 		''')
 	}
-
+	
 	def String getClassPrefix(Resource resource) {
 		val prefix = resource.normalizedURI.lastSegment.replace(".integ", "")
 		StringUtils.capitalize(prefix)
 	}
 
-	def List<String> generateCRSClassNames(Integrate integrate) {
-		val classNames = new ArrayList;
-		for (var suffix = 1; suffix <= integrate.conflictResolutionStrategies.size; suffix++) {
-			classNames.add('''ConflictResolutionStrategy«suffix»''');
-		}
-
-		classNames
-	}
-
-	private def void generateCRSImpls(IntegrateImpl integrate, QualifiedName packageName, List<String> crsClassNames, IFileSystemAccess2 fsa) {
-		for (var crsIndex = 0; crsIndex < integrate.conflictResolutionStrategies.size; crsIndex++) {
-			conflictResolutionStrategyGenerator.doGenerate(integrate.conflictResolutionStrategies.get(crsIndex),
-				packageName, crsClassNames.get(crsIndex), fsa)
-		}
+	private def List<String> generateCRSImpls(IntegrateImpl integrate, QualifiedName packageName,
+		IFileSystemAccess2 fsa) {
+		integrate.conflictResolutionStrategies.map [ crs |
+			conflictResolutionStrategyGenerator.doGenerate(crs, packageName, fsa)
+		]
 	}
 }

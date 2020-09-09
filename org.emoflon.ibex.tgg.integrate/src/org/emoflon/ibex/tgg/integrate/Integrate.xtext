@@ -19,7 +19,7 @@ Import:
 	'#import' rule=[tgg::Rule];
 
 ConflictResolutionStrategy:
-	'solve' 'conflict' 'for' 'all' '{'
+	name=ID':' 'solve' 'conflict' 'for' 'all' '{'
 	variables+=Variable+
 	'satisfies' '{'
 	rule=SatisfactionRule
