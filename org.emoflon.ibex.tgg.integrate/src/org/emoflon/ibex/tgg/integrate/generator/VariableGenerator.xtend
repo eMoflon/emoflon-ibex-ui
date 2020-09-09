@@ -11,6 +11,7 @@ import org.emoflon.ibex.tgg.integrate.integrate.PipelineStageTrg
 import org.emoflon.ibex.tgg.integrate.integrate.PipelineTypeFilterStage
 import org.emoflon.ibex.tgg.integrate.integrate.Variable
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.util.ConflictEltFilter
+import org.emoflon.ibex.tgg.integrate.integrate.PipelineExistsStage
 
 class VariableGenerator {
 
@@ -57,25 +58,38 @@ class VariableGenerator {
 		}
 
 		private def void compile(PipelineCreatedFilterStage p) {
-			result += '''«variableFilterName» = «PipelineStageExecuter.name».executeCreatedFilter(«variableFilterName»);'''
+			result +=
+				'''«variableFilterName» = «PipelineStageExecuter.name».executeCreatedFilter(«variableFilterName»);'''
 			compileNext(p.next)
 		}
 
 		private def void compile(PipelineDeletedFilterStage p) {
-			result += '''«variableFilterName» = «PipelineStageExecuter.name».executeDeletedFilter(«variableFilterName»);'''
+			result +=
+				'''«variableFilterName» = «PipelineStageExecuter.name».executeDeletedFilter(«variableFilterName»);'''
 			compileNext(p.next)
 		}
 
 		private def void compile(PipelineTypeFilterStage p) {
 			withEvaluatedFilter[|
-				result += '''«variableElementsName» = «PipelineStageExecuter.name».executeTypeFilter(«variableElementsName», «Set.name».of("«p.type.name»"));'''
+				result +=
+					'''«variableElementsName» = «PipelineStageExecuter.name».executeTypeFilter(«variableElementsName», «Set.name».of("«p.type.name»"));'''
 			]
 
 			compileNext(p.next)
 		}
 
 		private def void compile(PipelineCountStage p) {
-			withEvaluatedFilter[|result += '''Integer «variable.name» = «PipelineStageExecuter.name».executeCount(«variableElementsName»);''']
+			withEvaluatedFilter[|
+				result +=
+					'''Integer «variable.name» = «PipelineStageExecuter.name».executeCount(«variableElementsName»);'''
+			]
+		}
+
+		private def void compile(PipelineExistsStage p) {
+			withEvaluatedFilter[|
+				result +=
+					'''Boolean «variable.name» = «PipelineStageExecuter.name».executeExists(«variableElementsName»);'''
+			]
 		}
 
 		private def void withEvaluatedFilter(()=>void compile) {
@@ -94,6 +108,7 @@ class VariableGenerator {
 				PipelineDeletedFilterStage: p.compile
 				PipelineTypeFilterStage: p.compile
 				PipelineCountStage: p.compile
+				PipelineExistsStage: p.compile
 			}
 		}
 	}

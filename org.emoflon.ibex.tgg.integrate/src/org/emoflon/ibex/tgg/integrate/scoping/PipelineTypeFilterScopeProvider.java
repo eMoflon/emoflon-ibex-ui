@@ -19,11 +19,9 @@ import org.eclipse.xtext.scoping.Scopes;
 import org.eclipse.xtext.scoping.impl.SimpleScope;
 import org.emoflon.ibex.tgg.integrate.integrate.Import;
 import org.emoflon.ibex.tgg.integrate.integrate.Integrate;
-import org.emoflon.ibex.tgg.integrate.integrate.PipelineTypeFilterStage;
 import org.moflon.tgg.mosl.tgg.Rule;
 import org.moflon.tgg.mosl.tgg.Schema;
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile;
-import org.moflon.tgg.mosl.tgg.impl.SchemaImpl;
 
 public class PipelineTypeFilterScopeProvider {
 

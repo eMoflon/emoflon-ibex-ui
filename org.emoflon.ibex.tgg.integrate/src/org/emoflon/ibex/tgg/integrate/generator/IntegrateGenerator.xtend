@@ -13,16 +13,14 @@ import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
+import org.emoflon.ibex.tgg.integrate.api.ConflictContainerProcessor
 import org.emoflon.ibex.tgg.integrate.api.IConflictResolutionStrategy
 import org.emoflon.ibex.tgg.integrate.integrate.Integrate
 import org.emoflon.ibex.tgg.integrate.integrate.impl.IntegrateImpl
-import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict
+import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.ConflictContainer
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.util.ConflictResolver
-import org.emoflon.ibex.tgg.operational.strategies.integrate.util.MatchAnalysis
 
 import static extension org.eclipse.xtext.EcoreUtil2.*
-import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.ConflictContainer
-import org.emoflon.ibex.tgg.integrate.api.ConflictContainerProcessor
 
 /**
  * Generates code from your model files on save.

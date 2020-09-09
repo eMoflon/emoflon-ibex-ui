@@ -1,13 +1,14 @@
 package org.emoflon.ibex.tgg.integrate.generator
 
-import org.emoflon.ibex.tgg.integrate.api.resolution.ResolutionChecker
-import org.emoflon.ibex.tgg.integrate.integrate.And
-import org.emoflon.ibex.tgg.integrate.integrate.Comparison
-import org.emoflon.ibex.tgg.integrate.integrate.Or
-import org.emoflon.ibex.tgg.integrate.integrate.Predicate
 import org.emoflon.ibex.tgg.integrate.integrate.Resolution
 import org.emoflon.ibex.tgg.integrate.integrate.SatisfactionRule
-import org.emoflon.ibex.tgg.integrate.integrate.Variable
+import org.emoflon.ibex.tgg.integrate.integrate.OrExpression
+import org.emoflon.ibex.tgg.integrate.integrate.ComparisonExpression
+import org.emoflon.ibex.tgg.integrate.integrate.LiteralValue
+import org.emoflon.ibex.tgg.integrate.integrate.VariableReference
+import org.eclipse.emf.ecore.EObject
+import org.emoflon.ibex.tgg.integrate.api.resolution.ResolutionChecker
+import org.emoflon.ibex.tgg.integrate.integrate.AndExpression
 
 class SatisfactionRuleGenerator {
 
@@ -29,40 +30,44 @@ class SatisfactionRuleGenerator {
 		}
 
 		def compile() {
-			satisfactionRule.firstRule.compile
-			satisfactionRule.otherRules.forEach[rule|rule.compile]
-			compileResolutionCheck
+			compileNext(satisfactionRule.expression)
 			result
 		}
 
-		def compile(Comparison comparison) {
-			result +=
-				'''«comparison.v1.compile» «comparison.n1.compile» «comparison.c1» «comparison.v2.compile» «comparison.n2.compile»'''
+		def void compile(OrExpression e) {
+			compileNext(e.left)
+			result += '''||'''
+			e.right.forEach[r | compileNext(r)]
 		}
 
-		def String compile(Variable v) {
-			return '''«IF v !== null»«v.name»«ENDIF»'''
+		def void compile(AndExpression e) {
+			compileNext(e.left)
+			result += '''&&'''
+			e.right.forEach[r | compileNext(r)]
 		}
 
-		def String compile(Integer n) {
-			return '''«IF n !== null»«n.intValue»«ENDIF»'''
+		def void compile(ComparisonExpression e) {
+			compileNext(e.lhs)
+			result += e.op
+			compileNext(e.rhs)
 		}
 
-		def compile(Predicate p) {
-			switch p {
-				And: p.compile
-				Or: p.compile
+		def void compile(LiteralValue lv) {
+			result += '''«lv.value»'''
+		}
+
+		def void compile(VariableReference vr) {
+			result += '''«vr.ref.name»'''
+		}
+
+		def void compileNext(EObject next) {
+			switch (next) {
+				OrExpression: next.compile
+				AndExpression: next.compile
+				ComparisonExpression: next.compile
+				LiteralValue: next.compile
+				VariableReference: next.compile
 			}
-		}
-
-		def compile(And and) {
-			result += "&&"
-			and.comparison.compile
-		}
-
-		def compile(Or or) {
-			result += "||"
-			or.comparison.compile
 		}
 
 		def compileResolutionCheck() {

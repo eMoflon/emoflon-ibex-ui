@@ -24,6 +24,9 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="resolution" eType="#//Resolution"
         containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VariableReference" eSuperTypes="#//BooleanExpression #//ComparisonLiteral">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ref" eType="#//Variable"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Variable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="pipeline" eType="#//Pipeline"
@@ -56,30 +59,30 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PipelineTypeFilterStage" eSuperTypes="#//PipelineFilterStage">
     <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EClassifier"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="next" eType="#//PipelineCountStage"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="next" eType="#//PipelineEndStage"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="PipelineCountStage">
+  <eClassifiers xsi:type="ecore:EClass" name="PipelineEndStage">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PipelineCountStage" eSuperTypes="#//PipelineEndStage"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PipelineExistsStage" eSuperTypes="#//PipelineEndStage"/>
   <eClassifiers xsi:type="ecore:EClass" name="SatisfactionRule">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="firstRule" eType="#//Comparison"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="otherRules" upperBound="-1"
-        eType="#//Predicate" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Predicate">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="comparison" eType="#//Comparison"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expression" eType="#//Expression"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="And" eSuperTypes="#//Predicate"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Or" eSuperTypes="#//Predicate"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Comparison">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="v1" eType="#//Variable"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="n1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="c1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="v2" eType="#//Variable"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="n2" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Expression"/>
+  <eClassifiers xsi:type="ecore:EClass" name="BooleanExpression" eSuperTypes="#//Expression"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ComparisonExpression" eSuperTypes="#//BooleanExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="lhs" eType="#//ComparisonLiteral"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="op" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rhs" eType="#//ComparisonLiteral"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ComparisonLiteral"/>
+  <eClassifiers xsi:type="ecore:EClass" name="LiteralValue" eSuperTypes="#//ComparisonLiteral">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Resolution">
     <eStructuralFeatures xsi:type="ecore:EReference" name="strategy" eType="#//ResolutionStrategy"
@@ -98,4 +101,16 @@
   <eClassifiers xsi:type="ecore:EClass" name="PreferSourceResolutionStrategy" eSuperTypes="#//FallbackResolutionStrategy"/>
   <eClassifiers xsi:type="ecore:EClass" name="PreferTargetResolutionStrategy" eSuperTypes="#//FallbackResolutionStrategy"/>
   <eClassifiers xsi:type="ecore:EClass" name="ContinueResolutionStrategy" eSuperTypes="#//FallbackResolutionStrategy"/>
+  <eClassifiers xsi:type="ecore:EClass" name="OrExpression" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//Expression"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="right" upperBound="-1"
+        eType="#//Expression" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AndExpression" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//Expression"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="right" upperBound="-1"
+        eType="#//BooleanExpression" containment="true"/>
+  </eClassifiers>
 </ecore:EPackage>

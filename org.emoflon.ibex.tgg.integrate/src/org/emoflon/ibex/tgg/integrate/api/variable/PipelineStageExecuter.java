@@ -19,7 +19,11 @@ public class PipelineStageExecuter {
 	}
 
 	public static ConflictEltFilter executeTrg() {
-		return new ConflictEltFilter().trg();
+		return new ConflictEltFilter().src();
+	}
+	
+	public static ConflictEltFilter executeIntact() {
+		return new ConflictEltFilter().intact();
 	}
 
 	public static ConflictEltFilter executeCreatedFilter(ConflictEltFilter filter) {
@@ -49,5 +53,9 @@ public class PipelineStageExecuter {
 
 	public static int executeCount(Collection<?> elements) {
 		return elements.size();
+	}
+	
+	public static boolean executeExists(Collection<?> elements) {
+		return !elements.isEmpty();
 	}
 }

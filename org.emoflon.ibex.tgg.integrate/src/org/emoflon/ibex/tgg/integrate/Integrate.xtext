@@ -26,6 +26,9 @@ ConflictResolutionStrategy:
 	'}'
 	'}' 'with' resolution=Resolution;
 
+VariableReference:
+	ref=[Variable];
+
 Variable:
 	'var' name=ID '=' pipeline=Pipeline;
 
@@ -33,57 +36,62 @@ Pipeline:
 	start=(PipelineStageSrc | PipelineStageTrg);
 
 PipelineStageSrc:
-	name='#src' '|' next=(PipelineFilterStage | PipelineCountStage);
+	name='#src' '|' next=(PipelineFilterStage | PipelineEndStage);
 
 PipelineStageTrg:
-	name='#trg' '|' next=(PipelineFilterStage | PipelineCountStage);
+	name='#trg' '|' next=(PipelineFilterStage | PipelineEndStage);
 
 PipelineFilterStage:
 	PipelineCreatedFilterStage | PipelineDeletedFilterStage | PipelineTypeFilterStage;
 
 PipelineCreatedFilterStage:
-	name='created' '|' next=(PipelineTypeFilterStage | PipelineCountStage);
+	name='created' '|' next=(PipelineTypeFilterStage | PipelineEndStage);
 
 PipelineDeletedFilterStage:
-	name='deleted' '|' next=(PipelineTypeFilterStage | PipelineCountStage);
+	name='deleted' '|' next=(PipelineTypeFilterStage | PipelineEndStage);
 
 PipelineTypeFilterStage:
-	name='type' type=[ecore::EClassifier] '|' next=PipelineCountStage;
+	name='type' type=[ecore::EClassifier] '|' next=PipelineEndStage;
+
+PipelineEndStage:
+	PipelineCountStage | PipelineExistsStage;
 
 PipelineCountStage:
 	name='count';
 
+PipelineExistsStage:
+	name='exists';
+
 SatisfactionRule:
-	firstRule=Comparison otherRules+=Predicate*;
+	expression=OrExpression;
 
-Predicate:
-	(And | Or);
+OrExpression returns Expression:
+	AndExpression ({OrExpression.left=current} 'or' right+=AndExpression)*;
 
-And:
-	'and' comparison=Comparison;
+AndExpression returns Expression:
+	BooleanExpression ({AndExpression.left=current} 'and' right+=BooleanExpression)*;
 
-Or:
-	'or' comparison=Comparison;
+BooleanExpression:
+	ComparisonExpression | VariableReference;
 
-Integer returns ecore::EIntegerObject:
-	INT;
+ComparisonExpression:
+	lhs=ComparisonLiteral op=('>' | '>=' | '<' | '<=' | '==' | '!=') rhs=ComparisonLiteral;
 
-Comparison:
-	(v1=[Variable] | n1=Integer) c1=('>' | '>=' | '<' | '<=') (v2=[Variable] | n2=Integer);
+ComparisonLiteral:
+	VariableReference | LiteralValue;
+
+LiteralValue:
+	value=INT;
 
 Resolution:
 	strategy=ResolutionStrategy ('fallback' fallback=FallbackResolutionStrategy)?;
 
 ResolutionStrategy:
-	MergeAndPreserveResolutionStrategy
-	| RevokeAdditionResolutionStrategy
-	| RevokeDeletionResolutionStrategy
-	| FallbackResolutionStrategy;
+	MergeAndPreserveResolutionStrategy | RevokeAdditionResolutionStrategy | RevokeDeletionResolutionStrategy |
+	FallbackResolutionStrategy;
 
 FallbackResolutionStrategy:
-	PreferSourceResolutionStrategy
-	| PreferTargetResolutionStrategy
-	| ContinueResolutionStrategy;
+	PreferSourceResolutionStrategy | PreferTargetResolutionStrategy | ContinueResolutionStrategy;
 
 MergeAndPreserveResolutionStrategy:
 	name='mergeAndPreserve';
