@@ -9,6 +9,7 @@ import org.emoflon.ibex.tgg.integrate.integrate.VariableReference
 import org.eclipse.emf.ecore.EObject
 import org.emoflon.ibex.tgg.integrate.api.resolution.ResolutionChecker
 import org.emoflon.ibex.tgg.integrate.integrate.AndExpression
+import org.emoflon.ibex.tgg.integrate.integrate.WrappedOrExpression
 
 class SatisfactionRuleGenerator {
 
@@ -32,6 +33,12 @@ class SatisfactionRuleGenerator {
 		def compile() {
 			compileNext(satisfactionRule.expression)
 			result
+		}
+		
+		def void compile(WrappedOrExpression e) {
+			result += '''('''
+			compileNext(e.expression)
+			result += ''')'''
 		}
 
 		def void compile(OrExpression e) {
@@ -62,6 +69,7 @@ class SatisfactionRuleGenerator {
 
 		def void compileNext(EObject next) {
 			switch (next) {
+				WrappedOrExpression: next.compile
 				OrExpression: next.compile
 				AndExpression: next.compile
 				ComparisonExpression: next.compile

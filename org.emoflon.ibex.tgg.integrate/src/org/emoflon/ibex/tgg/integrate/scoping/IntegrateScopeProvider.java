@@ -7,6 +7,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.scoping.IScope;
 import org.emoflon.ibex.tgg.integrate.integrate.IntegratePackage;
+import org.emoflon.ibex.tgg.integrate.integrate.PipelineTypeFilterStage;
 
 import com.google.inject.Inject;
 
@@ -25,7 +26,7 @@ public class IntegrateScopeProvider extends AbstractIntegrateScopeProvider {
 	@Override
 	public IScope getScope(EObject context, EReference reference) {
 		if (reference == IntegratePackage.Literals.PIPELINE_TYPE_FILTER_STAGE__TYPE) {
-			return pipelineTypeFilterScopeProvider.provide(context);
+			return pipelineTypeFilterScopeProvider.provide((PipelineTypeFilterStage)context);
 		}
 		
 		return super.getScope(context, reference);
