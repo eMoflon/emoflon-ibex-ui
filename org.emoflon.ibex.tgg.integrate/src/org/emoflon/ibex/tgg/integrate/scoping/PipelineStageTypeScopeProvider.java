@@ -23,7 +23,7 @@ import org.moflon.tgg.mosl.tgg.Rule;
 import org.moflon.tgg.mosl.tgg.Schema;
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile;
 
-public class PipelineTypeFilterScopeProvider {
+public class PipelineStageTypeScopeProvider {
 
 	public IScope provide(PipelineStageType context) {
 		Integrate integrate = EcoreUtil2.getContainerOfType(context, Integrate.class);
