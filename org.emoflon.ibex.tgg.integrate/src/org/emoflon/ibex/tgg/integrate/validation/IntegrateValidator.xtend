@@ -11,6 +11,8 @@ import org.emoflon.ibex.tgg.integrate.integrate.VariableReference
 import org.emoflon.ibex.tgg.integrate.internal.ConflictResolutionStrategyRegistry
 import org.emoflon.ibex.tgg.integrate.internal.PipelineVisitor
 import org.emoflon.ibex.tgg.integrate.internal.MutableValue
+import org.emoflon.ibex.tgg.integrate.integrate.impl.ComparisonExpressionImpl
+import org.emoflon.ibex.tgg.integrate.integrate.ComparisonExpression
 
 class IntegrateValidator extends AbstractIntegrateValidator {
 
@@ -65,7 +67,18 @@ class IntegrateValidator extends AbstractIntegrateValidator {
 				error("Variable cannot be evaluated to a boolean expression", vr, IntegratePackage.Literals.VARIABLE_REFERENCE__REF)
 			}
 		}
+	}
+	
+	@Check
+	def void checkVariableReferenceInComparisonCanBeEvaluatedToNumerical(VariableReference vr) {
+		if (vr.eContainer instanceof ComparisonExpression) {
+			val value = MutableValue.of(false)
+			new PipelineVisitor(vr.ref).count[_|value.set(true)].visit()
 
+			if (!value.get) {
+				error("Variable cannot be evaluated to a numerical expression", vr, IntegratePackage.Literals.VARIABLE_REFERENCE__REF)
+			}
+		}
 	}
 
 }

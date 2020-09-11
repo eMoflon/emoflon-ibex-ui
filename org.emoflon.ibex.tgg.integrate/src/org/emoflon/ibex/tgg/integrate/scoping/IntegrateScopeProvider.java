@@ -8,7 +8,6 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.scoping.IScope;
 import org.emoflon.ibex.tgg.integrate.integrate.IntegratePackage;
 import org.emoflon.ibex.tgg.integrate.integrate.PipelineStageType;
-import org.emoflon.ibex.tgg.integrate.integrate.VariableReference;
 
 import com.google.inject.Inject;
 
