@@ -10,6 +10,7 @@ import org.eclipse.emf.ecore.EObject
 import org.emoflon.ibex.tgg.integrate.api.resolution.ResolutionChecker
 import org.emoflon.ibex.tgg.integrate.integrate.AndExpression
 import org.emoflon.ibex.tgg.integrate.integrate.WrappedOrExpression
+import org.emoflon.ibex.tgg.integrate.integrate.BooleanExpression
 
 class SatisfactionRuleGenerator {
 
@@ -52,6 +53,10 @@ class SatisfactionRuleGenerator {
 			result += '''&&'''
 			e.right.forEach[r | compileNext(r)]
 		}
+		
+		def void compile(BooleanExpression e) {
+			compileNext(e.expression)
+		}
 
 		def void compile(ComparisonExpression e) {
 			compileNext(e.lhs)
@@ -72,6 +77,7 @@ class SatisfactionRuleGenerator {
 				WrappedOrExpression: next.compile
 				OrExpression: next.compile
 				AndExpression: next.compile
+				BooleanExpression: next.compile
 				ComparisonExpression: next.compile
 				LiteralValue: next.compile
 				VariableReference: next.compile

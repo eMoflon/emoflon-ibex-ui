@@ -25,60 +25,58 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="resolution" eType="#//Resolution"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="VariableReference" eSuperTypes="#//BooleanExpression #//ComparisonParameter">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="ref" eType="#//Variable"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Variable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="pipeline" eType="#//Pipeline"
         containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VariableReference" eSuperTypes="#//ComparisonParameter">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ref" eType="#//Variable"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Pipeline">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="start" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="start" eType="#//PipelineStageStart"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="PipelineStageSrc">
+  <eClassifiers xsi:type="ecore:EClass" name="PipelineStageStart">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="next" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="PipelineStageTrg">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="next" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"
-        containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="PipelineFilterStage">
+  <eClassifiers xsi:type="ecore:EClass" name="PipelineStageSrc" eSuperTypes="#//PipelineStageStart"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PipelineStageTrg" eSuperTypes="#//PipelineStageStart"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PipelineStageFilter">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="PipelineCreatedFilterStage" eSuperTypes="#//PipelineFilterStage">
+  <eClassifiers xsi:type="ecore:EClass" name="PipelineStageModification" eSuperTypes="#//PipelineStageFilter">
     <eStructuralFeatures xsi:type="ecore:EReference" name="next" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="PipelineDeletedFilterStage" eSuperTypes="#//PipelineFilterStage">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="next" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"
-        containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="PipelineTypeFilterStage" eSuperTypes="#//PipelineFilterStage">
+  <eClassifiers xsi:type="ecore:EClass" name="PipelineStageCreated" eSuperTypes="#//PipelineStageModification"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PipelineStageDeleted" eSuperTypes="#//PipelineStageModification"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PipelineStageType" eSuperTypes="#//PipelineStageFilter">
     <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EClassifier"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="next" eType="#//PipelineEndStage"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="next" eType="#//PipelineStageEnd"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="PipelineEndStage">
+  <eClassifiers xsi:type="ecore:EClass" name="PipelineStageEnd">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="PipelineCountStage" eSuperTypes="#//PipelineEndStage"/>
-  <eClassifiers xsi:type="ecore:EClass" name="PipelineExistsStage" eSuperTypes="#//PipelineEndStage"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PipelineStageCount" eSuperTypes="#//PipelineStageEnd"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PipelineStageExists" eSuperTypes="#//PipelineStageEnd"/>
   <eClassifiers xsi:type="ecore:EClass" name="SatisfactionRule">
     <eStructuralFeatures xsi:type="ecore:EReference" name="expression" eType="#//Expression"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Expression"/>
-  <eClassifiers xsi:type="ecore:EClass" name="BooleanExpression" eSuperTypes="#//Expression"/>
-  <eClassifiers xsi:type="ecore:EClass" name="WrappedOrExpression" eSuperTypes="#//BooleanExpression">
+  <eClassifiers xsi:type="ecore:EClass" name="BooleanExpression" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expression" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="WrappedOrExpression">
     <eStructuralFeatures xsi:type="ecore:EReference" name="expression" eType="#//Expression"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ComparisonExpression" eSuperTypes="#//BooleanExpression">
+  <eClassifiers xsi:type="ecore:EClass" name="ComparisonExpression">
     <eStructuralFeatures xsi:type="ecore:EReference" name="lhs" eType="#//ComparisonParameter"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="op" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

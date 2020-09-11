@@ -26,42 +26,54 @@ ConflictResolutionStrategy:
 	'}'
 	'}' 'with' resolution=Resolution;
 
-VariableReference:
-	ref=[Variable];
-
 Variable:
 	'var' name=ID '=' pipeline=Pipeline;
 
+VariableReference:
+	ref=[Variable];
+
+//////////////
+// Pipeline //
+//////////////
 Pipeline:
-	start=(PipelineStageSrc | PipelineStageTrg);
+	start=PipelineStageStart;
+
+PipelineStageStart:
+	PipelineStageSrc | PipelineStageTrg;
 
 PipelineStageSrc:
-	name='#src' '|' next=(PipelineFilterStage | PipelineEndStage);
+	name='#src' '|' next=(PipelineStageFilter | PipelineStageEnd);
 
 PipelineStageTrg:
-	name='#trg' '|' next=(PipelineFilterStage | PipelineEndStage);
+	name='#trg' '|' next=(PipelineStageFilter | PipelineStageEnd);
 
-PipelineFilterStage:
-	PipelineCreatedFilterStage | PipelineDeletedFilterStage | PipelineTypeFilterStage;
+PipelineStageFilter:
+	PipelineStageModification | PipelineStageType;
 
-PipelineCreatedFilterStage:
-	name='created' '|' next=(PipelineTypeFilterStage | PipelineEndStage);
+PipelineStageModification:
+	PipelineStageCreated | PipelineStageDeleted;
 
-PipelineDeletedFilterStage:
-	name='deleted' '|' next=(PipelineTypeFilterStage | PipelineEndStage);
+PipelineStageCreated:
+	name='created' '|' next=(PipelineStageType | PipelineStageEnd);
 
-PipelineTypeFilterStage:
-	name='type' type=[ecore::EClassifier] '|' next=PipelineEndStage;
+PipelineStageDeleted:
+	name='deleted' '|' next=(PipelineStageType | PipelineStageEnd);
 
-PipelineEndStage:
-	PipelineCountStage | PipelineExistsStage;
+PipelineStageType:
+	name='type' type=[ecore::EClassifier] '|' next=PipelineStageEnd;
 
-PipelineCountStage:
+PipelineStageEnd:
+	PipelineStageCount | PipelineStageExists;
+
+PipelineStageCount:
 	name='count';
 
-PipelineExistsStage:
+PipelineStageExists:
 	name='exists';
 
+///////////////////////
+// Satisfaction Rule //
+///////////////////////
 SatisfactionRule:
 	expression=OrExpression;
 
@@ -72,7 +84,7 @@ AndExpression returns Expression:
 	BooleanExpression ({AndExpression.left=current} 'and' right+=BooleanExpression)*;
 
 BooleanExpression:
-	ComparisonExpression | VariableReference | WrappedOrExpression;
+	expression=(ComparisonExpression | VariableReference | WrappedOrExpression);
 
 WrappedOrExpression:
 	'(' expression=OrExpression ')';
@@ -86,6 +98,9 @@ ComparisonParameter:
 LiteralValue:
 	value=INT;
 
+///////////////
+// Resolution//
+///////////////
 Resolution:
 	strategy=ResolutionStrategy ('fallback' fallback=FallbackResolutionStrategy)?;
 

@@ -3,21 +3,13 @@
  */
 package org.emoflon.ibex.tgg.integrate.generator
 
-import java.util.List
 import javax.inject.Inject
-import org.apache.commons.lang3.StringUtils
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.AbstractGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
 import org.eclipse.xtext.naming.IQualifiedNameProvider
-import org.eclipse.xtext.naming.QualifiedName
-import org.emoflon.ibex.tgg.integrate.api.ConflictContainerProcessor
-import org.emoflon.ibex.tgg.integrate.api.IConflictResolutionStrategy
 import org.emoflon.ibex.tgg.integrate.integrate.Integrate
-import org.emoflon.ibex.tgg.integrate.integrate.impl.IntegrateImpl
-import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.ConflictContainer
-import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.util.ConflictResolver
 
 import static extension org.eclipse.xtext.EcoreUtil2.*
 
@@ -29,55 +21,17 @@ import static extension org.eclipse.xtext.EcoreUtil2.*
 class IntegrateGenerator extends AbstractGenerator {
 
 	@Inject ConflictResolutionStrategyGenerator conflictResolutionStrategyGenerator;
+	@Inject ConflictResolutionStrategyContainerGenerator conflictResolutionStrategyContainerGenerator;
 	@Inject extension IQualifiedNameProvider
 
-	final static String CLASS_POSTFIX = "ConflictResolver"
-
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
-		val integrate = resource.contents.get(0) as IntegrateImpl
-		val packageName = integrate.package.fullyQualifiedName
-
-		val crsClassNames = generateCRSImpls(integrate, packageName, fsa)
-		generateCRSContainer(integrate, packageName, crsClassNames ,resource, fsa);
-	}
-
-	def generateCRSContainer(Integrate integrate, QualifiedName packageName, List<String> crsClassNames, Resource resource,
-		IFileSystemAccess2 fsa) {
-		val className = getClassPrefix(resource) + CLASS_POSTFIX
-		val filePath = packageName.toString("/") + "/" + className + ".java"
-
-		fsa.generateFile(filePath, '''
-			package «packageName»;
-			
-			public class «className» implements «ConflictResolver.name»{
-				
-				private final «List.name»<«IConflictResolutionStrategy.name»> conflictResolutionStrategies;
-				
-				public «className»() {
-					this.conflictResolutionStrategies = «List.name».of(
-						«FOR crsClassName : crsClassNames SEPARATOR ','»
-							new «crsClassName»()
-						«ENDFOR»
-					);
-				}
-					
-				@Override
-				public void resolveConflict(«ConflictContainer.name» conflictContainer) {
-					«ConflictContainerProcessor.name».process(conflictContainer, conflictResolutionStrategies);
-				}
-			}
-		''')
-	}
-	
-	def String getClassPrefix(Resource resource) {
-		val prefix = resource.normalizedURI.lastSegment.replace(".integ", "")
-		StringUtils.capitalize(prefix)
-	}
-
-	private def List<String> generateCRSImpls(IntegrateImpl integrate, QualifiedName packageName,
-		IFileSystemAccess2 fsa) {
-		integrate.conflictResolutionStrategies.map [ crs |
+		val integrate = resource.contents.get(0) as Integrate
+		
+		val packageName =integrate.package.fullyQualifiedName.append(resource.normalizedURI.lastSegment.replace(".integ", ""))
+		val crsClassNames = integrate.conflictResolutionStrategies.map [ crs |
 			conflictResolutionStrategyGenerator.doGenerate(crs, packageName, fsa)
 		]
+
+		conflictResolutionStrategyContainerGenerator.doGenerate(resource, packageName, fsa, crsClassNames)
 	}
 }

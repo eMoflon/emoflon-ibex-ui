@@ -18,14 +18,14 @@ import org.eclipse.xtext.scoping.Scopes;
 import org.eclipse.xtext.scoping.impl.SimpleScope;
 import org.emoflon.ibex.tgg.integrate.integrate.Import;
 import org.emoflon.ibex.tgg.integrate.integrate.Integrate;
-import org.emoflon.ibex.tgg.integrate.integrate.PipelineTypeFilterStage;
+import org.emoflon.ibex.tgg.integrate.integrate.PipelineStageType;
 import org.moflon.tgg.mosl.tgg.Rule;
 import org.moflon.tgg.mosl.tgg.Schema;
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile;
 
 public class PipelineTypeFilterScopeProvider {
 
-	public IScope provide(PipelineTypeFilterStage context) {
+	public IScope provide(PipelineStageType context) {
 		Integrate integrate = EcoreUtil2.getContainerOfType(context, Integrate.class);
 		return buildScopeFromImports(integrate.getImports());
 	}

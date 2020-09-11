@@ -1,61 +1,66 @@
 package org.emoflon.ibex.tgg.integrate.api.variable;
 
-import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict;
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.util.ConflictElements;
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.util.ConflictEltFilter;
 
-import language.TGGRuleNode;
-
-public class PipelineStageExecuter {
-
-	public static ConflictEltFilter executeSrc() {
-		return new ConflictEltFilter().src();
-	}
-
-	public static ConflictEltFilter executeTrg() {
-		return new ConflictEltFilter().src();
+public class PipelineStageExecuter {	
+	
+	private final Conflict conflict;
+	private ConflictEltFilter filter;
+	private Set<String> typeNames;
+	
+	public PipelineStageExecuter(Conflict conflict) {
+		this.filter = new ConflictEltFilter();
+		this.conflict = conflict;
+		this.typeNames = new HashSet<String>();
 	}
 	
-	public static ConflictEltFilter executeIntact() {
-		return new ConflictEltFilter().intact();
+	public PipelineStageExecuter src() {
+		this.filter = filter.src();
+		return this;
 	}
-
-	public static ConflictEltFilter executeCreatedFilter(ConflictEltFilter filter) {
-		return filter.created();
+	
+	public PipelineStageExecuter trg() {
+		this.filter = filter.trg();
+		return this;
 	}
-
-	public static ConflictEltFilter executeDeletedFilter(ConflictEltFilter filter) {
-		return filter.deleted();
+	
+	public PipelineStageExecuter created() {
+		this.filter = filter.created();
+		return this;
 	}
-
-	public static Set<EObject> executeElementFilter(ConflictEltFilter filter, Conflict c) {
-		ConflictElements filteredElements = new ConflictElements(c, filter, true);
-		return filteredElements.getObjects();
+	
+	public PipelineStageExecuter deleted() {
+		this.filter = filter.deleted();
+		return this;
 	}
-
-	public static Set<EObject> executeTypeFilter(Set<EObject> elements,
-			Collection<String> filterClassNames) {
-
-		Predicate<TGGRuleNode> hasType = e -> {
-			String name = e.getType().getName();
-			return filterClassNames.contains(name);
-		};
-
-		return elements.stream().filter(e -> e instanceof TGGRuleNode).map(e -> (TGGRuleNode) e).filter(hasType)
-				.collect(Collectors.toSet());
+	
+	public PipelineStageExecuter types(Set<String> typeNames) {
+		this.typeNames.addAll(typeNames);
+		return this;
 	}
-
-	public static int executeCount(Collection<?> elements) {
+	
+	public int count() {
+		Set<EObject> elements = executeFilter();
 		return elements.size();
 	}
 	
-	public static boolean executeExists(Collection<?> elements) {
+	
+	public boolean exists() {
+		Set<EObject> elements = executeFilter();
 		return !elements.isEmpty();
 	}
+
+	private Set<EObject> executeFilter() {
+		ConflictElements filteredElements = new ConflictElements(conflict, filter, false);
+		Set<EObject> elements = filteredElements.getObjects();
+		// TODO: Implement type filtering
+		return elements;
+	}
+
 }

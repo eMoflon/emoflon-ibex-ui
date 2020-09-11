@@ -1,17 +1,9 @@
 package org.emoflon.ibex.tgg.integrate.generator
 
 import java.util.Set
-import org.eclipse.emf.ecore.EObject
 import org.emoflon.ibex.tgg.integrate.api.variable.PipelineStageExecuter
-import org.emoflon.ibex.tgg.integrate.integrate.PipelineCountStage
-import org.emoflon.ibex.tgg.integrate.integrate.PipelineCreatedFilterStage
-import org.emoflon.ibex.tgg.integrate.integrate.PipelineDeletedFilterStage
-import org.emoflon.ibex.tgg.integrate.integrate.PipelineStageSrc
-import org.emoflon.ibex.tgg.integrate.integrate.PipelineStageTrg
-import org.emoflon.ibex.tgg.integrate.integrate.PipelineTypeFilterStage
 import org.emoflon.ibex.tgg.integrate.integrate.Variable
-import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.util.ConflictEltFilter
-import org.emoflon.ibex.tgg.integrate.integrate.PipelineExistsStage
+import org.emoflon.ibex.tgg.integrate.internal.PipelineVisitor
 
 class VariableGenerator {
 
@@ -23,94 +15,29 @@ class VariableGenerator {
 	private static class VariableCompiler {
 
 		final Variable variable
-		final String variableFilterName
-		final String variableElementsName
-
+		final String executerName;
 		String result
-		boolean isFilterEvaluated
 
 		new(Variable variable) {
 			this.variable = variable
-			this.variableFilterName = '''«variable.name»Filter'''
-			this.variableElementsName = '''«variable.name»Elements'''
-			this.result = ""
-			this.isFilterEvaluated = false
+			this.executerName = '''«variable.name»Executer'''
+			this.result = '''«PipelineStageExecuter.name» «executerName» = new «PipelineStageExecuter.name»(conflict)'''
 		}
 
 		def String compile() {
-			val start = variable.pipeline.start
-			switch start {
-				PipelineStageSrc: start.compile
-				PipelineStageTrg: start.compile
-			}
+			new PipelineVisitor(variable)
+				.src[_|result += '''.src()''']
+				.trg[_|result += '''.trg()''']
+				.created[_|result += '''.created()''']
+				.deleted[_|result += '''.deleted()''']
+				.type[p|result += '''.types(«Set.name».of("«p.type.name»"))''']
+				.count[_|result += ''';int «variable.name» = «executerName».count();''']
+				.exists[_|result += ''';boolean «variable.name» = «executerName».exists();''']
+				.visit()
 
 			result
 		}
 
-		private def void compile(PipelineStageSrc p) {
-			result += '''«ConflictEltFilter.name» «variableFilterName» = «PipelineStageExecuter.name».executeSrc();'''
-			compileNext(p.next)
-		}
-
-		private def void compile(PipelineStageTrg p) {
-			result += '''«ConflictEltFilter.name» «variableFilterName» = «PipelineStageExecuter.name».executeTrg();'''
-			compileNext(p.next)
-		}
-
-		private def void compile(PipelineCreatedFilterStage p) {
-			result +=
-				'''«variableFilterName» = «PipelineStageExecuter.name».executeCreatedFilter(«variableFilterName»);'''
-			compileNext(p.next)
-		}
-
-		private def void compile(PipelineDeletedFilterStage p) {
-			result +=
-				'''«variableFilterName» = «PipelineStageExecuter.name».executeDeletedFilter(«variableFilterName»);'''
-			compileNext(p.next)
-		}
-
-		private def void compile(PipelineTypeFilterStage p) {
-			withEvaluatedFilter[|
-				result +=
-					'''«variableElementsName» = «PipelineStageExecuter.name».executeTypeFilter(«variableElementsName», «Set.name».of("«p.type.name»"));'''
-			]
-
-			compileNext(p.next)
-		}
-
-		private def void compile(PipelineCountStage p) {
-			withEvaluatedFilter[|
-				result +=
-					'''Integer «variable.name» = «PipelineStageExecuter.name».executeCount(«variableElementsName»);'''
-			]
-		}
-
-		private def void compile(PipelineExistsStage p) {
-			withEvaluatedFilter[|
-				result +=
-					'''Boolean «variable.name» = «PipelineStageExecuter.name».executeExists(«variableElementsName»);'''
-			]
-		}
-
-		private def void withEvaluatedFilter(()=>void compile) {
-			if (!isFilterEvaluated) {
-				result +=
-					'''«Set.name»<«EObject.name»> «variableElementsName» = «PipelineStageExecuter.name».executeElementFilter(«variableFilterName», conflict);'''
-				isFilterEvaluated = true
-			}
-
-			compile.apply
-		}
-
-		private def void compileNext(EObject p) {
-			switch p {
-				PipelineCreatedFilterStage: p.compile
-				PipelineDeletedFilterStage: p.compile
-				PipelineTypeFilterStage: p.compile
-				PipelineCountStage: p.compile
-				PipelineExistsStage: p.compile
-			}
-		}
 	}
 
 }
