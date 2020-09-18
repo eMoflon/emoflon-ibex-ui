@@ -1343,7 +1343,7 @@ class GTValidator extends AbstractGTValidator {
   			val value = GTArithmeticsCalculatorUtil::getValue(expression.right)
   			if(value == 0.0){
   				error(DIVISION_BY_ZERO_MESSAGE
-	  					, GTPackage.Literals.ARITHMETIC_EXPRESSION__RIGHT,
+	  					, GTPackage.Literals.MULT_EXPRESSION__RIGHT,
 	  					DIVISION_BY_ZERO) 
   			}	
   		} catch (IllegalArgumentException e){
@@ -1362,7 +1362,7 @@ class GTValidator extends AbstractGTValidator {
   				if(right instanceof ArithmeticNodeAttribute){
   					if(right.negative){
   						error(PARAMETER_NEGATIVE_MESSAGE
-	  					, GTPackage.Literals.ARITHMETIC_EXPRESSION__RIGHT,
+	  					, GTPackage.Literals.MULT_EXPRESSION__RIGHT,
 	  					PARAMETER_NEGATIVE)	
   					}
   				}
@@ -1372,7 +1372,7 @@ class GTValidator extends AbstractGTValidator {
   				if(right instanceof ArithmeticNodeAttribute){
   					if(right.negative){
   						error(PARAMETER_NEGATIVE_MESSAGE
-	  					, GTPackage.Literals.ARITHMETIC_EXPRESSION__RIGHT,
+	  					, GTPackage.Literals.ADD_EXPRESSION__RIGHT,
 	  					PARAMETER_NEGATIVE)	
   					}
   				}
@@ -1382,7 +1382,7 @@ class GTValidator extends AbstractGTValidator {
   				if(right instanceof ArithmeticNodeAttribute){
   					if(right.negative){
   						error(PARAMETER_NEGATIVE_MESSAGE
-	  					, GTPackage.Literals.ARITHMETIC_EXPRESSION__RIGHT,
+	  					, GTPackage.Literals.EXP_EXPRESSION__RIGHT,
 	  					PARAMETER_NEGATIVE)	
   					}
   				}

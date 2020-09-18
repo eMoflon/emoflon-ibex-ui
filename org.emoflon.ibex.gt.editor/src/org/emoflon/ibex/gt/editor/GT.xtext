@@ -195,7 +195,7 @@ ExpExpression returns ArithmeticExpression:
 	(MinMaxExpression | OneParameterArithmetics) ({ExpExpression.left = current} "^" right = (MinMaxExpression | OneParameterArithmetics))*;
 	
 MinMaxExpression returns ArithmeticExpression:
-	minMaxOperator = MinMaxOperator '(' left = ArithmeticExpression "," right = ArithmeticExpression ')';
+	{MinMaxExpression} minMaxOperator = MinMaxOperator '(' left = ArithmeticExpression "," right = ArithmeticExpression ')';
 
 OneParameterArithmetics returns ArithmeticExpression:
 	{OneParameterArithmetics} (negative?="-")? (operator = OneParameterOperator)? "("expression = ArithmeticExpression ")" 

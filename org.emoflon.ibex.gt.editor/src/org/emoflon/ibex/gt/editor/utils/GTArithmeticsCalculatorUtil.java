@@ -4,6 +4,7 @@ import org.emoflon.ibex.gt.editor.gT.AddExpression;
 import org.emoflon.ibex.gt.editor.gT.ArithmeticAttribute;
 import org.emoflon.ibex.gt.editor.gT.ArithmeticExpression;
 import org.emoflon.ibex.gt.editor.gT.ExpExpression;
+import org.emoflon.ibex.gt.editor.gT.MinMaxExpression;
 import org.emoflon.ibex.gt.editor.gT.MultExpression;
 import org.emoflon.ibex.gt.editor.gT.OneParameterArithmetics;
 
@@ -72,6 +73,14 @@ public class GTArithmeticsCalculatorUtil {
 			switch(((AddExpression) expression).getAddOperator()) {
 				case ADDITION: return left + right;
 				case SUBTRACTION: return left - right;
+			}
+		}
+		if(expression instanceof MinMaxExpression) {
+			double left = getValue(((MinMaxExpression) expression).getLeft());
+			double right = getValue(((MinMaxExpression) expression).getRight());
+			switch(((MinMaxExpression) expression).getMinMaxOperator()) {
+				case MAX: return Math.max(left, right);
+				case MIN: return Math.min(left, right);
 			}
 		}
 		// if the expression is an arithmeticNodeAttribute it can't be calculated for the validator
