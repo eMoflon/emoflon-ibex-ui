@@ -1197,7 +1197,7 @@ class GTValidator extends AbstractGTValidator {
 	  		try{
 	  			val value = GTArithmeticsCalculatorUtil::getValue(probability)
 	  			if(value < 0.0 || value > 1.0){
-	  				error(STATICPROBABILITY_NOT_CORRECT_MESSAGE, 
+	  				warning(STATICPROBABILITY_NOT_CORRECT_MESSAGE, 
 	  					GTPackage.Literals.EDITOR_PATTERN__PROBABILITY, 
 	  					STATICPROBABILITY_NOT_CORRECT)
 	  			}    			
