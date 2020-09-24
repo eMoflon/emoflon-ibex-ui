@@ -50,6 +50,7 @@ import org.emoflon.ibex.gt.editor.gT.MultOperator
 import org.emoflon.ibex.gt.editor.gT.AddExpression
 import org.emoflon.ibex.gt.editor.gT.ExpExpression
 import org.emoflon.ibex.gt.editor.utils.GTArithmeticsCalculatorUtil
+import org.emoflon.ibex.gt.editor.gT.EditorCountExpression
 
 /**
  * This class contains custom validation rules.
@@ -305,6 +306,10 @@ class GTValidator extends AbstractGTValidator {
  
   public static val PARAMETER_NEGATIVE_MESSAGE = "operators can't be directly behind each other"
   public static val PARAMETER_NEGATIVE = CODE_PREFIX + "arithmetics.parameterNegative"  
+  
+  // Count function
+  public static val RECURSIVE_COUNT_INVOCATION_MESSAGE = "Count can't be used recursively." 
+  public static val RECURSIVE_COUNT_INVOCATION = CODE_PREFIX + "count.recursiveInvocation"
   
   @Check
   def checkFile(EditorGTFile file) {
@@ -1192,7 +1197,7 @@ class GTValidator extends AbstractGTValidator {
 	  		try{
 	  			val value = GTArithmeticsCalculatorUtil::getValue(probability)
 	  			if(value < 0.0 || value > 1.0){
-	  				error(STATICPROBABILITY_NOT_CORRECT_MESSAGE, 
+	  				warning(STATICPROBABILITY_NOT_CORRECT_MESSAGE, 
 	  					GTPackage.Literals.EDITOR_PATTERN__PROBABILITY, 
 	  					STATICPROBABILITY_NOT_CORRECT)
 	  			}    			
@@ -1430,5 +1435,21 @@ class GTValidator extends AbstractGTValidator {
   	return type == EcorePackage.Literals.EDOUBLE || type == EcorePackage.Literals.EFLOAT ||
   	type == EcorePackage.Literals.EINT || type == EcorePackage.Literals.ESHORT || 
   	type == EcorePackage.Literals.ELONG || type == EcorePackage.Literals.EBYTE 
+  }
+ 	
+ @Check
+ def checkRecursiveInvocation(EditorCountExpression expr) {
+ 	var container = expr.eContainer
+ 	while(container !== null && !(container instanceof EditorPattern)) {
+ 		container = container.eContainer
  	}
+ 	if(container === null)
+ 		return
+ 			
+ 	val pattern = container as EditorPattern
+ 	if(expr.invokedPatten == pattern)
+ 		 error(RECURSIVE_COUNT_INVOCATION_MESSAGE, 
+	  		 	GTPackage.Literals.EDITOR_COUNT_EXPRESSION__INVOKED_PATTEN, RECURSIVE_COUNT_INVOCATION)
+ }
+
 }
