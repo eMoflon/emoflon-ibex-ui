@@ -14,9 +14,6 @@ import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolutio
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.CRS_RevokeAddition;
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.CRS_RevokeDeletion;
 
-import com.google.common.collect.Maps;
-import com.sun.xml.internal.ws.api.server.Container;
-
 public class ConflictResolutionStrategyRegistry {
 
 	public static String MERGE_AND_PRESERVE_NAME = "mergeAndPreserve";

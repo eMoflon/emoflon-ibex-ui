@@ -3,16 +3,15 @@ package org.emoflon.ibex.tgg.integrate.validation
 import java.util.HashSet
 import org.eclipse.xtext.validation.Check
 import org.emoflon.ibex.tgg.integrate.integrate.BooleanExpression
+import org.emoflon.ibex.tgg.integrate.integrate.ComparisonExpression
 import org.emoflon.ibex.tgg.integrate.integrate.ConflictResolutionStrategy
 import org.emoflon.ibex.tgg.integrate.integrate.Integrate
 import org.emoflon.ibex.tgg.integrate.integrate.IntegratePackage
 import org.emoflon.ibex.tgg.integrate.integrate.Resolution
 import org.emoflon.ibex.tgg.integrate.integrate.VariableReference
 import org.emoflon.ibex.tgg.integrate.internal.ConflictResolutionStrategyRegistry
-import org.emoflon.ibex.tgg.integrate.internal.PipelineVisitor
 import org.emoflon.ibex.tgg.integrate.internal.MutableValue
-import org.emoflon.ibex.tgg.integrate.integrate.impl.ComparisonExpressionImpl
-import org.emoflon.ibex.tgg.integrate.integrate.ComparisonExpression
+import org.emoflon.ibex.tgg.integrate.internal.PipelineVisitor
 
 class IntegrateValidator extends AbstractIntegrateValidator {
 
