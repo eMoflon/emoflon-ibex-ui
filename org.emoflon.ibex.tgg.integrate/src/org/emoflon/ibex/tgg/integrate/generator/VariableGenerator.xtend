@@ -1,6 +1,6 @@
 package org.emoflon.ibex.tgg.integrate.generator
 
-import java.util.Set
+import com.google.common.collect.ImmutableSet
 import org.emoflon.ibex.tgg.integrate.api.variable.PipelineStageExecuter
 import org.emoflon.ibex.tgg.integrate.integrate.Variable
 import org.emoflon.ibex.tgg.integrate.internal.PipelineVisitor
@@ -30,7 +30,7 @@ class VariableGenerator {
 				.trg[stage|result += '''.trg()''']
 				.created[stage|result += '''.created()''']
 				.deleted[stage|result += '''.deleted()''']
-				.type[p|result += '''.types(«Set.name».of("«p.type.name»"))''']
+				.type[p|result += '''.types(«ImmutableSet.name».of("«p.type.name»"))''']
 				.count[stage|result += ''';int «variable.name» = «executerName».count();''']
 				.exists[stage|result += ''';boolean «variable.name» = «executerName».exists();''']
 				.visit()

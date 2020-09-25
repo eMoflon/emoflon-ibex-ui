@@ -1,5 +1,6 @@
 package org.emoflon.ibex.tgg.integrate.generator
 
+import com.google.common.collect.ImmutableList
 import java.util.List
 import org.apache.commons.lang3.StringUtils
 import org.eclipse.emf.ecore.resource.Resource
@@ -29,7 +30,7 @@ class ConflictResolutionStrategyContainerGenerator {
 				private final «List.name»<«IConflictResolutionStrategy.name»> conflictResolutionStrategies;
 				
 				public «className»() {
-					this.conflictResolutionStrategies = «List.name».of(
+					this.conflictResolutionStrategies = «ImmutableList.name».of(
 						«FOR crsClassName : crsClassNames SEPARATOR ','»
 							new «crsClassName»()
 						«ENDFOR»
