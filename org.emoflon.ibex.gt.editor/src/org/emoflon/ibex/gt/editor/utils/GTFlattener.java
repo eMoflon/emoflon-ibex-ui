@@ -10,6 +10,7 @@ import java.util.Set;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.emoflon.ibex.gt.editor.gT.EditorAttribute;
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression;
 import org.emoflon.ibex.gt.editor.gT.EditorNode;
 import org.emoflon.ibex.gt.editor.gT.EditorOperator;
 import org.emoflon.ibex.gt.editor.gT.EditorParameter;
@@ -67,6 +68,19 @@ public class GTFlattener {
 		initializeNodes(pattern, superPatterns);
 		flattenedPattern.getConditions().addAll(pattern.getConditions());
 		initializeAttributeConstraints(pattern, superPatterns);
+		// fix attribute conditions pointing to the wrong editor node
+		Map<String, EditorNode> name2Node = new HashMap<>();
+		flattenedPattern.getNodes().forEach(node -> name2Node.put(node.getName(), node));
+		flattenedPattern.getNodes().stream()
+			.flatMap(node -> node.getAttributes().stream())
+			.map(attribute -> attribute.getValue())
+			.filter(editorExpression -> (editorExpression instanceof EditorAttributeExpression))
+			.map(editorExpression -> (EditorAttributeExpression)editorExpression)
+			.forEach(editorAttributeExpression -> {
+				if(name2Node.containsKey(editorAttributeExpression.getNode().getName())) {
+					editorAttributeExpression.setNode(name2Node.get(editorAttributeExpression.getNode().getName()));
+				}
+			});
 	}
 
 	private void initializeParameters(final EditorPattern pattern, final Set<EditorPattern> superPatterns) {

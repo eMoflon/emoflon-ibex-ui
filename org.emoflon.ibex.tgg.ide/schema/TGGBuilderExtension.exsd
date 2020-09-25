@@ -3,10 +3,10 @@
 <schema targetNamespace="org.emoflon.ibex.tgg.ide" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.emoflon.ibex.tgg.ide" id="IbexTGGBuilderExtension" name="IbexTGGBuilderExtension"/>
+         <meta.schema plugin="org.emoflon.ibex.tgg.ide" id="TGGBuilderExtension" name="TGGBuilderExtension"/>
       </appInfo>
       <documentation>
-         This is a hook into the building process.  Use this to register builder extensions that are invoked during the compilation process.
+         [Enter description of this extension point.]
       </documentation>
    </annotation>
 
@@ -18,7 +18,7 @@
       </annotation>
       <complexType>
          <choice minOccurs="1" maxOccurs="unbounded">
-            <element ref="builder_extension" minOccurs="1" maxOccurs="unbounded"/>
+            <element ref="builder_extension"/>
          </choice>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -55,15 +55,8 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn=":org.emoflon.ibex.tgg.ide.admin.BuilderExtension"/>
+                  <meta.attribute kind="java" basedOn=":org.emoflon.ibex.tgg.ide.admin.TGGBuilderExtension"/>
                </appInfo>
-            </annotation>
-         </attribute>
-         <attribute name="build_before_all" type="boolean" use="default" value="false">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
             </annotation>
          </attribute>
       </complexType>

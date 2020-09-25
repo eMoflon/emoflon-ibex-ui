@@ -22,8 +22,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.SafeRunner;
-import org.emoflon.ibex.gt.editor.GTStandaloneSetup;
 import org.moflon.core.utilities.ExtensionsUtil;
+import org.moflon.core.utilities.LogUtils;
 
 /**
  * Builder for Graph Transformation Projects.
@@ -35,6 +35,8 @@ public class GTBuilder extends IncrementalProjectBuilder {
 	public static final String BUILDER_ID = "org.emoflon.ibex.gt.editor.ui.builder";
 	
 	private IProject currentProject;
+	
+	private boolean cleanedProject = false;
 
 	/**
 	 * The name of the source folder. The builds are only triggered for changes in
@@ -81,6 +83,13 @@ public class GTBuilder extends IncrementalProjectBuilder {
 	public IProject[] buildManually(final int kind) throws CoreException {
 		return build(kind, null, null);
 	}
+	
+	@Override
+	protected void clean(IProgressMonitor monitor) throws CoreException {
+		log(" -> clean..");
+		cleanedProject = true;
+		super.clean(monitor);
+	}
 
 	@Override
 	protected IProject[] build(final int kind, final Map<String, String> args, final IProgressMonitor monitor)
@@ -90,11 +99,14 @@ public class GTBuilder extends IncrementalProjectBuilder {
 			log("src folder is missing");
 			return null;
 		}
-//		GTStandaloneSetup.doSetup();
 		
 		// Run builder extensions for the project.
 		runBuilderExtensions(ext -> ext.run(getProject(getBuildConfig())));
-
+		if(cleanedProject) {
+			cleanedProject = false;
+			log(" -> skipping build.. Please initiate full build manually.");
+			return null;
+		}
 		// Run builder extensions for each package.
 		switch (kind) {
 		case AUTO_BUILD:
@@ -102,6 +114,9 @@ public class GTBuilder extends IncrementalProjectBuilder {
 			incrementalBuild();
 			break;
 		case CLEAN_BUILD:
+			cleanedProject = false;
+			log(" -> skipping build.. Please initiate full build manually.");
+			break;
 		case FULL_BUILD:
 			fullBuild();
 			break;
@@ -115,7 +130,7 @@ public class GTBuilder extends IncrementalProjectBuilder {
 	 * Performs an incremental build.
 	 */
 	private void incrementalBuild() {
-		log("incremental build");
+		log(" -> incremental build");
 		Arrays.stream(getDelta(getProject(getBuildConfig())).getAffectedChildren())
 				.filter(child -> child.getProjectRelativePath().toString().contains("src"))
 				.filter(child -> !child.getProjectRelativePath().toString().contains("src-gen"))
@@ -142,7 +157,7 @@ public class GTBuilder extends IncrementalProjectBuilder {
 	 * Performs a full build.
 	 */
 	private void fullBuild() {
-		log("full build");
+		log(" -> full build");
 		buildPackages(findFolders(srcFolder));
 	}
 
