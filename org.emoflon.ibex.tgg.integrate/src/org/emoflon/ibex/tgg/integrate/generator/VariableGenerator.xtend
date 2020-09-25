@@ -26,13 +26,13 @@ class VariableGenerator {
 
 		def String compile() {
 			new PipelineVisitor(variable)
-				.src[_|result += '''.src()''']
-				.trg[_|result += '''.trg()''']
-				.created[_|result += '''.created()''']
-				.deleted[_|result += '''.deleted()''']
+				.src[stage|result += '''.src()''']
+				.trg[stage|result += '''.trg()''']
+				.created[stage|result += '''.created()''']
+				.deleted[stage|result += '''.deleted()''']
 				.type[p|result += '''.types(«Set.name».of("«p.type.name»"))''']
-				.count[_|result += ''';int «variable.name» = «executerName».count();''']
-				.exists[_|result += ''';boolean «variable.name» = «executerName».exists();''']
+				.count[stage|result += ''';int «variable.name» = «executerName».count();''']
+				.exists[stage|result += ''';boolean «variable.name» = «executerName».exists();''']
 				.visit()
 
 			result
