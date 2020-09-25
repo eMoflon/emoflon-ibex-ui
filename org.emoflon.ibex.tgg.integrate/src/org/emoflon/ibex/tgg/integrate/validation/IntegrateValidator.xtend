@@ -61,7 +61,7 @@ class IntegrateValidator extends AbstractIntegrateValidator {
 	def void checkVariableReferenceInBooleanExpressionCanBeEvaluedToBoolean(VariableReference vr) {
 		if (vr.eContainer instanceof BooleanExpression) {
 			val value = MutableValue.of(false)
-			new PipelineVisitor(vr.ref).exists[_|value.set(true)].visit()
+			new PipelineVisitor(vr.ref).exists[e|value.set(true)].visit()
 
 			if (!value.get) {
 				error("Variable cannot be evaluated to a boolean expression", vr, IntegratePackage.Literals.VARIABLE_REFERENCE__REF)
@@ -73,7 +73,7 @@ class IntegrateValidator extends AbstractIntegrateValidator {
 	def void checkVariableReferenceInComparisonCanBeEvaluatedToNumerical(VariableReference vr) {
 		if (vr.eContainer instanceof ComparisonExpression) {
 			val value = MutableValue.of(false)
-			new PipelineVisitor(vr.ref).count[_|value.set(true)].visit()
+			new PipelineVisitor(vr.ref).count[c|value.set(true)].visit()
 
 			if (!value.get) {
 				error("Variable cannot be evaluated to a numerical expression", vr, IntegratePackage.Literals.VARIABLE_REFERENCE__REF)
