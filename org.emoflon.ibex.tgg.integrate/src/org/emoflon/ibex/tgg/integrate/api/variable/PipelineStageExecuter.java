@@ -58,7 +58,7 @@ public class PipelineStageExecuter {
 	}
 
 	private Set<EObject> executeFilter() {
-		ConflictElements filteredElements = new ConflictElements(conflict, filter, false);
+		ConflictElements filteredElements = new ConflictElements(conflict, filter, true);
 		Set<EObject> elements = filteredElements.getObjects();
 		return executeTypeFilter(elements);
 	}
