@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -31,7 +32,7 @@ public class PipelineStageTypeScopeProvider {
 	}
 
 	private IScope buildScopeFromImports(EList<Import> imports) {
-		Set<EClassifier> types = imports.stream().map(imp -> imp.getRule())
+		Set<EClass> types = imports.stream().map(imp -> imp.getRule())
 				.map(this::getSchema)
 				.flatMap(this::getURIStream)
 				.map(this::getResourceForURI)
@@ -61,7 +62,7 @@ public class PipelineStageTypeScopeProvider {
 		return (EPackage) resource.getContents().get(0);
 	}
 	
-	private Stream<EClassifier> getClassifierStream(EPackage pkg) {
-		return EcoreUtil2.getAllContentsOfType(pkg, EClassifier.class).stream();
+	private Stream<EClass> getClassifierStream(EPackage pkg) {
+		return EcoreUtil2.getAllContentsOfType(pkg, EClass.class).stream();
 	}
 }

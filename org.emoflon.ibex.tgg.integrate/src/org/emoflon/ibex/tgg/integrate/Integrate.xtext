@@ -60,7 +60,7 @@ PipelineStageDeleted:
 	name='deleted' '|' next=(PipelineStageType | PipelineStageEnd);
 
 PipelineStageType:
-	name='type' type=[ecore::EClassifier] '|' next=PipelineStageEnd;
+	name='type' type=[ecore::EClass] '|' next=PipelineStageEnd;
 
 PipelineStageEnd:
 	PipelineStageCount | PipelineStageExists;
