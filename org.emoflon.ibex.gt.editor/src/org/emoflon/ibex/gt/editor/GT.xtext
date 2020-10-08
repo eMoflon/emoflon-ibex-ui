@@ -9,6 +9,10 @@ EditorGTFile:
 	conditions+=EditorCondition 
 //  | attributeConditionLibraries+=EditorAttributeConditionLibrary
 	)*;
+  
+  // This rule serves to have a common super class for pattern parameters and editor nodes
+EditorParameterOrNode:
+  (EditorNode | EditorParameter);
 
 EditorImport:
   'import' name=STRING;
@@ -25,8 +29,6 @@ EditorPattern:
   ('when' conditions+=[EditorCondition] ('||' conditions+=[EditorCondition])*)?
   (stochastic ?='@' probability = EditorProbability)?;
 
-
-
 enum EditorPatternType:
   PATTERN='pattern' |
   RULE='rule';
@@ -36,14 +38,15 @@ EditorParameter:
 
   // Nodes
 EditorNode:
-  (operator=OperatorInEditor)?
+  (operator=EditorOperator)?
   name=ID ':' type=[ecore::EClass] (binding=EditorBindingExpression)?
   ('{'
   (attributes+=EditorAttributeAssignment | references+=EditorReference)
 //attributeConditions+=EditorPatternAttributeCondition*
   '}')?;
 
-enum OperatorInEditor returns EditorOperator:
+enum EditorOperator:
+  CONTEXT='98943JKHF9802nf&&3120ß4$§_3§' |
   CREATE='++' |
   DELETE='--';
 
@@ -88,7 +91,7 @@ EditorParameterExpression:
 
 // References
 EditorReference:
-  (operator=OperatorInEditor)? '-' type=[ecore::EReference] '->' target=[EditorNode];
+  (operator=EditorOperator)? '-' type=[ecore::EReference] '->' target=[EditorNode];
 
 // Graph Conditions
 EditorCondition:
@@ -178,11 +181,6 @@ ArithmeticNodeAttribute:
 ArithmeticNumber returns ecore::EDouble:
 	 ('-')? INT ('.' INT)?;
 
-//enum EditorOperator:
-//  CONTEXT |
-//  CREATE |
-//  DELETE;
-//  
 //EditorPatternElement:
 //  EditorNode | EditorPatternAttributeCondition;
 //
@@ -260,6 +258,3 @@ ArithmeticNumber returns ecore::EDouble:
 //enum EditorAttributeConditionTargetPlatform:
 //  JAVA='Java';
 //
-//  // This rule serves to have a common super class for pattern parameters and editor nodes
-//EditorParameterOrNode:
-//  (EditorNode | EditorParameter);

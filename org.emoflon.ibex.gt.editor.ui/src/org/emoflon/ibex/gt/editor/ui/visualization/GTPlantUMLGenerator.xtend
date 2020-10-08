@@ -4,16 +4,16 @@ import java.util.HashSet
 import java.util.Set
 import org.apache.commons.lang3.StringUtils
 import org.eclipse.emf.common.util.EList
-import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorCondition
 import org.emoflon.ibex.gt.editor.gT.EditorNode
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
 import org.emoflon.ibex.gt.editor.gT.EditorPattern
 import org.emoflon.ibex.gt.editor.gT.EditorReference
-import org.emoflon.ibex.gt.editor.gT.EditorRelation
 import org.emoflon.ibex.gt.editor.utils.GTConditionHelper
 import org.emoflon.ibex.gt.editor.utils.GTEditorPatternUtils
 import org.emoflon.ibex.gt.editor.utils.GTFlattener
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeConstraint
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeAssignment
 
 /**
  * Utility methods to generate PlantUML code.
@@ -131,10 +131,19 @@ class GTPlantUMLGenerator {
 	/**
 	 * Prints the attribute constraint.
 	 */
-	private static def String attributeConstraint(EditorAttribute attr) {
-		val operator = if(attr.relation == EditorRelation.ASSIGNMENT) '+' else '#'
-		val name = if(attr.attribute === null || attr.attribute.name === null) '?' else attr.attribute.name
+	private static def String attributeConstraint(EditorAttributeConstraint attr) {
+		val operator = '#'
 		val relation = if(attr.relation === null) '?' else attr.relation.toString
+		'''«operator» «StringUtils.abbreviateMiddle(GTVisualizationUtils.toString(attr.lhs), "...", MAX_STR_LENGTH)» «relation» «StringUtils.abbreviateMiddle(GTVisualizationUtils.toString(attr.rhs), "...", MAX_STR_LENGTH)»'''
+	}
+	
+	/**
+	 * Prints the attribute constraint.
+	 */
+	private static def String attributeConstraint(EditorAttributeAssignment attr) {
+		val operator = '+'
+		val name = if(attr.attribute === null || attr.attribute.name === null) '?' else attr.attribute.name
+		val relation = ':='
 		'''«operator» «name» «relation» «StringUtils.abbreviateMiddle(GTVisualizationUtils.toString(attr.value), "...", MAX_STR_LENGTH)»'''
 	}
 

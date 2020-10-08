@@ -7,7 +7,7 @@ import org.eclipse.xtext.linking.impl.IllegalNodeException
 import org.eclipse.xtext.linking.impl.LinkingDiagnosticMessageProvider
 import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.GTPackage
-import org.emoflon.ibex.gt.editor.gT.EditorAttribute
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeAssignment
 
 /**
  * Custom error codes and messages for scoping violations.
@@ -48,7 +48,7 @@ class GTLinkingDiagnosticMessageProvider extends LinkingDiagnosticMessageProvide
 		}
 
 		// Attribute not found.
-		if (context.reference === GTPackage.Literals.EDITOR_ATTRIBUTE__ATTRIBUTE) {
+		if (context.reference === GTPackage.Literals.EDITOR_ATTRIBUTE_ASSIGNMENT__ATTRIBUTE) {
 			return new DiagnosticMessage(
 				String.format(ATTRIBUTE_NOT_FOUND_MESSAGE, linkText),
 				Severity.ERROR,
@@ -76,7 +76,7 @@ class GTLinkingDiagnosticMessageProvider extends LinkingDiagnosticMessageProvide
 
 		// Parameter of parameter expression not found.
 		if (context.reference === GTPackage.Literals.EDITOR_PARAMETER_EXPRESSION__PARAMETER) {
-			val expectedType = (context?.context?.eContainer as EditorAttribute)?.attribute?.EAttributeType?.name
+			val expectedType = (context?.context?.eContainer as EditorAttributeAssignment)?.attribute?.EAttributeType?.name
 			return new DiagnosticMessage(
 				String.format(PARAMETER_EXPRESSION_PARAMETER_NOT_FOUND_MESSAGE, linkText, expectedType),
 				Severity.ERROR,

@@ -10,7 +10,6 @@ import org.emoflon.ibex.gt.editor.gT.EditorNode;
 import org.emoflon.ibex.gt.editor.gT.EditorOperator;
 import org.emoflon.ibex.gt.editor.gT.EditorParameter;
 import org.emoflon.ibex.gt.editor.gT.EditorPattern;
-import org.emoflon.ibex.gt.editor.gT.EditorRelation;
 
 /**
  * Utility methods for editor patterns.
@@ -136,7 +135,7 @@ public class GTEditorPatternUtils {
 	 */
 	public static boolean containsCreatedOrDeletedElements(final EditorPattern editorPattern) {
 		return hasCreatedOrDeletedNode(editorPattern) || hasCreatedOrDeletedReference(editorPattern)
-				|| hasAttributeAssignment(editorPattern) || GTComplexAttributeConstraintsUtils.hasFreeVariablesInAttributeConditions(editorPattern);
+				|| hasAttributeAssignment(editorPattern);
 	}
 
 	/**
@@ -176,6 +175,6 @@ public class GTEditorPatternUtils {
 		return editorPattern.getNodes().stream() //
 				.map(node -> node.getAttributes()) //
 				.flatMap(attributes -> attributes.stream()) //
-				.anyMatch(attribute -> attribute.getRelation() == EditorRelation.ASSIGNMENT);
+				.findAny().isPresent();
 	}
 }

@@ -7,26 +7,22 @@ import org.eclipse.emf.ecore.EReference
 import org.eclipse.xtext.scoping.Scopes
 import org.eclipse.xtext.scoping.impl.FilteringScope
 import org.emoflon.ibex.gt.editor.gT.EditorApplicationCondition
-import org.emoflon.ibex.gt.editor.gT.EditorAttribute
-import org.emoflon.ibex.gt.editor.gT.EditorAttributeConditionParameter
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
 import org.emoflon.ibex.gt.editor.gT.EditorConditionReference
 import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile
 import org.emoflon.ibex.gt.editor.gT.EditorNode
-import org.emoflon.ibex.gt.editor.gT.EditorOperator
 import org.emoflon.ibex.gt.editor.gT.EditorParameter
 import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
 import org.emoflon.ibex.gt.editor.gT.EditorPattern
-import org.emoflon.ibex.gt.editor.gT.EditorPatternAttributeConstraintAttributeValueExpression
-import org.emoflon.ibex.gt.editor.gT.EditorPatternAttributeConstraintPredicate
-import org.emoflon.ibex.gt.editor.gT.EditorPatternAttributeConstraintVariable
 import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 import org.emoflon.ibex.gt.editor.utils.GTEditorPatternUtils
 import org.emoflon.ibex.gt.editor.utils.GTEnumExpressionHelper
 import org.emoflon.ibex.gt.editor.gT.ArithmeticNodeAttribute
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeAssignment
+import org.emoflon.ibex.gt.editor.gT.EditorOperator
 
 /**
  * This class contains custom scoping description.
@@ -39,7 +35,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
   override getScope(EObject context, EReference reference) {
     // Attributes
     if (isAttributeName(context, reference)) {
-      return getScopeForAttributes(context as EditorAttribute)
+      return getScopeForAttributes(context as EditorAttributeAssignment)
     }
 
     // Condition
@@ -99,63 +95,11 @@ class GTScopeProvider extends AbstractGTScopeProvider {
       return filterScopeForOtherObjectsFromSamePackage(context, reference)
     }
 
-    // Complex attribute constraints
-    if (isEditorAttributeConditionParameter(context, reference)) {
-      return getScopeForEditorAttributeConditionParameter(context as EditorAttributeConditionParameter)
-    }
-
-    if (isEditorPatternAttributeConstraintVariable(context, reference)) {
-      return getScopeForEditorPatternAttributeConstraintVariable(context as EditorPatternAttributeConstraintVariable)
-    }
-
-    if (isEditorPatternAttributeConstraintAttributeValueExpression(context, reference)) {
-      return getScopeForEditorPatternAttributeConstraintAttributeValueExpression(
-        context as EditorPatternAttributeConstraintAttributeValueExpression, reference)
-    }
-
     return super.getScope(context, reference)
   }
 
-  def isEditorPatternAttributeConstraintAttributeValueExpression(EObject context, EReference reference) {
-    return (context instanceof EditorPatternAttributeConstraintAttributeValueExpression &&
-      reference == GTPackage.Literals.EDITOR_PATTERN_ATTRIBUTE_CONSTRAINT_ATTRIBUTE_VALUE_EXPRESSION__ATTRIBUTE)
-  }
-
-  def getScopeForEditorPatternAttributeConstraintAttributeValueExpression(
-    EditorPatternAttributeConstraintAttributeValueExpression expression, EReference reference) {
-    return Scopes.scopeFor(expression.editorNode.type.EAllAttributes)
-  }
-
-  def isEditorPatternAttributeConstraintVariable(EObject context, EReference reference) {
-    return (context instanceof EditorPatternAttributeConstraintVariable &&
-      reference == GTPackage.Literals.EDITOR_PATTERN_ATTRIBUTE_CONSTRAINT_VARIABLE__TYPE)
-  }
-
-  def getScopeForEditorPatternAttributeConstraintVariable(EditorPatternAttributeConstraintVariable parameter) {
-    var EObject fileCandidate = parameter;
-    while (!(fileCandidate instanceof EditorGTFile)) {
-      fileCandidate = fileCandidate.eContainer;
-    }
-    val file = fileCandidate as EditorGTFile
-    return Scopes.scopeFor(GTEditorModelUtils.getDatatypes(file))
-  }
-
-  def isEditorAttributeConditionParameter(EObject context, EReference reference) {
-    return (context instanceof EditorAttributeConditionParameter &&
-      reference == GTPackage.Literals.EDITOR_ATTRIBUTE_CONDITION_PARAMETER__TYPE)
-  }
-
-  def getScopeForEditorAttributeConditionParameter(EditorAttributeConditionParameter parameter) {
-    var EObject fileCandidate = parameter;
-    while (!(fileCandidate instanceof EditorGTFile)) {
-      fileCandidate = fileCandidate.eContainer;
-    }
-    val file = fileCandidate as EditorGTFile
-    return Scopes.scopeFor(GTEditorModelUtils.getDatatypes(file))
-  }
-
   def isAttributeName(EObject context, EReference reference) {
-    return (context instanceof EditorAttribute && reference == GTPackage.Literals.EDITOR_ATTRIBUTE__ATTRIBUTE)
+    return (context instanceof EditorAttributeAssignment && reference == GTPackage.Literals.EDITOR_ATTRIBUTE_ASSIGNMENT__ATTRIBUTE)
   }
  
   def isNodeOfStochasticAttribute(EObject context, EReference reference){
@@ -289,7 +233,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
    * The attribute name must be one of the EAttribute from the EClass
    * of the node containing the attribute assignment or condition.
    */
-  def getScopeForAttributes(EditorAttribute context) {
+  def getScopeForAttributes(EditorAttributeAssignment context) {
     val containingNode = context.eContainer as EditorNode
     return Scopes.scopeFor(containingNode.type.EAllAttributes)
   }
@@ -343,7 +287,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
    * if their type fits to the one expected for the attribute value. 
    */
   def getScopeForAttributeExpressionAttributes(EditorAttributeExpression attributeExpression) {
-    val attributeConstraint = attributeExpression.eContainer as EditorAttribute
+    val attributeConstraint = attributeExpression.eContainer as EditorAttributeAssignment
     val node = attributeExpression.node
     if (node === null || node.type === null) {
       return Scopes.scopeFor([])
@@ -358,25 +302,14 @@ class GTScopeProvider extends AbstractGTScopeProvider {
    * Parameter expressions must reference a parameter of the type expected for the attribute value.
    */
   def getScopeForParameterExpressions(EditorParameterExpression parameterExpression) {
-    if (parameterExpression.eContainer instanceof EditorAttribute) {
-      val attributeConstraint = parameterExpression.eContainer as EditorAttribute
+    if (parameterExpression.eContainer instanceof EditorAttributeAssignment) {
+      val attributeConstraint = parameterExpression.eContainer as EditorAttributeAssignment
       val pattern = attributeConstraint.eContainer.eContainer as EditorPattern
       val parameters = newArrayList()
       GTEditorPatternUtils.getPatternWithAllSuperPatterns(pattern).forEach [
         parameters.addAll(it.parameters.filter [
           it.type == attributeConstraint.attribute.EAttributeType
         ])
-      ]
-      return Scopes.scopeFor(parameters)
-    } else if (parameterExpression.eContainer instanceof EditorPatternAttributeConstraintPredicate) {
-      val pattern = parameterExpression.eContainer.eContainer.eContainer as EditorPattern
-      val predicate = parameterExpression.eContainer as EditorPatternAttributeConstraintPredicate
-      var offset = GTEnumExpressionHelper.getOffsetOfExpression(predicate, parameterExpression);
-      val predicateArgumentTypes = predicate.name.parameters
-      val parameterType = predicateArgumentTypes.get(offset).type
-      val parameters = newArrayList()
-      GTEditorPatternUtils.getPatternWithAllSuperPatterns(pattern).forEach [
-        parameters.addAll(it.parameters.filter[it.type == parameterType])
       ]
       return Scopes.scopeFor(parameters)
     } else {

@@ -9,13 +9,12 @@ import java.util.Set;
 
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.emoflon.ibex.gt.editor.gT.EditorAttribute;
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeAssignment;
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression;
 import org.emoflon.ibex.gt.editor.gT.EditorNode;
 import org.emoflon.ibex.gt.editor.gT.EditorOperator;
 import org.emoflon.ibex.gt.editor.gT.EditorParameter;
 import org.emoflon.ibex.gt.editor.gT.EditorPattern;
-import org.emoflon.ibex.gt.editor.gT.EditorPatternAttributeCondition;
 import org.emoflon.ibex.gt.editor.gT.EditorReference;
 import org.emoflon.ibex.gt.editor.gT.GTFactory;
 
@@ -67,7 +66,8 @@ public class GTFlattener {
 		initializeParameters(pattern, superPatterns);
 		initializeNodes(pattern, superPatterns);
 		flattenedPattern.getConditions().addAll(pattern.getConditions());
-		initializeAttributeConstraints(pattern, superPatterns);
+		//TODO: Update to new constraints!
+//		initializeAttributeConstraints(pattern, superPatterns);
 		// fix attribute conditions pointing to the wrong editor node
 		Map<String, EditorNode> name2Node = new HashMap<>();
 		flattenedPattern.getNodes().forEach(node -> name2Node.put(node.getName(), node));
@@ -91,12 +91,6 @@ public class GTFlattener {
 	private void initializeNodes(final EditorPattern pattern, final Set<EditorPattern> superPatterns) {
 		final List<EditorNode> nodes = mergeNodes(pattern, superPatterns);
 		flattenedPattern.getNodes().addAll(nodes);
-	}
-
-	private void initializeAttributeConstraints(final EditorPattern pattern, final Set<EditorPattern> superPatterns) {
-		final List<EditorPatternAttributeCondition> attributeConditions = mergeAttributeConditions(pattern,
-				superPatterns);
-		flattenedPattern.getComplexAttributeConstraints().addAll(attributeConditions);
 	}
 
 	/**
@@ -276,7 +270,7 @@ public class GTFlattener {
 	 * @param mergedNode the node merged into the first one
 	 */
 	private void mergeAttributesOfNodes(final EditorNode node, final EditorNode mergedNode) {
-		for (final EditorAttribute mergedAttribute : mergedNode.getAttributes()) {
+		for (final EditorAttributeAssignment mergedAttribute : mergedNode.getAttributes()) {
 			mergeAttribute(node, mergedAttribute);
 		}
 	}
@@ -287,9 +281,9 @@ public class GTFlattener {
 	 * @param node            the node
 	 * @param mergedAttribute the attribute to merge
 	 */
-	private void mergeAttribute(final EditorNode node, final EditorAttribute mergedAttribute) {
-		final Optional<EditorAttribute> attribute = node.getAttributes().stream()
-				.filter(a -> GTEditorAttributeComparator.areAttributeConstraintsEqual(a, mergedAttribute)).findAny();
+	private void mergeAttribute(final EditorNode node, final EditorAttributeAssignment mergedAttribute) {
+		final Optional<EditorAttributeAssignment> attribute = node.getAttributes().stream()
+				.filter(a -> GTEditorAttributeComparator.areAttributeAssignmentsEqual(a, mergedAttribute)).findAny();
 		if (!attribute.isPresent()) {
 			if (GTFlatteningUtils.hasConflictingAssignment(node, mergedAttribute)) {
 				errors.add(String.format("Node %s has multiple assignments for attribute %s.", node.getName(),
@@ -335,13 +329,5 @@ public class GTFlattener {
 		} else {
 			node.getReferences().add(EcoreUtil.copy(mergedReference));
 		}
-	}
-
-	private List<EditorPatternAttributeCondition> mergeAttributeConditions(final EditorPattern pattern,
-			final Set<EditorPattern> superPatterns) {
-		final ArrayList<EditorPatternAttributeCondition> attributeConditions = new ArrayList<>();
-		attributeConditions.addAll(EcoreUtil.copyAll(pattern.getComplexAttributeConstraints()));
-		superPatterns.forEach(r -> attributeConditions.addAll(EcoreUtil.copyAll(r.getComplexAttributeConstraints())));
-		return attributeConditions;
 	}
 }

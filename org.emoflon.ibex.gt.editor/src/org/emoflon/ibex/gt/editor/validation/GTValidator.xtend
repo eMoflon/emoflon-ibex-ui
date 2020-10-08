@@ -10,7 +10,6 @@ import org.eclipse.xtext.validation.CheckType
 
 import org.emoflon.ibex.gt.editor.gT.EditorApplicationCondition
 import org.emoflon.ibex.gt.editor.gT.EditorApplicationConditionType
-import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorCondition
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile
 import org.emoflon.ibex.gt.editor.gT.EditorImport
@@ -30,12 +29,7 @@ import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 import org.emoflon.ibex.gt.editor.utils.GTFlatteningUtils
 import org.emoflon.ibex.gt.editor.utils.GTEditorPatternUtils
 import org.emoflon.ibex.gt.editor.utils.GTFlattener
-import org.emoflon.ibex.gt.editor.gT.EditorAttributeConditionOperationalization
-import org.emoflon.ibex.gt.editor.gT.EditorAttributeConditionAdornment
-import org.emoflon.ibex.gt.editor.gT.EditorAttributeConditionType
-import org.emoflon.ibex.gt.editor.gT.EditorAttributeConditionSpecification
 import org.eclipse.emf.common.util.EList
-import org.emoflon.ibex.gt.editor.gT.EditorAttributeConditionParameter
 import org.emoflon.ibex.gt.editor.gT.StochasticFunction
 import org.emoflon.ibex.gt.editor.gT.StochasticDistribution
 import org.emoflon.ibex.gt.editor.gT.StochasticFunctionExpression
@@ -51,6 +45,8 @@ import org.emoflon.ibex.gt.editor.gT.AddExpression
 import org.emoflon.ibex.gt.editor.gT.ExpExpression
 import org.emoflon.ibex.gt.editor.utils.GTArithmeticsCalculatorUtil
 import org.emoflon.ibex.gt.editor.gT.EditorCountExpression
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeAssignment
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeConstraint
 
 /**
  * This class contains custom validation rules.
@@ -735,7 +731,7 @@ class GTValidator extends AbstractGTValidator {
   }
 
   @Check
-  def checkAttribute(EditorAttribute attributeConstraint) {
+  def checkAttribute(EditorAttributeAssignment attributeConstraint) {
     val attribute = attributeConstraint.attribute
     val value = attributeConstraint.value
 
@@ -745,80 +741,117 @@ class GTValidator extends AbstractGTValidator {
       if (!GTEditorAttributeUtils.convertLiteralValueToObject(expectedType, value).present) {
         error(
           String.format(ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE, attribute.name, expectedType.name),
-          GTPackage.Literals.EDITOR_ATTRIBUTE__VALUE,
+          GTPackage.Literals.EDITOR_ATTRIBUTE_ASSIGNMENT__VALUE,
           ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE,
           expectedType.name
         )
       }
     }
-	//stochastic attributes can only be assigned
-	if(value instanceof StochasticFunctionExpression){
-		if(attributeConstraint.relation != EditorRelation.ASSIGNMENT){
-			error(NO_ASSIGNMENT_MESSAGE, GTPackage.Literals.EDITOR_ATTRIBUTE__VALUE, NO_ASSIGNMENT)
-		}
-	}
 	
     val node = attributeConstraint.eContainer as EditorNode
-    if (attributeConstraint.relation == EditorRelation.ASSIGNMENT) {
-      if (node.operator == EditorOperator.DELETE) {
+   	if (node.operator == EditorOperator.DELETE) {
         // If the node is a deleted node, it may not contain attribute assignments.
         error(
           String.format(ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE_MESSAGE, attribute.name, node.name),
-          GTPackage.Literals.EDITOR_ATTRIBUTE__RELATION,
+          GTPackage.Literals.EDITOR_ATTRIBUTE_ASSIGNMENT__VALUE,
           ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE,
           attribute.name
         )
       } else {
         // There may be at most one assignment per attribute in context and created nodes.
         val attributeAssignmentCount = node.attributes.filter [
-          it.attribute == attribute && it.relation == EditorRelation.ASSIGNMENT
-        ].size
+          it.attribute == attribute].size
         if (attributeAssignmentCount != 1) {
           error(
             String.format(ATTRIBUTE_MULTIPLE_ASSIGNMENTS_MESSAGE, attributeAssignmentCount, attribute.name),
-            GTPackage.Literals.EDITOR_ATTRIBUTE__RELATION,
+            GTPackage.Literals.EDITOR_ATTRIBUTE_ASSIGNMENT__VALUE,
             ATTRIBUTE_MULTIPLE_ASSIGNMENTS,
             attribute.name,
             node.operator.getName
           )
         }
-      }
-    } else { // attribute constraint is a condition
-      if (!GTEditorAttributeUtils.isComparable(attribute.EAttributeType) &&
-        !GTEditorAttributeUtils.isEqualityCheck(attributeConstraint.relation)) {
-        // If the attribute type is not comparable, only equivalence relations are allowed.
-        error(
-          String.format(ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE_MESSAGE, attributeConstraint.relation.toString,
-            attribute.name),
-          GTPackage.Literals.EDITOR_ATTRIBUTE__RELATION,
-          ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE,
-          attribute.name
-        )
-      } else {
-        // There should be no duplicate constraints within a node.
-        val constraints = node.attributes.filter [
-          GTEditorAttributeComparator.areAttributeConstraintsEqual(it, attributeConstraint)
-        ]
-        if (constraints.size > 1) {
-          warning(
-            String.format(ATTRIBUTE_DUPLICATE_CONDITION_MESSAGE, attribute.name, node.name, getTimes(constraints.size)),
-            GTPackage.Literals.EDITOR_ATTRIBUTE__ATTRIBUTE,
-            ATTRIBUTE_DUPLICATE_CONDITION,
-            attribute.name
-          )
-        }
-      }
-      if (node.operator == EditorOperator.CREATE) {
-        // If the node is a created node, it may not contain attribute conditions.
-        error(
-          String.format(ATTRIBUTE_CONDITION_IN_CREATED_NODE_MESSAGE, attribute.name, node.name),
-          GTPackage.Literals.EDITOR_ATTRIBUTE__RELATION,
-          ATTRIBUTE_CONDITION_IN_CREATED_NODE,
-          attribute.name
-        )
-      }
-    }
+      } 
   }
+// TODO:
+//  @Check
+//  def checkAttribute(EditorAttributeConstraint attributeConstraint) {
+//    val lhs = attributeConstraint.lhs
+//    val rhs = attributeConstraint.rhs
+//
+//    // The attribute value must be of the correct type.
+//    if (lhs instanceof EditorLiteralExpression && rhs instanceof EditorLiteralExpression) {
+//      val expectedType = lhs.EAttributeType
+//      if (!GTEditorAttributeUtils.convertLiteralValueToObject(expectedType, value).present) {
+//        error(
+//          String.format(ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE, attribute.name, expectedType.name),
+//          GTPackage.Literals.EDITOR_ATTRIBUTE_ASSIGNMENT__VALUE,
+//          ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE,
+//          expectedType.name
+//        )
+//      }
+//    }
+//	
+//    val node = attributeConstraint.eContainer as EditorNode
+//    if (attributeConstraint.relation == EditorRelation.ASSIGNMENT) {
+//      if (node.operator == EditorOperator.DELETE) {
+//        // If the node is a deleted node, it may not contain attribute assignments.
+//        error(
+//          String.format(ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE_MESSAGE, attribute.name, node.name),
+//          GTPackage.Literals.EDITOR_ATTRIBUTE__RELATION,
+//          ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE,
+//          attribute.name
+//        )
+//      } else {
+//        // There may be at most one assignment per attribute in context and created nodes.
+//        val attributeAssignmentCount = node.attributes.filter [
+//          it.attribute == attribute && it.relation == EditorRelation.ASSIGNMENT
+//        ].size
+//        if (attributeAssignmentCount != 1) {
+//          error(
+//            String.format(ATTRIBUTE_MULTIPLE_ASSIGNMENTS_MESSAGE, attributeAssignmentCount, attribute.name),
+//            GTPackage.Literals.EDITOR_ATTRIBUTE__RELATION,
+//            ATTRIBUTE_MULTIPLE_ASSIGNMENTS,
+//            attribute.name,
+//            node.operator.getName
+//          )
+//        }
+//      }
+//    } else { // attribute constraint is a condition
+//      if (!GTEditorAttributeUtils.isComparable(attribute.EAttributeType) &&
+//        !GTEditorAttributeUtils.isEqualityCheck(attributeConstraint.relation)) {
+//        // If the attribute type is not comparable, only equivalence relations are allowed.
+//        error(
+//          String.format(ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE_MESSAGE, attributeConstraint.relation.toString,
+//            attribute.name),
+//          GTPackage.Literals.EDITOR_ATTRIBUTE__RELATION,
+//          ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE,
+//          attribute.name
+//        )
+//      } else {
+//        // There should be no duplicate constraints within a node.
+//        val constraints = node.attributes.filter [
+//          GTEditorAttributeComparator.areAttributeConstraintsEqual(it, attributeConstraint)
+//        ]
+//        if (constraints.size > 1) {
+//          warning(
+//            String.format(ATTRIBUTE_DUPLICATE_CONDITION_MESSAGE, attribute.name, node.name, getTimes(constraints.size)),
+//            GTPackage.Literals.EDITOR_ATTRIBUTE__ATTRIBUTE,
+//            ATTRIBUTE_DUPLICATE_CONDITION,
+//            attribute.name
+//          )
+//        }
+//      }
+//      if (node.operator == EditorOperator.CREATE) {
+//        // If the node is a created node, it may not contain attribute conditions.
+//        error(
+//          String.format(ATTRIBUTE_CONDITION_IN_CREATED_NODE_MESSAGE, attribute.name, node.name),
+//          GTPackage.Literals.EDITOR_ATTRIBUTE__RELATION,
+//          ATTRIBUTE_CONDITION_IN_CREATED_NODE,
+//          attribute.name
+//        )
+//      }
+//    }
+//  }
 
   @Check
   def checkReference(EditorReference reference) {
@@ -1023,153 +1056,6 @@ class GTValidator extends AbstractGTValidator {
       s += "'" + name + "'"
     }
     return s + " and '" + sortedNames.last + "'"
-  }
-
-  /**
-   * Checks that an extend operation has at least one free adornment and that a check operation has only bound operations
-   */
-  @Check
-  def checkConsistencyOfOperationTypeAndAdornment(
-    EditorAttributeConditionOperationalization editorAttributeConditionOperationalization) {
-    val adornments = editorAttributeConditionOperationalization.adornments
-    val operationType = editorAttributeConditionOperationalization.operationalizationType
-    val hasFreeAdornment = hasFreeAdornment(adornments)
-    if ((operationType == EditorAttributeConditionType.CHECK && hasFreeAdornment) ||
-      (operationType == EditorAttributeConditionType.EXTEND && !hasFreeAdornment)) {
-      error(
-        EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_ADORNMENT,
-        GTPackage.Literals.EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION__OPERATIONALIZATION_TYPE,
-        EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_ADORNMENT_CODE
-      )
-    }
-  }
-
-  def static boolean hasFreeAdornment(Collection<EditorAttributeConditionAdornment> adornments) {
-    return adornments.exists[it == EditorAttributeConditionAdornment.FREE]
-  }
-
-  /**
-   * Checks that the adornment of an operationalization matches the length of the parameter list
-   */
-  @Check
-  def checkParameterCountVsAdornmentLength(
-    EditorAttributeConditionOperationalization editorAttributeConditionOperationalization) {
-    val adornments = editorAttributeConditionOperationalization.adornments
-    val constraintSpecification = editorAttributeConditionOperationalization.eContainer
-    if (constraintSpecification instanceof EditorAttributeConditionSpecification) {
-      val parameters = constraintSpecification.parameters
-      if (parameters.size != adornments.size) {
-        error(
-          EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_ADORNMENT_LENGTH,
-          GTPackage.Literals.EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION__OPERATIONALIZATION_TYPE,
-          EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_ADORNMENT_LENGTH_CODE
-        )
-      }
-    }
-  }
-
-  /**
-   * Checks that the reuse relation is free of loops and that the parameter names of the reusing and reused specification match 
-   */
-  @Check
-  def checkParameterListLengthWhenReusing(EditorAttributeConditionSpecification editorAttributeConditionSpecification) {
-    if (hasReuseCycle(editorAttributeConditionSpecification)) {
-      error(
-        EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_REUSE_CYCLE,
-        GTPackage.Literals.EDITOR_ATTRIBUTE_CONDITION_SPECIFICATION__REUSED_CONDITION_SPECIFICATION,
-        EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_REUSE_CYCLE_CODE
-      )
-      return
-    }
-
-    val reusedCondition = findReusedSpecification(editorAttributeConditionSpecification)
-    if (reusedCondition !== null) {
-      val parameters = editorAttributeConditionSpecification.parameters
-      val parametersOfReusedCondition = reusedCondition.parameters
-      if (!haveSameNames(parameters, parametersOfReusedCondition)) {
-        error(
-          EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_PARAMETER_NAMES_REUSE,
-          GTPackage.Literals.EDITOR_ATTRIBUTE_CONDITION_SPECIFICATION__NAME,
-          EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_INCONSISTENT_PARAMETER_NAMES_REUSE_CODE
-        )
-      }
-    }
-  }
-
-  def hasReuseCycle(EditorAttributeConditionSpecification specification) {
-    if (specification.reusedConditionSpecification === null)
-      return false
-
-    var reusedCondition = specification.reusedConditionSpecification
-    while (reusedCondition.reusedConditionSpecification !== null) {
-      reusedCondition = reusedCondition.reusedConditionSpecification
-      if (reusedCondition === specification) {
-        return true
-      }
-    }
-
-    return false
-  }
-
-  /**
-   * Precondition: specification.reusedConditionSpecification !== null
-   */
-  def findReusedSpecification(EditorAttributeConditionSpecification specification) {
-    var reusedCondition = specification.reusedConditionSpecification
-    if (reusedCondition === null)
-      return null
-
-    while (reusedCondition.reusedConditionSpecification !== null)
-      reusedCondition = reusedCondition.reusedConditionSpecification
-
-    return reusedCondition
-  }
-
-  def haveSameNames(EList<EditorAttributeConditionParameter> parameters1,
-    EList<EditorAttributeConditionParameter> parameters2) {
-    if (parameters1.size != parameters2.size)
-      return false
-
-    for (var i = 0; i < parameters1.size; i++) {
-      if (!parameters1.get(i).name.equals(parameters2.get(i).name))
-        return false
-    }
-
-    return true;
-  }
-
-  /**
-   * Checks that parameter names that occur in the specification string correspond to parameters 
-   */
-  @Check
-  def checkParameterNamesInTargetPlatformSpecification(
-    EditorAttributeConditionOperationalization editorAttributeConditionOperationalization) {
-    val codeFragment = editorAttributeConditionOperationalization.specification
-    if (countDelimiters(codeFragment) % 2 == 1) {
-      error(
-        EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_SPECIFICATION_UNTERMINATED_PARAMETER,
-        GTPackage.Literals.EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION__SPECIFICATION,
-        EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_SPECIFICATION_UNTERMINATED_PARAMETER_CODE
-      )
-    }
-    val parameterNamesInSpecification = getParameterNames(codeFragment)
-    val constraintSpecification = editorAttributeConditionOperationalization.eContainer
-    if (constraintSpecification instanceof EditorAttributeConditionSpecification) {
-      val parameters = constraintSpecification.parameters
-      val parameterNamesOfPredicate = getParameterNames(parameters)
-
-      val unknonParameters = newHashSet()
-      unknonParameters.addAll(parameterNamesInSpecification.filter[!parameterNamesOfPredicate.contains(it)])
-      if (!unknonParameters.isEmpty) {
-        error(
-          String.format(EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_SPECIFICATION_UNKNOWN_PARAMETER,
-            unknonParameters),
-          GTPackage.Literals.EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION__SPECIFICATION,
-          EDITOR_ATTRIBUTE_CONDITION_OPERATIONALIZATION_SPECIFICATION_UNKNOWN_PARAMETER_CODE
-        )
-      }
-    }
-
   }
   
   //stochastic function validation
@@ -1399,11 +1285,6 @@ class GTValidator extends AbstractGTValidator {
   			attribute.attribute.name), 
   			GTPackage.Literals.ARITHMETIC_NODE_ATTRIBUTE__ATTRIBUTE, PARAMETER_NO_NUMBER)
   	}
-  }
-  
-  
-  def getParameterNames(EList<EditorAttributeConditionParameter> list) {
-    return list.map[it.name]
   }
 
   def getParameterNames(String codeFragment) {

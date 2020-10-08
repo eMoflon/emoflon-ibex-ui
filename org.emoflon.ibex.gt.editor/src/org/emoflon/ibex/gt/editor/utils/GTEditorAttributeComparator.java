@@ -1,6 +1,7 @@
 package org.emoflon.ibex.gt.editor.utils;
 
-import org.emoflon.ibex.gt.editor.gT.EditorAttribute;
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeAssignment;
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeConstraint;
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression;
 import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression;
 import org.emoflon.ibex.gt.editor.gT.EditorExpression;
@@ -23,12 +24,26 @@ public class GTEditorAttributeComparator {
 	 * @return <code>true</code> if and only if the attribute constraints are of the
 	 *         same type and relation and have equal values
 	 */
-	public static boolean areAttributeConstraintsEqual(final EditorAttribute a, final EditorAttribute b) {
-		return a.getAttribute().equals(b.getAttribute()) // equal types
-				&& a.getRelation().equals(b.getRelation()) // equal relation
+	public static boolean areAttributeAssignmentsEqual(final EditorAttributeAssignment a, final EditorAttributeAssignment b) {
+		return a.getAttribute().equals(b.getAttribute())
 				&& areExpressionsEqual(a.getValue(), b.getValue()); // equal value
 	}
 
+	/**
+	 * Checks whether the attribute constraints express the same.
+	 * 
+	 * @param a
+	 *            the first attribute
+	 * @param b
+	 *            the second attribute
+	 * @return <code>true</code> if and only if the attribute constraints are of the
+	 *         same type and relation and have equal values
+	 */
+	public static boolean areAttributeConstraintsEqual(final EditorAttributeConstraint a, final EditorAttributeConstraint b) {
+		return a.getRelation().equals(b.getRelation()) // equal relation
+				&& areExpressionsEqual(a.getLhs(), b.getLhs()) // equal value
+				&& areExpressionsEqual(a.getRhs(), b.getRhs()); // equal value
+	}
 	/**
 	 * Checks whether the expressions are equal.
 	 * 
