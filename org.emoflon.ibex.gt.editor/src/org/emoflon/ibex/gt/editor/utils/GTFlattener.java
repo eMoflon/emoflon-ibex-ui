@@ -2,6 +2,7 @@ package org.emoflon.ibex.gt.editor.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -9,14 +10,26 @@ import java.util.Set;
 
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.emoflon.ibex.gt.editor.gT.AddExpression;
+import org.emoflon.ibex.gt.editor.gT.ArithmeticAttribute;
+import org.emoflon.ibex.gt.editor.gT.ArithmeticCalculationExpression;
+import org.emoflon.ibex.gt.editor.gT.ArithmeticExpression;
+import org.emoflon.ibex.gt.editor.gT.ArithmeticNodeAttribute;
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeAssignment;
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeConstraint;
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression;
+import org.emoflon.ibex.gt.editor.gT.EditorExpression;
 import org.emoflon.ibex.gt.editor.gT.EditorNode;
 import org.emoflon.ibex.gt.editor.gT.EditorOperator;
 import org.emoflon.ibex.gt.editor.gT.EditorParameter;
 import org.emoflon.ibex.gt.editor.gT.EditorPattern;
 import org.emoflon.ibex.gt.editor.gT.EditorReference;
+import org.emoflon.ibex.gt.editor.gT.ExpExpression;
 import org.emoflon.ibex.gt.editor.gT.GTFactory;
+import org.emoflon.ibex.gt.editor.gT.MinMaxExpression;
+import org.emoflon.ibex.gt.editor.gT.MultExpression;
+import org.emoflon.ibex.gt.editor.gT.OneParameterArithmetics;
+import org.emoflon.ibex.gt.editor.gT.StochasticFunctionExpression;
 
 /**
  * Provides flattening of refined patterns.
@@ -66,8 +79,6 @@ public class GTFlattener {
 		initializeParameters(pattern, superPatterns);
 		initializeNodes(pattern, superPatterns);
 		flattenedPattern.getConditions().addAll(pattern.getConditions());
-		//TODO: Update to new constraints!
-//		initializeAttributeConstraints(pattern, superPatterns);
 		// fix attribute conditions pointing to the wrong editor node
 		Map<String, EditorNode> name2Node = new HashMap<>();
 		flattenedPattern.getNodes().forEach(node -> name2Node.put(node.getName(), node));
@@ -81,8 +92,10 @@ public class GTFlattener {
 					editorAttributeExpression.setNode(name2Node.get(editorAttributeExpression.getNode().getName()));
 				}
 			});
+		initializeAttributeConstraints(pattern, superPatterns, name2Node);
 	}
 
+	
 	private void initializeParameters(final EditorPattern pattern, final Set<EditorPattern> superPatterns) {
 		final List<EditorParameter> parameters = mergeParameters(pattern, superPatterns);
 		flattenedPattern.getParameters().addAll(parameters);
@@ -92,7 +105,59 @@ public class GTFlattener {
 		final List<EditorNode> nodes = mergeNodes(pattern, superPatterns);
 		flattenedPattern.getNodes().addAll(nodes);
 	}
-
+	
+	private void initializeAttributeConstraints(EditorPattern pattern, Set<EditorPattern> superPatterns, Map<String, EditorNode> name2Node) {
+		final List<EditorAttributeConstraint> constraints = mergeConstraints(pattern, superPatterns);
+		constraints.forEach(constr -> fixConstraintNodes(constr, name2Node));
+		flattenedPattern.getAttributeConstraints().addAll(constraints);
+		
+	}
+	
+	private void fixConstraintNodes(EditorAttributeConstraint constraint, Map<String, EditorNode> name2Node) {
+		fixEditorExpression(constraint.getLhs(), name2Node);
+		fixEditorExpression(constraint.getRhs(), name2Node);
+	}
+	
+	private void fixEditorExpression(EditorExpression expr, Map<String, EditorNode> name2Node) {
+		if(expr instanceof EditorAttributeExpression) {
+			EditorAttributeExpression eae = (EditorAttributeExpression)expr;
+			eae.setNode(name2Node.get(eae.getNode().getName()));
+		} else if(expr instanceof StochasticFunctionExpression) {
+			StochasticFunctionExpression sfe = (StochasticFunctionExpression)expr;
+			fixArithmeticExpression(sfe.getMean(), name2Node);
+			fixArithmeticExpression(sfe.getSd(), name2Node);
+		} else if(expr instanceof ArithmeticCalculationExpression) {
+			fixArithmeticExpression(((ArithmeticCalculationExpression)expr).getExpression(), name2Node);
+		} else {
+			return;
+		}
+	}
+	
+	private void fixArithmeticExpression(ArithmeticExpression expr, Map<String, EditorNode> name2Node) {
+		if(expr instanceof AddExpression) {
+			fixArithmeticExpression(((AddExpression)expr).getLeft(),name2Node);
+			fixArithmeticExpression(((AddExpression)expr).getRight(),name2Node);
+		} else if(expr instanceof MultExpression) {
+			fixArithmeticExpression(((MultExpression)expr).getLeft(),name2Node);
+			fixArithmeticExpression(((MultExpression)expr).getRight(),name2Node);
+		} else if(expr instanceof ExpExpression) {
+			fixArithmeticExpression(((ExpExpression)expr).getLeft(),name2Node);
+			fixArithmeticExpression(((ExpExpression)expr).getRight(),name2Node);
+		} else if(expr instanceof MinMaxExpression) {
+			fixArithmeticExpression(((MinMaxExpression)expr).getLeft(),name2Node);
+			fixArithmeticExpression(((MinMaxExpression)expr).getRight(),name2Node);
+		}else if(expr instanceof OneParameterArithmetics) {
+			fixArithmeticExpression(((OneParameterArithmetics)expr).getExpression(),name2Node);
+		}else if(expr instanceof ArithmeticAttribute) {
+			return;
+		}else if(expr instanceof ArithmeticNodeAttribute) {
+			ArithmeticNodeAttribute ana = (ArithmeticNodeAttribute)expr;
+			ana.setNode(name2Node.get(ana.getNode().getName()));
+		}else {
+			return;
+		}
+	}
+	
 	/**
 	 * Returns the flattened pattern.
 	 * 
@@ -329,5 +394,14 @@ public class GTFlattener {
 		} else {
 			node.getReferences().add(EcoreUtil.copy(mergedReference));
 		}
+	}
+	
+	private List<EditorAttributeConstraint> mergeConstraints(EditorPattern pattern, Set<EditorPattern> superPatterns) {
+		// Collect nodes.
+		final List<EditorAttributeConstraint> collectedConstraints = new LinkedList<>();
+		collectedConstraints .addAll(EcoreUtil.copyAll(pattern.getAttributeConstraints()));
+		superPatterns.forEach(r -> collectedConstraints.addAll(EcoreUtil.copyAll(r.getAttributeConstraints())));
+		//TODO: Filter duplicates
+		return collectedConstraints;
 	}
 }

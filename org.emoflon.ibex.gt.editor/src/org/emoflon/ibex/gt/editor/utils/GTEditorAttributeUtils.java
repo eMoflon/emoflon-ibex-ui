@@ -70,14 +70,16 @@ public class GTEditorAttributeUtils {
 	 */
 	public static Optional<Object> convertEDataTypeStringToObject(final String s) {
 		try {
-			return Optional.of(Boolean.parseBoolean(s));
+			return Optional.of(Integer.parseInt(s));
 		} catch (final Exception e) {
 			try {
-				return Optional.of(Integer.parseInt(s));
+				return Optional.of(Double.parseDouble(s));
 			} catch (final Exception e1) {
-				try {
-					return Optional.of(Double.parseDouble(s));
-				} catch (final Exception e2) {
+				if(s.equalsIgnoreCase("false")) {
+					return Optional.of(false);
+				} else if(s.equalsIgnoreCase("true")) {
+					return Optional.of(true);
+				} else {
 					return Optional.of(s);
 				}
 			}
