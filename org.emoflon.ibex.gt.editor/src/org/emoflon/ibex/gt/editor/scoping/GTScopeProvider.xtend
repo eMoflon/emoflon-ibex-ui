@@ -23,6 +23,9 @@ import org.emoflon.ibex.gt.editor.utils.GTEnumExpressionHelper
 import org.emoflon.ibex.gt.editor.gT.ArithmeticNodeAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeAssignment
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
+import org.emoflon.ibex.gt.editor.gT.impl.EditorPatternImpl
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeConstraint
+import org.emoflon.ibex.gt.editor.gT.impl.EditorGTFileImpl
 
 /**
  * This class contains custom scoping description.
@@ -36,6 +39,10 @@ class GTScopeProvider extends AbstractGTScopeProvider {
     // Attributes
     if (isAttributeName(context, reference)) {
       return getScopeForAttributes(context as EditorAttributeAssignment)
+    }
+    
+    if(isAttributeConstraint(context, reference)) {
+    	 return getScopeForAttributes(context as EditorAttributeConstraint)
     }
 
     // Condition
@@ -100,6 +107,10 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 
   def isAttributeName(EObject context, EReference reference) {
     return (context instanceof EditorAttributeAssignment && reference == GTPackage.Literals.EDITOR_ATTRIBUTE_ASSIGNMENT__ATTRIBUTE)
+  }
+  
+   def isAttributeConstraint(EObject context, EReference reference) {
+    return (context instanceof EditorAttributeConstraint)
   }
  
   def isNodeOfStochasticAttribute(EObject context, EReference reference){
@@ -237,6 +248,11 @@ class GTScopeProvider extends AbstractGTScopeProvider {
     val containingNode = context.eContainer as EditorNode
     return Scopes.scopeFor(containingNode.type.EAllAttributes)
   }
+  
+  def getScopeForAttributes(EditorAttributeConstraint context) {
+    val pattern = context.eContainer as EditorPattern
+    return Scopes.scopeFor(pattern.nodes)
+  }
 
   /**
    * The parameter type must be one of the EDatatypes from the meta-models.
@@ -250,11 +266,22 @@ class GTScopeProvider extends AbstractGTScopeProvider {
    * The node of an attribute expression can be any context node which is valid within the same rule.
    */
   def getScopeForAttributeExpressionNodes(EditorAttributeExpression attributeExpression) {
-    val pattern = attributeExpression.eContainer.eContainer.eContainer as EditorPattern
-    val nodes = GTEditorPatternUtils.getAllNodesOfPattern(pattern, [
-      it.operator == EditorOperator.CONTEXT
-    ])
-    return Scopes.scopeFor(nodes)
+    val pattern = getContainer(attributeExpression, typeof(EditorPatternImpl))
+    if(attributeExpression.eContainer instanceof EditorAttributeAssignment) {
+    	val nodes = GTEditorPatternUtils.getAllNodesOfPattern(pattern, [
+	      it.operator == EditorOperator.CONTEXT
+	    ])
+    	return Scopes.scopeFor(nodes)
+    } else {
+    	val nodes = GTEditorPatternUtils.getAllNodesOfPattern(pattern, [
+	      it.operator == EditorOperator.CONTEXT
+	    ])
+	    nodes.addAll(GTEditorPatternUtils.getAllNodesOfPattern(pattern, [
+	      it.operator == EditorOperator.DELETE
+	    ]))
+    	return Scopes.scopeFor(nodes)
+    }
+	    
   }
   /**
    * get all the possible nodes in the pattern
@@ -287,15 +314,23 @@ class GTScopeProvider extends AbstractGTScopeProvider {
    * if their type fits to the one expected for the attribute value. 
    */
   def getScopeForAttributeExpressionAttributes(EditorAttributeExpression attributeExpression) {
-    val attributeConstraint = attributeExpression.eContainer as EditorAttributeAssignment
-    val node = attributeExpression.node
-    if (node === null || node.type === null) {
-      return Scopes.scopeFor([])
-    }
-    val attributes = node.type.EAllAttributes.filter [
-      it.EAttributeType == attributeConstraint.attribute.EAttributeType
-    ]
-    return Scopes.scopeFor(attributes)
+  	if(attributeExpression.eContainer instanceof EditorAttributeAssignment) {
+  		val attributeConstraint = attributeExpression.eContainer as EditorAttributeAssignment
+	    val node = attributeExpression.node
+	    if (node === null || node.type === null) {
+	      return Scopes.scopeFor([])
+	    }
+	    val attributes = node.type.EAllAttributes.filter [
+	      it.EAttributeType == attributeConstraint.attribute.EAttributeType
+	    ]
+	    return Scopes.scopeFor(attributes)
+  	} else {
+  		val node = attributeExpression.node
+  		if (node === null || node.type === null) {
+	      return Scopes.scopeFor([])
+	    }
+  		return Scopes.scopeFor(attributeExpression.node.type.EAllAttributes)
+  	} 
   }
 
   /**
@@ -313,7 +348,12 @@ class GTScopeProvider extends AbstractGTScopeProvider {
       ]
       return Scopes.scopeFor(parameters)
     } else {
-      return Scopes.scopeFor([])
+      val pattern = getContainer(parameterExpression, typeof(EditorPatternImpl))
+      val parameters = newArrayList()
+      GTEditorPatternUtils.getPatternWithAllSuperPatterns(pattern).forEach [
+        parameters.addAll(it.parameters)
+      ]
+      return Scopes.scopeFor(parameters)
     }
   }
 
@@ -321,11 +361,25 @@ class GTScopeProvider extends AbstractGTScopeProvider {
    * Any literal of the attribute's enum is valid.
    */
   def getScopeForEnumLiterals(EditorEnumExpression enumExpression) {
-    val type = GTEnumExpressionHelper.getEnumDataType(enumExpression)
-    if (type instanceof EEnum) {
-      return Scopes.scopeFor(type.ELiterals)
-    } else
-      return Scopes.scopeFor([])
+    val type = GTEnumExpressionHelper.getEnumDataType(enumExpression) as EEnum
+    if (type !== null && type instanceof EEnum) {
+      	return Scopes.scopeFor(type.ELiterals)
+    } else {
+    	val gtFile = getContainer(enumExpression, typeof(EditorGTFileImpl))
+      	return Scopes.scopeFor(GTEditorModelUtils.getEnums(gtFile).flatMap[enum | enum.ELiterals])
+    }
+    	
   }
 
+	@SuppressWarnings("unchecked")
+	def <T> T getContainer(EObject node, Class<T> clazz) {
+		var current = node;
+		while(!(current.getClass() == clazz)) {
+			if(node.eContainer() === null)
+				return null;
+			
+			current = current.eContainer();
+		}
+		return current as T;
+	}
 }

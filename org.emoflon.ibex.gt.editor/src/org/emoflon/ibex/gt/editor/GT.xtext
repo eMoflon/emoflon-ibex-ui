@@ -41,7 +41,7 @@ EditorNode:
   (operator=EditorOperator)?
   name=ID ':' type=[ecore::EClass] (binding=EditorBindingExpression)?
   ('{'
-  (attributes+=EditorAttributeAssignment | references+=EditorReference)
+  (attributes+=EditorAttributeAssignment | references+=EditorReference)*
 //attributeConditions+=EditorPatternAttributeCondition*
   '}')?;
 

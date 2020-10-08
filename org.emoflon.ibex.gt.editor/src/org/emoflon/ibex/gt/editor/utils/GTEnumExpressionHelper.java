@@ -5,6 +5,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeAssignment;
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeConstraint;
 import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression;
+import org.emoflon.ibex.gt.editor.gT.EditorGTFile;
+import org.emoflon.ibex.gt.editor.gT.impl.EditorGTFileImpl;
 
 public class GTEnumExpressionHelper {
 
@@ -19,10 +21,20 @@ public class GTEnumExpressionHelper {
 		if (container instanceof EditorAttributeAssignment) {
 			final EditorAttributeAssignment attributeConstraint = (EditorAttributeAssignment) container;
 			return attributeConstraint.getAttribute().getEAttributeType();
-		} else if (container instanceof EditorAttributeConstraint) {
-			final EditorAttributeConstraint predicate = (EditorAttributeConstraint) container;
-			return expression.getLiteral().getEEnum();
-		} else
+		} else {
 			return null;
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> T getContainer(EObject node, Class<T> clazz) {
+		EObject current = node;
+		while(!(current.getClass() == clazz)) {
+			if(node.eContainer() == null)
+				return null;
+			
+			current = current.eContainer();
+		}
+		return (T)current;
 	}
 }
