@@ -59,6 +59,30 @@ public class GTEditorAttributeUtils {
 			return Optional.empty();
 		}
 	}
+	
+	/**
+	 * Parses the String to the first possible type.
+	 * 
+	 * @param type the expected data type
+	 * @param s    the string to parse
+	 * @return an Optional for an Object of the type if the string can be converted
+	 *         to the type. Otherwise the Optional will be empty.
+	 */
+	public static Optional<Object> convertEDataTypeStringToObject(final String s) {
+		try {
+			return Optional.of(Boolean.parseBoolean(s));
+		} catch (final Exception e) {
+			try {
+				return Optional.of(Integer.parseInt(s));
+			} catch (final Exception e1) {
+				try {
+					return Optional.of(Double.parseDouble(s));
+				} catch (final Exception e2) {
+					return Optional.of(s);
+				}
+			}
+		} 
+	}
 
 	/**
 	 * Checks whether the data type is comparable.
