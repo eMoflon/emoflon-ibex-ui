@@ -20,23 +20,19 @@ import org.emoflon.ibex.gt.editor.gT.EditorParameter
 import org.emoflon.ibex.gt.editor.gT.EditorPattern
 import org.emoflon.ibex.gt.editor.gT.EditorPatternType
 import org.emoflon.ibex.gt.editor.gT.EditorReference
-import org.emoflon.ibex.gt.editor.gT.EditorRelation
 import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.utils.GTConditionHelper
-import org.emoflon.ibex.gt.editor.utils.GTEditorAttributeComparator
 import org.emoflon.ibex.gt.editor.utils.GTEditorAttributeUtils
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 import org.emoflon.ibex.gt.editor.utils.GTFlatteningUtils
 import org.emoflon.ibex.gt.editor.utils.GTEditorPatternUtils
 import org.emoflon.ibex.gt.editor.utils.GTFlattener
-import org.eclipse.emf.common.util.EList
 import org.emoflon.ibex.gt.editor.gT.StochasticFunction
 import org.emoflon.ibex.gt.editor.gT.StochasticDistribution
 import org.emoflon.ibex.gt.editor.gT.StochasticFunctionExpression
 import org.emoflon.ibex.gt.editor.gT.PossibleStochasticRanges
 import org.emoflon.ibex.gt.editor.gT.ArithmeticExpression
 import org.eclipse.emf.ecore.EcorePackage
-import org.emoflon.ibex.gt.editor.gT.ArithmeticNodeAttribute
 import org.emoflon.ibex.gt.editor.gT.OneParameterArithmetics
 import org.emoflon.ibex.gt.editor.gT.AllOneParameterOperators
 import org.emoflon.ibex.gt.editor.gT.MultExpression
@@ -46,7 +42,8 @@ import org.emoflon.ibex.gt.editor.gT.ExpExpression
 import org.emoflon.ibex.gt.editor.utils.GTArithmeticsCalculatorUtil
 import org.emoflon.ibex.gt.editor.gT.EditorCountExpression
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeAssignment
-import org.emoflon.ibex.gt.editor.gT.EditorAttributeConstraint
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
+import org.emoflon.ibex.gt.editor.gT.ArithmeticCalculationExpression
 
 /**
  * This class contains custom validation rules.
@@ -729,6 +726,20 @@ class GTValidator extends AbstractGTValidator {
       }
     }
   }
+  
+  @Check
+  def checkLiteralExpression(EditorLiteralExpression literalExpression) {
+  	if(literalExpression.eContainer instanceof ArithmeticCalculationExpression || 
+  		literalExpression.eContainer instanceof StochasticFunctionExpression ||
+  		literalExpression.eContainer instanceof StochasticFunction) {
+  		try{
+  			Double.parseDouble(literalExpression.value)
+  		}catch(Exception e) {
+  			error("Literal is not a number.",  
+  				GTPackage.Literals.EDITOR_LITERAL_EXPRESSION__VALUE, CODE_PREFIX+"literal.invalid_format");
+  		}
+  	} 
+  }
 
   @Check
   def checkAttribute(EditorAttributeAssignment attributeConstraint) {
@@ -1245,7 +1256,7 @@ class GTValidator extends AbstractGTValidator {
   			
   			if(expression instanceof MultExpression){
   				val right = expression.right
-  				if(right instanceof ArithmeticNodeAttribute){
+  				if(right instanceof OneParameterArithmetics){
   					if(right.negative){
   						error(PARAMETER_NEGATIVE_MESSAGE
 	  					, GTPackage.Literals.MULT_EXPRESSION__RIGHT,
@@ -1255,7 +1266,7 @@ class GTValidator extends AbstractGTValidator {
   			}
   			if(expression instanceof AddExpression) {
   				val right = expression.right
-  				if(right instanceof ArithmeticNodeAttribute){
+  				if(right instanceof OneParameterArithmetics){
   					if(right.negative){
   						error(PARAMETER_NEGATIVE_MESSAGE
 	  					, GTPackage.Literals.ADD_EXPRESSION__RIGHT,
@@ -1265,7 +1276,7 @@ class GTValidator extends AbstractGTValidator {
   			}
   			if(expression instanceof ExpExpression) {
   				val right = expression.right
-  				if(right instanceof ArithmeticNodeAttribute){
+  				if(right instanceof OneParameterArithmetics){
   					if(right.negative){
   						error(PARAMETER_NEGATIVE_MESSAGE
 	  					, GTPackage.Literals.EXP_EXPRESSION__RIGHT,
@@ -1279,11 +1290,11 @@ class GTValidator extends AbstractGTValidator {
    * checks if the parameter holds a numeric value
    */
   @Check
-  def checkIfNodeAttributeIsParseable(ArithmeticNodeAttribute attribute){
+  def checkIfNodeAttributeIsParseable(EditorAttributeExpression attribute){
   	if(!isParseable(attribute)){
   		error(String.format(PARAMETER_NO_NUMBER_MESSAGE, attribute.node.name, 
   			attribute.attribute.name), 
-  			GTPackage.Literals.ARITHMETIC_NODE_ATTRIBUTE__ATTRIBUTE, PARAMETER_NO_NUMBER)
+  			GTPackage.Literals.EDITOR_ATTRIBUTE_EXPRESSION__ATTRIBUTE, PARAMETER_NO_NUMBER)
   	}
   }
 
@@ -1311,7 +1322,7 @@ class GTValidator extends AbstractGTValidator {
   }
   
   // checks if an attribute is parseable as a number
-  def isParseable(ArithmeticNodeAttribute attribute){
+  def isParseable(EditorAttributeExpression attribute){
   	val type = attribute.attribute.EAttributeType
   	return type == EcorePackage.Literals.EDOUBLE || type == EcorePackage.Literals.EFLOAT ||
   	type == EcorePackage.Literals.EINT || type == EcorePackage.Literals.ESHORT || 

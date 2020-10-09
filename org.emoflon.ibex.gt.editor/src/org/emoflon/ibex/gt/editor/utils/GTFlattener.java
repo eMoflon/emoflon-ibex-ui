@@ -11,10 +11,8 @@ import java.util.Set;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.emoflon.ibex.gt.editor.gT.AddExpression;
-import org.emoflon.ibex.gt.editor.gT.ArithmeticAttribute;
 import org.emoflon.ibex.gt.editor.gT.ArithmeticCalculationExpression;
 import org.emoflon.ibex.gt.editor.gT.ArithmeticExpression;
-import org.emoflon.ibex.gt.editor.gT.ArithmeticNodeAttribute;
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeAssignment;
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeConstraint;
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression;
@@ -148,10 +146,8 @@ public class GTFlattener {
 			fixArithmeticExpression(((MinMaxExpression)expr).getRight(),name2Node);
 		}else if(expr instanceof OneParameterArithmetics) {
 			fixArithmeticExpression(((OneParameterArithmetics)expr).getExpression(),name2Node);
-		}else if(expr instanceof ArithmeticAttribute) {
-			return;
-		}else if(expr instanceof ArithmeticNodeAttribute) {
-			ArithmeticNodeAttribute ana = (ArithmeticNodeAttribute)expr;
+		}else if(expr instanceof EditorAttributeExpression) {
+			EditorAttributeExpression ana = (EditorAttributeExpression)expr;
 			ana.setNode(name2Node.get(ana.getNode().getName()));
 		}else {
 			return;

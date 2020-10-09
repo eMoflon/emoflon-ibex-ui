@@ -1,8 +1,8 @@
 package org.emoflon.ibex.gt.editor.utils;
 
 import org.emoflon.ibex.gt.editor.gT.AddExpression;
-import org.emoflon.ibex.gt.editor.gT.ArithmeticAttribute;
 import org.emoflon.ibex.gt.editor.gT.ArithmeticExpression;
+import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression;
 import org.emoflon.ibex.gt.editor.gT.ExpExpression;
 import org.emoflon.ibex.gt.editor.gT.MinMaxExpression;
 import org.emoflon.ibex.gt.editor.gT.MultExpression;
@@ -22,10 +22,10 @@ public class GTArithmeticsCalculatorUtil {
 	 * @return the calculation
 	 * @throws IllegalArgumentException when the expression has an airhtmeticNodeAttribute
 	 */
-	public static double getValue(final ArithmeticExpression expression) throws IllegalArgumentException {
+	public static double getValue(final ArithmeticExpression expression) throws Exception {
 		
-		if(expression instanceof ArithmeticAttribute) {
-			return  ((ArithmeticAttribute) expression).getStaticAttribute();
+		if(expression instanceof EditorLiteralExpression) {
+			return  Double.parseDouble(((EditorLiteralExpression) expression).getValue());
 		}
 		if(expression instanceof OneParameterArithmetics) {
 			double value = getValue(((OneParameterArithmetics) expression).getExpression());

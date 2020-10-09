@@ -5,10 +5,7 @@ generate gT "http://www.emoflon.org/ibex/gt/editor/GT"
 
 EditorGTFile:
  	(imports+=EditorImport)*
- 	(patterns+=EditorPattern |
-	conditions+=EditorCondition 
-//  | attributeConditionLibraries+=EditorAttributeConditionLibrary
-	)*;
+ 	(patterns+=EditorPattern | conditions+=EditorCondition)*;
   
   // This rule serves to have a common super class for pattern parameters and editor nodes
 EditorParameterOrNode:
@@ -39,20 +36,18 @@ EditorParameter:
   // Nodes
 EditorNode:
   (operator=EditorOperator)?
-  name=ID ':' type=[ecore::EClass] (binding=EditorBindingExpression)?
-  ('{'
+  name=ID ':' type=[ecore::EClass] ('{'
   (attributes+=EditorAttributeAssignment | references+=EditorReference)*
-//attributeConditions+=EditorPatternAttributeCondition*
   '}')?;
 
 enum EditorOperator:
-  CONTEXT='98943JKHF9802nf&&3120ß4$§_3§' |
+  CONTEXT='$context' |
   CREATE='++' |
   DELETE='--';
 
   // Attribute Assignments and Conditions
 EditorAttributeConstraint:
-	lhs=EditorExpression relation=EditorRelation rhs=EditorExpression;
+	'#' lhs=EditorExpression relation=EditorRelation rhs=EditorExpression;
   
 EditorAttributeAssignment:
 	'.' attribute=[ecore::EAttribute] ':=' value=EditorExpression;
@@ -66,7 +61,10 @@ enum EditorRelation:
   SMALLER='<';
 
 EditorExpression:
-  EditorAttributeExpression | EditorLiteralExpression | EditorEnumExpression | EditorCountExpression |
+//  EditorAttributeExpression | 
+//  EditorLiteralExpression | 
+  EditorEnumExpression | 
+//  EditorCountExpression |
   EditorParameterExpression | StochasticFunctionExpression | ArithmeticCalculationExpression;
 
 EditorAttributeExpression:
@@ -108,9 +106,6 @@ enum EditorApplicationConditionType:
   POSITIVE='enforce' |
   NEGATIVE='forbid';
 
-EditorBindingExpression:
-  ':=' node=[EditorNode];
-
 // stochastic functions
 EditorProbability:
 	StochasticFunction | ArithmeticExpression;
@@ -150,7 +145,7 @@ enum OneParameterOperator returns AllOneParameterOperators:
 	E_EXPONENTIAL ="exp" | LOGARITHMUS = "log" | NAT_LOG = "ln";
 
 ArithmeticCalculationExpression:
-	"calc" "("expression = ArithmeticExpression ")" ;
+	expression = ArithmeticExpression ;
 	
 ArithmeticExpression:
 	AddExpression;
@@ -173,88 +168,14 @@ OneParameterArithmetics returns ArithmeticExpression:
 	| ArithmeticAttribute;
 
 ArithmeticAttribute returns ArithmeticExpression:
-	{ArithmeticAttribute} (staticAttribute = ArithmeticNumber) | ArithmeticNodeAttribute | EditorCountExpression;
+//	{ArithmeticAttribute} (staticAttribute = ArithmeticNumber) | 
+//	ArithmeticNodeAttribute |
+	EditorLiteralExpression |
+	EditorAttributeExpression |
+	EditorCountExpression;
 	
-ArithmeticNodeAttribute:
-	 (negative?="-")? node=[EditorNode] '.' attribute=[ecore::EAttribute];
+//ArithmeticNodeAttribute:
+//	 (negative?="-")? node=[EditorNode] '.' attribute=[ecore::EAttribute];
 
-ArithmeticNumber returns ecore::EDouble:
-	 ('-')? INT ('.' INT)?;
-
-//EditorPatternElement:
-//  EditorNode | EditorPatternAttributeCondition;
-//
-//// Complex attribute conditions
-//EditorPatternAttributeCondition:
-//  {EditorPatternAttributeCondition}
-//  'attributeCondition' '{'
-//  constraints+=EditorPatternAttributeConstraint*
-//  '}';
-//
-//EditorPatternAttributeConstraint:
-//  EditorPatternAttributeConstraintVariable | EditorPatternAttributeConstraintPredicate;
-//
-//EditorPatternAttributeConstraintVariable:
-//  name=ID ':' type=[ecore::EDataType];
-//
-//EditorPatternAttributeConstraintPredicate:
-//  name=[EditorAttributeConditionSpecification|ID]
-//  '(' args+=EditorPatternAttributeConstraintArgument? (',' args+=EditorPatternAttributeConstraintArgument)*
-//  ')';
-
-//EditorPatternAttributeConstraintArgument:
-//  EditorPatternAttributeConstraintAttributeValueExpression | EditorLiteralExpression |  EditorCountExpression | EditorEnumExpression | EditorPatternAttributeConstraintVariableReference | EditorParameterExpression;
-//
-//EditorPatternAttributeConstraintAttributeValueExpression:
-//  editorNode=[EditorNode] '.' attribute=[ecore::EAttribute] (free?="*")?;
-//  
-//EditorPatternAttributeConstraintVariableReference:
-//  name=[EditorPatternAttributeConstraintVariable]
-//;
-//
-///*
-// * Attribute constraints library
-// * This library allows the developer to provide her own constraint types (only for EDataTypes)
-// * An EditorAttributeConditionSpecification represents a predicate with a number of typed parameters
-// * An EditorAttributeConditionOperationalization is an operationalization of such a predicate (i.e., one way to fulfill the constraint)
-// */
-//EditorAttributeConditionLibrary:
-//  {EditorAttributeConditionLibrary}
-//  'attributeConditionLibrary' '{'
-//  (conditionSpecifications+=EditorAttributeConditionSpecification)*
-//  '}';
-//
-//EditorAttributeConditionSpecification:
-//  {EditorAttributeConditionSpecification}
-//  name=ID
-//  ('('
-//  (parameters+=EditorAttributeConditionParameter (',' parameters+=EditorAttributeConditionParameter)*)?
-//  ')')
-//  (('reuse' reusedConditionSpecification=[EditorAttributeConditionSpecification|ID]) | ('{'
-//  (operationalizations+=EditorAttributeConditionOperationalization*)
-//  '}'))?;
-//
-//EditorAttributeConditionParameter:
-//  name=ID ':' type=[ecore::EDataType];
-//
-//EditorAttributeConditionOperationalization:
-//  {EditorAttributeConditionOperationalization}
-//  operationalizationType = EditorAttributeConditionType '[' adornments+=EditorAttributeConditionAdornment+ ']'
-//  '{'
-//  target=EditorAttributeConditionTargetPlatform ':' specification=STRING
-//  '}';
-//
-///*
-// * A BOUND parameter possesses a value prior to the evaluation of an operation, a free parameter is bound by the operation
-// */
-//enum EditorAttributeConditionAdornment:
-//  BOUND='B' |
-//  FREE='F';
-//  
-//enum EditorAttributeConditionType:
-//  CHECK='check' |
-//  EXTEND='extend';
-//
-//enum EditorAttributeConditionTargetPlatform:
-//  JAVA='Java';
-//
+//ArithmeticNumber returns ecore::EDouble:
+//	 ('-')? INT ('.' INT)?;
