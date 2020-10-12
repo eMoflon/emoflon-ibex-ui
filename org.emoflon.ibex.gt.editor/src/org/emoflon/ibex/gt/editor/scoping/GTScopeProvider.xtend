@@ -35,9 +35,9 @@ import java.util.LinkedList
  * on how and when to use it.
  */
 class GTScopeProvider extends AbstractGTScopeProvider {
-
-  override getScope(EObject context, EReference reference) {
-    // Attributes
+	
+	def scopeInternal(EObject context, EReference reference) {
+		// Attributes
     if (isAttributeName(context, reference)) {
       return getScopeForAttributes(context as EditorAttributeAssignment)
     }
@@ -111,6 +111,15 @@ class GTScopeProvider extends AbstractGTScopeProvider {
     }
 
     return super.getScope(context, reference)
+	}
+
+  override getScope(EObject context, EReference reference) {
+    try{
+    	return scopeInternal(context, reference)
+    }catch(Exception e) {
+    	e.printStackTrace
+    	return super.getScope(context, reference)
+    }
   }
 
   def isAttributeName(EObject context, EReference reference) {
