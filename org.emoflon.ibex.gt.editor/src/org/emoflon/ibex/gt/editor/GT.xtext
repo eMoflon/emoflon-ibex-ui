@@ -61,10 +61,7 @@ enum EditorRelation:
   SMALLER='<';
 
 EditorExpression:
-//  EditorAttributeExpression | 
-//  EditorLiteralExpression | 
   EditorEnumExpression | 
-//  EditorCountExpression |
   EditorParameterExpression | StochasticFunctionExpression | ArithmeticCalculationExpression;
 
 EditorAttributeExpression:
@@ -163,19 +160,11 @@ ExpExpression returns ArithmeticExpression:
 MinMaxExpression returns ArithmeticExpression:
 	{MinMaxExpression} minMaxOperator = MinMaxOperator '(' left = ArithmeticExpression "," right = ArithmeticExpression ')';
 
-OneParameterArithmetics returns ArithmeticExpression:
-	{OneParameterArithmetics} (negative?="-")? (operator = OneParameterOperator)? "("expression = ArithmeticExpression ")" 
+OneParameterArithmetics returns ArithmeticExpression: {OneParameterArithmetics} 
+	(negative?="-")? (operator = OneParameterOperator)? "("expression = ArithmeticExpression ")" 
 	| ArithmeticAttribute;
 
 ArithmeticAttribute returns ArithmeticExpression:
-//	{ArithmeticAttribute} (staticAttribute = ArithmeticNumber) | 
-//	ArithmeticNodeAttribute |
 	EditorLiteralExpression |
 	EditorAttributeExpression |
 	EditorCountExpression;
-	
-//ArithmeticNodeAttribute:
-//	 (negative?="-")? node=[EditorNode] '.' attribute=[ecore::EAttribute];
-
-//ArithmeticNumber returns ecore::EDouble:
-//	 ('-')? INT ('.' INT)?;

@@ -75,14 +75,14 @@ class GTLinkingDiagnosticMessageProvider extends LinkingDiagnosticMessageProvide
 		}
 
 		// Parameter of parameter expression not found.
-		if (context.reference === GTPackage.Literals.EDITOR_PARAMETER_EXPRESSION__PARAMETER) {
-			val expectedType = (context?.context?.eContainer as EditorAttributeAssignment)?.attribute?.EAttributeType?.name
-			return new DiagnosticMessage(
-				String.format(PARAMETER_EXPRESSION_PARAMETER_NOT_FOUND_MESSAGE, linkText, expectedType),
-				Severity.ERROR,
-				PARAMETER_EXPRESSION_PARAMETER_NOT_FOUND
-			)
-		}
+//		if (context.reference === GTPackage.Literals.EDITOR_PARAMETER_EXPRESSION__PARAMETER) {
+//			val expectedType = (context?.context?.eContainer as EditorAttributeAssignment)?.attribute?.EAttributeType?.name
+//			return new DiagnosticMessage(
+//				String.format(PARAMETER_EXPRESSION_PARAMETER_NOT_FOUND_MESSAGE, linkText, expectedType),
+//				Severity.ERROR,
+//				PARAMETER_EXPRESSION_PARAMETER_NOT_FOUND
+//			)
+//		}
 
 		// Parameter type not found in scope.
 		if (context.reference === GTPackage.Literals.EDITOR_PARAMETER__TYPE) {
