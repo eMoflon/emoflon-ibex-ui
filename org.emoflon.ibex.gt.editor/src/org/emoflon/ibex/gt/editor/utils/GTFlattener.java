@@ -395,7 +395,7 @@ public class GTFlattener {
 	private List<EditorAttributeConstraint> mergeConstraints(EditorPattern pattern, Set<EditorPattern> superPatterns) {
 		// Collect nodes.
 		final List<EditorAttributeConstraint> collectedConstraints = new LinkedList<>();
-		collectedConstraints .addAll(EcoreUtil.copyAll(pattern.getAttributeConstraints()));
+		collectedConstraints.addAll(EcoreUtil.copyAll(pattern.getAttributeConstraints()));
 		superPatterns.forEach(r -> collectedConstraints.addAll(EcoreUtil.copyAll(r.getAttributeConstraints())));
 		//TODO: Filter duplicates
 		return collectedConstraints;
