@@ -19,11 +19,11 @@ EditorPattern:
   ('('
   (parameters+=EditorParameter (',' parameters+=EditorParameter)*)?
   ')')?
-  ('refines' superPatterns+=[EditorPattern] (',' superPatterns+=[EditorPattern])*)?
+  ('refines' superPatterns+=[EditorPattern|ID] (',' superPatterns+=[EditorPattern|ID])*)?
   ('{'
   (nodes+=EditorNode | attributeConstraints+=EditorAttributeConstraint )*
   '}')?
-  ('when' conditions+=[EditorCondition] ('||' conditions+=[EditorCondition])*)?
+  ('when' conditions+=[EditorCondition|ID] ('||' conditions+=[EditorCondition|ID])*)?
   (stochastic ?='@' probability = EditorProbability)?;
 
 enum EditorPatternType:
@@ -65,10 +65,10 @@ EditorExpression:
   EditorParameterExpression | StochasticFunctionExpression | ArithmeticCalculationExpression;
 
 EditorAttributeExpression:
-  node=[EditorNode] '.' attribute=[ecore::EAttribute];
+  node=[EditorNode|ID] '.' attribute=[ecore::EAttribute];
   
 EditorCountExpression:
-	'count' '(' invokedPatten = [EditorPattern] ')'
+	'count' '(' invokedPatten = [EditorPattern|ID] ')'
 ;
 
 EditorLiteralExpression:
@@ -82,11 +82,11 @@ EditorEnumExpression:
   'enum::' literal=[ecore::EEnumLiteral];
 
 EditorParameterExpression:
-  'param::' parameter=[EditorParameter];
+  'param::' parameter=[EditorParameter|ID];
 
 // References
 EditorReference:
-  (operator=EditorOperator)? '-' type=[ecore::EReference] '->' target=[EditorNode];
+  (operator=EditorOperator)? '-' type=[ecore::EReference] '->' target=[EditorNode|ID];
 
 // Graph Conditions
 EditorCondition:
@@ -95,9 +95,9 @@ EditorCondition:
 
 EditorSimpleCondition:
   {EditorConditionReference}
-  condition=[EditorCondition] |
+  condition=[EditorCondition|ID] |
   {EditorApplicationCondition}
-  type=EditorApplicationConditionType pattern=[EditorPattern];
+  type=EditorApplicationConditionType pattern=[EditorPattern|ID];
 
 enum EditorApplicationConditionType:
   POSITIVE='enforce' |
