@@ -22,7 +22,8 @@ class GTPlantUMLGenerator {
 	static val ContextColor = 'Black'
 	static val CreateColor = 'DarkGreen'
 	static val DeleteColor = 'Crimson'
-	static int MAX_STR_LENGTH = 25
+	static val AtrConstrColor = 'White'
+	static int MAX_STR_LENGTH = 100
 
 	/**
 	 * Returns the PlantUML code for the visualization of an empty file.
@@ -46,14 +47,19 @@ class GTPlantUMLGenerator {
 				HeaderBackgroundColor<<CONTEXT>> «ContextColor»
 				HeaderBackgroundColor<<CREATE>> «CreateColor»
 				HeaderBackgroundColor<<DELETE>> «DeleteColor»
+				HeaderBackgroundColor<<ATR_CONSTR>> «AtrConstrColor»
 				BorderColor<<CONTEXT>> «ContextColor»
 				BorderColor<<CREATE>> «CreateColor»
 				BorderColor<<DELETE>> «DeleteColor»
+				BorderColor<<ATR_CONSTR>> «ContextColor»
+				FontColor<<ATR_CONSTR>> «ContextColor»
 				FontColor White
 			}
 			
 			namespace «pattern.name» {
 				«visualizeGraph(flattenedPattern)»
+				«visualizeAttributeConstraints(flattenedPattern)»
+				«visualizeRate(flattenedPattern)»
 			}
 			
 			«FOR p : getConditionPatterns(pattern)»
@@ -90,7 +96,7 @@ class GTPlantUMLGenerator {
 			«FOR node : pattern.nodes»
 				class "«nodeName(node)»" <<«nodeSkin(node)»>> {
 					«FOR attr: node.attributes»
-						«attributeConstraint(attr)»
+						«org.emoflon.ibex.gt.editor.ui.visualization.GTPlantUMLGenerator.attributeAssignment(attr)»
 					«ENDFOR»
 				}
 			«ENDFOR»
@@ -100,6 +106,35 @@ class GTPlantUMLGenerator {
 					"«nodeName(node)»" -[#«referenceColor(reference)»]-> "«nodeName(reference.target)»": «referenceLabel(reference)»
 				«ENDFOR»
 			«ENDFOR»
+		'''
+	}
+	
+	/**
+	 * Visualizes attribute constraints. 
+	 */
+	private static def String visualizeAttributeConstraints(EditorPattern pattern) {
+		if(pattern.attributeConstraints.isEmpty)
+			return ""
+		
+		return '''
+			class "Attribute Constraints" <<ATR_CONSTR>>{
+			«FOR constraint : pattern.attributeConstraints»
+				«attributeConstraint(constraint)»
+			«ENDFOR»
+			}
+		'''
+	}
+	
+	/**
+	 * Visualizes rule rate. 
+	 */
+	def static visualizeRate(EditorPattern pattern) {
+		if(!pattern.stochastic || pattern.probability === null)
+			return ""
+		return '''
+			class "Rule Probability" <<ATR_CONSTR>>{
+				# P(..) = «GTVisualizationUtils.toString(pattern.probability)»
+			}
 		'''
 	}
 
@@ -140,7 +175,7 @@ class GTPlantUMLGenerator {
 	/**
 	 * Prints the attribute constraint.
 	 */
-	private static def String attributeConstraint(EditorAttributeAssignment attr) {
+	private static def String attributeAssignment(EditorAttributeAssignment attr) {
 		val operator = '+'
 		val name = if(attr.attribute === null || attr.attribute.name === null) '?' else attr.attribute.name
 		val relation = ':='

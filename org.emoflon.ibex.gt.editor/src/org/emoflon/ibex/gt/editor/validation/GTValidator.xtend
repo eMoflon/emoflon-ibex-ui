@@ -1276,15 +1276,6 @@ class GTValidator extends AbstractGTValidator {
 		}
 	}
 
-	@Check
-	def checkNodeExists(EditorAttributeExpression attribute) {
-		val pattern = getContainer(attribute, typeof(EditorPatternImpl))
-		val names = pattern.nodes.map[node | node.name].toSet
-		if(!names.contains(attribute.node.name)){
-			error("Node with such a name does not exist!", GTPackage.Literals.EDITOR_ATTRIBUTE_EXPRESSION__NODE, "Fumanchu!")
-		}
-	}
-
 	@SuppressWarnings("unchecked")
 	def <T> T getContainer(EObject node, Class<T> clazz) {
 		var current = node;
