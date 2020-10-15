@@ -35,7 +35,7 @@ EditorParameter:
 
   // Nodes
 EditorNode:
-  (operator=EditorOperator)?
+  (operator=EditorOperator)? (local?='local')?
   name=ID ':' type=[ecore::EClass] ('{'
   (attributes+=EditorAttributeAssignment | references+=EditorReference)*
   '}')?;
