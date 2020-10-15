@@ -25,7 +25,6 @@ import org.emoflon.ibex.gt.editor.gT.EditorOperator
 import org.emoflon.ibex.gt.editor.gT.impl.EditorPatternImpl
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeConstraint
 import org.emoflon.ibex.gt.editor.gT.impl.EditorGTFileImpl
-import java.util.List
 import java.util.LinkedList
 import org.emoflon.ibex.gt.editor.gT.StochasticFunction
 import org.emoflon.ibex.gt.editor.gT.ArithmeticExpression
