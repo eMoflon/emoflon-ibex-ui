@@ -50,6 +50,7 @@ import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression
 import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
 import org.eclipse.emf.ecore.EObject
 import org.emoflon.ibex.gt.editor.gT.impl.EditorPatternImpl
+import org.emoflon.ibex.gt.editor.gT.MinMaxExpression
 
 /**
  * This class contains custom validation rules.
@@ -219,7 +220,11 @@ class GTValidator extends AbstractGTValidator {
 
 	public static val CONDITION_PATTERN_INVALID_CONDITIONS = CODE_PREFIX +
 		"condition.pattern.invalid.hasMultipleConditions"
+	public static val CONDITION_PATTERN_INVALID_CONDITIONS2 = CODE_PREFIX +
+		"condition.pattern.invalid.hasArithmeticExpressions"
+		
 	public static val CONDITION_PATTERN_INVALID_CONDITIONS_MESSAGE = "Condition may not use '%s' because it has multiple conditions."
+	public static val CONDITION_PATTERN_INVALID_CONDITIONS_MESSAGE2 = "Condition may not use '%s' because it has attribute constraints using count(..) or arithmetic expressions."
 
 	public static val CONDITION_PATTERN_INVALID_PARAMETERS = CODE_PREFIX + "condition.pattern.invalid.hasParameters"
 	public static val CONDITION_PATTERN_INVALID_PARAMETERS_MESSAGE = "Condition may not use '%s' because it has parameters."
@@ -499,20 +504,6 @@ class GTValidator extends AbstractGTValidator {
 				)
 			}
 		}
-	}
-
-	/**
-	 * EditorPattern are not allowed to have multiple OR connected EditorConditions for TIE-GT
-	 * (currently disabled because we would have to decide whether this is TIE-GT or IBeX) 
-	 */
-	// @Check 
-	def checkPatternNoORConnectedConditions(EditorPattern pattern) {
-		if (pattern.conditions.size > 1)
-			error(
-				String.format(PATTERN_OR_CONNECTED_CONDITIONS_NOT_SUPPORTED, pattern.toText),
-				GTPackage.Literals.EDITOR_PATTERN__CONDITIONS,
-				PATTERN_CONDITIONS_UNSUPPORTED
-			)
 	}
 
 	/**
@@ -987,7 +978,7 @@ class GTValidator extends AbstractGTValidator {
 			)
 		}
 
-		// An and clause must not contain a PAC and a NAC for the same pattern.
+		// An and-clause must not contain a PAC and a NAC for the same pattern.
 		val conditions = conditionHelper.getApplicationConditions
 		val pacs = conditions.filter[it.type == EditorApplicationConditionType.POSITIVE]
 		val nacs = conditions.filter[it.type == EditorApplicationConditionType.NEGATIVE]
@@ -1005,7 +996,7 @@ class GTValidator extends AbstractGTValidator {
 	}
 
 	@Check
-	def checkEnforce(EditorApplicationCondition applicationCondition) {
+	def checkApplicationCondition(EditorApplicationCondition applicationCondition) {
 		checkPatternInApplicationCondition(applicationCondition.pattern,
 			GTPackage.Literals.EDITOR_APPLICATION_CONDITION__PATTERN)
 	}
@@ -1038,6 +1029,33 @@ class GTValidator extends AbstractGTValidator {
 						CONDITION_PATTERN_INVALID_CONDITIONS
 					)
 				}
+				// Patterns in conditions must not have attibute constraints with complex arithmetic or count expressions
+				val flattenedPattern = (new GTFlattener(pattern)).flattenedPattern;
+				for(EditorAttributeConstraint eac : flattenedPattern.attributeConstraints) {
+					if(checkForComplexArithmetics(eac.lhs) || checkForComplexArithmetics(eac.rhs)) {
+						error(
+							String.format(CONDITION_PATTERN_INVALID_CONDITIONS_MESSAGE2, pattern.name),
+							feature, CONDITION_PATTERN_INVALID_CONDITIONS2
+						)
+					}
+				}
+			}
+		}
+	}
+	
+	def boolean checkForComplexArithmetics(EditorExpression expression) {
+		if(expression instanceof EditorEnumExpression || expression instanceof EditorParameterExpression) {
+			return false
+		} else if(expression instanceof StochasticFunctionExpression) {
+			return true
+		} else {
+			val ace = expression as ArithmeticCalculationExpression
+			if(ace.expression instanceof AddExpression || ace.expression instanceof MultExpression 
+				|| ace.expression instanceof ExpExpression || ace.expression instanceof MinMaxExpression
+				|| ace.expression instanceof OneParameterArithmetics || ace.expression instanceof EditorCountExpression) {
+				return true
+			} else {
+				return false
 			}
 		}
 	}
