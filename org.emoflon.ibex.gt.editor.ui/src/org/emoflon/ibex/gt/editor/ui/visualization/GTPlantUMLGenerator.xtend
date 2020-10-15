@@ -22,6 +22,7 @@ class GTPlantUMLGenerator {
 	static val ContextColor = 'Black'
 	static val CreateColor = 'DarkGreen'
 	static val DeleteColor = 'Crimson'
+	static val LocalNodeColor = 'Gray'
 	static val AtrConstrColor = 'White'
 	static int MAX_STR_LENGTH = 100
 
@@ -48,10 +49,12 @@ class GTPlantUMLGenerator {
 				HeaderBackgroundColor<<CREATE>> «CreateColor»
 				HeaderBackgroundColor<<DELETE>> «DeleteColor»
 				HeaderBackgroundColor<<ATR_CONSTR>> «AtrConstrColor»
+				HeaderBackgroundColor<<LOCAL_NODE>> «LocalNodeColor»
 				BorderColor<<CONTEXT>> «ContextColor»
 				BorderColor<<CREATE>> «CreateColor»
 				BorderColor<<DELETE>> «DeleteColor»
 				BorderColor<<ATR_CONSTR>> «ContextColor»
+				BorderColor<<LOCAL_NODE>> «ContextColor»
 				FontColor<<ATR_CONSTR>> «ContextColor»
 				FontColor White
 			}
@@ -160,7 +163,11 @@ class GTPlantUMLGenerator {
 	 * Prints the skin name for the node.
 	 */
 	private static def String nodeSkin(EditorNode node) {
-		return node.operator.getName
+		if(node.local) {
+			return "LOCAL_NODE" 
+		} else {
+			return node.operator.getName
+		}
 	}
 
 	/**
