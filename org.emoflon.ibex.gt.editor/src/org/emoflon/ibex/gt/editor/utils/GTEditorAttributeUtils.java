@@ -85,6 +85,34 @@ public class GTEditorAttributeUtils {
 			}
 		} 
 	}
+	
+	/**
+	 * Parses the String to the first possible type.
+	 * 
+	 * @param type the expected data type
+	 * @param s    the string to parse
+	 * @return an Optional for an Object of the type if the string can be converted
+	 *         to the type. Otherwise the Optional will be empty.
+	 */
+	public static EDataType convertStringToEDataType(final String s) {
+		try {
+			Integer.parseInt(s);
+			return EcorePackage.Literals.EINT;
+		} catch (final Exception e) {
+			try {
+				Double.parseDouble(s);
+				return EcorePackage.Literals.EDOUBLE;
+			} catch (final Exception e1) {
+				if(s.equalsIgnoreCase("false")) {
+					return EcorePackage.Literals.EBOOLEAN;
+				} else if(s.equalsIgnoreCase("true")) {
+					return EcorePackage.Literals.EBOOLEAN;
+				} else {
+					return EcorePackage.Literals.ESTRING;
+				}
+			}
+		} 
+	}
 
 	/**
 	 * Checks whether the data type is comparable.
