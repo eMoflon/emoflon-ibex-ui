@@ -102,7 +102,7 @@ LiteralValue:
 // Resolution//
 ///////////////
 Resolution:
-	strategy=ResolutionStrategy ('fallback' fallback=FallbackResolutionStrategy)?;
+	strategy=ResolutionStrategy ('when' '{' operationalDelta+=OperationalDelta '}')? ('fallback' fallback=FallbackResolutionStrategy)?;
 
 ResolutionStrategy:
 	MergeAndPreserveResolutionStrategy | RevokeAdditionResolutionStrategy | RevokeDeletionResolutionStrategy |
@@ -128,3 +128,13 @@ PreferTargetResolutionStrategy:
 
 ContinueResolutionStrategy:
 	name='continue';
+	
+///////////////////////
+// Operational Delta //
+///////////////////////
+OperationalDelta:
+	variables+=Variable+
+	'satisfies' '{'
+		rule=SatisfactionRule
+	'}'
+;

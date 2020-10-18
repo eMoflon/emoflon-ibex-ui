@@ -13,6 +13,7 @@ import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolutio
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.CRS_PreferTarget;
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.CRS_RevokeAddition;
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.CRS_RevokeDeletion;
+import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.ConflictResolutionStrategy;
 
 public class ConflictResolutionStrategyRegistry {
 
@@ -41,16 +42,16 @@ public class ConflictResolutionStrategyRegistry {
 	}
 
 	private static class Container {
-		private Class<?> crsInterface;
+		private Class<? extends ConflictResolutionStrategy> crsInterface;
 		private Consumer<Conflict> resolver;
 
-		public Container(Class<?> crsInterface, Consumer<Conflict> resolver) {
+		public Container(Class<? extends ConflictResolutionStrategy> crsInterface, Consumer<Conflict> resolver) {
 			this.crsInterface = crsInterface;
 			this.resolver = resolver;
 		}
 	}
 
-	public static Class<?> getCRSInterface(String resolutionStrategyName) {
+	public static Class<? extends ConflictResolutionStrategy> getCRSInterface(String resolutionStrategyName) {
 		return NAME_MAPPING.get(resolutionStrategyName).crsInterface;
 	}
 

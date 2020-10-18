@@ -90,6 +90,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="Resolution">
     <eStructuralFeatures xsi:type="ecore:EReference" name="strategy" eType="#//ResolutionStrategy"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="operationalDelta" upperBound="-1"
+        eType="#//OperationalDelta" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="fallback" eType="#//FallbackResolutionStrategy"
         containment="true"/>
   </eClassifiers>
@@ -104,6 +106,12 @@
   <eClassifiers xsi:type="ecore:EClass" name="PreferSourceResolutionStrategy" eSuperTypes="#//FallbackResolutionStrategy"/>
   <eClassifiers xsi:type="ecore:EClass" name="PreferTargetResolutionStrategy" eSuperTypes="#//FallbackResolutionStrategy"/>
   <eClassifiers xsi:type="ecore:EClass" name="ContinueResolutionStrategy" eSuperTypes="#//FallbackResolutionStrategy"/>
+  <eClassifiers xsi:type="ecore:EClass" name="OperationalDelta">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="variables" upperBound="-1"
+        eType="#//Variable" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rule" eType="#//SatisfactionRule"
+        containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="OrExpression" eSuperTypes="#//Expression">
     <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//Expression"
         containment="true"/>

@@ -7,6 +7,7 @@ import org.emoflon.ibex.tgg.integrate.api.IConflictResolutionStrategy
 import org.emoflon.ibex.tgg.integrate.integrate.ConflictResolutionStrategy
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict
 import org.apache.commons.lang3.StringUtils
+import java.util.Optional
 
 class ConflictResolutionStrategyGenerator {
 
@@ -23,16 +24,17 @@ class ConflictResolutionStrategyGenerator {
 			public class «className» implements «IConflictResolutionStrategy.name» {
 				
 				@Override
-				public boolean canSolve(«Conflict.name» conflict) {
+				public boolean conflictSatisfiesRule(«Conflict.name» conflict) {
 				«FOR variable : strategy.variables»
 					«variableGenerator.generate(variable)»
 				«ENDFOR»
 				
 					return «satisfactionRuleGenerator.generate(strategy.rule, strategy.resolution)»;
 				}
+
 				
 				@Override
-				public void solve(«Conflict.name» conflict) {
+				public «Optional.name»<String> getResolutionStrategyNameToApply(«Conflict.name» conflict) {
 					«resolutionGenerator.generate(strategy.resolution)»
 				}
 			}

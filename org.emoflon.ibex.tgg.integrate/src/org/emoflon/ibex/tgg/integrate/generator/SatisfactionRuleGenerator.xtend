@@ -33,7 +33,7 @@ class SatisfactionRuleGenerator {
 
 		def compile() {
 			compileNext(satisfactionRule.expression)
-			compileResolutionCheck()
+			//compileResolutionCheck()
 			result
 		}
 		
