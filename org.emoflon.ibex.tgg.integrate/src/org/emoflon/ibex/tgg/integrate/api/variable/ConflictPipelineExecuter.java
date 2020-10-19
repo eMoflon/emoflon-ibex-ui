@@ -10,51 +10,56 @@ import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict;
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.util.ConflictElements;
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.util.ConflictEltFilter;
 
-public class PipelineStageExecuter {
+public class ConflictPipelineExecuter implements PipelineExecuter {
 
 	private final Conflict conflict;
 	private ConflictEltFilter filter;
 	private Set<TypeFilterData> typeFilterData;
-
-	public PipelineStageExecuter(Conflict conflict) {
-		this.filter = new ConflictEltFilter();
+	
+	public ConflictPipelineExecuter(Conflict conflict) {
 		this.conflict = conflict;
+		this.filter = new ConflictEltFilter();
 		this.typeFilterData = new HashSet<TypeFilterData>();
 	}
-
-	public PipelineStageExecuter src() {
-		this.filter = filter.src();
+	
+	@Override
+	public PipelineExecuter src() {
+		filter.src();
 		return this;
 	}
 
-	public PipelineStageExecuter trg() {
-		this.filter = filter.trg();
+	@Override
+	public PipelineExecuter trg() {
+		filter.trg();
 		return this;
 	}
 
-	public PipelineStageExecuter created() {
-		this.filter = filter.created();
+	@Override
+	public PipelineExecuter created() {
+		filter.created();
 		return this;
 	}
 
-	public PipelineStageExecuter deleted() {
-		this.filter = filter.deleted();
+	@Override
+	public PipelineExecuter deleted() {
+		filter.deleted();
 		return this;
 	}
 
-	public PipelineStageExecuter types(Set<TypeFilterData> data) {
+	@Override
+	public PipelineExecuter types(Set<TypeFilterData> data) {
 		this.typeFilterData.addAll(data);
 		return this;
 	}
 
+	@Override
 	public int count() {
-		Set<EObject> elements = executeFilter();
-		return elements.size();
+		return executeFilter().size();
 	}
 
+	@Override
 	public boolean exists() {
-		Set<EObject> elements = executeFilter();
-		return !elements.isEmpty();
+		return !executeFilter().isEmpty();
 	}
 
 	private Set<EObject> executeFilter() {
@@ -84,5 +89,4 @@ public class PipelineStageExecuter {
 		return data.getElementName().equals(name)
 				&& data.getPackageName().equals(packageName);
 	}
-
 }

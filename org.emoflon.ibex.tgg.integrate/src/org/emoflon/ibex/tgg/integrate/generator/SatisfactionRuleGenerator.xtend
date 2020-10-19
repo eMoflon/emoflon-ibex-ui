@@ -1,33 +1,29 @@
 package org.emoflon.ibex.tgg.integrate.generator
 
-import org.emoflon.ibex.tgg.integrate.integrate.Resolution
-import org.emoflon.ibex.tgg.integrate.integrate.SatisfactionRule
-import org.emoflon.ibex.tgg.integrate.integrate.OrExpression
+import org.eclipse.emf.ecore.EObject
+import org.emoflon.ibex.tgg.integrate.integrate.AndExpression
+import org.emoflon.ibex.tgg.integrate.integrate.BooleanExpression
 import org.emoflon.ibex.tgg.integrate.integrate.ComparisonExpression
 import org.emoflon.ibex.tgg.integrate.integrate.LiteralValue
+import org.emoflon.ibex.tgg.integrate.integrate.OrExpression
+import org.emoflon.ibex.tgg.integrate.integrate.SatisfactionRule
 import org.emoflon.ibex.tgg.integrate.integrate.VariableReference
-import org.eclipse.emf.ecore.EObject
-import org.emoflon.ibex.tgg.integrate.api.resolution.ResolutionChecker
-import org.emoflon.ibex.tgg.integrate.integrate.AndExpression
 import org.emoflon.ibex.tgg.integrate.integrate.WrappedOrExpression
-import org.emoflon.ibex.tgg.integrate.integrate.BooleanExpression
 
 class SatisfactionRuleGenerator {
 
-	def generate(SatisfactionRule satisfactionRule, Resolution resolution) {
-		val satisfactionRuleCompiler = new SatisfactionRuleCompiler(satisfactionRule, resolution)
+	def generate(SatisfactionRule satisfactionRule) {
+		val satisfactionRuleCompiler = new SatisfactionRuleCompiler(satisfactionRule)
 		satisfactionRuleCompiler.compile()
 	}
 
 	private static class SatisfactionRuleCompiler {
 
 		SatisfactionRule satisfactionRule
-		Resolution resolution
 		String result
 
-		new(SatisfactionRule satisfactionRule, Resolution resolution) {
+		new(SatisfactionRule satisfactionRule) {
 			this.satisfactionRule = satisfactionRule
-			this.resolution = resolution
 			this.result = ""
 		}
 
@@ -83,21 +79,6 @@ class SatisfactionRuleGenerator {
 				LiteralValue: next.compile
 				VariableReference: next.compile
 			}
-		}
-
-		def compileResolutionCheck() {
-			result += '''&& 
-				«IF resolution.fallback === null»
-					«ResolutionChecker.name».resolutionWillBeExecuted(
-										"«resolution.strategy.name»",
-										conflict)
-				«ELSE»
-					«ResolutionChecker.name».anyResolutionWillBeExecuted(
-						"«resolution.strategy.name»", 
-						"«resolution.fallback.name»", 
-						conflict)
-				«ENDIF»
-			'''
 		}
 	}
 }

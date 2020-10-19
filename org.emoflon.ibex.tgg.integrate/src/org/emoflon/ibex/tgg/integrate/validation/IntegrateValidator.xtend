@@ -7,15 +7,13 @@ import org.emoflon.ibex.tgg.integrate.integrate.ComparisonExpression
 import org.emoflon.ibex.tgg.integrate.integrate.ConflictResolutionStrategy
 import org.emoflon.ibex.tgg.integrate.integrate.Integrate
 import org.emoflon.ibex.tgg.integrate.integrate.IntegratePackage
-import org.emoflon.ibex.tgg.integrate.integrate.Resolution
 import org.emoflon.ibex.tgg.integrate.integrate.VariableReference
-import org.emoflon.ibex.tgg.integrate.internal.ConflictResolutionStrategyRegistry
 import org.emoflon.ibex.tgg.integrate.internal.MutableValue
 import org.emoflon.ibex.tgg.integrate.internal.PipelineVisitor
 
 class IntegrateValidator extends AbstractIntegrateValidator {
 
-	@Check
+	/*@Check
 	def void checkFallbackStrategyIsProvided(Resolution resolution) {
 		val strategy = resolution.getStrategy();
 		val fallback = resolution.getFallback();
@@ -41,7 +39,7 @@ class IntegrateValidator extends AbstractIntegrateValidator {
 
 	private def boolean strategyIsFallback(String strategyName) {
 		return ConflictResolutionStrategyRegistry.FALLBACK_STRATEGY_NAMES.contains(strategyName);
-	}
+	}*/
 
 	@Check
 	def void checkConflictResolutionStrategiesHaveUniqueName(Integrate integrate) {

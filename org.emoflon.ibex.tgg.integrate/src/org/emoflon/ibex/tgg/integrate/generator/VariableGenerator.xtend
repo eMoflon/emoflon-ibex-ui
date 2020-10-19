@@ -2,15 +2,15 @@ package org.emoflon.ibex.tgg.integrate.generator
 
 import com.google.common.collect.ImmutableSet
 import org.eclipse.emf.ecore.EClass
-import org.emoflon.ibex.tgg.integrate.api.variable.PipelineStageExecuter
+import org.emoflon.ibex.tgg.integrate.api.variable.PipelineExecuter
 import org.emoflon.ibex.tgg.integrate.api.variable.TypeFilterData
 import org.emoflon.ibex.tgg.integrate.integrate.Variable
 import org.emoflon.ibex.tgg.integrate.internal.PipelineVisitor
 
 class VariableGenerator {
 
-	def String generate(Variable variable) {
-		val vc = new VariableCompiler(variable)
+	def String generate(Variable variable, Class<? extends PipelineExecuter> pipelineExecuterClazz) {
+		val vc = new VariableCompiler(variable, pipelineExecuterClazz)
 		vc.compile
 	}
 
@@ -20,10 +20,11 @@ class VariableGenerator {
 		final String executerName;
 		String result
 
-		new(Variable variable) {
+		new(Variable variable, Class<? extends PipelineExecuter> pipelineExecuterClazz) {
 			this.variable = variable
 			this.executerName = '''«variable.name»Executer'''
-			this.result = '''«PipelineStageExecuter.name» «executerName» = new «PipelineStageExecuter.name»(conflict)'''
+		
+			this.result = '''«PipelineExecuter.name» «executerName» = new «pipelineExecuterClazz.name»(conflict)'''
 		}
 
 		def String compile() {

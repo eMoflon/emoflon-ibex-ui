@@ -32,7 +32,7 @@ Variable:
 VariableReference:
 	ref=[Variable];
 
-//////////////
+	//////////////
 // Pipeline //
 //////////////
 Pipeline:
@@ -71,7 +71,7 @@ PipelineStageCount:
 PipelineStageExists:
 	name='exists';
 
-///////////////////////
+	///////////////////////
 // Satisfaction Rule //
 ///////////////////////
 SatisfactionRule:
@@ -98,11 +98,16 @@ ComparisonParameter:
 LiteralValue:
 	value=INT;
 
-///////////////
-// Resolution//
-///////////////
+	////////////////
+// Resolution //
+////////////////
 Resolution:
-	strategy=ResolutionStrategy ('when' '{' operationalDelta+=OperationalDelta '}')? ('fallback' fallback=FallbackResolutionStrategy)?;
+	strategies+=ResolutionStrategyWithOperationalDelta ('or' strategies+=ResolutionStrategyWithOperationalDelta)*
+	fallback=FallbackResolutionStrategy?;
+
+ResolutionStrategyWithOperationalDelta:
+	strategy=ResolutionStrategy
+	('when' '{' operationalDelta+=OperationalDelta '}')?;
 
 ResolutionStrategy:
 	MergeAndPreserveResolutionStrategy | RevokeAdditionResolutionStrategy | RevokeDeletionResolutionStrategy |
@@ -128,13 +133,12 @@ PreferTargetResolutionStrategy:
 
 ContinueResolutionStrategy:
 	name='continue';
-	
-///////////////////////
+
+	///////////////////////
 // Operational Delta //
 ///////////////////////
 OperationalDelta:
 	variables+=Variable+
 	'satisfies' '{'
-		rule=SatisfactionRule
-	'}'
-;
+	rule=SatisfactionRule
+	'}';

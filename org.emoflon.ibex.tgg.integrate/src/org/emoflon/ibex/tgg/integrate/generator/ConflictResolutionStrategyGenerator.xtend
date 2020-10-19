@@ -8,6 +8,7 @@ import org.emoflon.ibex.tgg.integrate.integrate.ConflictResolutionStrategy
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict
 import org.apache.commons.lang3.StringUtils
 import java.util.Optional
+import org.emoflon.ibex.tgg.integrate.api.variable.ConflictPipelineExecuter
 
 class ConflictResolutionStrategyGenerator {
 
@@ -26,10 +27,10 @@ class ConflictResolutionStrategyGenerator {
 				@Override
 				public boolean conflictSatisfiesRule(«Conflict.name» conflict) {
 				«FOR variable : strategy.variables»
-					«variableGenerator.generate(variable)»
+					«variableGenerator.generate(variable, ConflictPipelineExecuter)»
 				«ENDFOR»
 				
-					return «satisfactionRuleGenerator.generate(strategy.rule, strategy.resolution)»;
+					return «satisfactionRuleGenerator.generate(strategy.rule)»;
 				}
 
 				

@@ -88,12 +88,16 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Resolution">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="strategies" upperBound="-1"
+        eType="#//ResolutionStrategyWithOperationalDelta" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="fallback" eType="#//FallbackResolutionStrategy"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ResolutionStrategyWithOperationalDelta">
     <eStructuralFeatures xsi:type="ecore:EReference" name="strategy" eType="#//ResolutionStrategy"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="operationalDelta" upperBound="-1"
         eType="#//OperationalDelta" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="fallback" eType="#//FallbackResolutionStrategy"
-        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ResolutionStrategy">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
