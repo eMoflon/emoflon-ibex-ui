@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource.CyclicLinkingException;
 import org.emoflon.ibex.gt.editor.gT.EditorNode;
 import org.emoflon.ibex.gt.editor.gT.EditorOperator;
@@ -176,5 +177,17 @@ public class GTEditorPatternUtils {
 				.map(node -> node.getAttributes()) //
 				.flatMap(attributes -> attributes.stream()) //
 				.findAny().isPresent();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> T getContainer(EObject node, Class<T> clazz) {
+		EObject current = node;
+		while (!(current.getClass() == clazz)) {
+			if (node.eContainer() == null)
+				return null;
+
+			current = current.eContainer();
+		}
+		return (T)current;
 	}
 }

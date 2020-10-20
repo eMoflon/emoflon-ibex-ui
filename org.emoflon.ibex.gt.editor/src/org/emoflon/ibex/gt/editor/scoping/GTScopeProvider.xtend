@@ -286,7 +286,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	 * The node of an attribute expression can be any context node which is valid within the same rule.
 	 */
 	def getScopeForAttributeExpressionNodes(EditorAttributeExpression attributeExpression) {
-		val pattern = getContainer(attributeExpression, typeof(EditorPatternImpl))
+		val pattern =GTEditorPatternUtils.getContainer(attributeExpression, typeof(EditorPatternImpl))
 		if (attributeExpression.eContainer instanceof EditorAttributeAssignment) {
 			val nodes = GTEditorPatternUtils.getAllNodesOfPattern(pattern, [
 				it.operator == EditorOperator.CONTEXT
@@ -308,7 +308,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	 * get all the possible nodes in the pattern
 	 */
 	def getScopeForStochasticAttributeNode(EditorAttributeExpression attribute) {
-		var pattern = getContainer(attribute, typeof(EditorPatternImpl))
+		var pattern = GTEditorPatternUtils.getContainer(attribute, typeof(EditorPatternImpl))
 		// searches for EditorPattern Container
 		val nodes = GTEditorPatternUtils.getAllNodesOfPattern(pattern, [
 			it.operator == EditorOperator.CONTEXT])
@@ -370,7 +370,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 			]
 			return Scopes.scopeFor(parameters)
 		} else {
-			val pattern = getContainer(parameterExpression, typeof(EditorPatternImpl))
+			val pattern = GTEditorPatternUtils.getContainer(parameterExpression, typeof(EditorPatternImpl))
 			val parameters = newArrayList()
 			GTEditorPatternUtils.getPatternWithAllSuperPatterns(pattern).forEach [
 				parameters.addAll(it.parameters)
@@ -387,21 +387,10 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		if (type !== null && type instanceof EEnum) {
 			return Scopes.scopeFor(type.ELiterals)
 		} else {
-			val gtFile = getContainer(enumExpression, typeof(EditorGTFileImpl))
+			val gtFile = GTEditorPatternUtils.getContainer(enumExpression, typeof(EditorGTFileImpl))
 			return Scopes.scopeFor(GTEditorModelUtils.getEnums(gtFile).flatMap[enum|enum.ELiterals])
 		}
 
 	}
 
-	@SuppressWarnings("unchecked")
-	def <T> T getContainer(EObject node, Class<T> clazz) {
-		var current = node;
-		while (!(current.getClass() == clazz)) {
-			if (node.eContainer() === null)
-				return null;
-
-			current = current.eContainer();
-		}
-		return current as T;
-	}
 }
