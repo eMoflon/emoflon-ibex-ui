@@ -54,7 +54,6 @@ class GTLinkingDiagnosticMessageProvider extends LinkingDiagnosticMessageProvide
 		
 		//TODO: Other possible lazy-linking occurrences
 
-//		return super.getUnresolvedProxyMessage(context)
-		return new DiagnosticMessage("", Severity.ERROR, "");
+		return super.getUnresolvedProxyMessage(context)
 	}
 }

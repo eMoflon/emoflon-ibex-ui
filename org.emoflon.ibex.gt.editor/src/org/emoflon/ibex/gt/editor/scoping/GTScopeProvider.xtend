@@ -28,6 +28,7 @@ import org.emoflon.ibex.gt.editor.gT.impl.EditorGTFileImpl
 import java.util.LinkedList
 import org.emoflon.ibex.gt.editor.gT.StochasticFunction
 import org.emoflon.ibex.gt.editor.gT.ArithmeticExpression
+import org.emoflon.ibex.gt.editor.gT.EditorCountExpression
 
 /**
  * This class contains custom scoping description.
@@ -54,15 +55,16 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		if (isPatternOfCondition(context, reference)) {
 			return filterScopeForOtherObjectsFromSamePackage(context, reference)
 		}
-
-		// Stochastic attributes
-		if (isNodeOfStochasticAttribute(context, reference)) {
-			return getScopeForStochasticAttributeNode(context as EditorAttributeExpression)
+		
+		// Arithmetic Expressions
+		if (isArithmeticExpression(context)) {
+			return getScopeForArithmeticExpression(context as ArithmeticExpression)
 		}
 
-//		if (isAttributeOfStochasticAttribute(context, reference)) {
-//			return getScopeForStochasticAttribute(context as EditorAttributeExpression)
-//		}
+		// Stochastic functions
+		if (isStochasticFunction(context)) {
+			return getScopeForStochasticFunction(context as StochasticFunction)
+		}
 
 		// Expressions
 		if (isAttributeOfAttributeExpression(context, reference)) {
@@ -132,15 +134,17 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		return (context instanceof EditorAttributeConstraint)
 	}
 
-	def isNodeOfStochasticAttribute(EObject context, EReference reference) {
-		return ((context instanceof StochasticFunction || context instanceof ArithmeticExpression) 
-			&& reference == GTPackage.Literals.EDITOR_ATTRIBUTE_EXPRESSION__NODE);
+	def isStochasticFunction(EObject context) {
+		return context instanceof StochasticFunction 
+		&& !(context instanceof EditorAttributeExpression)  
+		&& !(context instanceof EditorCountExpression);
 	}
-
-//	def isAttributeOfStochasticAttribute(EObject context, EReference reference) {
-//		return (context instanceof EditorAttributeExpression &&
-//			reference == GTPackage.Literals.EDITOR_ATTRIBUTE_EXPRESSION__ATTRIBUTE)
-//	}
+	
+	def isArithmeticExpression(EObject context) {
+		return context instanceof ArithmeticExpression 
+		&& !(context instanceof EditorAttributeExpression) 
+		&& !(context instanceof EditorCountExpression);
+	}
 
 	def isNodeOfAttributeExpression(EObject context, EReference reference) {
 		return (context instanceof EditorAttributeExpression &&
@@ -307,8 +311,8 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	/**
 	 * get all the possible nodes in the pattern
 	 */
-	def getScopeForStochasticAttributeNode(EditorAttributeExpression attribute) {
-		var pattern = GTEditorPatternUtils.getContainer(attribute, typeof(EditorPatternImpl))
+	def getScopeForArithmeticExpression(ArithmeticExpression expression) {
+		var pattern = GTEditorPatternUtils.getContainer(expression, typeof(EditorPatternImpl))
 		// searches for EditorPattern Container
 		val nodes = GTEditorPatternUtils.getAllNodesOfPattern(pattern, [
 			it.operator == EditorOperator.CONTEXT])
@@ -318,18 +322,21 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 			
 		return Scopes.scopeFor(nodes)
 	}
-//
-//	/**
-//	 * get all the attributes of the node; if the attribute is parseable is checked at the validator
-//	 */
-//	def getScopeForStochasticAttribute(EditorAttributeExpression attribute) {
-//		val node = attribute.node
-//		if (node === null || node.type === null) {
-//			return Scopes.scopeFor([])
-//		}
-//		return Scopes.scopeFor(node.type.EAllAttributes)
-//
-//	}
+	
+	/**
+	 * get all the possible nodes in the pattern
+	 */
+	def getScopeForStochasticFunction(StochasticFunction function) {
+		var pattern = GTEditorPatternUtils.getContainer(function, typeof(EditorPatternImpl))
+		// searches for EditorPattern Container
+		val nodes = GTEditorPatternUtils.getAllNodesOfPattern(pattern, [
+			it.operator == EditorOperator.CONTEXT])
+			
+		nodes.addAll(GTEditorPatternUtils.getAllNodesOfPattern(pattern, [
+			it.operator == EditorOperator.DELETE]))
+			
+		return Scopes.scopeFor(nodes)
+	}
 
 	/**
 	 * Any attributes of the node of the attribute expression are valid
