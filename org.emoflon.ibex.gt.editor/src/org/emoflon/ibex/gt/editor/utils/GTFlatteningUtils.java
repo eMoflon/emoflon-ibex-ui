@@ -9,10 +9,9 @@ import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
-import org.emoflon.ibex.gt.editor.gT.EditorAttribute;
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeAssignment;
 import org.emoflon.ibex.gt.editor.gT.EditorNode;
 import org.emoflon.ibex.gt.editor.gT.EditorOperator;
-import org.emoflon.ibex.gt.editor.gT.EditorRelation;
 
 /**
  * Utility methods for flattening of patterns.
@@ -112,10 +111,9 @@ public class GTFlatteningUtils {
 	 * @return <code>true</code> if and only if the node has another assignment for
 	 *         the same attribute
 	 */
-	public static boolean hasConflictingAssignment(final EditorNode node, final EditorAttribute attribute) {
-		final boolean isAssignment = attribute.getRelation() == EditorRelation.ASSIGNMENT;
-		return isAssignment && !node.getAttributes().stream().filter(
-				a -> a.getRelation() == EditorRelation.ASSIGNMENT && a.getAttribute().equals(attribute.getAttribute()))
+	public static boolean hasConflictingAssignment(final EditorNode node, final EditorAttributeAssignment attribute) {
+		return !node.getAttributes().stream().filter(
+				a -> a.getAttribute().equals(attribute.getAttribute()))
 				.allMatch(a -> GTEditorAttributeComparator.areExpressionsEqual(a.getValue(), attribute.getValue()));
 	}
 
@@ -127,16 +125,15 @@ public class GTFlatteningUtils {
 	 *         assignments for the same attribute
 	 */
 	public static boolean hasConflictingAssignment(final Set<EditorNode> nodes) {
-		final List<EditorAttribute> assignments = nodes.stream() //
+		final List<EditorAttributeAssignment> assignments = nodes.stream() //
 				.flatMap(n -> n.getAttributes().stream()) //
-				.filter(a -> a.getRelation() == EditorRelation.ASSIGNMENT) //
 				.collect(Collectors.toList());
 
-		final HashMap<EAttribute, EditorAttribute> attributeAssignments = new HashMap<>();
-		for (final EditorAttribute assignment : assignments) {
+		final HashMap<EAttribute, EditorAttributeAssignment> attributeAssignments = new HashMap<>();
+		for (final EditorAttributeAssignment assignment : assignments) {
 			if (attributeAssignments.containsKey(assignment.getAttribute())) {
 				// Check whether the assignment is compatible with assignment in map
-				if (!GTEditorAttributeComparator.areAttributeConstraintsEqual(assignment,
+				if (!GTEditorAttributeComparator.areAttributeAssignmentsEqual(assignment,
 						attributeAssignments.get(assignment.getAttribute()))) {
 					return true;
 				}

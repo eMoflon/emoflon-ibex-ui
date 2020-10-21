@@ -4,16 +4,16 @@ import java.util.HashSet
 import java.util.Set
 import org.apache.commons.lang3.StringUtils
 import org.eclipse.emf.common.util.EList
-import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorCondition
 import org.emoflon.ibex.gt.editor.gT.EditorNode
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
 import org.emoflon.ibex.gt.editor.gT.EditorPattern
 import org.emoflon.ibex.gt.editor.gT.EditorReference
-import org.emoflon.ibex.gt.editor.gT.EditorRelation
 import org.emoflon.ibex.gt.editor.utils.GTConditionHelper
 import org.emoflon.ibex.gt.editor.utils.GTEditorPatternUtils
 import org.emoflon.ibex.gt.editor.utils.GTFlattener
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeConstraint
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeAssignment
 
 /**
  * Utility methods to generate PlantUML code.
@@ -22,7 +22,9 @@ class GTPlantUMLGenerator {
 	static val ContextColor = 'Black'
 	static val CreateColor = 'DarkGreen'
 	static val DeleteColor = 'Crimson'
-	static int MAX_STR_LENGTH = 25
+	static val LocalNodeColor = 'Gray'
+	static val AtrConstrColor = 'White'
+	static int MAX_STR_LENGTH = 100
 
 	/**
 	 * Returns the PlantUML code for the visualization of an empty file.
@@ -46,14 +48,21 @@ class GTPlantUMLGenerator {
 				HeaderBackgroundColor<<CONTEXT>> «ContextColor»
 				HeaderBackgroundColor<<CREATE>> «CreateColor»
 				HeaderBackgroundColor<<DELETE>> «DeleteColor»
+				HeaderBackgroundColor<<ATR_CONSTR>> «AtrConstrColor»
+				HeaderBackgroundColor<<LOCAL_NODE>> «LocalNodeColor»
 				BorderColor<<CONTEXT>> «ContextColor»
 				BorderColor<<CREATE>> «CreateColor»
 				BorderColor<<DELETE>> «DeleteColor»
+				BorderColor<<ATR_CONSTR>> «ContextColor»
+				BorderColor<<LOCAL_NODE>> «ContextColor»
+				FontColor<<ATR_CONSTR>> «ContextColor»
 				FontColor White
 			}
 			
 			namespace «pattern.name» {
 				«visualizeGraph(flattenedPattern)»
+				«visualizeAttributeConstraints(flattenedPattern)»
+				«visualizeRate(flattenedPattern)»
 			}
 			
 			«FOR p : getConditionPatterns(pattern)»
@@ -90,7 +99,7 @@ class GTPlantUMLGenerator {
 			«FOR node : pattern.nodes»
 				class "«nodeName(node)»" <<«nodeSkin(node)»>> {
 					«FOR attr: node.attributes»
-						«attributeConstraint(attr)»
+						«org.emoflon.ibex.gt.editor.ui.visualization.GTPlantUMLGenerator.attributeAssignment(attr)»
 					«ENDFOR»
 				}
 			«ENDFOR»
@@ -100,6 +109,35 @@ class GTPlantUMLGenerator {
 					"«nodeName(node)»" -[#«referenceColor(reference)»]-> "«nodeName(reference.target)»": «referenceLabel(reference)»
 				«ENDFOR»
 			«ENDFOR»
+		'''
+	}
+	
+	/**
+	 * Visualizes attribute constraints. 
+	 */
+	private static def String visualizeAttributeConstraints(EditorPattern pattern) {
+		if(pattern.attributeConstraints.isEmpty)
+			return ""
+		
+		return '''
+			class "Attribute Constraints" <<ATR_CONSTR>>{
+			«FOR constraint : pattern.attributeConstraints»
+				«attributeConstraint(constraint)»
+			«ENDFOR»
+			}
+		'''
+	}
+	
+	/**
+	 * Visualizes rule rate. 
+	 */
+	def static visualizeRate(EditorPattern pattern) {
+		if(!pattern.stochastic || pattern.probability === null)
+			return ""
+		return '''
+			class "Rule Probability" <<ATR_CONSTR>>{
+				# P(..) = «GTVisualizationUtils.toString(pattern.probability)»
+			}
 		'''
 	}
 
@@ -125,16 +163,29 @@ class GTPlantUMLGenerator {
 	 * Prints the skin name for the node.
 	 */
 	private static def String nodeSkin(EditorNode node) {
-		return node.operator.getName
+		if(node.local) {
+			return "LOCAL_NODE" 
+		} else {
+			return node.operator.getName
+		}
 	}
 
 	/**
 	 * Prints the attribute constraint.
 	 */
-	private static def String attributeConstraint(EditorAttribute attr) {
-		val operator = if(attr.relation == EditorRelation.ASSIGNMENT) '+' else '#'
-		val name = if(attr.attribute === null || attr.attribute.name === null) '?' else attr.attribute.name
+	private static def String attributeConstraint(EditorAttributeConstraint attr) {
+		val operator = '#'
 		val relation = if(attr.relation === null) '?' else attr.relation.toString
+		'''«operator» «StringUtils.abbreviateMiddle(GTVisualizationUtils.toString(attr.lhs), "...", MAX_STR_LENGTH)» «relation» «StringUtils.abbreviateMiddle(GTVisualizationUtils.toString(attr.rhs), "...", MAX_STR_LENGTH)»'''
+	}
+	
+	/**
+	 * Prints the attribute constraint.
+	 */
+	private static def String attributeAssignment(EditorAttributeAssignment attr) {
+		val operator = '+'
+		val name = if(attr.attribute === null || attr.attribute.name === null) '?' else attr.attribute.name
+		val relation = ':='
 		'''«operator» «name» «relation» «StringUtils.abbreviateMiddle(GTVisualizationUtils.toString(attr.value), "...", MAX_STR_LENGTH)»'''
 	}
 

@@ -168,7 +168,7 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 			return;
 		}
 
-		EditorRelation.VALUES.filter[it != EditorRelation.ASSIGNMENT].forEach [
+		EditorRelation.VALUES.forEach [
 			GTAttributeQuickfixes.changeAttributeRelation(
 				issue,
 				acceptor,
@@ -176,19 +176,6 @@ class GTQuickfixProvider extends DefaultQuickfixProvider {
 				it
 			)
 		]
-	}
-
-	/**
-	 * Converts the attribute condition in an assignment to an assignment. 
-	 */
-	@Fix(GTValidator.ATTRIBUTE_CONDITION_IN_CREATED_NODE)
-	def changeAttributeConditionToAssignment(Issue issue, IssueResolutionAcceptor acceptor) {
-		GTAttributeQuickfixes.changeAttributeRelation(
-			issue,
-			acceptor,
-			"Convert condition for '%s' to assignment.",
-			EditorRelation.ASSIGNMENT
-		)
 	}
 
 	/**

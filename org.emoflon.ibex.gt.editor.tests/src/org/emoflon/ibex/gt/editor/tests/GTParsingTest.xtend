@@ -10,7 +10,6 @@ import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
-import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile
 import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression
@@ -23,6 +22,8 @@ import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
 import org.junit.Assert
 import org.junit.runner.RunWith
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeConstraint
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeAssignment
 
 /**
  * Abstract test class for JUnit parsing tests of the editor.
@@ -133,31 +134,48 @@ abstract class GTParsingTest {
 		return node.attributes.get(attributeIndex)
 	}
 
-	static def void assertAttribute(EditorAttribute attributeConstraint, String name, EditorRelation relation) {
+	static def void assertAttributeAssignment(EditorAttributeAssignment attributeConstraint, String name) {
 		Assert.assertEquals(name, attributeConstraint.attribute.name)
+	}
+	
+	static def void assertAttributeConstraint(EditorAttributeConstraint attributeConstraint, String name, EditorRelation relation) {
 		Assert.assertEquals(relation, attributeConstraint.relation)
 	}
 
-	static def void assertAttributeWithAttributeExpression(EditorAttribute attributeConstraint, String name,
+	static def void assertAttributeWithAttributeExpression(EditorAttributeConstraint attributeConstraint, String name,
 		EditorRelation relation, EditorNode node, String attr) {
-		assertAttribute(attributeConstraint, name, relation)
-		Assert.assertTrue(attributeConstraint.value instanceof EditorAttributeExpression)
-		Assert.assertEquals(node, (attributeConstraint.value as EditorAttributeExpression).node)
-		Assert.assertEquals(attr, (attributeConstraint.value as EditorAttributeExpression).attribute.name)
+		assertAttributeConstraint(attributeConstraint, name, relation)
+		Assert.assertTrue(attributeConstraint.rhs instanceof EditorAttributeExpression)
+		Assert.assertTrue(attributeConstraint.lhs instanceof EditorAttributeExpression)
+		Assert.assertEquals(node, (attributeConstraint.lhs as EditorAttributeExpression).node)
+		Assert.assertEquals(attr, (attributeConstraint.rhs as EditorAttributeExpression).attribute.name)
 	}
-
-	static def void assertAttributeLiteral(EditorAttribute attributeConstraint, String name, EditorRelation relation,
-		String value) {
-		assertAttribute(attributeConstraint, name, relation)
+	
+	static def void assertAttributeLiteral(EditorAttributeAssignment attributeConstraint, String name, String value) {
+		assertAttributeAssignment(attributeConstraint, name)
 		Assert.assertTrue(attributeConstraint.value instanceof EditorLiteralExpression)
 		Assert.assertEquals(value, (attributeConstraint.value as EditorLiteralExpression).value)
 	}
 
-	static def void assertAttributeParameter(EditorAttribute attributeConstraint, String name, EditorRelation relation,
-		EditorParameter parameter) {
-		assertAttribute(attributeConstraint, name, relation)
+	static def void assertAttributeLiteral(EditorAttributeConstraint attributeConstraint, String name, EditorRelation relation,
+		String value) {
+		assertAttributeConstraint(attributeConstraint, name, relation)
+		Assert.assertTrue(attributeConstraint.rhs instanceof EditorLiteralExpression)
+		Assert.assertEquals(value, (attributeConstraint.rhs as EditorLiteralExpression).value)
+	}
+	
+	static def void assertAttributeParameter(EditorAttributeAssignment attributeConstraint, String name, EditorParameter parameter) {
+		assertAttributeAssignment(attributeConstraint, name)
 		Assert.assertTrue(attributeConstraint.value instanceof EditorParameterExpression)
 		Assert.assertEquals(parameter, (attributeConstraint.value as EditorParameterExpression).parameter)
+	}
+	
+
+	static def void assertAttributeParameter(EditorAttributeConstraint attributeConstraint, String name, EditorRelation relation,
+		EditorParameter parameter) {
+		assertAttributeConstraint(attributeConstraint, name, relation)
+		Assert.assertTrue(attributeConstraint.rhs instanceof EditorParameterExpression)
+		Assert.assertEquals(parameter, (attributeConstraint.rhs as EditorParameterExpression).parameter)
 	}
 
 	static def getReference(EditorNode node, int referenceIndex) {

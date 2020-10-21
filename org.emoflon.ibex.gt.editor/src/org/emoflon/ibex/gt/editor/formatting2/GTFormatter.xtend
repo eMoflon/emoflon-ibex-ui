@@ -8,7 +8,7 @@ import org.eclipse.xtext.formatting2.IFormattableDocument
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 
 import org.emoflon.ibex.gt.editor.gT.EditorApplicationCondition
-import org.emoflon.ibex.gt.editor.gT.EditorAttribute
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeAssignment
 import org.emoflon.ibex.gt.editor.gT.EditorCondition
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile
 import org.emoflon.ibex.gt.editor.gT.EditorImport
@@ -160,16 +160,16 @@ class GTFormatter extends AbstractFormatter2 {
 		]
 	}
 
-	def dispatch void format(EditorAttribute attribute, extension IFormattableDocument document) {
+	def dispatch void format(EditorAttributeAssignment attribute, extension IFormattableDocument document) {
 		// No space before and after ".".
 		attribute.regionFor.keyword(".").surround[noSpace]
 
 		// One space before and after the relation.
-		attribute.regionFor.feature(GTPackage.Literals.EDITOR_ATTRIBUTE__RELATION).surround[oneSpace]
+		attribute.regionFor.feature(GTPackage.Literals.EDITOR_ATTRIBUTE_ASSIGNMENT__VALUE).surround[oneSpace]
 	}
 
 	def dispatch void format(EditorReference reference, extension IFormattableDocument document) {
-		if (reference.operator == EditorOperator.CONTEXT) {
+		if (reference.operator == EditorOperator.DELETE) {
 			// No space before "-" and between "-" and the reference name.
 			reference.regionFor.keyword("-").surround[noSpace]
 		} else {

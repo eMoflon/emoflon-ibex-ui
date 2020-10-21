@@ -9,12 +9,9 @@ import org.eclipse.xtext.ui.editor.outline.IOutlineNode
 import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider
 import org.eclipse.xtext.ui.editor.utils.TextStyle
 import org.eclipse.xtext.ui.label.StylerFactory
-import org.emoflon.ibex.gt.editor.gT.EditorAttributeConditionLibrary
 import org.emoflon.ibex.gt.editor.gT.EditorCondition
 import org.emoflon.ibex.gt.editor.gT.EditorPattern
 import org.emoflon.ibex.gt.editor.gT.EditorPatternType
-import org.emoflon.ibex.gt.editor.gT.EditorAttributeConditionSpecification
-import org.emoflon.ibex.gt.editor.utils.GtPrettyPrinter
 
 /**
  * Customization of the default outline structure.
@@ -37,14 +34,6 @@ class GTOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		) {
 			super._createNode(parentNode, modelElement)
 		}
-		if (modelElement instanceof EditorAttributeConditionLibrary) {
-		  super._createNode(parentNode, modelElement)
-		  val outlineLibraryNode = parentNode.children.last
-		  val library = modelElement as EditorAttributeConditionLibrary
-		  for (EditorAttributeConditionSpecification cond : library.conditionSpecifications) {
-		    super._createNode(outlineLibraryNode, cond)
-		  }
-		}
 		return
 	}
 	
@@ -60,10 +49,6 @@ class GTOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	 */
 	def _isLeaf(EditorCondition condition) {
 		return true;
-	}
-	
-	def _isLeaf(EditorAttributeConditionSpecification object) {
-	  return true;
 	}
 	
 	/**
@@ -82,14 +67,6 @@ class GTOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		}
 		return text
 	}
-	
-	def _text(EditorAttributeConditionLibrary library) {
-	  return "Attribute Condition Library"
-	}
-	
-	def _text(EditorAttributeConditionSpecification conditionSpecification) {
-    return GtPrettyPrinter.describe(conditionSpecification)
-  }
 
 	/**
 	 * Customize the image for patterns/rules.
@@ -107,8 +84,5 @@ class GTOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	def _image(EditorCondition condition) {
 		return imageHelper.getImage('gt-condition.gif')
 	}
-	
-	def _image(EditorAttributeConditionLibrary library) {
-	  return imageHelper.getImage('gt-attribute-libary.gif')
-	}
+
 }
