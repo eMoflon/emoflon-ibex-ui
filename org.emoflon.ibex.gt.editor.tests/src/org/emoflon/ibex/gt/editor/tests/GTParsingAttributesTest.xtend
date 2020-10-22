@@ -29,8 +29,8 @@ class GTParsingAttributesTest extends GTParsingTest {
 		''')
 		assertValid(file)
 		val node = file.getRule(0).getNode(0)
-		assertAttributeLiteral(node.getAttribute(0), "name", EditorRelation.ASSIGNMENT, "Test1")
-		assertAttributeLiteral(node.getAttribute(1), "instanceTypeName", EditorRelation.ASSIGNMENT, "Test2")
+		assertAttributeLiteral(node.getAttribute(0), "name", "Test1")
+		assertAttributeLiteral(node.getAttribute(1), "instanceTypeName", "Test2")
 	}
 
 	@Test
@@ -46,9 +46,9 @@ class GTParsingAttributesTest extends GTParsingTest {
 			}
 		''')
 		assertValid(file)
-		val node = file.getRule(0).getNode(0)
-		assertAttributeLiteral(node.getAttribute(0), "name", EditorRelation.UNEQUAL, "Test1")
-		assertAttributeLiteral(node.getAttribute(1), "instanceTypeName", EditorRelation.EQUAL, "Test2")
+		val node = file.getRule(0)
+		assertAttributeLiteral(node.attributeConstraints.get(0), "name", EditorRelation.UNEQUAL, "Test1")
+		assertAttributeLiteral(node.attributeConstraints.get(0), "instanceTypeName", EditorRelation.EQUAL, "Test2")
 	}
 
 	@Test
@@ -67,7 +67,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		assertValid(file)
 		val node = file.getRule(0).getNode(1)
 		val targetNode = file.getRule(0).getNode(0)
-		assertAttributeWithAttributeExpression(node.getAttribute(0), "name", EditorRelation.EQUAL, targetNode, "name")
+		assertAttributeWithAttributeExpression(file.getRule(0).attributeConstraints.get(0), "name", EditorRelation.EQUAL, targetNode, "name")
 	}
 
 	@Test
@@ -128,7 +128,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		assertValid(file)
 		val node = file.getRule(0).getNode(0)
 		val parameter = file.getRule(0).getParameter(0)
-		assertAttributeParameter(node.getAttribute(0), "name", EditorRelation.ASSIGNMENT, parameter)
+		assertAttributeParameter(node.getAttribute(0), "name", parameter)
 	}
 
 	@Test
@@ -150,7 +150,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		assertValid(file, 2)
 		val node = file.getRule(1).getNode(0)
 		val parameter = file.getRule(0).getParameter(0)
-		assertAttributeParameter(node.getAttribute(0), "name", EditorRelation.ASSIGNMENT, parameter)
+		assertAttributeParameter(node.getAttribute(0), "name", parameter)
 	}
 
 	@Test
@@ -194,7 +194,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		assertFile(file)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.editorAttribute,
+			GTPackage.eINSTANCE.editorAttributeAssignment,
 			GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE,
 			String.format(GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE, "abstract", "EBoolean"),
 			String.format(GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE, "lowerBound", "EInt"),
@@ -216,7 +216,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		assertFile(file)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.editorAttribute,
+			GTPackage.eINSTANCE.editorAttributeAssignment,
 			GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE,
 			String.format(GTValidator.ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE_MESSAGE, "name", "EString")
 		)
@@ -236,7 +236,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		assertFile(file)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.editorAttribute,
+			GTPackage.eINSTANCE.editorAttributeAssignment,
 			GTValidator.ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE,
 			String.format(GTValidator.ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE_MESSAGE, ">=", "abstract")
 		)
@@ -257,7 +257,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		assertFile(file)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.editorAttribute,
+			GTPackage.eINSTANCE.editorAttributeAssignment,
 			GTValidator.ATTRIBUTE_MULTIPLE_ASSIGNMENTS,
 			String.format(GTValidator.ATTRIBUTE_MULTIPLE_ASSIGNMENTS_MESSAGE, 2, 'name')
 		)
@@ -277,7 +277,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		assertFile(file)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.editorAttribute,
+			GTPackage.eINSTANCE.editorAttributeAssignment,
 			GTValidator.ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE,
 			String.format(GTValidator.ATTRIBUTE_ASSIGNMENT_IN_DELETED_NODE_MESSAGE, 'name', 'clazz')
 		)
@@ -297,7 +297,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		assertFile(file)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.editorAttribute,
+			GTPackage.eINSTANCE.editorAttributeConstraint,
 			GTValidator.ATTRIBUTE_CONDITION_IN_CREATED_NODE,
 			String.format(GTValidator.ATTRIBUTE_CONDITION_IN_CREATED_NODE_MESSAGE, 'name', 'clazz')
 		)
@@ -318,7 +318,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		assertFile(file)
 		assertValidationWarnings(
 			file,
-			GTPackage.eINSTANCE.editorAttribute,
+			GTPackage.eINSTANCE.editorAttributeConstraint,
 			GTValidator.ATTRIBUTE_DUPLICATE_CONDITION,
 			String.format(GTValidator.ATTRIBUTE_DUPLICATE_CONDITION_MESSAGE, 'name', 'clazz', 'twice')
 		)
@@ -338,7 +338,7 @@ class GTParsingAttributesTest extends GTParsingTest {
 		assertFile(file)
 		assertValidationErrors(
 			file,
-			GTPackage.eINSTANCE.editorAttribute,
+			GTPackage.eINSTANCE.editorAttributeConstraint,
 			GTLinkingDiagnosticMessageProvider.ATTRIBUTE_NOT_FOUND,
 			String.format(GTLinkingDiagnosticMessageProvider.ATTRIBUTE_NOT_FOUND_MESSAGE, 'name')
 		)

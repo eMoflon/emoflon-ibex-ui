@@ -91,7 +91,7 @@ class GTParsingPatternRefinementFlatteningTest extends GTParsingTest {
 
 		assertNode(flattenedRule.getNode(0), EditorOperator.CONTEXT, "clazz", "EClass", 5, 0)
 		Assert.assertEquals(2,
-			flattenedRule.getNode(0).attributes.filter[it.relation == EditorRelation.ASSIGNMENT].size)
+			flattenedRule.getNode(0).attributes.size)
 	}
 
 	@Test

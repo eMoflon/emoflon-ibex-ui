@@ -8,14 +8,14 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.util.CancelIndicator
 
-import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 import org.emoflon.ibex.gt.editor.gT.EditorNode
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
 import org.emoflon.ibex.gt.editor.gT.EditorPattern
 import org.emoflon.ibex.gt.editor.gT.EditorReference
-import org.emoflon.ibex.gt.editor.gT.EditorRelation
 import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.utils.GTEditorPatternUtils
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeAssignment
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeConstraint
 
 /**
  * Applying syntax highlighting configuration.
@@ -33,12 +33,9 @@ class GTHighlightingCalculator extends DefaultSemanticHighlightingCalculator {
 		super.doProvideHighlightingFor(resource, acceptor, cancelIndicator)
 	}
 
-	def dispatch void highlightElement(EditorAttribute element, IHighlightedPositionAcceptor acceptor) {
-		if (element.relation == EditorRelation.ASSIGNMENT) {
-			val style = GTHighlightingConfiguration.getStyle(EditorOperator.CREATE)
-			highlight(acceptor, element, GTPackage.Literals.EDITOR_ATTRIBUTE__ATTRIBUTE, style)
-			highlight(acceptor, element, GTPackage.Literals.EDITOR_ATTRIBUTE__RELATION, style)
-		}
+	def dispatch void highlightElement(EditorAttributeAssignment element, IHighlightedPositionAcceptor acceptor) {
+		val style = GTHighlightingConfiguration.getStyle(EditorOperator.CREATE)
+		highlight(acceptor, element, GTPackage.Literals.EDITOR_ATTRIBUTE_ASSIGNMENT__ATTRIBUTE, style)
 	}
 
 	def dispatch void highlightElement(EditorNode element, IHighlightedPositionAcceptor acceptor) {
@@ -56,6 +53,11 @@ class GTHighlightingCalculator extends DefaultSemanticHighlightingCalculator {
 	def dispatch void highlightElement(EditorReference element, IHighlightedPositionAcceptor acceptor) {
 		val style = GTHighlightingConfiguration.getStyle(element.operator)
 		highlight(acceptor, element, style)
+	}
+	
+	def dispatch void highlightElement(EditorAttributeConstraint element, IHighlightedPositionAcceptor acceptor) {
+		val style = GTHighlightingConfiguration.ATR_CONSTR
+		acceptor.addPosition(NodeModelUtils.getNode(element).offset, 1, style)
 	}
 
 	def dispatch void highlightElement(EObject element, IHighlightedPositionAcceptor acceptor) {

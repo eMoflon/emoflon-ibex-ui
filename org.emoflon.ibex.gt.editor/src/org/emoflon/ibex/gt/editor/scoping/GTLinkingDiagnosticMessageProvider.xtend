@@ -3,11 +3,8 @@ package org.emoflon.ibex.gt.editor.scoping
 import org.eclipse.xtext.diagnostics.DiagnosticMessage
 import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.linking.ILinkingDiagnosticMessageProvider.ILinkingDiagnosticContext
-import org.eclipse.xtext.linking.impl.IllegalNodeException
 import org.eclipse.xtext.linking.impl.LinkingDiagnosticMessageProvider
-import org.emoflon.ibex.gt.editor.gT.EditorReference
 import org.emoflon.ibex.gt.editor.gT.GTPackage
-import org.emoflon.ibex.gt.editor.gT.EditorAttribute
 
 /**
  * Custom error codes and messages for scoping violations.
@@ -40,86 +37,22 @@ class GTLinkingDiagnosticMessageProvider extends LinkingDiagnosticMessageProvide
 	public static val REFERENCE_TARGET_NODE_NOT_FOUND_MESSAGE = "Could not find node '%s' of type '%s'."
 
 	override getUnresolvedProxyMessage(ILinkingDiagnosticContext context) {
-		var linkText = "";
-		try {
-			linkText = context.getLinkText();
-		} catch (IllegalNodeException e) {
-			linkText = e.getNode().getText();
-		}
-
-		// Attribute not found.
-		if (context.reference === GTPackage.Literals.EDITOR_ATTRIBUTE__ATTRIBUTE) {
-			return new DiagnosticMessage(
-				String.format(ATTRIBUTE_NOT_FOUND_MESSAGE, linkText),
-				Severity.ERROR,
-				ATTRIBUTE_NOT_FOUND
-			)
-		}
-
-		// Attribute type of attribute expression not found.
-		if (context.reference === GTPackage.Literals.EDITOR_ATTRIBUTE_EXPRESSION__ATTRIBUTE) {
-			return new DiagnosticMessage(
-				String.format(ATTRIBUTE_EXPRESSION_ATTRIBUTE_NOT_FOUND_MESSAGE, linkText),
-				Severity.ERROR,
-				ATTRIBUTE_EXPRESSION_ATTRIBUTE_NOT_FOUND
-			)
-		}
-
+		
 		// Node of attribute expression not found.
 		if (context.reference === GTPackage.Literals.EDITOR_ATTRIBUTE_EXPRESSION__NODE) {
-			return new DiagnosticMessage(
-				String.format(ATTRIBUTE_EXPRESSION_NODE_NOT_FOUND_MESSAGE, linkText),
-				Severity.ERROR,
-				ATTRIBUTE_EXPRESSION_NODE_NOT_FOUND
+			return new DiagnosticMessage(ATTRIBUTE_EXPRESSION_NODE_NOT_FOUND_MESSAGE,
+				Severity.ERROR, ATTRIBUTE_EXPRESSION_NODE_NOT_FOUND
 			)
 		}
-
-		// Parameter of parameter expression not found.
-		if (context.reference === GTPackage.Literals.EDITOR_PARAMETER_EXPRESSION__PARAMETER) {
-			val expectedType = (context?.context?.eContainer as EditorAttribute)?.attribute?.EAttributeType?.name
-			return new DiagnosticMessage(
-				String.format(PARAMETER_EXPRESSION_PARAMETER_NOT_FOUND_MESSAGE, linkText, expectedType),
-				Severity.ERROR,
-				PARAMETER_EXPRESSION_PARAMETER_NOT_FOUND
+		
+		// Attribute type of attribute expression not found.
+		if (context.reference === GTPackage.Literals.EDITOR_ATTRIBUTE_EXPRESSION__ATTRIBUTE) {
+			return new DiagnosticMessage( ATTRIBUTE_EXPRESSION_ATTRIBUTE_NOT_FOUND_MESSAGE,
+				Severity.ERROR, ATTRIBUTE_EXPRESSION_ATTRIBUTE_NOT_FOUND
 			)
 		}
-
-		// Parameter type not found in scope.
-		if (context.reference === GTPackage.Literals.EDITOR_PARAMETER__TYPE) {
-			return new DiagnosticMessage(
-				String.format(PARAMETER_TYPE_NOT_FOUND_MESSAGE, linkText),
-				Severity.ERROR,
-				PARAMETER_TYPE_NOT_FOUND
-			)
-		}
-
-		// Node type not found in scope.
-		if (context.reference === GTPackage.Literals.EDITOR_NODE__TYPE) {
-			return new DiagnosticMessage(
-				String.format(NODE_TYPE_NOT_FOUND_MESSAGE, linkText),
-				Severity.ERROR,
-				NODE_TYPE_NOT_FOUND
-			)
-		}
-
-		// Reference type not found.
-		if (context.reference === GTPackage.Literals.EDITOR_REFERENCE__TYPE) {
-			return new DiagnosticMessage(
-				String.format(REFERENCE_NOT_FOUND_MESSAGE, linkText),
-				Severity.ERROR,
-				REFERENCE_NOT_FOUND
-			)
-		}
-
-		// Reference target node not found in scope.
-		if (context.reference === GTPackage.Literals.EDITOR_REFERENCE__TARGET) {
-			val expectedType = (context.context as EditorReference).type?.EReferenceType?.name
-			return new DiagnosticMessage(
-				String.format(REFERENCE_TARGET_NODE_NOT_FOUND_MESSAGE, linkText, expectedType),
-				Severity.ERROR,
-				REFERENCE_TARGET_NODE_NOT_FOUND
-			)
-		}
+		
+		//TODO: Other possible lazy-linking occurrences
 
 		return super.getUnresolvedProxyMessage(context)
 	}

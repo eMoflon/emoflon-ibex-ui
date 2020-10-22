@@ -13,12 +13,14 @@ import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.EcoreUtil2;
-import org.emoflon.ibex.gt.editor.gT.EditorAttribute;
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeAssignment;
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeConstraint;
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile;
 import org.emoflon.ibex.gt.editor.gT.EditorNode;
 import org.emoflon.ibex.gt.editor.gT.EditorOperator;
@@ -61,6 +63,19 @@ public class GTEditorModelUtils {
 		final ArrayList<EDataType> types = new ArrayList<>();
 		file.getImports().forEach(i -> {
 			loadEcoreModel(i.getName()).ifPresent(m -> types.addAll(getElements(m, EDataType.class)));
+		});
+		return types;
+	}
+	
+	/**
+	 * Returns all Enums imported into the given file.
+	 * 
+	 * @param file the GT file
+	 */
+	public static ArrayList<EEnum> getEnums(final EditorGTFile file) {
+		final ArrayList<EEnum> types = new ArrayList<>();
+		file.getImports().forEach(i -> {
+			loadEcoreModel(i.getName()).ifPresent(m -> types.addAll(getElements(m, EEnum.class)));
 		});
 		return types;
 	}
@@ -156,8 +171,19 @@ public class GTEditorModelUtils {
 	 *            the editor attribute
 	 * @return the editor node
 	 */
-	public static EditorNode getNode(final EditorAttribute editorAttribute) {
+	public static EditorNode getNode(final EditorAttributeAssignment editorAttribute) {
 		return (EditorNode) editorAttribute.eContainer();
+	}
+	
+	/**
+	 * Returns the node of the editor attribute.
+	 * 
+	 * @param editorAttribute
+	 *            the editor attribute
+	 * @return the editor node
+	 */
+	public static EditorPattern getPattern(final EditorAttributeConstraint editorAttribute) {
+		return (EditorPattern) editorAttribute.eContainer();
 	}
 
 	/**
