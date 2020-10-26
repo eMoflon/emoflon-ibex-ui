@@ -27,7 +27,7 @@ class ConflictResolutionStrategyGenerator {
 				@Override
 				public boolean conflictSatisfiesRule(«Conflict.name» conflict) {
 				«FOR variable : strategy.variables»
-					«variableGenerator.generate(variable, ConflictPipelineExecuter)»
+					«variableGenerator.generate(variable, '''new «ConflictPipelineExecuter.name»(conflict)''')»
 				«ENDFOR»
 				
 					return «satisfactionRuleGenerator.generate(strategy.rule)»;

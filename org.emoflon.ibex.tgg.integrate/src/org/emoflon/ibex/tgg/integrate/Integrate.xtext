@@ -107,7 +107,7 @@ Resolution:
 
 ResolutionStrategyWithOperationalDelta:
 	strategy=ResolutionStrategy
-	('when' '{' operationalDelta+=OperationalDelta '}')?;
+	('when' '{' operationalDelta=OperationalDelta '}')?;
 
 ResolutionStrategy:
 	MergeAndPreserveResolutionStrategy | RevokeAdditionResolutionStrategy | RevokeDeletionResolutionStrategy |

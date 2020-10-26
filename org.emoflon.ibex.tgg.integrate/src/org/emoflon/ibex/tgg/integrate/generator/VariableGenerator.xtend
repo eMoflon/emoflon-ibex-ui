@@ -9,8 +9,8 @@ import org.emoflon.ibex.tgg.integrate.internal.PipelineVisitor
 
 class VariableGenerator {
 
-	def String generate(Variable variable, Class<? extends PipelineExecuter> pipelineExecuterClazz) {
-		val vc = new VariableCompiler(variable, pipelineExecuterClazz)
+	def String generate(Variable variable, String pipelineExecutorConstructorCall) {
+		val vc = new VariableCompiler(variable, pipelineExecutorConstructorCall)
 		vc.compile
 	}
 
@@ -20,11 +20,11 @@ class VariableGenerator {
 		final String executerName;
 		String result
 
-		new(Variable variable, Class<? extends PipelineExecuter> pipelineExecuterClazz) {
+		new(Variable variable, String pipelineExecutorConstructorCall) {
 			this.variable = variable
 			this.executerName = '''«variable.name»Executer'''
 		
-			this.result = '''«PipelineExecuter.name» «executerName» = new «pipelineExecuterClazz.name»(conflict)'''
+			this.result = '''«PipelineExecuter.name» «executerName» = «pipelineExecutorConstructorCall»'''
 		}
 
 		def String compile() {

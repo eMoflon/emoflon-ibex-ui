@@ -96,8 +96,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="ResolutionStrategyWithOperationalDelta">
     <eStructuralFeatures xsi:type="ecore:EReference" name="strategy" eType="#//ResolutionStrategy"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="operationalDelta" upperBound="-1"
-        eType="#//OperationalDelta" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="operationalDelta" eType="#//OperationalDelta"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ResolutionStrategy">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
