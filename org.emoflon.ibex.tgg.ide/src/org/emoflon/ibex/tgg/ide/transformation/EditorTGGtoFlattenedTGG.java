@@ -65,7 +65,6 @@ public class EditorTGGtoFlattenedTGG {
 			sort(newRules);
 			rules.addAll(newRules);
 
-			cleanUpNACsIfPossible(flattened);
 			cleanUpDuplicateAttributeConditions(flattened);
 
 			return Optional.of(flattened);
@@ -139,16 +138,6 @@ public class EditorTGGtoFlattenedTGG {
 		if(!a.getOp().equals(assign.getOp())) return false;
 		if(!a.getAttribute().equals(assign.getAttribute())) return false;
 		return identical(a.getValueExp(), assign.getValueExp());
-	}
-
-	private void cleanUpNACsIfPossible(TripleGraphGrammarFile flattened) {
-		for (Nac nac : flattened.getNacs()) {
-			Rule oldRule = nac.getRule();
-			Optional<Rule> newRule = flattened.getRules().stream()
-											   .filter(r -> r.getName().equals(oldRule.getName()))
-											   .findAny();
-			newRule.ifPresent(r -> nac.setRule(r));
-		}
 	}
 
 	public void sort(List<Rule> rules) {

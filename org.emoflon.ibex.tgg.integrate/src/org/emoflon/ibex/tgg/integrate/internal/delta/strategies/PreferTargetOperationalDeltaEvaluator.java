@@ -70,7 +70,7 @@ public class PreferTargetOperationalDeltaEvaluator {
 		}
 
 		Set<ITGGMatch> matches = new HashSet<ITGGMatch>();
-		matches.add(conflict.getBrokenMatch().getMatch());
+		matches.add(conflict.getMatch());
 		matches.addAll(conflict.getScopeMatches());
 
 		return matches	.stream()

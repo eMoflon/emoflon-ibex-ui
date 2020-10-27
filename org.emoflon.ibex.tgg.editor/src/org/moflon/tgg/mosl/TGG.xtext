@@ -14,7 +14,6 @@ TripleGraphGrammarFile:
 	using += Using*	
 	(schema = Schema)?
   	(rules += Rule)*
-  	(nacs += Nac)*
   	(library = AttrCondDefLibrary)?
 ;
 
@@ -168,29 +167,6 @@ Operator:
 	value='++'
 ;
 
-/* ------------ */
-/*    NACs      */
-/* ------------ */
-
-Nac:
-	'#nac' name = ID '#for' rule = [Rule]
-		
-	(
-	'#source' '{'
-		sourcePatterns += ContextObjectVariablePattern* 
-	'}'
-	|
-	'#target' '{'
-		targetPatterns += ContextObjectVariablePattern* 
-	'}'
-	) 
-
-	('#attributeConditions' '{'
-		attrConditions += AttrCond*
-	'}')? 
-;
-
-
 /* ---------------- */
 /*    Auxiliaries   */
 /* ---------------- */
@@ -229,7 +205,7 @@ OperatorPattern:
 ;
 
 NamedElements:
-	 Rule  | Schema | CorrType | AttrCondDef | NamePattern | AttrCondDefLibrary | Nac
+	 Rule  | Schema | CorrType | AttrCondDef | NamePattern | AttrCondDefLibrary
 ;
 
 NamePattern:

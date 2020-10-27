@@ -196,11 +196,9 @@ class TGGValidator extends AbstractTGGValidator {
 	
 	@Check
 	def checkForNameOfFileWithSingleTGGRule(TripleGraphGrammarFile file){
-		if(file.rules.size + file.nacs.size == 1){
+		if(file.rules.size == 1){
 			if(file.rules.size == 1)
 				checkForNameOfFileWithSingleTGGRule(file.rules.get(0).name, file, file.rules.get(0))
-			else if 	(file.nacs.size == 1)
-				checkForNameOfFileWithSingleTGGRule(file.nacs.get(0).name, file, file.nacs.get(0))
 		}
 	}
 	

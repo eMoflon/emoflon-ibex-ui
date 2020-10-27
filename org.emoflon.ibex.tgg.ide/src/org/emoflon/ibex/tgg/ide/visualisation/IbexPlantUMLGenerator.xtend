@@ -29,11 +29,6 @@ class IbexPlantUMLGenerator {
 			return visualiseTGGRule(chosenRule.get(0))
 		}
  
-		val chosenNac = file.nacs.filter[n|n.name.equals(selected)]
-		if (chosenNac.length == 1) {
-			return visualiseNAC(chosenNac.get(0))
-		}
-
 		return '''title I don't know how to visualise "«StringUtils.abbreviate(selected.replaceAll("\\s+",""), 20)»"...'''
 	}
 
@@ -196,10 +191,6 @@ class IbexPlantUMLGenerator {
 			
 			«FOR r : tgg.rules»
 				«IF r.abstractRule»abstract«ENDIF» class "«r.name»" «platformURIToRule(projectName, r.name)»
-			«ENDFOR»
-			«FOR n : tgg.nacs»
-				class "«n.name»"<<NAC>> «platformURIToRule(projectName, n.name)»
-				"«n.rule.name»" --> "«n.name»"
 			«ENDFOR»
 			«FOR r : tgg.rules»
 				«FOR sup:r.supertypes»
