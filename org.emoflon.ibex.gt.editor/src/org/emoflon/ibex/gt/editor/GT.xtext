@@ -37,7 +37,7 @@ EditorParameter:
 EditorNode:
   (operator=EditorOperator)? (local?='local')?
   name=ID ':' type=[ecore::EClass] ('{'
-  (attributes+=EditorAttributeAssignment | references+=EditorReference)*
+  (attributes+=EditorAttributeAssignment | references+=(EditorReference|EditorTransitiveReference))*
   '}')?;
 
 enum EditorOperator:
@@ -45,7 +45,36 @@ enum EditorOperator:
   CREATE='++' |
   DELETE='--';
 
-  // Attribute Assignments and Conditions
+EditorEnumExpression:
+  'enum::' literal=[ecore::EEnumLiteral];
+
+EditorParameterExpression:
+  'param::' parameter=[EditorParameter|ID];
+
+// References
+EditorReference:
+  (operator=EditorOperator)? '-' type=[ecore::EReference] '->' target=[EditorNode|ID];
+  
+// Transitive References
+EditorTransitiveReference returns EditorReference:
+	'~' type=[ecore::EReference] ('('limit=ArithmeticExpression')')? '~>' target=[EditorNode|ID];
+	
+// Graph Conditions
+EditorCondition:
+  'condition' name=ID '='
+  conditions+=EditorSimpleCondition ('&&' conditions+=EditorSimpleCondition)*;
+
+EditorSimpleCondition:
+  {EditorConditionReference}
+  condition=[EditorCondition|ID] |
+  {EditorApplicationCondition}
+  type=EditorApplicationConditionType pattern=[EditorPattern|ID];
+
+enum EditorApplicationConditionType:
+  POSITIVE='enforce' |
+  NEGATIVE='forbid';
+  
+    // Attribute Assignments and Conditions
 EditorAttributeConstraint:
 	'#' lhs=EditorExpression relation=EditorRelation rhs=EditorExpression;
   
@@ -77,31 +106,6 @@ EditorLiteralExpression:
 
 Number:
   ('-')? INT ('.' INT)?;
-
-EditorEnumExpression:
-  'enum::' literal=[ecore::EEnumLiteral];
-
-EditorParameterExpression:
-  'param::' parameter=[EditorParameter|ID];
-
-// References
-EditorReference:
-  (operator=EditorOperator)? '-' type=[ecore::EReference] '->' target=[EditorNode|ID];
-
-// Graph Conditions
-EditorCondition:
-  'condition' name=ID '='
-  conditions+=EditorSimpleCondition ('&&' conditions+=EditorSimpleCondition)*;
-
-EditorSimpleCondition:
-  {EditorConditionReference}
-  condition=[EditorCondition|ID] |
-  {EditorApplicationCondition}
-  type=EditorApplicationConditionType pattern=[EditorPattern|ID];
-
-enum EditorApplicationConditionType:
-  POSITIVE='enforce' |
-  NEGATIVE='forbid';
 
 // stochastic functions
 EditorProbability:
