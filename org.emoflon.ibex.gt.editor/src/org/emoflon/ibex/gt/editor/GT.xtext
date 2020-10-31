@@ -56,7 +56,7 @@ EditorReference:
   (operator=EditorOperator)? '-' type=[ecore::EReference] '->' target=[EditorNode|ID];
   
 // Transitive References
-EditorTransitiveReference returns EditorReference:
+EditorTransitiveReference returns EditorReference: {EditorTransitiveReference}
 	'~' type=[ecore::EReference] ('('limit=ArithmeticExpression')')? '~>' target=[EditorNode|ID];
 	
 // Graph Conditions
