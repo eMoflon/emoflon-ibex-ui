@@ -89,12 +89,8 @@ public class IbexTGGVisualiser extends EMoflonVisualiser {
 		TripleGraphGrammarFile flattened = flattenedOptional.get();
 
 		// If there's only one TGG rule, then visualize this.
-		if (flattened.getRules().size() == 1 && flattened.getNacs().size() == 0)
+		if (flattened.getRules().size() == 1)
 			return IbexPlantUMLGenerator.visualiseTGGRule(flattened.getRules().get(0));
-
-		// If there's only one NAC, then visualize this.
-		if (flattened.getRules().size() == 0 && flattened.getNacs().size() == 1)
-			return IbexPlantUMLGenerator.visualiseNAC(flattened.getNacs().get(0));
 
 		// Otherwise visualize what the user has selected in the TGG editor.
 		return visualizeSelection(file, flattened, selection);
@@ -114,13 +110,6 @@ public class IbexTGGVisualiser extends EMoflonVisualiser {
 				}
 			}
 
-			for (final Nac nac : file.getNacs()) {
-				ICompositeNode object = NodeModelUtils.getNode(nac);
-				if (selectionStart >= object.getStartLine() && selectionEnd <= object.getEndLine()) {
-					return IbexPlantUMLGenerator.visualiseNAC(flattenedNacIfPossible(nac, flattened));
-				}
-			}
-
 			String text = textSelection.getText();
 			if (text != null && !text.isEmpty()) {
 				return IbexPlantUMLGenerator.visualiseTGGFile(flattened, text);
@@ -136,14 +125,6 @@ public class IbexTGGVisualiser extends EMoflonVisualiser {
 				.filter(r -> r.getName().equals(rule.getName()))//
 				.findAny()//
 				.orElse(rule);
-	}
-
-	private Nac flattenedNacIfPossible(Nac nac, TripleGraphGrammarFile flattened) {
-		return flattened.getNacs()//
-				.stream()//
-				.filter(r -> r.getName().equals(nac.getName()))//
-				.findAny()//
-				.orElse(nac);
 	}
 
 	private Optional<TripleGraphGrammarFile> flatten(TripleGraphGrammarFile file) throws Exception {

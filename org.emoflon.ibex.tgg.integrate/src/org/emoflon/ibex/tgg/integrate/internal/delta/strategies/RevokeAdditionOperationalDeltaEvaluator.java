@@ -49,7 +49,7 @@ public class RevokeAdditionOperationalDeltaEvaluator extends RevokeStrategyOpera
 		Set<ITGGMatch> matches = conflict.getScopeMatches().stream()
 				.filter(match -> match.getType().equals(PatternType.CONSISTENCY)).collect(Collectors.toSet());
 
-		matches.add(conflict.getBrokenMatch().getMatch());
+		matches.add(conflict.getMatch());
 
 		Set<TGGRule> relevantRules = conflict.integrate().getTGG().getRules().stream()
 				.filter(rule -> ruleIsInAnyMatch(rule, matches)).collect(Collectors.toSet());
