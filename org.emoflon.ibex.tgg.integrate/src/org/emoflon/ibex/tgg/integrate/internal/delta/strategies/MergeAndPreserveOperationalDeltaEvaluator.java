@@ -3,7 +3,6 @@ package org.emoflon.ibex.tgg.integrate.internal.delta.strategies;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;

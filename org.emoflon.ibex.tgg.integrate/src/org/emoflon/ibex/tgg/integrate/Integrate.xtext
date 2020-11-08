@@ -16,7 +16,7 @@ QualifiedName:
 	ID ('.' ID)*;
 
 Import:
-	'#import' rule=[tgg::Rule];
+	'import' rule=[tgg::Rule];
 
 ConflictResolutionStrategy:
 	name=ID ':' 'solve' 'conflict' 'for' 'all' '{'
@@ -42,10 +42,10 @@ PipelineStageStart:
 	PipelineStageSrc | PipelineStageTrg;
 
 PipelineStageSrc:
-	name='#src' '|' next=(PipelineStageFilter | PipelineStageEnd);
+	name='src' '|' next=(PipelineStageFilter | PipelineStageEnd);
 
 PipelineStageTrg:
-	name='#trg' '|' next=(PipelineStageFilter | PipelineStageEnd);
+	name='trg' '|' next=(PipelineStageFilter | PipelineStageEnd);
 
 PipelineStageFilter:
 	PipelineStageModification | PipelineStageType;
