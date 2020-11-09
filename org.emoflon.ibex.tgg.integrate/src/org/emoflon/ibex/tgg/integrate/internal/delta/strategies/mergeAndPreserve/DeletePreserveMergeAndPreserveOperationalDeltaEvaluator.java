@@ -1,16 +1,14 @@
-package org.emoflon.ibex.tgg.integrate.internal.delta.strategies;
+package org.emoflon.ibex.tgg.integrate.internal.delta.strategies.mergeAndPreserve;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.emoflon.ibex.tgg.compiler.patterns.PatternType;
 import org.emoflon.ibex.tgg.operational.matches.ITGGMatch;
-import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict;
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.DeletePreserveConflict;
-import org.emoflon.ibex.tgg.operational.strategies.integrate.modelchange.ModelChanges;
 import org.emoflon.ibex.tgg.operational.strategies.integrate.util.EltFilter;
 import org.emoflon.ibex.tgg.operational.strategies.integrate.util.MatchAnalysis;
 import org.emoflon.ibex.tgg.operational.strategies.integrate.util.TGGMatchUtil;
@@ -22,53 +20,33 @@ import language.TGGRule;
 import language.TGGRuleElement;
 import language.TGGRuleNode;
 
-public class MergeAndPreserveOperationalDeltaEvaluator {
-	private final Conflict conflict;
+class DeletePreserveMergeAndPreserveOperationalDeltaEvaluator {
+
+	private final DeletePreserveConflict conflict;
 	private final Set<DomainType> domainTypes;
 	private final Set<BindingType> modifications;
 	private final TGGMatchUtil util;
 	private final Set<EObject> byUserDeletedElements;
 
-	public MergeAndPreserveOperationalDeltaEvaluator(Conflict conflict, Set<DomainType> domainTypes,
-			Set<BindingType> modifications) {
+	public DeletePreserveMergeAndPreserveOperationalDeltaEvaluator(DeletePreserveConflict conflict,
+			Set<DomainType> domainTypes, Set<BindingType> modifications, TGGMatchUtil util,
+			Set<EObject> byUserDeletedElements) {
 		this.conflict = conflict;
 		this.domainTypes = domainTypes;
 		this.modifications = modifications;
-		this.util = new TGGMatchUtil(conflict.integrate());
-		this.byUserDeletedElements = collectAllByUserDeletedElements();
+		this.util = util;
+		this.byUserDeletedElements = removeElementsToBeRevoked(byUserDeletedElements);
 	}
-	
-	private Set<EObject> collectAllByUserDeletedElements() {
-		ModelChanges userModelChanges = conflict.integrate().getUserModelChanges();
 
-		Set<EObject> deletedElements = new HashSet<EObject>();
-		userModelChanges.getDeletedElements().forEach(element -> {
-			deletedElements.addAll(getChildren(element));
-			deletedElements.add(element);
-		});
-		
-		return deletedElements;
-	}
-	
-	private Set<EObject> getChildren(EObject element) {
-		Set<EObject> children = new HashSet<EObject>();
-		element.eContents().forEach(child -> {
-			children.addAll(getChildren(child));
-			children.add(child);
-		});
-		
-		return children;
+	private Set<EObject> removeElementsToBeRevoked(Set<EObject> byUserDeletedElements) {
+		Predicate<EObject> isNotInCausingMatch = (element) -> {
+			return conflict.getCausingMatches().stream().noneMatch(match -> match.getObjects().contains(element));
+		};
+
+		return byUserDeletedElements.stream().filter(isNotInCausingMatch).collect(Collectors.toSet());
 	}
 
 	public int evaluate() {
-		if (conflict instanceof DeletePreserveConflict) {
-			return evaluate((DeletePreserveConflict) conflict);
-		}
-
-		return 0;
-	}
-
-	private int evaluate(DeletePreserveConflict conflict) {
 		int count = 0;
 		if (domainTypes.contains(DomainType.SRC)) {
 			if (modifications.contains(BindingType.CREATE)) {
@@ -85,7 +63,7 @@ public class MergeAndPreserveOperationalDeltaEvaluator {
 			if (modifications.contains(BindingType.CREATE)) {
 				count += countElementsToBeCreated(conflict, PatternType.SRC, DomainType.TRG);
 			}
-			
+
 			if (modifications.contains(BindingType.DELETE)) {
 				Set<TGGRule> rulesToBeExecuted = getRulesToBeExecuted(conflict, DomainType.SRC);
 				count += evaluateRules(rulesToBeExecuted, DomainType.TRG);
@@ -147,5 +125,4 @@ public class MergeAndPreserveOperationalDeltaEvaluator {
 						rule -> TGGModelUtils.getNodesByOperatorAndDomain(rule, BindingType.CREATE, domainType).size())
 				.sum();
 	}
-
 }
