@@ -167,6 +167,29 @@ Operator:
 	value='++'
 ;
 
+/* ------------ */
+/*    NACs      */
+/* ------------ */
+
+Nac:
+	'#nac' name = ID '#for' rule = [Rule]
+		
+	(
+	'#source' '{'
+		sourcePatterns += ContextObjectVariablePattern* 
+	'}'
+	|
+	'#target' '{'
+		targetPatterns += ContextObjectVariablePattern* 
+	'}'
+	) 
+
+	('#attributeConditions' '{'
+		attrConditions += AttrCond*
+	'}')? 
+;
+
+
 /* ---------------- */
 /*    Auxiliaries   */
 /* ---------------- */
@@ -205,7 +228,7 @@ OperatorPattern:
 ;
 
 NamedElements:
-	 Rule  | Schema | CorrType | AttrCondDef | NamePattern | AttrCondDefLibrary
+	 Rule  | Schema | CorrType | AttrCondDef | NamePattern | AttrCondDefLibrary | Nac
 ;
 
 NamePattern:
