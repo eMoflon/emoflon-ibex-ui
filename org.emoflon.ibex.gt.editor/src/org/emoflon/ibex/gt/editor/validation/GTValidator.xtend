@@ -64,8 +64,12 @@ class GTValidator extends AbstractGTValidator {
 	 * The list of invalid node names.
 	 */
 	static val nodeNameBlacklist = #[
-		"class",
-		"rule"
+		"class", 
+		"rule",
+		"abstract", "assert", "boolean", "break", "byte", "case", "catch", "char", "class", "const", "continue", "default", "do", "double", "EAttribute", "EBoolean", "EDataType", 
+		"EClass", "EClassifier", "EDouble", "EFloat", "EInt", "else", "enum", "EPackage", "EReference", "EString", "extends", "final", "finally", "float", "for", "goto", "if", 
+		"implements", "import", "instanceof", "int", "interface", "long", "native", "new", "package", "private", "protected", "public", "return", "short", "static", 
+		"strictfp", "super", "switch", "synchronized", "this", "throw", "throws", "transient", "try", "void", "volatile", "while"
 	]
 
 	/**
@@ -80,7 +84,11 @@ class GTValidator extends AbstractGTValidator {
 		"notify",
 		"notifyAll",
 		"toString",
-		"wait"
+		"wait",
+		"abstract", "assert", "boolean", "break", "byte", "case", "catch", "char", "class", "const", "continue", "default", "do", "double", "EAttribute", "EBoolean", "EDataType", 
+		"EClass", "EClassifier", "EDouble", "EFloat", "EInt", "else", "enum", "EPackage", "EReference", "EString", "extends", "final", "finally", "float", "for", "goto", "if", 
+		"implements", "import", "instanceof", "int", "interface", "long", "native", "new", "package", "private", "protected", "public", "return", "short", "static", 
+		"strictfp", "super", "switch", "synchronized", "this", "throw", "throws", "transient", "try", "void", "volatile", "while"
 	]
 
 	static val CODE_PREFIX = "org.emoflon.ibex.gt.editor."
