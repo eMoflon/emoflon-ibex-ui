@@ -84,7 +84,7 @@ AndExpression returns Expression:
 	BooleanExpression ({AndExpression.left=current} 'and' right+=BooleanExpression)*;
 
 BooleanExpression:
-	expression=(ComparisonExpression | VariableReference | WrappedOrExpression);
+	(invert?='not')? expression=(ComparisonExpression | VariableReference | WrappedOrExpression);
 
 WrappedOrExpression:
 	'(' expression=OrExpression ')';
