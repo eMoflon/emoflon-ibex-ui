@@ -94,7 +94,7 @@ class GTPlantUMLGenerator {
 	/**
 	 * Visualizes the nodes and edges. 
 	 */
-	private static def String visualizeGraph(EditorPattern pattern) {
+	static def String visualizeGraph(EditorPattern pattern) {
 		'''
 			«FOR node : pattern.nodes»
 				class "«nodeName(node)»" <<«nodeSkin(node)»>> {
@@ -115,7 +115,7 @@ class GTPlantUMLGenerator {
 	/**
 	 * Visualizes attribute constraints. 
 	 */
-	private static def String visualizeAttributeConstraints(EditorPattern pattern) {
+	static def String visualizeAttributeConstraints(EditorPattern pattern) {
 		if(pattern.attributeConstraints.isEmpty)
 			return ""
 		
@@ -144,7 +144,7 @@ class GTPlantUMLGenerator {
 	/**
 	 * Prints the name and type name of the node.
 	 */
-	private static def String nodeName(EditorNode node) {
+	static def String nodeName(EditorNode node) {
 		if (node === null) {
 			return '?'
 		}
@@ -155,14 +155,14 @@ class GTPlantUMLGenerator {
 	/**
 	 * Prints the node with the given name in the pattern.
 	 */
-	private static def String nodeName(EditorPattern pattern, String name) {
+	static def String nodeName(EditorPattern pattern, String name) {
 		return nodeName(pattern.nodes.findFirst[it.name == name])
 	}
 
 	/**
 	 * Prints the skin name for the node.
 	 */
-	private static def String nodeSkin(EditorNode node) {
+	static def String nodeSkin(EditorNode node) {
 		if(node.local) {
 			return "LOCAL_NODE" 
 		} else {
@@ -173,7 +173,7 @@ class GTPlantUMLGenerator {
 	/**
 	 * Prints the attribute constraint.
 	 */
-	private static def String attributeConstraint(EditorAttributeConstraint attr) {
+	static def String attributeConstraint(EditorAttributeConstraint attr) {
 		val operator = '#'
 		val relation = if(attr.relation === null) '?' else attr.relation.toString
 		'''«operator» «StringUtils.abbreviateMiddle(GTVisualizationUtils.toString(attr.lhs), "...", MAX_STR_LENGTH)» «relation» «StringUtils.abbreviateMiddle(GTVisualizationUtils.toString(attr.rhs), "...", MAX_STR_LENGTH)»'''
@@ -182,7 +182,7 @@ class GTPlantUMLGenerator {
 	/**
 	 * Prints the attribute constraint.
 	 */
-	private static def String attributeAssignment(EditorAttributeAssignment attr) {
+	static def String attributeAssignment(EditorAttributeAssignment attr) {
 		val operator = '+'
 		val name = if(attr.attribute === null || attr.attribute.name === null) '?' else attr.attribute.name
 		val relation = ':='
@@ -192,7 +192,7 @@ class GTPlantUMLGenerator {
 	/**
 	 * Prints the color for the reference.
 	 */
-	private static def String referenceColor(EditorReference reference) {
+	static def String referenceColor(EditorReference reference) {
 		if (reference.operator == EditorOperator.CONTEXT) {
 			'''«ContextColor»'''
 		} else if (reference.operator === EditorOperator.CREATE) {
@@ -207,7 +207,7 @@ class GTPlantUMLGenerator {
 	/**
 	 * Prints the reference label in the color of the reference operator.
 	 */
-	private static def String referenceLabel(EditorReference reference) {
+	static def String referenceLabel(EditorReference reference) {
 		val type = if(reference === null || reference.type === null) '?' else reference.type.name
 		'''<color:«referenceColor(reference)»>«type»'''
 	}
@@ -215,7 +215,7 @@ class GTPlantUMLGenerator {
 	/**
 	 * Extracts the patterns from the conditions of the pattern.
 	 */
-	private static def Set<EditorPattern> getConditionPatterns(EditorPattern pattern) {
+	static def Set<EditorPattern> getConditionPatterns(EditorPattern pattern) {
 		val patterns = new HashSet
 		for (c : pattern.conditions) {
 			patterns.addAll(getConditionPatterns(c))
@@ -226,7 +226,7 @@ class GTPlantUMLGenerator {
 	/**
 	 * Extracts the patterns from a list of simple conditions.
 	 */
-	private static def Set<EditorPattern> getConditionPatterns(EditorCondition condition) {
+	static def Set<EditorPattern> getConditionPatterns(EditorCondition condition) {
 		val patterns = new HashSet
 		for (c : new GTConditionHelper(condition).getApplicationConditions()) {
 			patterns.add(c.pattern)
@@ -279,7 +279,7 @@ class GTPlantUMLGenerator {
 	/**
 	 * Prints the link to the pattern.
 	 */
-	private static def link(EditorPattern pattern) {
+	static def link(EditorPattern pattern) {
 		val resource = pattern.eResource
 		val uri = resource.URI + '#' + resource.getURIFragment(pattern)
 		'''[[«uri»]]'''
@@ -288,7 +288,7 @@ class GTPlantUMLGenerator {
 	/**
 	 * Print the common settings for all visualizations.
 	 */
-	private static def String commonLayoutSettings() {
+	static def String commonLayoutSettings() {
 		'''
 			hide empty members
 			hide circle

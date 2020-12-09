@@ -11,6 +11,7 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile;
 import org.emoflon.ibex.gt.editor.gT.EditorPattern;
+import org.emoflon.ibex.gt.editor.gT.impl.EditorGTFileImpl;
 import org.moflon.core.ui.visualisation.EMoflonPlantUMLGenerator;
 import org.moflon.core.ui.visualisation.common.EMoflonVisualiser;
 
@@ -97,6 +98,7 @@ public class GTVisualizer extends EMoflonVisualiser {
 			return Optional.of(editor) //
 					.flatMap(maybeCast(XtextEditor.class))
 					.map(e -> e.getDocument().readOnly(res -> res.getContents().get(0)))
+					.filter(e -> e.getClass().getName().equals("org.emoflon.ibex.gt.editor.gT.impl.EditorGTFileImpl"))
 					.flatMap(maybeCast(EditorGTFile.class));
 		} catch (Exception e) {
 			return Optional.empty();
