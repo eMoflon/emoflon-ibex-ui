@@ -2,11 +2,11 @@ package org.emoflon.ibex.tgg.integrate.internal.delta;
 
 import java.util.Set;
 
-import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.MergeAndPreserveOperationalDeltaEvaluator;
-import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.PreferSourceOperationalDeltaEvaluator;
-import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.PreferTargetOperationalDeltaEvaluator;
-import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.RevokeAdditionOperationalDeltaEvaluator;
-import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.RevokeDeletionOperationalDeltaEvaluator;
+import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.mergeAndPreserve.MergeAndPreserveOperationalDeltaEvaluator;
+import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.preferSource.PreferSourceOperationalDeltaEvaluator;
+import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.preferTarget.PreferTargetOperationalDeltaEvaluator;
+import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.revokeAddition.RevokeAdditionOperationalDeltaEvaluator;
+import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.revokeDeletion.RevokeDeletionOperationalDeltaEvaluator;
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict;
 
 import language.BindingType;

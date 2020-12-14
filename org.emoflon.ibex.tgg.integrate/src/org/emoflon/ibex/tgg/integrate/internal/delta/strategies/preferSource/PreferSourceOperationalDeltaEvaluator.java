@@ -1,4 +1,4 @@
-package org.emoflon.ibex.tgg.integrate.internal.delta.strategies;
+package org.emoflon.ibex.tgg.integrate.internal.delta.strategies.preferSource;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.emoflon.ibex.tgg.compiler.patterns.PatternType;
+import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.ResolutionStrategyOperationalDeltaEvaluator;
 import org.emoflon.ibex.tgg.operational.matches.ITGGMatch;
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict;
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.DeletePreserveConflict;
@@ -15,20 +16,14 @@ import language.BindingType;
 import language.DomainType;
 import language.TGGRule;
 
-public class PreferSourceOperationalDeltaEvaluator {
-
-	private final Conflict conflict;
-	private final Set<DomainType> domainTypes;
-	private final Set<BindingType> modifications;
-
+public class PreferSourceOperationalDeltaEvaluator extends ResolutionStrategyOperationalDeltaEvaluator {
+	
 	public PreferSourceOperationalDeltaEvaluator(Conflict conflict, Set<DomainType> domainTypes,
 			Set<BindingType> modifications) {
-		super();
-		this.conflict = conflict;
-		this.domainTypes = domainTypes;
-		this.modifications = modifications;
+		super(conflict, domainTypes, modifications);
 	}
 
+	@Override
 	public int evaluate() {
 		if (conflict instanceof DeletePreserveConflict) {
 			return evaluate((DeletePreserveConflict) conflict);
@@ -58,7 +53,7 @@ public class PreferSourceOperationalDeltaEvaluator {
 			return 0;
 		}
 
-		return conflict.getScopeMatches().stream().filter(match -> !isOfType(match, PatternType.SRC))
+		return conflict.getScopeMatches().stream().filter(match -> isOfType(match, PatternType.SRC))
 				.mapToInt(match -> countGreenElementsForCorrespondingRule(match)).sum();
 	}
 
