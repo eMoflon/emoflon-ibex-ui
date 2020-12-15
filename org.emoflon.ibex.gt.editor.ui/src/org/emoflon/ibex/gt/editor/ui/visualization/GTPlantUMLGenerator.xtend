@@ -73,7 +73,7 @@ class GTPlantUMLGenerator {
 				
 				«FOR node : flattenedConditionPattern.nodes»
 					«IF nodeNamesInFlattenedPattern.contains(node.name)»
-						"«pattern.name».«nodeName(flattenedPattern, node.name)»" #--# "«p.name».«nodeName(node)»"
+						"«pattern.name».«nodeName(flattenedPattern, node.name)»" #.[#335bb0].# "«p.name».«nodeName(node)»"
 					«ENDIF»
 				«ENDFOR»
 			«ENDFOR»
