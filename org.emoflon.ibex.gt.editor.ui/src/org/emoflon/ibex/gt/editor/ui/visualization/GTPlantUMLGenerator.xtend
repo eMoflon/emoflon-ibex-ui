@@ -39,6 +39,9 @@ class GTPlantUMLGenerator {
 	 * Returns the PlantUML code for the visualization of the given pattern.
 	 */
 	static def String visualizePattern(EditorPattern pattern) {
+		if(pattern.name == null || pattern.name == "")
+			throw new RuntimeException("GT-Visualization: Pattern name is null!")
+			
 		val flattenedPattern = new GTFlattener(pattern).getFlattenedPattern
 		val nodeNamesInFlattenedPattern = flattenedPattern.nodes.map[it.name]
 		'''
