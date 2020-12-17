@@ -242,7 +242,7 @@ class GTPlantUMLGenerator {
 	 */
 	static def String visualizePatternHierarchy(EList<EditorPattern> patterns) {
 		val allPatterns = new HashSet(patterns)
-		for (p : patterns) {
+		for (p : patterns.filter[p | p.name !== null]) {
 			for (s : GTEditorPatternUtils.getAllSuperPatterns(p)) {
 				if (!allPatterns.contains(s)) {
 					allPatterns.add(s)
@@ -261,11 +261,11 @@ class GTPlantUMLGenerator {
 				ArrowColor Black
 			}
 			
-			«FOR pattern : allPatterns»
+			«FOR pattern : allPatterns.filter[p | p.name !== null]»
 				«IF pattern.abstract»abstract «ENDIF»class "«pattern.name»" «link(pattern)»
 			«ENDFOR»
 			
-			«FOR pattern : allPatterns»
+			«FOR pattern : allPatterns.filter[p | p.name !== null]»
 				«FOR sup: pattern.superPatterns»
 					«IF sup.name !== null»
 						"«pattern.name»" --|> "«sup.name»"
