@@ -14,6 +14,14 @@ import org.emoflon.ibex.gt.editor.utils.GTEditorPatternUtils
 import org.emoflon.ibex.gt.editor.utils.GTFlattener
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeConstraint
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeAssignment
+import java.util.AbstractMap.SimpleEntry
+import java.util.Map.Entry
+import org.moflon.core.utilities.EcoreUtils
+import java.util.HashMap
+import org.emoflon.ibex.gt.editor.gT.EditorCountExpression
+import java.util.Map
+import org.emoflon.ibex.gt.editor.gT.StochasticFunction
+import org.emoflon.ibex.gt.editor.gT.ArithmeticExpression
 
 /**
  * Utility methods to generate PlantUML code.
@@ -38,66 +46,83 @@ class GTPlantUMLGenerator {
 	/**
 	 * Returns the PlantUML code for the visualization of the given pattern.
 	 */
-	static def String visualizePattern(EditorPattern pattern) {
-		if(pattern.name == null || pattern.name == "")
+	static def String visualizeSelectedPattern(EditorPattern pattern) {
+		if(pattern.name === null || pattern.name == "")
 			throw new RuntimeException("GT-Visualization: Pattern name is null!")
 			
 		val flattenedPattern = new GTFlattener(pattern).getFlattenedPattern
-		val nodeNamesInFlattenedPattern = flattenedPattern.nodes.map[it.name]
 		'''
 			«commonLayoutSettings»
 			
 			skinparam class {
-				HeaderBackgroundColor<<CONTEXT>> «ContextColor»
-				HeaderBackgroundColor<<CREATE>> «CreateColor»
-				HeaderBackgroundColor<<DELETE>> «DeleteColor»
-				HeaderBackgroundColor<<ATR_CONSTR>> «AtrConstrColor»
-				HeaderBackgroundColor<<LOCAL_NODE>> «LocalNodeColor»
-				BorderColor<<CONTEXT>> «ContextColor»
-				BorderColor<<CREATE>> «CreateColor»
-				BorderColor<<DELETE>> «DeleteColor»
-				BorderColor<<ATR_CONSTR>> «ContextColor»
-				BorderColor<<LOCAL_NODE>> «ContextColor»
-				FontColor<<ATR_CONSTR>> «ContextColor»
-				FontColor White
+				«patternLayoutContent()»
 			}
 			
-			namespace «pattern.name» {
+			«visualizePattern(flattenedPattern, "", false)»
+			
+		'''
+	}
+	
+	static def String visualizePattern(EditorPattern pattern, String namespace, boolean isSupport) {
+		if(pattern.name === null || "".equals(pattern.name) )
+			throw new RuntimeException("GT-Visualization: Pattern name is null!")
+		val hasNamespace = !"".equals(namespace)
+		val flattenedPattern = new GTFlattener(pattern).getFlattenedPattern
+		val nodeNamesInFlattenedPattern = flattenedPattern.nodes.map[it.name]
+		'''
+			namespace «pattern.name»«IF isSupport» #EEEEEE«ELSE» #FFFFFF«ENDIF»{
 				«visualizeGraph(flattenedPattern)»
 				«visualizeAttributeConstraints(flattenedPattern)»
 				«visualizeRate(flattenedPattern)»
+				«IF !pattern.parameters.isEmpty»
+				class Parameter <<Conditions>> {
+				«FOR param : pattern.parameters»
+					# «param.name» : «param.type.name»
+				«ENDFOR»
+				}
+				«ENDIF»
+				
+				«IF !pattern.conditions.isEmpty»
+				class Conditions <<Conditions>> {
+					# «GTVisualizationUtils.getConditionString(pattern)»
+				}
+				«ENDIF»
 			}
 			
 			«FOR p : getConditionPatterns(pattern)»
 				«val flattenedConditionPattern = new GTFlattener(p).getFlattenedPattern»
-				namespace «p.name» #EEEEEE {
-					«visualizeGraph(flattenedConditionPattern)»
-				}
-				
+					«visualizePattern(flattenedConditionPattern,"",true)»
 				«FOR node : flattenedConditionPattern.nodes»
 					«IF nodeNamesInFlattenedPattern.contains(node.name)»
-						"«pattern.name».«nodeName(flattenedPattern, node.name)»" #.[#335bb0].# "«p.name».«nodeName(node)»"
+						"«IF hasNamespace»«namespace».«ENDIF»«pattern.name».«nodeName(flattenedPattern, node.name)»" #.[#335bb0].# "«IF hasNamespace»«namespace».«ENDIF»«p.name».«nodeName(node)»"
 					«ENDIF»
 				«ENDFOR»
 			«ENDFOR»
 			
-			«IF !pattern.conditions.isEmpty»
-				legend bottom
-					«GTVisualizationUtils.getConditionString(pattern)»
-				endlegend
-			«ENDIF»
-			
-			center footer
-				= «pattern.name»
-				«GTVisualizationUtils.signature(flattenedPattern)»
-			end footer
+			«visualizeCountInvocation(flattenedPattern, namespace)»
+
 		'''
 	}
-
+		
 	/**
 	 * Visualizes the nodes and edges. 
 	 */
 	static def String visualizeGraph(EditorPattern pattern) {
+		val injectivityConstraints = new HashSet<Entry<EditorNode,EditorNode>>
+		pattern.nodes
+		.filter[node | node.operator != EditorOperator.CREATE]
+		.forEach[node | {
+			pattern.nodes
+			.filter[other | other.operator != EditorOperator.CREATE]
+			.filter[other | EcoreUtils.areTypesCompatible(node.type, other.type)]
+			.filter[other | node != other]
+			.forEach[other | {
+				val fwd = new SimpleEntry(node, other)
+				val bwd = new SimpleEntry(other, node)
+				if(!injectivityConstraints.contains(fwd) && !injectivityConstraints.contains(bwd))
+					injectivityConstraints.add(fwd)
+			}]
+		}]
 		'''
 			«FOR node : pattern.nodes»
 				class "«nodeName(node)»" <<«nodeSkin(node)»>> {
@@ -112,6 +137,10 @@ class GTPlantUMLGenerator {
 					"«nodeName(node)»" -[#«referenceColor(reference)»]-> "«nodeName(reference.target)»": «referenceLabel(reference)»
 				«ENDFOR»
 			«ENDFOR»
+			
+			«FOR nodes : injectivityConstraints»
+				"«nodeName(nodes.key)»" #-[#335bb0]-# "«nodeName(nodes.value)»" : = !=
+			«ENDFOR»
 		'''
 	}
 	
@@ -123,12 +152,56 @@ class GTPlantUMLGenerator {
 			return ""
 		
 		return '''
-			class "Attribute Constraints" <<ATR_CONSTR>>{
+			class "Attribute Constraints" <<Conditions>>{
 			«FOR constraint : pattern.attributeConstraints»
 				«attributeConstraint(constraint)»
 			«ENDFOR»
 			}
 		'''
+	}
+	
+	def static String visualizeCountInvocation(EditorPattern pattern, String namespace) {
+			val countExpressions = new HashMap
+			val hasNamespace = !"".equals(namespace)
+			pattern.attributeConstraints.forEach[ac | {
+				GTVisualizationUtils.accumulateCountExpr(ac.lhs, countExpressions)
+				GTVisualizationUtils.accumulateCountExpr(ac.rhs, countExpressions)
+			}]
+			pattern.nodes.flatMap[node | node.attributes].forEach[attribute | {
+				GTVisualizationUtils.accumulateCountExpr(attribute.value, countExpressions)
+			}]
+			if(pattern.stochastic) {
+				if(pattern.probability instanceof StochasticFunction) {
+					val sf = pattern.probability as StochasticFunction
+					GTVisualizationUtils.accumulateCountExpr(sf.functionExpression, countExpressions)
+					if(sf.parameter !== null)
+						GTVisualizationUtils.accumulateCountExpr(sf.parameter, countExpressions)
+				} else {
+					val ae = pattern.probability as ArithmeticExpression
+					GTVisualizationUtils.accumulateCountExpr(ae, countExpressions)
+				}
+			}
+			val mappings = new HashMap<EditorCountExpression, Map<EditorNode, EditorNode>>
+			countExpressions.values.forEach[cExpr | {
+				val map = new HashMap<EditorNode, EditorNode>
+				mappings.put(cExpr, map)
+				val flattenedPattern = new GTFlattener(cExpr.invokedPatten).getFlattenedPattern
+				flattenedPattern.nodes.forEach[other | {
+					pattern.nodes.forEach[node | {
+						if(node.name.equals(other.name)) {
+							map.put(node, other)
+						}
+					}]
+				}]
+			}]
+			return '''
+			«FOR countExpr : countExpressions.values»
+				«visualizePattern(countExpr.invokedPatten,"",true)»
+				«FOR mapping : mappings.get(countExpr).entrySet»
+				"«IF hasNamespace»«namespace».«ENDIF»«pattern.name».«nodeName(mapping.key)»" #.[#335bb0].# "«IF hasNamespace»«namespace».«ENDIF»«countExpr.invokedPatten.name».«nodeName(mapping.value)»"
+				«ENDFOR»
+			«ENDFOR»
+			'''
 	}
 	
 	/**
@@ -138,7 +211,7 @@ class GTPlantUMLGenerator {
 		if(!pattern.stochastic || pattern.probability === null)
 			return ""
 		return '''
-			class "Rule Probability" <<ATR_CONSTR>>{
+			class "Rule Probability" <<Conditions>>{
 				# P(..) = «GTVisualizationUtils.toString(pattern.probability)»
 			}
 		'''
@@ -299,6 +372,27 @@ class GTPlantUMLGenerator {
 			
 			skinparam padding 2
 			skinparam shadowing false
+		'''
+	}
+	
+	static def String patternLayoutContent() {
+		'''
+		HeaderBackgroundColor<<CONTEXT>> «ContextColor»
+		HeaderBackgroundColor<<CREATE>> «CreateColor»
+		HeaderBackgroundColor<<DELETE>> «DeleteColor»
+		HeaderBackgroundColor<<ATR_CONSTR>> «AtrConstrColor»
+		HeaderBackgroundColor<<LOCAL_NODE>> «LocalNodeColor»
+		HeaderBackgroundColor<<Conditions>> «AtrConstrColor»
+		BorderColor<<CONTEXT>> «ContextColor»
+		BorderColor<<CREATE>> «CreateColor»
+		BorderColor<<DELETE>> «DeleteColor»
+		BorderColor<<ATR_CONSTR>> «ContextColor»
+		BorderColor<<LOCAL_NODE>> «ContextColor»
+		BorderColor<<Conditions>> «ContextColor»
+		FontColor<<ATR_CONSTR>> «ContextColor»
+		FontColor<<Conditions>> «ContextColor»
+		FontColor White
+		FontStyle<<Conditions>> bold
 		'''
 	}
 }

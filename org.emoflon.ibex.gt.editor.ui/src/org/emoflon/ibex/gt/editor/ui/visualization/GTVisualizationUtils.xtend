@@ -28,6 +28,8 @@ import org.emoflon.ibex.gt.editor.gT.PossibleStochasticRanges
 import org.emoflon.ibex.gt.editor.gT.StochasticDistribution
 import org.emoflon.ibex.gt.editor.gT.EditorProbability
 import org.emoflon.ibex.gt.editor.gT.StochasticFunction
+import java.util.Set
+import java.util.Map
 
 /**
  * Utility methods to print objects of the editor model.
@@ -146,6 +148,63 @@ class GTVisualizationUtils {
 		} else { // Arithmetic Attribute -> EditorCountExpression
 			val ece = expression as EditorCountExpression
 			return '''count(«ece.invokedPatten.name»)'''
+		}
+	}
+	
+	static def void accumulateCountExpr(EditorExpression expression, Map<String, EditorCountExpression> countExpr) {
+		if (expression === null) {
+			return
+		}
+		if (expression instanceof EditorEnumExpression) {
+			return
+		} else if (expression instanceof EditorParameterExpression) {
+			return
+		} else if (expression instanceof StochasticFunctionExpression) {
+			accumulateCountExpr(expression.mean, countExpr);
+			if(expression.hasSd) {
+				accumulateCountExpr(expression.sd, countExpr);
+			}
+		} else {
+			accumulateCountExpr((expression as ArithmeticCalculationExpression).expression, countExpr);
+		}	
+	}
+	
+	static def void accumulateCountExpr(ArithmeticExpression expression, Map<String, EditorCountExpression> countExpr) {
+		if(expression === null) {
+			return
+		}
+		if(expression instanceof AddExpression) {
+			val ae = expression
+			accumulateCountExpr(ae.left, countExpr)
+			accumulateCountExpr(ae.right, countExpr)
+			return
+		} else if(expression instanceof MultExpression) {
+			val me = expression
+			accumulateCountExpr(me.left, countExpr)
+			accumulateCountExpr(me.right, countExpr)
+			return
+		} else if(expression instanceof ExpExpression) {
+			val ee = expression
+			accumulateCountExpr(ee.left, countExpr)
+			accumulateCountExpr(ee.right, countExpr)
+			return
+		} else if(expression instanceof MinMaxExpression) {
+			val mme = expression
+			accumulateCountExpr(mme.left, countExpr)
+			accumulateCountExpr(mme.right, countExpr)
+			return
+		} else if(expression instanceof OneParameterArithmetics) {
+			val opa = expression
+			accumulateCountExpr(opa.expression, countExpr)
+			return
+		} else if(expression instanceof EditorLiteralExpression) { // Arithmetic Attribute -> EditorLiteralExpression
+			return
+		} else if(expression instanceof EditorAttributeExpression) { // Arithmetic Attribute -> EditorAttributeExpression
+			return
+		} else { // Arithmetic Attribute -> EditorCountExpression
+			val ece = expression as EditorCountExpression
+			countExpr.put(ece.invokedPatten.name, ece)
+			return
 		}
 	}
 	

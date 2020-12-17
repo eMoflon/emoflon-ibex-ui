@@ -45,7 +45,7 @@ public class GTVisualizer extends EMoflonVisualiser {
 		}
 		if (patterns.size() == 1) {
 			try {
-				return GTPlantUMLGenerator.visualizePattern(patterns.get(0));
+				return GTPlantUMLGenerator.visualizeSelectedPattern(patterns.get(0));
 			}catch(Exception e) {
 				return GTPlantUMLGenerator.visualizeNothing();
 			}
@@ -53,7 +53,7 @@ public class GTVisualizer extends EMoflonVisualiser {
 		Optional<EditorPattern> pattern = determineSelectedRule(selection, patterns);
 		if (pattern.isPresent()) {
 			try {
-				return GTPlantUMLGenerator.visualizePattern(pattern.get());
+				return GTPlantUMLGenerator.visualizeSelectedPattern(pattern.get());
 			}catch(Exception e) {
 				return GTPlantUMLGenerator.visualizeNothing();
 			}
