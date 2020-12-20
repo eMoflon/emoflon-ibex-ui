@@ -7,15 +7,22 @@ import java.util.ArrayList
 import java.util.HashMap
 import java.util.List
 import java.util.Map
+import org.eclipse.core.resources.ResourcesPlugin
+import org.eclipse.core.runtime.Path
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.common.util.URI
+import org.eclipse.emf.ecore.EAttribute
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.validation.Check
+import org.moflon.tgg.mosl.tgg.AttributeAssignment
 import org.moflon.tgg.mosl.tgg.AttributeConstraint
 import org.moflon.tgg.mosl.tgg.AttributeExpression
+import org.moflon.tgg.mosl.tgg.ContextObjectVariablePattern
+import org.moflon.tgg.mosl.tgg.CorrVariablePattern
 import org.moflon.tgg.mosl.tgg.EnumExpression
 import org.moflon.tgg.mosl.tgg.Import
 import org.moflon.tgg.mosl.tgg.LinkVariablePattern
@@ -27,13 +34,7 @@ import org.moflon.tgg.mosl.tgg.Rule
 import org.moflon.tgg.mosl.tgg.TggPackage
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
 import org.moflon.tgg.mosl.tgg.impl.LocalVariableImpl
-import org.moflon.tgg.mosl.tgg.CorrVariablePattern
-import org.eclipse.emf.ecore.EStructuralFeature
-import org.moflon.tgg.mosl.tgg.ContextObjectVariablePattern
-import org.eclipse.core.resources.ResourcesPlugin
-import org.eclipse.core.runtime.Path
-import org.moflon.tgg.mosl.tgg.AttributeAssignment
-import org.eclipse.emf.ecore.EAttribute
+import org.moflon.tgg.mosl.tgg.AttrCond
 
 /**
  * This class contains custom validation rules. 
@@ -400,6 +401,12 @@ class TGGValidator extends AbstractTGGValidator {
 			newList.add(attrConstr);
 			constrainedAttr.put(attrConstr.attribute, newList);
 		}
+	}
+	
+	@Check
+	def checkForDerivedAttributeAssignmentsInCSPsOnly(AttributeExpression attrExpr) {
+		if (attrExpr.isDerived && !(attrExpr.eContainer instanceof AttrCond))
+			error("Derived attribute expressions are only permitted in attribute conditions!", attrExpr, TggPackage.Literals.ATTRIBUTE_EXPRESSION__DERIVED);
 	}
 	
 }

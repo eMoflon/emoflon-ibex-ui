@@ -148,7 +148,7 @@ EnumExpression:
 ;
 
 AttributeExpression:
-	objectVar = [ecore::EObject] '.' attribute = [ecore::EAttribute]
+	(derived ?= '#derived')? objectVar = [ecore::EObject] '.' attribute = [ecore::EAttribute]
 ;
 
 LiteralExpression:
