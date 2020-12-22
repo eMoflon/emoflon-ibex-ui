@@ -2,6 +2,7 @@ package org.emoflon.ibex.tgg.integrate.internal.delta;
 
 import java.util.Set;
 
+import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.deleteCorrespondences.DeleteCorrespondenceOperationalDeltaEvaluator;
 import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.mergeAndPreserve.MergeAndPreserveOperationalDeltaEvaluator;
 import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.preferSource.PreferSourceOperationalDeltaEvaluator;
 import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.preferTarget.PreferTargetOperationalDeltaEvaluator;
@@ -26,6 +27,8 @@ public class OperationalDeltaEvaluator {
 			return new RevokeDeletionOperationalDeltaEvaluator(conflict, domainTypes, modifications).evaluate();
 		case "mergeAndPreserve":
 			return new MergeAndPreserveOperationalDeltaEvaluator(conflict, domainTypes, modifications).evaluate();
+		case "deleteCorrespondences":
+			return new DeleteCorrespondenceOperationalDeltaEvaluator(conflict, domainTypes, modifications).evaluate();
 		default:
 			return 0;
 		}

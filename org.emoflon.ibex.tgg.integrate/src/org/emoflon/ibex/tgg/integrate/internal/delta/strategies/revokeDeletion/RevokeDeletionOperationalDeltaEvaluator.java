@@ -4,6 +4,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.emoflon.ibex.tgg.compiler.patterns.PatternType;
+import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.OperationalDeltaCommons;
 import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.ResolutionStrategyOperationalDeltaEvaluator;
 import org.emoflon.ibex.tgg.operational.matches.ITGGMatch;
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict;
@@ -33,11 +34,11 @@ public class RevokeDeletionOperationalDeltaEvaluator extends ResolutionStrategyO
 	private int evaluate(DeletePreserveConflict conflict) {
 		int count = 0;
 		if (modifications.contains(BindingType.CREATE)) {
-			if (domainTypes.contains(DomainType.SRC) && conflict.getDomainToBePreserved().equals(DomainType.TRG)) {
+			if (domainTypes.contains(DomainType.SRC)) {
 				count += countElementsToBeCreated(conflict, PatternType.TRG, DomainType.SRC);
 			}
 			
-			if (domainTypes.contains(DomainType.TRG) && conflict.getDomainToBePreserved().equals(DomainType.SRC)) {
+			if (domainTypes.contains(DomainType.TRG)) {
 				count += countElementsToBeCreated(conflict, PatternType.SRC, DomainType.TRG);
 			}
 		}
@@ -50,16 +51,12 @@ public class RevokeDeletionOperationalDeltaEvaluator extends ResolutionStrategyO
 		Set<ITGGMatch> matches = conflict.getScopeMatches().stream()
 				.filter(match -> match.getType().equals(patternType)).collect(Collectors.toSet());
 		Set<TGGRule> relevantRules = conflict.integrate().getTGG().getRules().stream()
-				.filter(rule -> ruleIsInAnyMatch(rule, matches)).collect(Collectors.toSet());
+				.filter(rule -> OperationalDeltaCommons.ruleIsInAnyMatch(rule, matches)).collect(Collectors.toSet());
 
 		return relevantRules.stream()
 				.mapToInt(
 						rule -> TGGModelUtils.getNodesByOperatorAndDomain(rule, BindingType.CREATE, domainType).size())
 				.sum();
-	}
-
-	private boolean ruleIsInAnyMatch(TGGRule rule, Set<ITGGMatch> matches) {
-		return matches.stream().anyMatch(match -> match.getRuleName().equals(rule.getName()));
 	}
 
 }

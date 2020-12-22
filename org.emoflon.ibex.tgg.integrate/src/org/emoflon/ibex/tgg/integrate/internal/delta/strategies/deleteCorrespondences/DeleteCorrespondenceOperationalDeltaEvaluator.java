@@ -1,5 +1,6 @@
-package org.emoflon.ibex.tgg.integrate.internal.delta.strategies.mergeAndPreserve;
+package org.emoflon.ibex.tgg.integrate.internal.delta.strategies.deleteCorrespondences;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -9,7 +10,9 @@ import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.EList;
 import org.emoflon.ibex.tgg.compiler.patterns.PatternType;
 import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.OperationalDeltaCommons;
+import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.ResolutionStrategyOperationalDeltaEvaluator;
 import org.emoflon.ibex.tgg.operational.matches.ITGGMatch;
+import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict;
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.DeletePreserveConflict;
 import org.emoflon.ibex.tgg.operational.strategies.integrate.util.EltFilter;
 import org.emoflon.ibex.tgg.util.TGGModelUtils;
@@ -19,40 +22,32 @@ import language.DomainType;
 import language.TGGRule;
 import language.TGGRuleElement;
 
-class DeletePreserveMergeAndPreserveOperationalDeltaEvaluator {
+public class DeleteCorrespondenceOperationalDeltaEvaluator extends ResolutionStrategyOperationalDeltaEvaluator {
 
-	private final DeletePreserveConflict conflict;
-	private final Set<DomainType> domainTypes;
-	private final Set<BindingType> modifications;
-
-	public DeletePreserveMergeAndPreserveOperationalDeltaEvaluator(DeletePreserveConflict conflict,
-			Set<DomainType> domainTypes, Set<BindingType> modifications) {
-		this.conflict = conflict;
-		this.domainTypes = domainTypes;
-		this.modifications = modifications;
+	public DeleteCorrespondenceOperationalDeltaEvaluator(Conflict conflict, Set<DomainType> domainTypes,
+			Set<BindingType> modifications) {
+		super(conflict, domainTypes, modifications);
 	}
 
+	@Override
 	public int evaluate() {
+		if (conflict instanceof DeletePreserveConflict) {
+			return evaluate((DeletePreserveConflict) conflict);
+		}
+		return 0;
+	}
+
+	private int evaluate(DeletePreserveConflict conflict) {
 		int count = 0;
 		if (domainTypes.contains(DomainType.SRC)) {
 			if (modifications.contains(BindingType.CREATE)) {
 				count += countElementsToBeCreated(PatternType.TRG, DomainType.SRC);
 			}
-
-			if (modifications.contains(BindingType.DELETE)) {
-				List<TGGRule> rulesToBeExecuted = getRelevantRules(DomainType.TRG);
-				count += evaluateRules(rulesToBeExecuted, DomainType.SRC);
-			}
 		}
 
 		if (domainTypes.contains(DomainType.TRG)) {
 			if (modifications.contains(BindingType.CREATE)) {
-				count += countElementsToBeCreated(PatternType.SRC, DomainType.TRG);
-			}
-
-			if (modifications.contains(BindingType.DELETE)) {
-				List<TGGRule> rulesToBeExecuted = getRelevantRules(DomainType.SRC);
-				count += evaluateRules(rulesToBeExecuted, DomainType.TRG);
+				count += evaluateConsistencyMatches(DomainType.SRC, DomainType.TRG);
 			}
 		}
 
@@ -69,20 +64,24 @@ class DeletePreserveMergeAndPreserveOperationalDeltaEvaluator {
 		return evaluateRules(relevantRules, domainType);
 	}
 
-	private List<TGGRule> getRelevantRules(DomainType domainType) {
-		Predicate<ITGGMatch> hasDeletedElementsOnDomain = hasDeletedElementsOnDomain(domainType);
-		EList<TGGRule> rules = conflict.integrate().getTGG().getRules();
-		List<ITGGMatch> matchesToBeResolved = conflict.getScopeMatches().stream()//
-				.filter(match -> match.getType().equals(PatternType.CONSISTENCY))
-				.filter(brokenMatch -> !conflict.getCausingMatches().contains(brokenMatch))//
-				.filter(hasDeletedElementsOnDomain).collect(Collectors.toList());
+	private int evaluateConsistencyMatches(DomainType srcDomainType, DomainType trgDomainType) {
+		Predicate<ITGGMatch> hasDeletedElementsOnDomain = hasDeletedElementsOnDomain(srcDomainType);
+		Set<ITGGMatch> matches = new HashSet<ITGGMatch>();
+		matches.addAll(conflict.getConflictMatches());
+		matches.addAll(conflict.getScopeMatches());
 
-		List<TGGRule> relevantRules = matchesToBeResolved.stream()//
-				.map(match -> rules.stream().filter(rule -> rule.getName().equals(match.getRuleName())).findFirst())//
+		Set<ITGGMatch> relevantMatches = matches.stream()//
+				.filter(hasDeletedElementsOnDomain).collect(Collectors.toSet());
+
+		EList<TGGRule> rules = conflict.integrate().getTGG().getRules();
+		List<TGGRule> relevantRules = relevantMatches.stream()//
+				.map(match -> rules.stream()//
+						.filter(rule -> rule.getName().equals(match.getRuleName()))//
+						.findFirst())//
 				.filter(Optional::isPresent)//
 				.map(Optional::get).collect(Collectors.toList());
 
-		return relevantRules;
+		return evaluateRules(relevantRules, trgDomainType);
 	}
 
 	private Predicate<ITGGMatch> hasDeletedElementsOnDomain(DomainType domainType) {

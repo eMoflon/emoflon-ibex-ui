@@ -4,6 +4,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.emoflon.ibex.tgg.compiler.patterns.PatternType;
+import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.OperationalDeltaCommons;
 import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.ResolutionStrategyOperationalDeltaEvaluator;
 import org.emoflon.ibex.tgg.operational.matches.ITGGMatch;
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict;
@@ -54,7 +55,7 @@ public class RevokeAdditionOperationalDeltaEvaluator extends ResolutionStrategyO
 		matches.add(conflict.getMatch());
 
 		Set<TGGRule> relevantRules = conflict.integrate().getTGG().getRules().stream()
-				.filter(rule -> ruleIsInAnyMatch(rule, matches)).collect(Collectors.toSet());
+				.filter(rule -> OperationalDeltaCommons.ruleIsInAnyMatch(rule, matches)).collect(Collectors.toSet());
 
 		return relevantRules.stream()
 				.mapToInt(
@@ -62,7 +63,4 @@ public class RevokeAdditionOperationalDeltaEvaluator extends ResolutionStrategyO
 				.sum();
 	}
 
-	private boolean ruleIsInAnyMatch(TGGRule rule, Set<ITGGMatch> matches) {
-		return matches.stream().anyMatch(match -> match.getRuleName().equals(rule.getName()));
-	}
 }

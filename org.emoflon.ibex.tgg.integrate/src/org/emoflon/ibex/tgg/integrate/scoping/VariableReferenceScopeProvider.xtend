@@ -6,8 +6,8 @@ import org.eclipse.xtext.scoping.impl.SimpleScope
 import org.eclipse.xtext.scoping.Scopes
 import org.eclipse.xtext.naming.DefaultDeclarativeQualifiedNameProvider
 import org.eclipse.xtext.EcoreUtil2
-import org.emoflon.ibex.tgg.integrate.integrate.ConflictResolutionStrategy
 import org.emoflon.ibex.tgg.integrate.integrate.OperationalDelta
+import org.emoflon.ibex.tgg.integrate.integrate.ConflictResolutionSpecification
 
 class VariableReferenceScopeProvider {
 
@@ -20,9 +20,9 @@ class VariableReferenceScopeProvider {
 					new DefaultDeclarativeQualifiedNameProvider()));
 		}
 
-		val conflictResolutionStrategy = EcoreUtil2.getContainerOfType(context, ConflictResolutionStrategy);
-		return new SimpleScope(Scopes.scopeFor(conflictResolutionStrategy.getVariables()),
-			Scopes.scopedElementsFor(conflictResolutionStrategy.getVariables(),
+		val conflictResolutionSpecification = EcoreUtil2.getContainerOfType(context, ConflictResolutionSpecification);
+		return new SimpleScope(Scopes.scopeFor(conflictResolutionSpecification.getVariables()),
+			Scopes.scopedElementsFor(conflictResolutionSpecification.getVariables(),
 				new DefaultDeclarativeQualifiedNameProvider()));
 
 	}

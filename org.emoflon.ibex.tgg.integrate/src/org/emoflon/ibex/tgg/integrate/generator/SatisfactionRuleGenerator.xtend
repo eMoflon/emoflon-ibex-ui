@@ -51,13 +51,18 @@ class SatisfactionRuleGenerator {
 		}
 		
 		def void compile(BooleanExpression e) {
+			if (e.invert) {
+				result += '''!'''
+			}
 			compileNext(e.expression)
 		}
 
 		def void compile(ComparisonExpression e) {
+			result += '''('''
 			compileNext(e.lhs)
 			result += e.op
 			compileNext(e.rhs)
+			result += ''')'''
 		}
 
 		def void compile(LiteralValue lv) {

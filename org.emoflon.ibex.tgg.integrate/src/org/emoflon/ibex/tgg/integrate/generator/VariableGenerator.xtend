@@ -6,6 +6,7 @@ import org.emoflon.ibex.tgg.integrate.api.variable.PipelineExecuter
 import org.emoflon.ibex.tgg.integrate.api.variable.TypeFilterData
 import org.emoflon.ibex.tgg.integrate.integrate.Variable
 import org.emoflon.ibex.tgg.integrate.internal.PipelineVisitor
+import org.eclipse.emf.common.util.EList
 
 class VariableGenerator {
 
@@ -33,7 +34,7 @@ class VariableGenerator {
 				.trg[stage|result += '''.trg()''']
 				.created[stage|result += '''.created()''']
 				.deleted[stage|result += '''.deleted()''']
-				.type[stage|result += '''.types(«compileTypes(stage.type)»)''']
+				.type[stage|result += '''.types(«compileTypes(stage.types)»)''']
 				.count[stage|result += ''';int «variable.name» = «executerName».count();''']
 				.exists[stage|result += ''';boolean «variable.name» = «executerName».exists();''']
 				.visit()
@@ -41,8 +42,14 @@ class VariableGenerator {
 			result
 		}
 		
-		def String compileTypes(EClass eClass) {
-			'''«ImmutableSet.name».of(new «TypeFilterData.name»("«eClass.name»", "«eClass.EPackage.name»"))'''
+		def String compileTypes(EList<EClass> types) {
+			val typeFilters = '''
+			«FOR type : types SEPARATOR ','»
+				new «TypeFilterData.name»("«type.name»", "«type.EPackage.name»")
+			«ENDFOR»
+			'''
+			
+			'''«ImmutableSet.name».of(«typeFilters»)'''
 		}
 
 	}

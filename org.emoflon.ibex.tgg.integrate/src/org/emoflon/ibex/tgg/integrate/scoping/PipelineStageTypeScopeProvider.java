@@ -32,8 +32,7 @@ public class PipelineStageTypeScopeProvider {
 	}
 
 	private IScope buildScopeFromImports(EList<Import> imports) {
-		Set<EClass> types = imports.stream().map(imp -> imp.getRule())
-				.map(this::getSchema)
+		Set<EClass> types = imports.stream().map(Import::getSchema)
 				.flatMap(this::getURIStream)
 				.map(this::getResourceForURI)
 				.map(this::getEPackage)
@@ -44,10 +43,6 @@ public class PipelineStageTypeScopeProvider {
 				Scopes.scopedElementsFor(types, new DefaultDeclarativeQualifiedNameProvider()));
 	}
 
-	private Schema getSchema(Rule rule) {
-		return rule.getSchema();
-	}
-	
 	private Stream<URI> getURIStream(Schema schema) {
 		TripleGraphGrammarFile tggFile = EcoreUtil2.getContainerOfType(schema, TripleGraphGrammarFile.class);
 		return tggFile.getImports().stream().map(imp -> URI.createURI(imp.getName()));
