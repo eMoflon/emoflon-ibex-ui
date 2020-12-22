@@ -7,13 +7,13 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.naming.QualifiedName
 import org.emoflon.ibex.tgg.integrate.api.ConflictContainerProcessor
-import org.emoflon.ibex.tgg.integrate.api.IConflictResolutionStrategy
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.ConflictContainer
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.util.ConflictResolver
 
 import static extension org.eclipse.xtext.EcoreUtil2.*
+import org.emoflon.ibex.tgg.integrate.api.ConflictResolutionSpecification
 
-class ConflictResolutionStrategyContainerGenerator {
+class ConflictResolverGenerator {
 
 	final static String CLASS_POSTFIX = "ConflictResolver"
 
@@ -27,7 +27,7 @@ class ConflictResolutionStrategyContainerGenerator {
 			
 			public class «className» implements «ConflictResolver.name»{
 				
-				private final «List.name»<«IConflictResolutionStrategy.name»> conflictResolutionStrategies;
+				private final «List.name»<«ConflictResolutionSpecification.name»> conflictResolutionStrategies;
 				
 				public «className»() {
 					this.conflictResolutionStrategies = «ImmutableList.name».of(

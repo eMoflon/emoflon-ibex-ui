@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict;
 
-public interface IConflictResolutionStrategy {
+public interface ConflictResolutionSpecification {
 
 	boolean conflictSatisfiesRule(Conflict conflict);
 	

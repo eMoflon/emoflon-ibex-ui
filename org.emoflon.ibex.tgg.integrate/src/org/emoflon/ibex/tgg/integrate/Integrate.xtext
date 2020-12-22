@@ -5,9 +5,9 @@ import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 generate integrate "http://www.emoflon.org/ibex/tgg/integrate/Integrate"
 
 Integrate:
-	package=Package
-	imports+=Import*
-	conflictResolutionStrategies+=ConflictResolutionStrategy*;
+	package=Package?
+	imports+=Import
+	conflictResolutionSpecifications+=ConflictResolutionSpecification*;
 
 Package:
 	'package' name=QualifiedName;
@@ -16,10 +16,10 @@ QualifiedName:
 	ID ('.' ID)*;
 
 Import:
-	'import' rule=[tgg::Rule];
+	'import' schema=[tgg::Schema];
 
-ConflictResolutionStrategy:
-	name=ID ':' 'solve' 'conflict' 'for' 'all' '{'
+ConflictResolutionSpecification:
+	name=ID ':' 'solve' '{'
 	variables+=Variable+
 	'satisfies' '{'
 	rule=SatisfactionRule
@@ -60,7 +60,7 @@ PipelineStageDeleted:
 	name='deleted' '|' next=(PipelineStageType | PipelineStageEnd);
 
 PipelineStageType:
-	name='type' type=[ecore::EClass] '|' next=PipelineStageEnd;
+	name='type' types+=([ecore::EClass]) (',' types+=[ecore::EClass])* '|' next=PipelineStageEnd;
 
 PipelineStageEnd:
 	PipelineStageCount | PipelineStageExists;
@@ -114,7 +114,8 @@ ResolutionStrategy:
 	FallbackResolutionStrategy;
 
 FallbackResolutionStrategy:
-	PreferSourceResolutionStrategy | PreferTargetResolutionStrategy | ContinueResolutionStrategy;
+	PreferSourceResolutionStrategy | PreferTargetResolutionStrategy | DeleteCorrespondencesResolutionStrategy |
+	ContinueResolutionStrategy;
 
 MergeAndPreserveResolutionStrategy:
 	name='mergeAndPreserve';
@@ -130,6 +131,9 @@ PreferSourceResolutionStrategy:
 
 PreferTargetResolutionStrategy:
 	name='preferTarget';
+
+DeleteCorrespondencesResolutionStrategy:
+	name='deleteCorrespondences';
 
 ContinueResolutionStrategy:
 	name='continue';

@@ -1,13 +1,16 @@
 package org.emoflon.ibex.tgg.integrate.internal.delta.strategies.preferSource;
 
-import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.emoflon.ibex.tgg.compiler.patterns.PatternType;
+import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.OperationalDeltaCommons;
 import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.ResolutionStrategyOperationalDeltaEvaluator;
 import org.emoflon.ibex.tgg.operational.matches.ITGGMatch;
+import org.emoflon.ibex.tgg.operational.strategies.integrate.classification.BrokenMatch;
+import org.emoflon.ibex.tgg.operational.strategies.integrate.classification.DeletionType;
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict;
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.DeletePreserveConflict;
 import org.emoflon.ibex.tgg.util.TGGModelUtils;
@@ -17,7 +20,7 @@ import language.DomainType;
 import language.TGGRule;
 
 public class PreferSourceOperationalDeltaEvaluator extends ResolutionStrategyOperationalDeltaEvaluator {
-	
+
 	public PreferSourceOperationalDeltaEvaluator(Conflict conflict, Set<DomainType> domainTypes,
 			Set<BindingType> modifications) {
 		super(conflict, domainTypes, modifications);
@@ -33,40 +36,33 @@ public class PreferSourceOperationalDeltaEvaluator extends ResolutionStrategyOpe
 	}
 
 	private int evaluate(DeletePreserveConflict conflict) {
-		if (!domainTypes.contains(DomainType.TRG)) {
-			// PreferSource will only affect changes in target domain
-			return 0;
+		int count = 0;
+		if (domainTypes.contains(DomainType.TRG)) {
+			if (modifications.contains(BindingType.CREATE)) {
+				count += countElementsToBeCreated(conflict);
+			}
+
+			if (modifications.contains(BindingType.DELETE)) {
+				count += countElementsToBeDeleted(conflict);
+			}
 		}
 
-		switch (conflict.getDomainToBePreserved()) {
-		case SRC:
-			return countElementsToBeCreated(conflict);
-		case TRG:
-			return countElementsToBeDeleted(conflict);
-		default:
-			return 0;
-		}
+		return count;
 	}
 
 	private int countElementsToBeCreated(DeletePreserveConflict conflict) {
-		if (!modifications.contains(BindingType.CREATE)) {
-			return 0;
-		}
-
-		return conflict.getScopeMatches().stream().filter(match -> isOfType(match, PatternType.SRC))
+		return conflict.getScopeMatches().stream().filter(match -> OperationalDeltaCommons.isOfType(match, PatternType.SRC))
 				.mapToInt(match -> countGreenElementsForCorrespondingRule(match)).sum();
 	}
 
 	private int countElementsToBeDeleted(DeletePreserveConflict conflict) {
-		if (!modifications.contains(BindingType.DELETE)) {
-			return 0;
-		}
-
+		Map<ITGGMatch, BrokenMatch> classifiedBrokenMatches = conflict.integrate().getClassifiedBrokenMatches();
 		Set<ITGGMatch> matches = new HashSet<ITGGMatch>();
 		matches.add(conflict.getMatch());
 		matches.addAll(conflict.getScopeMatches());
-
-		return matches.stream().filter(match -> isOfType(match, PatternType.CONSISTENCY))
+		return matches.stream()//
+				.filter(match -> OperationalDeltaCommons.isOfType(match, PatternType.CONSISTENCY)) //
+				.filter(consistencyMatch -> staysBrokenAfterConflictResolution(classifiedBrokenMatches.get(consistencyMatch))) //
 				.mapToInt(match -> countGreenElementsForCorrespondingRule(match)).sum();
 	}
 
@@ -77,8 +73,17 @@ public class PreferSourceOperationalDeltaEvaluator extends ResolutionStrategyOpe
 				.orElse(0);
 	}
 
-	private boolean isOfType(ITGGMatch match, PatternType... types) {
-		return Arrays.stream(types).anyMatch(type -> match.getType().equals(type));
-	}
+	private boolean staysBrokenAfterConflictResolution(BrokenMatch brokenMatch) {
+		if (brokenMatch == null) {
+			return false;
+		}
 
+		DeletionType deletionType = brokenMatch.getDeletionType();
+		return deletionType.equals(DeletionType.SRC_FULL_TRG_NOT)
+				|| deletionType.equals(DeletionType.SRC_FULL_TRG_PARTLY)
+				|| deletionType.equals(DeletionType.SRC_PARTLY_TRG_FULL)
+				|| deletionType.equals(DeletionType.SRC_PARTLY_TRG_NOT)
+				|| deletionType.equals(DeletionType.SRC_PARTLY_TRG_PARTLY)
+				|| deletionType.equals(DeletionType.COMPLETELY);
+	}
 }

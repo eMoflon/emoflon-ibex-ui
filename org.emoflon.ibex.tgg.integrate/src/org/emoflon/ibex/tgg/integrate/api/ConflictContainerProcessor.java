@@ -9,13 +9,13 @@ import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.ConflictC
 
 public class ConflictContainerProcessor {
 
-	public static void process(ConflictContainer conflictContainer, List<IConflictResolutionStrategy> conflictResolutionStrategies) {
+	public static void process(ConflictContainer conflictContainer, List<ConflictResolutionSpecification> conflictResolutionStrategies) {
 		conflictContainer.getConflicts().forEach(conflict -> processConflict(conflict, conflictResolutionStrategies));
 		conflictContainer.getSubContainers().forEach(subContainer -> process(subContainer, conflictResolutionStrategies));
 	}
 	
-	private static void processConflict(Conflict conflict, List<IConflictResolutionStrategy> conflictResolutionStrategies) {
-		for (IConflictResolutionStrategy conflictResolutionStrategy : conflictResolutionStrategies) {
+	private static void processConflict(Conflict conflict, List<ConflictResolutionSpecification> conflictResolutionStrategies) {
+		for (ConflictResolutionSpecification conflictResolutionStrategy : conflictResolutionStrategies) {
 			if (conflictResolutionStrategy.conflictSatisfiesRule(conflict)) {
 				Optional<String> resolutionStrategyNameToApply = conflictResolutionStrategy.getResolutionStrategyNameToApply(conflict);
 				if (resolutionStrategyNameToApply.isPresent()) {

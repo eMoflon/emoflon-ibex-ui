@@ -4,7 +4,7 @@ import java.util.HashSet
 import org.eclipse.xtext.validation.Check
 import org.emoflon.ibex.tgg.integrate.integrate.BooleanExpression
 import org.emoflon.ibex.tgg.integrate.integrate.ComparisonExpression
-import org.emoflon.ibex.tgg.integrate.integrate.ConflictResolutionStrategy
+import org.emoflon.ibex.tgg.integrate.integrate.ConflictResolutionSpecification
 import org.emoflon.ibex.tgg.integrate.integrate.Integrate
 import org.emoflon.ibex.tgg.integrate.integrate.IntegratePackage
 import org.emoflon.ibex.tgg.integrate.integrate.VariableReference
@@ -44,10 +44,10 @@ class IntegrateValidator extends AbstractIntegrateValidator {
 	@Check
 	def void checkConflictResolutionStrategiesHaveUniqueName(Integrate integrate) {
 		val crsNames = new HashSet<String>();
-		for (ConflictResolutionStrategy crs : integrate.getConflictResolutionStrategies()) {
+		for (ConflictResolutionSpecification crs : integrate.getConflictResolutionSpecifications()) {
 			if (crsNames.contains(crs.getName())) {
 				error("Name of conflict resolution strategies must be unique", crs,
-					IntegratePackage.Literals.CONFLICT_RESOLUTION_STRATEGY__NAME);
+					IntegratePackage.Literals.CONFLICT_RESOLUTION_SPECIFICATION__NAME);
 			} else {
 				crsNames.add(crs.getName());
 			}
