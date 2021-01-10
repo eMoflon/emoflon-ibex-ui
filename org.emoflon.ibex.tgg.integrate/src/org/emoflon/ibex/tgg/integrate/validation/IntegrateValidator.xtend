@@ -13,34 +13,6 @@ import org.emoflon.ibex.tgg.integrate.internal.PipelineVisitor
 
 class IntegrateValidator extends AbstractIntegrateValidator {
 
-	/*@Check
-	def void checkFallbackStrategyIsProvided(Resolution resolution) {
-		val strategy = resolution.getStrategy();
-		val fallback = resolution.getFallback();
-		if (strategy !== null && strategyNeedsFallback(strategy.getName()) && fallback === null) {
-			error("Chosen resolution strategy needs a fallback strategy", strategy,
-				IntegratePackage.Literals.RESOLUTION_STRATEGY__NAME);
-		}
-	}
-
-	private def boolean strategyNeedsFallback(String strategyName) {
-		return ConflictResolutionStrategyRegistry.RESOLUTION_STRATEGY_NAMES.contains(strategyName);
-	}
-
-	@Check
-	def void checkFallbackStrategyWillNeverBeExecuted(Resolution resolution) {
-		val strategy = resolution.getStrategy();
-		val fallback = resolution.getFallback();
-		if (strategy !== null && strategyIsFallback(strategy.getName()) && fallback !== null) {
-			warning("Fallback strategy will never be executed", fallback,
-				IntegratePackage.Literals.RESOLUTION_STRATEGY__NAME);
-		}
-	}
-
-	private def boolean strategyIsFallback(String strategyName) {
-		return ConflictResolutionStrategyRegistry.FALLBACK_STRATEGY_NAMES.contains(strategyName);
-	}*/
-
 	@Check
 	def void checkConflictResolutionStrategiesHaveUniqueName(Integrate integrate) {
 		val crsNames = new HashSet<String>();

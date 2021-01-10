@@ -71,6 +71,7 @@ class DeletePreserveMergeAndPreserveOperationalDeltaEvaluator {
 
 	private List<TGGRule> getRelevantRules(DomainType domainType) {
 		Predicate<ITGGMatch> hasDeletedElementsOnDomain = hasDeletedElementsOnDomain(domainType);
+		
 		EList<TGGRule> rules = conflict.integrate().getTGG().getRules();
 		List<ITGGMatch> matchesToBeResolved = conflict.getScopeMatches().stream()//
 				.filter(match -> match.getType().equals(PatternType.CONSISTENCY))

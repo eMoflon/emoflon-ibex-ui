@@ -56,6 +56,7 @@ public class PreferSourceOperationalDeltaEvaluator extends ResolutionStrategyOpe
 	}
 
 	private int countElementsToBeDeleted(DeletePreserveConflict conflict) {
+		// TODO: INTEGRATE: getClassifiedBrokenMatches() may not return most recent set. Investigate?
 		Map<ITGGMatch, BrokenMatch> classifiedBrokenMatches = conflict.integrate().getClassifiedBrokenMatches();
 		Set<ITGGMatch> matches = new HashSet<ITGGMatch>();
 		matches.add(conflict.getMatch());
@@ -78,6 +79,7 @@ public class PreferSourceOperationalDeltaEvaluator extends ResolutionStrategyOpe
 			return false;
 		}
 
+		// TODO: INTEGRATE: Coordinate with CR
 		DeletionType deletionType = brokenMatch.getDeletionType();
 		return deletionType.equals(DeletionType.SRC_FULL_TRG_NOT)
 				|| deletionType.equals(DeletionType.SRC_FULL_TRG_PARTLY)

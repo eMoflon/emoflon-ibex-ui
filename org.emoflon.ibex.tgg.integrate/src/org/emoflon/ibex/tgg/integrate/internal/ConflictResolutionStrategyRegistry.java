@@ -34,6 +34,7 @@ public class ConflictResolutionStrategyRegistry {
 	private static final Map<String, Container> NAME_MAPPING = buildNameMapping();
 
 	private static Map<String, Container> buildNameMapping() {
+		
 		HashMap<String, Container> mapping = new HashMap<>();
 		mapping.put(MERGE_AND_PRESERVE_NAME, new Container(CRS_MergeAndPreserve.class, conflict -> ((CRS_MergeAndPreserve) conflict).crs_mergeAndPreserve()));
 		mapping.put(PREFER_SOURCE_NAME, new Container(CRS_PreferSource.class, conflict -> ((CRS_PreferSource) conflict).crs_preferSource()));

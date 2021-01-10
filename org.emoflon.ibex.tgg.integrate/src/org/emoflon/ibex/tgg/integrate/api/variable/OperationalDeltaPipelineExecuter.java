@@ -49,7 +49,7 @@ public class OperationalDeltaPipelineExecuter implements PipelineExecuter {
 
 	@Override
 	public PipelineExecuter types(Set<TypeFilterData> data) {
-		// TODO Auto-generated method stub
+		// TODO INTEGRATE: Implement type filtering for operational delta evaluation
 		return this;
 	}
 

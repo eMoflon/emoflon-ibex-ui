@@ -6,7 +6,9 @@ import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict;
 public class ResolutionExecuter {
 
 	public static void execute(String resolutionStrategyName, Conflict conflict) {
-		ConflictResolutionStrategyRegistry.getConflictResolver(resolutionStrategyName).accept(conflict);
+		ConflictResolutionStrategyRegistry
+			.getConflictResolver(resolutionStrategyName)
+			.accept(conflict);
 	}
 	
 }

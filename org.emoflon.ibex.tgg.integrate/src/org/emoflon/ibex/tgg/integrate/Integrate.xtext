@@ -20,10 +20,10 @@ Import:
 
 ConflictResolutionSpecification:
 	name=ID ':' 'solve' '{'
-	variables+=Variable+
-	'satisfies' '{'
-	rule=SatisfactionRule
-	'}'
+		variables+=Variable+
+		'satisfies' '{'
+			rule=SatisfactionRule
+		'}'
 	'}' 'with' resolution=Resolution;
 
 Variable:
