@@ -156,11 +156,11 @@ LiteralExpression:
 ;
 
 LinkVariablePattern:
-	(op = Operator)? '-' type = [ecore::EReference] '->' target = [ObjectVariablePattern]
+	(op = Operator)? '-' type = [ecore::EReference] '->' target = [ObjectVariablePattern|ID]
 ;
 
 ContextLinkVariablePattern:
-	'-' type = [ecore::EReference] '->' target = [ContextObjectVariablePattern]
+	'-' type = [ecore::EReference] '->' target = [ContextObjectVariablePattern|ID]
 ;
 
 Operator:

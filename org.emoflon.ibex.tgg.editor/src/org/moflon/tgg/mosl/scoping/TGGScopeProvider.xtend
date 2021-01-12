@@ -24,6 +24,7 @@ import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider
 import org.eclipse.xtext.scoping.impl.FilteringScope
 import org.eclipse.xtext.scoping.impl.SimpleScope
 import org.moflon.core.utilities.EcoreUtils
+import org.moflon.core.utilities.ProxyResolver
 import org.moflon.ide.mosl.core.scoping.MoflonScope
 import org.moflon.tgg.mosl.tgg.AttributeAssignment
 import org.moflon.tgg.mosl.tgg.AttributeConstraint
@@ -269,9 +270,10 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 	
 	def is_equal_or_super_type_of_ov(EClass sup, IEObjectDescription desc){
 		val sub = getOVType(desc.EObjectOrProxy)
+		val resolvedSup = ProxyResolver.resolve(sup)
 		sub != null && (  
-			EcoreUtils.equalsFQN(sub, sup) 
-		 	|| !sub.EAllSuperTypes.filter[superType | EcoreUtils.equalsFQN(superType, sup)].empty 
+			EcoreUtils.equalsFQN(sub, resolvedSup as EClass) 
+		 	|| !sub.EAllSuperTypes.filter[superType | EcoreUtils.equalsFQN(superType, resolvedSup as EClass)].empty 
 		 	|| EcoreUtils.equalsFQN(sub, EcorePackage.eINSTANCE.EObject)
 		)
 	}
