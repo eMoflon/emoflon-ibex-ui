@@ -53,6 +53,7 @@ import org.emoflon.ibex.gt.editor.gT.impl.EditorPatternImpl
 import org.emoflon.ibex.gt.editor.gT.MinMaxExpression
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
 import org.eclipse.emf.ecore.impl.EEnumImpl
+import org.emoflon.ibex.gt.editor.utils.GTDisjointPatternFinder
 
 /**
  * This class contains custom validation rules.
@@ -297,6 +298,10 @@ class GTValidator extends AbstractGTValidator {
 	// Count function
 	public static val RECURSIVE_COUNT_INVOCATION_MESSAGE = "Count can't be used recursively."
 	public static val RECURSIVE_COUNT_INVOCATION = CODE_PREFIX + "count.recursiveInvocation"
+	
+	// Disjoint pattern matching optimization extension
+	public static val PATTERN_DISJOINT_MESSAGE = "the pattern '%s' is disjoint with the subpatterns %s"
+  	public static val PATTERN_DISJOINT = "pattern.isDisjoint"
 
 	@Check
 	def checkFile(EditorGTFile file) {
@@ -1473,5 +1478,15 @@ class GTValidator extends AbstractGTValidator {
 			error(RECURSIVE_COUNT_INVOCATION_MESSAGE, GTPackage.Literals.EDITOR_COUNT_EXPRESSION__INVOKED_PATTEN,
 				RECURSIVE_COUNT_INVOCATION)
 	}
+	
+	 @Check
+  	def checkIfPatternDisjunct(EditorPattern pattern){
+  		val disjunctPatternFinder = new GTDisjointPatternFinder(pattern)
+  		if(disjunctPatternFinder.disjoint && !pattern.isOptimize){
+  			warning(String.format(PATTERN_DISJOINT_MESSAGE, pattern.name, 
+  			GTDisjointPatternFinder::getDisjointPatternFormat(disjunctPatternFinder.subpatterns))
+	  		, GTPackage.Literals.EDITOR_PATTERN__NAME, PATTERN_DISJOINT)	
+  	}
+  }
 
 }
