@@ -27,27 +27,27 @@ import org.emoflon.ibex.gt.editor.gT.EditorSimpleCondition;
  * Class which finds connected subpatterns in a pattern
  * 
  */
-public class GTDisjunctPatternFinder {
+public class GTDisjointPatternFinder {
 	
 		List<Set<EditorNode>> currentSubgraphs;	
 		EditorPattern flattenedPattern;
-		boolean isDisjunct;
+		boolean isDisjoint;
 		Set<Set<EditorNode>> allSubgraphs;
 	
-	public GTDisjunctPatternFinder(EditorPattern pattern) {
+	public GTDisjointPatternFinder(EditorPattern pattern) {
 		Optional<EditorPattern> newPattern = getFlattenedPattern(pattern);
 		allSubgraphs = new HashSet<Set<EditorNode>>();
 		
 		if(newPattern.isPresent()) flattenedPattern = newPattern.get();
 		else throw new IllegalArgumentException("pattern could not be flattened");
-		//disjunct patterns will not be searched for when there is more than one condition
+		//disjoint patterns will not be searched for when there is more than one condition
 		if(pattern.getConditions().size()>1 || pattern.isAbstract()) {
-			isDisjunct = false;
+			isDisjoint = false;
 			return;
 		}
 		calculateGraph(flattenedPattern);
-		currentSubgraphs = checkDisjunctPatterns(flattenedPattern);
-		isDisjunct = currentSubgraphs.size() >1;
+		currentSubgraphs = checkDisjointPatterns(flattenedPattern);
+		isDisjoint = currentSubgraphs.size() >1;
 	}
 	
 	/**
@@ -92,15 +92,15 @@ public class GTDisjunctPatternFinder {
 				
 			}
 		}
-		findDisjunctSubpatterns(flattenedGraph, signatureNodes);
+		findDisjointSubpatterns(flattenedGraph, signatureNodes);
 		return flattenedGraph;
 	}
 		
 	/**
-	 * finds all disjunct patterns in a pattern
+	 * finds all disjoint patterns in a pattern
 	 * @return
 	 */
-	private void findDisjunctSubpatterns(final Map<EditorNode, Pair<Set<EditorNode>, Boolean>> flattenedGraph, final List<EditorNode> signatureNodes) {
+	private void findDisjointSubpatterns(final Map<EditorNode, Pair<Set<EditorNode>, Boolean>> flattenedGraph, final List<EditorNode> signatureNodes) {
 		for(final EditorNode node: flattenedGraph.keySet().stream().filter(n -> n.getOperator() != EditorOperator.CREATE).collect(Collectors.toList())) {
 			//checks if node is already in a subgraph
 			if(flattenedGraph.get(node).getRight().booleanValue()) continue;
@@ -202,7 +202,7 @@ public class GTDisjunctPatternFinder {
 	/**
 	 * find all subpatterns that have signatureNodes of the main pattern
 	 */
-	private List<Set<EditorNode>> checkDisjunctPatterns(final EditorPattern pattern) {
+	private List<Set<EditorNode>> checkDisjointPatterns(final EditorPattern pattern) {
 		List<EditorNode> signatureNodes = getNodesByOperator(pattern, EditorOperator.CONTEXT, EditorOperator.DELETE).stream()
 				.filter(n -> !n.getName().startsWith("_")).collect(Collectors.toList());
 		// removes all subgraphs that do not have any signature nodes
@@ -226,16 +226,16 @@ public class GTDisjunctPatternFinder {
 	}
 	
 	/**
-	 * formats the disjunct patterns for the GTValidator
+	 * formats the disjoint patterns for the GTValidator
 	 */
-	public static String getDisjunctPatternFormat(List<Set<EditorNode>> nodeSet) {
-		List<String> disjunctPatterns = new ArrayList<String>();
+	public static String getDisjointPatternFormat(List<Set<EditorNode>> nodeSet) {
+		List<String> disjointPatterns = new ArrayList<String>();
 		for(Set<EditorNode> set: nodeSet) {
 			Set<String> nodeNames = set.stream().map(n -> n.getName()).collect(Collectors.toSet());
 			String pattern = "{" + StringUtils.join(nodeNames, ", ") + "}";
-			disjunctPatterns.add(pattern);
+			disjointPatterns.add(pattern);
 		}
-		return StringUtils.join(disjunctPatterns, ", ");
+		return StringUtils.join(disjointPatterns, ", ");
 	}
 	
 	private Optional<EditorPattern> getFlattenedPattern(final EditorPattern editorPattern) {
@@ -278,8 +278,8 @@ public class GTDisjunctPatternFinder {
 		return conditionPatterns;
 	}
 	
-	public boolean isDisjunct() {
-		return isDisjunct;
+	public boolean isDisjoint() {
+		return isDisjoint;
 	}
 	
 	public List<Set<EditorNode>> getSubpatterns(){

@@ -15,7 +15,7 @@ EditorImport:
   'import' name=STRING;
 
 EditorPattern:
-	(disjoint ?= '@disjoint')?
+	(optimize ?= '@optimize')?
   (abstract?='abstract')? type=EditorPatternType name=ID
   ('('
   (parameters+=EditorParameter (',' parameters+=EditorParameter)*)?
