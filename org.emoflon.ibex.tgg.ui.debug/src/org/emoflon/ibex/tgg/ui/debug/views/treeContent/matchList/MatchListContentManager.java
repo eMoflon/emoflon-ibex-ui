@@ -29,6 +29,10 @@ public class MatchListContentManager {
 
 		matchNodes = new HashMap<>();
 	}
+	
+	public MatchNode getMatchNode(Match m) {
+		return matchNodes.get(m);
+	}
 
 	public void populate(Collection<Match> matches) {
 

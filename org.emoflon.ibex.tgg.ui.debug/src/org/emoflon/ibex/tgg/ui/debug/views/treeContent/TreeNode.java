@@ -1,19 +1,25 @@
 package org.emoflon.ibex.tgg.ui.debug.views.treeContent;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.TextStyle;
 import org.emoflon.ibex.tgg.ui.debug.core.VictoryUI;
 
 public abstract class TreeNode {
+	
+	private static Map<FontData,Font> fonts = new HashMap<FontData, Font>();
+	
 	private String font = "Monospaced";
 	private int fontSize = 10;
 	private int fontStyle = SWT.NORMAL;
@@ -50,8 +56,18 @@ public abstract class TreeNode {
 		return new StyledString(getLabel(), new Styler() {
 			@Override
 			public void applyStyles(TextStyle pTextStyle) {
-				pTextStyle.font = FontDescriptor.createFrom(new FontData(font, fontSize, fontStyle))
-						.createFont(VictoryUI.getDisplay());
+				//check if font already exists
+				Font f;
+				FontData fontdata = new FontData(font, fontSize, fontStyle);
+				synchronized (fonts) {
+					f = fonts.get(fontdata);
+					if(f == null) {
+						f = FontDescriptor.createFrom(fontdata).createFont(VictoryUI.getDisplay());
+						fonts.put(fontdata, f);
+					}
+				}
+				
+				pTextStyle.font = f;
 				pTextStyle.strikeout = strikethrough;
 			}
 		});

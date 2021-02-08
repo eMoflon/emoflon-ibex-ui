@@ -21,6 +21,9 @@ import org.emoflon.ibex.tgg.ui.debug.api.DataProvider;
 import org.emoflon.ibex.tgg.ui.debug.api.Match;
 import org.emoflon.ibex.tgg.ui.debug.api.Rule;
 import org.emoflon.ibex.tgg.ui.debug.api.RuleApplication;
+import org.emoflon.ibex.tgg.ui.debug.api.enums.DebuggerMode;
+import org.emoflon.ibex.tgg.ui.debug.breakpoints.BreakpointManager;
+import org.emoflon.ibex.tgg.ui.debug.core.IDebugModeUpdater;
 import org.emoflon.ibex.tgg.ui.debug.core.IExitCodeReceiver;
 import org.emoflon.ibex.tgg.ui.debug.core.VictoryUI;
 import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager;
@@ -33,9 +36,13 @@ import org.emoflon.ibex.tgg.ui.debug.views.visualisable.VisualisableElement;
 public class MatchDisplayView extends Composite implements IVisualiser {
 
 	private IExitCodeReceiver exitCodeReceiver;
+	private IDebugModeUpdater debugModeUpdater;
 	private DataProvider dataProvider;
 	private UserOptionsManager userOptionsManager;
 	private UserOptionsMenu userOptionsMenu;
+	
+	private BreakpointManager breakpointManager;
+	private BreakpointMenu breakpointMenu;
 
 	private ScrolledComposite imageScroller;
 	private Label imageContainer;
@@ -49,14 +56,19 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	private Button saveModelsButton;
 	private Button restartButton;
 	private Button terminateButton;
+	private Button runButton;
+	private Button stepButton;
+	private Button configureBreakpointsButton;
 
-	private MatchDisplayView(Composite parent, IExitCodeReceiver exitCodeReceiver, DataProvider dataProvider,
-			UserOptionsManager userOptionsManager) {
+	private MatchDisplayView(Composite parent, IExitCodeReceiver exitCodeReceiver, IDebugModeUpdater debugModeUpdater, DataProvider dataProvider,
+			UserOptionsManager userOptionsManager, BreakpointManager breakpointManager) {
 		super(parent, SWT.NONE);
 
 		this.exitCodeReceiver = exitCodeReceiver;
 		this.dataProvider = dataProvider;
 		this.userOptionsManager = userOptionsManager;
+		this.breakpointManager = breakpointManager;
+		this.debugModeUpdater = debugModeUpdater;
 	}
 
 	private MatchDisplayView build() {
@@ -78,7 +90,7 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 
 		Composite buttonRow = new Composite(this, SWT.NONE);
 		buttonRow.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		buttonRow.setLayout(new GridLayout(4, false));
+		buttonRow.setLayout(new GridLayout(7, false));
 
 		userOptionsMenuButton = new Button(buttonRow, SWT.PUSH);
 		userOptionsMenuButton.setText("User Options");
@@ -87,6 +99,44 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 			@Override
 			public void widgetSelected(SelectionEvent pSelectionEvent) {
 				userOptionsMenu.show();
+			}
+		});
+		
+		runButton = new Button(buttonRow, SWT.PUSH);
+		runButton.setText("Run");
+		runButton.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
+		runButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent pSelectionEvent) {
+				switch (debugModeUpdater.getDebuggerMode()) {
+					case RUN:
+						debugModeUpdater.setDebuggerMode(DebuggerMode.STEP);
+						break;
+					case STEP:
+						debugModeUpdater.setDebuggerMode(DebuggerMode.RUN);
+						break;
+					default:
+						break;
+					}
+				}
+		});
+		stepButton = new Button(buttonRow, SWT.PUSH);
+		stepButton.setText("Step");
+		stepButton.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
+		stepButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent pSelectionEvent) {
+				debugModeUpdater.step();
+			}
+		});
+		
+		configureBreakpointsButton = new Button(buttonRow, SWT.PUSH);
+		configureBreakpointsButton.setText("Configure Breakpoints");
+		configureBreakpointsButton.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
+		configureBreakpointsButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent pSelectionEvent) {
+				breakpointMenu.show();
 			}
 		});
 
@@ -134,14 +184,18 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 
 		userOptionsMenu = new UserOptionsMenu(userOptionsManager, this);
 		userOptionsMenu.build(getShell());
+		
+		breakpointMenu = new BreakpointMenu(userOptionsManager, breakpointManager, dataProvider);
+		breakpointMenu.build(getShell());
+		
 		this.updateToolTips();
 		pack();
 		return this;
 	}
 
-	public static MatchDisplayView create(Composite parent, IExitCodeReceiver exitCodeReceiver,
-			DataProvider dataProvider, UserOptionsManager userOptionsManager) {
-		return new MatchDisplayView(parent, exitCodeReceiver, dataProvider, userOptionsManager).build();
+	public static MatchDisplayView create(Composite parent, IExitCodeReceiver exitCodeReceiver, IDebugModeUpdater debugModeUpdater,
+			DataProvider dataProvider, UserOptionsManager userOptionsManager, BreakpointManager breakpointManager) {
+		return new MatchDisplayView(parent, exitCodeReceiver, debugModeUpdater, dataProvider, userOptionsManager, breakpointManager).build();
 	}
 
 	/*
@@ -208,6 +262,20 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 				ToolTips.MATCHDISPLAY_SAVE_MODELS_BUTTON.getDescription(userOptionsManager.getToolTipSetting()));
 		imageContainer.setToolTipText(
 				ToolTips.MATCHDISPLAY_IMAGECONTAINER.getDescription(userOptionsManager.getToolTipSetting()));
+	}
+	
+	public void updateDebuggerMode() {
+		DebuggerMode newDebuggerMode = debugModeUpdater.getDebuggerMode();
+		switch(newDebuggerMode) {
+		case RUN:
+			this.runButton.setText("Break");
+			this.stepButton.setEnabled(false);
+			break;
+		case STEP:
+			this.runButton.setText("Run");
+			this.stepButton.setEnabled(true);
+			break;
+		}
 	}
 
 	private void displayImage(byte[] imageData) {

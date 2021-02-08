@@ -11,6 +11,7 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -188,6 +189,24 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 				applyItem.setEnabled(!matchNodes.isEmpty());
 			}
 		}
+	}
+	
+	public void setSelection(Match m) {
+		treeViewer.collapseAll();
+		if(m != null) {
+			MatchNode node = contentManager.getMatchNode(m);
+			StructuredSelection selection;
+			if(node == null) {
+				selection = new StructuredSelection();
+			} else {
+				treeViewer.expandToLevel(node, 0);
+				selection = new StructuredSelection(node);
+			}
+			treeViewer.setSelection(selection);
+		} else {
+			treeViewer.setSelection(new StructuredSelection());
+		}
+		
 	}
 
 	/**

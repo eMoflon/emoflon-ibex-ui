@@ -4,6 +4,7 @@ import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Set;
 import java.util.function.Consumer;
 
 import org.eclipse.swt.SWT;
@@ -21,13 +22,17 @@ import org.emoflon.ibex.tgg.ui.debug.api.DataPackage;
 import org.emoflon.ibex.tgg.ui.debug.api.DataProvider;
 import org.emoflon.ibex.tgg.ui.debug.api.Match;
 import org.emoflon.ibex.tgg.ui.debug.api.Victory;
+import org.emoflon.ibex.tgg.ui.debug.api.enums.DebuggerMode;
+import org.emoflon.ibex.tgg.ui.debug.breakpoints.Breakpoint;
+import org.emoflon.ibex.tgg.ui.debug.breakpoints.BreakpointManager;
 import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions.ToolTipOption;
 import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager;
+import org.emoflon.ibex.tgg.ui.debug.views.BreakpointMenu;
 import org.emoflon.ibex.tgg.ui.debug.views.MatchDisplayView;
 import org.emoflon.ibex.tgg.ui.debug.views.MatchListView;
 import org.emoflon.ibex.tgg.ui.debug.views.ProtocolView;
 
-public class VictoryUI implements IExitCodeReceiver, Consumer<DataPackage> {
+public class VictoryUI implements IExitCodeReceiver, IDebugModeUpdater, Consumer<DataPackage> {
 
 	private static Display display;
 
@@ -43,11 +48,13 @@ public class VictoryUI implements IExitCodeReceiver, Consumer<DataPackage> {
 	private ProtocolView protocolView;
 	private MatchDisplayView matchDisplayView;
 	private UserOptionsManager userOptionsManager;
+	private BreakpointManager breakpointManager;
 
-	public VictoryUI(Victory victory, DataProvider dataProvider) {
+	public VictoryUI(Victory victory, DataProvider dataProvider, BreakpointManager breakpointManager) {
 		this.victory = victory;
 		this.dataProvider = dataProvider;
-		userOptionsManager = new UserOptionsManager();
+		this.userOptionsManager = new UserOptionsManager();
+		this.breakpointManager = breakpointManager;
 
 		initUI();
 	}
@@ -84,7 +91,7 @@ public class VictoryUI implements IExitCodeReceiver, Consumer<DataPackage> {
 
 		leftPanelSashForm.setWeights(new int[] { 60, 40 });
 
-		matchDisplayView = MatchDisplayView.create(mainSashForm, this, dataProvider, userOptionsManager);
+		matchDisplayView = MatchDisplayView.create(mainSashForm, this, this, dataProvider, userOptionsManager, breakpointManager);
 		matchDisplayView.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		mainSashForm.setWeights(new int[] { 30, 70 });
@@ -159,7 +166,6 @@ public class VictoryUI implements IExitCodeReceiver, Consumer<DataPackage> {
 		helpToolTipsFull.addSelectionListener(tooltipSelectionListener);
 		helpToolTipsMinimal.addSelectionListener(tooltipSelectionListener);
 		helpToolTipsOff.addSelectionListener(tooltipSelectionListener);
-
 	}
 
 	public boolean run() {
@@ -182,8 +188,33 @@ public class VictoryUI implements IExitCodeReceiver, Consumer<DataPackage> {
 		matchListView.populate(dataPackage.getMatches());
 		protocolView.populate(dataPackage.getRuleApplications());
 	}
+	
+	public void setMatchSelection(Match m) {
+		matchListView.setSelection(m);
+	}
 
 	public Match getSelectedMatch() {
 		return matchListView.getChosenMatch();
+	}
+
+	@Override
+	public void setDebuggerMode(DebuggerMode newDebugMode) {
+		if(newDebugMode != getDebuggerMode()) {
+			victory.setDebuggerMode(newDebugMode);
+			if(newDebugMode == DebuggerMode.RUN) {
+				victory.skipMatchSelection();
+			}
+		}
+		this.matchDisplayView.updateDebuggerMode();
+	}
+
+	@Override
+	public DebuggerMode getDebuggerMode() {
+		return victory.getDebuggerMode();
+	}
+	
+	@Override
+	public void step() {
+		victory.skipMatchSelection();
 	}
 }
