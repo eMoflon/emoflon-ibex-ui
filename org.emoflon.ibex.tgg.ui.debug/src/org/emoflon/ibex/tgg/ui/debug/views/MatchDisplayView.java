@@ -270,10 +270,13 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 		case RUN:
 			this.runButton.setText("Break");
 			this.stepButton.setEnabled(false);
+			this.configureBreakpointsButton.setEnabled(false);
+			this.breakpointMenu.hide();
 			break;
 		case STEP:
 			this.runButton.setText("Run");
 			this.stepButton.setEnabled(true);
+			this.configureBreakpointsButton.setEnabled(true);
 			break;
 		}
 	}

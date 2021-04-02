@@ -4,7 +4,6 @@ import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Set;
 import java.util.function.Consumer;
 
 import org.eclipse.swt.SWT;
@@ -23,11 +22,9 @@ import org.emoflon.ibex.tgg.ui.debug.api.DataProvider;
 import org.emoflon.ibex.tgg.ui.debug.api.Match;
 import org.emoflon.ibex.tgg.ui.debug.api.Victory;
 import org.emoflon.ibex.tgg.ui.debug.api.enums.DebuggerMode;
-import org.emoflon.ibex.tgg.ui.debug.breakpoints.Breakpoint;
 import org.emoflon.ibex.tgg.ui.debug.breakpoints.BreakpointManager;
 import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions.ToolTipOption;
 import org.emoflon.ibex.tgg.ui.debug.options.UserOptionsManager;
-import org.emoflon.ibex.tgg.ui.debug.views.BreakpointMenu;
 import org.emoflon.ibex.tgg.ui.debug.views.MatchDisplayView;
 import org.emoflon.ibex.tgg.ui.debug.views.MatchListView;
 import org.emoflon.ibex.tgg.ui.debug.views.ProtocolView;
@@ -185,7 +182,7 @@ public class VictoryUI implements IExitCodeReceiver, IDebugModeUpdater, Consumer
 
 	@Override
 	public void accept(DataPackage dataPackage) {
-		matchListView.populate(dataPackage.getMatches());
+		matchListView.populate(dataPackage.getMatches(), dataPackage.getRuleApplications());
 		protocolView.populate(dataPackage.getRuleApplications());
 	}
 	

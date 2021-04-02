@@ -1,10 +1,14 @@
 package org.emoflon.ibex.tgg.ui.debug.adapter.TGGAdapter;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EcorePackage;
+import org.emoflon.ibex.tgg.ui.debug.api.Attribute;
 import org.emoflon.ibex.tgg.ui.debug.api.Node;
 import org.emoflon.ibex.tgg.ui.debug.api.enums.Action;
 import org.emoflon.ibex.tgg.ui.debug.api.enums.Domain;
@@ -63,11 +67,16 @@ public class TGGRuleNodeAdapter implements Node {
 	}
 
 	@Override
-	public List<String> getAttributes() {
-		// TODO Requires a String for each line of attributes that should be displayed
-		// For rule-nodes we can leave this empty for now, but we may want to fill in
-		// the fields it has later
-		return Collections.emptyList();
+	public List<Attribute> getAttributes() {
+		List<Attribute> attributes = new ArrayList<Attribute>();
+		for (EAttribute attr : node.getType().getEAttributes()) {
+			if(EcorePackage.eINSTANCE.getEClassifiers().contains(attr.eClass())) {
+				attributes.add(EAttributeAdapter.adapt(attr));
+			}
+//			attributes.add(attr.getEType().getName() + " " + attr.getName() + " = " + object.eGet(attr));
+		}
+
+		return attributes;
 	}
 
 	@Override

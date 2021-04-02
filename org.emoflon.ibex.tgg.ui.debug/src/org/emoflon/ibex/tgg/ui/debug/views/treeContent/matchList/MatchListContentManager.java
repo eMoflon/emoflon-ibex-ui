@@ -3,16 +3,19 @@ package org.emoflon.ibex.tgg.ui.debug.views.treeContent.matchList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.emoflon.ibex.tgg.ui.debug.api.Match;
 import org.emoflon.ibex.tgg.ui.debug.api.Rule;
+import org.emoflon.ibex.tgg.ui.debug.api.RuleApplication;
 import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeContentManager;
 
 public class MatchListContentManager {
 
-	private TreeContentManager manager = new TreeContentManager();
+	private TreeContentManager manager = new TreeContentManager(0);
 
 	private Map<Rule, RuleNode> ruleNodes;
 	private Map<Match, MatchNode> matchNodes;
@@ -34,7 +37,16 @@ public class MatchListContentManager {
 		return matchNodes.get(m);
 	}
 
-	public void populate(Collection<Match> matches) {
+	public void populate(Collection<Match> matches, List<RuleApplication> ruleApplications) {
+		
+		if(!ruleApplications.isEmpty()) {
+			RuleApplication lastRuleApplication = ruleApplications.get(ruleApplications.size()-1);
+			for(Entry<Rule, RuleNode> ruleNodeMapping : ruleNodes.entrySet()) {
+				if(ruleNodeMapping.getKey().getName().equals(lastRuleApplication.getRuleName())) {
+					ruleNodeMapping.getValue().increaseTimesApplied();
+				}
+			}
+		}
 
 		if (matches == null || matches.isEmpty())
 			return;

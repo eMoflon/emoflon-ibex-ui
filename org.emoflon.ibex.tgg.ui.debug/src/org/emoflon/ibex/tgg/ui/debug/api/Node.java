@@ -18,5 +18,5 @@ public interface Node {
 
 	public Action getAction();
 
-	public List<String> getAttributes();
+	public List<Attribute> getAttributes();
 }

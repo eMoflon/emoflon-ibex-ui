@@ -1,8 +1,6 @@
 package org.emoflon.ibex.tgg.ui.debug.api;
 
 import org.emoflon.ibex.tgg.ui.debug.api.enums.DebuggerMode;
-import org.emoflon.ibex.tgg.ui.debug.breakpoints.Breakpoint;
-import org.emoflon.ibex.tgg.ui.debug.breakpoints.Breakpoint.BreakpointEvaluationTime;
 import org.emoflon.ibex.tgg.ui.debug.breakpoints.BreakpointManager;
 import org.emoflon.ibex.tgg.ui.debug.core.IDebugModeUpdater;
 import org.emoflon.ibex.tgg.ui.debug.core.VictoryUI;
@@ -24,17 +22,6 @@ public final class Victory implements IDebugModeUpdater {
 	public boolean run(DataProvider dataProvider, Runnable matchProvider) {
 		
 		this.breakpointManager = new BreakpointManager();
-		
-		//TODO remove test code
-//		Breakpoint b = new NumberOfMatchesBreakpoint(100, "EmployeeToPCRule", "EmployeeToLaptopRule");
-//		b.setBreakpointEvaluationTime(BreakpointEvaluationTime.FOUND_MATCHES);
-//		this.breakpointManager.addBreakpoint(b);
-//		b = new RulenameBreakpoint("EmployeeToLaptopRule");
-//		b.setBreakpointEvaluationTime(BreakpointEvaluationTime.MATCH_SELECTED);
-//		this.breakpointManager.addBreakpoint(b);
-//		b = new CreatedTypeBreakpoint("PC");
-//		b.setBreakpointEvaluationTime(BreakpointEvaluationTime.MATCH_SELECTED);
-//		this.breakpointManager.addBreakpoint(b);
 		
 		if (ui != null)
 			throw new IllegalStateException("Victory has already been initialised.");
@@ -73,26 +60,20 @@ public final class Victory implements IDebugModeUpdater {
 	
 	public boolean checkBreakpointsBeforeMatchSelection(DataPackage dataPackage) {
 		//check if any breakpoint is hit
-		synchronized (breakpointManager) {
-			for(Breakpoint b : breakpointManager.getTopLevelBreakpoints()) {
-				if(b.isActive(BreakpointEvaluationTime.FOUND_MATCHES)) {
-					Match m = b.evaluate(dataPackage);
-					if(m != null) {
-						this.setDebuggerMode(DebuggerMode.STEP);
-						VictoryUI.getDisplay().syncExec(() -> ui.setMatchSelection(m));
-						return true;
-					}
-				}
-			}
-			return false;
+		Match m = this.breakpointManager.checkBreakpointsBeforeMatchSelection(dataPackage);
+		if(m != null) {
+			this.setDebuggerMode(DebuggerMode.STEP);
+			VictoryUI.getDisplay().syncExec(() -> ui.setMatchSelection(m));
+			return true;
 		}
+		return false;
 	}
 	
 	public void updateUI(DataPackage dataPackage, Match chosenMatch) {
 		if (ui == null)
 			throw new IllegalStateException("Victory has not been initialised yet.");
 		VictoryUI.getDisplay().syncExec(() -> ui.accept(dataPackage));
-		if(chosenMatch != null) {
+		if(chosenMatch != null && this.getDebuggerMode() == DebuggerMode.STEP) {
 			VictoryUI.getDisplay().syncExec(() -> ui.setMatchSelection(chosenMatch));
 		}
 		preSelectedMatch = chosenMatch;
@@ -100,18 +81,12 @@ public final class Victory implements IDebugModeUpdater {
 	
 	public boolean checkBreakpointsAfterMatchSelection(DataPackage dataPackage, Match chosenMatch) {
 		//check if any breakpoint is hit
-		synchronized (breakpointManager) {
-			for(Breakpoint b : breakpointManager.getTopLevelBreakpoints()) {
-				if(b.isActive(BreakpointEvaluationTime.MATCH_SELECTED)) {
-					if(b.evaluate(chosenMatch)) {
-						this.setDebuggerMode(DebuggerMode.STEP);
-						VictoryUI.getDisplay().syncExec(() -> ui.setMatchSelection(chosenMatch));
-						return true;
-					}
-				}
-			}
-			return false;
+		if(this.breakpointManager.checkBreakpointsAfterMatchSelection(dataPackage, chosenMatch)) {
+			this.setDebuggerMode(DebuggerMode.STEP);
+			VictoryUI.getDisplay().syncExec(() -> ui.setMatchSelection(chosenMatch));
+			return true;
 		}
+		return false;
 	}
 
 	public Match selectMatch() {

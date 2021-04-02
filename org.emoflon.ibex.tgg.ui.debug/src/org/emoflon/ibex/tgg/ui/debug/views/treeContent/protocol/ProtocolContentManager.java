@@ -12,7 +12,7 @@ import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeNode;
 
 public class ProtocolContentManager {
 
-	private TreeContentManager manager = new TreeContentManager();
+	private TreeContentManager manager = new TreeContentManager(0);
 
 	private List<RuleApplicationNode> protocolNodes;
 	private final IUserOptions userOptions;

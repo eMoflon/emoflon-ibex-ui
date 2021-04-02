@@ -4,6 +4,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.emoflon.ibex.tgg.ui.debug.api.DataPackage;
+import org.emoflon.ibex.tgg.ui.debug.api.Match;
+import org.emoflon.ibex.tgg.ui.debug.breakpoints.Breakpoint.BreakpointEvaluationTime;
 import org.emoflon.ibex.tgg.ui.debug.breakpoints.impl.CombinedBreakpoint;
 import org.emoflon.ibex.tgg.ui.debug.core.VictoryUI;
 import org.emoflon.ibex.tgg.ui.debug.views.BreakpointMenu;
@@ -47,6 +50,31 @@ public class BreakpointManager {
 	
 	public synchronized Collection<Breakpoint> getTopLevelBreakpoints() {
 		return this.breakpoints;
+	}
+	
+	public Match checkBreakpointsBeforeMatchSelection(DataPackage dataPackage) {
+		//check if any breakpoint is hit
+		for(Breakpoint b : this.getTopLevelBreakpoints()) {
+			if(b.isActive(BreakpointEvaluationTime.FOUND_MATCHES)) {
+				Match m = b.evaluate(dataPackage);
+				if(m != null) {
+					return m;
+				}
+			}
+		}
+		return null;
+	}
+	
+	public boolean checkBreakpointsAfterMatchSelection(DataPackage dataPackage, Match chosenMatch) {
+		//check if any breakpoint is hit
+		for(Breakpoint b : this.getTopLevelBreakpoints()) {
+			if(b.isActive(BreakpointEvaluationTime.MATCH_SELECTED)) {
+				if(b.evaluate(chosenMatch)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	public BreakpointMenu getBreakpointMenu() {

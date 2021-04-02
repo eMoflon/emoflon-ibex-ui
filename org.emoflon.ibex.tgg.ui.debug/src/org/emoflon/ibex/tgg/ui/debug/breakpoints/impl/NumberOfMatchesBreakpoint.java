@@ -2,6 +2,7 @@ package org.emoflon.ibex.tgg.ui.debug.breakpoints.impl;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.emoflon.ibex.tgg.ui.debug.api.DataPackage;
 import org.emoflon.ibex.tgg.ui.debug.api.Match;
@@ -13,7 +14,7 @@ public class NumberOfMatchesBreakpoint extends AbstractBreakpoint {
 	
 	private int limit;
 	
-	private final boolean considerAllRules;
+	private boolean considerAllRules;
 	
 	@Override
 	public String toString() {
@@ -73,6 +74,19 @@ public class NumberOfMatchesBreakpoint extends AbstractBreakpoint {
 	public synchronized void setLimit(int limit) {
 		this.limit = limit;
 		this.resetHitCount();
+	}
+	
+	public synchronized void setRules(String... rules) {
+		this.rules.clear();
+		this.considerAllRules = rules.length < 1;
+		for(String r : rules) {
+			this.rules.add(r);
+		}
+		this.resetHitCount();
+	}
+	
+	public synchronized String[] getRules() {
+		return this.rules.toArray(new String[this.rules.size()]);
 	}
 
 }

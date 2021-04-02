@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.emoflon.ibex.tgg.ui.debug.api.Match;
 import org.emoflon.ibex.tgg.ui.debug.api.Rule;
+import org.emoflon.ibex.tgg.ui.debug.api.RuleApplication;
 import org.emoflon.ibex.tgg.ui.debug.api.Victory;
 import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeNode;
@@ -166,13 +167,14 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 
 	/**
 	 * Populates the list-view with the given collection of matches.
+	 * @param ruleApplications 
 	 * 
 	 * @param pMatches the collection of matches to populate the list-view with
 	 */
-	public void populate(Collection<Match> matches) {
+	public void populate(Collection<Match> matches, List<RuleApplication> ruleApplications) {
 		applyButton.setEnabled(false);
 		applyItem.setEnabled(false);
-		contentManager.populate(matches);
+		contentManager.populate(matches, ruleApplications);
 		treeViewer.refresh();
 		Object selectedElement = treeViewer.getStructuredSelection().getFirstElement();
 		if(selectedElement != null) {
@@ -241,8 +243,8 @@ public class MatchListView extends Composite implements ISharedFocusElement {
 	private void applyMatch(MatchNode matchNode) {
 		synchronized (chosenMatch) {
 			victory.setSelectedMatch(matchNode.getMatch());
-			RuleNode ruleNode = (RuleNode) matchNode.getParent();
-			ruleNode.increaseTimesApplied();
+//			RuleNode ruleNode = (RuleNode) matchNode.getParent();
+//			ruleNode.increaseTimesApplied();
 			chosenMatch.notify();
 		}
 	}

@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.emoflon.ibex.tgg.ui.debug.breakpoints.Breakpoint;
 import org.emoflon.ibex.tgg.ui.debug.breakpoints.impl.CombinedBreakpoint;
 import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions;
@@ -15,7 +16,7 @@ import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeNode;
 
 public class BreakpointContentManager {
 	
-	private final TreeContentManager manager = new TreeContentManager();
+	private final TreeContentManager manager = new TreeContentManager(StyledCellLabelProvider.COLORS_ON_SELECTION);
 	private final IUserOptions userOptions;
 	
 	private Map<Breakpoint, BreakpointNode> breakpointNodes;

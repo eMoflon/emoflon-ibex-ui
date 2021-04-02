@@ -8,7 +8,9 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.emoflon.ibex.tgg.ui.debug.api.Attribute;
 import org.emoflon.ibex.tgg.ui.debug.api.Node;
 import org.emoflon.ibex.tgg.ui.debug.api.enums.Action;
 import org.emoflon.ibex.tgg.ui.debug.api.enums.Domain;
@@ -36,7 +38,7 @@ public class EObjectAdapter implements Node {
 	private String label;
 	private String index;
 	private Domain domain;
-	private List<String> attributes;
+	private List<Attribute> attributes;
 
 	private EObjectAdapter(EObject eObject, Domain domain) {
 		object = eObject;
@@ -54,8 +56,13 @@ public class EObjectAdapter implements Node {
 		}
 
 		attributes = new ArrayList<>();
-		for (EAttribute attr : object.eClass().getEAttributes())
-			attributes.add(attr.getEType().getName() + " " + attr.getName() + " = " + object.eGet(attr));
+		for (EAttribute attr : object.eClass().getEAttributes()) {
+			if(EcorePackage.eINSTANCE.getEClassifiers().contains(attr.eClass())) {
+				attributes.add(EAttributeAdapter.adapt(object, attr));
+			}
+//			attributes.add(attr.getEType().getName() + " " + attr.getName() + " = " + object.eGet(attr));
+		}
+			
 	}
 
 	public String getIndex() {
@@ -83,7 +90,7 @@ public class EObjectAdapter implements Node {
 	}
 
 	@Override
-	public List<String> getAttributes() {
+	public List<Attribute> getAttributes() {
 		return attributes;
 	}
 

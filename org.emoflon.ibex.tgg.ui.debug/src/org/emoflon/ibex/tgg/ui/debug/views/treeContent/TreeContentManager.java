@@ -1,18 +1,25 @@
 package org.emoflon.ibex.tgg.ui.debug.views.treeContent;
 
-import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
+import java.util.Arrays;
+
+import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.IToolTipProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.emoflon.ibex.tgg.ui.debug.views.treeContent.TreeNode.TreeRootNode;
 
 public class TreeContentManager
-		implements ITreeContentProvider, IStyledLabelProvider, IColorProvider, IToolTipProvider {
+		extends StyledCellLabelProvider
+		implements ITreeContentProvider, IStyledLabelProvider, IColorProvider, IToolTipProvider 
+		 {
 
 	private TreeRootNode root = new TreeRootNode();
 
@@ -20,8 +27,12 @@ public class TreeContentManager
 		return root;
 	}
 
-	public DelegatingStyledCellLabelProvider getCellLabelProvider() {
-		return new DelegatingStyledCellLabelProvider(this);
+	public IBaseLabelProvider getCellLabelProvider() {
+		return this;
+	}
+	
+	public TreeContentManager(int style) {
+		super(style);
 	}
 
 	/*
@@ -124,5 +135,33 @@ public class TreeContentManager
 			return ((TreeNode) element).getBackground();
 		else
 			throw new IllegalStateException("Tree must not contain any elements other than TreeNodes");
+	}
+	
+	@Override
+	public void update(ViewerCell cell) {
+		//Taken from DelegatingStyledCellLabelProvider
+		Object element = cell.getElement();
+
+		StyledString styledString = getStyledText(element);
+		String newText= styledString.toString();
+
+		StyleRange[] oldStyleRanges= cell.getStyleRanges();
+		StyleRange[] newStyleRanges= isOwnerDrawEnabled() ? styledString.getStyleRanges() : null;
+
+		if (!Arrays.equals(oldStyleRanges, newStyleRanges)) {
+			cell.setStyleRanges(newStyleRanges);
+			if (cell.getText().equals(newText)) {
+				// make sure there will be a refresh from a change
+				cell.setText(""); //$NON-NLS-1$
+			}
+		}
+
+		cell.setText(newText);
+		cell.setImage(getImage(element));
+//		cell.setFont(getFont(element));
+		cell.setForeground(getForeground(element));
+		cell.setBackground(getBackground(element));
+
+		// no super call required. changes on item will trigger the refresh.
 	}
 }
