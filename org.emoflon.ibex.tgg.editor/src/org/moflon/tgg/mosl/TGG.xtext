@@ -140,7 +140,7 @@ AttributeAssignment:
 ;
 
 Expression:
-	(LiteralExpression | AttributeExpression | EnumExpression)
+	(EnumExpression | AttributeExpression | LiteralExpression)
 ;
 
 EnumExpression:
