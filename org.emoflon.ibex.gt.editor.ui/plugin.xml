@@ -501,16 +501,15 @@
      	</wizard>
 	</extension>
  <extension
-       point="net.sourceforge.plantuml.eclipse.diagramTextProvider">
-    <diagramTextProvider
-          priority="20"
-          providerClass="org.emoflon.ibex.gt.editor.ui.visualization.GTVisualizer">
-    </diagramTextProvider>
- </extension>
- <extension
        point="net.sourceforge.plantuml.eclipse.linkOpener">
     <linkOpener
           linkOpenerClass="org.emoflon.ibex.gt.editor.ui.visualization.PlatformFragmentLinkOpener">
     </linkOpener>
+ </extension>
+ <extension
+       point="org.moflon.core.ui.DiagramTextProvider">
+    <diagram_text_provider
+          class="org.emoflon.ibex.gt.editor.ui.visualization.GTVisualizer">
+    </diagram_text_provider>
  </extension>
 </plugin>

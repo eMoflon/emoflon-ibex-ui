@@ -18,10 +18,9 @@
     </builder>
   </extension>
   <extension
-        point="net.sourceforge.plantuml.eclipse.diagramTextProvider">
-     <diagramTextProvider
-           priority="3"
-           providerClass="org.emoflon.ibex.tgg.ide.visualisation.IbexTGGVisualiser">
-     </diagramTextProvider>
+        point="org.moflon.core.ui.DiagramTextProvider">
+     <diagram_text_provider
+           class="org.emoflon.ibex.tgg.ide.visualisation.IbexTGGVisualiser">
+     </diagram_text_provider>
   </extension>
 </plugin>
