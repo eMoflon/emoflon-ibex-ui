@@ -104,11 +104,8 @@ public class GTVisualizer implements EMoflonDiagramTextProvider {
 	
 	@Override
 	public boolean supportsSelection(ISelection selection) {
-		Collection<EObject> elements = VisualiserUtilities.extractEcoreSelection(selection);
-		if(elements == null)
-			return false;
-
-		return !elements.stream().filter(elt -> !elt.eClass().getEPackage().getName().contains("org.emoflon.ibex.gt.editor.gT")).findAny().isPresent();
+		//Note: If the editor is detected correctly, this must be true anyways!
+		return true;
 	}
 
 	/**

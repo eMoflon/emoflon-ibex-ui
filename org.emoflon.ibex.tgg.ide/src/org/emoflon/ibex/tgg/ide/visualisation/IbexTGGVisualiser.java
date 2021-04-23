@@ -140,11 +140,8 @@ public class IbexTGGVisualiser implements EMoflonDiagramTextProvider {
 	
 	@Override
 	public boolean supportsSelection(ISelection selection) {
-		Collection<EObject> elements = VisualiserUtilities.extractEcoreSelection(selection);
-		if(elements == null)
-			return false;
-
-		return !elements.stream().filter(elt -> !elt.eClass().getEPackage().getName().contains("org.moflon.tgg.mosl.tgg")).findAny().isPresent();
+		//Note: If the editor is detected correctly, this must be true anyways!
+		return true;
 	}
 
 	private Optional<TripleGraphGrammarFile> extractTGGFileFromEditor(IEditorPart editor) {

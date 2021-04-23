@@ -17,6 +17,7 @@ import org.emoflon.ibex.gt.editor.gT.EditorAttributeAssignment
 import java.util.AbstractMap.SimpleEntry
 import java.util.Map.Entry
 import org.moflon.core.utilities.EcoreUtils
+import org.eclipse.xtext.EcoreUtil2
 import java.util.HashMap
 import org.emoflon.ibex.gt.editor.gT.EditorCountExpression
 import java.util.Map
@@ -90,6 +91,7 @@ class GTPlantUMLGenerator {
 			}
 			
 			«FOR p : getConditionPatterns(pattern)»
+				«IF !p.eIsProxy»
 				«val flattenedConditionPattern = new GTFlattener(p).getFlattenedPattern»
 					«visualizePattern(flattenedConditionPattern,"",true)»
 				«FOR node : flattenedConditionPattern.nodes»
@@ -97,6 +99,7 @@ class GTPlantUMLGenerator {
 						"«IF hasNamespace»«namespace».«ENDIF»«pattern.name».«nodeName(flattenedPattern, node.name)»" #.[#335bb0].# "«IF hasNamespace»«namespace».«ENDIF»«p.name».«nodeName(node)»"
 					«ENDIF»
 				«ENDFOR»
+				«ENDIF»
 			«ENDFOR»
 			
 			«visualizeCountInvocation(flattenedPattern, namespace)»
@@ -305,6 +308,9 @@ class GTPlantUMLGenerator {
 	static def Set<EditorPattern> getConditionPatterns(EditorCondition condition) {
 		val patterns = new HashSet
 		for (c : new GTConditionHelper(condition).getApplicationConditions()) {
+			if(c.pattern.eIsProxy) {
+				EcoreUtil2.resolveLazyCrossReferences(c.eResource, null);
+			}
 			patterns.add(c.pattern)
 		}
 		return patterns
