@@ -1,8 +1,10 @@
 package org.emoflon.ibex.gt.editor.ui.visualization;
 
+import java.util.Collection;
 import java.util.Optional;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorPart;
@@ -11,18 +13,18 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile;
 import org.emoflon.ibex.gt.editor.gT.EditorPattern;
-import org.emoflon.ibex.gt.editor.gT.impl.EditorGTFileImpl;
+import org.moflon.core.ui.VisualiserUtilities;
 import org.moflon.core.ui.visualisation.EMoflonPlantUMLGenerator;
-import org.moflon.core.ui.visualisation.common.EMoflonVisualiser;
+import org.moflon.core.ui.visualisation.common.EMoflonDiagramTextProvider;
 
 /**
  * The GTVisualizer provides a PlantUML visualization of graph transformation
  * rules.
  */
-public class GTVisualizer extends EMoflonVisualiser {
+public class GTVisualizer implements EMoflonDiagramTextProvider {
 
 	@Override
-	protected String getDiagramBody(final IEditorPart editor, final ISelection selection) {
+	public String getDiagramBody(final IEditorPart editor, final ISelection selection) {
 		Optional<EditorGTFile> file = this.loadFileFromEditor(editor);
 		if (!file.isPresent()) {
 			return EMoflonPlantUMLGenerator.emptyDiagram();
@@ -98,6 +100,12 @@ public class GTVisualizer extends EMoflonVisualiser {
 	@Override
 	public boolean supportsEditor(final IEditorPart editor) {
 		return this.loadFileFromEditor(editor).isPresent();
+	}
+	
+	@Override
+	public boolean supportsSelection(ISelection selection) {
+		//Note: If the editor is detected correctly, this must be true anyways!
+		return true;
 	}
 
 	/**

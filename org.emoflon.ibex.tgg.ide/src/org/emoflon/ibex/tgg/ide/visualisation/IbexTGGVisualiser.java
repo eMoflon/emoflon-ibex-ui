@@ -1,9 +1,11 @@
 package org.emoflon.ibex.tgg.ide.visualisation;
 
+import java.util.Collection;
 import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -15,21 +17,21 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.emoflon.ibex.tgg.ide.admin.IbexTGGBuilder;
 import org.emoflon.ibex.tgg.ide.transformation.EditorTGGtoFlattenedTGG;
+import org.moflon.core.ui.VisualiserUtilities;
 import org.moflon.core.ui.visualisation.EMoflonPlantUMLGenerator;
-import org.moflon.core.ui.visualisation.common.EMoflonVisualiser;
+import org.moflon.core.ui.visualisation.common.EMoflonDiagramTextProvider;
 import org.moflon.core.utilities.MoflonUtil;
-import org.moflon.tgg.mosl.tgg.Nac;
 import org.moflon.tgg.mosl.tgg.Rule;
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile;
 
-public class IbexTGGVisualiser extends EMoflonVisualiser {
+public class IbexTGGVisualiser implements EMoflonDiagramTextProvider {
 
 	private Logger logger = Logger.getLogger(IbexTGGVisualiser.class);
 
 	private Optional<String> lastDiagramBody = Optional.empty();
 
 	@Override
-	protected String getDiagramBody(IEditorPart editor, ISelection selection) {
+	public String getDiagramBody(IEditorPart editor, ISelection selection) {
 		try {
 			String body = maybeVisualiseTGGRule(editor, selection) //
 					.orElse(maybeVisualiseTGGSchema(editor, selection)//
@@ -134,6 +136,12 @@ public class IbexTGGVisualiser extends EMoflonVisualiser {
 	@Override
 	public boolean supportsEditor(IEditorPart editor) {
 		return extractTGGFileFromEditor(editor).isPresent();
+	}
+	
+	@Override
+	public boolean supportsSelection(ISelection selection) {
+		//Note: If the editor is detected correctly, this must be true anyways!
+		return true;
 	}
 
 	private Optional<TripleGraphGrammarFile> extractTGGFileFromEditor(IEditorPart editor) {
