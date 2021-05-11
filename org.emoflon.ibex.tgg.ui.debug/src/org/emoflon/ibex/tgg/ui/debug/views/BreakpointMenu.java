@@ -44,6 +44,7 @@ import org.emoflon.ibex.tgg.ui.debug.breakpoints.impl.CombinedBreakpoint;
 import org.emoflon.ibex.tgg.ui.debug.breakpoints.impl.CombinedBreakpoint.CombinationType;
 import org.emoflon.ibex.tgg.ui.debug.breakpoints.impl.CombinedBreakpoint.EvaluationType;
 import org.emoflon.ibex.tgg.ui.debug.breakpoints.impl.CreatedTypeBreakpoint;
+import org.emoflon.ibex.tgg.ui.debug.breakpoints.impl.ModelSizeBreakpoint;
 import org.emoflon.ibex.tgg.ui.debug.breakpoints.impl.NumberOfMatchesBreakpoint;
 import org.emoflon.ibex.tgg.ui.debug.breakpoints.impl.RulenameBreakpoint;
 import org.emoflon.ibex.tgg.ui.debug.options.IUserOptions;
@@ -144,6 +145,22 @@ public class BreakpointMenu {
 		};
 		addNumberOfMatchesBreakpointTreeMenu.addSelectionListener(selectionListener);
 		addNumberOfMatchesBreakpointMenuBar.addSelectionListener(selectionListener);
+		
+		MenuItem addModelSizeBreakpointTreeMenu = new MenuItem(treeMenu, SWT.PUSH);
+		MenuItem addModelSizeBreakpointMenuBar = new MenuItem(addMenu, SWT.PUSH);
+		this.addBreakpointMenuItems.add(addModelSizeBreakpointTreeMenu);
+		this.addBreakpointMenuItems.add(addModelSizeBreakpointMenuBar);
+		addModelSizeBreakpointTreeMenu.setText("Add model size breakpoint");
+		addModelSizeBreakpointMenuBar.setText("Add model size breakpoint");
+		selectionListener = new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent pSelectionEvent) {
+				ModelSizeBreakpoint breakpointToAdd = new ModelSizeBreakpoint(1000);
+				handleAddingOfBreakpoint(breakpointToAdd);
+			}
+		};
+		addModelSizeBreakpointTreeMenu.addSelectionListener(selectionListener);
+		addModelSizeBreakpointMenuBar.addSelectionListener(selectionListener);
 		
 		MenuItem addCreatedTypeBreakpointTreeMenu = new MenuItem(treeMenu, SWT.PUSH);
 		MenuItem addCreatedTypeBreakpointMenuBar = new MenuItem(addMenu, SWT.PUSH);
@@ -248,7 +265,10 @@ public class BreakpointMenu {
 					}  else if(selectedElement.getBreakpoint() instanceof AttributeConditionBreakpoint) {
 						breakpointConfigurationComposite = new AttributeConditionBreakpointConfiguration(menuShell, SWT.NORMAL);
 						((AttributeConditionBreakpointConfiguration) breakpointConfigurationComposite).build((AttributeConditionBreakpoint) selectedElement.getBreakpoint(), selectedElement, dataProvider.getAllRules());
-					} 
+					}  else if(selectedElement.getBreakpoint() instanceof ModelSizeBreakpoint) {
+						breakpointConfigurationComposite = new ModelSizeBreakpointConfiguration(menuShell, SWT.NORMAL);
+						((ModelSizeBreakpointConfiguration) breakpointConfigurationComposite).build((ModelSizeBreakpoint) selectedElement.getBreakpoint(), selectedElement);
+					}
 					//TODO other breakpoint types need to be added here
 					menuShell.pack(true);
 				}
@@ -485,13 +505,20 @@ public class BreakpointMenu {
 						errorbox.setText(breakpoint.getLastError());
 						errorbox.pack(true);
 						treeViewer.refresh(selectedElement, true);
-						breakpointConfigurationComposite.pack(true);
-						breakpointConfigurationComposite.getParent().pack(true);
 					}
+					breakpointConfigurationComposite.pack(true);
+					breakpointConfigurationComposite.getParent().pack(true);
+					textbox.pack();
+					textbox.setSize(Math.max(500, textbox.getSize().x), textbox.getSize().y);
 				}
 				
 				@Override
-				public void keyPressed(KeyEvent e) {}
+				public void keyPressed(KeyEvent e) {
+					breakpointConfigurationComposite.pack(true);
+					breakpointConfigurationComposite.getParent().pack(true);
+					textbox.pack();
+					textbox.setSize(Math.max(500, textbox.getSize().x), textbox.getSize().y);
+				}
 			});
 			textbox.addFocusListener(new FocusListener() {
 				
@@ -503,6 +530,8 @@ public class BreakpointMenu {
 					treeViewer.refresh(selectedElement, true);
 					breakpointConfigurationComposite.pack(true);
 					breakpointConfigurationComposite.getParent().pack(true);
+					textbox.pack();
+					textbox.setSize(Math.max(500, textbox.getSize().x), textbox.getSize().y);
 				}
 				
 				@Override
@@ -524,6 +553,8 @@ public class BreakpointMenu {
 					treeViewer.refresh(selectedElement, true);
 					breakpointConfigurationComposite.pack(true);
 					breakpointConfigurationComposite.getParent().pack(true);
+					textbox.pack();
+					textbox.setSize(Math.max(500, textbox.getSize().x), textbox.getSize().y);
 				}
 			});
 		}
@@ -568,6 +599,31 @@ public class BreakpointMenu {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					breakpoint.setRules(rulesList.getSelection());					
+					treeViewer.refresh(selectedElement, true);
+				}
+			});
+		}
+	}
+	
+	private class ModelSizeBreakpointConfiguration extends BreakpointConfigurationComposite {
+		private ModelSizeBreakpointConfiguration(Composite parent, int style) {
+			super(parent, style);
+		}
+		
+		private void build(ModelSizeBreakpoint breakpoint, BreakpointNode selectedElement) {
+			super.build(breakpoint, selectedElement);
+			
+			Group limitGroup = new Group(this, SWT.NONE);
+			limitGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
+			limitGroup.setLayout(new GridLayout());
+			limitGroup.setText("Number of elements");
+			
+			Spinner spinner = new Spinner(limitGroup, SWT.NORMAL);
+			spinner.setValues(breakpoint.getLimit(), 0, Integer.MAX_VALUE, 0, 1, 10);
+			spinner.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					breakpoint.setLimit(spinner.getSelection());
 					treeViewer.refresh(selectedElement, true);
 				}
 			});

@@ -7,10 +7,12 @@ import java.util.stream.Collectors;
 import org.emoflon.ibex.tgg.ui.debug.api.DataPackage;
 import org.emoflon.ibex.tgg.ui.debug.api.Match;
 import org.emoflon.ibex.tgg.ui.debug.api.RuleApplication;
+import org.emoflon.ibex.tgg.ui.debug.api.TripleGraph;
 
 public class DataPackageAdapter implements DataPackage {
 	private Collection<Match> matches;
 	private List<RuleApplication> ruleApplications;
+	private TripleGraph tripleGraph;	
 
 	public DataPackageAdapter(org.emoflon.ibex.tgg.operational.monitoring.DataPackage dataPackage) {
 		matches = dataPackage.getMatches().stream()//
@@ -19,6 +21,8 @@ public class DataPackageAdapter implements DataPackage {
 		ruleApplications = dataPackage.getProtocol().stream()//
 				.map((step) -> ProtocolStepAdapter.adapt(step))//
 				.collect(Collectors.toList());
+		tripleGraph = TripleGraphAdapter.adapt(dataPackage.getTripleGraph());
+		
 	}
 
 	@Override
@@ -30,4 +34,10 @@ public class DataPackageAdapter implements DataPackage {
 	public List<RuleApplication> getRuleApplications() {
 		return ruleApplications;
 	}
+
+	@Override
+	public TripleGraph getTripleGraph() {
+		return tripleGraph;
+	}
+
 }

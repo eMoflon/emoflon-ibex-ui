@@ -37,7 +37,7 @@ public class CreatedTypeBreakpoint extends AbstractBreakpoint {
 		boolean found = false;
 		Graph g = match.getRule().getGraph();
 		for(Node n: g.getNodes()) {
-			if(typeName.equals(n.getType()) && n.getAction() == Action.CREATE) {
+			if(typeName.equals(n.getType()) && (n.getAction() == Action.CREATE || n.getAction() == Action.TRANSLATE)) {
 				found = true;
 				break;
 			}

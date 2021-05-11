@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
@@ -21,6 +22,7 @@ import org.emoflon.ibex.tgg.ui.debug.api.DataProvider;
 import org.emoflon.ibex.tgg.ui.debug.api.Match;
 import org.emoflon.ibex.tgg.ui.debug.api.Rule;
 import org.emoflon.ibex.tgg.ui.debug.api.RuleApplication;
+import org.emoflon.ibex.tgg.ui.debug.api.TripleGraph;
 import org.emoflon.ibex.tgg.ui.debug.api.enums.DebuggerMode;
 import org.emoflon.ibex.tgg.ui.debug.breakpoints.BreakpointManager;
 import org.emoflon.ibex.tgg.ui.debug.core.IDebugModeUpdater;
@@ -31,6 +33,7 @@ import org.emoflon.ibex.tgg.ui.debug.util.ModelLocationDialog;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.MatchVisualisation;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.RuleApplicationVisualisation;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.RuleVisualisation;
+import org.emoflon.ibex.tgg.ui.debug.views.visualisable.TripleGraphVisualisation;
 import org.emoflon.ibex.tgg.ui.debug.views.visualisable.VisualisableElement;
 
 public class MatchDisplayView extends Composite implements IVisualiser {
@@ -59,6 +62,9 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 	private Button runButton;
 	private Button stepButton;
 	private Button configureBreakpointsButton;
+	private Button showCompleteModelButton;
+	
+	private TripleGraph latestCompleteModel;
 
 	private MatchDisplayView(Composite parent, IExitCodeReceiver exitCodeReceiver, IDebugModeUpdater debugModeUpdater, DataProvider dataProvider,
 			UserOptionsManager userOptionsManager, BreakpointManager breakpointManager) {
@@ -90,7 +96,7 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 
 		Composite buttonRow = new Composite(this, SWT.NONE);
 		buttonRow.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		buttonRow.setLayout(new GridLayout(7, false));
+		buttonRow.setLayout(new GridLayout(8, false));
 
 		userOptionsMenuButton = new Button(buttonRow, SWT.PUSH);
 		userOptionsMenuButton.setText("User Options");
@@ -127,6 +133,20 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 			@Override
 			public void widgetSelected(SelectionEvent pSelectionEvent) {
 				debugModeUpdater.step();
+			}
+		});
+		
+		showCompleteModelButton = new Button(buttonRow, SWT.PUSH);
+		showCompleteModelButton.setText("Show complete model");
+		showCompleteModelButton.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
+		showCompleteModelButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent pSelectionEvent) {
+				//TODO unselect protocol
+				//TODO unselect matchlist
+				if(latestCompleteModel != null) {
+					display(latestCompleteModel);
+				}
 			}
 		});
 		
@@ -234,6 +254,11 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 		currentElement = ruleApplicationCache.get(ruleApplications);
 		refresh();
 	}
+	
+	public void display(TripleGraph tripleGraph) {
+		currentElement = new TripleGraphVisualisation(tripleGraph, userOptionsManager, dataProvider);
+		refresh();
+	}
 
 	@Override
 	public void refresh() {
@@ -285,5 +310,9 @@ public class MatchDisplayView extends Composite implements IVisualiser {
 		Image image = new Image(Display.getCurrent(), new ByteArrayInputStream(imageData));
 		imageScroller.setMinSize(image.getBounds().width, image.getBounds().height);
 		imageContainer.setImage(image);
+	}
+	
+	public void populate(TripleGraph tripleGraph) {
+		this.latestCompleteModel = tripleGraph;
 	}
 }

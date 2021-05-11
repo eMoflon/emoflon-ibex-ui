@@ -6,8 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.emoflon.ibex.tgg.ui.debug.api.Attribute;
@@ -56,7 +59,7 @@ public class EObjectAdapter implements Node {
 		}
 
 		attributes = new ArrayList<>();
-		for (EAttribute attr : object.eClass().getEAttributes()) {
+		for (EAttribute attr : object.eClass().getEAllAttributes()) {
 			if(EcorePackage.eINSTANCE.getEClassifiers().contains(attr.eClass())) {
 				attributes.add(EAttributeAdapter.adapt(object, attr));
 			}
@@ -95,16 +98,35 @@ public class EObjectAdapter implements Node {
 	}
 
 	public static void constructGraphDomain(GraphBuilder builder, Domain domain, Collection<EObject> domainObjects) {
-		for (EObject object : domainObjects) {
-			builder.addNode(EObjectAdapter.adapt(object, domain));
-			for (EObject contentObject : object.eContents()) {
-				builder.addEdge(contentObject.eContainingFeature().getName(), EObjectAdapter.get(object),
+		for (EObject domObject : domainObjects) {
+			builder.addNode(EObjectAdapter.adapt(domObject, domain));
+			for (EObject contentObject : domObject.eContents()) {
+				builder.addEdge(contentObject.eContainingFeature().getName(), EObjectAdapter.get(domObject),
 						EObjectAdapter.adapt(contentObject, domain), EdgeType.NORMAL, Action.CONTEXT);
 			}
-			for (EObject crossReference : object.eCrossReferences()) {
-				builder.addEdge(crossReference.eContainingFeature().getName(), EObjectAdapter.get(object),
-						EObjectAdapter.adapt(crossReference, domain), EdgeType.NORMAL, Action.CONTEXT);
+			for (EReference reference : domObject.eClass().getEAllReferences()) {
+				if(reference.isContainment() || reference.isContainer()) {
+					continue; //allready handled in the first loop
+				}
+				Object referencedObject = domObject.eGet(reference, true);
+				if(referencedObject == null) {
+					continue;
+				}
+				if(referencedObject instanceof EList) {
+					for(EObject ref : ((EList<EObject>) referencedObject)) {
+						builder.addEdge(reference.getName(), EObjectAdapter.get(domObject),
+								EObjectAdapter.adapt(ref, domain), EdgeType.NORMAL, Action.CONTEXT);
+					}
+				} else {
+					EObject ref = (EObject) referencedObject;
+					builder.addEdge(reference.getName(), EObjectAdapter.get(domObject),
+							EObjectAdapter.adapt(ref, domain), EdgeType.NORMAL, Action.CONTEXT);
+				}
 			}
+//			for (EObject crossReference : object.eCrossReferences()) {
+//				builder.addEdge(crossReference.eContainingFeature().getName(), EObjectAdapter.get(object),
+//						EObjectAdapter.adapt(crossReference, domain), EdgeType.NORMAL, Action.CONTEXT);
+//			}
 		}
 	}
 

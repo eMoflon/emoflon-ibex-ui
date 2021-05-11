@@ -2,7 +2,6 @@ package org.emoflon.ibex.tgg.ui.debug.breakpoints.impl;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.emoflon.ibex.tgg.ui.debug.api.DataPackage;
 import org.emoflon.ibex.tgg.ui.debug.api.Match;

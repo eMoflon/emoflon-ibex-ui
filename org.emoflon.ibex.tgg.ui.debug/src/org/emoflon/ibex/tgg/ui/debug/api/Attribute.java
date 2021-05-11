@@ -6,6 +6,8 @@ public interface Attribute {
 	
 	public String getName();
 	
+	public String getTypeName();
+	
 	public Object getValue();
 
 }

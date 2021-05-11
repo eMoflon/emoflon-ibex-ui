@@ -60,7 +60,11 @@ public class VictoryIBeXAdapter extends IbexController implements DataProvider {
 	@Override
 	public ITGGMatch chooseOneMatch(ImmutableMatchContainer matchContainer) {
 		
-		DataPackage dataPackage = this.createDataPackage(matchContainer.getMatches());
+		DataPackage dataPackage = this.createDataPackage(
+				matchContainer.getMatches(),
+				dataProvider.getSourceModelNodes(),
+				dataProvider.getTargetModelNodes(),
+				dataProvider.getCorrModelNodes());
 		
 		victory.updateUI(new DataPackageAdapter(dataPackage), null);
 		

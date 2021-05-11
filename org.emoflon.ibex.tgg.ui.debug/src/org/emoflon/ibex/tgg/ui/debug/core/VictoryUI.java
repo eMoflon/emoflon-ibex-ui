@@ -184,6 +184,7 @@ public class VictoryUI implements IExitCodeReceiver, IDebugModeUpdater, Consumer
 	public void accept(DataPackage dataPackage) {
 		matchListView.populate(dataPackage.getMatches(), dataPackage.getRuleApplications());
 		protocolView.populate(dataPackage.getRuleApplications());
+		matchDisplayView.populate(dataPackage.getTripleGraph());
 	}
 	
 	public void setMatchSelection(Match m) {

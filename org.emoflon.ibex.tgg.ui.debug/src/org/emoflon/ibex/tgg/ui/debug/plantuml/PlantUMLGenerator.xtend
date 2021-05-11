@@ -151,7 +151,7 @@ class PlantUMLGenerator {
 		'''
 			class "«n.getNodeLabel(nodeLabelOptions)»" as «id»«FOR stereotype : stereotypes» <<«stereotype»>>«ENDFOR» {
 				«FOR attribute : n.attributes»
-					«attribute.type» «attribute.name»«IF attribute.value !== null» = «attribute.value»«ENDIF»
+					«attribute.typeName» «attribute.name»«IF attribute.value !== null» = «attribute.value»«ENDIF»
 				«ENDFOR»
 			}
 		'''

@@ -69,7 +69,7 @@ public class TGGRuleNodeAdapter implements Node {
 	@Override
 	public List<Attribute> getAttributes() {
 		List<Attribute> attributes = new ArrayList<Attribute>();
-		for (EAttribute attr : node.getType().getEAttributes()) {
+		for (EAttribute attr : node.getType().getEAllAttributes()) {
 			if(EcorePackage.eINSTANCE.getEClassifiers().contains(attr.eClass())) {
 				attributes.add(EAttributeAdapter.adapt(attr));
 			}

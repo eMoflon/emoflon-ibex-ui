@@ -11,4 +11,6 @@ public interface DataPackage {
 	public Collection<Match> getMatches();
 
 	public List<RuleApplication> getRuleApplications();
+	
+	public TripleGraph getTripleGraph();
 }
