@@ -29,6 +29,7 @@ import java.util.LinkedList
 import org.emoflon.ibex.gt.editor.gT.StochasticFunction
 import org.emoflon.ibex.gt.editor.gT.ArithmeticExpression
 import org.emoflon.ibex.gt.editor.gT.EditorCountExpression
+import org.emoflon.ibex.gt.editor.gT.EditorReferenceIterator
 
 /**
  * This class contains custom scoping description.
@@ -104,6 +105,12 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		if (isReferenceTarget(context, reference)) {
 			return getScopeForReferenceTargets(context as EditorReference)
 		}
+		
+		// ForEach
+		if (isForEachType(context, reference)) {
+			return getScopeForForEachTypes(context as EditorReferenceIterator)
+		}
+
 
 		// Patterns
 		if (isSuperPattern(context, reference)) {
@@ -191,6 +198,10 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	def isReferenceTarget(EObject context, EReference reference) {
 		return (context instanceof EditorReference && reference == GTPackage.Literals.EDITOR_REFERENCE__TARGET)
 	}
+	
+	def isForEachType(EObject context, EReference reference) {
+		return (context instanceof EditorReferenceIterator && reference == GTPackage.Literals.EDITOR_REFERENCE_ITERATOR__TYPE)
+	}
 
 	def isSuperPattern(EObject context, EReference reference) {
 		return (context instanceof EditorPattern && reference == GTPackage.Literals.EDITOR_PATTERN__SUPER_PATTERNS)
@@ -248,6 +259,15 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 
 		// If the type cannot be resolved return all nodes.
 		return Scopes.scopeFor(GTEditorPatternUtils.getAllNodesOfPattern(pattern, [true]))
+	}
+	
+	/**
+	 * The type of a reference must be one of the EReferences from the EClass
+	 * of the node containing the reference.
+	 */
+	def getScopeForForEachTypes(EditorReferenceIterator context) {
+		val containingNode = context.eContainer as EditorNode
+		return Scopes.scopeFor(containingNode.type.EAllReferences)
 	}
 
 	/**

@@ -38,7 +38,7 @@ EditorParameter:
 EditorNode:
   (operator=EditorOperator)? (local?='local')?
   name=ID ':' type=[ecore::EClass] ('{'
-  (attributes+=EditorAttributeAssignment | references+=EditorReference)*
+  (attributes+=EditorAttributeAssignment | references+=EditorReference | iterators+=EditorReferenceIterator)*
   '}')?;
 
 enum EditorOperator:
@@ -88,6 +88,12 @@ EditorParameterExpression:
 // References
 EditorReference:
   (operator=EditorOperator)? '-' type=[ecore::EReference] '->' target=[EditorNode|ID];
+
+EditorReferenceIterator:
+	'forEach' type=[ecore::EReference] '->' element=ID '{'
+		(attributes+=EditorAttributeAssignment | references+=EditorReference)+
+	'}'
+;
 
 // Graph Conditions
 EditorCondition:
