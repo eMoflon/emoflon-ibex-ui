@@ -90,10 +90,16 @@ EditorReference:
   (operator=EditorOperator)? '-' type=[ecore::EReference] '->' target=[EditorNode|ID];
 
 EditorReferenceIterator:
-	'forEach' type=[ecore::EReference] '->' element=ID '{'
-		(attributes+=EditorAttributeAssignment | references+=EditorReference)+
+	'forEach' type=[ecore::EReference] '->' name=ID '{'
+		(attributes+=EditorAttributeAssignment | iteratorAttributes+=EditorIteratorAttributeAssignment | references+=EditorIteratorReference)+
 	'}'
 ;
+
+EditorIteratorAttributeAssignment:
+	iterator=[EditorReferenceIterator|ID] '.' attribute=[ecore::EAttribute] ':=' value=EditorExpression;
+
+EditorIteratorReference:
+  operator=EditorOperator source=[EditorNode|ID] '-' type=[ecore::EReference] '->' target=[EditorReferenceIterator|ID];
 
 // Graph Conditions
 EditorCondition:
