@@ -52,12 +52,13 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		}
 		
 		// Iterator Attributes
-		if (isIteratorAttributeIterator(context, reference)) {
-			return getScopeForIteratorAttributeIterators(context as EditorIteratorAttributeAssignment)
-		}
-		if (isIteratorAttribute(context, reference)) {
-			return getScopeForIteratorAttributes(context as EditorIteratorAttributeAssignment)
-		}
+//		TODO
+//		if (isIteratorAttributeIterator(context, reference)) {
+//			return getScopeForIteratorAttributeIterators(context as EditorIteratorAttributeAssignment)
+//		}
+//		if (isIteratorAttribute(context, reference)) {
+//			return getScopeForIteratorAttributes(context as EditorIteratorAttributeAssignment)
+//		}
 
 		// Condition
 		if (isConditionOfCondition(context, reference)) {
@@ -155,8 +156,9 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	}
 
 	def isIteratorAttributeIterator(EObject context, EReference reference) {
-		return (context instanceof EditorIteratorAttributeAssignment &&
-			reference == GTPackage.Literals.EDITOR_AT)
+//		TODO:
+//		return (context instanceof EditorIteratorAttributeAssignment &&
+//			reference == GTPackage.Literals.EDITOR_)
 	}
 
 	def isAttributeConstraint(EObject context, EReference reference) {
