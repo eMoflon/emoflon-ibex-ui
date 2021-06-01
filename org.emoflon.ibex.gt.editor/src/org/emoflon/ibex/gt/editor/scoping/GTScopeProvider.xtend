@@ -32,6 +32,7 @@ import org.emoflon.ibex.gt.editor.gT.EditorCountExpression
 import org.emoflon.ibex.gt.editor.gT.EditorReferenceIterator
 import org.emoflon.ibex.gt.editor.gT.EditorIteratorReference
 import org.emoflon.ibex.gt.editor.gT.EditorIteratorAttributeAssignment
+import org.emoflon.ibex.gt.editor.gT.impl.EditorNodeImpl
 
 /**
  * This class contains custom scoping description.
@@ -52,13 +53,12 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		}
 		
 		// Iterator Attributes
-//		TODO
-//		if (isIteratorAttributeIterator(context, reference)) {
-//			return getScopeForIteratorAttributeIterators(context as EditorIteratorAttributeAssignment)
-//		}
-//		if (isIteratorAttribute(context, reference)) {
-//			return getScopeForIteratorAttributes(context as EditorIteratorAttributeAssignment)
-//		}
+		if (isIteratorAttributeIterator(context, reference)) {
+			return getScopeForIteratorAttributeIterators(context as EditorIteratorAttributeAssignment)
+		}
+		if (isIteratorAttribute(context, reference)) {
+			return getScopeForIteratorAttributes(context as EditorIteratorAttributeAssignment)
+		}
 
 		// Condition
 		if (isConditionOfCondition(context, reference)) {
@@ -156,9 +156,13 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	}
 
 	def isIteratorAttributeIterator(EObject context, EReference reference) {
-//		TODO:
-//		return (context instanceof EditorIteratorAttributeAssignment &&
-//			reference == GTPackage.Literals.EDITOR_)
+		return (context instanceof EditorIteratorAttributeAssignment &&
+			reference == GTPackage.Literals.EDITOR_ITERATOR_ATTRIBUTE_ASSIGNMENT__ITERATOR)
+	}
+	
+	def isIteratorAttribute(EObject context, EReference reference) {
+		return (context instanceof EditorIteratorAttributeAssignment &&
+			reference == GTPackage.Literals.EDITOR_ITERATOR_ATTRIBUTE_ASSIGNMENT__ATTRIBUTE)
 	}
 
 	def isAttributeConstraint(EObject context, EReference reference) {
@@ -304,7 +308,15 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	
 	def getScopeForIteratorReferenceSources(EditorIteratorReference reference) {
 		val pattern = GTEditorPatternUtils.getContainer(reference, typeof(EditorPatternImpl));
-		return Scopes.scopeFor(GTEditorPatternUtils.getAllNodesOfPattern(pattern, [true]))
+		if(reference.operator == EditorOperator.DELETE) {
+			val node = GTEditorPatternUtils.getContainer(reference, typeof(EditorNodeImpl));
+			val scope = new LinkedList
+			scope.add(node)
+			return Scopes.scopeFor(scope)
+		} else {
+			return Scopes.scopeFor(GTEditorPatternUtils.getAllNodesOfPattern(pattern, [true]))
+		}
+		
 	}
 	
 	def getScopeForIteratorReferenceTypes(EditorIteratorReference reference) {
@@ -347,19 +359,23 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	 * of the node containing the attribute assignment or condition.
 	 */
 	def getScopeForAttributes(EditorAttributeAssignment context) {
-		if(context.eContainer instanceof EditorNode) {
-			val containingNode = context.eContainer as EditorNode
-			return Scopes.scopeFor(containingNode.type.EAllAttributes)
-		} else {
-			val containingIterator = context.eContainer as EditorReferenceIterator
-			return Scopes.scopeFor((containingIterator.type.EType as EClass).EAllAttributes)
-		}
-		
+		val containingNode = GTEditorPatternUtils.getContainer(context, typeof(EditorNodeImpl))
+		return Scopes.scopeFor(containingNode.type.EAllAttributes)
 	}
 
 	def getScopeForAttributes(EditorAttributeConstraint context) {
-		val pattern = context.eContainer as EditorPattern
+		val pattern = GTEditorPatternUtils.getContainer(context, typeof(EditorPatternImpl))
 		return Scopes.scopeFor(pattern.nodes)
+	}
+	
+	def getScopeForIteratorAttributeIterators(EditorIteratorAttributeAssignment assignment) {
+		val pattern = GTEditorPatternUtils.getContainer(assignment, typeof(EditorPatternImpl))
+		return Scopes.scopeFor(pattern.nodes)
+	}
+	
+	def getScopeForIteratorAttributes(EditorIteratorAttributeAssignment assignment) {
+		val containingIterator = assignment.eContainer as EditorReferenceIterator
+		return Scopes.scopeFor((containingIterator.type.EType as EClass).EAllAttributes)
 	}
 
 	/**
