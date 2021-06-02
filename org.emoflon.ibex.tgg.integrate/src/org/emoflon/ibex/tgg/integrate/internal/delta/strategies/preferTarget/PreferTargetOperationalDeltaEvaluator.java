@@ -1,7 +1,6 @@
 package org.emoflon.ibex.tgg.integrate.internal.delta.strategies.preferTarget;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
@@ -9,7 +8,7 @@ import org.emoflon.ibex.tgg.compiler.patterns.PatternType;
 import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.OperationalDeltaCommons;
 import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.ResolutionStrategyOperationalDeltaEvaluator;
 import org.emoflon.ibex.tgg.operational.matches.ITGGMatch;
-import org.emoflon.ibex.tgg.operational.strategies.integrate.classification.BrokenMatch;
+import org.emoflon.ibex.tgg.operational.strategies.integrate.classification.ClassifiedMatch;
 import org.emoflon.ibex.tgg.operational.strategies.integrate.classification.DeletionType;
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict;
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.DeletePreserveConflict;
@@ -57,13 +56,12 @@ public class PreferTargetOperationalDeltaEvaluator extends ResolutionStrategyOpe
 	}
 
 	private int countElementsToBeDeleted(DeletePreserveConflict conflict) {
-		Map<ITGGMatch, BrokenMatch> classifiedBrokenMatches = conflict.integrate().getClassifiedBrokenMatches();
 		Set<ITGGMatch> matches = new HashSet<ITGGMatch>();
 		matches.add(conflict.getMatch());
 		matches.addAll(conflict.getScopeMatches());
 		return matches.stream()//
 				.filter(match -> OperationalDeltaCommons.isOfType(match, PatternType.CONSISTENCY)) //
-				.filter(consistencyMatch -> staysBrokenAfterConflictResolution(classifiedBrokenMatches.get(consistencyMatch))) //
+				.filter(consistencyMatch -> staysBrokenAfterConflictResolution(conflict.integrate().matchClassifier().get(consistencyMatch))) //
 				.mapToInt(match -> countGreenElementsForCorrespondingRule(match)).sum();
 	}
 
@@ -74,7 +72,7 @@ public class PreferTargetOperationalDeltaEvaluator extends ResolutionStrategyOpe
 				.orElse(0);
 	}
 
-	private boolean staysBrokenAfterConflictResolution(BrokenMatch brokenMatch) {
+	private boolean staysBrokenAfterConflictResolution(ClassifiedMatch brokenMatch) {
 		if (brokenMatch == null) {
 			return false;
 		}

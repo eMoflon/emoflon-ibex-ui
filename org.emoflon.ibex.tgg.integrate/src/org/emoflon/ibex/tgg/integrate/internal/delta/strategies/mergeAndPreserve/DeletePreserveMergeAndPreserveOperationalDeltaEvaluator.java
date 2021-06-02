@@ -89,7 +89,7 @@ class DeletePreserveMergeAndPreserveOperationalDeltaEvaluator {
 	private Predicate<ITGGMatch> hasDeletedElementsOnDomain(DomainType domainType) {
 		return match -> {
 			EltFilter filter = new EltFilter().deleted().domains(domainType);
-			Set<TGGRuleElement> elts = conflict.integrate().getMatchUtil().getAnalysis(match).getElts(filter);
+			Set<TGGRuleElement> elts = conflict.integrate().matchUtils().get(match).getElts(filter);
 			return !elts.isEmpty();
 		};
 	}
