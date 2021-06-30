@@ -553,7 +553,7 @@ class GTValidator extends AbstractGTValidator {
 	 */
 	def checkPatternType(EditorPattern pattern) {
 		val flattenedPattern = new GTFlattener(pattern).flattenedPattern
-		val isRule = GTEditorPatternUtils.containsCreatedOrDeletedElements(flattenedPattern)
+		val isRule = GTEditorPatternUtils.containsCreatedOrDeletedElements(flattenedPattern) || GTEditorPatternUtils.containsForEachLoop(flattenedPattern)
 		if (isRule && pattern.type === EditorPatternType.PATTERN) {
 			error(
 				String.format(PATTERN_TYPE_INVALID_PATTERN_MESSAGE, pattern.name),

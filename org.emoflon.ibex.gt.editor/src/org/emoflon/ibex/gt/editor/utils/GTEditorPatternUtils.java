@@ -138,6 +138,11 @@ public class GTEditorPatternUtils {
 		return hasCreatedOrDeletedNode(editorPattern) || hasCreatedOrDeletedReference(editorPattern)
 				|| hasAttributeAssignment(editorPattern);
 	}
+	
+	public static boolean containsForEachLoop(final EditorPattern editorPattern) {
+		return editorPattern.getNodes().stream()
+				.anyMatch(node -> node.getIterators() != null && node.getIterators().size()>0);
+	}	
 
 	/**
 	 * Checks whether the editor pattern contains at least one created or deleted

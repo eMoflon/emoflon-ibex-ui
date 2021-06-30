@@ -92,17 +92,19 @@ EditorReference:
 EditorReferenceIterator:
 	'forEach' type=[ecore::EReference] '->' name=ID '{'
 		(iteratorAttributes+=EditorIteratorAttributeAssignment | references+=EditorIteratorReference)+
-	'}'
-;
+	'}';
+
+EditorIteratorAttributeExpression:
+	'iterator::' iterator=[EditorReferenceIterator] '.' attribute=[ecore::EAttribute];
 
 EditorIteratorAttributeAssignment:
 	EditorIteratorAttributeAssignmentItr | EditorIteratorAttributeAssignmentNode;
 	
 EditorIteratorAttributeAssignmentItr:
- 	'iterator' iterator=[EditorReferenceIterator] '.' attribute=[ecore::EAttribute] ':=' value=EditorExpression;
+ 	iteratorAttribute=EditorIteratorAttributeExpression ':=' value=EditorExpression;
 	
 EditorIteratorAttributeAssignmentNode:
- 	'node' node=[EditorNode] '.' attribute=[ecore::EAttribute] ':=' value=EditorExpression;
+ 	nodeAttribute=EditorAttributeExpression ':=' value=EditorExpression;
 
 EditorIteratorReference:
  	operator=EditorOperator source=[EditorNode|ID] '-' type=[ecore::EReference] '->' target=[EditorReferenceIterator|ID];
@@ -186,4 +188,5 @@ OneParameterArithmetics returns ArithmeticExpression: {OneParameterArithmetics}
 ArithmeticAttribute returns ArithmeticExpression:
 	EditorLiteralExpression |
 	EditorAttributeExpression |
+	EditorIteratorAttributeExpression |
 	EditorCountExpression;
