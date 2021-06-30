@@ -240,8 +240,8 @@ class GTValidator extends AbstractGTValidator {
 	public static val CONDITION_PATTERN_INVALID_PARAMETERS = CODE_PREFIX + "condition.pattern.invalid.hasParameters"
 	public static val CONDITION_PATTERN_INVALID_PARAMETERS_MESSAGE = "Condition may not use '%s' because it has parameters."
 
-	public static val CONDITION_PATTERN_INVALID_RULE = CODE_PREFIX + "condition.pattern.invalid.isRule"
-	public static val CONDITION_PATTERN_INVALID_RULE_MESSAGE = "Condition may not use '%s' because it is a rule."
+	public static val CONDITION_PATTERN_INVALID_RULE = CODE_PREFIX + "condition.pattern.invalid.isEmptyRule"
+	public static val CONDITION_PATTERN_INVALID_RULE_MESSAGE = "Condition may not use '%s' because it is a rule, which contains no context."
 
 	public static val CONDITION_SELF_REFERENCE = CODE_PREFIX + "condition.selfReference"
 	public static val CONDITION_SELF_REFERENCE_MESSAGE = "Condition '%s' references itself which is not allowed."
@@ -1058,13 +1058,22 @@ class GTValidator extends AbstractGTValidator {
 	 * Validates that the given pattern has no parameters and is no rule.
 	 */
 	def checkPatternInApplicationCondition(EditorPattern pattern, EStructuralFeature feature) {
-		// Patterns in conditions must not be rules.
+		/* Of course rules can be used as patterns in conditions but they must at least possess one context node.
+		 * Previously: Patterns in conditions must not be rules. <- Lazy version
+		 */ 
 		if (pattern.type === EditorPatternType.RULE) {
-			error(
-				String.format(CONDITION_PATTERN_INVALID_RULE_MESSAGE, pattern.name),
-				feature,
-				CONDITION_PATTERN_INVALID_RULE
-			)
+//			error(
+//				String.format(CONDITION_PATTERN_INVALID_RULE_MESSAGE, pattern.name),
+//				feature,
+//				CONDITION_PATTERN_INVALID_RULE
+//			)
+			if(pattern.nodes.filter[node | node.operator == EditorOperator.CONTEXT || node.operator == EditorOperator.DELETE].empty) {
+				error(
+					String.format(CONDITION_PATTERN_INVALID_RULE_MESSAGE, pattern.name),
+					feature,
+					CONDITION_PATTERN_INVALID_RULE
+				)
+			}
 		} else {
 			// Patterns in conditions must not have any parameters.
 			if (pattern.parameters.size > 0) {
