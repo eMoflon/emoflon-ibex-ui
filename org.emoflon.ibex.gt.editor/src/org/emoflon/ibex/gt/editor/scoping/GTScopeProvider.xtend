@@ -33,6 +33,9 @@ import org.emoflon.ibex.gt.editor.gT.EditorReferenceIterator
 import org.emoflon.ibex.gt.editor.gT.EditorIteratorReference
 import org.emoflon.ibex.gt.editor.gT.EditorIteratorAttributeAssignment
 import org.emoflon.ibex.gt.editor.gT.impl.EditorNodeImpl
+import org.emoflon.ibex.gt.editor.gT.EditorIteratorAttributeAssignmentItr
+import org.emoflon.ibex.gt.editor.gT.EditorIteratorAttributeAssignmentNode
+import org.emoflon.ibex.gt.editor.gT.impl.EditorReferenceIteratorImpl
 
 /**
  * This class contains custom scoping description.
@@ -53,11 +56,14 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		}
 		
 		// Iterator Attributes
-		if (isIteratorAttributeIterator(context, reference)) {
-			return getScopeForIteratorAttributeIterators(context as EditorIteratorAttributeAssignment)
+		if (isIteratorAttributeAssignmentItr(context, reference)) {
+			return getScopeForIteratorAttributeAssignmentItr(context as EditorIteratorAttributeAssignmentItr)
 		}
-		if (isIteratorAttribute(context, reference)) {
-			return getScopeForIteratorAttributes(context as EditorIteratorAttributeAssignment)
+		if (isIteratorAttributeAssignmentNode(context, reference)) {
+			return getScopeForIteratorAttributeAssignmentNode(context as EditorIteratorAttributeAssignmentNode)
+		}
+		if (isIteratorAttributeAssignmentAttribute(context, reference)) {
+			return getScopeForIteratorAttributeAssignmentAttribute(context as EditorIteratorAttributeAssignment)
 		}
 
 		// Condition
@@ -155,12 +161,17 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		}
 	}
 
-	def isIteratorAttributeIterator(EObject context, EReference reference) {
-		return (context instanceof EditorIteratorAttributeAssignment &&
-			reference == GTPackage.Literals.EDITOR_ITERATOR_ATTRIBUTE_ASSIGNMENT__ITERATOR)
+	def isIteratorAttributeAssignmentItr(EObject context, EReference reference) {
+		return (context instanceof EditorIteratorAttributeAssignmentItr &&
+			reference == GTPackage.Literals.EDITOR_ITERATOR_ATTRIBUTE_ASSIGNMENT_ITR__ITERATOR)
 	}
 	
-	def isIteratorAttribute(EObject context, EReference reference) {
+	def isIteratorAttributeAssignmentNode(EObject context, EReference reference) {
+		return (context instanceof EditorIteratorAttributeAssignmentNode &&
+			reference == GTPackage.Literals.EDITOR_ITERATOR_ATTRIBUTE_ASSIGNMENT_NODE__NODE)
+	}
+	
+	def isIteratorAttributeAssignmentAttribute(EObject context, EReference reference) {
 		return (context instanceof EditorIteratorAttributeAssignment &&
 			reference == GTPackage.Literals.EDITOR_ITERATOR_ATTRIBUTE_ASSIGNMENT__ATTRIBUTE)
 	}
@@ -368,14 +379,26 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		return Scopes.scopeFor(pattern.nodes)
 	}
 	
-	def getScopeForIteratorAttributeIterators(EditorIteratorAttributeAssignment assignment) {
+	def getScopeForIteratorAttributeAssignmentItr(EditorIteratorAttributeAssignmentItr assignment) {
+		val itr = GTEditorPatternUtils.getContainer(assignment, typeof(EditorReferenceIteratorImpl))
+		val lst = new LinkedList
+		lst.add(itr)
+		return Scopes.scopeFor(lst)
+	}
+	
+	def getScopeForIteratorAttributeAssignmentNode(EditorIteratorAttributeAssignment assignment) {
 		val pattern = GTEditorPatternUtils.getContainer(assignment, typeof(EditorPatternImpl))
 		return Scopes.scopeFor(pattern.nodes)
 	}
 	
-	def getScopeForIteratorAttributes(EditorIteratorAttributeAssignment assignment) {
-		val containingIterator = assignment.eContainer as EditorReferenceIterator
-		return Scopes.scopeFor((containingIterator.type.EType as EClass).EAllAttributes)
+	def getScopeForIteratorAttributeAssignmentAttribute(EditorIteratorAttributeAssignment assignment) {
+		if(assignment instanceof EditorIteratorAttributeAssignmentItr) {
+			val itr = GTEditorPatternUtils.getContainer(assignment, typeof(EditorReferenceIteratorImpl))
+			return Scopes.scopeFor((itr.type.EType as EClass).EAllAttributes)
+		} else {
+			val asgn = assignment as EditorIteratorAttributeAssignmentNode
+			return Scopes.scopeFor((asgn.node.type as EClass).EAllAttributes)
+		}
 	}
 
 	/**
