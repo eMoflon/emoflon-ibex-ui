@@ -22,6 +22,7 @@ import org.emoflon.ibex.gt.editor.gT.EditorOperator;
 import org.emoflon.ibex.gt.editor.gT.EditorParameter;
 import org.emoflon.ibex.gt.editor.gT.EditorPattern;
 import org.emoflon.ibex.gt.editor.gT.EditorReference;
+import org.emoflon.ibex.gt.editor.gT.EditorReferenceIterator;
 import org.emoflon.ibex.gt.editor.gT.ExpExpression;
 import org.emoflon.ibex.gt.editor.gT.GTFactory;
 import org.emoflon.ibex.gt.editor.gT.MinMaxExpression;
@@ -287,6 +288,7 @@ public class GTFlattener {
 		mergeOperatorsOfNodes(node, mergedNode);
 		mergeAttributesOfNodes(node, mergedNode);
 		mergeReferencesOfNodes(node, mergedNode);
+		mergeIteratorsOfNodes(node, mergedNode);
 	}
 
 	/**
@@ -389,6 +391,20 @@ public class GTFlattener {
 			}
 		} else {
 			node.getReferences().add(EcoreUtil.copy(mergedReference));
+		}
+	}
+	
+	private void mergeIteratorsOfNodes(EditorNode node, EditorNode mergedNode) {
+		for(EditorReferenceIterator mergedIterator : mergedNode.getIterators()) {
+			mergeIterator(mergedNode, mergedIterator);
+		}
+	}
+	
+	private void mergeIterator(final EditorNode node, final EditorReferenceIterator mergedIterator) {
+		final Optional<EditorReferenceIterator> iteratorInNode = node.getIterators().stream()
+				.filter(r -> GTEditorAttributeComparator.areIteratorsEqual(r, mergedIterator)).findAny();
+		if (!iteratorInNode.isPresent()) {
+			node.getIterators().add(EcoreUtil.copy(mergedIterator));
 		}
 	}
 	

@@ -8,6 +8,7 @@ import org.emoflon.ibex.gt.editor.gT.EditorExpression;
 import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression;
 import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression;
 import org.emoflon.ibex.gt.editor.gT.EditorReference;
+import org.emoflon.ibex.gt.editor.gT.EditorReferenceIterator;
 
 /**
  * Utility methods to compare whether two editor elements are equal.
@@ -112,5 +113,9 @@ public class GTEditorAttributeComparator {
 	 */
 	public static boolean areReferencesEqual(final EditorReference a, final EditorReference b) {
 		return a.getType().equals(b.getType()) && a.getTarget().getName().equals(b.getTarget().getName());
+	}
+	
+	public static boolean areIteratorsEqual(final EditorReferenceIterator a, final EditorReferenceIterator b) {
+		return a.getType().equals(b.getType()) && a.getName().equals(b.getName());
 	}
 }
