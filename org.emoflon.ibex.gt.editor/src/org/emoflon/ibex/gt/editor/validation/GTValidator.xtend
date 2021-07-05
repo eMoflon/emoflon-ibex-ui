@@ -54,6 +54,8 @@ import org.emoflon.ibex.gt.editor.gT.MinMaxExpression
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
 import org.eclipse.emf.ecore.impl.EEnumImpl
 import org.emoflon.ibex.gt.editor.utils.GTDisjointPatternFinder
+import org.emoflon.ibex.gt.editor.gT.EditorIteratorReference
+import org.emoflon.ibex.gt.editor.gT.EditorReferenceIterator
 
 /**
  * This class contains custom validation rules.
@@ -65,12 +67,69 @@ class GTValidator extends AbstractGTValidator {
 	 * The list of invalid node names.
 	 */
 	static val nodeNameBlacklist = #[
-		"class", 
+		"class",
 		"rule",
-		"abstract", "assert", "boolean", "break", "byte", "case", "catch", "char", "class", "const", "continue", "default", "do", "double", "EAttribute", "EBoolean", "EDataType", 
-		"EClass", "EClassifier", "EDouble", "EFloat", "EInt", "else", "enum", "EPackage", "EReference", "EString", "extends", "final", "finally", "float", "for", "goto", "if", 
-		"implements", "import", "instanceof", "int", "interface", "long", "native", "new", "package", "private", "protected", "public", "return", "short", "static", 
-		"strictfp", "super", "switch", "synchronized", "this", "throw", "throws", "transient", "try", "void", "volatile", "while"
+		"abstract",
+		"assert",
+		"boolean",
+		"break",
+		"byte",
+		"case",
+		"catch",
+		"char",
+		"class",
+		"const",
+		"continue",
+		"default",
+		"do",
+		"double",
+		"EAttribute",
+		"EBoolean",
+		"EDataType",
+		"EClass",
+		"EClassifier",
+		"EDouble",
+		"EFloat",
+		"EInt",
+		"else",
+		"enum",
+		"EPackage",
+		"EReference",
+		"EString",
+		"extends",
+		"final",
+		"finally",
+		"float",
+		"for",
+		"goto",
+		"if",
+		"implements",
+		"import",
+		"instanceof",
+		"int",
+		"interface",
+		"long",
+		"native",
+		"new",
+		"package",
+		"private",
+		"protected",
+		"public",
+		"return",
+		"short",
+		"static",
+		"strictfp",
+		"super",
+		"switch",
+		"synchronized",
+		"this",
+		"throw",
+		"throws",
+		"transient",
+		"try",
+		"void",
+		"volatile",
+		"while"
 	]
 
 	/**
@@ -86,10 +145,67 @@ class GTValidator extends AbstractGTValidator {
 		"notifyAll",
 		"toString",
 		"wait",
-		"abstract", "assert", "boolean", "break", "byte", "case", "catch", "char", "class", "const", "continue", "default", "do", "double", "EAttribute", "EBoolean", "EDataType", 
-		"EClass", "EClassifier", "EDouble", "EFloat", "EInt", "else", "enum", "EPackage", "EReference", "EString", "extends", "final", "finally", "float", "for", "goto", "if", 
-		"implements", "import", "instanceof", "int", "interface", "long", "native", "new", "package", "private", "protected", "public", "return", "short", "static", 
-		"strictfp", "super", "switch", "synchronized", "this", "throw", "throws", "transient", "try", "void", "volatile", "while"
+		"abstract",
+		"assert",
+		"boolean",
+		"break",
+		"byte",
+		"case",
+		"catch",
+		"char",
+		"class",
+		"const",
+		"continue",
+		"default",
+		"do",
+		"double",
+		"EAttribute",
+		"EBoolean",
+		"EDataType",
+		"EClass",
+		"EClassifier",
+		"EDouble",
+		"EFloat",
+		"EInt",
+		"else",
+		"enum",
+		"EPackage",
+		"EReference",
+		"EString",
+		"extends",
+		"final",
+		"finally",
+		"float",
+		"for",
+		"goto",
+		"if",
+		"implements",
+		"import",
+		"instanceof",
+		"int",
+		"interface",
+		"long",
+		"native",
+		"new",
+		"package",
+		"private",
+		"protected",
+		"public",
+		"return",
+		"short",
+		"static",
+		"strictfp",
+		"super",
+		"switch",
+		"synchronized",
+		"this",
+		"throw",
+		"throws",
+		"transient",
+		"try",
+		"void",
+		"volatile",
+		"while"
 	]
 
 	static val CODE_PREFIX = "org.emoflon.ibex.gt.editor."
@@ -233,7 +349,7 @@ class GTValidator extends AbstractGTValidator {
 		"condition.pattern.invalid.hasMultipleConditions"
 	public static val CONDITION_PATTERN_INVALID_CONDITIONS2 = CODE_PREFIX +
 		"condition.pattern.invalid.hasArithmeticExpressions"
-		
+
 	public static val CONDITION_PATTERN_INVALID_CONDITIONS_MESSAGE = "Condition may not use '%s' because it has multiple conditions."
 	public static val CONDITION_PATTERN_INVALID_CONDITIONS_MESSAGE2 = "Condition may not use '%s' because it has attribute constraints using count(..) or arithmetic expressions."
 
@@ -298,10 +414,10 @@ class GTValidator extends AbstractGTValidator {
 	// Count function
 	public static val RECURSIVE_COUNT_INVOCATION_MESSAGE = "Count can't be used recursively."
 	public static val RECURSIVE_COUNT_INVOCATION = CODE_PREFIX + "count.recursiveInvocation"
-	
+
 	// Disjoint pattern matching optimization extension
 	public static val PATTERN_DISJOINT_MESSAGE = "the pattern '%s' is disjoint with the subpatterns %s"
-  	public static val PATTERN_DISJOINT = "pattern.isDisjoint"
+	public static val PATTERN_DISJOINT = "pattern.isDisjoint"
 
 	@Check
 	def checkFile(EditorGTFile file) {
@@ -553,7 +669,8 @@ class GTValidator extends AbstractGTValidator {
 	 */
 	def checkPatternType(EditorPattern pattern) {
 		val flattenedPattern = new GTFlattener(pattern).flattenedPattern
-		val isRule = GTEditorPatternUtils.containsCreatedOrDeletedElements(flattenedPattern) || GTEditorPatternUtils.containsForEachLoop(flattenedPattern)
+		val isRule = GTEditorPatternUtils.containsCreatedOrDeletedElements(flattenedPattern) ||
+			GTEditorPatternUtils.containsForEachLoop(flattenedPattern)
 		if (isRule && pattern.type === EditorPatternType.PATTERN) {
 			error(
 				String.format(PATTERN_TYPE_INVALID_PATTERN_MESSAGE, pattern.name),
@@ -642,12 +759,11 @@ class GTValidator extends AbstractGTValidator {
 				}
 			}
 		}
-		
+
 		// Local nodes must be context
-		if(node.local && (node.operator != EditorOperator.CONTEXT)) {
-			error(
-				"Local nodes must be context and may not be deleted!",
-				GTPackage.Literals.EDITOR_NODE__OPERATOR, "org.emoflon.ibex.gt.editor.node.local.expectContext")
+		if (node.local && (node.operator != EditorOperator.CONTEXT)) {
+			error("Local nodes must be context and may not be deleted!", GTPackage.Literals.EDITOR_NODE__OPERATOR,
+				"org.emoflon.ibex.gt.editor.node.local.expectContext")
 		}
 
 		val pattern = node.eContainer
@@ -727,9 +843,10 @@ class GTValidator extends AbstractGTValidator {
 			literalExpression.eContainer instanceof ArithmeticExpression ||
 			literalExpression.eContainer instanceof StochasticFunctionExpression ||
 			literalExpression.eContainer instanceof EditorPattern) {
-			if (GTEditorAttributeUtils.convertStringToEDataType(literalExpression.value) == EcorePackage.Literals.ESTRING || 
-				GTEditorAttributeUtils.convertStringToEDataType(literalExpression.value) == EcorePackage.Literals.EBOOLEAN
-			) {
+			if (GTEditorAttributeUtils.convertStringToEDataType(literalExpression.value) ==
+				EcorePackage.Literals.ESTRING ||
+				GTEditorAttributeUtils.convertStringToEDataType(literalExpression.value) ==
+					EcorePackage.Literals.EBOOLEAN) {
 				error("The literal does not represent a numeric value.",
 					GTPackage.Literals.EDITOR_LITERAL_EXPRESSION__VALUE, PARAMETER_NO_NUMBER)
 				return
@@ -759,13 +876,14 @@ class GTValidator extends AbstractGTValidator {
 		}
 
 		val node = attributeConstraint.eContainer as EditorNode
-		
+
 		// check if receiving node is non-local
-		if(node.isLocal) {
+		if (node.isLocal) {
 			error("Attributes of local nodes may not be used in attribute assignments!",
-					GTPackage.Literals.EDITOR_ATTRIBUTE_ASSIGNMENT__ATTRIBUTE, CODE_PREFIX + "arithmetics.nonLocalAttributes")
+				GTPackage.Literals.EDITOR_ATTRIBUTE_ASSIGNMENT__ATTRIBUTE,
+				CODE_PREFIX + "arithmetics.nonLocalAttributes")
 		}
-		
+
 		if (node.operator == EditorOperator.DELETE) {
 			// If the node is a deleted node, it may not contain attribute assignments.
 			error(
@@ -791,118 +909,139 @@ class GTValidator extends AbstractGTValidator {
 
 	@Check
 	def checkAttributeConstraint(EditorAttributeConstraint attributeConstraint) {
-    	val lhs = attributeConstraint.lhs
-    	val rhs = attributeConstraint.rhs
-    	var lhsNumeric = true
-    	var rhsNumeric = true
-    	
-    	if(lhs instanceof EditorEnumExpression) {
-    		lhsNumeric = false
-    		if(!(attributeConstraint.relation == EditorRelation.EQUAL || attributeConstraint.relation == EditorRelation.UNEQUAL)) {
-    			error("Relation "+attributeConstraint.relation+" is not supported for boolean or enum data types.",
-					GTPackage.Literals.EDITOR_ATTRIBUTE_CONSTRAINT__RELATION,
-					ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE)
-    		}
-    	}
-    	
-    	if(lhs instanceof EditorParameterExpression) {
-    		if(lhs.parameter.type == EcorePackage.Literals.ESTRING) {
-    			lhsNumeric = false;
-    		} else if(lhs.parameter.type == EcorePackage.Literals.EBOOLEAN || lhs.parameter.type instanceof EEnumImpl) {
-    			lhsNumeric = false;
-    			if(!(attributeConstraint.relation == EditorRelation.EQUAL || attributeConstraint.relation == EditorRelation.UNEQUAL)) {
-    				error("Relation "+attributeConstraint.relation+" is not supported for boolean or enum data types.",
+		val lhs = attributeConstraint.lhs
+		val rhs = attributeConstraint.rhs
+		var lhsNumeric = true
+		var rhsNumeric = true
+
+		if (lhs instanceof EditorEnumExpression) {
+			lhsNumeric = false
+			if (!(attributeConstraint.relation == EditorRelation.EQUAL ||
+				attributeConstraint.relation == EditorRelation.UNEQUAL)) {
+				error("Relation " + attributeConstraint.relation + " is not supported for boolean or enum data types.",
+					GTPackage.Literals.EDITOR_ATTRIBUTE_CONSTRAINT__RELATION, ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE)
+			}
+		}
+
+		if (lhs instanceof EditorParameterExpression) {
+			if (lhs.parameter.type == EcorePackage.Literals.ESTRING) {
+				lhsNumeric = false;
+			} else if (lhs.parameter.type == EcorePackage.Literals.EBOOLEAN ||
+				lhs.parameter.type instanceof EEnumImpl) {
+				lhsNumeric = false;
+				if (!(attributeConstraint.relation == EditorRelation.EQUAL ||
+					attributeConstraint.relation == EditorRelation.UNEQUAL)) {
+					error(
+						"Relation " + attributeConstraint.relation +
+							" is not supported for boolean or enum data types.",
 						GTPackage.Literals.EDITOR_ATTRIBUTE_CONSTRAINT__RELATION,
 						ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE)
-    			}
-    		}
-    	}
-    	
-    	if(lhs instanceof ArithmeticCalculationExpression) {
-    		if(lhs.expression instanceof EditorAttributeExpression) {
-    			val eae = lhs.expression as EditorAttributeExpression
-    			if(eae.attribute.EType == EcorePackage.Literals.ESTRING) {
-    				lhsNumeric = false;
-    			} else if(eae.attribute.EType == EcorePackage.Literals.EBOOLEAN || eae.attribute.EType instanceof EEnumImpl) {
-    				lhsNumeric = false;
-    				if(!(attributeConstraint.relation == EditorRelation.EQUAL || attributeConstraint.relation == EditorRelation.UNEQUAL)) {
-	    				error("Relation "+attributeConstraint.relation+" is not supported for boolean or enum data types.",
+				}
+			}
+		}
+
+		if (lhs instanceof ArithmeticCalculationExpression) {
+			if (lhs.expression instanceof EditorAttributeExpression) {
+				val eae = lhs.expression as EditorAttributeExpression
+				if (eae.attribute.EType == EcorePackage.Literals.ESTRING) {
+					lhsNumeric = false;
+				} else if (eae.attribute.EType == EcorePackage.Literals.EBOOLEAN ||
+					eae.attribute.EType instanceof EEnumImpl) {
+					lhsNumeric = false;
+					if (!(attributeConstraint.relation == EditorRelation.EQUAL ||
+						attributeConstraint.relation == EditorRelation.UNEQUAL)) {
+						error(
+							"Relation " + attributeConstraint.relation +
+								" is not supported for boolean or enum data types.",
 							GTPackage.Literals.EDITOR_ATTRIBUTE_CONSTRAINT__RELATION,
 							ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE)
-    				}
-    			}
-    		} else if (lhs.expression instanceof EditorLiteralExpression) {
-    			val ele = lhs.expression as EditorLiteralExpression
-    			val type = GTEditorAttributeUtils.convertStringToEDataType(ele.value)
-    			if(type == EcorePackage.Literals.ESTRING) {
-    				lhsNumeric = false;
-    			} else if(type == EcorePackage.Literals.EBOOLEAN) {
-    				lhsNumeric = false;
-    				if(!(attributeConstraint.relation == EditorRelation.EQUAL || attributeConstraint.relation == EditorRelation.UNEQUAL)) {
-	    				error("Relation "+attributeConstraint.relation+" is not supported for boolean or enum data types.",
+					}
+				}
+			} else if (lhs.expression instanceof EditorLiteralExpression) {
+				val ele = lhs.expression as EditorLiteralExpression
+				val type = GTEditorAttributeUtils.convertStringToEDataType(ele.value)
+				if (type == EcorePackage.Literals.ESTRING) {
+					lhsNumeric = false;
+				} else if (type == EcorePackage.Literals.EBOOLEAN) {
+					lhsNumeric = false;
+					if (!(attributeConstraint.relation == EditorRelation.EQUAL ||
+						attributeConstraint.relation == EditorRelation.UNEQUAL)) {
+						error(
+							"Relation " + attributeConstraint.relation +
+								" is not supported for boolean or enum data types.",
 							GTPackage.Literals.EDITOR_ATTRIBUTE_CONSTRAINT__RELATION,
 							ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE)
-    				}
-    			}
-    		}
-    	}
-    	
-    	if(rhs instanceof EditorEnumExpression) {
-    		rhsNumeric = false
-    		if(!(attributeConstraint.relation == EditorRelation.EQUAL || attributeConstraint.relation == EditorRelation.UNEQUAL)) {
-	    		error("Relation "+attributeConstraint.relation+" is not supported for boolean or enum data types.",
-					GTPackage.Literals.EDITOR_ATTRIBUTE_CONSTRAINT__RELATION,
-					ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE)
-    		}
-    	}
-    	
-    	if(rhs instanceof EditorParameterExpression) {
-    		if(rhs.parameter.type == EcorePackage.Literals.ESTRING) {
-    			rhsNumeric = false;
-    		} else if(rhs.parameter.type == EcorePackage.Literals.EBOOLEAN || rhs.parameter.type instanceof EEnumImpl) {
-    			rhsNumeric = false;
-    			if(!(attributeConstraint.relation == EditorRelation.EQUAL || attributeConstraint.relation == EditorRelation.UNEQUAL)) {
-	    			error("Relation "+attributeConstraint.relation+" is not supported for boolean or enum data types.",
+					}
+				}
+			}
+		}
+
+		if (rhs instanceof EditorEnumExpression) {
+			rhsNumeric = false
+			if (!(attributeConstraint.relation == EditorRelation.EQUAL ||
+				attributeConstraint.relation == EditorRelation.UNEQUAL)) {
+				error("Relation " + attributeConstraint.relation + " is not supported for boolean or enum data types.",
+					GTPackage.Literals.EDITOR_ATTRIBUTE_CONSTRAINT__RELATION, ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE)
+			}
+		}
+
+		if (rhs instanceof EditorParameterExpression) {
+			if (rhs.parameter.type == EcorePackage.Literals.ESTRING) {
+				rhsNumeric = false;
+			} else if (rhs.parameter.type == EcorePackage.Literals.EBOOLEAN ||
+				rhs.parameter.type instanceof EEnumImpl) {
+				rhsNumeric = false;
+				if (!(attributeConstraint.relation == EditorRelation.EQUAL ||
+					attributeConstraint.relation == EditorRelation.UNEQUAL)) {
+					error(
+						"Relation " + attributeConstraint.relation +
+							" is not supported for boolean or enum data types.",
 						GTPackage.Literals.EDITOR_ATTRIBUTE_CONSTRAINT__RELATION,
 						ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE)
-    			}
-    		}
-    	}
-    	
-    	if(rhs instanceof ArithmeticCalculationExpression) {
-    		if(rhs.expression instanceof EditorAttributeExpression) {
-    			val eae = rhs.expression as EditorAttributeExpression
-    			if(eae.attribute.EType == EcorePackage.Literals.ESTRING) {
-    				rhsNumeric = false;
-    			} else if(eae.attribute.EType == EcorePackage.Literals.EBOOLEAN || eae.attribute.EType instanceof EEnumImpl) {
-    				rhsNumeric = false;
-    				if(!(attributeConstraint.relation == EditorRelation.EQUAL || attributeConstraint.relation == EditorRelation.UNEQUAL)) {
-	    				error("Relation "+attributeConstraint.relation+" is not supported for boolean or enum data types.",
+				}
+			}
+		}
+
+		if (rhs instanceof ArithmeticCalculationExpression) {
+			if (rhs.expression instanceof EditorAttributeExpression) {
+				val eae = rhs.expression as EditorAttributeExpression
+				if (eae.attribute.EType == EcorePackage.Literals.ESTRING) {
+					rhsNumeric = false;
+				} else if (eae.attribute.EType == EcorePackage.Literals.EBOOLEAN ||
+					eae.attribute.EType instanceof EEnumImpl) {
+					rhsNumeric = false;
+					if (!(attributeConstraint.relation == EditorRelation.EQUAL ||
+						attributeConstraint.relation == EditorRelation.UNEQUAL)) {
+						error(
+							"Relation " + attributeConstraint.relation +
+								" is not supported for boolean or enum data types.",
 							GTPackage.Literals.EDITOR_ATTRIBUTE_CONSTRAINT__RELATION,
 							ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE)
-    				}
-    			}
-    		} else if (rhs.expression instanceof EditorLiteralExpression) {
-    			val ele = rhs.expression as EditorLiteralExpression
-    			val type = GTEditorAttributeUtils.convertStringToEDataType(ele.value)
-    			if(type == EcorePackage.Literals.ESTRING) {
-    				rhsNumeric = false;
-    			} else if(type == EcorePackage.Literals.EBOOLEAN) {
-    				rhsNumeric = false;
-    				if(!(attributeConstraint.relation == EditorRelation.EQUAL || attributeConstraint.relation == EditorRelation.UNEQUAL)) {
-	    				error("Relation "+attributeConstraint.relation+" is not supported for boolean or enum data types.",
-						GTPackage.Literals.EDITOR_ATTRIBUTE_CONSTRAINT__RELATION,
-						ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE)
-    				}
-    			}
-    		}
-    	}
-    	
-    	if(lhsNumeric != rhsNumeric) {
-    		error("Can not compare numeric an non-numeric values.",
-    			GTPackage.Literals.EDITOR_ATTRIBUTE_CONSTRAINT__RELATION,
-					ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE)
-    	}
+					}
+				}
+			} else if (rhs.expression instanceof EditorLiteralExpression) {
+				val ele = rhs.expression as EditorLiteralExpression
+				val type = GTEditorAttributeUtils.convertStringToEDataType(ele.value)
+				if (type == EcorePackage.Literals.ESTRING) {
+					rhsNumeric = false;
+				} else if (type == EcorePackage.Literals.EBOOLEAN) {
+					rhsNumeric = false;
+					if (!(attributeConstraint.relation == EditorRelation.EQUAL ||
+						attributeConstraint.relation == EditorRelation.UNEQUAL)) {
+						error(
+							"Relation " + attributeConstraint.relation +
+								" is not supported for boolean or enum data types.",
+							GTPackage.Literals.EDITOR_ATTRIBUTE_CONSTRAINT__RELATION,
+							ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE)
+					}
+				}
+			}
+		}
+
+		if (lhsNumeric != rhsNumeric) {
+			error("Can not compare numeric an non-numeric values.",
+				GTPackage.Literals.EDITOR_ATTRIBUTE_CONSTRAINT__RELATION, ATTRIBUTE_RELATION_TYPE_NOT_COMPARABLE)
+		}
 
 	}
 
@@ -970,7 +1109,7 @@ class GTValidator extends AbstractGTValidator {
 					node.name
 				)
 			}
-			
+
 		}
 
 		if (reference.operator == EditorOperator.DELETE) {
@@ -996,13 +1135,12 @@ class GTValidator extends AbstractGTValidator {
 				)
 			}
 		}
-		
+
 		// References to local nodes may not be deleted or created
 		if (reference.operator == EditorOperator.DELETE || reference.operator == EditorOperator.CREATE) {
-			if (targetNodes.findFirst[tn | tn.isLocal] !== null) {
+			if (targetNodes.findFirst[tn|tn.isLocal] !== null) {
 				error("References to local nodes must be context and may not be deleted!",
-					GTPackage.Literals.EDITOR_REFERENCE__OPERATOR,
-					REFERENCE_TARGET_EXPECT_CONTEXT)
+					GTPackage.Literals.EDITOR_REFERENCE__OPERATOR, REFERENCE_TARGET_EXPECT_CONTEXT)
 			}
 		}
 	}
@@ -1060,14 +1198,16 @@ class GTValidator extends AbstractGTValidator {
 	def checkPatternInApplicationCondition(EditorPattern pattern, EStructuralFeature feature) {
 		/* Of course rules can be used as patterns in conditions but they must at least possess one context node.
 		 * Previously: Patterns in conditions must not be rules. <- Lazy version
-		 */ 
+		 */
 		if (pattern.type === EditorPatternType.RULE) {
 //			error(
 //				String.format(CONDITION_PATTERN_INVALID_RULE_MESSAGE, pattern.name),
 //				feature,
 //				CONDITION_PATTERN_INVALID_RULE
 //			)
-			if(pattern.nodes.filter[node | node.operator == EditorOperator.CONTEXT || node.operator == EditorOperator.DELETE].empty) {
+			if (pattern.nodes.filter [ node |
+				node.operator == EditorOperator.CONTEXT || node.operator == EditorOperator.DELETE
+			].empty) {
 				error(
 					String.format(CONDITION_PATTERN_INVALID_RULE_MESSAGE, pattern.name),
 					feature,
@@ -1093,28 +1233,29 @@ class GTValidator extends AbstractGTValidator {
 				}
 				// Patterns in conditions must not have attibute constraints with complex arithmetic or count expressions
 				val flattenedPattern = (new GTFlattener(pattern)).flattenedPattern;
-				for(EditorAttributeConstraint eac : flattenedPattern.attributeConstraints) {
-					if(checkForComplexArithmetics(eac.lhs) || checkForComplexArithmetics(eac.rhs)) {
+				for (EditorAttributeConstraint eac : flattenedPattern.attributeConstraints) {
+					if (checkForComplexArithmetics(eac.lhs) || checkForComplexArithmetics(eac.rhs)) {
 						error(
 							String.format(CONDITION_PATTERN_INVALID_CONDITIONS_MESSAGE2, pattern.name),
-							feature, CONDITION_PATTERN_INVALID_CONDITIONS2
+							feature,
+							CONDITION_PATTERN_INVALID_CONDITIONS2
 						)
 					}
 				}
 			}
 		}
 	}
-	
+
 	def boolean checkForComplexArithmetics(EditorExpression expression) {
-		if(expression instanceof EditorEnumExpression || expression instanceof EditorParameterExpression) {
+		if (expression instanceof EditorEnumExpression || expression instanceof EditorParameterExpression) {
 			return false
-		} else if(expression instanceof StochasticFunctionExpression) {
+		} else if (expression instanceof StochasticFunctionExpression) {
 			return true
 		} else {
 			val ace = expression as ArithmeticCalculationExpression
-			if(ace.expression instanceof AddExpression || ace.expression instanceof MultExpression 
-				|| ace.expression instanceof ExpExpression || ace.expression instanceof MinMaxExpression
-				|| ace.expression instanceof OneParameterArithmetics || ace.expression instanceof EditorCountExpression) {
+			if (ace.expression instanceof AddExpression || ace.expression instanceof MultExpression ||
+				ace.expression instanceof ExpExpression || ace.expression instanceof MinMaxExpression ||
+				ace.expression instanceof OneParameterArithmetics || ace.expression instanceof EditorCountExpression) {
 				return true
 			} else {
 				return false
@@ -1374,8 +1515,9 @@ class GTValidator extends AbstractGTValidator {
 	@Check
 	def checkEditorAttributeExpression(EditorAttributeExpression attribute) {
 		val pattern = GTEditorPatternUtils.getContainer(attribute, typeof(EditorPatternImpl));
-		val targetNodes = GTEditorPatternUtils.getAllNodesOfPattern(pattern, [node | node.name.equals(attribute.node.name)])
-		
+		val targetNodes = GTEditorPatternUtils.
+			getAllNodesOfPattern(pattern, [node|node.name.equals(attribute.node.name)])
+
 		if (attribute.eContainer instanceof StochasticFunction ||
 			attribute.eContainer instanceof ArithmeticExpression ||
 			attribute.eContainer instanceof StochasticFunctionExpression ||
@@ -1383,13 +1525,14 @@ class GTValidator extends AbstractGTValidator {
 			if (!isParseable(attribute)) {
 				error(String.format(PARAMETER_NO_NUMBER_MESSAGE, attribute.node.name, attribute.attribute.name),
 					GTPackage.Literals.EDITOR_ATTRIBUTE_EXPRESSION__ATTRIBUTE, PARAMETER_NO_NUMBER)
-			} 
-			
-			if(targetNodes.findFirst[node | node.isLocal] !== null) {
-				error("Attributes of local nodes may not be used in arithmetic expressions!",
-					GTPackage.Literals.EDITOR_ATTRIBUTE_EXPRESSION__NODE, CODE_PREFIX + "arithmetics.nonLocalAttributes")
 			}
-			
+
+			if (targetNodes.findFirst[node|node.isLocal] !== null) {
+				error("Attributes of local nodes may not be used in arithmetic expressions!",
+					GTPackage.Literals.EDITOR_ATTRIBUTE_EXPRESSION__NODE,
+					CODE_PREFIX + "arithmetics.nonLocalAttributes")
+			}
+
 			return
 		}
 
@@ -1430,7 +1573,7 @@ class GTValidator extends AbstractGTValidator {
 				if (ace.expression instanceof EditorLiteralExpression) {
 					val ele = ace.expression as EditorLiteralExpression
 					val type = GTEditorAttributeUtils.convertStringToEDataType(ele.value);
-					if(type != attribute.attribute.EType) {
+					if (type != attribute.attribute.EType) {
 						error("Data type mismatch.", GTPackage.Literals.EDITOR_ATTRIBUTE_EXPRESSION__ATTRIBUTE,
 							ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE)
 					}
@@ -1456,15 +1599,15 @@ class GTValidator extends AbstractGTValidator {
 				error("Data type mismatch.", GTPackage.Literals.EDITOR_ATTRIBUTE_EXPRESSION__ATTRIBUTE,
 					ATTRIBUTE_LITERAL_VALUE_WRONG_TYPE)
 			}
-			if(targetNodes.findFirst[node | node.isLocal] !== null) {
+			if (targetNodes.findFirst[node|node.isLocal] !== null) {
 				error("Attributes of local nodes may not be used in attribute assignments",
-					GTPackage.Literals.EDITOR_ATTRIBUTE_EXPRESSION__NODE, 
+					GTPackage.Literals.EDITOR_ATTRIBUTE_EXPRESSION__NODE,
 					CODE_PREFIX + "arithmetics.nonLocalAttributes")
 			}
 		}
 
 	}
-	
+
 	// checks if an attribute is parseable as a number
 	def isParseable(EditorAttributeExpression attribute) {
 		val type = attribute.attribute.EAttributeType
@@ -1487,15 +1630,24 @@ class GTValidator extends AbstractGTValidator {
 			error(RECURSIVE_COUNT_INVOCATION_MESSAGE, GTPackage.Literals.EDITOR_COUNT_EXPRESSION__INVOKED_PATTEN,
 				RECURSIVE_COUNT_INVOCATION)
 	}
+
+	@Check
+	def checkIfPatternDisjunct(EditorPattern pattern) {
+		val disjunctPatternFinder = new GTDisjointPatternFinder(pattern)
+		if (disjunctPatternFinder.disjoint && !pattern.isOptimize) {
+			warning(
+				String.format(PATTERN_DISJOINT_MESSAGE, pattern.name,
+					GTDisjointPatternFinder::getDisjointPatternFormat(disjunctPatternFinder.subpatterns)),
+				GTPackage.Literals.EDITOR_PATTERN__NAME, PATTERN_DISJOINT)
+		}
+	}
 	
-	 @Check
-  	def checkIfPatternDisjunct(EditorPattern pattern){
-  		val disjunctPatternFinder = new GTDisjointPatternFinder(pattern)
-  		if(disjunctPatternFinder.disjoint && !pattern.isOptimize){
-  			warning(String.format(PATTERN_DISJOINT_MESSAGE, pattern.name, 
-  			GTDisjointPatternFinder::getDisjointPatternFormat(disjunctPatternFinder.subpatterns))
-	  		, GTPackage.Literals.EDITOR_PATTERN__NAME, PATTERN_DISJOINT)	
-  	}
-  }
+	@Check
+	def checkIteratorName(EditorReferenceIterator iterator) {
+		val pattern = GTEditorPatternUtils.getContainer(iterator, typeof(EditorPatternImpl));
+		val nodeNames = pattern.nodes.map[node | node.name].toSet
+		if(nodeNames.contains(iterator.name))
+			error("Iterators cannot be named '%s'. Use a different name.", GTPackage.Literals.EDITOR_REFERENCE_ITERATOR__NAME, iterator.name)
+	}
 
 }
