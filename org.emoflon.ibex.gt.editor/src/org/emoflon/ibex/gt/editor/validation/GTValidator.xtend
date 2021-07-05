@@ -1646,7 +1646,10 @@ class GTValidator extends AbstractGTValidator {
 	def checkIteratorName(EditorReferenceIterator iterator) {
 		val pattern = GTEditorPatternUtils.getContainer(iterator, typeof(EditorPatternImpl));
 		val nodeNames = pattern.nodes.map[node | node.name].toSet
+		val iteratorNames = pattern.nodes.flatMap[node | node.iterators].filter[itr | itr.name !== null && itr !== iterator].map[itr | itr.name].toSet
 		if(nodeNames.contains(iterator.name))
+			error("Iterators cannot be named '%s'. Use a different name.", GTPackage.Literals.EDITOR_REFERENCE_ITERATOR__NAME, iterator.name)
+		if(iteratorNames.contains(iterator.name))
 			error("Iterators cannot be named '%s'. Use a different name.", GTPackage.Literals.EDITOR_REFERENCE_ITERATOR__NAME, iterator.name)
 	}
 
