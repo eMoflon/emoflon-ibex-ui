@@ -16,6 +16,9 @@ import org.emoflon.ibex.gt.editor.gT.GTPackage
 import org.emoflon.ibex.gt.editor.utils.GTEditorPatternUtils
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeAssignment
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeConstraint
+import org.emoflon.ibex.gt.editor.gT.EditorIteratorReference
+import org.emoflon.ibex.gt.editor.gT.EditorIteratorAttributeAssignment
+import org.emoflon.ibex.gt.editor.gT.EditorIteratorAttributeAssignmentItr
 
 /**
  * Applying syntax highlighting configuration.
@@ -33,6 +36,14 @@ class GTHighlightingCalculator extends DefaultSemanticHighlightingCalculator {
 		super.doProvideHighlightingFor(resource, acceptor, cancelIndicator)
 	}
 
+	def dispatch void highlightElement(EditorIteratorAttributeAssignment element, IHighlightedPositionAcceptor acceptor) {
+		val style = GTHighlightingConfiguration.getStyle(EditorOperator.CREATE)
+		if(element instanceof EditorIteratorAttributeAssignmentItr)
+			highlight(acceptor, element, GTPackage.Literals.EDITOR_ITERATOR_ATTRIBUTE_ASSIGNMENT_ITR__ITERATOR_ATTRIBUTE, style)
+		else
+			highlight(acceptor, element, GTPackage.Literals.EDITOR_ITERATOR_ATTRIBUTE_ASSIGNMENT_NODE__NODE_ATTRIBUTE, style)
+	}
+	
 	def dispatch void highlightElement(EditorAttributeAssignment element, IHighlightedPositionAcceptor acceptor) {
 		val style = GTHighlightingConfiguration.getStyle(EditorOperator.CREATE)
 		highlight(acceptor, element, GTPackage.Literals.EDITOR_ATTRIBUTE_ASSIGNMENT__ATTRIBUTE, style)
@@ -51,6 +62,11 @@ class GTHighlightingCalculator extends DefaultSemanticHighlightingCalculator {
 	}
 
 	def dispatch void highlightElement(EditorReference element, IHighlightedPositionAcceptor acceptor) {
+		val style = GTHighlightingConfiguration.getStyle(element.operator)
+		highlight(acceptor, element, style)
+	}
+	
+	def dispatch void highlightElement(EditorIteratorReference element, IHighlightedPositionAcceptor acceptor) {
 		val style = GTHighlightingConfiguration.getStyle(element.operator)
 		highlight(acceptor, element, style)
 	}

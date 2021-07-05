@@ -38,7 +38,7 @@ EditorParameter:
 EditorNode:
   (operator=EditorOperator)? (local?='local')?
   name=ID ':' type=[ecore::EClass] ('{'
-  (attributes+=EditorAttributeAssignment | references+=EditorReference)*
+  (attributes+=EditorAttributeAssignment | references+=EditorReference | iterators+=EditorReferenceIterator)*
   '}')?;
 
 enum EditorOperator:
@@ -88,6 +88,26 @@ EditorParameterExpression:
 // References
 EditorReference:
   (operator=EditorOperator)? '-' type=[ecore::EReference] '->' target=[EditorNode|ID];
+
+EditorReferenceIterator:
+	'forEach' type=[ecore::EReference] '->' name=ID '{'
+		(iteratorAttributes+=EditorIteratorAttributeAssignment | references+=EditorIteratorReference)+
+	'}';
+
+EditorIteratorAttributeExpression:
+	'iterator::' iterator=[EditorReferenceIterator] '.' attribute=[ecore::EAttribute];
+
+EditorIteratorAttributeAssignment:
+	EditorIteratorAttributeAssignmentItr | EditorIteratorAttributeAssignmentNode;
+	
+EditorIteratorAttributeAssignmentItr:
+ 	iteratorAttribute=EditorIteratorAttributeExpression ':=' value=EditorExpression;
+	
+EditorIteratorAttributeAssignmentNode:
+ 	nodeAttribute=EditorAttributeExpression ':=' value=EditorExpression;
+
+EditorIteratorReference:
+ 	operator=EditorOperator source=[EditorNode|ID] '-' type=[ecore::EReference] '->' target=[EditorReferenceIterator|ID];
 
 // Graph Conditions
 EditorCondition:
@@ -168,4 +188,5 @@ OneParameterArithmetics returns ArithmeticExpression: {OneParameterArithmetics}
 ArithmeticAttribute returns ArithmeticExpression:
 	EditorLiteralExpression |
 	EditorAttributeExpression |
+	EditorIteratorAttributeExpression |
 	EditorCountExpression;

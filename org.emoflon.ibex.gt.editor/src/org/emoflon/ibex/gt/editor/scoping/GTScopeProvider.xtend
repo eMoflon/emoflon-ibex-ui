@@ -29,6 +29,12 @@ import java.util.LinkedList
 import org.emoflon.ibex.gt.editor.gT.StochasticFunction
 import org.emoflon.ibex.gt.editor.gT.ArithmeticExpression
 import org.emoflon.ibex.gt.editor.gT.EditorCountExpression
+import org.emoflon.ibex.gt.editor.gT.EditorReferenceIterator
+import org.emoflon.ibex.gt.editor.gT.EditorIteratorReference
+import org.emoflon.ibex.gt.editor.gT.EditorIteratorAttributeAssignment
+import org.emoflon.ibex.gt.editor.gT.impl.EditorNodeImpl
+import org.emoflon.ibex.gt.editor.gT.impl.EditorReferenceIteratorImpl
+import org.emoflon.ibex.gt.editor.gT.EditorIteratorAttributeExpression
 
 /**
  * This class contains custom scoping description.
@@ -46,6 +52,14 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 
 		if (isAttributeConstraint(context, reference)) {
 			return getScopeForAttributes(context as EditorAttributeConstraint)
+		}
+		
+		// Iterator Attributes
+		if (isIteratorAttributeExpressionIterator(context, reference)) {
+			return getScopeForIteratorAttributeExpressionItr(context as EditorIteratorAttributeExpression)
+		}
+		if (isIteratorAttributeExpressionAttribute(context, reference)) {
+			return getScopeForIteratorAttributeExpressionAtr(context as EditorIteratorAttributeExpression)
 		}
 
 		// Condition
@@ -104,6 +118,24 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		if (isReferenceTarget(context, reference)) {
 			return getScopeForReferenceTargets(context as EditorReference)
 		}
+		
+		// IteratorReferences
+
+		if (isIteratorReferenceSource(context, reference)) {
+			return getScopeForIteratorReferenceSources(context as EditorIteratorReference)
+		}
+		if (isIteratorReferenceType(context, reference)) {
+			return getScopeForIteratorReferenceTypes(context as EditorIteratorReference)
+		}
+		if (isIteratorReferenceTarget(context, reference)) {
+			return getScopeForIteratorReferenceTargets(context as EditorIteratorReference)
+		}
+		
+		// ForEach
+		if (isForEachType(context, reference)) {
+			return getScopeForForEachTypes(context as EditorReferenceIterator)
+		}
+
 
 		// Patterns
 		if (isSuperPattern(context, reference)) {
@@ -125,13 +157,23 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		}
 	}
 
-	def isAttributeName(EObject context, EReference reference) {
-		return (context instanceof EditorAttributeAssignment &&
-			reference == GTPackage.Literals.EDITOR_ATTRIBUTE_ASSIGNMENT__ATTRIBUTE)
+	def isIteratorAttributeExpressionIterator(EObject context, EReference reference) {
+		return (context instanceof EditorIteratorAttributeExpression &&
+			reference == GTPackage.Literals.EDITOR_ITERATOR_ATTRIBUTE_EXPRESSION__ITERATOR)
+	}
+	
+	def isIteratorAttributeExpressionAttribute(EObject context, EReference reference) {
+		return (context instanceof EditorIteratorAttributeExpression &&
+			reference == GTPackage.Literals.EDITOR_ITERATOR_ATTRIBUTE_EXPRESSION__ATTRIBUTE)
 	}
 
 	def isAttributeConstraint(EObject context, EReference reference) {
 		return (context instanceof EditorAttributeConstraint)
+	}
+	
+	def isAttributeName(EObject context, EReference reference) {
+		return (context instanceof EditorAttributeAssignment &&
+			reference == GTPackage.Literals.EDITOR_ATTRIBUTE_ASSIGNMENT__ATTRIBUTE)
 	}
 
 	def isStochasticFunction(EObject context) {
@@ -191,6 +233,22 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	def isReferenceTarget(EObject context, EReference reference) {
 		return (context instanceof EditorReference && reference == GTPackage.Literals.EDITOR_REFERENCE__TARGET)
 	}
+	
+	def isIteratorReferenceSource(EObject context, EReference reference) {
+		return (context instanceof EditorIteratorReference && reference == GTPackage.Literals.EDITOR_ITERATOR_REFERENCE__SOURCE)
+	}
+	
+	def isIteratorReferenceType(EObject context, EReference reference) {
+		return (context instanceof EditorIteratorReference && reference == GTPackage.Literals.EDITOR_ITERATOR_REFERENCE__TYPE)
+	}
+
+	def isIteratorReferenceTarget(EObject context, EReference reference) {
+		return (context instanceof EditorIteratorReference && reference == GTPackage.Literals.EDITOR_ITERATOR_REFERENCE__TARGET)
+	}
+	
+	def isForEachType(EObject context, EReference reference) {
+		return (context instanceof EditorReferenceIterator && reference == GTPackage.Literals.EDITOR_REFERENCE_ITERATOR__TYPE)
+	}
 
 	def isSuperPattern(EObject context, EReference reference) {
 		return (context instanceof EditorPattern && reference == GTPackage.Literals.EDITOR_PATTERN__SUPER_PATTERNS)
@@ -234,7 +292,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	 */
 	def getScopeForReferenceTargets(EditorReference reference) {
 		val referenceType = reference.type
-		val pattern = reference.eContainer.eContainer as EditorPattern
+		val pattern = GTEditorPatternUtils.getContainer(reference, typeof(EditorPatternImpl));
 
 		if (referenceType !== null) {
 			val targetNodeType = referenceType.EReferenceType
@@ -248,6 +306,40 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 
 		// If the type cannot be resolved return all nodes.
 		return Scopes.scopeFor(GTEditorPatternUtils.getAllNodesOfPattern(pattern, [true]))
+	}
+	
+	def getScopeForIteratorReferenceSources(EditorIteratorReference reference) {
+		val pattern = GTEditorPatternUtils.getContainer(reference, typeof(EditorPatternImpl));
+		if(reference.operator == EditorOperator.DELETE) {
+			val node = GTEditorPatternUtils.getContainer(reference, typeof(EditorNodeImpl));
+			val scope = new LinkedList
+			scope.add(node)
+			return Scopes.scopeFor(scope)
+		} else {
+			return Scopes.scopeFor(GTEditorPatternUtils.getAllNodesOfPattern(pattern, [true]))
+		}
+		
+	}
+	
+	def getScopeForIteratorReferenceTypes(EditorIteratorReference reference) {
+		val sourceNode = reference.source
+		return Scopes.scopeFor(sourceNode.type.EAllReferences)
+	}
+	
+	def getScopeForIteratorReferenceTargets(EditorIteratorReference reference) {
+		val iterator = reference.eContainer as EditorReferenceIterator 
+		val scope = new LinkedList
+		scope.add(iterator) 
+		return Scopes.scopeFor(scope)
+	}
+	
+	/**
+	 * The type of a reference must be one of the EReferences from the EClass
+	 * of the node containing the reference.
+	 */
+	def getScopeForForEachTypes(EditorReferenceIterator context) {
+		val containingNode = context.eContainer as EditorNode
+		return Scopes.scopeFor(containingNode.type.EAllReferences)
 	}
 
 	/**
@@ -269,13 +361,28 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	 * of the node containing the attribute assignment or condition.
 	 */
 	def getScopeForAttributes(EditorAttributeAssignment context) {
-		val containingNode = context.eContainer as EditorNode
+		val containingNode = GTEditorPatternUtils.getContainer(context, typeof(EditorNodeImpl))
 		return Scopes.scopeFor(containingNode.type.EAllAttributes)
 	}
 
 	def getScopeForAttributes(EditorAttributeConstraint context) {
-		val pattern = context.eContainer as EditorPattern
+		val pattern = GTEditorPatternUtils.getContainer(context, typeof(EditorPatternImpl))
 		return Scopes.scopeFor(pattern.nodes)
+	}
+	
+	def getScopeForIteratorAttributeExpressionItr(EditorIteratorAttributeExpression expr) {
+		val itr = GTEditorPatternUtils.getContainer(expr, typeof(EditorReferenceIteratorImpl))
+		if(itr === null)
+			return Scopes.scopeFor(new LinkedList)
+			
+		val lst = new LinkedList
+		lst.add(itr)
+		return Scopes.scopeFor(lst)
+	}
+	
+	def getScopeForIteratorAttributeExpressionAtr(EditorIteratorAttributeExpression expr) {
+		val itr = GTEditorPatternUtils.getContainer(expr, typeof(EditorReferenceIteratorImpl))
+		return Scopes.scopeFor((itr.type.EType as EClass).EAllAttributes)
 	}
 
 	/**
@@ -291,7 +398,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 	 */
 	def getScopeForAttributeExpressionNodes(EditorAttributeExpression attributeExpression) {
 		val pattern =GTEditorPatternUtils.getContainer(attributeExpression, typeof(EditorPatternImpl))
-		if (attributeExpression.eContainer instanceof EditorAttributeAssignment) {
+		if (attributeExpression.eContainer instanceof EditorAttributeAssignment || attributeExpression.eContainer instanceof EditorIteratorAttributeAssignment) {
 			val nodes = GTEditorPatternUtils.getAllNodesOfPattern(pattern, [
 				it.operator == EditorOperator.CONTEXT
 			])
