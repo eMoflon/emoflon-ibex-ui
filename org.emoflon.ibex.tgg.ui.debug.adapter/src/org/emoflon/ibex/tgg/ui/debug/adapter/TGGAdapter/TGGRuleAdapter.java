@@ -67,7 +67,7 @@ public class TGGRuleAdapter implements Rule {
 		// Add corr edges to the graph
 		rule.getNodes().stream()//
 				.filter(node -> DomainType.CORR.equals(node.getDomainType()))//
-				.map(node -> TGGRuleCorrAdapter.adapt((TGGRuleCorr) node))//
+				.map(node -> TGGRuleCorrAdapter.adapt((TGGRuleCorr) node, operationType))//
 				.forEach(corr -> {
 					graphBuilder.addEdge(corr);
 					corrs.add(corr);

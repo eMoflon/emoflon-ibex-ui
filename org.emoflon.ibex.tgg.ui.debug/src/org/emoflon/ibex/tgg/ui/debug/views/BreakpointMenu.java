@@ -359,7 +359,7 @@ public class BreakpointMenu {
 				Button enabledButton = new Button(evaluationTimeGroup, SWT.CHECK);
 				enabledButton.setText("Enabled");
 				enabledButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-				enabledButton.setSelection(breakpoint.getBreakpointEvaluationTime() == BreakpointEvaluationTime.ALWAYS);
+				enabledButton.setSelection(breakpoint.getBreakpointEvaluationTime() != BreakpointEvaluationTime.OFF);
 				enabledButton.addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent pSelectionEvent) {

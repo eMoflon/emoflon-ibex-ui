@@ -70,6 +70,7 @@ public class UserOptionsMenu {
 		displayCreatedElementsButton = new Button(graphElementsGroup, SWT.CHECK);
 		displayCreatedElementsButton.setText("Created Elements");
 		displayCreatedElementsButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+		displayCreatedElementsButton.setSelection(userOptionsManager.displayFullRuleForMatches());
 		displayCreatedElementsButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent pSelectionEvent) {

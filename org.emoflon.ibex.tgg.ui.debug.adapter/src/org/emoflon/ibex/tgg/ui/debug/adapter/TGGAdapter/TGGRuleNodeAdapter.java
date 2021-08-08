@@ -46,8 +46,8 @@ public class TGGRuleNodeAdapter implements Node {
 
 		if (!BindingType.CREATE.equals(node.getBindingType()))
 			action = Action.CONTEXT;
-		else if ((Domain.SRC.equals(domain) && IBeXOperation.FWD.equals(operationType)) || //
-				(Domain.TRG.equals(domain) && IBeXOperation.BWD.equals(operationType)))
+		else if ((Domain.SRC.equals(domain) && (IBeXOperation.FWD.equals(operationType)) || IBeXOperation.CC.equals(operationType) || IBeXOperation.CO.equals(operationType)) || //
+				(Domain.TRG.equals(domain) && (IBeXOperation.BWD.equals(operationType) || IBeXOperation.CC.equals(operationType) || IBeXOperation.CO.equals(operationType))))
 			action = Action.TRANSLATE;
 		else
 			action = Action.CREATE;

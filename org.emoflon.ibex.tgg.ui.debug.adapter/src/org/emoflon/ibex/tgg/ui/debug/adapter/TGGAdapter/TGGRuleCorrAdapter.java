@@ -15,18 +15,27 @@ public class TGGRuleCorrAdapter implements Edge {
 
 	private static Map<TGGRuleCorr, TGGRuleCorrAdapter> wrappers = new HashMap<>();
 
-	public static TGGRuleCorrAdapter adapt(TGGRuleCorr protocolStep) {
+	public static TGGRuleCorrAdapter adapt(TGGRuleCorr protocolStep, IBeXOperation operationType) {
 		if (!wrappers.containsKey(protocolStep))
-			wrappers.put(protocolStep, new TGGRuleCorrAdapter(protocolStep));
+			wrappers.put(protocolStep, new TGGRuleCorrAdapter(protocolStep, operationType));
 		return wrappers.get(protocolStep);
 	}
 
 	// ----------
 
 	private TGGRuleCorr corr;
+	
+	private Action action;
 
-	private TGGRuleCorrAdapter(TGGRuleCorr ruleCorr) {
+	private TGGRuleCorrAdapter(TGGRuleCorr ruleCorr, IBeXOperation operationType) {
 		corr = ruleCorr;
+		
+		if (BindingType.CREATE.equals(corr.getBindingType()) && IBeXOperation.CO.equals(operationType))
+			action = Action.TRANSLATE;
+		else if(BindingType.CREATE.equals(corr.getBindingType()))
+			action = Action.CREATE;
+		else
+			action = Action.CONTEXT;
 	}
 
 	@Override
@@ -51,10 +60,7 @@ public class TGGRuleCorrAdapter implements Edge {
 
 	@Override
 	public Action getAction() {
-		if (BindingType.CREATE.equals(corr.getBindingType()))
-			return Action.CREATE;
-		else
-			return Action.CONTEXT;
+		return action;
 	}
 
 	public String getName() {

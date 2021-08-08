@@ -127,6 +127,7 @@ public class CombinedBreakpoint extends AbstractBreakpoint {
 			if(!b.isActive(BreakpointEvaluationTime.FOUND_MATCHES)) {
 				continue;
 			}
+			foundMatch = b.evaluate(dataPackage);
 			if(foundMatch == null) {
 				//one of the breakpoints did not find a match => complete combination will be unsuccessful
 				return null;

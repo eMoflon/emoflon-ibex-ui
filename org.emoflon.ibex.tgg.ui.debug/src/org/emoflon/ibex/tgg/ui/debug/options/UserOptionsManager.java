@@ -10,9 +10,9 @@ public class UserOptionsManager implements IUserOptions {
 	private boolean displayTrgContextForMatches = true;
 	private boolean displayCorrContextForMatches = true;
 
-	private VisualizationLabelOptions corrLabelVisualization = VisualizationLabelOptions.ABBREVIATED;
-	private VisualizationLabelOptions edgeLabelVisualization = VisualizationLabelOptions.ABBREVIATED;
-	private VisualizationLabelOptions nodeLabelVisualization = VisualizationLabelOptions.ABBREVIATED;
+	private VisualizationLabelOptions corrLabelVisualization = VisualizationLabelOptions.FULLNAME;
+	private VisualizationLabelOptions edgeLabelVisualization = VisualizationLabelOptions.FULLNAME;
+	private VisualizationLabelOptions nodeLabelVisualization = VisualizationLabelOptions.FULLNAME;
 	private int neighborhoodSize = 0;
 
 	private ToolTipOption toolTipSetting = ToolTipOption.MINIMAL;
