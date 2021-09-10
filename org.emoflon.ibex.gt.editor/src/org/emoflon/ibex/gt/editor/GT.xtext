@@ -90,7 +90,7 @@ EditorReference:
   (operator=EditorOperator)? '-' type=[ecore::EReference] '->' target=[EditorNode|ID];
 
 EditorReferenceIterator:
-	'forEach' type=[ecore::EReference] '->' name=ID '{'
+	'forEach' type=[ecore::EReference] '->' name=ID ('<'subType=[ecore::EClass]'>')? '{'
 		(iteratorAttributes+=EditorIteratorAttributeAssignment | references+=EditorIteratorReference)+
 	'}';
 
