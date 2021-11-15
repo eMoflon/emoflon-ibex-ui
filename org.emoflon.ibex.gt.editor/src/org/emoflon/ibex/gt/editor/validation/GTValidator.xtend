@@ -416,7 +416,7 @@ class GTValidator extends AbstractGTValidator {
 	public static val RECURSIVE_COUNT_INVOCATION = CODE_PREFIX + "count.recursiveInvocation"
 
 	// Disjoint pattern matching optimization extension
-	public static val PATTERN_DISJOINT_MESSAGE = "The pattern '%s' has signature nodes that are disjoint, i.e., nodes not connected through edges, which will have a negative influence on performance.\nWe have detected the following set of disjoint sub-patterns %s"
+	public static val PATTERN_DISJOINT_MESSAGE = "The pattern '%s' has signature nodes that are disjoint, i.e., some sub-sets of nodes are not connected through edges. This will have a negative impact on performance.\nWe have detected the following disjoint sets of pattern nodes: %s"
 	public static val PATTERN_DISJOINT = "pattern.isDisjoint"
 
 	@Check
