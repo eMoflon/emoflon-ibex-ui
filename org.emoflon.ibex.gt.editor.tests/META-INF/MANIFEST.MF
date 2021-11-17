@@ -19,4 +19,4 @@ Import-Package: org.hamcrest.core,
  org.junit.runner.manipulation;version="4.5.0",
  org.junit.runner.notification;version="4.5.0"
 Automatic-Module-Name: org.emoflon.ibex.gt.editor.tests
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-15
