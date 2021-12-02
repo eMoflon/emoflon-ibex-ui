@@ -2,6 +2,7 @@ package org.emoflon.ibex.gt.editor.ui.builder;
 
 import com.google.common.collect.Lists;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -13,6 +14,7 @@ import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.ui.PlatformUI;
+import org.moflon.core.plugins.manifest.ManifestFileUpdater;
 
 /**
  * Nature for Graph Transformation Projects.
@@ -28,8 +30,11 @@ public class GTNature implements IProjectNature {
 			@Override
 			public void run() {
 				try {
+					GTNature.this.setUpManifestFile();
 					addGTBuilder();
 				} catch (CoreException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
@@ -73,5 +78,11 @@ public class GTNature implements IProjectNature {
 	 */
 	public static Collection<String> getRequiredBuilders() {
 		return Lists.newArrayList(GTBuilder.BUILDER_ID);
+	}
+	
+	private void setUpManifestFile() throws CoreException, IOException {
+		new ManifestFileUpdater().processManifest(this.project, manifest -> {
+			return ManifestFileUpdater.setBasicProperties(manifest, this.project.getName());
+		});
 	}
 }
