@@ -26,4 +26,4 @@ Export-Package: org.emoflon.ibex.tgg.ui.debug.api,
  org.emoflon.ibex.tgg.ui.debug.views.treeContent.protocol,
  org.emoflon.ibex.tgg.ui.debug.views.visualisable
 Automatic-Module-Name: org.emoflon.ibex.tgg.ide
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-16

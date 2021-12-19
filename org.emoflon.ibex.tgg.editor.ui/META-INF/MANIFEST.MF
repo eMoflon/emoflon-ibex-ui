@@ -39,4 +39,4 @@ Export-Package: org.moflon.tgg.mosl.ui,
 Bundle-Activator: org.moflon.tgg.mosl.ui.internal.TGGActivator
 Automatic-Module-Name: org.emoflon.ibex.tgg.editor.ui
 Import-Package: org.apache.log4j
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-16
