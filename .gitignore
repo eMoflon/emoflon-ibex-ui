@@ -1,5 +1,4 @@
 **/xtend-gen/*
-**/src-gen/*
 !**/xtend-gen/*.keep
 !**/src-gen/*.keep
 **/bin/
