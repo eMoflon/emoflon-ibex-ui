@@ -4,15 +4,21 @@ import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 generate gT "http://www.emoflon.org/ibex/gt/editor/GT"
 
 EditorGTFile:
- 	(imports+=EditorImport)*
+ 	(imports+=AbstractImport)*
  	(patterns+=EditorPattern | conditions+=EditorCondition)*;
   
   // This rule serves to have a common super class for pattern parameters and editor nodes
 EditorParameterOrNode:
   (EditorNode | EditorParameter);
 
-EditorImport:
+AbstractImport:
+  EditorImport | XMLImport;
+
+EditorImport:{EditorImport}
   'import' name=STRING;
+
+XMLImport:{XMLImport}
+  'import' 'XML'; // TODO: Verify
 
 EditorPattern:
   (abstract?='abstract')? type=EditorPatternType name=ID
