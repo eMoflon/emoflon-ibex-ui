@@ -37,6 +37,7 @@ import org.emoflon.ibex.gt.editor.gT.impl.EditorReferenceIteratorImpl
 import org.emoflon.ibex.gt.editor.gT.EditorIteratorAttributeExpression
 import java.util.Set
 import org.eclipse.emf.ecore.EPackage
+import org.emoflon.ibex.gt.editor.gT.EditorImport
 
 /**
  * This class contains custom scoping description.
@@ -357,6 +358,7 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		val editorFile = GTEditorPatternUtils.getContainer(context, typeof(EditorGTFileImpl));
 		
 		val allImportedClasses = editorFile.imports
+			.filter[imp | imp instanceof EditorImport].map[imp | imp as EditorImport]
 			.map[imp | GTEditorModelUtils.loadEcoreModel(imp.name)]
 			.filter[pkg | pkg.isPresent]
 			.flatMap[pkg | pkg.get.contents]

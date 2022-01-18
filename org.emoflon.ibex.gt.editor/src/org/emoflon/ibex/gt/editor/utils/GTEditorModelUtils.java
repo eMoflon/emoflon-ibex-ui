@@ -22,6 +22,7 @@ import org.eclipse.xtext.EcoreUtil2;
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeAssignment;
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeConstraint;
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile;
+import org.emoflon.ibex.gt.editor.gT.EditorImport;
 import org.emoflon.ibex.gt.editor.gT.EditorNode;
 import org.emoflon.ibex.gt.editor.gT.EditorOperator;
 import org.emoflon.ibex.gt.editor.gT.EditorPattern;
@@ -48,7 +49,9 @@ public class GTEditorModelUtils {
 	 */
 	public static ArrayList<EClass> getClasses(final EditorGTFile file) {
 		final ArrayList<EClass> classes = new ArrayList<>();
-		file.getImports().forEach(i -> {
+		file.getImports()
+		.stream().filter(i -> i instanceof EditorImport).map(i -> (EditorImport) i)
+		.forEach(i -> {
 			loadEcoreModel(i.getName()).ifPresent(m -> classes.addAll(getElements(m, EClass.class)));
 		});
 		return classes;
@@ -61,7 +64,9 @@ public class GTEditorModelUtils {
 	 */
 	public static ArrayList<EDataType> getDatatypes(final EditorGTFile file) {
 		final ArrayList<EDataType> types = new ArrayList<>();
-		file.getImports().forEach(i -> {
+		file.getImports()
+		.stream().filter(i -> i instanceof EditorImport).map(i -> (EditorImport) i)
+		.forEach(i -> {
 			loadEcoreModel(i.getName()).ifPresent(m -> types.addAll(getElements(m, EDataType.class)));
 		});
 		return types;
@@ -74,7 +79,9 @@ public class GTEditorModelUtils {
 	 */
 	public static ArrayList<EEnum> getEnums(final EditorGTFile file) {
 		final ArrayList<EEnum> types = new ArrayList<>();
-		file.getImports().forEach(i -> {
+		file.getImports()
+		.stream().filter(i -> i instanceof EditorImport).map(i -> (EditorImport) i)
+		.forEach(i -> {
 			loadEcoreModel(i.getName()).ifPresent(m -> types.addAll(getElements(m, EEnum.class)));
 		});
 		return types;

@@ -24,6 +24,7 @@ import org.junit.Assert
 import org.junit.runner.RunWith
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeConstraint
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeAssignment
+import org.emoflon.ibex.gt.editor.gT.EditorImport
 
 /**
  * Abstract test class for JUnit parsing tests of the editor.
@@ -91,7 +92,7 @@ abstract class GTParsingTest {
 		assertValidResource(file)
 
 		Assert.assertEquals(1, file.imports.size)
-		Assert.assertEquals("http://www.eclipse.org/emf/2002/Ecore", file.imports.get(0).name)
+		Assert.assertEquals("http://www.eclipse.org/emf/2002/Ecore", file.imports.filter[imp | imp instanceof EditorImport].map[imp | imp as EditorImport].get(0).name)
 
 		Assert.assertEquals(ruleCount, file.patterns.size)
 	}
