@@ -33,4 +33,5 @@ public class TGGRuntimeModule extends org.moflon.tgg.mosl.AbstractTGGRuntimeModu
       org.eclipse.emf.ecore.EValidator.Registry registry = super.bindEValidatorRegistry();
       return registry;
    }
+
 }

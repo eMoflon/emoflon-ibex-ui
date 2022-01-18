@@ -1,6 +1,7 @@
-package org.emoflon.ibex.tgg.ide.admin;
+package org.emoflon.ibex.tgg.builder;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.emf.ecore.resource.Resource;
 
 public interface TGGBuilderExtension {
 	
@@ -13,5 +14,5 @@ public interface TGGBuilderExtension {
 	 * @param project
 	 *            the project to build
 	 */
-	public void run(IProject project);
+	public void run(IProject project, Resource schemaResource);
 }

@@ -23,14 +23,14 @@ Require-Bundle: com.google.guava,
  org.eclipse.xtext,
  org.eclipse.xtext.ui,
  org.eclipse.xtext.xbase.lib,
- org.emoflon.ibex.common.editor.utils,
  org.emoflon.ibex.tgg.editor,
  org.moflon.core.plugins,
  org.moflon.core.ui,
- org.moflon.core.utilities
+ org.moflon.core.utilities,
+ org.eclipse.xtext.builder
 Bundle-ManifestVersion: 2
 Bundle-ActivationPolicy: lazy
-Bundle-Activator: org.emoflon.ibex.tgg.ide.admin.IbexTGGPlugin
+Bundle-Activator: org.emoflon.ibex.tgg.ide.admin.TGGPlugin
 Bundle-ClassPath: .
 Export-Package: org.emoflon.ibex.tgg.ide.admin,
  org.emoflon.ibex.tgg.ide.transformation,

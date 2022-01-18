@@ -15,6 +15,7 @@ import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.Scopes;
+import org.eclipse.xtext.scoping.impl.DefaultGlobalScopeProvider;
 import org.eclipse.xtext.scoping.impl.SimpleScope;
 
 import com.google.common.collect.Iterables;
@@ -28,7 +29,7 @@ public class MoflonScope extends SimpleScope {
 			  Scopes.scopedElementsFor(accountForSubPackages(objects), 
 					                   new RootPackageAwareQualifiedNamedProvider()));
 	}
-
+	
 	private static Collection<EObject> accountForSubPackages(List<EObject> objects) {		
 		Set<EObject> allPackages = objects
 			.stream()
@@ -61,6 +62,7 @@ public class MoflonScope extends SimpleScope {
 }
 
 class RootPackageAwareQualifiedNamedProvider extends DefaultDeclarativeQualifiedNameProvider {
+	
 	@Override
 	public QualifiedName getFullyQualifiedName(EObject obj) {
 		if(obj instanceof EPackage){

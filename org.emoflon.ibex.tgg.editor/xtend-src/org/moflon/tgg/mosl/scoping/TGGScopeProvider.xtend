@@ -270,7 +270,13 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 	
 	def is_equal_or_super_type_of_ov(EClass sup, IEObjectDescription desc){
 		val sub = getOVType(desc.EObjectOrProxy)
+		logger.info("Sub: " + sub)
+		if(sub != null)
+			logger.info((sub as EClass).EPackage)
+		if(sup != null)
+			logger.info((sup as EClass).EPackage)
 		val resolvedSup = ProxyResolver.resolve(sup)
+		logger.info(resolvedSup)
 		sub != null && (  
 			EcoreUtils.equalsFQN(sub, resolvedSup as EClass) 
 		 	|| !sub.EAllSuperTypes.filter[superType | EcoreUtils.equalsFQN(superType, resolvedSup as EClass)].empty 
@@ -522,4 +528,6 @@ class TGGScopeProvider extends AbstractDeclarativeScopeProvider {
 	def TripleGraphGrammarFile file(Schema schema){
 		schema.eContainer as TripleGraphGrammarFile
 	}
+	
+	
 }

@@ -139,7 +139,7 @@ public abstract class AbstractTGGRuntimeModule extends org.eclipse.xtext.common.
 	}
 
 	// contributed by org.eclipse.xtext.generator.generator.GeneratorFragment
-	public Class<? extends org.eclipse.xtext.generator.IGenerator> bindIGenerator() {
+	public Class<? extends org.eclipse.xtext.generator.IGenerator2> bindIGenerator() {
 		return org.moflon.tgg.mosl.generator.TGGGenerator.class;
 	}
 
