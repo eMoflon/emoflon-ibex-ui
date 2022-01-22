@@ -102,7 +102,7 @@ public class IbexTGGNature implements IProjectNature {
 					"org.apache.log4j", "com.google.guava", "org.sat4j.core", "org.sat4j.pb",
 
 					// EMF deps
-					"org.eclipse.emf.ecore.xmi",
+					"org.eclipse.emf.ecore.xmi", 
 
 					// Ibex deps
 					"org.emoflon.ibex.common", "org.emoflon.ibex.tgg.language", "org.emoflon.ibex.tgg.runtime", "org.emoflon.ibex.tgg.ui.debug", "org.emoflon.ibex.tgg.ui.debug.adapter",
