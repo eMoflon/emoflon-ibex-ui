@@ -27,11 +27,19 @@ import org.emoflon.ibex.gt.editor.gT.EditorNode;
 import org.emoflon.ibex.gt.editor.gT.EditorOperator;
 import org.emoflon.ibex.gt.editor.gT.EditorPattern;
 import org.emoflon.ibex.gt.editor.gT.EditorReference;
+import org.emoflon.ibex.gt.editor.gT.GTPackage;
+import org.emoflon.ibex.gt.editor.gT.XMLImport;
 
 /**
  * Utility methods for dealing with meta-models.
  */
 public class GTEditorModelUtils {
+	
+	/**
+	 * The uri for loading the XML model with the "import XML" shorthand.
+	 */
+	private static final String XMLURI = "platform:/resource/ModelXML/model/modelxml.ecore";
+	
 	/**
 	 * The set of meta-model resources loaded.
 	 */
@@ -49,6 +57,14 @@ public class GTEditorModelUtils {
 	 */
 	public static ArrayList<EClass> getClasses(final EditorGTFile file) {
 		final ArrayList<EClass> classes = new ArrayList<>();
+		file.getImports().forEach(i -> {
+			if (i instanceof XMLImport) {
+				var xi = (XMLImport) i;
+				loadEcoreModel(XMLURI);
+//				classes.add(); TODO load eClass for XML
+			}
+		});
+		
 		file.getImports()
 		.stream().filter(i -> i instanceof EditorImport).map(i -> (EditorImport) i)
 		.forEach(i -> {
