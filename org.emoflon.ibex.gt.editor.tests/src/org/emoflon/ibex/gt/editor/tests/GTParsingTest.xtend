@@ -92,6 +92,7 @@ abstract class GTParsingTest {
 		assertValidResource(file)
 
 		Assert.assertEquals(1, file.imports.size)
+		// TODO: Maybe add assert for XMLImport?
 		Assert.assertEquals("http://www.eclipse.org/emf/2002/Ecore", file.imports.filter[imp | imp instanceof EditorImport].map[imp | imp as EditorImport].get(0).name)
 
 		Assert.assertEquals(ruleCount, file.patterns.size)
