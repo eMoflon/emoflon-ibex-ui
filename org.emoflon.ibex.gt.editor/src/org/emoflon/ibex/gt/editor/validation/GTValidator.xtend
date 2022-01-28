@@ -56,6 +56,7 @@ import org.eclipse.emf.ecore.impl.EEnumImpl
 import org.emoflon.ibex.gt.editor.utils.GTDisjointPatternFinder
 import org.emoflon.ibex.gt.editor.gT.EditorIteratorReference
 import org.emoflon.ibex.gt.editor.gT.EditorReferenceIterator
+import org.emoflon.ibex.gt.editor.gT.XMLImport
 
 /**
  * This class contains custom validation rules.
@@ -458,7 +459,8 @@ class GTValidator extends AbstractGTValidator {
 
 		// Imports must be unique.
 		val file = importEcore.eContainer as EditorGTFile
-		val importDeclarationCount = file.imports.filter[import|import instanceof EditorImport].map[import | import as EditorImport].filter[name.equals(importEcore.name)].size
+		val importDeclarationCount = file.imports.filter[import|import instanceof EditorImport].map[import | import as EditorImport].filter[name.equals(importEcore.name)].size 
+								   + file.imports.filter[import|import instanceof XMLImport].length
 		if (importDeclarationCount !== 1) {
 			warning(
 				String.format(IMPORT_DUPLICATE_MESSAGE, importEcore.name, getTimes(importDeclarationCount)),

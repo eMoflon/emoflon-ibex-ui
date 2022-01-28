@@ -38,7 +38,7 @@ public class GTEditorModelUtils {
 	/**
 	 * The uri for loading the XML model with the "import XML" shorthand.
 	 */
-	private static final String XMLURI = "platform:/resource/ModelXML/model/modelxml.ecore";
+	public static final String XMLURI = "platform:/resource/ModelXML/model/modelxml.ecore";
 	
 	/**
 	 * The set of meta-model resources loaded.
@@ -59,9 +59,7 @@ public class GTEditorModelUtils {
 		final ArrayList<EClass> classes = new ArrayList<>();
 		file.getImports().forEach(i -> {
 			if (i instanceof XMLImport) {
-				var xi = (XMLImport) i;
-				loadEcoreModel(XMLURI);
-//				classes.add(); TODO load eClass for XML
+				loadEcoreModel(XMLURI).ifPresent(m -> classes.addAll(getElements(m, EClass.class)));
 			}
 		});
 		
@@ -85,6 +83,13 @@ public class GTEditorModelUtils {
 		.forEach(i -> {
 			loadEcoreModel(i.getName()).ifPresent(m -> types.addAll(getElements(m, EDataType.class)));
 		});
+		
+		file.getImports()
+		.stream().filter(i -> i instanceof XMLImport).map(i -> (XMLImport) i)
+		.forEach(i -> {
+			loadEcoreModel(XMLURI).ifPresent(m -> types.addAll(getElements(m, EDataType.class)));
+		});
+		
 		return types;
 	}
 	
@@ -100,6 +105,13 @@ public class GTEditorModelUtils {
 		.forEach(i -> {
 			loadEcoreModel(i.getName()).ifPresent(m -> types.addAll(getElements(m, EEnum.class)));
 		});
+		
+		file.getImports()
+		.stream().filter(i -> i instanceof XMLImport).map(i -> (XMLImport) i)
+		.forEach(i -> {
+			loadEcoreModel(XMLURI).ifPresent(m -> types.addAll(getElements(m, EEnum.class)));
+		});
+		
 		return types;
 	}
 

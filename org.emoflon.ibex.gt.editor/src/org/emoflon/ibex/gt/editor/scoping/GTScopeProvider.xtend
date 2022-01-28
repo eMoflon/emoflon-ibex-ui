@@ -38,6 +38,7 @@ import org.emoflon.ibex.gt.editor.gT.EditorIteratorAttributeExpression
 import java.util.Set
 import org.eclipse.emf.ecore.EPackage
 import org.emoflon.ibex.gt.editor.gT.EditorImport
+import org.emoflon.ibex.gt.editor.gT.XMLImport
 
 /**
  * This class contains custom scoping description.
@@ -357,15 +358,19 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		val edgeType = context.type.EType as EClass
 		val editorFile = GTEditorPatternUtils.getContainer(context, typeof(EditorGTFileImpl));
 		
-		val allImportedClasses = editorFile.imports
+		val xmlModel = editorFile.imports.filter[i | i instanceof XMLImport].map[GTEditorModelUtils.loadEcoreModel(GTEditorModelUtils.XMLURI)]
+		val allImportedModels = editorFile.imports
 			.filter[imp | imp instanceof EditorImport].map[imp | imp as EditorImport]
-			.map[imp | GTEditorModelUtils.loadEcoreModel(imp.name)]
-			.filter[pkg | pkg.isPresent]
+			.map[imp | GTEditorModelUtils.loadEcoreModel(imp.name)] + xmlModel
+			
+		val allImportedClasses = allImportedModels.filter[pkg | pkg.isPresent]
 			.flatMap[pkg | pkg.get.contents]
 			.flatMap[model | (model as EPackage).EClassifiers]
 			.filter[cnts | cnts instanceof EClass]
 			.map[cnts | cnts as EClass]
 			.toSet
+			
+		
 			
 		val validSubClasses = allImportedClasses.filter[cls | cls.EAllSuperTypes.contains(edgeType)]
 		return Scopes.scopeFor(validSubClasses)
