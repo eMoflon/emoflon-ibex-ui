@@ -27,7 +27,6 @@ import org.emoflon.ibex.gt.editor.gT.EditorNode;
 import org.emoflon.ibex.gt.editor.gT.EditorOperator;
 import org.emoflon.ibex.gt.editor.gT.EditorPattern;
 import org.emoflon.ibex.gt.editor.gT.EditorReference;
-import org.emoflon.ibex.gt.editor.gT.GTPackage;
 import org.emoflon.ibex.gt.editor.gT.XMLImport;
 
 /**
@@ -58,15 +57,8 @@ public class GTEditorModelUtils {
 	public static ArrayList<EClass> getClasses(final EditorGTFile file) {
 		final ArrayList<EClass> classes = new ArrayList<>();
 		file.getImports().forEach(i -> {
-			if (i instanceof XMLImport) {
-				loadEcoreModel(XMLURI).ifPresent(m -> classes.addAll(getElements(m, EClass.class)));
-			}
-		});
-		
-		file.getImports()
-		.stream().filter(i -> i instanceof EditorImport).map(i -> (EditorImport) i)
-		.forEach(i -> {
-			loadEcoreModel(i.getName()).ifPresent(m -> classes.addAll(getElements(m, EClass.class)));
+			String name = (i instanceof XMLImport) ? XMLURI : ((EditorImport) i).getName();
+			loadEcoreModel(name).ifPresent(m -> classes.addAll(getElements(m, EClass.class)));
 		});
 		return classes;
 	}
@@ -78,18 +70,10 @@ public class GTEditorModelUtils {
 	 */
 	public static ArrayList<EDataType> getDatatypes(final EditorGTFile file) {
 		final ArrayList<EDataType> types = new ArrayList<>();
-		file.getImports()
-		.stream().filter(i -> i instanceof EditorImport).map(i -> (EditorImport) i)
-		.forEach(i -> {
-			loadEcoreModel(i.getName()).ifPresent(m -> types.addAll(getElements(m, EDataType.class)));
+		file.getImports().forEach(i -> {
+			String name = (i instanceof XMLImport) ? XMLURI : ((EditorImport) i).getName();
+			loadEcoreModel(name).ifPresent(m -> types.addAll(getElements(m, EDataType.class)));
 		});
-		
-		file.getImports()
-		.stream().filter(i -> i instanceof XMLImport).map(i -> (XMLImport) i)
-		.forEach(i -> {
-			loadEcoreModel(XMLURI).ifPresent(m -> types.addAll(getElements(m, EDataType.class)));
-		});
-		
 		return types;
 	}
 	
@@ -100,18 +84,10 @@ public class GTEditorModelUtils {
 	 */
 	public static ArrayList<EEnum> getEnums(final EditorGTFile file) {
 		final ArrayList<EEnum> types = new ArrayList<>();
-		file.getImports()
-		.stream().filter(i -> i instanceof EditorImport).map(i -> (EditorImport) i)
-		.forEach(i -> {
-			loadEcoreModel(i.getName()).ifPresent(m -> types.addAll(getElements(m, EEnum.class)));
+		file.getImports().forEach(i -> {
+			String name = (i instanceof XMLImport) ? XMLURI : ((EditorImport) i).getName();
+			loadEcoreModel(name).ifPresent(m -> types.addAll(getElements(m, EEnum.class)));
 		});
-		
-		file.getImports()
-		.stream().filter(i -> i instanceof XMLImport).map(i -> (XMLImport) i)
-		.forEach(i -> {
-			loadEcoreModel(XMLURI).ifPresent(m -> types.addAll(getElements(m, EEnum.class)));
-		});
-		
 		return types;
 	}
 

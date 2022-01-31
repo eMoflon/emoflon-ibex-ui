@@ -1,62 +1,59 @@
 package org.emoflon.ibex.gt.editor.validation
 
 import java.util.Collection
-
 import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EDataType
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
+import org.eclipse.emf.ecore.EcorePackage
+import org.eclipse.emf.ecore.impl.EEnumImpl
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.CheckType
-
+import org.emoflon.ibex.gt.editor.gT.AddExpression
+import org.emoflon.ibex.gt.editor.gT.AllOneParameterOperators
+import org.emoflon.ibex.gt.editor.gT.ArithmeticCalculationExpression
+import org.emoflon.ibex.gt.editor.gT.ArithmeticExpression
 import org.emoflon.ibex.gt.editor.gT.EditorApplicationCondition
 import org.emoflon.ibex.gt.editor.gT.EditorApplicationConditionType
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeAssignment
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeConstraint
+import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
 import org.emoflon.ibex.gt.editor.gT.EditorCondition
+import org.emoflon.ibex.gt.editor.gT.EditorCountExpression
+import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression
+import org.emoflon.ibex.gt.editor.gT.EditorExpression
 import org.emoflon.ibex.gt.editor.gT.EditorGTFile
 import org.emoflon.ibex.gt.editor.gT.EditorImport
 import org.emoflon.ibex.gt.editor.gT.EditorLiteralExpression
 import org.emoflon.ibex.gt.editor.gT.EditorNode
 import org.emoflon.ibex.gt.editor.gT.EditorOperator
 import org.emoflon.ibex.gt.editor.gT.EditorParameter
+import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
 import org.emoflon.ibex.gt.editor.gT.EditorPattern
 import org.emoflon.ibex.gt.editor.gT.EditorPatternType
 import org.emoflon.ibex.gt.editor.gT.EditorReference
+import org.emoflon.ibex.gt.editor.gT.EditorReferenceIterator
+import org.emoflon.ibex.gt.editor.gT.EditorRelation
+import org.emoflon.ibex.gt.editor.gT.ExpExpression
 import org.emoflon.ibex.gt.editor.gT.GTPackage
-import org.emoflon.ibex.gt.editor.utils.GTConditionHelper
-import org.emoflon.ibex.gt.editor.utils.GTEditorAttributeUtils
-import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
-import org.emoflon.ibex.gt.editor.utils.GTFlatteningUtils
-import org.emoflon.ibex.gt.editor.utils.GTEditorPatternUtils
-import org.emoflon.ibex.gt.editor.utils.GTFlattener
-import org.emoflon.ibex.gt.editor.gT.StochasticFunction
-import org.emoflon.ibex.gt.editor.gT.StochasticDistribution
-import org.emoflon.ibex.gt.editor.gT.StochasticFunctionExpression
-import org.emoflon.ibex.gt.editor.gT.PossibleStochasticRanges
-import org.emoflon.ibex.gt.editor.gT.ArithmeticExpression
-import org.eclipse.emf.ecore.EcorePackage
-import org.emoflon.ibex.gt.editor.gT.OneParameterArithmetics
-import org.emoflon.ibex.gt.editor.gT.AllOneParameterOperators
+import org.emoflon.ibex.gt.editor.gT.MinMaxExpression
 import org.emoflon.ibex.gt.editor.gT.MultExpression
 import org.emoflon.ibex.gt.editor.gT.MultOperator
-import org.emoflon.ibex.gt.editor.gT.AddExpression
-import org.emoflon.ibex.gt.editor.gT.ExpExpression
-import org.emoflon.ibex.gt.editor.utils.GTArithmeticsCalculatorUtil
-import org.emoflon.ibex.gt.editor.gT.EditorCountExpression
-import org.emoflon.ibex.gt.editor.gT.EditorAttributeAssignment
-import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
-import org.emoflon.ibex.gt.editor.gT.ArithmeticCalculationExpression
-import org.emoflon.ibex.gt.editor.gT.EditorAttributeConstraint
-import org.emoflon.ibex.gt.editor.gT.EditorExpression
-import org.emoflon.ibex.gt.editor.gT.EditorEnumExpression
-import org.emoflon.ibex.gt.editor.gT.EditorParameterExpression
-import org.eclipse.emf.ecore.EObject
-import org.emoflon.ibex.gt.editor.gT.impl.EditorPatternImpl
-import org.emoflon.ibex.gt.editor.gT.MinMaxExpression
-import org.emoflon.ibex.gt.editor.gT.EditorRelation
-import org.eclipse.emf.ecore.impl.EEnumImpl
-import org.emoflon.ibex.gt.editor.utils.GTDisjointPatternFinder
-import org.emoflon.ibex.gt.editor.gT.EditorIteratorReference
-import org.emoflon.ibex.gt.editor.gT.EditorReferenceIterator
+import org.emoflon.ibex.gt.editor.gT.OneParameterArithmetics
+import org.emoflon.ibex.gt.editor.gT.PossibleStochasticRanges
+import org.emoflon.ibex.gt.editor.gT.StochasticDistribution
+import org.emoflon.ibex.gt.editor.gT.StochasticFunction
+import org.emoflon.ibex.gt.editor.gT.StochasticFunctionExpression
 import org.emoflon.ibex.gt.editor.gT.XMLImport
+import org.emoflon.ibex.gt.editor.gT.impl.EditorPatternImpl
+import org.emoflon.ibex.gt.editor.utils.GTArithmeticsCalculatorUtil
+import org.emoflon.ibex.gt.editor.utils.GTConditionHelper
+import org.emoflon.ibex.gt.editor.utils.GTDisjointPatternFinder
+import org.emoflon.ibex.gt.editor.utils.GTEditorAttributeUtils
+import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
+import org.emoflon.ibex.gt.editor.utils.GTEditorPatternUtils
+import org.emoflon.ibex.gt.editor.utils.GTFlattener
+import org.emoflon.ibex.gt.editor.utils.GTFlatteningUtils
 
 /**
  * This class contains custom validation rules.
@@ -443,7 +440,7 @@ class GTValidator extends AbstractGTValidator {
 				error(
 					String.format(IMPORT_NO_ECORE_MESSAGE, importEcore.name),
 					GTPackage.Literals.EDITOR_IMPORT__NAME,
-					org.emoflon.ibex.gt.editor.validation.GTValidator.IMPORT_NO_ECORE,
+					GTValidator.IMPORT_NO_ECORE,
 					importEcore.name
 				)
 			}
