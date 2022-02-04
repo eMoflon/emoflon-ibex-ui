@@ -457,8 +457,18 @@ class GTValidator extends AbstractGTValidator {
 		// Imports must be unique.
 		val file = importEcore.eContainer as EditorGTFile
 		val importDeclarationCount = file.imports.filter[import|import instanceof EditorImport].map[import | import as EditorImport].filter[name.equals(importEcore.name)].size 
-								   + file.imports.filter[import|import instanceof XMLImport].length
+								    
 		if (importDeclarationCount !== 1) {
+			warning(
+				String.format(IMPORT_DUPLICATE_MESSAGE, importEcore.name, getTimes(importDeclarationCount)),
+				GTPackage.Literals.EDITOR_IMPORT__NAME,
+				IMPORT_DUPLICATE,
+				importEcore.name
+			)
+		}
+		
+		val xmlDeclarationCount = file.imports.filter[import|import instanceof XMLImport].length
+		if (xmlDeclarationCount > 1) {
 			warning(
 				String.format(IMPORT_DUPLICATE_MESSAGE, importEcore.name, getTimes(importDeclarationCount)),
 				GTPackage.Literals.EDITOR_IMPORT__NAME,

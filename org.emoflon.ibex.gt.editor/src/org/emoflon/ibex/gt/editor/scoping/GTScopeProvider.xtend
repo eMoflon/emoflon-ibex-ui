@@ -38,6 +38,8 @@ import org.emoflon.ibex.gt.editor.gT.impl.EditorReferenceIteratorImpl
 import org.emoflon.ibex.gt.editor.utils.GTEditorModelUtils
 import org.emoflon.ibex.gt.editor.utils.GTEditorPatternUtils
 import org.emoflon.ibex.gt.editor.utils.GTEnumExpressionHelper
+import org.emoflon.ibex.modelxml.ModelxmlPackage
+import java.util.Optional
 
 /**
  * This class contains custom scoping description.
@@ -357,10 +359,13 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 		val edgeType = context.type.EType as EClass
 		val editorFile = GTEditorPatternUtils.getContainer(context, typeof(EditorGTFileImpl));
 		
-		val xmlModel = editorFile.imports.filter[i | i instanceof XMLImport].map[GTEditorModelUtils.loadEcoreModel(GTEditorModelUtils.XMLURI)]
+		val xmlModel = ModelxmlPackage.eINSTANCE.eResource
+		//val xmlModel = editorFile.imports.filter[i | i instanceof XMLImport].map[GTEditorModelUtils.loadEcoreModel(GTEditorModelUtils.XMLURI)]
 		val allImportedModels = editorFile.imports
 			.filter[imp | imp instanceof EditorImport].map[imp | imp as EditorImport]
-			.map[imp | GTEditorModelUtils.loadEcoreModel(imp.name)] + xmlModel
+			.map[imp | GTEditorModelUtils.loadEcoreModel(imp.name)].toSet
+			
+		editorFile.imports.filter[i | i instanceof XMLImport].exists[allImportedModels.add(Optional.of(xmlModel))]
 			
 		val allImportedClasses = allImportedModels.filter[pkg | pkg.isPresent]
 			.flatMap[pkg | pkg.get.contents]

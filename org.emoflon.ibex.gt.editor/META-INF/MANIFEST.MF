@@ -16,7 +16,8 @@ Require-Bundle: org.antlr.runtime;bundle-version="[3.2.0,3.2.1)",
  org.eclipse.xtext.xbase,
  org.eclipse.xtext.xbase.lib;bundle-version="2.15.0",
  org.objectweb.asm;resolution:=optional,
- org.moflon.core.utilities
+ org.moflon.core.utilities,
+ org.emoflon.ibex.modelxml;bundle-version="0.1.0"
 Export-Package: org.emoflon.ibex.gt.editor,
  org.emoflon.ibex.gt.editor.formatting2,
  org.emoflon.ibex.gt.editor.generator,
