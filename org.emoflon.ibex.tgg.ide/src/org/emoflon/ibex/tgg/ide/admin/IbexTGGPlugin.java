@@ -14,6 +14,6 @@ public class IbexTGGPlugin extends Plugin {
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		super.stop(context);
+		super.stop(context); 
 	}
 }

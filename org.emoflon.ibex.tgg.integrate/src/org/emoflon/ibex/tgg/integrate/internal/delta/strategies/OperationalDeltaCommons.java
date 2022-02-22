@@ -2,7 +2,6 @@ package org.emoflon.ibex.tgg.integrate.internal.delta.strategies;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Set;
 
 import org.emoflon.ibex.tgg.compiler.patterns.PatternType;
 import org.emoflon.ibex.tgg.operational.matches.ITGGMatch;
