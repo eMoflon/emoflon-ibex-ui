@@ -15,10 +15,7 @@ import org.eclipse.xtext.generator.OutputConfiguration;
 import org.eclipse.xtext.ui.util.PluginProjectFactory;
 import org.eclipse.xtext.ui.wizard.AbstractPluginProjectCreator;
 import org.eclipse.xtext.ui.wizard.DefaultProjectInfo;
-import org.eclipse.jdt.core.IClasspathEntry;
-import org.eclipse.jdt.launching.JavaRuntime;
 import org.emoflon.ibex.gt.editor.ui.builder.GTNature;
-import org.moflon.core.plugins.manifest.ManifestFileUpdater;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -39,23 +36,7 @@ public class GTProjectCreator extends AbstractPluginProjectCreator {
 	protected PluginProjectFactory createProjectFactory() {
 		final PluginProjectFactory projectFactory = super.createProjectFactory();
 		projectFactory.setWithPluginXml(false);
-		IClasspathEntry cpEntry = JavaRuntime.getDefaultJREContainerEntry();
-		projectFactory.setJreContainerEntry(cpEntry);
 		return projectFactory;
-	}
-	
-	@Override
-	protected IProject createProject(IProgressMonitor monitor) {
-		IProject project = super.createProject(monitor);
-		try {
-			new ManifestFileUpdater().processManifest(project, manifest -> {
-				return ManifestFileUpdater.setBasicProperties(manifest, project.getName());
-			});
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return project;
 	}
 
 	@Override

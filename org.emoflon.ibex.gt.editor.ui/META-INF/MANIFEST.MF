@@ -11,7 +11,6 @@ Require-Bundle: net.sourceforge.plantuml.eclipse,
  org.eclipse.core.runtime,
  org.eclipse.jdt.core,
  org.eclipse.jdt.debug.ui,
- org.eclipse.jdt.launching,
  org.eclipse.ui,
  org.eclipse.ui.editors,
  org.eclipse.ui.ide,
@@ -27,8 +26,7 @@ Require-Bundle: net.sourceforge.plantuml.eclipse,
  org.emoflon.ibex.gt.editor,
  org.emoflon.ibex.gt.editor.ide,
  org.moflon.core.ui,
- org.moflon.core.utilities,
- org.moflon.core.plugins
+ org.moflon.core.utilities
 Import-Package: org.apache.log4j
 Export-Package: org.emoflon.ibex.gt.editor.ui,
  org.emoflon.ibex.gt.editor.ui.builder,

@@ -187,7 +187,7 @@ public class GTEditorPatternUtils {
 	@SuppressWarnings("unchecked")
 	public static <T> T getContainer(EObject node, Class<T> clazz) {
 		EObject current = node;
-		while (!(current.getClass() == clazz)) {
+		while (current !=null && !(current.getClass() == clazz)) {
 			if (node.eContainer() == null)
 				return null;
 
