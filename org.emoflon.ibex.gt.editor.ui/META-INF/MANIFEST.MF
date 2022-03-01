@@ -31,7 +31,6 @@ Require-Bundle: net.sourceforge.plantuml.eclipse,
  org.moflon.core.plugins
 Import-Package: org.apache.log4j
 Export-Package: org.emoflon.ibex.gt.editor.ui,
- org.emoflon.ibex.gt.editor.ui.builder,
  org.emoflon.ibex.gt.editor.ui.contentassist,
  org.emoflon.ibex.gt.editor.ui.highlighting,
  org.emoflon.ibex.gt.editor.ui.internal,

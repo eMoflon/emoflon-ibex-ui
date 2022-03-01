@@ -2,16 +2,6 @@
 <?eclipse version="3.0"?>
 <plugin>
   <extension-point id="TGGBuilderExtension" name="TGGBuilderExtension" schema="schema/TGGBuilderExtension.exsd"/>
-  <extension id="nature" name="IBeX TGG Nature" point="org.eclipse.core.resources.natures">
-    <runtime>
-       <run
-             class="org.emoflon.ibex.tgg.ide.admin.IbexTGGNature">
-       </run>
-    </runtime>
-    <builder
-          id="org.emoflon.ibex.tgg.ide.builder">
-    </builder>
-  </extension>
   <extension id="builder" name="IBeX TGG Builder" point="org.eclipse.core.resources.builders">
     <builder hasNature="true">
       <run class="org.emoflon.ibex.tgg.ide.admin.IbexTGGBuilder"/>

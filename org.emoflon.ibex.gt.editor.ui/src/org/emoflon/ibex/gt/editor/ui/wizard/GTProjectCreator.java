@@ -1,6 +1,5 @@
 package org.emoflon.ibex.gt.editor.ui.wizard;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -8,6 +7,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.xtext.builder.EclipseResourceFileSystemAccess2;
 import org.eclipse.xtext.generator.IFileSystemAccess;
 import org.eclipse.xtext.generator.IFileSystemAccess2;
@@ -15,9 +16,6 @@ import org.eclipse.xtext.generator.OutputConfiguration;
 import org.eclipse.xtext.ui.util.PluginProjectFactory;
 import org.eclipse.xtext.ui.wizard.AbstractPluginProjectCreator;
 import org.eclipse.xtext.ui.wizard.DefaultProjectInfo;
-import org.eclipse.jdt.core.IClasspathEntry;
-import org.eclipse.jdt.launching.JavaRuntime;
-import org.emoflon.ibex.gt.editor.ui.builder.GTNature;
 import org.moflon.core.plugins.manifest.ManifestFileUpdater;
 
 import com.google.common.collect.ImmutableList;
@@ -71,20 +69,6 @@ public class GTProjectCreator extends AbstractPluginProjectCreator {
 	@Override
 	protected List<String> getAllFolders() {
 		return ImmutableList.of(getModelFolderName(), "src-gen");
-	}
-
-	@Override
-	protected String[] getProjectNatures() {
-		final ArrayList<String> natures = Lists.newArrayList(GTNature.NATURE_ID);
-		natures.addAll(Lists.newArrayList(super.getProjectNatures()));
-		return natures.toArray(new String[natures.size()]);
-	}
-
-	@Override
-	protected String[] getBuilders() {
-		final ArrayList<String> builders = Lists.newArrayList(GTNature.getRequiredBuilders());
-		builders.addAll(Lists.newArrayList(super.getBuilders()));
-		return builders.toArray(new String[builders.size()]);
 	}
 
 	@Override

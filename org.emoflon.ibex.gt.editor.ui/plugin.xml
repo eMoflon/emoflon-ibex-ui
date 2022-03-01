@@ -416,11 +416,6 @@
 		</runtime>
 	    <builder id="org.emoflon.ibex.gt.editor.ui.builder"></builder>
   	</extension>
-  	<extension id="builder" name="GT Builder" point="org.eclipse.core.resources.builders">
-    	<builder hasNature="true">
-      		<run class="org.emoflon.ibex.gt.editor.ui.builder.GTBuilder"/>
-    	</builder>
-  	</extension>
    <extension
          point="org.eclipse.ui.ide.projectNatureImages">
       <image

@@ -1,11 +1,9 @@
 package org.emoflon.ibex.tgg.ide.visualisation;
 
-import java.util.Collection;
 import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -15,9 +13,8 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.ui.editor.XtextEditor;
-import org.emoflon.ibex.tgg.ide.admin.IbexTGGBuilder;
+import org.emoflon.ibex.tgg.builder.TGGBuildUtil;
 import org.emoflon.ibex.tgg.ide.transformation.EditorTGGtoFlattenedTGG;
-import org.moflon.core.ui.VisualiserUtilities;
 import org.moflon.core.ui.visualisation.EMoflonPlantUMLGenerator;
 import org.moflon.core.ui.visualisation.common.EMoflonDiagramTextProvider;
 import org.moflon.core.utilities.MoflonUtil;
@@ -62,8 +59,8 @@ public class IbexTGGVisualiser implements EMoflonDiagramTextProvider {
 
 	private TripleGraphGrammarFile loadTGG(String projectName) {
 		ResourceSet rs = new ResourceSetImpl();
-		Resource tgg = rs.getResource(URI.createPlatformResourceURI(projectName + "/" + IbexTGGBuilder.MODEL_FOLDER
-				+ "/" + MoflonUtil.lastCapitalizedSegmentOf(projectName) + IbexTGGBuilder.EDITOR_MODEL_EXTENSION, true),
+		Resource tgg = rs.getResource(URI.createPlatformResourceURI(projectName + "/" + TGGBuildUtil.MODEL_FOLDER
+				+ "/" + MoflonUtil.lastCapitalizedSegmentOf(projectName) + TGGBuildUtil.EDITOR_MODEL_EXTENSION, true),
 				true);
 		return (TripleGraphGrammarFile) tgg.getContents().get(0);
 	}

@@ -17,6 +17,7 @@
 			<attribute name="ignore_optional_problems" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="src" path="xtend-src"/>
 	<classpathentry exported="true" kind="lib" path=".antlr-generator-3.2.0-patch.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

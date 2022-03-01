@@ -1,7 +1,3 @@
 **/xtend-gen/*
-**/src-gen/*
 !**/xtend-gen/*.keep
-!**/src-gen/*.keep
 **/bin/
-*.genmodel
-*.plugin.xml_gen
