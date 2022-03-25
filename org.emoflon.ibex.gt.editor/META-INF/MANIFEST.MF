@@ -16,18 +16,20 @@ Require-Bundle: org.antlr.runtime;bundle-version="[3.2.0,3.2.1)",
  org.eclipse.xtext.xbase,
  org.eclipse.xtext.xbase.lib;bundle-version="2.15.0",
  org.objectweb.asm;resolution:=optional,
- org.moflon.core.utilities
+ org.moflon.core.utilities,
+ org.moflon.core.plugins
 Export-Package: org.emoflon.ibex.gt.editor,
  org.emoflon.ibex.gt.editor.formatting2,
- org.emoflon.ibex.gt.editor.generator,
  org.emoflon.ibex.gt.editor.gT,
  org.emoflon.ibex.gt.editor.gT.impl,
  org.emoflon.ibex.gt.editor.gT.util,
+ org.emoflon.ibex.gt.editor.generator,
  org.emoflon.ibex.gt.editor.parser.antlr,
  org.emoflon.ibex.gt.editor.parser.antlr.internal,
  org.emoflon.ibex.gt.editor.scoping,
  org.emoflon.ibex.gt.editor.serializer,
  org.emoflon.ibex.gt.editor.services,
+ org.emoflon.ibex.gt.editor.ui.builder,
  org.emoflon.ibex.gt.editor.utils,
  org.emoflon.ibex.gt.editor.validation
 Import-Package: org.apache.log4j

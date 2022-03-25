@@ -1,9 +1,3 @@
 /bin/*
-/gen/*
-model/generated/*.ecore
-model/generated/*.genmodel
-**/*.xmi
 !/**/.keep*
-/src/org/moflon/tgg/mosl/csp
 /xtend-gen/*
-/src-gen/*

@@ -29,7 +29,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.INewWizard;
-import org.emoflon.ibex.tgg.ide.admin.IbexTGGNature;
+import org.emoflon.ibex.tgg.builder.TGGBuildUtil;
 import org.moflon.core.utilities.LogUtils;
 import org.moflon.core.utilities.MoflonUtil;
 import org.moflon.core.utilities.WorkspaceHelper;
@@ -81,9 +81,6 @@ public class NewIntegrationWizard extends AbstractMoflonWizard implements INewWi
 		// Create project
 		project.create(subMon.split(1));
 		project.open(subMon.split(1));
-
-		// Add Ibex TGG Nature
-		WorkspaceHelper.addNature(project, IbexTGGNature.IBEX_TGG_NATURE_ID, subMon.split(1));
 	}
 
 	protected void generateDefaultFiles(final IProgressMonitor monitor, IProject project) throws CoreException {
@@ -91,7 +88,7 @@ public class NewIntegrationWizard extends AbstractMoflonWizard implements INewWi
 			final SubMonitor subMon = SubMonitor.convert(monitor, "Generating default files", 3);
 			String defaultSchema = DefaultFilesHelper.generateDefaultSchema(MoflonUtil.lastCapitalizedSegmentOf(project.getName()),
 					Lists.newArrayList(importURIs), sourceMetamodelsNames, targetMetamodelsNames);
-			IPath pathToSchema = new Path(IbexTGGNature.SCHEMA_FILE);
+			IPath pathToSchema = new Path(TGGBuildUtil.SCHEMA_FILE);
 			WorkspaceHelper.addAllFoldersAndFile(project, pathToSchema, defaultSchema, subMon.split(1));
 			WorkspaceHelper.addAllFolders(project, "src/org/emoflon/ibex/tgg/rules", subMon.split(1));
 			WorkspaceHelper.addAllFolders(project, "model", subMon.split(1));
