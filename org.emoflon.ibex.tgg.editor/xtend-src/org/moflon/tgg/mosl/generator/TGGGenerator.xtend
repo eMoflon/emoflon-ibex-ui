@@ -12,15 +12,17 @@ import org.eclipse.xtext.resource.SynchronizedXtextResourceSet
 import org.moflon.core.utilities.ExtensionsUtil
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
 import org.emoflon.ibex.tgg.builder.TGGBuilderExtension
+import org.eclipse.xtext.generator.IGenerator
+import org.eclipse.xtext.generator.IFileSystemAccess
 
 /**
  * Generates code from your model files on save.
  * 
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#code-generation
  */
-class TGGGenerator extends AbstractGenerator {
+class TGGGenerator implements IGenerator {
 	
-	override doGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
+	override doGenerate(Resource input, IFileSystemAccess fsa) {
 		var lResource = input.resourceSet as SynchronizedXtextResourceSet
 		val project = lResource.classpathURIContext as JavaProject
 		val iProject = project.project

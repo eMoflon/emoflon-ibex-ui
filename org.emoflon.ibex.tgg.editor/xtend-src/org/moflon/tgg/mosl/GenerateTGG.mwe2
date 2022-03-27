@@ -34,13 +34,13 @@ Workflow {
     	exclude = ".keepsrcgen"
     }
     
-    
     component = Generator {
     	pathRtProject = runtimeProject
     	pathUiProject = "${runtimeProject}.ui"
     	projectNameRt = projectName
     	projectNameUi = "${projectName}.ui"
     	encoding = encoding
+    	srcPath = "/xtend-src"
     	language = auto-inject {
     		uri = grammarURI
     
