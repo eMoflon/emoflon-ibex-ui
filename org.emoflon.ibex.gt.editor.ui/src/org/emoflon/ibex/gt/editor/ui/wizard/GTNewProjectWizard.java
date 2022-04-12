@@ -1,21 +1,21 @@
 package org.emoflon.ibex.gt.editor.ui.wizard;
 
-import com.google.inject.Inject;
-
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.eclipse.xtext.ui.wizard.DefaultProjectInfo;
 import org.eclipse.xtext.ui.wizard.IExtendedProjectInfo;
 import org.eclipse.xtext.ui.wizard.XtextNewProjectWizard;
+
+import com.google.inject.Inject;
 
 /**
  * The wizard for creating a new GT project.
  */
 public class GTNewProjectWizard extends XtextNewProjectWizard {
 	public static final String PROJECT_WIZARD_ID = "org.emoflon.ibex.gt.editor.ui.wizard.GTNewProjectWizard";
-	private static final String PROJECT_WIZARD_TITLE = "New eMoflon Graph Transformation Project";
-	private static final String PROJECT_WIZARD_DESCRIPTION = "Create a new eMoflon Graph Transformation Project.";
+	public static final String PROJECT_WIZARD_TITLE = "New eMoflon Graph Transformation Project";
+	public static final String PROJECT_WIZARD_DESCRIPTION = "Create a new eMoflon Graph Transformation Project.";
 
-	private WizardNewProjectCreationPage mainPage;
+	protected WizardNewProjectCreationPage mainPage;
 
 	@Inject
 	public GTNewProjectWizard(final GTProjectCreator projectCreator) {
