@@ -45,4 +45,4 @@ Export-Package: org.emoflon.ibex.tgg.builder,
  org.moflon.tgg.mosl.validation
 Automatic-Module-Name: org.emoflon.ibex.tgg.editor
 Import-Package: org.apache.log4j
-Bundle-RequiredExecutionEnvironment: JavaSE-16
+Bundle-RequiredExecutionEnvironment: JavaSE-17
