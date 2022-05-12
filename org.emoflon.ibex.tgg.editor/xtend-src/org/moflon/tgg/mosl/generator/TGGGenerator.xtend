@@ -4,16 +4,14 @@
 package org.moflon.tgg.mosl.generator
 
 import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.jdt.internal.core.JavaProject
-import org.eclipse.xtext.generator.AbstractGenerator
-import org.eclipse.xtext.generator.IFileSystemAccess2
-import org.eclipse.xtext.generator.IGeneratorContext
+import org.eclipse.xtext.generator.IFileSystemAccess
+import org.eclipse.xtext.generator.IGenerator
 import org.eclipse.xtext.resource.SynchronizedXtextResourceSet
+import org.emoflon.ibex.tgg.builder.TGGBuilderExtension
 import org.moflon.core.utilities.ExtensionsUtil
 import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile
-import org.emoflon.ibex.tgg.builder.TGGBuilderExtension
-import org.eclipse.xtext.generator.IGenerator
-import org.eclipse.xtext.generator.IFileSystemAccess
 
 /**
  * Generates code from your model files on save.
@@ -22,6 +20,8 @@ import org.eclipse.xtext.generator.IFileSystemAccess
  */
 class TGGGenerator implements IGenerator {
 	
+	var oldFsa = null
+		
 	override doGenerate(Resource input, IFileSystemAccess fsa) {
 		var lResource = input.resourceSet as SynchronizedXtextResourceSet
 		val project = lResource.classpathURIContext as JavaProject
@@ -30,6 +30,12 @@ class TGGGenerator implements IGenerator {
 		val xtextParsedTGG = input.getContents().get(0) as TripleGraphGrammarFile;
 		if(xtextParsedTGG.schema == null)
 			return;
+			
+		// trick to avoid xtext triggering endless loops
+		if(oldFsa != null && oldFsa.hashCode == fsa.hashCode) 
+			return;
+		
+		this.oldFsa = fsa
 		
 		ExtensionsUtil
 			.collectExtensions(TGGBuilderExtension.BUILDER_EXTENSON_ID, "class", typeof(TGGBuilderExtension))
