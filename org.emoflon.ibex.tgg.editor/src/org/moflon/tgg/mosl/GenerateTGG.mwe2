@@ -128,5 +128,34 @@ Workflow {
     		fragment = compare.CompareFragment auto-inject {}
     	}
     }
+    
+    // More or less dirty workaround to prevent the stub generation of:
+    // {TGGRuntimeModule.java, TGGStandaloneSetup.java, TGGUiModule.java}
+    //
+    // These files were moved from xtend-src to src to also include them (but not
+    // the *.xtend files into the eMoflon builds. This introduced the problem that
+    // while running the MWE2 file (GenerateTGG.mwe2), Xtext also generated the
+    // three files above. This lead to errors like "The type ... is already defined".
+    //
+    // As I could not find anything like a "FileCleaner" (that would be able to just
+    // remove the three generated stub files), I've had to abuse the DirectoryCleaner
+    // by excluding all sub folders with *.xtend files.
+    component = DirectoryCleaner {
+    	directory = "${runtimeProject}.ui/xtend-src/org/moflon/tgg/mosl/ui/"
+    	exclude = "contentassist"
+    	exclude = "labeling"
+    	exclude = "outline"
+    	exclude = "quickfix"
+    }
+    component = DirectoryCleaner {
+    	directory = "${runtimeProject}/xtend-src/org/moflon/tgg/mosl/"
+    	exclude = "defaults"
+    	exclude = "formatting"
+    	exclude = "formatting2"
+    	exclude = "generator"
+    	exclude = "scoping"
+    	exclude = "validation"
+    }
+    
 }
 
