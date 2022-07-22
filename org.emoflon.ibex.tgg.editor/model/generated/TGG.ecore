@@ -15,9 +15,9 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Schema" eSuperTypes="#//NamedElements">
     <eStructuralFeatures xsi:type="ecore:EReference" name="sourceTypes" unique="false"
-        upperBound="-1" eType="ecore:EClass ../../../org.eclipse.emf.ecore/model/Ecore.ecore#//EPackage"/>
+        upperBound="-1" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EPackage"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="targetTypes" unique="false"
-        upperBound="-1" eType="ecore:EClass ../../../org.eclipse.emf.ecore/model/Ecore.ecore#//EPackage"/>
+        upperBound="-1" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EPackage"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="correspondenceTypes" upperBound="-1"
         eType="#//CorrType" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="attributeCondDefs" upperBound="-1"
@@ -25,8 +25,8 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CorrType" eSuperTypes="#//NamedElements">
     <eStructuralFeatures xsi:type="ecore:EReference" name="super" eType="#//CorrType"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="ecore:EClass ../../../org.eclipse.emf.ecore/model/Ecore.ecore#//EClass"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="ecore:EClass ../../../org.eclipse.emf.ecore/model/Ecore.ecore#//EClass"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EClass"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EClass"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AttrCondDef" eSuperTypes="#//NamedElements">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="userDefined" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
@@ -39,7 +39,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Param">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="paramName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="ecore:EClass ../../../org.eclipse.emf.ecore/model/Ecore.ecore#//EDataType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EDataType"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Rule" eSuperTypes="#//NamedElements">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="abstractRule" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
@@ -78,7 +78,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//ObjectVariablePattern"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ObjectVariablePattern" eSuperTypes="#//NamePattern">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="ecore:EClass ../../../org.eclipse.emf.ecore/model/Ecore.ecore#//EClass"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="attributeAssignments" upperBound="-1"
         eType="#//AttributeAssignment" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="attributeConstraints" upperBound="-1"
@@ -88,43 +88,43 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ContextObjectVariablePattern">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="ecore:EClass ../../../org.eclipse.emf.ecore/model/Ecore.ecore#//EClass"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="attributeConstraints" upperBound="-1"
         eType="#//AttributeConstraint" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="linkVariablePatterns" upperBound="-1"
         eType="#//ContextLinkVariablePattern" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AttributeConstraint">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="ecore:EClass ../../../org.eclipse.emf.ecore/model/Ecore.ecore#//EAttribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EAttribute"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="op" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="valueExp" eType="#//Expression"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AttributeAssignment">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="ecore:EClass ../../../org.eclipse.emf.ecore/model/Ecore.ecore#//EAttribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EAttribute"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="op" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="valueExp" eType="#//Expression"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Expression" eSuperTypes="#//ParamValue"/>
   <eClassifiers xsi:type="ecore:EClass" name="EnumExpression" eSuperTypes="#//Expression">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="eenum" eType="ecore:EClass ../../../org.eclipse.emf.ecore/model/Ecore.ecore#//EEnum"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="literal" eType="ecore:EClass ../../../org.eclipse.emf.ecore/model/Ecore.ecore#//EEnumLiteral"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eenum" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EEnum"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="literal" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EEnumLiteral"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AttributeExpression" eSuperTypes="#//Expression">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="derived" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="objectVar" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="ecore:EClass ../../../org.eclipse.emf.ecore/model/Ecore.ecore#//EAttribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EAttribute"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="LiteralExpression" eSuperTypes="#//Expression">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="LinkVariablePattern" eSuperTypes="#//OperatorPattern">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="ecore:EClass ../../../org.eclipse.emf.ecore/model/Ecore.ecore#//EReference"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EReference"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//ObjectVariablePattern"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ContextLinkVariablePattern">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="ecore:EClass ../../../org.eclipse.emf.ecore/model/Ecore.ecore#//EReference"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EReference"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//ContextObjectVariablePattern"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Operator">
