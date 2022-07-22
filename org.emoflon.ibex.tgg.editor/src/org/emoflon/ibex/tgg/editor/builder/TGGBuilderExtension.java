@@ -5,7 +5,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 
 public interface TGGBuilderExtension {
 
-	public static final String BUILDER_EXTENSON_ID = "org.emoflon.ibex.tgg.ide.TGGBuilderExtension";
+	public static final String BUILDER_EXTENSON_ID = "org.emoflon.ibex.tgg.editor.TGGBuilderExtension";
 
 	/**
 	 * Builds the package in the given project. This will be triggered for each package containing .gt
