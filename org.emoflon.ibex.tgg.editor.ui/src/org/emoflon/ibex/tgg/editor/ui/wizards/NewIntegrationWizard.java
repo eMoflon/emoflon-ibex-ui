@@ -49,7 +49,7 @@ public class NewIntegrationWizard extends AbstractMoflonWizard implements INewWi
 
 	private static final Logger logger = Logger.getLogger(NewIntegrationWizard.class);
 
-	public static final String NEW_INTEGRATION_PROJECT_WIZARD_ID = "org.moflon.tgg.mosl.newIntegrationProject";
+	public static final String NEW_INTEGRATION_PROJECT_WIZARD_ID = "org.emoflon.ibex.tgg.editor.ui.newIntegrationProject";
 
 	@Override
 	public void addPages() {

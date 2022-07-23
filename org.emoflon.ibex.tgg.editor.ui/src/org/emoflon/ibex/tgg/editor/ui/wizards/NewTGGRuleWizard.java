@@ -13,7 +13,7 @@ import org.moflon.core.utilities.WorkspaceHelper;
 
 public class NewTGGRuleWizard extends AbstractMoflonWizard implements INewWizard {
 
-	public static final String NEW_TGG_RULE_WIZARD_ID = "org.moflon.tgg.mosl.newTGGRule";
+	public static final String NEW_TGG_RULE_WIZARD_ID = "org.emoflon.ibex.tgg.editor.ui.newTGGRule";
 
 	protected NewTGGRuleProjectInfoPage projectInfo;
 
