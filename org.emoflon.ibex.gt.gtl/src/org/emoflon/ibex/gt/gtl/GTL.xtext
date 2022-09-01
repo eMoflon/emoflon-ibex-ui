@@ -9,7 +9,12 @@ generate gTL "http://www.emoflon.org/ibex/gt/gtl/GTL"
 EditorFile:
 	package = PackageDeclaration
 	imports += Import
+	importedPatterns += PatternImport
 	rules += SlimRule
+;
+
+PatternImport : 
+	'from' file = StringLiteral 'import' ('*' | pattern = [SlimRule|ID])
 ;
 
 @Override
