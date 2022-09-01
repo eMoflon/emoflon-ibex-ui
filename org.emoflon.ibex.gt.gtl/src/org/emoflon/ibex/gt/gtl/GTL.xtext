@@ -49,6 +49,15 @@ GTLRuleNodeDeletion :
 	'--' deletion = SlimRuleNode
 ;
 
+@Override
+ExpressionOperand:
+	operand = (NodeAttributeExpression | ArithmeticLiteral | EnumExpression | ParameterExpression | Constant)
+;
+
+ParameterExpression:
+	parameter = [GTLRuleParameter|ID]
+;
+
 GTLInvocation :
 	type=GTLInvocationType supportPattern=[SlimRule|ID] ('['mappings+=GTLNodeMapping (',' mappings+=GTLNodeMapping)*']')?
 ;
@@ -58,5 +67,5 @@ enum GTLInvocationType :
 ;
 
 GTLNodeMapping:
-	'from' srcNode = [slimGT::SlimRuleNode|ID] 'to' trgNode = [slimGT::SlimRuleNode|ID]
+	srcNode = [slimGT::SlimRuleNode|ID] '=' trgNode = [slimGT::SlimRuleNode|ID]
 ;

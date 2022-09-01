@@ -6,7 +6,9 @@ Bundle-Vendor: My Company
 Bundle-Version: 1.0.0.qualifier
 Bundle-SymbolicName: org.emoflon.ibex.gt.gtl.ui; singleton:=true
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.emoflon.ibex.gt.gtl,
+Require-Bundle: org.emoflon.ibex.common.slimgt;bundle-version="1.0.0",
+ org.emoflon.ibex.common.slimgt.ui;bundle-version="1.0.0",
+ org.emoflon.ibex.gt.gtl,
  org.emoflon.ibex.gt.gtl.ide,
  org.eclipse.xtext.ui,
  org.eclipse.xtext.ui.shared,

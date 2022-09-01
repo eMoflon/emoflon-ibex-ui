@@ -24,7 +24,7 @@ SlimRule:
 ;
 
 SlimRuleNodeContext:
-	context = SlimRuleNode
+	(local?='local')? context = SlimRuleNode
 ;
 
 SlimRuleNodeCreation: 
@@ -105,7 +105,7 @@ BracketExpression returns ArithmeticExpression: {BracketExpression}
 ;
 
 ExpressionOperand:
-	NodeAttributeExpression | ArithmeticLiteral | EnumExpression | Constant
+	operand = (NodeAttributeExpression | ArithmeticLiteral | EnumExpression | Constant)
 ;
 
 NodeAttributeExpression:
