@@ -1,8 +1,6 @@
 /bin/
 /xtend-gen/
 /src-gen/
-/model/
 
 !/xtend-gen/.gitkeep
 !/src-gen/.gitkeep
-!/model/.gitkeep

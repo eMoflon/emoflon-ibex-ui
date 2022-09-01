@@ -1,0 +1,30 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.emoflon.ibex.gt.gtl
+Bundle-ManifestVersion: 2
+Bundle-Name: org.emoflon.ibex.gt.gtl
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: org.emoflon.ibex.gt.gtl; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.xtext,
+ org.eclipse.xtext.xbase,
+ org.eclipse.equinox.common;bundle-version="3.5.0",
+ org.emoflon.ibex.common.slimgt;bundle-version="1.0.0",
+ org.eclipse.emf.ecore,
+ org.eclipse.xtext.xbase.lib;bundle-version="2.14.0",
+ org.eclipse.xtext.util,
+ org.eclipse.emf.common,
+ org.antlr.runtime;bundle-version="[3.2.0,3.2.1)"
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Export-Package: org.emoflon.ibex.gt.gtl.parser.antlr.internal,
+ org.emoflon.ibex.gt.gtl.gTL.impl,
+ org.emoflon.ibex.gt.gtl.scoping,
+ org.emoflon.ibex.gt.gtl.services,
+ org.emoflon.ibex.gt.gtl.gTL,
+ org.emoflon.ibex.gt.gtl.gTL.util,
+ org.emoflon.ibex.gt.gtl,
+ org.emoflon.ibex.gt.gtl.parser.antlr,
+ org.emoflon.ibex.gt.gtl.serializer,
+ org.emoflon.ibex.gt.gtl.generator,
+ org.emoflon.ibex.gt.gtl.validation
+Import-Package: org.apache.log4j
