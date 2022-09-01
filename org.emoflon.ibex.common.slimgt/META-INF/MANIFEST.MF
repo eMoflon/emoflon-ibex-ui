@@ -1,0 +1,29 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.emoflon.ibex.common.slimgt
+Bundle-ManifestVersion: 2
+Bundle-Name: org.emoflon.ibex.common.slimgt
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: org.emoflon.ibex.common.slimgt; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.xtext,
+ org.eclipse.xtext.xbase,
+ org.eclipse.equinox.common;bundle-version="3.5.0",
+ org.eclipse.emf.ecore,
+ org.eclipse.xtext.xbase.lib;bundle-version="2.14.0",
+ org.eclipse.xtext.util,
+ org.eclipse.emf.common,
+ org.antlr.runtime;bundle-version="[3.2.0,3.2.1)"
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Export-Package: org.emoflon.ibex.common.slimgt.slimGT,
+ org.emoflon.ibex.common.slimgt.slimGT.impl,
+ org.emoflon.ibex.common.slimgt.serializer,
+ org.emoflon.ibex.common.slimgt.parser.antlr,
+ org.emoflon.ibex.common.slimgt.services,
+ org.emoflon.ibex.common.slimgt,
+ org.emoflon.ibex.common.slimgt.validation,
+ org.emoflon.ibex.common.slimgt.parser.antlr.internal,
+ org.emoflon.ibex.common.slimgt.slimGT.util,
+ org.emoflon.ibex.common.slimgt.scoping,
+ org.emoflon.ibex.common.slimgt.generator
+Import-Package: org.apache.log4j

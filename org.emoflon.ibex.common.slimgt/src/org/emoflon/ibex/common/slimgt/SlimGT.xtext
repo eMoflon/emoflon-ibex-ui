@@ -1,0 +1,189 @@
+grammar org.emoflon.ibex.common.slimgt.SlimGT with org.eclipse.xtext.common.Terminals
+
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+generate slimGT "http://www.emoflon.org/ibex/common/slimgt/SlimGT"
+
+EditorFile:
+	package = PackageDeclaration
+	imports += Import
+;
+
+PackageDeclaration:
+	'package' name = QualifiedName
+;
+
+Import:
+	'#import' name = STRING
+;
+
+SlimRule:
+	(contextNodes += SlimRuleNodeContext |
+	createdNodes += SlimRuleNodeCreation |
+	atrConditions += SlimRuleAttributeCondition)
+;
+
+SlimRuleNodeContext:
+	context = SlimRuleNode
+;
+
+SlimRuleNodeCreation: 
+	'++' creation = SlimRuleNode
+;
+
+SlimRuleNode:
+	name = ID ':' type=[ecore::EClass | QualifiedName] ('{'
+		(contextEdges += SlimRuleEdgeContext |
+		createdEdges += SlimRuleEdgeCreation |
+		assignments += SlimRuleAttributeAssignment)
+	'}')?
+;
+
+SlimRuleEdgeContext:
+	context = SlimRuleEdge
+;
+
+SlimRuleEdgeCreation:
+	'++' creation = SlimRuleSimpleEdge
+;
+
+SlimRuleEdge:
+	SlimRuleSimpleEdge | SlimRuleTransitiveEdge
+;
+
+SlimRuleSimpleEdge returns SlimRuleEdge: {SlimRuleSimpleEdge}
+	'-' type=[ecore::EReference] '->' target=[SlimRuleNode|ID]
+;
+
+SlimRuleTransitiveEdge returns SlimRuleEdge: {SlimRuleTransitiveEdge}
+	'~' type=[ecore::EReference] '~>' target=[SlimRuleNode|ID]
+;
+
+SlimRuleAttributeAssignment:
+	'.' type=[ecore::EAttribute] ':=' value=ValueExpression
+;
+
+SlimRuleAttributeCondition:
+	'#' lhs=ValueExpression operator=RelationalOperator rhs=ValueExpression
+;
+
+enum RelationalOperator:
+  GREATER='>' |
+  GREATER_OR_EQUAL='>=' |
+  EQUAL='==' |
+  UNEQUAL='!=' |
+  SMALLER_OR_EQUAL='<=' |
+  SMALLER='<'
+;
+
+ValueExpression:
+	ArithmeticExpression
+;
+
+ArithmeticExpression:
+	SumArithmeticExpression
+;
+
+SumArithmeticExpression returns ArithmeticExpression:
+	ProductArithmeticExpression({SumArithmeticExpression.left = current} operator=SumOperator right=ProductArithmeticExpression)* 
+;
+
+ProductArithmeticExpression returns ArithmeticExpression:
+	ExpArithmeticExpression({ProductArithmeticExpression.left = current} operator=ProductOperator right=ExpArithmeticExpression)*
+;
+
+ExpArithmeticExpression returns ArithmeticExpression:
+	UnaryArithmeticExpression({ExpArithmeticExpression.left = current} operator=ExpOperator right=UnaryArithmeticExpression)*
+;
+
+UnaryArithmeticExpression returns ArithmeticExpression: {UnaryArithmeticExpression}
+	operator=UnaryOperator '(' operand=BracketExpression ')' | BracketExpression
+;
+
+BracketExpression returns ArithmeticExpression: {BracketExpression}
+	'(' operand=ArithmeticExpression ')' | ExpressionOperand
+;
+
+ExpressionOperand:
+	NodeAttributeExpression | ArithmeticLiteral | EnumExpression | Constant
+;
+
+NodeAttributeExpression:
+	node = [SlimRuleNode|ID] '.' feature = [ecore::EAttribute]
+;
+
+EnumExpression:
+  'enum::' literal=[ecore::EEnumLiteral]
+;
+
+ArithmeticLiteral:
+	value = (DoubleLiteral | IntegerLiteral | StringLiteral)
+;
+
+Constant:
+	value = ConstantLiteral
+;
+
+enum ConstantLiteral:
+	PI = 'pi' |
+	E = 'e' |
+	NULL = 'null'
+;
+
+enum ProductOperator:
+	MULT='*' |
+ 	DIV='/'
+;
+
+enum ExpOperator:
+ 	POW='pow'	|
+ 	LOG='log'
+;
+
+enum SumOperator:
+	PLUS='+' 	|
+	MINUS='-' 	
+;
+
+enum UnaryOperator:
+	NEG='-'		|
+	ABS='abs'	|
+	SQRT='sqrt' |
+	sin='sin'	|
+	cos='cos'
+;
+
+QualifiedName returns ecore::EString:
+	ID ('.' ID)*
+;
+
+DoubleLiteral:
+	value = Double
+;
+
+IntegerLiteral:
+	value = Integer
+;
+
+StringLiteral:
+	value = STRING
+;
+
+
+Double returns ecore::EDouble:
+	('-')?INT '.' INT
+;
+
+Integer returns ecore::EInt:
+	(('-')? INT)
+;
+
+@Override
+terminal INT returns ecore::EInt:
+	'0'..'9' ('0'..'9')*
+;
+
+@Override
+terminal STRING returns ecore::EString:
+	'"' ( '""' | !('"') )* '"'
+;
