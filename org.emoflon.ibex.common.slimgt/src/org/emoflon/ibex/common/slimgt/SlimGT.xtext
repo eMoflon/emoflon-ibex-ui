@@ -76,6 +76,14 @@ enum RelationalOperator:
   SMALLER='<'
 ;
 
+SlimRuleNodeMapping:
+	srcNode = [SlimRuleNode|ID] '=' trgNode = [SlimRuleNode|ID]
+;
+
+SlimRuleNodeMappings:
+	'['mappings+=SlimRuleNodeMapping (',' mappings+=SlimRuleNodeMapping)*']'
+;
+
 ValueExpression:
 	ArithmeticExpression
 ;
@@ -93,7 +101,16 @@ ProductArithmeticExpression returns ArithmeticExpression:
 ;
 
 ExpArithmeticExpression returns ArithmeticExpression:
-	UnaryArithmeticExpression({ExpArithmeticExpression.left = current} operator=ExpOperator right=UnaryArithmeticExpression)*
+	(UnaryArithmeticExpression | StochasticArithmeticExpression | MinMaxArithmeticExpression)
+	({ExpArithmeticExpression.left = current} operator=ExpOperator right=(UnaryArithmeticExpression | StochasticArithmeticExpression | MinMaxArithmeticExpression))*
+;
+
+StochasticArithmeticExpression returns ArithmeticExpression:
+	{StochasticArithmeticExpression} distribution = StochasticDistribution '(' mean = ArithmeticExpression (hasSd ?= "," sd = ArithmeticExpression)? ')'
+;
+
+MinMaxArithmeticExpression returns ArithmeticExpression:
+	{MinMaxArithmeticExpression} minMaxOperator = MinMaxOperator '(' left = ArithmeticExpression "," right = ArithmeticExpression ')'
 ;
 
 UnaryArithmeticExpression returns ArithmeticExpression: {UnaryArithmeticExpression}
@@ -105,19 +122,23 @@ BracketExpression returns ArithmeticExpression: {BracketExpression}
 ;
 
 ExpressionOperand:
-	operand = (NodeAttributeExpression | ArithmeticLiteral | EnumExpression | Constant)
+	operand = (NodeAttributeExpression | CountExpression | ArithmeticLiteral | EnumExpression | Constant)
 ;
 
 NodeAttributeExpression:
 	node = [SlimRuleNode|ID] '.' feature = [ecore::EAttribute]
 ;
 
+CountExpression:
+	'count' '(' invokedPatten = [SlimRule|ID] ')' (mappings=SlimRuleNodeMappings)?
+;
+
 EnumExpression:
-  'enum::' literal=[ecore::EEnumLiteral]
+ 	'enum::' literal=[ecore::EEnumLiteral]
 ;
 
 ArithmeticLiteral:
-	value = (DoubleLiteral | IntegerLiteral | StringLiteral)
+	value = (DoubleLiteral | IntegerLiteral | StringLiteral | BooleanLiteral)
 ;
 
 Constant:
@@ -125,32 +146,45 @@ Constant:
 ;
 
 enum ConstantLiteral:
-	PI = 'pi' |
-	E = 'e' |
-	NULL = 'null'
+	PI 	= 	'pi' 	|
+	E 	= 	'e' 	|
+	NULL= 	'null'
 ;
 
 enum ProductOperator:
-	MULT='*' |
- 	DIV='/'
+	MULT=	'*' 	|
+ 	DIV	=	'/'	 	|
+ 	MOD	=	'%'
 ;
 
 enum ExpOperator:
- 	POW='pow'	|
- 	LOG='log'
+ 	POW = 	'pow'	|
+ 	LOG = 	'log'
 ;
 
 enum SumOperator:
-	PLUS='+' 	|
-	MINUS='-' 	
+	PLUS =	'+' 	|
+	MINUS=	'-' 	
+;
+
+enum StochasticDistribution:
+	NORMAL 		= 	"N" 	| 
+	UNIFORM 	= 	"U" 	| 
+	EXPONENTIAL = 	"Exp"
+;	
+
+enum MinMaxOperator:
+	MAX	=	'max' 	|
+	MIN	=	'min' 	
 ;
 
 enum UnaryOperator:
-	NEG='-'		|
-	ABS='abs'	|
-	SQRT='sqrt' |
-	sin='sin'	|
-	cos='cos'
+	NEG	=	'-'		|
+	ABS	=	'abs'	|
+	SQRT=	'sqrt' 	|
+	SIN	=	'sin'	|
+	COS	=	'cos'	|
+	TAN = 	'tan'
 ;
 
 QualifiedName returns ecore::EString:
@@ -169,6 +203,9 @@ StringLiteral:
 	value = STRING
 ;
 
+BooleanLiteral:
+	value = Boolean
+;
 
 Double returns ecore::EDouble:
 	('-')?INT '.' INT
@@ -186,4 +223,16 @@ terminal INT returns ecore::EInt:
 @Override
 terminal STRING returns ecore::EString:
 	'"' ( '""' | !('"') )* '"'
+;
+
+Boolean returns ecore::EBoolean:
+	TRUE | FALSE
+;
+
+terminal TRUE returns ecore::EBoolean:
+	'true'
+;
+
+terminal FALSE returns ecore::EBoolean:
+	'false'
 ;

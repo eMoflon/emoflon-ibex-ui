@@ -30,7 +30,7 @@ SlimRule:
 			deletedNodes += GTLRuleNodeDeletion |
 			atrConditions += SlimRuleAttributeCondition |
 			invocations += GTLInvocation)
-	'}'
+	'}' (stochastic ?='@' probability = ValueExpression)?
 ;
 
 enum GTLType :
@@ -42,7 +42,7 @@ GTLRuleParameter:
 ;
 
 GTLRuleRefinement:
-	'refines' superRule=[SlimRule|ID] ('['mappings+=GTLNodeMapping (',' mappings+=GTLNodeMapping)*']')?
+	'refines' superRule=[SlimRule|ID] (mappings=SlimRuleNodeMappings)?
 ;
 
 GTLRuleNodeDeletion :
@@ -50,8 +50,23 @@ GTLRuleNodeDeletion :
 ;
 
 @Override
+SlimRuleNode:
+	name = ID ':' type=[ecore::EClass | QualifiedName] ('{'
+		(contextEdges += SlimRuleEdgeContext |
+		createdEdges += SlimRuleEdgeCreation |
+		deletedEdges += GTLRuleEdgeDeletion |
+		edgeIterators += GTLEdgeIterator |
+		assignments += SlimRuleAttributeAssignment)
+	'}')?
+;
+
+GTLRuleEdgeDeletion:
+	'--' deletion = SlimRuleSimpleEdge
+;
+
+@Override
 ExpressionOperand:
-	operand = (NodeAttributeExpression | ArithmeticLiteral | EnumExpression | ParameterExpression | Constant)
+	operand = (NodeAttributeExpression | CountExpression | ArithmeticLiteral | EnumExpression | ParameterExpression | Constant)
 ;
 
 ParameterExpression:
@@ -59,13 +74,38 @@ ParameterExpression:
 ;
 
 GTLInvocation :
-	type=GTLInvocationType supportPattern=[SlimRule|ID] ('['mappings+=GTLNodeMapping (',' mappings+=GTLNodeMapping)*']')?
+	type=GTLInvocationType supportPattern=[SlimRule|ID] (mappings=SlimRuleNodeMappings)?
 ;
 
 enum GTLInvocationType :
 	POSITIVE = 'enforce' | NEGATIVE = 'forbid'
 ;
 
-GTLNodeMapping:
-	srcNode = [slimGT::SlimRuleNode|ID] '=' trgNode = [slimGT::SlimRuleNode|ID]
+GTLEdgeIterator:
+	'forEach' type=[ecore::EReference] '->' name=ID ('<'subType=[ecore::EClass]'>')? '{'
+		(iteratorAttributes+=GTLEdgeIteratorAttributeAssignment | references+=GTLEdgeIteratorReference)+
+	'}'
+;
+
+GTLEdgeIteratorAttributeExpression:
+	'iterator::' iterator=[GTLEdgeIterator] '.' attribute=[ecore::EAttribute];
+
+GTLEdgeIteratorAttributeAssignment:
+	GTLEdgeIteratorAttributeAssignmentItr | GTLEdgeIteratorAttributeAssignmentNode
+;
+	
+GTLEdgeIteratorAttributeAssignmentItr:
+ 	iteratorAttribute=GTLEdgeIteratorAttributeExpression ':=' value=ValueExpression
+;
+	
+GTLEdgeIteratorAttributeAssignmentNode:
+ 	nodeAttribute=NodeAttributeExpression ':=' value=ValueExpression
+;
+
+GTLEdgeIteratorReference:
+ 	operator=EdgeIteratorOperator source=[SlimRuleNode|ID] '-' type=[ecore::EReference] '->' target=[GTLEdgeIterator|ID]
+;
+
+enum EdgeIteratorOperator:
+	CREATE = '++' | DELETE = '--'
 ;
