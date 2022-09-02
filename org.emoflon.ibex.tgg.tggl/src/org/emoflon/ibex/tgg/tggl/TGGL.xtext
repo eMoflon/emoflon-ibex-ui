@@ -109,7 +109,7 @@ TGGRule:
 		sourceRule = SlimRule 
 	'}')? 	
 	
-	('#''arget' '{'
+	('#''target' '{'
 		targetRule = SlimRule 
 	'}')? 
 	
