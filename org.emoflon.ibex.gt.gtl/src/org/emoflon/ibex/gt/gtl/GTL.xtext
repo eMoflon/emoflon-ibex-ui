@@ -13,6 +13,11 @@ EditorFile:
 	rules += SlimRule
 ;
 
+
+PackageDeclaration:
+	'package' name = QualifiedName
+;
+
 PatternImport : 
 	'from' file = StringLiteral 'import' ('*' | pattern = [SlimRule|ID])
 ;
@@ -22,24 +27,21 @@ SlimRule:
 	(abstract?='abstract')? 
 	type = GTLType 
 	name = ID 
-	('(' parameters+=GTLRuleParameter (',' parameters+=GTLRuleParameter)* ')')? 
+	('(' parameters+=SlimParameter (',' parameters+=SlimParameter)* ')')? 
 	(refinement=GTLRuleRefinement)? 
 	'{'
-			(contextNodes += SlimRuleNodeContext |
-			createdNodes += SlimRuleNodeCreation |
-			deletedNodes += GTLRuleNodeDeletion |
+			(contextNodes += SlimRuleNodeContext 		|
+			createdNodes += SlimRuleNodeCreation 		|
+			deletedNodes += GTLRuleNodeDeletion 		|
 			atrConditions += SlimRuleAttributeCondition |
-			watchDogs += GTLRuleWatchDogs |
-			invocations += GTLInvocation)
-	'}' (stochastic ?='@' probability = ValueExpression)?
+			//watchDogs += GTLRuleWatchDogs 				|
+			invocations += SlimRuleInvocation)
+	'}' 
+	(stochastic ?='@' probability = ValueExpression)?
 ;
 
 enum GTLType :
 	PATTERN = 'pattern' | RULE = 'rule'
-;
-
-GTLRuleParameter:
-  name=ID ':' type=[ecore::EDataType]
 ;
 
 GTLRuleRefinement:
@@ -75,15 +77,7 @@ ExpressionOperand:
 ;
 
 ParameterExpression:
-	parameter = [GTLRuleParameter|ID]
-;
-
-GTLInvocation :
-	type=GTLInvocationType supportPattern=[SlimRule|ID] (mappings=SlimRuleNodeMappings)?
-;
-
-enum GTLInvocationType :
-	POSITIVE = 'enforce' | NEGATIVE = 'forbid'
+	parameter = [slimGT::SlimParameter|ID]
 ;
 
 GTLEdgeIterator:

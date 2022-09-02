@@ -1,4 +1,4 @@
-module org.emoflon.ibex.gt.gtl.GenerateGTL
+module org.emoflon.ibex.tgg.tggl.GenerateTGGL
 
 import org.eclipse.xtext.xtext.generator.*
 import org.eclipse.xtext.xtext.generator.model.project.*
@@ -18,7 +18,7 @@ Workflow {
 	component = XtextGenerator {
 		configuration = {
 			project = StandardProjectConfig {
-				baseName = "org.emoflon.ibex.gt.gtl"
+				baseName = "org.emoflon.ibex.tgg.tggl"
 				rootPath = rootPath
 				eclipsePlugin = {
 					enabled = true
@@ -33,9 +33,9 @@ Workflow {
 			}
 		}
 		language = StandardLanguage {
-			name = "org.emoflon.ibex.gt.gtl.GTL"
-			fileExtensions = "gtl"
-
+			name = "org.emoflon.ibex.tgg.tggl.TGGL"
+			fileExtensions = "tggl"
+			
 			referencedResource = "platform:/resource/org.emoflon.ibex.common.slimgt/model/generated/SlimGT.genmodel"
 
 			serializer = {

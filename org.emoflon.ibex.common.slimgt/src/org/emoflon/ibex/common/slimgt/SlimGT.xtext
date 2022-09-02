@@ -5,12 +5,7 @@ import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 generate slimGT "http://www.emoflon.org/ibex/common/slimgt/SlimGT"
 
 EditorFile:
-	package = PackageDeclaration
 	imports += Import
-;
-
-PackageDeclaration:
-	'package' name = QualifiedName
 ;
 
 Import:
@@ -48,7 +43,7 @@ SlimRuleEdgeCreation:
 ;
 
 SlimRuleEdge:
-	SlimRuleSimpleEdge | SlimRuleTransitiveEdge
+	SlimRuleSimpleEdge //| SlimRuleTransitiveEdge
 ;
 
 SlimRuleSimpleEdge returns SlimRuleEdge: {SlimRuleSimpleEdge}
@@ -76,12 +71,24 @@ enum RelationalOperator:
   SMALLER='<'
 ;
 
+SlimParameter:
+  name=ID ':' (type = [ecore::EDataType | QualifiedName])
+;
+
 SlimRuleNodeMapping:
 	srcNode = [SlimRuleNode|ID] '=' trgNode = [SlimRuleNode|ID]
 ;
 
 SlimRuleNodeMappings:
 	'['mappings+=SlimRuleNodeMapping (',' mappings+=SlimRuleNodeMapping)*']'
+;
+
+SlimRuleInvocation :
+	type=SlimRuleInvocationType supportPattern=[SlimRule|ID] (mappings=SlimRuleNodeMappings)?
+;
+
+enum SlimRuleInvocationType :
+	POSITIVE = 'enforce' | NEGATIVE = 'forbid'
 ;
 
 ValueExpression:

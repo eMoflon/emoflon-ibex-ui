@@ -1,0 +1,130 @@
+grammar org.emoflon.ibex.tgg.tggl.TGGL with org.emoflon.ibex.common.slimgt.SlimGT
+
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+import "http://www.emoflon.org/ibex/common/slimgt/SlimGT" as slimGT
+
+generate tGGL "http://www.emoflon.org/ibex/tgg/tggl/TGGL"
+
+@Override
+EditorFile:
+	imports += Import
+	using += Using
+	(schema = Schema)?
+  	rules += TGGRule
+  	(library = AttributeConditionDefinitionLibrary)?
+;
+
+Using:
+	'#''using' importedNamespace = QualifiedNameWithWildcard
+;
+
+QualifiedNameWithWildcard:
+	QualifiedName '.*'
+;
+
+/* ---------- */
+/*   SCHEMA   */
+/* ---------- */
+
+Schema:
+	'#''schema' name = QualifiedName
+		
+	('#''source' '{'
+		sourceTypes += [ecore::EPackage | QualifiedName]
+	'}')? 
+	
+	('#''target' '{'
+		targetTypes += [ecore::EPackage | QualifiedName]
+	'}')? 
+
+	('#''correspondence' '{'
+		correspondenceTypes += CorrespondenceType
+	'}')?	
+	
+	('#''attributeConditions' '{'
+		attributeCondDefs += AttributeConditionDefinition
+	'}')? 
+;
+
+AttributeConditionDefinition:
+	(userDefined ?= '#userDefined')? 
+	name = ID '(' params += SlimParameter (',' params += SlimParameter)* ')' 
+	'{'
+		'#''sync' 
+		'{'
+			allowedSyncBindings += Binding (',' allowedSyncBindings += Binding)*
+		'}'
+		('#''gen'
+		'{'
+			allowedGenBindings += Binding (',' allowedGenBindings += Binding )*
+		'}'
+		)?
+	'}'
+;
+
+Binding:
+	'[' value += ('B'|'F')+ ']'
+;
+
+AttributeConditionDefinitionLibrary:
+	'#''library' name = QualifiedName
+	'{'
+		attributeCondDefs += AttributeConditionDefinition
+	'}'
+;
+
+CorrespondenceType:
+	name = ID ('#''extends' super=[CorrespondenceType]) | ('{'
+		'#''src->' source = [ecore::EClass | QualifiedName]  
+		'#''trg->' target = [ecore::EClass | QualifiedName]
+	'}')
+;
+
+AttributeCondition:
+	name = [AttributeConditionDefinition] 
+	'(' values += (LocalVariable | ExpressionOperand) 
+		(',' values += (LocalVariable | ExpressionOperand))* ')'
+;
+
+@Override
+ExpressionOperand:
+	operand = (NodeAttributeExpression | ArithmeticLiteral | EnumExpression | Constant)
+;
+
+LocalVariable:
+	name = ID
+;
+
+/* ------------- */
+/*   TGG RULES   */
+/* ------------- */
+
+TGGRule:
+	(abstract ?= '#abstract')? 
+	'#''rule' name = ID 
+	('#''extends' supertypes += [TGGRule] (',' supertypes += [TGGRule])*)? 
+	'#''with' schema = [Schema | QualifiedName]
+		
+	('#''source' '{'
+		sourceRule = SlimRule 
+	'}')? 	
+	
+	('#''arget' '{'
+		targetRule = SlimRule 
+	'}')? 
+	
+	('#''correspondence' '{'
+		correspondenceNodes += CorrespondenceNode	
+	'}')? 
+
+	('#''attributeConditions' '{'
+		attrConditions += AttributeCondition
+	'}')? 
+;
+
+CorrespondenceNode:
+	(created ?= '++')? name = ID ':' type = [CorrespondenceType | QualifiedName] '{'
+		'#''src->' source = [slimGT::SlimRuleNode|ID]
+		'#''trg->' target = [slimGT::SlimRuleNode|ID]
+	'}' 
+;
