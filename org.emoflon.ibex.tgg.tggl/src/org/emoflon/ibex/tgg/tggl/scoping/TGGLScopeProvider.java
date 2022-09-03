@@ -3,13 +3,23 @@
  */
 package org.emoflon.ibex.tgg.tggl.scoping;
 
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.xtext.scoping.IScope;
 
 /**
  * This class contains custom scoping description.
  * 
- * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#scoping
+ * See
+ * https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#scoping
  * on how and when to use it.
  */
 public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
+
+	@Override
+	public IScope getScopeInternal(EObject context, EReference reference) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

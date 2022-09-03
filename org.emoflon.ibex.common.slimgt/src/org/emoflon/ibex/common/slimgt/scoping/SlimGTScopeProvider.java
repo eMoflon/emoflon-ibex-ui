@@ -3,13 +3,29 @@
  */
 package org.emoflon.ibex.common.slimgt.scoping;
 
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.xtext.scoping.IScope;
 
 /**
  * This class contains custom scoping description.
  * 
- * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#scoping
+ * See
+ * https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#scoping
  * on how and when to use it.
  */
-public class SlimGTScopeProvider extends AbstractSlimGTScopeProvider {
+public abstract class SlimGTScopeProvider extends AbstractSlimGTScopeProvider {
+	@Override
+	public IScope getScope(EObject context, EReference reference) {
+		if (context == null)
+			return IScope.NULLSCOPE;
+		try {
+			return getScopeInternal(context, reference);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return IScope.NULLSCOPE;
+		}
+	}
 
+	public abstract IScope getScopeInternal(EObject context, EReference reference) throws Exception;
 }

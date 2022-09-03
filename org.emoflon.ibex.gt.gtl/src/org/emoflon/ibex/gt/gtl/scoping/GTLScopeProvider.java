@@ -3,13 +3,180 @@
  */
 package org.emoflon.ibex.gt.gtl.scoping;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.scoping.IScope;
+import org.eclipse.xtext.scoping.Scopes;
+import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
+import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtils;
+import org.emoflon.ibex.gt.gtl.gTL.EditorFile;
+import org.emoflon.ibex.gt.gtl.gTL.PatternImport;
+import org.emoflon.ibex.gt.gtl.gTL.impl.EditorFileImpl;
 
 /**
  * This class contains custom scoping description.
  * 
- * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#scoping
+ * See
+ * https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#scoping
  * on how and when to use it.
  */
 public class GTLScopeProvider extends AbstractGTLScopeProvider {
 
+	protected Map<Resource, Map<URI, Resource>> resourceCache = new HashMap<>();
+
+	protected Resource loadResource(final Resource requester, final URI gtModelUri) {
+		Map<URI, Resource> cache = resourceCache.get(requester);
+		if (cache == null) {
+			cache = new HashMap<>();
+			resourceCache.put(requester, cache);
+		}
+
+		Resource other = cache.get(gtModelUri);
+		if (other == null) {
+			XtextResourceSet rs = new XtextResourceSet();
+			try {
+				other = rs.getResource(gtModelUri, true);
+			} catch (Exception e) {
+				return other;
+			}
+			cache.put(gtModelUri, other);
+
+			if (other == null)
+				return other;
+
+			EcoreUtil2.resolveLazyCrossReferences(other, () -> false);
+		}
+
+		return other;
+	}
+
+	@Override
+	public IScope getScopeInternal(EObject context, EReference reference) throws Exception {
+		if (GTLScopeUtil.isPatternImportPattern(context, reference)) {
+			return scopeForPatternImportPattern((PatternImport) context, reference);
+		} else {
+			return super.getScope(context, reference);
+		}
+	}
+
+	protected IScope scopeForPatternImportPattern(PatternImport context, EReference reference) {
+		if (context == null || context.getFile() == null || context.getFile().getValue() == null
+				|| context.getFile().getValue().isBlank())
+			return IScope.NULLSCOPE;
+
+		Resource resource = null;
+		String currentImport = context.getFile().getValue().replace("\"", "");
+		File importFile = new File(currentImport);
+		if (importFile.exists() && importFile.isFile() && importFile.isAbsolute()) {
+			URI gtModelUri = URI.createFileURI(currentImport);
+			resource = loadResource(context.eResource(), gtModelUri);
+			if (resource == null)
+				return IScope.NULLSCOPE;
+		} else {
+			// 1. Case: package name
+			if (!(currentImport.contains("/") || currentImport.contains("\\"))) {
+				IProject currentProject = SlimGTWorkspaceUtils.getCurrentProject(context.eResource());
+
+				String currentFile = context.eResource().getURI().toString().replace("platform:/resource/", "")
+						.replace(currentProject.getName(), "");
+				currentFile = currentProject.getLocation().toPortableString() + currentFile;
+				currentFile = currentFile.replace("/", "\\");
+
+				IWorkspace ws = ResourcesPlugin.getWorkspace();
+				for (IProject project : ws.getRoot().getProjects()) {
+					try {
+						if (!project.hasNature("org.emoflon.ibex.gt.gtl.ui.nature"))
+							continue;
+					} catch (CoreException e) {
+						continue;
+					}
+
+					File projectFile = new File(project.getLocation().toPortableString());
+					List<File> gtFiles = new LinkedList<>();
+					SlimGTWorkspaceUtils.gatherFilesWithEnding(gtFiles, projectFile, ".gtl", true);
+
+					for (File gtFile : gtFiles) {
+						URI gtModelUri;
+						try {
+							gtModelUri = URI.createFileURI(gtFile.getCanonicalPath());
+						} catch (IOException e) {
+							continue;
+						}
+
+						String fileString = gtModelUri.toFileString();
+
+						if (fileString.equals(currentFile))
+							continue;
+
+						resource = loadResource(context.eResource(), gtModelUri);
+						if (resource == null)
+							continue;
+
+						EObject gtModel = resource.getContents().get(0);
+
+						if (gtModel == null)
+							continue;
+
+						if (gtModel instanceof EditorFile gipsEditorFile) {
+							if (gipsEditorFile.getPackage().getName().equals(context.getFile())) {
+								break;
+							}
+						}
+						resource = null;
+					}
+
+					if (resource != null)
+						break;
+				}
+			} else { // 2. Case: relative path
+				IProject currentProject = SlimGTWorkspaceUtils.getCurrentProject(context.eResource());
+				if (currentProject == null)
+					return IScope.NULLSCOPE;
+
+				String absolutePath = null;
+				try {
+					absolutePath = Paths.get(currentProject.getLocation().toPortableString())
+							.resolve(Paths.get(currentImport)).toFile().getCanonicalPath();
+				} catch (IOException e) {
+					return IScope.NULLSCOPE;
+				}
+				URI gtModelUri = URI.createFileURI(absolutePath);
+				resource = loadResource(context.eResource(), gtModelUri);
+				if (resource == null)
+					return IScope.NULLSCOPE;
+			}
+		}
+
+		Set<String> allPatterns = new HashSet<>();
+		EditorFile currentFile = SlimGTModelUtil.getContainer(context, EditorFileImpl.class);
+		currentFile.getRules().forEach(p -> allPatterns.add(p.getName()));
+
+		EcoreUtil2.resolveLazyCrossReferences(resource, () -> false);
+		EObject gtModel = resource.getContents().get(0);
+		if (gtModel instanceof EditorFile gtlFile) {
+			return Scopes.scopeFor(gtlFile.getRules().stream().filter(p -> !allPatterns.contains(p.getName()))
+					.collect(Collectors.toList()));
+		} else {
+			return IScope.NULLSCOPE;
+		}
+	}
 }
