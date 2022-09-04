@@ -36,4 +36,5 @@ public final class SlimGTEMFUtils {
 		}
 		return metamodel;
 	}
+
 }

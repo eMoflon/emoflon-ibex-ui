@@ -6,6 +6,7 @@ package org.emoflon.ibex.gt.gtl.scoping;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -29,7 +30,9 @@ import org.eclipse.xtext.scoping.Scopes;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
 import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtils;
 import org.emoflon.ibex.gt.gtl.gTL.EditorFile;
+import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinement;
 import org.emoflon.ibex.gt.gtl.gTL.PatternImport;
+import org.emoflon.ibex.gt.gtl.gTL.SlimRule;
 import org.emoflon.ibex.gt.gtl.gTL.impl.EditorFileImpl;
 
 /**
@@ -69,10 +72,69 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 		return other;
 	}
 
+	public Collection<SlimRule> getAllRulesInScope(EditorFile ef) {
+		Set<SlimRule> ruleSet = new HashSet<>();
+		ef.getImportedPatterns().forEach(pi -> ruleSet.add(pi.getPattern()));
+		ruleSet.addAll(ef.getRules());
+
+		IProject currentProject = SlimGTWorkspaceUtils.getCurrentProject(ef.eResource());
+		String currentFile = ef.eResource().getURI().toString().replace("platform:/resource/", "")
+				.replace(currentProject.getName(), "");
+		currentFile = currentProject.getLocation().toPortableString() + currentFile;
+		currentFile = currentFile.replace("/", "\\");
+
+		IWorkspace ws = ResourcesPlugin.getWorkspace();
+		for (IProject project : ws.getRoot().getProjects()) {
+			try {
+				if (!project.hasNature("org.emoflon.ibex.gt.gtl.ui.nature"))
+					continue;
+			} catch (CoreException e) {
+				continue;
+			}
+
+			File projectFile = new File(project.getLocation().toPortableString());
+			List<File> gtFiles = new LinkedList<>();
+			SlimGTWorkspaceUtils.gatherFilesWithEnding(gtFiles, projectFile, ".gtl", true);
+
+			for (File gtFile : gtFiles) {
+				URI gtModelUri;
+				try {
+					gtModelUri = URI.createFileURI(gtFile.getCanonicalPath());
+				} catch (IOException e) {
+					continue;
+				}
+
+				String fileString = gtModelUri.toFileString();
+
+				if (fileString.equals(currentFile))
+					continue;
+
+				Resource resource = loadResource(ef.eResource(), gtModelUri);
+				if (resource == null)
+					continue;
+
+				EObject gtlModel = resource.getContents().get(0);
+
+				if (gtlModel == null)
+					continue;
+
+				if (gtlModel instanceof EditorFile otherEditorFile) {
+					if (otherEditorFile.getPackage().getName().equals(ef.getPackage().getName())) {
+						ruleSet.addAll(otherEditorFile.getRules());
+					}
+				}
+			}
+		}
+
+		return ruleSet;
+	}
+
 	@Override
 	public IScope getScopeInternal(EObject context, EReference reference) throws Exception {
 		if (GTLScopeUtil.isPatternImportPattern(context, reference)) {
 			return scopeForPatternImportPattern((PatternImport) context, reference);
+		} else if (GTLScopeUtil.isGTLRuleRefinementRule(context, reference)) {
+			return scopeForRuleRefinementRule((GTLRuleRefinement) context, reference);
 		} else {
 			return super.getScope(context, reference);
 		}
@@ -131,13 +193,13 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 						if (resource == null)
 							continue;
 
-						EObject gtModel = resource.getContents().get(0);
+						EObject gtlModel = resource.getContents().get(0);
 
-						if (gtModel == null)
+						if (gtlModel == null)
 							continue;
 
-						if (gtModel instanceof EditorFile gipsEditorFile) {
-							if (gipsEditorFile.getPackage().getName().equals(context.getFile())) {
+						if (gtlModel instanceof EditorFile otherEditorFile) {
+							if (otherEditorFile.getPackage().getName().equals(context.getFile())) {
 								break;
 							}
 						}
@@ -179,4 +241,10 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 			return IScope.NULLSCOPE;
 		}
 	}
+
+	protected IScope scopeForRuleRefinementRule(GTLRuleRefinement context, EReference reference) {
+		EditorFile currentFile = SlimGTModelUtil.getContainer(context, EditorFileImpl.class);
+		return Scopes.scopeFor(getAllRulesInScope(currentFile));
+	}
+
 }

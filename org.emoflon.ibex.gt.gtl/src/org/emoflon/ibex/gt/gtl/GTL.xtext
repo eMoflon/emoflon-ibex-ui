@@ -40,6 +40,11 @@ SlimRule:
 	(stochastic ?='@' probability = ValueExpression)?
 ;
 
+@Override
+SlimParameter:
+  name=ID ':' (type = [ecore::EDataType])
+;
+
 enum GTLType :
 	PATTERN = 'pattern' | RULE = 'rule'
 ;
