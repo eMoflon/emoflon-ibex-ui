@@ -98,6 +98,14 @@ LocalVariable:
 /* ------------- */
 /*   TGG RULES   */
 /* ------------- */
+@Override
+SlimRuleNode:
+	name = ID ':' type=[ecore::EClass | QualifiedName] ('{'
+		(contextEdges += SlimRuleEdgeContext |
+		createdEdges += SlimRuleEdgeCreation |
+		assignments += SlimRuleAttributeAssignment)
+	'}')?
+;
 
 TGGRule:
 	(abstract ?= '#abstract')? 
@@ -124,7 +132,7 @@ TGGRule:
 
 CorrespondenceNode:
 	(created ?= '++')? name = ID ':' type = [CorrespondenceType | QualifiedName] '{'
-		'#''src->' source = [slimGT::SlimRuleNode|ID]
-		'#''trg->' target = [slimGT::SlimRuleNode|ID]
+		'#''src->' source = [SlimRuleNode|ID]
+		'#''trg->' target = [SlimRuleNode|ID]
 	'}' 
 ;

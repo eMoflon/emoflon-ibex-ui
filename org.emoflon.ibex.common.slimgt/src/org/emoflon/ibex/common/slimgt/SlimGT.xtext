@@ -27,7 +27,7 @@ SlimRuleNodeCreation:
 ;
 
 SlimRuleNode:
-	name = ID ':' type=[ecore::EClass | QualifiedName] ('{'
+	name = ID ':' type=[ecore::EClass] ('{'
 		(contextEdges += SlimRuleEdgeContext |
 		createdEdges += SlimRuleEdgeCreation |
 		assignments += SlimRuleAttributeAssignment)

@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.EcoreUtil2;
@@ -36,7 +37,7 @@ public final class SlimGTModelUtil {
 	/**
 	 * Returns all EDataTypes imported into the given file.
 	 * 
-	 * @param file the GT file
+	 * @param file the SlimGT file
 	 */
 	public static Collection<EDataType> getDatatypes(final EditorFile file) {
 		return file.getImports().stream().map(i -> {
@@ -47,6 +48,23 @@ public final class SlimGTModelUtil {
 			}
 		}).filter(model -> model.isPresent())
 				.flatMap(model -> getElements((EObject) model.get(), EDataType.class).stream())
+				.collect(Collectors.toSet());
+	}
+
+	/**
+	 * Returns all EClasses imported into the given file.
+	 * 
+	 * @param file the SlimGT file
+	 */
+	public static Collection<EClass> getClasses(final EditorFile file) {
+		return file.getImports().stream().map(i -> {
+			try {
+				return Optional.of(SlimGTEMFUtils.loadMetamodel(i.getName()));
+			} catch (Exception e) {
+				return Optional.empty();
+			}
+		}).filter(model -> model.isPresent())
+				.flatMap(model -> getElements((EObject) model.get(), EClass.class).stream())
 				.collect(Collectors.toSet());
 	}
 }
