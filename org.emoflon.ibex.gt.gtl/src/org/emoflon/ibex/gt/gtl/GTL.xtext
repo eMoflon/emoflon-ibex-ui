@@ -78,11 +78,11 @@ GTLRuleWatchDogs:
 
 @Override
 ExpressionOperand:
-	operand = (NodeAttributeExpression | CountExpression | ArithmeticLiteral | EnumExpression | ParameterExpression | Constant)
+	operand = (NodeAttributeExpression | CountExpression | ArithmeticLiteral | EnumExpression | GTLParameterExpression | Constant)
 ;
 
-ParameterExpression:
-	parameter = [slimGT::SlimParameter|ID]
+GTLParameterExpression:
+	'param' '::' parameter = [slimGT::SlimParameter|ID]
 ;
 
 GTLEdgeIterator:
@@ -92,7 +92,7 @@ GTLEdgeIterator:
 ;
 
 GTLEdgeIteratorAttributeExpression:
-	'iterator::' iterator=[GTLEdgeIterator] '.' attribute=[ecore::EAttribute];
+	'iterator' '::' iterator=[GTLEdgeIterator] '.' attribute=[ecore::EAttribute];
 
 GTLEdgeIteratorAttributeAssignment:
 	GTLEdgeIteratorAttributeAssignmentItr | GTLEdgeIteratorAttributeAssignmentNode

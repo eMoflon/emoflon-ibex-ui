@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.EcoreUtil2;
 import org.emoflon.ibex.common.slimgt.slimGT.EditorFile;
@@ -65,6 +66,22 @@ public final class SlimGTModelUtil {
 			}
 		}).filter(model -> model.isPresent())
 				.flatMap(model -> getElements((EObject) model.get(), EClass.class).stream())
+				.collect(Collectors.toSet());
+	}
+
+	/**
+	 * Returns all Enums imported into the given file.
+	 * 
+	 * @param file the GT file
+	 */
+	public static Collection<EEnum> getEnums(final EditorFile file) {
+		return file.getImports().stream().map(i -> {
+			try {
+				return Optional.of(SlimGTEMFUtils.loadMetamodel(i.getName()));
+			} catch (Exception e) {
+				return Optional.empty();
+			}
+		}).filter(model -> model.isPresent()).flatMap(model -> getElements((EObject) model.get(), EEnum.class).stream())
 				.collect(Collectors.toSet());
 	}
 }

@@ -8,6 +8,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import org.emoflon.ibex.common.slimgt.slimGT.EditorFile;
+import org.emoflon.ibex.common.slimgt.slimGT.EnumExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimParameter;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode;
@@ -40,6 +41,8 @@ public class SlimGTScopeProvider extends AbstractSlimGTScopeProvider {
 			return scopeForSlimRuleNodeType((SlimRuleNode) context, reference);
 		} else if (SlimGTScopeUtil.isSlimRuleEdgeType(context, reference)) {
 			return scopeForSlimEdgeType((SlimRuleEdge) context, reference);
+		} else if (SlimGTScopeUtil.isEnumExpressionLiteral(context, reference)) {
+			return scopeForEnumExpressionLiteral((EnumExpression) context, reference);
 		} else {
 			return super.getScope(context, reference);
 		}
@@ -58,6 +61,11 @@ public class SlimGTScopeProvider extends AbstractSlimGTScopeProvider {
 	protected IScope scopeForSlimEdgeType(SlimRuleEdge context, EReference reference) {
 		SlimRuleNode node = SlimGTModelUtil.getContainer(context, SlimRuleNode.class);
 		return Scopes.scopeFor(node.getType().getEAllReferences());
+	}
+
+	private IScope scopeForEnumExpressionLiteral(EnumExpression context, EReference reference) {
+		EditorFile ef = SlimGTModelUtil.getContainer(context, EditorFile.class);
+		return Scopes.scopeFor(SlimGTModelUtil.getEnums(ef));
 	}
 
 }

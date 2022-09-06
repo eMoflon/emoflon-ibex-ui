@@ -32,6 +32,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMapping;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
 import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtils;
 import org.emoflon.ibex.gt.gtl.gTL.EditorFile;
+import org.emoflon.ibex.gt.gtl.gTL.GTLParameterExpression;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinement;
 import org.emoflon.ibex.gt.gtl.gTL.PatternImport;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRule;
@@ -142,6 +143,8 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 			return scopeForNodeMappingSrc((SlimRuleNodeMapping) context, reference);
 		} else if (GTLScopeUtil.isSlimRuleNodeMappingTrg(context, reference)) {
 			return scopeForNodeMappingTrg((SlimRuleNodeMapping) context, reference);
+		} else if (GTLScopeUtil.isGTLParameterExpressionParameter(context, reference)) {
+			return scopeForParameterExpressionParameter((GTLParameterExpression) context, reference);
 		} else {
 			return super.getScope(context, reference);
 		}
@@ -301,6 +304,14 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 				return IScope.NULLSCOPE;
 			}
 		}
+	}
+
+	protected IScope scopeForParameterExpressionParameter(GTLParameterExpression context, EReference reference) {
+		SlimRule currentRule = SlimGTModelUtil.getContainer(context, SlimRule.class);
+		if (currentRule.getParameters() == null || currentRule.getParameters().size() <= 0)
+			return IScope.NULLSCOPE;
+
+		return Scopes.scopeFor(currentRule.getParameters());
 	}
 
 }
