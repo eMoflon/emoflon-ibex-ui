@@ -27,6 +27,8 @@ import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
+import org.emoflon.ibex.common.slimgt.scoping.SlimGTScopeUtil;
+import org.emoflon.ibex.common.slimgt.slimGT.CountExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMapping;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
@@ -139,12 +141,14 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 			return scopeForPatternImportPattern((PatternImport) context, reference);
 		} else if (GTLScopeUtil.isGTLRuleRefinementRule(context, reference)) {
 			return scopeForRuleRefinementRule((GTLRuleRefinement) context, reference);
-		} else if (GTLScopeUtil.isSlimRuleNodeMappingSrc(context, reference)) {
+		} else if (SlimGTScopeUtil.isSlimRuleNodeMappingSrc(context, reference)) {
 			return scopeForNodeMappingSrc((SlimRuleNodeMapping) context, reference);
-		} else if (GTLScopeUtil.isSlimRuleNodeMappingTrg(context, reference)) {
+		} else if (SlimGTScopeUtil.isSlimRuleNodeMappingTrg(context, reference)) {
 			return scopeForNodeMappingTrg((SlimRuleNodeMapping) context, reference);
 		} else if (GTLScopeUtil.isGTLParameterExpressionParameter(context, reference)) {
 			return scopeForParameterExpressionParameter((GTLParameterExpression) context, reference);
+		} else if (SlimGTScopeUtil.isCountExpressionPattern(context, reference)) {
+			return scopeForCountExpressionPattern((CountExpression) context, reference);
 		} else {
 			return super.getScope(context, reference);
 		}
@@ -267,19 +271,29 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 			allRuleNodes.removeAll(
 					currentRule.getDeletedNodes().stream().map(cn -> cn.getDeletion()).collect(Collectors.toSet()));
 			return Scopes.scopeFor(allRuleNodes);
-		} else {
-			container = SlimGTModelUtil.getContainer(context, SlimRuleInvocation.class);
-			if (container != null && container instanceof SlimRuleInvocation invocation) {
-				Set<SlimRuleNode> allRuleNodes = new HashSet<>();
-				allRuleNodes.addAll(currentRule.getContextNodes().stream().map(cn -> (SlimRuleNode) cn.getContext())
-						.collect(Collectors.toSet()));
-				allRuleNodes.addAll(
-						currentRule.getDeletedNodes().stream().map(cn -> cn.getDeletion()).collect(Collectors.toSet()));
-				return Scopes.scopeFor(allRuleNodes);
-			} else {
-				return IScope.NULLSCOPE;
-			}
 		}
+
+		container = SlimGTModelUtil.getContainer(context, SlimRuleInvocation.class);
+		if (container != null && container instanceof SlimRuleInvocation invocation) {
+			Set<SlimRuleNode> allRuleNodes = new HashSet<>();
+			allRuleNodes.addAll(currentRule.getContextNodes().stream().map(cn -> (SlimRuleNode) cn.getContext())
+					.collect(Collectors.toSet()));
+			allRuleNodes.addAll(
+					currentRule.getDeletedNodes().stream().map(cn -> cn.getDeletion()).collect(Collectors.toSet()));
+			return Scopes.scopeFor(allRuleNodes);
+		}
+
+		container = SlimGTModelUtil.getContainer(context, CountExpression.class);
+		if (container != null && container instanceof CountExpression count) {
+			Set<SlimRuleNode> allRuleNodes = new HashSet<>();
+			allRuleNodes.addAll(currentRule.getContextNodes().stream().map(cn -> (SlimRuleNode) cn.getContext())
+					.collect(Collectors.toSet()));
+			allRuleNodes.addAll(
+					currentRule.getDeletedNodes().stream().map(cn -> cn.getDeletion()).collect(Collectors.toSet()));
+			return Scopes.scopeFor(allRuleNodes);
+		}
+
+		return IScope.NULLSCOPE;
 	}
 
 	protected IScope scopeForNodeMappingTrg(SlimRuleNodeMapping context, EReference reference) {
@@ -294,16 +308,23 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 			allRuleNodes.addAll(currentRule.getCreatedNodes().stream().map(cn -> (SlimRuleNode) cn.getCreation())
 					.collect(Collectors.toSet()));
 			return Scopes.scopeFor(allRuleNodes);
-		} else {
-			container = SlimGTModelUtil.getContainer(context, SlimRuleInvocation.class);
-			if (container != null && container instanceof SlimRuleInvocation invocation) {
-				SlimRule trgRule = (SlimRule) invocation.getSupportPattern();
-				Collection<SlimRuleNode> allRuleNodes = GTLModelUtil.getAllContextRuleNodes(trgRule);
-				return Scopes.scopeFor(allRuleNodes);
-			} else {
-				return IScope.NULLSCOPE;
-			}
 		}
+
+		container = SlimGTModelUtil.getContainer(context, SlimRuleInvocation.class);
+		if (container != null && container instanceof SlimRuleInvocation invocation) {
+			SlimRule trgRule = (SlimRule) invocation.getSupportPattern();
+			Collection<SlimRuleNode> allRuleNodes = GTLModelUtil.getAllContextRuleNodes(trgRule);
+			return Scopes.scopeFor(allRuleNodes);
+		}
+
+		container = SlimGTModelUtil.getContainer(context, CountExpression.class);
+		if (container != null && container instanceof CountExpression count) {
+			SlimRule trgRule = (SlimRule) count.getInvokedPatten();
+			Collection<SlimRuleNode> allRuleNodes = GTLModelUtil.getAllContextRuleNodes(trgRule);
+			return Scopes.scopeFor(allRuleNodes);
+		}
+
+		return IScope.NULLSCOPE;
 	}
 
 	protected IScope scopeForParameterExpressionParameter(GTLParameterExpression context, EReference reference) {
@@ -314,4 +335,10 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 		return Scopes.scopeFor(currentRule.getParameters());
 	}
 
+	private IScope scopeForCountExpressionPattern(CountExpression context, EReference reference) {
+		EditorFile ef = SlimGTModelUtil.getContainer(context, EditorFile.class);
+		SlimRule rule = SlimGTModelUtil.getContainer(context, SlimRule.class);
+
+		return Scopes.scopeFor(ef.getRules().stream().filter(r -> !r.equals(rule)).collect(Collectors.toList()));
+	}
 }
