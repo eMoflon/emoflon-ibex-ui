@@ -21,6 +21,29 @@ public final class GTLModelUtil {
 		return nodes.values();
 	}
 
+	public static Collection<SlimRuleNode> getAllCreatedAndContextRuleNodes(SlimRule context) {
+		Map<String, SlimRuleNode> nodes = new HashMap<>();
+		getAllCreatedAndContextRuleNodes(context, nodes);
+		return nodes.values();
+	}
+
+	private static void getAllCreatedAndContextRuleNodes(SlimRule root, Map<String, SlimRuleNode> nodes) {
+		root.getContextNodes().stream().map(cn -> (SlimRuleNode) cn.getContext())
+				.forEach(cn -> nodes.put(cn.getName(), cn));
+		root.getCreatedNodes().stream().map(cn -> (SlimRuleNode) cn.getCreation())
+				.forEach(crN -> nodes.put(crN.getName(), crN));
+
+		if (root.getRefinement() != null && root.getRefinement().getSuperRule() != null
+				&& root.getRefinement().getMappings() == null
+				&& root.getRefinement().getMappings().getMappings().size() > 0) {
+			root.getRefinement().getMappings().getMappings().forEach(mapping -> {
+				nodes.remove(mapping.getTrgNode().getName());
+				nodes.put(mapping.getTrgNode().getName(), (SlimRuleNode) mapping.getSrcNode());
+			});
+			getAllCreatedAndContextRuleNodes(root.getRefinement().getSuperRule(), nodes);
+		}
+	}
+
 	private static void getAllContextRuleNodes(SlimRule root, Map<String, SlimRuleNode> nodes) {
 		root.getContextNodes().stream().map(cn -> (SlimRuleNode) cn.getContext())
 				.forEach(cn -> nodes.put(cn.getName(), cn));
@@ -51,7 +74,7 @@ public final class GTLModelUtil {
 				nodes.remove(mapping.getTrgNode().getName());
 				nodes.put(mapping.getTrgNode().getName(), (SlimRuleNode) mapping.getSrcNode());
 			});
-			getAllContextRuleNodes(root.getRefinement().getSuperRule(), nodes);
+			getAllRuleNodes(root.getRefinement().getSuperRule(), nodes);
 		}
 	}
 

@@ -78,7 +78,7 @@ GTLRuleWatchDogs:
 
 @Override
 ExpressionOperand:
-	operand = (NodeAttributeExpression | CountExpression | ArithmeticLiteral | EnumExpression | GTLParameterExpression | Constant)
+	operand = (NodeAttributeExpression | CountExpression | GTLEdgeIteratorAttributeExpression | ArithmeticLiteral | EnumExpression | GTLParameterExpression | Constant)
 ;
 
 GTLParameterExpression:
