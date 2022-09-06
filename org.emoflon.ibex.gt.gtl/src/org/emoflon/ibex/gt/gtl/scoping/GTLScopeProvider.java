@@ -29,6 +29,7 @@ import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import org.emoflon.ibex.common.slimgt.scoping.SlimGTScopeUtil;
 import org.emoflon.ibex.common.slimgt.slimGT.CountExpression;
+import org.emoflon.ibex.common.slimgt.slimGT.NodeAttributeExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMapping;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
@@ -149,6 +150,12 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 			return scopeForParameterExpressionParameter((GTLParameterExpression) context, reference);
 		} else if (SlimGTScopeUtil.isCountExpressionPattern(context, reference)) {
 			return scopeForCountExpressionPattern((CountExpression) context, reference);
+		} else if (SlimGTScopeUtil.isNodeAttributeExpressionNode(context, reference)) {
+			return scopeForNodeAttributeExpressionNode((NodeAttributeExpression) context, reference);
+		} else if (SlimGTScopeUtil.isNodeAttributeExpressionFeature(context, reference)) {
+			return scopeForNodeAttributeExpressionFeature((NodeAttributeExpression) context, reference);
+		} else if (SlimGTScopeUtil.isValueOrArithmeticExpression(context)) {
+			return scopeForValueOrArithmeticExpression(context, reference);
 		} else {
 			return super.getScope(context, reference);
 		}
@@ -335,10 +342,24 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 		return Scopes.scopeFor(currentRule.getParameters());
 	}
 
-	private IScope scopeForCountExpressionPattern(CountExpression context, EReference reference) {
+	protected IScope scopeForCountExpressionPattern(CountExpression context, EReference reference) {
 		EditorFile ef = SlimGTModelUtil.getContainer(context, EditorFile.class);
 		SlimRule rule = SlimGTModelUtil.getContainer(context, SlimRule.class);
 
 		return Scopes.scopeFor(ef.getRules().stream().filter(r -> !r.equals(rule)).collect(Collectors.toList()));
+	}
+
+	protected IScope scopeForValueOrArithmeticExpression(EObject context, EReference reference) {
+		SlimRule rule = SlimGTModelUtil.getContainer(context, SlimRule.class);
+		return Scopes.scopeFor(GTLModelUtil.getAllContextRuleNodes(rule));
+	}
+
+	protected IScope scopeForNodeAttributeExpressionFeature(NodeAttributeExpression context, EReference reference) {
+		SlimRule rule = SlimGTModelUtil.getContainer(context, SlimRule.class);
+		return Scopes.scopeFor(GTLModelUtil.getAllContextRuleNodes(rule));
+	}
+
+	protected IScope scopeForNodeAttributeExpressionNode(NodeAttributeExpression context, EReference reference) {
+		return Scopes.scopeFor(context.getNode().getType().getEAllAttributes());
 	}
 }

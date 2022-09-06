@@ -2,13 +2,17 @@ package org.emoflon.ibex.common.slimgt.scoping;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.emoflon.ibex.common.slimgt.slimGT.ArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.CountExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.EnumExpression;
+import org.emoflon.ibex.common.slimgt.slimGT.NodeAttributeExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimParameter;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeAssignment;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMapping;
+import org.emoflon.ibex.common.slimgt.slimGT.ValueExpression;
 
 public final class SlimGTScopeUtil {
 	public static boolean isSlimParameterType(final EObject context, final EReference reference) {
@@ -21,6 +25,11 @@ public final class SlimGTScopeUtil {
 
 	public static boolean isSlimRuleEdgeType(final EObject context, final EReference reference) {
 		return context instanceof SlimRuleEdge && reference == SlimGTPackage.Literals.SLIM_RULE_EDGE__TYPE;
+	}
+
+	public static boolean isSlimRuleAttributeAssignmentType(final EObject context, final EReference reference) {
+		return context instanceof SlimRuleAttributeAssignment
+				&& reference == SlimGTPackage.Literals.SLIM_RULE_ATTRIBUTE_ASSIGNMENT__TYPE;
 	}
 
 	public static boolean isSlimRuleNodeMappingSrc(final EObject context, final EReference reference) {
@@ -40,5 +49,19 @@ public final class SlimGTScopeUtil {
 	public static boolean isCountExpressionPattern(EObject context, EReference reference) {
 		return context instanceof CountExpression
 				&& reference == SlimGTPackage.Literals.COUNT_EXPRESSION__INVOKED_PATTEN;
+	}
+
+	public static boolean isValueOrArithmeticExpression(EObject context) {
+		return context instanceof ValueExpression || context instanceof ArithmeticExpression;
+	}
+
+	public static boolean isNodeAttributeExpressionNode(EObject context, EReference reference) {
+		return context instanceof NodeAttributeExpression
+				&& reference == SlimGTPackage.Literals.NODE_ATTRIBUTE_EXPRESSION__NODE;
+	}
+
+	public static boolean isNodeAttributeExpressionFeature(EObject context, EReference reference) {
+		return context instanceof NodeAttributeExpression
+				&& reference == SlimGTPackage.Literals.NODE_ATTRIBUTE_EXPRESSION__FEATURE;
 	}
 }
