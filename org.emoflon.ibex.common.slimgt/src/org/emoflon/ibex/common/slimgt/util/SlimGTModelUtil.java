@@ -14,7 +14,7 @@ public final class SlimGTModelUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> T getContainer(EObject node, Class<T> clazz) {
 		EObject current = node;
-		while (current != null && !(current.getClass() == clazz)) {
+		while (current != null && !(current.getClass().isInstance(clazz))) {
 			if (node.eContainer() == null)
 				return null;
 

@@ -29,8 +29,6 @@ import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMapping;
-import org.emoflon.ibex.common.slimgt.slimGT.impl.SlimRuleImpl;
-import org.emoflon.ibex.common.slimgt.slimGT.impl.SlimRuleInvocationImpl;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
 import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtils;
 import org.emoflon.ibex.gt.gtl.gTL.EditorFile;
@@ -38,8 +36,6 @@ import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinement;
 import org.emoflon.ibex.gt.gtl.gTL.PatternImport;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRule;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNode;
-import org.emoflon.ibex.gt.gtl.gTL.impl.EditorFileImpl;
-import org.emoflon.ibex.gt.gtl.gTL.impl.GTLRuleRefinementImpl;
 import org.emoflon.ibex.gt.gtl.util.GTLModelUtil;
 
 /**
@@ -240,7 +236,7 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 		}
 
 		Set<String> allPatterns = new HashSet<>();
-		EditorFile currentFile = SlimGTModelUtil.getContainer(context, EditorFileImpl.class);
+		EditorFile currentFile = SlimGTModelUtil.getContainer(context, EditorFile.class);
 		currentFile.getRules().forEach(p -> allPatterns.add(p.getName()));
 
 		EcoreUtil2.resolveLazyCrossReferences(resource, () -> false);
@@ -254,13 +250,13 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 	}
 
 	protected IScope scopeForRuleRefinementRule(GTLRuleRefinement context, EReference reference) {
-		EditorFile currentFile = SlimGTModelUtil.getContainer(context, EditorFileImpl.class);
+		EditorFile currentFile = SlimGTModelUtil.getContainer(context, EditorFile.class);
 		return Scopes.scopeFor(getAllRulesInScope(currentFile));
 	}
 
 	protected IScope scopeForNodeMappingSrc(SlimRuleNodeMapping context, EReference reference) {
-		SlimRule currentRule = (SlimRule) SlimGTModelUtil.getContainer(context, SlimRuleImpl.class);
-		EObject container = SlimGTModelUtil.getContainer(context, GTLRuleRefinementImpl.class);
+		SlimRule currentRule = SlimGTModelUtil.getContainer(context, SlimRule.class);
+		EObject container = SlimGTModelUtil.getContainer(context, GTLRuleRefinement.class);
 		if (container != null && container instanceof GTLRuleRefinement refinement) {
 			Collection<SlimRuleNode> allRuleNodes = GTLModelUtil.getAllRuleNodes(currentRule);
 			allRuleNodes.removeAll(currentRule.getContextNodes().stream().map(cn -> (SlimRuleNode) cn.getContext())
@@ -269,7 +265,7 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 					currentRule.getDeletedNodes().stream().map(cn -> cn.getDeletion()).collect(Collectors.toSet()));
 			return Scopes.scopeFor(allRuleNodes);
 		} else {
-			container = SlimGTModelUtil.getContainer(context, SlimRuleInvocationImpl.class);
+			container = SlimGTModelUtil.getContainer(context, SlimRuleInvocation.class);
 			if (container != null && container instanceof SlimRuleInvocation invocation) {
 				Set<SlimRuleNode> allRuleNodes = new HashSet<>();
 				allRuleNodes.addAll(currentRule.getContextNodes().stream().map(cn -> (SlimRuleNode) cn.getContext())
@@ -284,8 +280,8 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 	}
 
 	protected IScope scopeForNodeMappingTrg(SlimRuleNodeMapping context, EReference reference) {
-		SlimRule currentRule = (SlimRule) SlimGTModelUtil.getContainer(context, SlimRuleImpl.class);
-		EObject container = SlimGTModelUtil.getContainer(context, GTLRuleRefinementImpl.class);
+		SlimRule currentRule = SlimGTModelUtil.getContainer(context, SlimRule.class);
+		EObject container = SlimGTModelUtil.getContainer(context, GTLRuleRefinement.class);
 		if (container != null && container instanceof GTLRuleRefinement refinement) {
 			Set<SlimRuleNode> allRuleNodes = new HashSet<>();
 			allRuleNodes.addAll(currentRule.getContextNodes().stream().map(cn -> (SlimRuleNode) cn.getContext())
@@ -296,7 +292,7 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 					.collect(Collectors.toSet()));
 			return Scopes.scopeFor(allRuleNodes);
 		} else {
-			container = SlimGTModelUtil.getContainer(context, SlimRuleInvocationImpl.class);
+			container = SlimGTModelUtil.getContainer(context, SlimRuleInvocation.class);
 			if (container != null && container instanceof SlimRuleInvocation invocation) {
 				SlimRule trgRule = (SlimRule) invocation.getSupportPattern();
 				Collection<SlimRuleNode> allRuleNodes = GTLModelUtil.getAllContextRuleNodes(trgRule);

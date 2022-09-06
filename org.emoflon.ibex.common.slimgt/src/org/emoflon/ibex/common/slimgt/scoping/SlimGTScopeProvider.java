@@ -9,8 +9,8 @@ import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import org.emoflon.ibex.common.slimgt.slimGT.EditorFile;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimParameter;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode;
-import org.emoflon.ibex.common.slimgt.slimGT.impl.EditorFileImpl;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
 
 /**
@@ -36,21 +36,28 @@ public class SlimGTScopeProvider extends AbstractSlimGTScopeProvider {
 	public IScope getScopeInternal(EObject context, EReference reference) throws Exception {
 		if (SlimGTScopeUtil.isSlimParameterType(context, reference)) {
 			return scopeForParameterType((SlimParameter) context, reference);
-		}
-		if (SlimGTScopeUtil.isSlimRuleNodeType(context, reference)) {
+		} else if (SlimGTScopeUtil.isSlimRuleNodeType(context, reference)) {
 			return scopeForSlimRuleNodeType((SlimRuleNode) context, reference);
+		} else if (SlimGTScopeUtil.isSlimRuleEdgeType(context, reference)) {
+			return scopeForSlimEdgeType((SlimRuleEdge) context, reference);
 		} else {
 			return super.getScope(context, reference);
 		}
 	}
 
 	protected IScope scopeForParameterType(SlimParameter context, EReference reference) {
-		EditorFile ef = SlimGTModelUtil.getContainer(context, EditorFileImpl.class);
+		EditorFile ef = SlimGTModelUtil.getContainer(context, EditorFile.class);
 		return Scopes.scopeFor(SlimGTModelUtil.getDatatypes(ef));
 	}
 
 	protected IScope scopeForSlimRuleNodeType(SlimRuleNode context, EReference reference) {
-		EditorFile ef = SlimGTModelUtil.getContainer(context, EditorFileImpl.class);
+		EditorFile ef = SlimGTModelUtil.getContainer(context, EditorFile.class);
 		return Scopes.scopeFor(SlimGTModelUtil.getClasses(ef));
 	}
+
+	protected IScope scopeForSlimEdgeType(SlimRuleEdge context, EReference reference) {
+		SlimRuleNode node = SlimGTModelUtil.getContainer(context, SlimRuleNode.class);
+		return Scopes.scopeFor(node.getType().getEAllReferences());
+	}
+
 }
