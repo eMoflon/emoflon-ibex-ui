@@ -65,7 +65,11 @@ public class SlimGTScopeProvider extends AbstractSlimGTScopeProvider {
 			return IScope.NULLSCOPE;
 		try {
 			return getScopeInternal(context, reference);
-		} catch (Exception e) {
+		}
+		catch(NullPointerException e) {
+			return IScope.NULLSCOPE;
+		}
+		catch(Exception e) {
 			e.printStackTrace();
 			return IScope.NULLSCOPE;
 		}

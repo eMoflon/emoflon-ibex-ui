@@ -7,6 +7,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.CorrespondenceType;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLPackage;
+import org.emoflon.ibex.tgg.tggl.tGGL.TGGRule;
 
 public class TGGLScopeUtil {
 
@@ -30,5 +31,10 @@ public class TGGLScopeUtil {
 				(reference == SlimGTPackage.Literals.SLIM_RULE_EDGE__TARGET || //
 				reference == TGGLPackage.Literals.CORRESPONDENCE_NODE__SOURCE || //
 				reference == TGGLPackage.Literals.CORRESPONDENCE_NODE__TARGET); //
+	}
+	
+	public static boolean isTGGRuleSuper(EObject context, EReference reference) {
+		return context instanceof TGGRule && //
+				reference == TGGLPackage.Literals.TGG_RULE__SUPERTYPES;
 	}
 }

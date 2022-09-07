@@ -67,10 +67,21 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		if(isEdgeTargetReference(context, reference))
 			return getEdgeTargetReference(context, reference);
 		
+		if(isTGGRuleSuper(context, reference))
+			return getTGGRuleCandidates(context, reference);
 		
 		return null;
 	}
 	
+	private IScope getTGGRuleCandidates(EObject context, EReference reference) {
+		var rule = (TGGRule) context;
+		var rules = getAllRulesInScope(context);
+		
+		// remove self reference
+		rules.remove(rule);
+		return Scopes.scopeFor(rules);
+	}
+
 	private IScope getEdgeTargetReference(EObject context, EReference reference) {
 		switch(getDomainType(context)) {
 		case SOURCE:
@@ -193,7 +204,8 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		return types;
 	}
 
-	public Collection<TGGRule> getAllRulesInScope(EditorFile ef) {
+	public Collection<TGGRule> getAllRulesInScope(EObject obj) {
+		var ef = getContainer(obj, EditorFile.class);
 		Collection<TGGRule> ruleSet = new HashSet<>();
 		ruleSet.addAll(ef.getRules());
 		

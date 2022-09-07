@@ -111,7 +111,6 @@ TGGRule:
 	(abstract ?= '#abstract')? 
 	'#''rule' name = ID 
 	('#''extends' supertypes += [TGGRule] (',' supertypes += [TGGRule])*)? 
-	'#''with' schema = [Schema | QualifiedName]
 		
 	('#''source' '{'
 		sourceRule = SlimRule 
