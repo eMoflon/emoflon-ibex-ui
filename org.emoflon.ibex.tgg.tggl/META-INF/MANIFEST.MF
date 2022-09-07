@@ -14,7 +14,8 @@ Require-Bundle: org.eclipse.xtext,
  org.eclipse.xtext.xbase.lib;bundle-version="2.14.0",
  org.eclipse.xtext.util,
  org.eclipse.emf.common,
- org.antlr.runtime;bundle-version="[3.2.0,3.2.1)"
+ org.antlr.runtime;bundle-version="[3.2.0,3.2.1)",
+ org.eclipse.core.resources
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.emoflon.ibex.tgg.tggl.tGGL.util,
  org.emoflon.ibex.tgg.tggl.generator,

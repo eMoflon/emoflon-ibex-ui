@@ -3,9 +3,42 @@
  */
 package org.emoflon.ibex.tgg.tggl.scoping;
 
+import static org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil.*;
+import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.*;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.scoping.IScope;
+import org.eclipse.xtext.scoping.Scopes;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRule;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeContext;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeCreation;
+import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtils;
+import org.emoflon.ibex.tgg.tggl.tGGL.CorrespondenceNode;
+import org.emoflon.ibex.tgg.tggl.tGGL.EditorFile;
+import org.emoflon.ibex.tgg.tggl.tGGL.Schema;
+import org.emoflon.ibex.tgg.tggl.tGGL.TGGLPackage;
+import org.emoflon.ibex.tgg.tggl.tGGL.TGGRule;
+
 
 /**
  * This class contains custom scoping description.
@@ -14,12 +47,222 @@ import org.eclipse.xtext.scoping.IScope;
  * https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#scoping
  * on how and when to use it.
  */
+enum DomainType{
+	SOURCE, CORRESPONDENCE, TARGET
+}
+
 public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 
+	
 	@Override
 	public IScope getScopeInternal(EObject context, EReference reference) throws Exception {
-		// TODO Auto-generated method stub
+		if(isNodeType(context, reference)) 
+			return getTypes(context, reference, getDomainType(context));
+		
+		if(isCorrespondenceSourceType(context, reference))
+			return getTypes(context, reference, DomainType.SOURCE);
+		if(isCorrespondenceSourceType(context, reference))
+			return getTypes(context, reference, DomainType.TARGET);
+		
+		if(isEdgeTargetReference(context, reference))
+			return getEdgeTargetReference(context, reference);
+		
+		
 		return null;
 	}
+	
+	private IScope getEdgeTargetReference(EObject context, EReference reference) {
+		switch(getDomainType(context)) {
+		case SOURCE:
+			return Scopes.scopeFor(getTargetNodes(context, reference, DomainType.SOURCE));
+		case CORRESPONDENCE:
+			return Scopes.scopeFor(getTargetNodes(context, reference, DomainType.CORRESPONDENCE));
+		case TARGET:
+			return Scopes.scopeFor(getTargetNodes(context, reference, DomainType.TARGET));
+		}
+		throw new RuntimeException("Could not resolve edge targets for " + context);
+	}
+	
+	private Collection<EObject> getTargetNodes(EObject context, EReference reference, DomainType domain) {
+		var rule = getContainer(context, TGGRule.class);
+		Set<EObject> nodes = new HashSet<EObject>();
+		var ruleCandidates = new HashSet<TGGRule>();
+		ruleCandidates.add(rule);
+		
+		// find all nodes in each TGG rule that is refined
+		while(!ruleCandidates.isEmpty()) {
+			var currentRule = ruleCandidates.iterator().next();
+			ruleCandidates.remove(currentRule);
+			ruleCandidates.addAll(currentRule.getSupertypes());
+			
+			switch(domain) {
+			case SOURCE:
+				nodes.addAll(getSlimRuleNodesFromContext(rule.getSourceRule().getContextNodes()));
+				nodes.addAll(getSlimRuleNodesFromCreation(rule.getSourceRule().getCreatedNodes()));
+				break;
+			case CORRESPONDENCE:
+				if(reference == TGGLPackage.Literals.CORRESPONDENCE_NODE__SOURCE) {
+					nodes.addAll(getSlimRuleNodesFromContext(rule.getSourceRule().getContextNodes()));
+					nodes.addAll(getSlimRuleNodesFromCreation(rule.getSourceRule().getCreatedNodes()));
+				}
+				if(reference == TGGLPackage.Literals.CORRESPONDENCE_NODE__TARGET) {
+					nodes.addAll(getSlimRuleNodesFromContext(rule.getTargetRule().getContextNodes()));
+					nodes.addAll(getSlimRuleNodesFromCreation(rule.getTargetRule().getCreatedNodes()));
+				}
+				break;
+			case TARGET:
+				nodes.addAll(getSlimRuleNodesFromContext(rule.getTargetRule().getContextNodes()));
+				nodes.addAll(getSlimRuleNodesFromCreation(rule.getTargetRule().getCreatedNodes()));
+				break;
+			}
+		}
+		
+		// only allow elements with a matching type
+		EClass targetType = null;
+		if(context instanceof SlimRuleEdge edge) {
+			targetType = (EClass) edge.getType().getEType();
+		}
+		else if(context instanceof CorrespondenceNode correspondence) {
+			if(reference == TGGLPackage.Literals.CORRESPONDENCE_NODE__SOURCE) 
+				targetType = correspondence.getType().getSource();
+			if(reference == TGGLPackage.Literals.CORRESPONDENCE_NODE__TARGET) 
+				targetType = correspondence.getType().getTarget();
 
+		} else 
+			throw new RuntimeException("Cannot resolve type for context element " + context);
+		
+		final EClass finalTargetType = targetType;
+		nodes = nodes.parallelStream() //
+				.filter(n -> finalTargetType.isSuperTypeOf(n.eClass())) //
+				.collect(Collectors.toSet()); //
+		
+		return nodes;
+	}
+	
+	private Collection<SlimRuleNode> getSlimRuleNodesFromContext(Collection<SlimRuleNodeContext> contextElements) {
+		return contextElements.stream().map(c -> c.getContext()).toList();
+	}
+
+	private Collection<SlimRuleNode> getSlimRuleNodesFromCreation(Collection<SlimRuleNodeCreation> createdElements) {
+		return createdElements.stream().map(c -> c.getCreation()).toList();
+	}
+	
+	private DomainType getDomainType(EObject context) {
+		var tggRule = getContainer(context, TGGRule.class);
+		var rule = getContainer(context, SlimRule.class);
+		if(rule != null) {
+			if(tggRule.getSourceRule().equals(rule)) 
+				return DomainType.SOURCE;
+			if(tggRule.getTargetRule().equals(rule)) 
+				return DomainType.TARGET;
+		}
+		
+		// else it must be a correspondence node
+		if(tggRule.getCorrespondenceNodes().contains(context)) {
+			return DomainType.CORRESPONDENCE;
+		}
+		
+		throw new RuntimeException("Could not identify domain of element " + context);
+	}
+
+	private IScope getTypes(EObject context, EReference reference, DomainType domain) {
+		var schema = getSchemaInScope(context);
+
+		switch(domain) {
+		case SOURCE:
+			return Scopes.scopeFor(getTypes(schema.getSourceTypes()));
+		case CORRESPONDENCE:
+			return Scopes.scopeFor(schema.getCorrespondenceTypes());
+		case TARGET:
+			return Scopes.scopeFor(getTypes(schema.getTargetTypes()));
+		}
+		return IScope.NULLSCOPE;
+	}
+
+	public Collection<EClass> getTypes(Collection<EPackage> packages) {
+		var types = new HashSet<EClass>();
+		var packageCandidates = new HashSet<EPackage>(packages);
+		while(!packageCandidates.isEmpty()) {
+			var pkg = packageCandidates.iterator().next();
+			packageCandidates.remove(pkg);
+			for(var classifier : pkg.getEClassifiers()) {
+				if(classifier instanceof EClass eClass && !eClass.isAbstract())
+					types.add(eClass);
+			}
+		}
+		return types;
+	}
+
+	public Collection<TGGRule> getAllRulesInScope(EditorFile ef) {
+		Collection<TGGRule> ruleSet = new HashSet<>();
+		ruleSet.addAll(ef.getRules());
+		
+		for(var file : getAllFilesInScope(ef)) {
+			ruleSet.addAll(file.getRules());
+		}
+		return ruleSet;
+	}
+	
+	public Schema getSchemaInScope(EObject obj) {
+		var editorFile = getContainer(obj, EditorFile.class);
+		for(var file : getAllFilesInScope(editorFile)) {
+			if(file.getSchema() != null)
+				return file.getSchema();
+		}
+		return null;
+	}
+	
+	public Collection<EditorFile> getAllFilesInScope(EObject obj) {
+		var editorFile = getContainer(obj, EditorFile.class);
+		Collection<EditorFile> editorFiles = new HashSet<>();
+
+		IProject currentProject = SlimGTWorkspaceUtils.getCurrentProject(editorFile.eResource());
+		String currentFile = editorFile.eResource().getURI().toString().replace("platform:/resource/", "")
+				.replace(currentProject.getName(), "");
+		currentFile = currentProject.getLocation().toPortableString() + currentFile;
+		currentFile = currentFile.replace("/", "\\");
+
+		IWorkspace ws = ResourcesPlugin.getWorkspace();
+		for (IProject project : ws.getRoot().getProjects()) {
+			try {
+				if (!project.hasNature("org.emoflon.ibex.gt.gtl.ui.nature"))
+					continue;
+			} catch (CoreException e) {
+				continue;
+			}
+
+			File projectFile = new File(project.getLocation().toPortableString());
+			List<File> tggFiles = new LinkedList<>();
+			SlimGTWorkspaceUtils.gatherFilesWithEnding(tggFiles, projectFile, ".tggl", true);
+
+			for (File tggFile : tggFiles) {
+				URI tggModelUri;
+				try {
+					tggModelUri = URI.createFileURI(tggFile.getCanonicalPath());
+				} catch (IOException e) {
+					continue;
+				}
+
+				String fileString = tggModelUri.toFileString();
+
+				if (fileString.equals(currentFile))
+					continue;
+
+				Resource resource = loadResource(editorFile.eResource(), tggModelUri);
+				if (resource == null)
+					continue;
+
+				EObject tggModel = resource.getContents().get(0);
+
+				if (tggModel == null)
+					continue;
+
+				if (tggModel instanceof EditorFile otherEditorFile) {
+					editorFiles.add(otherEditorFile);
+				}
+			}
+		}
+
+		return editorFiles;
+	}
 }
