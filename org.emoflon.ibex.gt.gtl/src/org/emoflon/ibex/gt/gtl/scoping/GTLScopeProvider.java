@@ -58,34 +58,6 @@ import org.emoflon.ibex.gt.gtl.util.GTLModelUtil;
  */
 public class GTLScopeProvider extends AbstractGTLScopeProvider {
 
-	protected Map<Resource, Map<URI, Resource>> resourceCache = new HashMap<>();
-
-	protected Resource loadResource(final Resource requester, final URI gtModelUri) {
-		Map<URI, Resource> cache = resourceCache.get(requester);
-		if (cache == null) {
-			cache = new HashMap<>();
-			resourceCache.put(requester, cache);
-		}
-
-		Resource other = cache.get(gtModelUri);
-		if (other == null) {
-			XtextResourceSet rs = new XtextResourceSet();
-			try {
-				other = rs.getResource(gtModelUri, true);
-			} catch (Exception e) {
-				return other;
-			}
-			cache.put(gtModelUri, other);
-
-			if (other == null)
-				return other;
-
-			EcoreUtil2.resolveLazyCrossReferences(other, () -> false);
-		}
-
-		return other;
-	}
-
 	public Collection<SlimRule> getAllRulesInScope(EditorFile ef) {
 		Set<SlimRule> ruleSet = new HashSet<>();
 		ef.getImportedPatterns().forEach(pi -> ruleSet.add(pi.getPattern()));
