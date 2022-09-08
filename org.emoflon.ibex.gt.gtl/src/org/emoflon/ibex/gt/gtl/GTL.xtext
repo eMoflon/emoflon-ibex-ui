@@ -28,7 +28,7 @@ SlimRule:
 	type = GTLType 
 	name = ID 
 	('(' parameters+=SlimParameter (',' parameters+=SlimParameter)* ')')? 
-	(refinement=GTLRuleRefinement)? 
+	(refinement+=GTLRuleRefinement (',' refinement+=GTLRuleRefinement)*)? 
 	'{'
 			(contextNodes += SlimRuleNodeContext 		|
 			createdNodes += SlimRuleNodeCreation 		|
@@ -50,7 +50,36 @@ enum GTLType :
 ;
 
 GTLRuleRefinement:
-	'refines' superRule=[SlimRule|ID] (mappings=SlimRuleNodeMappings)?
+	'refines' refinement = (GTLRuleRefinementPlain | GTLRuleRefinementAliased)
+;
+
+GTLRuleRefinementPlain:
+	superRule=[SlimRule|ID]
+;
+
+GTLRuleRefinementAliased:
+	superRule=[SlimRule|ID] 'as' name=ID
+;
+
+GTLRuleRefinmentNode:
+	'@' 'refines' refinement=GTLRuleRefinmentReference '.' node=[SlimRuleNode|ID]
+;
+
+GTLRuleRefinmentReference:
+	GTLRuleRefinmentReferencePlain | GTLRuleRefinmentReferenceAliased
+;
+
+GTLRuleRefinmentReferencePlain returns GTLRuleRefinmentReference:
+	reference=[SlimRule|ID]
+;
+
+GTLRuleRefinmentReferenceAliased returns GTLRuleRefinmentReference:
+	reference=[GTLRuleRefinementAliased|ID]
+;
+
+
+GTLRuleRefinementAlias:
+	'as' name=ID
 ;
 
 GTLRuleNodeDeletion :
@@ -59,6 +88,7 @@ GTLRuleNodeDeletion :
 
 @Override
 SlimRuleNode:
+	(refinement=GTLRuleRefinmentNode)?
 	name = ID ':' type=[ecore::EClass] ('{'
 		(contextEdges += SlimRuleEdgeContext |
 		createdEdges += SlimRuleEdgeCreation |
