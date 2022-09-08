@@ -42,7 +42,6 @@ import org.emoflon.ibex.tgg.tggl.tGGL.TGGLPackage;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRule;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRuleExtension;
 
-
 /**
  * This class contains custom scoping description.
  * 
@@ -50,96 +49,85 @@ import org.emoflon.ibex.tgg.tggl.tGGL.TGGRuleExtension;
  * https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#scoping
  * on how and when to use it.
  */
-enum DomainType{
+enum DomainType {
 	SOURCE, CORRESPONDENCE, TARGET
 }
 
 public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 
-	
 	@Override
 	public IScope getScopeInternal(EObject context, EReference reference) throws Exception {
-		if(isNodeType(context, reference)) 
+		if (isNodeType(context, reference))
 			return getTypes(context, reference, getDomainType(context));
-		
-		if(isCorrespondenceSourceType(context, reference))
+
+		if (isCorrespondenceSourceType(context, reference))
 			return getTypes(context, reference, DomainType.SOURCE);
-		if(isCorrespondenceSourceType(context, reference))
+		if (isCorrespondenceSourceType(context, reference))
 			return getTypes(context, reference, DomainType.TARGET);
-		
-		if(isEdgeTargetReference(context, reference))
+
+		if (isEdgeTargetReference(context, reference))
 			return getEdgeTargetReference(context, reference);
-		
-		if(isTGGRuleExtensionSuper(context, reference))
+
+		if (isTGGRuleExtensionSuper(context, reference))
 			return getTGGRuleCandidates(context, reference);
-		if(isRuleNodeMappingSource(context, reference))
+		if (isRuleNodeMappingSource(context, reference))
 			return getMappingSourceNodes(context, reference);
-		if(isRuleNodeMappingTarget(context, reference))
+		if (isRuleNodeMappingTarget(context, reference))
 			return getMappingTargetNodes(context, reference);
-		
+
 		return super.getScopeInternal(context, reference);
 	}
-	
+
 	private IScope getMappingTargetNodes(EObject context, EReference reference) {
 		var mapping = (SlimRuleNodeMapping) context;
-		var tggRule = getContainer(context, TGGRule.class);
-		
-		// get target rule if container is a rule extension or invocation
-		TGGRule targetRule = null;
-		var extension = getContainer(context, TGGRuleExtension.class);
-		if(extension != null) {
-			targetRule = extension.getSupertype();
-		}
+
+		// get invocation and extract matching types from the support pattern
 		var invocation = getContainer(context, SlimRuleInvocation.class);
-		if(invocation != null) {
-			targetRule = invocation.getSupportPattern();
+		var supportPattern = invocation.getSupportPattern();
+		
+		Set<SlimRuleNode> nodeCandidates = new HashSet<>();
+		var sourceNode = mapping.getSrcNode();
+		
+		// only show nodes with correct mode (context/creation)
+		var creationNode = getContainer(sourceNode, SlimRuleNodeCreation.class);
+		if(creationNode != null) {
+			nodeCandidates.addAll(supportPattern.getCreatedNodes().stream() //
+					.map(n -> n.getCreation()).toList());			
+		}
+		var contextNode = getContainer(sourceNode, SlimRuleNodeContext.class);
+		if(contextNode != null) {
+			nodeCandidates.addAll(supportPattern.getContextNodes().stream() //
+					.map(n -> n.getContext()).toList());
 		}
 		
-		var nodeCandidates = new HashSet<EObject>();
-		
-		switch(getDomainType(mapping.getSrcNode())) {
-		case SOURCE:
-			nodeCandidates.addAll(targetRule.getSourceRule().getContextNodes());
-			nodeCandidates.addAll(targetRule.getSourceRule().getCreatedNodes());
-			break;
-		case CORRESPONDENCE:
-			nodeCandidates.addAll(targetRule.getCorrespondenceNodes());
-			break;
-		case TARGET:
-			nodeCandidates.addAll(targetRule.getTargetRule().getContextNodes());
-			nodeCandidates.addAll(targetRule.getTargetRule().getCreatedNodes());
-			break;
-		}
+		// only show nodes that have a matching type
+		nodeCandidates = nodeCandidates.stream() //
+				.filter(n -> sourceNode.getType().isSuperTypeOf(n.getType())).collect(Collectors.toSet()); 
 		
 		return Scopes.scopeFor(nodeCandidates);
 	}
 
+	// only allow candidates from the rule that have the right domain
 	private IScope getMappingSourceNodes(EObject context, EReference reference) {
-		var tggRule = getContainer(context, TGGRule.class);
+		var slimRule = getContainer(context, SlimRule.class);
 		var nodeCandidates = new HashSet<EObject>();
-		
-		nodeCandidates.addAll(tggRule.getSourceRule().getContextNodes());
-		nodeCandidates.addAll(tggRule.getSourceRule().getCreatedNodes());
-		
-		nodeCandidates.addAll(tggRule.getCorrespondenceNodes());
-		
-		nodeCandidates.addAll(tggRule.getTargetRule().getContextNodes());
-		nodeCandidates.addAll(tggRule.getTargetRule().getCreatedNodes());
-		
+		nodeCandidates.addAll(slimRule.getContextNodes());
+		nodeCandidates.addAll(slimRule.getCreatedNodes());
+
 		return Scopes.scopeFor(nodeCandidates);
 	}
 
 	private IScope getTGGRuleCandidates(EObject context, EReference reference) {
 		var rule = (TGGRule) context;
 		var rules = getAllRulesInScope(context);
-		
+
 		// remove self reference
 		rules.remove(rule);
 		return Scopes.scopeFor(rules);
 	}
 
 	private IScope getEdgeTargetReference(EObject context, EReference reference) {
-		switch(getDomainType(context)) {
+		switch (getDomainType(context)) {
 		case SOURCE:
 			return Scopes.scopeFor(getTargetNodes(context, reference, DomainType.SOURCE));
 		case CORRESPONDENCE:
@@ -149,32 +137,32 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		}
 		throw new RuntimeException("Could not resolve edge targets for " + context);
 	}
-	
+
 	private Collection<EObject> getTargetNodes(EObject context, EReference reference, DomainType domain) {
 		var rule = getContainer(context, TGGRule.class);
 		Set<EObject> nodes = new HashSet<EObject>();
 		var ruleCandidates = new HashSet<TGGRule>();
 		ruleCandidates.add(rule);
-		
+
 		// find all nodes in each TGG rule that is refined
-		while(!ruleCandidates.isEmpty()) {
+		while (!ruleCandidates.isEmpty()) {
 			var currentRule = ruleCandidates.iterator().next();
 			ruleCandidates.remove(currentRule);
-			for(var extension : currentRule.getExtensions()) {
+			for (var extension : currentRule.getExtensions()) {
 				ruleCandidates.add(extension.getSupertype());
 			}
-			
-			switch(domain) {
+
+			switch (domain) {
 			case SOURCE:
 				nodes.addAll(getSlimRuleNodesFromContext(rule.getSourceRule().getContextNodes()));
 				nodes.addAll(getSlimRuleNodesFromCreation(rule.getSourceRule().getCreatedNodes()));
 				break;
 			case CORRESPONDENCE:
-				if(reference == TGGLPackage.Literals.CORRESPONDENCE_NODE__SOURCE) {
+				if (reference == TGGLPackage.Literals.CORRESPONDENCE_NODE__SOURCE) {
 					nodes.addAll(getSlimRuleNodesFromContext(rule.getSourceRule().getContextNodes()));
 					nodes.addAll(getSlimRuleNodesFromCreation(rule.getSourceRule().getCreatedNodes()));
 				}
-				if(reference == TGGLPackage.Literals.CORRESPONDENCE_NODE__TARGET) {
+				if (reference == TGGLPackage.Literals.CORRESPONDENCE_NODE__TARGET) {
 					nodes.addAll(getSlimRuleNodesFromContext(rule.getTargetRule().getContextNodes()));
 					nodes.addAll(getSlimRuleNodesFromCreation(rule.getTargetRule().getCreatedNodes()));
 				}
@@ -185,29 +173,28 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 				break;
 			}
 		}
-		
+
 		// only allow elements with a matching type
 		EClass targetType = null;
-		if(context instanceof SlimRuleEdge edge) {
+		if (context instanceof SlimRuleEdge edge) {
 			targetType = (EClass) edge.getType().getEType();
-		}
-		else if(context instanceof CorrespondenceNode correspondence) {
-			if(reference == TGGLPackage.Literals.CORRESPONDENCE_NODE__SOURCE) 
+		} else if (context instanceof CorrespondenceNode correspondence) {
+			if (reference == TGGLPackage.Literals.CORRESPONDENCE_NODE__SOURCE)
 				targetType = correspondence.getType().getSource();
-			if(reference == TGGLPackage.Literals.CORRESPONDENCE_NODE__TARGET) 
+			if (reference == TGGLPackage.Literals.CORRESPONDENCE_NODE__TARGET)
 				targetType = correspondence.getType().getTarget();
 
-		} else 
+		} else
 			throw new RuntimeException("Cannot resolve type for context element " + context);
-		
+
 		final EClass finalTargetType = targetType;
 		nodes = nodes.parallelStream() //
 				.filter(n -> finalTargetType.isSuperTypeOf(n.eClass())) //
 				.collect(Collectors.toSet()); //
-		
+
 		return nodes;
 	}
-	
+
 	private Collection<SlimRuleNode> getSlimRuleNodesFromContext(Collection<SlimRuleNodeContext> contextElements) {
 		return contextElements.stream().map(c -> c.getContext()).toList();
 	}
@@ -215,29 +202,29 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 	private Collection<SlimRuleNode> getSlimRuleNodesFromCreation(Collection<SlimRuleNodeCreation> createdElements) {
 		return createdElements.stream().map(c -> c.getCreation()).toList();
 	}
-	
+
 	private DomainType getDomainType(EObject context) {
 		var tggRule = getContainer(context, TGGRule.class);
 		var rule = getContainer(context, SlimRule.class);
-		if(rule != null) {
-			if(tggRule.getSourceRule().equals(rule)) 
+		if (rule != null) {
+			if (tggRule.getSourceRule().equals(rule))
 				return DomainType.SOURCE;
-			if(tggRule.getTargetRule().equals(rule)) 
+			if (tggRule.getTargetRule().equals(rule))
 				return DomainType.TARGET;
 		}
-		
+
 		// else it must be a correspondence node
-		if(tggRule.getCorrespondenceNodes().contains(context)) {
+		if (tggRule.getCorrespondenceNodes().contains(context)) {
 			return DomainType.CORRESPONDENCE;
 		}
-		
+
 		throw new RuntimeException("Could not identify domain of element " + context);
 	}
 
 	private IScope getTypes(EObject context, EReference reference, DomainType domain) {
 		var schema = getSchemaInScope(context);
 
-		switch(domain) {
+		switch (domain) {
 		case SOURCE:
 			return Scopes.scopeFor(getTypes(schema.getSourceTypes()));
 		case CORRESPONDENCE:
@@ -251,11 +238,11 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 	public Collection<EClass> getTypes(Collection<EPackage> packages) {
 		var types = new HashSet<EClass>();
 		var packageCandidates = new HashSet<EPackage>(packages);
-		while(!packageCandidates.isEmpty()) {
+		while (!packageCandidates.isEmpty()) {
 			var pkg = packageCandidates.iterator().next();
 			packageCandidates.remove(pkg);
-			for(var classifier : pkg.getEClassifiers()) {
-				if(classifier instanceof EClass eClass && !eClass.isAbstract())
+			for (var classifier : pkg.getEClassifiers()) {
+				if (classifier instanceof EClass eClass && !eClass.isAbstract())
 					types.add(eClass);
 			}
 		}
@@ -266,22 +253,22 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		var ef = getContainer(obj, EditorFile.class);
 		Collection<TGGRule> ruleSet = new HashSet<>();
 		ruleSet.addAll(ef.getRules());
-		
-		for(var file : getAllFilesInScope(ef)) {
+
+		for (var file : getAllFilesInScope(ef)) {
 			ruleSet.addAll(file.getRules());
 		}
 		return ruleSet;
 	}
-	
+
 	public Schema getSchemaInScope(EObject obj) {
 		var editorFile = getContainer(obj, EditorFile.class);
-		for(var file : getAllFilesInScope(editorFile)) {
-			if(file.getSchema() != null)
+		for (var file : getAllFilesInScope(editorFile)) {
+			if (file.getSchema() != null)
 				return file.getSchema();
 		}
 		return null;
 	}
-	
+
 	public Collection<EditorFile> getAllFilesInScope(EObject obj) {
 		var editorFile = getContainer(obj, EditorFile.class);
 		Collection<EditorFile> editorFiles = new HashSet<>();
