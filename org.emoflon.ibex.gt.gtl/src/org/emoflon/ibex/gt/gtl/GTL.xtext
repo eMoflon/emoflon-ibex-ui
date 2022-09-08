@@ -50,11 +50,11 @@ enum GTLType :
 ;
 
 GTLRuleRefinement:
-	'refines' refinement = (GTLRuleRefinementPlain | GTLRuleRefinementAliased)
+	'refines' name = (GTLRuleRefinementPlain | GTLRuleRefinementAliased)
 ;
 
 GTLRuleRefinementPlain:
-	superRule=[SlimRule|ID]
+	name=[SlimRule|ID]
 ;
 
 GTLRuleRefinementAliased:
@@ -62,24 +62,7 @@ GTLRuleRefinementAliased:
 ;
 
 GTLRuleRefinmentNode:
-	'@' 'refines' refinement=GTLRuleRefinmentReference '.' node=[SlimRuleNode|ID]
-;
-
-GTLRuleRefinmentReference:
-	GTLRuleRefinmentReferencePlain | GTLRuleRefinmentReferenceAliased
-;
-
-GTLRuleRefinmentReferencePlain returns GTLRuleRefinmentReference:
-	reference=[SlimRule|ID]
-;
-
-GTLRuleRefinmentReferenceAliased returns GTLRuleRefinmentReference:
-	reference=[GTLRuleRefinementAliased|ID]
-;
-
-
-GTLRuleRefinementAlias:
-	'as' name=ID
+	'@' 'refines' refinement=[GTLRuleRefinement|ID] '.' node=[SlimRuleNode|ID]
 ;
 
 GTLRuleNodeDeletion :
