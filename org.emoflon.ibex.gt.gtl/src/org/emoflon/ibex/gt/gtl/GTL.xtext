@@ -62,7 +62,7 @@ GTLRuleRefinementAliased:
 ;
 
 GTLRuleRefinmentNode:
-	'@' 'refines' refinement=[GTLRuleRefinement|ID] '.' node=[SlimRuleNode|ID]
+	refinement=[GTLRuleRefinement|ID] '.' refinementNode=[SlimRuleNode|ID]
 ;
 
 GTLRuleNodeDeletion :
@@ -71,7 +71,7 @@ GTLRuleNodeDeletion :
 
 @Override
 SlimRuleNode:
-	(refinement=GTLRuleRefinmentNode)?
+	(hasRefinement ?= '@refines'  refinement=GTLRuleRefinmentNode)?
 	name = ID ':' type=[ecore::EClass] ('{'
 		(contextEdges += SlimRuleEdgeContext |
 		createdEdges += SlimRuleEdgeCreation |
