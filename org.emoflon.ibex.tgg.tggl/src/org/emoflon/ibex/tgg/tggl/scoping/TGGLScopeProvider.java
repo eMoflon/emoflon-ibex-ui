@@ -279,47 +279,37 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		currentFile = currentProject.getLocation().toPortableString() + currentFile;
 		currentFile = currentFile.replace("/", "\\");
 
-		IWorkspace ws = ResourcesPlugin.getWorkspace();
-		for (IProject project : ws.getRoot().getProjects()) {
+		File projectFile = new File(currentProject.getLocation().toPortableString());
+		List<File> tggFiles = new LinkedList<>();
+		SlimGTWorkspaceUtils.gatherFilesWithEnding(tggFiles, projectFile, ".tggl", true);
+
+		for (File tggFile : tggFiles) {
+			URI tggModelUri;
 			try {
-				if (!project.hasNature("org.emoflon.ibex.gt.gtl.ui.nature"))
-					continue;
-			} catch (CoreException e) {
+				tggModelUri = URI.createFileURI(tggFile.getCanonicalPath());
+			} catch (IOException e) {
 				continue;
 			}
 
-			File projectFile = new File(project.getLocation().toPortableString());
-			List<File> tggFiles = new LinkedList<>();
-			SlimGTWorkspaceUtils.gatherFilesWithEnding(tggFiles, projectFile, ".tggl", true);
+			String fileString = tggModelUri.toFileString();
 
-			for (File tggFile : tggFiles) {
-				URI tggModelUri;
-				try {
-					tggModelUri = URI.createFileURI(tggFile.getCanonicalPath());
-				} catch (IOException e) {
-					continue;
-				}
+			if (fileString.equals(currentFile))
+				continue;
 
-				String fileString = tggModelUri.toFileString();
+			Resource resource = loadResource(editorFile.eResource(), tggModelUri);
+			if (resource == null)
+				continue;
 
-				if (fileString.equals(currentFile))
-					continue;
+			EObject tggModel = resource.getContents().get(0);
 
-				Resource resource = loadResource(editorFile.eResource(), tggModelUri);
-				if (resource == null)
-					continue;
+			if (tggModel == null)
+				continue;
 
-				EObject tggModel = resource.getContents().get(0);
-
-				if (tggModel == null)
-					continue;
-
-				if (tggModel instanceof EditorFile otherEditorFile) {
-					editorFiles.add(otherEditorFile);
-				}
+			if (tggModel instanceof EditorFile otherEditorFile) {
+				editorFiles.add(otherEditorFile);
 			}
 		}
-
 		return editorFiles;
 	}
+		
 }
