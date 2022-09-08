@@ -29,15 +29,18 @@ import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRule;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeContext;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeCreation;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMapping;
 import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtils;
 import org.emoflon.ibex.tgg.tggl.tGGL.CorrespondenceNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.EditorFile;
 import org.emoflon.ibex.tgg.tggl.tGGL.Schema;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLPackage;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRule;
+import org.emoflon.ibex.tgg.tggl.tGGL.TGGRuleExtension;
 
 
 /**
@@ -67,12 +70,65 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		if(isEdgeTargetReference(context, reference))
 			return getEdgeTargetReference(context, reference);
 		
-		if(isTGGRuleSuper(context, reference))
+		if(isTGGRuleExtensionSuper(context, reference))
 			return getTGGRuleCandidates(context, reference);
+		if(isRuleNodeMappingSource(context, reference))
+			return getMappingSourceNodes(context, reference);
+		if(isRuleNodeMappingTarget(context, reference))
+			return getMappingTargetNodes(context, reference);
 		
-		return null;
+		return super.getScopeInternal(context, reference);
 	}
 	
+	private IScope getMappingTargetNodes(EObject context, EReference reference) {
+		var mapping = (SlimRuleNodeMapping) context;
+		var tggRule = getContainer(context, TGGRule.class);
+		
+		// get target rule if container is a rule extension or invocation
+		TGGRule targetRule = null;
+		var extension = getContainer(context, TGGRuleExtension.class);
+		if(extension != null) {
+			targetRule = extension.getSupertype();
+		}
+		var invocation = getContainer(context, SlimRuleInvocation.class);
+		if(invocation != null) {
+			targetRule = invocation.getSupportPattern();
+		}
+		
+		var nodeCandidates = new HashSet<EObject>();
+		
+		switch(getDomainType(mapping.getSrcNode())) {
+		case SOURCE:
+			nodeCandidates.addAll(targetRule.getSourceRule().getContextNodes());
+			nodeCandidates.addAll(targetRule.getSourceRule().getCreatedNodes());
+			break;
+		case CORRESPONDENCE:
+			nodeCandidates.addAll(targetRule.getCorrespondenceNodes());
+			break;
+		case TARGET:
+			nodeCandidates.addAll(targetRule.getTargetRule().getContextNodes());
+			nodeCandidates.addAll(targetRule.getTargetRule().getCreatedNodes());
+			break;
+		}
+		
+		return Scopes.scopeFor(nodeCandidates);
+	}
+
+	private IScope getMappingSourceNodes(EObject context, EReference reference) {
+		var tggRule = getContainer(context, TGGRule.class);
+		var nodeCandidates = new HashSet<EObject>();
+		
+		nodeCandidates.addAll(tggRule.getSourceRule().getContextNodes());
+		nodeCandidates.addAll(tggRule.getSourceRule().getCreatedNodes());
+		
+		nodeCandidates.addAll(tggRule.getCorrespondenceNodes());
+		
+		nodeCandidates.addAll(tggRule.getTargetRule().getContextNodes());
+		nodeCandidates.addAll(tggRule.getTargetRule().getCreatedNodes());
+		
+		return Scopes.scopeFor(nodeCandidates);
+	}
+
 	private IScope getTGGRuleCandidates(EObject context, EReference reference) {
 		var rule = (TGGRule) context;
 		var rules = getAllRulesInScope(context);
@@ -104,7 +160,9 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		while(!ruleCandidates.isEmpty()) {
 			var currentRule = ruleCandidates.iterator().next();
 			ruleCandidates.remove(currentRule);
-			ruleCandidates.addAll(currentRule.getSupertypes());
+			for(var extension : currentRule.getExtensions()) {
+				ruleCandidates.add(extension.getSupertype());
+			}
 			
 			switch(domain) {
 			case SOURCE:
