@@ -15,7 +15,9 @@ Import:
 SlimRule:
 	(contextNodes += SlimRuleNodeContext |
 	createdNodes += SlimRuleNodeCreation |
-	atrConditions += SlimRuleAttributeCondition)
+	atrConditions += SlimRuleAttributeCondition |
+	invocations += SlimRuleInvocation
+	)
 ;
 
 SlimRuleNodeContext:
