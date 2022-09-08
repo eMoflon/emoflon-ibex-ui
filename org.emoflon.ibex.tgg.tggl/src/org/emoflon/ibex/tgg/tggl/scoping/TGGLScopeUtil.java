@@ -9,7 +9,6 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMapping;
 import org.emoflon.ibex.tgg.tggl.tGGL.CorrespondenceType;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLPackage;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRule;
-import org.emoflon.ibex.tgg.tggl.tGGL.TGGRuleExtension;
 
 public class TGGLScopeUtil {
 
@@ -35,9 +34,9 @@ public class TGGLScopeUtil {
 				reference == TGGLPackage.Literals.CORRESPONDENCE_NODE__TARGET); //
 	}
 	
-	public static boolean isTGGRuleExtensionSuper(EObject context, EReference reference) {
-		return context instanceof TGGRuleExtension && //
-				reference == TGGLPackage.Literals.TGG_RULE_EXTENSION__SUPERTYPE;
+	public static boolean isTGGRuleRefinement(EObject context, EReference reference) {
+		return context instanceof TGGRule && //
+				reference == TGGLPackage.Literals.TGG_RULE__REFINEMENTS;
 	}
 	
 	public static boolean isRuleNodeMappingSource(EObject context, EReference reference) {

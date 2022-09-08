@@ -126,7 +126,7 @@ SlimRuleNode:
 TGGRule:
 	(abstract ?= 'abstract')? 
 	'rule' name = ID 
-	('refines' extensions += [TGGRuleExtension] (',' extensions += [TGGRuleExtension])*)? 
+	('refines' refinements += [TGGRule] (',' refinements += [TGGRule])*)? 
 		
 	('source' '{'
 		sourceRule = SlimRule 
@@ -143,10 +143,6 @@ TGGRule:
 	('attributeConditions' '{'
 		attrConditions += AttributeCondition
 	'}')? 
-;
-
-TGGRuleExtension :
-	supertype=[TGGRule] (mappings=SlimRuleNodeMappings)?
 ;
 
 CorrespondenceNode:
