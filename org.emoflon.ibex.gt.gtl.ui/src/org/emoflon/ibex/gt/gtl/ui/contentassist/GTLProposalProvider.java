@@ -27,6 +27,7 @@ import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
 import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtils;
 import org.emoflon.ibex.gt.gtl.gTL.EditorFile;
+import org.emoflon.ibex.gt.gtl.ui.builder.GTLNature;
 
 /**
  * See
@@ -119,7 +120,7 @@ public class GTLProposalProvider extends AbstractGTLProposalProvider {
 		for (IProject project : ws.getRoot().getProjects()) {
 
 			try {
-				if (!project.hasNature("org.emoflon.ibex.gt.gtl.ui.nature"))
+				if (!project.hasNature(GTLNature.NATURE_ID))
 					continue;
 			} catch (CoreException e) {
 				continue;

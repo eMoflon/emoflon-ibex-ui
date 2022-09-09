@@ -309,7 +309,7 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 	protected IScope scopeForSlimRuleNodeType(org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode context,
 			EReference reference) {
 		SlimRuleNode ruleNode = (SlimRuleNode) context;
-		if (!ruleNode.isHasRefinement()) {
+		if (!ruleNode.isRefining()) {
 			return super.scopeForSlimRuleNodeType(context, reference);
 		} else {
 			if (ruleNode.getRefinement() == null || ruleNode.getRefinement().getRefinementNode() == null)

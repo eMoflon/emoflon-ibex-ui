@@ -11,6 +11,7 @@ import org.emoflon.ibex.gt.gtl.gTL.GTLParameterExpression;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinement;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinmentNode;
 import org.emoflon.ibex.gt.gtl.gTL.PatternImport;
+import org.emoflon.ibex.gt.gtl.gTL.SlimRule;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNode;
 
 public final class GTLScopeUtil {
@@ -19,8 +20,10 @@ public final class GTLScopeUtil {
 	}
 
 	public static boolean isGTLRuleRefinementRule(final EObject context, final EReference reference) {
-		return context instanceof GTLRuleRefinement && (reference == GTLPackage.Literals.GTL_RULE_REFINEMENT__NAME
-				|| reference == GTLPackage.Literals.GTL_RULE_REFINEMENT_ALIASED__SUPER_RULE);
+		return (context instanceof SlimRule || context instanceof GTLRuleRefinement)
+				&& (reference == GTLPackage.Literals.SLIM_RULE__REFINEMENT
+						|| reference == GTLPackage.Literals.GTL_RULE_REFINEMENT__NAME
+						|| reference == GTLPackage.Literals.GTL_RULE_REFINEMENT_ALIASED__SUPER_RULE);
 	}
 
 	public static boolean isGTLRuleRefinementNodeRefinement(final EObject context, final EReference reference) {
