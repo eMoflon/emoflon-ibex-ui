@@ -1,4 +1,4 @@
-package org.emoflon.ibex.gt.editor.ui.builder;
+package org.emoflon.ibex.tgg.tggl.ui.builder;
 
 import java.util.ArrayList;
 
@@ -10,9 +10,9 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 
-public class GTNature implements IProjectNature {
+public class TGGLNature implements IProjectNature {
 
-	public static final String NATURE_ID = "org.emoflon.ibex.gt.gtl.ui.nature";
+	public static final String NATURE_ID = "org.emoflon.ibex.tgg.tggl.ui.nature";
 
 	private IProject project;
 

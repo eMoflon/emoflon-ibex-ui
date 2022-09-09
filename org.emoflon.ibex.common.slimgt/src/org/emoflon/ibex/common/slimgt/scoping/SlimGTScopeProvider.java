@@ -65,11 +65,9 @@ public class SlimGTScopeProvider extends AbstractSlimGTScopeProvider {
 			return IScope.NULLSCOPE;
 		try {
 			return getScopeInternal(context, reference);
-		}
-		catch(NullPointerException e) {
+		} catch (NullPointerException e) {
 			return IScope.NULLSCOPE;
-		}
-		catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return IScope.NULLSCOPE;
 		}
@@ -78,17 +76,20 @@ public class SlimGTScopeProvider extends AbstractSlimGTScopeProvider {
 	public IScope getScopeInternal(EObject context, EReference reference) throws Exception {
 		if (SlimGTScopeUtil.isSlimParameterType(context, reference)) {
 			return scopeForParameterType((SlimParameter) context, reference);
-		} else if (SlimGTScopeUtil.isSlimRuleNodeType(context, reference)) {
-			return scopeForSlimRuleNodeType((SlimRuleNode) context, reference);
-		} else if (SlimGTScopeUtil.isSlimRuleEdgeType(context, reference)) {
-			return scopeForSlimEdgeType((SlimRuleEdge) context, reference);
-		} else if (SlimGTScopeUtil.isEnumExpressionLiteral(context, reference)) {
-			return scopeForEnumExpressionLiteral((EnumExpression) context, reference);
-		} else if (SlimGTScopeUtil.isSlimRuleAttributeAssignmentType(context, reference)) {
-			return scopeForlimRuleAttributeAssignmentType((SlimRuleAttributeAssignment) context, reference);
-		} else {
-			return super.getScope(context, reference);
 		}
+		if (SlimGTScopeUtil.isSlimRuleNodeType(context, reference)) {
+			return scopeForSlimRuleNodeType((SlimRuleNode) context, reference);
+		}
+		if (SlimGTScopeUtil.isSlimRuleEdgeType(context, reference)) {
+			return scopeForSlimEdgeType((SlimRuleEdge) context, reference);
+		}
+		if (SlimGTScopeUtil.isEnumExpressionLiteral(context, reference)) {
+			return scopeForEnumExpressionLiteral((EnumExpression) context, reference);
+		}
+		if (SlimGTScopeUtil.isSlimRuleAttributeAssignmentType(context, reference)) {
+			return scopeForlimRuleAttributeAssignmentType((SlimRuleAttributeAssignment) context, reference);
+		}
+		return super.getScope(context, reference);
 	}
 
 	protected IScope scopeForParameterType(SlimParameter context, EReference reference) {

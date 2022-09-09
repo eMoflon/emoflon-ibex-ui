@@ -19,16 +19,16 @@ PackageDeclaration:
 ;
 
 PatternImport : 
-	'from' file = StringLiteral 'import' ('*' | pattern = [SlimRule|ID])
+	'from' file = StringLiteral 'import' (importingAll ?= '*' | pattern = [SlimRule|ID])
 ;
 
 @Override
 SlimRule:
 	(abstract?='abstract')? 
-	type = GTLType 
+	type = GTLRuleType 
 	name = ID 
 	('(' parameters+=SlimParameter (',' parameters+=SlimParameter)* ')')? 
-	(refinement+=GTLRuleRefinement (',' refinement+=GTLRuleRefinement)*)? 
+	(refining ?= 'refines' refinement+=GTLRuleRefinement (',' refinement+=GTLRuleRefinement)*)? 
 	'{'
 			(contextNodes += SlimRuleNodeContext 		|
 			createdNodes += SlimRuleNodeCreation 		|
@@ -45,12 +45,12 @@ SlimParameter:
   name=ID ':' (type = [ecore::EDataType])
 ;
 
-enum GTLType :
+enum GTLRuleType :
 	PATTERN = 'pattern' | RULE = 'rule'
 ;
 
 GTLRuleRefinement:
-	'refines' name = (GTLRuleRefinementPlain | GTLRuleRefinementAliased)
+	name = (GTLRuleRefinementPlain | GTLRuleRefinementAliased)
 ;
 
 GTLRuleRefinementPlain:
@@ -62,7 +62,7 @@ GTLRuleRefinementAliased:
 ;
 
 GTLRuleRefinmentNode:
-	'@' 'refines' refinement=[GTLRuleRefinement|ID] '.' node=[SlimRuleNode|ID]
+	refinement=[GTLRuleRefinement|ID] '.' refinementNode=[SlimRuleNode|ID]
 ;
 
 GTLRuleNodeDeletion :
@@ -71,7 +71,7 @@ GTLRuleNodeDeletion :
 
 @Override
 SlimRuleNode:
-	(refinement=GTLRuleRefinmentNode)?
+	(refining ?= '@refines'  refinement=GTLRuleRefinmentNode)?
 	name = ID ':' type=[ecore::EClass] ('{'
 		(contextEdges += SlimRuleEdgeContext |
 		createdEdges += SlimRuleEdgeCreation |

@@ -9,7 +9,10 @@ import org.emoflon.ibex.gt.gtl.gTL.GTLEdgeIteratorReference;
 import org.emoflon.ibex.gt.gtl.gTL.GTLPackage;
 import org.emoflon.ibex.gt.gtl.gTL.GTLParameterExpression;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinement;
+import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinmentNode;
 import org.emoflon.ibex.gt.gtl.gTL.PatternImport;
+import org.emoflon.ibex.gt.gtl.gTL.SlimRule;
+import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNode;
 
 public final class GTLScopeUtil {
 	public static boolean isPatternImportPattern(final EObject context, final EReference reference) {
@@ -17,7 +20,21 @@ public final class GTLScopeUtil {
 	}
 
 	public static boolean isGTLRuleRefinementRule(final EObject context, final EReference reference) {
-		return context instanceof GTLRuleRefinement && reference == GTLPackage.Literals.GTL_RULE_REFINEMENT__SUPER_RULE;
+		return (context instanceof SlimRule || context instanceof GTLRuleRefinement)
+				&& (reference == GTLPackage.Literals.SLIM_RULE__REFINEMENT
+						|| reference == GTLPackage.Literals.GTL_RULE_REFINEMENT__NAME
+						|| reference == GTLPackage.Literals.GTL_RULE_REFINEMENT_ALIASED__SUPER_RULE);
+	}
+
+	public static boolean isGTLRuleRefinementNodeRefinement(final EObject context, final EReference reference) {
+		return (context instanceof SlimRuleNode || context instanceof GTLRuleRefinmentNode)
+				&& (reference == GTLPackage.Literals.SLIM_RULE_NODE__REFINEMENT
+						|| reference == GTLPackage.Literals.GTL_RULE_REFINMENT_NODE__REFINEMENT);
+	}
+
+	public static boolean isGTLRuleRefinementNodeNode(final EObject context, final EReference reference) {
+		return context instanceof GTLRuleRefinmentNode
+				&& reference == GTLPackage.Literals.GTL_RULE_REFINMENT_NODE__REFINEMENT_NODE;
 	}
 
 	public static boolean isGTLParameterExpressionParameter(final EObject context, final EReference reference) {
