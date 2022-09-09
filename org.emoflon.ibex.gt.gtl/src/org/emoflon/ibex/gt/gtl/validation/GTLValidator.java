@@ -31,6 +31,7 @@ import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtils;
 import org.emoflon.ibex.common.slimgt.validation.SlimGTValidatorUtils;
 import org.emoflon.ibex.gt.gtl.gTL.EditorFile;
 import org.emoflon.ibex.gt.gtl.gTL.GTLPackage;
+import org.emoflon.ibex.gt.gtl.gTL.GTLParameterExpression;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleNodeDeletion;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinement;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementAliased;
@@ -287,6 +288,8 @@ public class GTLValidator extends AbstractGTLValidator {
 		// TODO: Fixme -> Make an exception for the EcorePackage metamodel
 	}
 
+	// Rule Checks
+
 	@Check
 	protected void checkRuleNameForbidden(SlimRule rule) {
 		if (rule.getName() == null)
@@ -352,6 +355,8 @@ public class GTLValidator extends AbstractGTLValidator {
 					GTLPackage.Literals.SLIM_RULE__NAME);
 	}
 
+	// Parameter Checks
+
 	@Check
 	protected void checkParameterUnique(SlimParameter parameter) {
 		if (parameter.getName() == null)
@@ -366,6 +371,8 @@ public class GTLValidator extends AbstractGTLValidator {
 					SlimGTPackage.Literals.SLIM_PARAMETER__NAME);
 		}
 	}
+
+	// Refinement Checks
 
 	@Check
 	protected void checkRefinementsUnique(GTLRuleRefinement refinement) {
@@ -423,6 +430,8 @@ public class GTLValidator extends AbstractGTLValidator {
 		}
 
 	}
+
+	// Rule node Checks
 
 	@Check
 	protected void checkRuleNodeOperationFitsGTRuleType(SlimRuleNodeCreation node) {
@@ -519,5 +528,36 @@ public class GTLValidator extends AbstractGTLValidator {
 					GTLPackage.Literals.SLIM_RULE__DELETED_NODES);
 		}
 
+	}
+
+	@Check
+	protected void checkRuleNodeNameUnique(SlimRuleNode node) {
+		if (node.getName() == null)
+			return;
+
+		SlimRule currentRule = SlimGTModelUtil.getContainer(node, SlimRule.class);
+		long nodeCount = currentRule.getContextNodes().stream().map(n -> n.getContext())
+				.filter(n -> n.getName().equals(node.getName())).count();
+		nodeCount += currentRule.getDeletedNodes().stream().map(n -> n.getDeletion())
+				.filter(n -> n.getName().equals(node.getName())).count();
+		nodeCount += currentRule.getCreatedNodes().stream().map(n -> n.getCreation())
+				.filter(n -> n.getName().equals(node.getName())).count();
+
+		if (nodeCount > 1) {
+			error(String.format("The node name '%s' may not be defined more than once within this pattern.",
+					node.getName()), SlimGTPackage.Literals.SLIM_RULE_NODE__NAME);
+		}
+	}
+
+	// Arithmetic Expession Checks
+
+	@Check
+	protected void parameterOnlyInAssignment(GTLParameterExpression paramExpression) {
+		SlimRuleAttributeAssignment assignment = SlimGTModelUtil.getContainer(paramExpression,
+				SlimRuleAttributeAssignment.class);
+		if (assignment == null) {
+			error("Parameter expressions may only be used in attribute assignments.",
+					GTLPackage.Literals.GTL_PARAMETER_EXPRESSION__PARAMETER);
+		}
 	}
 }
