@@ -6,6 +6,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMapping;
+import org.emoflon.ibex.tgg.tggl.tGGL.CorrespondenceNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.CorrespondenceType;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLPackage;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementAliased;
@@ -14,9 +15,19 @@ import org.emoflon.ibex.tgg.tggl.tGGL.TGGRule;
 
 public class TGGLScopeUtil {
 
-	public static boolean isNodeType(EObject context, EReference reference) {
+	public static boolean isSlimRuleNodeType(EObject context, EReference reference) {
 		return context instanceof SlimRuleNode //
 				&& reference == SlimGTPackage.Literals.SLIM_RULE_NODE__TYPE; //
+	}
+	
+	public static boolean isCorrespondenceTypeSuper(EObject context, EReference reference) {
+		return context instanceof CorrespondenceType //
+				&& reference == TGGLPackage.Literals.CORRESPONDENCE_TYPE__SUPER;
+	}
+	
+	public static boolean isCorrespondenceNodeType(EObject context, EReference reference) {
+		return context instanceof CorrespondenceNode //
+				&& reference == TGGLPackage.Literals.CORRESPONDENCE_NODE__TYPE;
 	}
 	
 	public static boolean isCorrespondenceSourceType(EObject context, EReference reference) {
