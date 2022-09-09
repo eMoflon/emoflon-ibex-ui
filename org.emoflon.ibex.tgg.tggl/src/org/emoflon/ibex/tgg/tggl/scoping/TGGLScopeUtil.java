@@ -5,8 +5,11 @@ import org.eclipse.emf.ecore.EReference;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMapping;
 import org.emoflon.ibex.tgg.tggl.tGGL.CorrespondenceType;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLPackage;
+import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementAliased;
+import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRule;
 
 public class TGGLScopeUtil {
@@ -33,8 +36,28 @@ public class TGGLScopeUtil {
 				reference == TGGLPackage.Literals.CORRESPONDENCE_NODE__TARGET); //
 	}
 	
-	public static boolean isTGGRuleSuper(EObject context, EReference reference) {
-		return context instanceof TGGRule && //
-				reference == TGGLPackage.Literals.TGG_RULE__SUPERTYPES;
+	public static boolean isRuleNodeMappingSource(EObject context, EReference reference) {
+		return context instanceof SlimRuleNodeMapping && //
+				reference == SlimGTPackage.Literals.SLIM_RULE_NODE_MAPPING__SRC_NODE; //
+	}
+	
+	public static boolean isRuleNodeMappingTarget(EObject context, EReference reference) {
+		return context instanceof SlimRuleNodeMapping && //
+				reference == SlimGTPackage.Literals.SLIM_RULE_NODE_MAPPING__TRG_NODE; //
+	}
+	
+	public static boolean isTGGRuleRefinementAliasedSuperRule(EObject context, EReference reference) {
+		return context instanceof TGGLRuleRefinementAliased && //
+				reference == TGGLPackage.Literals.TGGL_RULE_REFINEMENT_ALIASED__SUPER_RULE;
+	}
+	
+	public static boolean isTGGRuleRefinmentNodeRefinement(EObject context, EReference reference) {
+		return context instanceof TGGLRuleRefinementNode && //
+				reference == TGGLPackage.Literals.TGGL_RULE_REFINEMENT_NODE__REFINEMENT;
+	}
+	
+	public static boolean isTGGRuleRefinmentNodeNode(EObject context, EReference reference) {
+		return context instanceof TGGLRuleRefinementNode && //
+				reference == TGGLPackage.Literals.TGGL_RULE_REFINEMENT_NODE__NODE;
 	}
 }

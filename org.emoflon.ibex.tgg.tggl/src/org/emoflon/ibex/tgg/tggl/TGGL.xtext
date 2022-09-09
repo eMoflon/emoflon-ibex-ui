@@ -15,7 +15,7 @@ EditorFile:
 ;
 
 Using:
-	'#''using' importedNamespace = QualifiedNameWithWildcard
+	'using' importedNamespace = QualifiedNameWithWildcard
 ;
 
 QualifiedNameWithWildcard:
@@ -27,34 +27,33 @@ QualifiedNameWithWildcard:
 /* ---------- */
 
 Schema:
-	'#''schema' name = QualifiedName
+	'schema' name = QualifiedName
 		
-	('#''source' '{'
+	('source' '{'
 		sourceTypes += [ecore::EPackage | QualifiedName]
 	'}')? 
 	
-	('#''target' '{'
+	('target' '{'
 		targetTypes += [ecore::EPackage | QualifiedName]
 	'}')? 
 
-	('#''correspondence' '{'
+	('correspondence' '{'
 		correspondenceTypes += CorrespondenceType
 	'}')?	
 	
-	('#''attributeConditions' '{'
+	('attributeConditions' '{'
 		attributeCondDefs += AttributeConditionDefinition
 	'}')? 
 ;
 
 AttributeConditionDefinition:
-	(userDefined ?= '#userDefined')? 
 	name = ID '(' params += SlimParameter (',' params += SlimParameter)* ')' 
 	'{'
-		'#''sync' 
+		'sync' 
 		'{'
 			allowedSyncBindings += Binding (',' allowedSyncBindings += Binding)*
 		'}'
-		('#''gen'
+		('gen'
 		'{'
 			allowedGenBindings += Binding (',' allowedGenBindings += Binding )*
 		'}'
@@ -67,16 +66,16 @@ Binding:
 ;
 
 AttributeConditionDefinitionLibrary:
-	'#''library' name = QualifiedName
+	'library' name = QualifiedName
 	'{'
 		attributeCondDefs += AttributeConditionDefinition
 	'}'
 ;
 
 CorrespondenceType:
-	name = ID ('#''extends' super=[CorrespondenceType]) | ('{'
-		'#''src->' source = [ecore::EClass | QualifiedName]  
-		'#''trg->' target = [ecore::EClass | QualifiedName]
+	name = ID ('extends' super=[CorrespondenceType]) | ('{'
+		'src->' source = [ecore::EClass | QualifiedName]  
+		'trg->' target = [ecore::EClass | QualifiedName]
 	'}')
 ;
 
@@ -95,11 +94,32 @@ LocalVariable:
 	name = ID
 ;
 
+TGGLRuleRefinement:
+	'refines' name = (TGGLRuleRefinementPlain | TGGLRuleRefinementAliased)
+;
+
+TGGLRuleRefinementPlain:
+	name=[TGGRule|ID]
+;
+
+TGGLRuleRefinementAliased:
+	superRule=[TGGRule|ID] 'as' name=ID
+;
+
+TGGLRuleRefinementNode:
+	'@' 'refines' refinement=[TGGLRuleRefinement|ID] '.' node=[SlimRuleNode|ID]
+;
+
+TGGLRuleRefinementCorrespondence:
+	'@' 'refines' refinement=[TGGLRuleRefinement|ID] '.' node=[CorrespondenceNode|ID]
+;
+
 /* ------------- */
 /*   TGG RULES   */
 /* ------------- */
 @Override
 SlimRuleNode:
+	(refinement=TGGLRuleRefinementNode)?
 	name = ID ':' type=[ecore::EClass | QualifiedName] ('{'
 		(contextEdges += SlimRuleEdgeContext |
 		createdEdges += SlimRuleEdgeCreation |
@@ -108,30 +128,31 @@ SlimRuleNode:
 ;
 
 TGGRule:
-	(abstract ?= '#abstract')? 
-	'#''rule' name = ID 
-	('#''extends' supertypes += [TGGRule] (',' supertypes += [TGGRule])*)? 
+	(abstract ?= 'abstract')? 
+	'rule' name = ID 
+	('refines' refinements += [TGGLRuleRefinement] (',' refinements += [TGGLRuleRefinement])*)? 
 		
-	('#''source' '{'
+	('source' '{'
 		sourceRule = SlimRule 
 	'}')? 	
 	
-	('#''target' '{'
+	('target' '{'
 		targetRule = SlimRule 
 	'}')? 
 	
-	('#''correspondence' '{'
+	('correspondence' '{'
 		correspondenceNodes += CorrespondenceNode	
 	'}')? 
 
-	('#''attributeConditions' '{'
+	('attributeConditions' '{'
 		attrConditions += AttributeCondition
 	'}')? 
 ;
 
 CorrespondenceNode:
+	(refinement=TGGLRuleRefinementCorrespondence)?
 	(created ?= '++')? name = ID ':' type = [CorrespondenceType | QualifiedName] '{'
-		'#''src->' source = [SlimRuleNode|ID]
-		'#''trg->' target = [SlimRuleNode|ID]
+		'src->' source = [SlimRuleNode|ID]
+		'trg->' target = [SlimRuleNode|ID]
 	'}' 
 ;
