@@ -40,6 +40,16 @@ public class TGGLScopeUtil {
 				reference == TGGLPackage.Literals.CORRESPONDENCE_TYPE__TARGET; //
 	}
 	
+	public static boolean isCorrespondenceNodeSource(EObject context, EReference reference) {
+		return context instanceof CorrespondenceNode && //
+				reference == TGGLPackage.Literals.CORRESPONDENCE_NODE__SOURCE;
+	}
+	
+	public static boolean isCorrespondenceNodeTarget(EObject context, EReference reference) {
+		return context instanceof CorrespondenceNode && //
+				reference == TGGLPackage.Literals.CORRESPONDENCE_NODE__TARGET;
+	}
+	
 	public static boolean isEdgeTargetReference(EObject context, EReference reference) {
 		return context instanceof SlimRuleEdge && //
 				(reference == SlimGTPackage.Literals.SLIM_RULE_EDGE__TARGET || //

@@ -62,7 +62,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		if (isSlimRuleNodeType(context, reference))
 			return getTypes(context, reference, getDomainType(context));
 		if(isCorrespondenceNodeType(context, reference))
-			return getTypes(context, reference, getDomainType(context));
+			return getTypes(context, reference, DomainType.CORRESPONDENCE);
 		
 		if (isCorrespondenceSourceType(context, reference))
 			return getTypes(context, reference, DomainType.SOURCE);
@@ -72,7 +72,11 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		// edge target references
 		if (isEdgeTargetReference(context, reference))
 			return getEdgeTargetReference(context, reference);
-
+		if (isCorrespondenceNodeSource(context, reference))
+			return getCorrespondenceReferencedNodes(context, reference);
+		if (isCorrespondenceNodeTarget(context, reference))
+			return getCorrespondenceReferencedNodes(context, reference);
+		
 		// mapping references
 		if (isRuleNodeMappingSource(context, reference))
 			return getMappingSourceNodes(context, reference);
@@ -87,9 +91,44 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		if (isTGGRuleRefinmentNodeNode(context, reference))
 			return getTargetNodesFromRefinedRule(context, reference);
 		
-		
-
 		return super.getScopeInternal(context, reference);
+	}
+	
+	private IScope getCorrespondenceReferencedNodes(EObject context, EReference reference) {
+		var corrNode = (CorrespondenceNode) context;
+		var domain = DomainType.SOURCE;
+		if(reference == TGGLPackage.Literals.CORRESPONDENCE_NODE__TARGET)
+			domain = DomainType.TARGET;
+		
+		var tggRule = getContainer(context, TGGRule.class);
+		Collection<SlimRuleNode> nodes;
+		switch(domain) {
+		case SOURCE:
+			nodes = getSourceNodes(tggRule);
+			break;
+		case TARGET:
+			nodes = getTargetNodes(tggRule);
+			break;
+		default:
+			throw new RuntimeException("Should not occur");
+		}
+		
+		// we still have to filter nodes for those that match the correspondence nodes type
+		var corrType = corrNode.getType();
+		EClass referencedType;
+		switch(domain) {
+		case SOURCE:
+			referencedType = corrType.getSource();
+			break;
+		case TARGET:
+			referencedType = corrType.getTarget();
+			break;
+		default:
+			throw new RuntimeException("Should not occur");
+		}
+		
+		nodes = nodes.stream().filter(n -> referencedType.isSuperTypeOf(n.getType())).toList();
+		return Scopes.scopeFor(nodes);
 	}
 
 	private IScope getTargetNodesFromRefinedRule(EObject context, EReference reference) {
