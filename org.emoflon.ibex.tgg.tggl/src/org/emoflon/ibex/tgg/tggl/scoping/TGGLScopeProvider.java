@@ -58,6 +58,12 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 	@Override
 	public IScope getScopeInternal(EObject context, EReference reference) throws Exception {
 		
+		// package references
+//		if (isSchemaSourceTypes(context, reference))
+//			return getPackagesFromImports(context, reference);
+//		if (isSchemaTargetTypes(context, reference))
+//			return getPackagesFromImports(context, reference);
+		
 		// node type references
 		if (isSlimRuleNodeType(context, reference))
 			return getTypes(context, reference, getDomainType(context));
@@ -94,6 +100,15 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		return super.getScopeInternal(context, reference);
 	}
 	
+	private IScope getPackagesFromImports(EObject context, EReference reference) {
+		var editorFile = getContainer(context, EditorFile.class);
+		var imports = editorFile.getImports();
+		for(var imp : imports) {
+//			imp.
+		}
+		return null;
+	}
+
 	private IScope getCorrespondenceReferencedNodes(EObject context, EReference reference) {
 		var corrNode = (CorrespondenceNode) context;
 		var domain = DomainType.SOURCE;

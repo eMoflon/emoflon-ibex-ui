@@ -8,6 +8,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMapping;
 import org.emoflon.ibex.tgg.tggl.tGGL.CorrespondenceNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.CorrespondenceType;
+import org.emoflon.ibex.tgg.tggl.tGGL.Schema;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLPackage;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementAliased;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementNode;
@@ -15,6 +16,16 @@ import org.emoflon.ibex.tgg.tggl.tGGL.TGGRule;
 
 public class TGGLScopeUtil {
 
+	public static boolean isSchemaSourceTypes(EObject context, EReference reference) {
+		return context instanceof Schema && //
+				reference == TGGLPackage.Literals.SCHEMA__SOURCE_TYPES;
+	}
+	
+	public static boolean isSchemaTargetTypes(EObject context, EReference reference) {
+		return context instanceof Schema && //
+				reference == TGGLPackage.Literals.SCHEMA__TARGET_TYPES;
+	}
+	
 	public static boolean isSlimRuleNodeType(EObject context, EReference reference) {
 		return context instanceof SlimRuleNode //
 				&& reference == SlimGTPackage.Literals.SLIM_RULE_NODE__TYPE; //
