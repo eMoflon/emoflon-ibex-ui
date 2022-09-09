@@ -23,17 +23,23 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.validation.Check;
 import org.emoflon.ibex.common.slimgt.slimGT.Import;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeAssignment;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeContext;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeCreation;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
 import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtils;
 import org.emoflon.ibex.common.slimgt.validation.SlimGTValidatorUtils;
 import org.emoflon.ibex.gt.gtl.gTL.EditorFile;
 import org.emoflon.ibex.gt.gtl.gTL.GTLPackage;
+import org.emoflon.ibex.gt.gtl.gTL.GTLRuleNodeDeletion;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinement;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementAliased;
+import org.emoflon.ibex.gt.gtl.gTL.GTLRuleType;
 import org.emoflon.ibex.gt.gtl.gTL.PackageDeclaration;
 import org.emoflon.ibex.gt.gtl.gTL.PatternImport;
 import org.emoflon.ibex.gt.gtl.gTL.SlimParameter;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRule;
+import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNode;
 import org.emoflon.ibex.gt.gtl.util.GTLModelUtil;
 
 /**
@@ -401,5 +407,117 @@ public class GTLValidator extends AbstractGTLValidator {
 			error(String.format("The refinement alias '%s' collides with another refinement alias.",
 					refinement.getName()), GTLPackage.Literals.GTL_RULE_REFINEMENT_ALIASED__NAME);
 		}
+	}
+
+	@Check
+	protected void checkRefinementFitsGTRuleType(GTLRuleRefinement refinement) {
+		SlimRule currentRule = SlimGTModelUtil.getContainer(refinement, SlimRule.class);
+
+		Optional<SlimRule> superRule = GTLModelUtil.refinementToRule(refinement);
+		if (!superRule.isPresent())
+			return;
+
+		if (currentRule.getType() == GTLRuleType.PATTERN && superRule.get().getType() == GTLRuleType.RULE) {
+			error(String.format("The a pattern may not refine a rule ('%s').", superRule.get().getName()),
+					GTLPackage.Literals.GTL_RULE_REFINEMENT__NAME);
+		}
+
+	}
+
+	@Check
+	protected void checkRuleNodeOperationFitsGTRuleType(SlimRuleNodeCreation node) {
+		SlimRule currentRule = SlimGTModelUtil.getContainer(node, SlimRule.class);
+		if (node.getCreation() == null)
+			return;
+
+		if (node.getCreation().getName() == null)
+			return;
+
+		if (currentRule.getType() == GTLRuleType.PATTERN) {
+			error(String.format("A pattern may not define a node creation ('%s').", node.getCreation().getName()),
+					SlimGTPackage.Literals.SLIM_RULE_NODE_CREATION__CREATION);
+		}
+
+	}
+
+	@Check
+	protected void checkRuleNodeOperationFitsGTRuleType(GTLRuleNodeDeletion node) {
+		SlimRule currentRule = SlimGTModelUtil.getContainer(node, SlimRule.class);
+		if (node.getDeletion() == null)
+			return;
+
+		if (node.getDeletion().getName() == null)
+			return;
+
+		if (currentRule.getType() == GTLRuleType.PATTERN) {
+			error(String.format("A pattern may not define a node deletion ('%s').", node.getDeletion().getName()),
+					GTLPackage.Literals.GTL_RULE_NODE_DELETION__DELETION);
+		}
+
+	}
+
+	@Check
+	protected void checkRuleNodeOperationFitsGTRuleType(SlimRuleAttributeAssignment assignment) {
+		SlimRule currentRule = SlimGTModelUtil.getContainer(assignment, SlimRule.class);
+
+		if (currentRule.getType() == GTLRuleType.PATTERN) {
+			error("A pattern may not define an attribute assignment.",
+					SlimGTPackage.Literals.SLIM_RULE_NODE__ASSIGNMENTS);
+		}
+
+	}
+
+	@Check
+	protected void checkRuleNodeOperationFitsSuperNode(SlimRuleNodeCreation node) {
+		if (node.getCreation() == null)
+			return;
+
+		if (!((SlimRuleNode) node.getCreation()).isRefining())
+			return;
+
+		SlimRuleNode superNode = ((SlimRuleNode) node.getCreation()).getRefinement().getRefinementNode();
+		SlimRuleNodeCreation superCreation = SlimGTModelUtil.getContainer(superNode, SlimRuleNodeCreation.class);
+
+		if (superCreation == null) {
+			error("A node creation may only refine another node creation.",
+					SlimGTPackage.Literals.SLIM_RULE__CREATED_NODES);
+		}
+
+	}
+
+	@Check
+	protected void checkRuleNodeOperationFitsSuperNode(SlimRuleNodeContext node) {
+		if (node.getContext() == null)
+			return;
+
+		if (!((SlimRuleNode) node.getContext()).isRefining())
+			return;
+
+		SlimRuleNode superNode = ((SlimRuleNode) node.getContext()).getRefinement().getRefinementNode();
+		SlimRuleNodeContext superContext = SlimGTModelUtil.getContainer(superNode, SlimRuleNodeContext.class);
+
+		if (superContext == null) {
+			error("A context node may only refine another context node.",
+					SlimGTPackage.Literals.SLIM_RULE__CONTEXT_NODES);
+		}
+
+	}
+
+	@Check
+	protected void checkRuleNodeOperationFitsSuperNode(GTLRuleNodeDeletion node) {
+		if (node.getDeletion() == null)
+			return;
+
+		if (!node.getDeletion().isRefining())
+			return;
+
+		SlimRuleNode superNode = node.getDeletion().getRefinement().getRefinementNode();
+		GTLRuleNodeDeletion superDeletion = SlimGTModelUtil.getContainer(superNode, GTLRuleNodeDeletion.class);
+
+		if (superDeletion == null) {
+			error("A node deletion may only refine another node deletion.",
+					GTLPackage.Literals.SLIM_RULE__DELETED_NODES);
+		}
+
 	}
 }
