@@ -212,4 +212,24 @@ public final class GTLModelUtil {
 		}
 	}
 
+	public static Collection<SlimRule> getAllSuperRules(SlimRule context) {
+		List<SlimRule> rules = new LinkedList<>();
+		getAllSuperRules(context, rules);
+		return rules;
+	}
+
+	public static void getAllSuperRules(SlimRule root, List<SlimRule> rules) {
+		if (root.isRefining()) {
+			for (GTLRuleRefinement refinement : root.getRefinement()) {
+				Optional<SlimRule> ruleOpt = refinementToRule(refinement);
+				if (ruleOpt.isEmpty())
+					continue;
+
+				SlimRule superRule = ruleOpt.get();
+				rules.add(superRule);
+				getAllSuperRules(superRule, rules);
+			}
+		}
+	}
+
 }

@@ -28,6 +28,8 @@ import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtils;
 import org.emoflon.ibex.common.slimgt.validation.SlimGTValidatorUtils;
 import org.emoflon.ibex.gt.gtl.gTL.EditorFile;
 import org.emoflon.ibex.gt.gtl.gTL.GTLPackage;
+import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinement;
+import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementAliased;
 import org.emoflon.ibex.gt.gtl.gTL.PackageDeclaration;
 import org.emoflon.ibex.gt.gtl.gTL.PatternImport;
 import org.emoflon.ibex.gt.gtl.gTL.SlimParameter;
@@ -356,6 +358,48 @@ public class GTLValidator extends AbstractGTLValidator {
 		if (paramCount > 1) {
 			error(String.format("Parameter '%s' must not be declared more than once.", parameter.getName()),
 					SlimGTPackage.Literals.SLIM_PARAMETER__NAME);
+		}
+	}
+
+	@Check
+	protected void checkRefinementsUnique(GTLRuleRefinement refinement) {
+		SlimRule currentRule = SlimGTModelUtil.getContainer(refinement, SlimRule.class);
+
+		Optional<SlimRule> superRule = GTLModelUtil.refinementToRule(refinement);
+		if (!superRule.isPresent())
+			return;
+
+		long refinementCount = GTLModelUtil.getAllSuperRules(currentRule).stream()
+				.filter(rule -> rule.getName().equals(superRule.get().getName())).count();
+
+		if (refinementCount > 1) {
+			error(String.format("The rule/pattern '%s' may not be refined more than once.", superRule.get().getName()),
+					GTLPackage.Literals.GTL_RULE_REFINEMENT__NAME);
+		}
+	}
+
+	@Check
+	protected void checkRefinementAliasesUnique(GTLRuleRefinementAliased refinement) {
+		SlimRule currentRule = SlimGTModelUtil.getContainer(refinement, SlimRule.class);
+
+		if (refinement.getName() == null)
+			return;
+
+		long refinementCount = GTLModelUtil.getAllSuperRules(currentRule).stream()
+				.filter(rule -> rule.getName().equals(refinement.getName())).count();
+
+		if (refinementCount > 1) {
+			error(String.format("The refinement alias '%s' collides with a super pattern/rule name.",
+					refinement.getName()), GTLPackage.Literals.GTL_RULE_REFINEMENT_ALIASED__NAME);
+		}
+
+		refinementCount = currentRule.getRefinement().stream().filter(ref -> (ref instanceof GTLRuleRefinementAliased))
+				.map(ref -> (GTLRuleRefinementAliased) ref).filter(ref -> ref.getName().equals(refinement.getName()))
+				.count();
+
+		if (refinementCount > 1) {
+			error(String.format("The refinement alias '%s' collides with another refinement alias.",
+					refinement.getName()), GTLPackage.Literals.GTL_RULE_REFINEMENT_ALIASED__NAME);
 		}
 	}
 }
