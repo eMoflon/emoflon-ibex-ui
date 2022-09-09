@@ -3,23 +3,54 @@
  */
 package org.emoflon.ibex.gt.gtl.validation;
 
+import org.eclipse.xtext.validation.Check;
+import org.emoflon.ibex.gt.gtl.gTL.GTLPackage;
+import org.emoflon.ibex.gt.gtl.gTL.PackageDeclaration;
 
 /**
- * This class contains custom validation rules. 
+ * This class contains custom validation rules.
  *
- * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
+ * See
+ * https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 public class GTLValidator extends AbstractGTLValidator {
-	
-//	public static final String INVALID_NAME = "invalidName";
-//
-//	@Check
-//	public void checkGreetingStartsWithCapital(Greeting greeting) {
-//		if (!Character.isUpperCase(greeting.getName().charAt(0))) {
-//			warning("Name should start with a capital",
-//					GTLPackage.Literals.GREETING__NAME,
-//					INVALID_NAME);
-//		}
-//	}
-	
+
+	@Check
+	public void packageValid(PackageDeclaration pkg) {
+		if (pkg.getName() == null || pkg.getName().isBlank()) {
+			error("Package name must not be empty!", GTLPackage.Literals.PACKAGE_DECLARATION__NAME);
+			return;
+		}
+
+		if (pkg.getName().contains(" ")) {
+			error("Package name may not contain any white spaces.", GTLPackage.Literals.PACKAGE_DECLARATION__NAME);
+		}
+
+		if (pkg.getName().contains("\\")) {
+			error("Package name may not contain any slashes.", GTLPackage.Literals.PACKAGE_DECLARATION__NAME);
+		}
+
+		if (pkg.getName().contains("/")) {
+			error("Package name may not contain any slashes.", GTLPackage.Literals.PACKAGE_DECLARATION__NAME);
+		}
+
+		StringBuilder sb = new StringBuilder();
+
+		if (pkg.getName().chars().filter(c -> Character.isUpperCase(c)).map(c -> {
+			sb.append((char) c + " ");
+			return c;
+		}).findAny().isPresent()) {
+			error("Package name may not contain any upper case letters. The following illegal characters were found: "
+					+ sb.toString(), GTLPackage.Literals.PACKAGE_DECLARATION__NAME);
+		}
+
+		if (pkg.getName().chars().filter(c -> !(Character.isLetter(c) || Character.isDigit(c) || c == '.' || c == '"'))
+				.map(c -> {
+					sb.append((char) c + " ");
+					return c;
+				}).findAny().isPresent()) {
+			error("Package name may not contain any characters other than lower case letters, digits or dots. The following illegal characters were found: "
+					+ sb.toString(), GTLPackage.Literals.PACKAGE_DECLARATION__NAME);
+		}
+	}
 }
