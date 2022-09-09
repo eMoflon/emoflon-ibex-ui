@@ -229,13 +229,13 @@ public class GTLValidator extends AbstractGTLValidator {
 		presentNamesAndImports.addAll(pkgScope.stream().flatMap(file -> file.getRules().stream()).map(r -> r.getName())
 				.collect(Collectors.toSet()));
 
-		if (!pImport.isImportingAll())
+		if (!pImport.isImportingAll()) {
 			if (pImport.getPattern() == null)
 				return;
 
-		if (presentNamesAndImports.contains(pImport.getPattern().getName())) {
-			error(String.format("Pattern/rule '%s' must not be declared more than once.",
-					pImport.getPattern().getName()), GTLPackage.Literals.PATTERN_IMPORT__PATTERN);
+			if (presentNamesAndImports.contains(pImport.getPattern().getName()))
+				error(String.format("Pattern/rule '%s' must not be declared more than once.",
+						pImport.getPattern().getName()), GTLPackage.Literals.PATTERN_IMPORT__PATTERN);
 		} else {
 			Optional<EditorFile> optFile = loadGTLModelByImport(pImport);
 			if (!optFile.isPresent()) // This will be checked somewhere else.
@@ -318,5 +318,26 @@ public class GTLValidator extends AbstractGTLValidator {
 			error("Pattern/rule name may not contain any characters other than letters, digits. The following illegal characters were found: "
 					+ sb.toString(), GTLPackage.Literals.SLIM_RULE__NAME);
 		}
+	}
+
+	@Check
+	protected void checkRuleNameUnique(SlimRule rule) {
+		if (rule.getName() == null) // This will be checked somewhere else.
+			return;
+
+		EditorFile ef = SlimGTModelUtil.getContainer(rule, EditorFile.class);
+		Collection<EditorFile> pkgScope = loadAllEditorFilesInPackage(ef);
+
+		Set<String> presentNamesAndImports = ef.getRules().stream().filter(p -> p != null && p.getName() != null)
+				.filter(p -> !rule.equals(p)).map(r -> r.getName()).collect(Collectors.toSet());
+		presentNamesAndImports.addAll(ef.getImportedPatterns().stream().filter(
+				p -> p != null && !p.isImportingAll() && p.getPattern() != null && p.getPattern().getName() != null)
+				.map(p -> p.getPattern().getName()).collect(Collectors.toSet()));
+		presentNamesAndImports.addAll(pkgScope.stream().flatMap(file -> file.getRules().stream()).map(r -> r.getName())
+				.collect(Collectors.toSet()));
+
+		if (presentNamesAndImports.contains(rule.getName()))
+			error(String.format("Pattern/rule '%s' must not be declared more than once.", rule.getName()),
+					GTLPackage.Literals.SLIM_RULE__NAME);
 	}
 }
