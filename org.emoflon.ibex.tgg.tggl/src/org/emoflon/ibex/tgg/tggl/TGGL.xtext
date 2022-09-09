@@ -106,8 +106,12 @@ TGGLRuleRefinementAliased:
 	superRule=[TGGRule|ID] 'as' name=ID
 ;
 
-TGGLRuleRefinmentNode:
+TGGLRuleRefinementNode:
 	'@' 'refines' refinement=[TGGLRuleRefinement|ID] '.' node=[SlimRuleNode|ID]
+;
+
+TGGLRuleRefinementCorrespondence:
+	'@' 'refines' refinement=[TGGLRuleRefinement|ID] '.' node=[CorrespondenceNode|ID]
 ;
 
 /* ------------- */
@@ -115,7 +119,7 @@ TGGLRuleRefinmentNode:
 /* ------------- */
 @Override
 SlimRuleNode:
-	(refinement=TGGLRuleRefinmentNode)?
+	(refinement=TGGLRuleRefinementNode)?
 	name = ID ':' type=[ecore::EClass | QualifiedName] ('{'
 		(contextEdges += SlimRuleEdgeContext |
 		createdEdges += SlimRuleEdgeCreation |
@@ -126,7 +130,7 @@ SlimRuleNode:
 TGGRule:
 	(abstract ?= 'abstract')? 
 	'rule' name = ID 
-	('refines' refinements += [TGGRule] (',' refinements += [TGGRule])*)? 
+	('refines' refinements += [TGGLRuleRefinement] (',' refinements += [TGGLRuleRefinement])*)? 
 		
 	('source' '{'
 		sourceRule = SlimRule 
@@ -146,6 +150,7 @@ TGGRule:
 ;
 
 CorrespondenceNode:
+	(refinement=TGGLRuleRefinementCorrespondence)?
 	(created ?= '++')? name = ID ':' type = [CorrespondenceType | QualifiedName] '{'
 		'src->' source = [SlimRuleNode|ID]
 		'trg->' target = [SlimRuleNode|ID]
