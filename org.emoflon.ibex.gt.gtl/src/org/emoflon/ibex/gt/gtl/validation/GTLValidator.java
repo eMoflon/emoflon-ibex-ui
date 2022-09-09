@@ -3,9 +3,33 @@
  */
 package org.emoflon.ibex.gt.gtl.validation;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.validation.Check;
+import org.emoflon.ibex.common.slimgt.slimGT.Import;
+import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
+import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtils;
+import org.emoflon.ibex.common.slimgt.validation.SlimGTValidatorUtils;
+import org.emoflon.ibex.gt.gtl.gTL.EditorFile;
 import org.emoflon.ibex.gt.gtl.gTL.GTLPackage;
 import org.emoflon.ibex.gt.gtl.gTL.PackageDeclaration;
+import org.emoflon.ibex.gt.gtl.gTL.PatternImport;
+import org.emoflon.ibex.gt.gtl.gTL.SlimRule;
 
 /**
  * This class contains custom validation rules.
@@ -14,6 +38,125 @@ import org.emoflon.ibex.gt.gtl.gTL.PackageDeclaration;
  * https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 public class GTLValidator extends AbstractGTLValidator {
+
+	public Optional<EditorFile> loadGTLModelByFullPath(final EObject context, final String path) {
+		Resource resource = null;
+		URI gtModelUri = null;
+		EditorFile file = null;
+
+		File importFile = new File(path);
+		if (importFile.exists() && importFile.isFile() && importFile.isAbsolute()) {
+			gtModelUri = URI.createFileURI(path);
+			try {
+				resource = loadResource(context.eResource(), gtModelUri);
+				file = (EditorFile) resource.getContents().get(0);
+			} catch (Exception e) {
+				return Optional.empty();
+			}
+		}
+
+		if (file == null) {
+			return Optional.empty();
+		} else {
+			return Optional.of(file);
+		}
+	}
+
+	public Optional<EditorFile> loadGTLModelByRelativePath(final EObject context, final String path) {
+		IProject currentProject = SlimGTWorkspaceUtils.getCurrentProject(context.eResource());
+		Resource resource = null;
+		URI gtModelUri = null;
+		String absolutePath = null;
+		EditorFile file = null;
+
+		try {
+			absolutePath = Paths.get(currentProject.getLocation().toPortableString()).resolve(Paths.get(path)).toFile()
+					.getCanonicalPath();
+		} catch (IOException e1) {
+			return Optional.empty();
+		}
+
+		gtModelUri = URI.createFileURI(absolutePath);
+		try {
+			resource = loadResource(context.eResource(), gtModelUri);
+			file = (EditorFile) resource.getContents().get(0);
+		} catch (Exception e) {
+			return Optional.empty();
+		}
+
+		if (file == null) {
+			return Optional.empty();
+		} else {
+			return Optional.of(file);
+		}
+	}
+
+	public Optional<EditorFile> loadGTLModelByImport(final PatternImport imp) {
+		String currentImport = imp.getFile().getValue().replace("\"", "");
+		File importFile = new File(currentImport);
+		Optional<EditorFile> optFile = null;
+		if (importFile.exists() && importFile.isFile() && importFile.isAbsolute()) {
+			optFile = loadGTLModelByFullPath(imp, currentImport);
+		} else {
+			optFile = loadGTLModelByRelativePath(imp, currentImport);
+		}
+		return optFile;
+	}
+
+	public Collection<EditorFile> loadAllEditorFilesInPackage(final EditorFile ef) {
+		Collection<EditorFile> pkgScope = new LinkedList<>();
+
+		IProject currentProject = SlimGTWorkspaceUtils.getCurrentProject(ef.eResource());
+		String currentFile = ef.eResource().getURI().toString().replace("platform:/resource/", "")
+				.replace(currentProject.getName(), "");
+		currentFile = currentProject.getLocation().toPortableString() + currentFile;
+		currentFile = currentFile.replace("/", "\\");
+
+		IWorkspace ws = ResourcesPlugin.getWorkspace();
+		for (IProject project : ws.getRoot().getProjects()) {
+			try {
+				if (!project.hasNature("org.emoflon.ibex.gt.gtl.ui.nature"))
+					continue;
+			} catch (CoreException e) {
+				continue;
+			}
+
+			File projectFile = new File(project.getLocation().toPortableString());
+			List<File> gtFiles = new LinkedList<>();
+			SlimGTWorkspaceUtils.gatherFilesWithEnding(gtFiles, projectFile, ".gtl", true);
+
+			for (File gtFile : gtFiles) {
+				URI gtModelUri;
+				try {
+					gtModelUri = URI.createFileURI(gtFile.getCanonicalPath());
+				} catch (IOException e) {
+					continue;
+				}
+
+				String fileString = gtModelUri.toFileString();
+
+				if (fileString.equals(currentFile))
+					continue;
+
+				Resource resource = loadResource(ef.eResource(), gtModelUri);
+				if (resource == null)
+					continue;
+
+				EObject gtlModel = resource.getContents().get(0);
+
+				if (gtlModel == null)
+					continue;
+
+				if (gtlModel instanceof EditorFile otherEditorFile) {
+					if (otherEditorFile.getPackage().getName().equals(ef.getPackage().getName())) {
+						pkgScope.add(otherEditorFile);
+					}
+				}
+			}
+		}
+
+		return pkgScope;
+	}
 
 	@Check
 	public void packageValid(PackageDeclaration pkg) {
@@ -51,6 +194,129 @@ public class GTLValidator extends AbstractGTLValidator {
 				}).findAny().isPresent()) {
 			error("Package name may not contain any characters other than lower case letters, digits or dots. The following illegal characters were found: "
 					+ sb.toString(), GTLPackage.Literals.PACKAGE_DECLARATION__NAME);
+		}
+	}
+
+	@Check
+	public void checkImportUriExists(PatternImport imp) {
+		if (imp.getFile() == null || imp.getFile().getValue() == null || imp.getFile().getValue().isBlank())
+			return;
+
+		Optional<EditorFile> optFile = loadGTLModelByImport(imp);
+		if (!optFile.isPresent()) {
+			error("Import path <" + imp.getFile().getValue() + "> is not valid.",
+					GTLPackage.Literals.PATTERN_IMPORT__FILE);
+		}
+
+	}
+
+	/**
+	 * Pattern names must be unique.
+	 */
+	@Check
+	public void checkImportNameUnique(PatternImport pImport) {
+		if (!pImport.isImportingAll() && (pImport.getPattern() == null || pImport.getPattern().getName() == null))
+			return;
+
+		EditorFile ef = SlimGTModelUtil.getContainer(pImport, EditorFile.class);
+		Collection<EditorFile> pkgScope = loadAllEditorFilesInPackage(ef);
+
+		Set<String> presentNamesAndImports = ef.getRules().stream().filter(p -> p != null && p.getName() != null)
+				.map(r -> r.getName()).collect(Collectors.toSet());
+		presentNamesAndImports.addAll(ef.getImportedPatterns().stream().filter(p -> !pImport.equals(p)).filter(
+				p -> p != null && !p.isImportingAll() && p.getPattern() != null && p.getPattern().getName() != null)
+				.map(p -> p.getPattern().getName()).collect(Collectors.toSet()));
+		presentNamesAndImports.addAll(pkgScope.stream().flatMap(file -> file.getRules().stream()).map(r -> r.getName())
+				.collect(Collectors.toSet()));
+
+		if (!pImport.isImportingAll())
+			if (pImport.getPattern() == null)
+				return;
+
+		if (presentNamesAndImports.contains(pImport.getPattern().getName())) {
+			error(String.format("Pattern/rule '%s' must not be declared more than once.",
+					pImport.getPattern().getName()), GTLPackage.Literals.PATTERN_IMPORT__PATTERN);
+		} else {
+			Optional<EditorFile> optFile = loadGTLModelByImport(pImport);
+			if (!optFile.isPresent()) // This will be checked somewhere else.
+				return;
+
+			Set<String> importedNames = optFile.get().getRules().stream().map(r -> r.getName())
+					.collect(Collectors.toSet());
+
+			for (String importedRule : importedNames) {
+				if (presentNamesAndImports.contains(importedRule))
+					error(String.format("Pattern/rule '%s' must not be declared more than once.", importedRule),
+							GTLPackage.Literals.PATTERN_IMPORT__PATTERN);
+			}
+		}
+	}
+
+	/**
+	 * Pattern names must be unique.
+	 */
+	@Check
+	public void checkNumbeOfImportedMetamodels(PatternImport pImport) {
+		if (!pImport.isImportingAll() && (pImport.getPattern() == null || pImport.getPattern().getName() == null))
+			return;
+
+		// TODO: Fixme -> Make an exception for the EcorePackage metamodel
+
+//		Set<EditorFile> importedGTLFiles = new HashSet<>();
+//		importedGTLFiles.addAll(loadAllEditorFilesInPackage(ef));
+
+	}
+
+	@Check
+	protected void checkOnlyOneMetamodelImport(Import imp) {
+		EditorFile ef = SlimGTModelUtil.getContainer(imp, EditorFile.class);
+//		if(ef.getImports().size() > 1) {
+//			error("Pattern/rule '%s' must not be declared more than once.", SlimGTPackage.Literals.IMPORT__NAME);
+//		}
+		// TODO: Fixme -> Make an exception for the EcorePackage metamodel
+	}
+
+	@Check
+	protected void checkRuleNameForbidden(SlimRule rule) {
+		if (rule.getName() == null)
+			return;
+
+		if (SlimGTValidatorUtils.RULE_NAME_BACKLIST.contains(rule.getName())) {
+			error(String.format("Pattern/rule '%s' is a java keyword or an emf class and, hence, forbidden.",
+					rule.getName()), GTLPackage.Literals.SLIM_RULE__NAME);
+		}
+	}
+
+	@Check
+	protected void checkRuleNameInvalidSymbols(SlimRule rule) {
+		if (rule.getName() == null)
+			error("Pattern/rule name may not be null.", GTLPackage.Literals.SLIM_RULE__NAME);
+
+		if (rule.getName().isBlank()) {
+			error("Pattern/rule name must not be empty!", GTLPackage.Literals.SLIM_RULE__NAME);
+			return;
+		}
+
+		if (rule.getName().contains(" ")) {
+			error("Pattern/rule name may not contain any white spaces.", GTLPackage.Literals.SLIM_RULE__NAME);
+		}
+
+		if (rule.getName().contains("\\")) {
+			error("Pattern/rule name may not contain any slashes.", GTLPackage.Literals.SLIM_RULE__NAME);
+		}
+
+		if (rule.getName().contains("/")) {
+			error("Pattern/rule name may not contain any slashes.", GTLPackage.Literals.SLIM_RULE__NAME);
+		}
+
+		StringBuilder sb = new StringBuilder();
+
+		if (rule.getName().chars().filter(c -> !(Character.isLetter(c) || Character.isDigit(c))).map(c -> {
+			sb.append((char) c + " ");
+			return c;
+		}).findAny().isPresent()) {
+			error("Pattern/rule name may not contain any characters other than letters, digits. The following illegal characters were found: "
+					+ sb.toString(), GTLPackage.Literals.SLIM_RULE__NAME);
 		}
 	}
 }

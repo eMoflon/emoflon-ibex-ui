@@ -196,78 +196,22 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 			if (resource == null)
 				return IScope.NULLSCOPE;
 		} else {
-			// 1. Case: package name
-			if (!(currentImport.contains("/") || currentImport.contains("\\"))) {
-				IProject currentProject = SlimGTWorkspaceUtils.getCurrentProject(context.eResource());
+			// 2. Case: relative path
+			IProject currentProject = SlimGTWorkspaceUtils.getCurrentProject(context.eResource());
+			if (currentProject == null)
+				return IScope.NULLSCOPE;
 
-				String currentFile = context.eResource().getURI().toString().replace("platform:/resource/", "")
-						.replace(currentProject.getName(), "");
-				currentFile = currentProject.getLocation().toPortableString() + currentFile;
-				currentFile = currentFile.replace("/", "\\");
-
-				IWorkspace ws = ResourcesPlugin.getWorkspace();
-				for (IProject project : ws.getRoot().getProjects()) {
-					try {
-						if (!project.hasNature("org.emoflon.ibex.gt.gtl.ui.nature"))
-							continue;
-					} catch (CoreException e) {
-						continue;
-					}
-
-					File projectFile = new File(project.getLocation().toPortableString());
-					List<File> gtFiles = new LinkedList<>();
-					SlimGTWorkspaceUtils.gatherFilesWithEnding(gtFiles, projectFile, ".gtl", true);
-
-					for (File gtFile : gtFiles) {
-						URI gtModelUri;
-						try {
-							gtModelUri = URI.createFileURI(gtFile.getCanonicalPath());
-						} catch (IOException e) {
-							continue;
-						}
-
-						String fileString = gtModelUri.toFileString();
-
-						if (fileString.equals(currentFile))
-							continue;
-
-						resource = loadResource(context.eResource(), gtModelUri);
-						if (resource == null)
-							continue;
-
-						EObject gtlModel = resource.getContents().get(0);
-
-						if (gtlModel == null)
-							continue;
-
-						if (gtlModel instanceof EditorFile otherEditorFile) {
-							if (otherEditorFile.getPackage().getName().equals(context.getFile())) {
-								break;
-							}
-						}
-						resource = null;
-					}
-
-					if (resource != null)
-						break;
-				}
-			} else { // 2. Case: relative path
-				IProject currentProject = SlimGTWorkspaceUtils.getCurrentProject(context.eResource());
-				if (currentProject == null)
-					return IScope.NULLSCOPE;
-
-				String absolutePath = null;
-				try {
-					absolutePath = Paths.get(currentProject.getLocation().toPortableString())
-							.resolve(Paths.get(currentImport)).toFile().getCanonicalPath();
-				} catch (IOException e) {
-					return IScope.NULLSCOPE;
-				}
-				URI gtModelUri = URI.createFileURI(absolutePath);
-				resource = loadResource(context.eResource(), gtModelUri);
-				if (resource == null)
-					return IScope.NULLSCOPE;
+			String absolutePath = null;
+			try {
+				absolutePath = Paths.get(currentProject.getLocation().toPortableString())
+						.resolve(Paths.get(currentImport)).toFile().getCanonicalPath();
+			} catch (IOException e) {
+				return IScope.NULLSCOPE;
 			}
+			URI gtModelUri = URI.createFileURI(absolutePath);
+			resource = loadResource(context.eResource(), gtModelUri);
+			if (resource == null)
+				return IScope.NULLSCOPE;
 		}
 
 		Set<String> allPatterns = new HashSet<>();

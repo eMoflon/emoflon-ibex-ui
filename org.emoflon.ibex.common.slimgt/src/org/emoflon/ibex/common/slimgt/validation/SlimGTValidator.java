@@ -3,6 +3,9 @@
  */
 package org.emoflon.ibex.common.slimgt.validation;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
@@ -10,6 +13,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
+import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.validation.Check;
 import org.emoflon.ibex.common.slimgt.slimGT.Import;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
@@ -21,6 +26,34 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
  * https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 public class SlimGTValidator extends AbstractSlimGTValidator {
+
+	protected Map<Resource, Map<URI, Resource>> resourceCache = new HashMap<>();
+
+	protected Resource loadResource(final Resource requester, final URI gtModelUri) {
+		Map<URI, Resource> cache = resourceCache.get(requester);
+		if (cache == null) {
+			cache = new HashMap<>();
+			resourceCache.put(requester, cache);
+		}
+
+		Resource other = cache.get(gtModelUri);
+		if (other == null) {
+			XtextResourceSet rs = new XtextResourceSet();
+			try {
+				other = rs.getResource(gtModelUri, true);
+			} catch (Exception e) {
+				return other;
+			}
+			cache.put(gtModelUri, other);
+
+			if (other == null)
+				return other;
+
+			EcoreUtil2.resolveLazyCrossReferences(other, () -> false);
+		}
+
+		return other;
+	}
 
 	/**
 	 * This prevents all exceptions being "swallowed" by the default validator

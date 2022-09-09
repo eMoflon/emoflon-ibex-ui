@@ -19,13 +19,13 @@ PackageDeclaration:
 ;
 
 PatternImport : 
-	'from' file = StringLiteral 'import' ('*' | pattern = [SlimRule|ID])
+	'from' file = StringLiteral 'import' (importingAll ?= '*' | pattern = [SlimRule|ID])
 ;
 
 @Override
 SlimRule:
 	(abstract?='abstract')? 
-	type = GTLType 
+	type = GTLRuleType 
 	name = ID 
 	('(' parameters+=SlimParameter (',' parameters+=SlimParameter)* ')')? 
 	(refining ?= 'refines' refinement+=GTLRuleRefinement (',' refinement+=GTLRuleRefinement)*)? 
@@ -45,7 +45,7 @@ SlimParameter:
   name=ID ':' (type = [ecore::EDataType])
 ;
 
-enum GTLType :
+enum GTLRuleType :
 	PATTERN = 'pattern' | RULE = 'rule'
 ;
 
