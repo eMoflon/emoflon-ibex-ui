@@ -3,6 +3,8 @@ package org.emoflon.ibex.gt.gtl.util;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -14,6 +16,7 @@ import org.emoflon.ibex.gt.gtl.gTL.GTLRuleNodeDeletion;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinement;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementAliased;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementPlain;
+import org.emoflon.ibex.gt.gtl.gTL.SlimParameter;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRule;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNode;
 
@@ -184,6 +187,28 @@ public final class GTLModelUtil {
 					.forEach(n -> {
 						nodes.add(n);
 					});
+		}
+	}
+
+	public static Collection<SlimParameter> getAllParameters(SlimRule context) {
+		List<SlimParameter> params = new LinkedList<>();
+		getAllParameters(context, params);
+		return params;
+	}
+
+	public static void getAllParameters(SlimRule root, Collection<SlimParameter> params) {
+		if (root.getParameters() != null)
+			params.addAll(root.getParameters());
+
+		if (root.isRefining()) {
+			for (GTLRuleRefinement refinement : root.getRefinement()) {
+				Optional<SlimRule> ruleOpt = refinementToRule(refinement);
+				if (ruleOpt.isEmpty())
+					continue;
+
+				SlimRule superRule = ruleOpt.get();
+				getAllParameters(superRule, params);
+			}
 		}
 	}
 

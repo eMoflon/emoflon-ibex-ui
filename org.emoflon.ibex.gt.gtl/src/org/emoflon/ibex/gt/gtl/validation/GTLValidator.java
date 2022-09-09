@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.validation.Check;
 import org.emoflon.ibex.common.slimgt.slimGT.Import;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
 import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtils;
 import org.emoflon.ibex.common.slimgt.validation.SlimGTValidatorUtils;
@@ -29,7 +30,9 @@ import org.emoflon.ibex.gt.gtl.gTL.EditorFile;
 import org.emoflon.ibex.gt.gtl.gTL.GTLPackage;
 import org.emoflon.ibex.gt.gtl.gTL.PackageDeclaration;
 import org.emoflon.ibex.gt.gtl.gTL.PatternImport;
+import org.emoflon.ibex.gt.gtl.gTL.SlimParameter;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRule;
+import org.emoflon.ibex.gt.gtl.util.GTLModelUtil;
 
 /**
  * This class contains custom validation rules.
@@ -269,7 +272,7 @@ public class GTLValidator extends AbstractGTLValidator {
 
 	@Check
 	protected void checkOnlyOneMetamodelImport(Import imp) {
-		EditorFile ef = SlimGTModelUtil.getContainer(imp, EditorFile.class);
+//		EditorFile ef = SlimGTModelUtil.getContainer(imp, EditorFile.class);
 //		if(ef.getImports().size() > 1) {
 //			error("Pattern/rule '%s' must not be declared more than once.", SlimGTPackage.Literals.IMPORT__NAME);
 //		}
@@ -339,5 +342,20 @@ public class GTLValidator extends AbstractGTLValidator {
 		if (presentNamesAndImports.contains(rule.getName()))
 			error(String.format("Pattern/rule '%s' must not be declared more than once.", rule.getName()),
 					GTLPackage.Literals.SLIM_RULE__NAME);
+	}
+
+	@Check
+	protected void checkParameterUnique(SlimParameter parameter) {
+		if (parameter.getName() == null)
+			return;
+
+		SlimRule currentRule = SlimGTModelUtil.getContainer(parameter, SlimRule.class);
+		long paramCount = GTLModelUtil.getAllParameters(currentRule).stream()
+				.filter(param -> param.getName().equals(parameter.getName())).count();
+
+		if (paramCount > 1) {
+			error(String.format("Parameter '%s' must not be declared more than once.", parameter.getName()),
+					SlimGTPackage.Literals.SLIM_PARAMETER__NAME);
+		}
 	}
 }

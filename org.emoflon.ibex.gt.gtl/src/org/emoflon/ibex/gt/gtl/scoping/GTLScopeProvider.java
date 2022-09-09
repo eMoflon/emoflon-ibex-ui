@@ -334,10 +334,7 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 
 	protected IScope scopeForParameterExpressionParameter(GTLParameterExpression context, EReference reference) {
 		SlimRule currentRule = SlimGTModelUtil.getContainer(context, SlimRule.class);
-		if (currentRule.getParameters() == null || currentRule.getParameters().size() <= 0)
-			return IScope.NULLSCOPE;
-
-		return Scopes.scopeFor(currentRule.getParameters());
+		return Scopes.scopeFor(GTLModelUtil.getAllParameters(currentRule));
 	}
 
 	protected IScope scopeForCountExpressionPattern(CountExpression context, EReference reference) {
