@@ -42,8 +42,15 @@ public final class SlimGTEMFUtils {
 		var metamodel = EPackage.Registry.INSTANCE.getEPackage(uri);
 		if (metamodel == null || metamodel.eIsProxy()) {
 			var resourceSet = new ResourceSetImpl();
+			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("ecore", new EcoreResourceFactoryImpl());
+			EcorePackage.eINSTANCE.eClass();
+			
 			var resource = resourceSet.createResource(URI.createURI(uri));
-			resource.load(null);
+			try {
+			    resource.load(null);
+			catch(IOException) {
+				return null;
+			}
 			if(resource != null && !resource.getContents().isEmpty()) {
 				if(resource.getContents().get(0) instanceof EPackage ePackage)
 					metamodel = ePackage;

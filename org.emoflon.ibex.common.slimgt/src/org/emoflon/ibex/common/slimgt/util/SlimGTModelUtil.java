@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EClass;
@@ -45,7 +46,18 @@ public final class SlimGTModelUtil {
 	 * @param file the SlimGT file
 	 */
 	public static Collection<EDataType> getDatatypes(final EditorFile file) {
-		return getElements((EObject) EcorePackage.eINSTANCE, EDataType.class);
+		Set<EDataType> dataTypes = file.getImports().stream().map(i -> {
+			try {
+				return Optional.of(SlimGTEMFUtils.loadMetamodel(i.getName()));
+			} catch (Exception e) {
+				return Optional.empty();
+			}
+		}).filter(model -> model.isPresent())
+				.flatMap(model -> getElements((EObject) model.get(), EDataType.class).stream())
+				.collect(Collectors.toSet());
+		dataTypes.addAll(getElements(EcorePackage.eINSTANCE, EDataType.class));
+
+		return dataTypes;
 	}
 	
 	
