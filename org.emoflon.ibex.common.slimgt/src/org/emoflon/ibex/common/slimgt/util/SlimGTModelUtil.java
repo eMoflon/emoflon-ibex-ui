@@ -2,12 +2,14 @@ package org.emoflon.ibex.common.slimgt.util;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.xtext.EcoreUtil2;
 import org.emoflon.ibex.common.slimgt.slimGT.EditorFile;
 
@@ -15,7 +17,7 @@ public final class SlimGTModelUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> T getContainer(EObject node, Class<T> clazz) {
 		EObject current = node;
-		while (current != null && !(current.getClass().isInstance(clazz))) {
+		while (current != null && !(clazz.isInstance(current))) {
 			if (node.eContainer() == null)
 				return null;
 
@@ -41,7 +43,7 @@ public final class SlimGTModelUtil {
 	 * @param file the SlimGT file
 	 */
 	public static Collection<EDataType> getDatatypes(final EditorFile file) {
-		return file.getImports().stream().map(i -> {
+		Set<EDataType> dataTypes = file.getImports().stream().map(i -> {
 			try {
 				return Optional.of(SlimGTEMFUtils.loadMetamodel(i.getName()));
 			} catch (Exception e) {
@@ -50,6 +52,9 @@ public final class SlimGTModelUtil {
 		}).filter(model -> model.isPresent())
 				.flatMap(model -> getElements((EObject) model.get(), EDataType.class).stream())
 				.collect(Collectors.toSet());
+		dataTypes.addAll(getElements(EcorePackage.eINSTANCE, EDataType.class));
+
+		return dataTypes;
 	}
 
 	/**

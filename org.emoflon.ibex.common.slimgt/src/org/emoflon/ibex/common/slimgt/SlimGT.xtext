@@ -9,7 +9,7 @@ EditorFile:
 ;
 
 Import:
-	'#import' name = STRING
+	'import' name = STRING
 ;
 
 SlimRule: {SlimRule}
