@@ -1,6 +1,8 @@
 package org.emoflon.ibex.common.slimgt.util;
 
+import java.io.IOException;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -8,6 +10,8 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.xtext.EcoreUtil2;
 import org.emoflon.ibex.common.slimgt.slimGT.EditorFile;
 
@@ -15,7 +19,7 @@ public final class SlimGTModelUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> T getContainer(EObject node, Class<T> clazz) {
 		EObject current = node;
-		while (current != null && !(current.getClass().isInstance(clazz))) {
+		while (current != null && !(clazz.isInstance(current))) {
 			if (node.eContainer() == null)
 				return null;
 
@@ -41,15 +45,34 @@ public final class SlimGTModelUtil {
 	 * @param file the SlimGT file
 	 */
 	public static Collection<EDataType> getDatatypes(final EditorFile file) {
-		return file.getImports().stream().map(i -> {
+		return getElements((EObject) EcorePackage.eINSTANCE, EDataType.class);
+	}
+	
+	
+	
+	/**
+	 * Returns all EPackages imported into the given file
+	 * 
+	 * @param file the SlimGT file
+	 */
+	public static Collection<EPackage> getPackages(final EditorFile file) {
+		var imports = file.getImports();
+		var allPackages = new HashSet<EPackage>();
+		
+		for(var imp : imports) {
+			EPackage ePackage = null;
 			try {
-				return Optional.of(SlimGTEMFUtils.loadMetamodel(i.getName()));
+				ePackage = SlimGTEMFUtils.loadMetamodel(imp.getName());
 			} catch (Exception e) {
-				return Optional.empty();
 			}
-		}).filter(model -> model.isPresent())
-				.flatMap(model -> getElements((EObject) model.get(), EDataType.class).stream())
-				.collect(Collectors.toSet());
+			
+			if(ePackage == null)
+				continue;
+			
+			allPackages.add(ePackage);
+			allPackages.addAll(getElements((EObject) ePackage, EPackage.class));
+		}
+		return allPackages;
 	}
 
 	/**

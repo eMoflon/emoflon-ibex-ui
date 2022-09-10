@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
+import org.eclipse.xtext.scoping.impl.FilteringScope;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRule;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
@@ -59,10 +60,10 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 	public IScope getScopeInternal(EObject context, EReference reference) throws Exception {
 		
 		// package references
-//		if (isSchemaSourceTypes(context, reference))
-//			return getPackagesFromImports(context, reference);
-//		if (isSchemaTargetTypes(context, reference))
-//			return getPackagesFromImports(context, reference);
+		if (isSchemaSourceTypes(context, reference))
+			return getPackagesFromImports(context, reference);
+		if (isSchemaTargetTypes(context, reference))
+			return getPackagesFromImports(context, reference);
 		
 		// node type references
 		if (isSlimRuleNodeType(context, reference))
@@ -72,7 +73,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		
 		if (isCorrespondenceSourceType(context, reference))
 			return getTypes(context, reference, DomainType.SOURCE);
-		if (isCorrespondenceSourceType(context, reference))
+		if (isCorrespondenceTargetType(context, reference))
 			return getTypes(context, reference, DomainType.TARGET);
 
 		// edge target references
@@ -99,14 +100,12 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		
 		return super.getScopeInternal(context, reference);
 	}
-	
+
 	private IScope getPackagesFromImports(EObject context, EReference reference) {
-		var editorFile = getContainer(context, EditorFile.class);
-		var imports = editorFile.getImports();
-		for(var imp : imports) {
-//			imp.
-		}
-		return null;
+		var schema = getSchemaInScope(context);
+		var editorFile = getContainer(schema, EditorFile.class);
+		var packages = getPackages(editorFile);
+		return Scopes.scopeFor(packages);
 	}
 
 	private IScope getCorrespondenceReferencedNodes(EObject context, EReference reference) {
@@ -427,9 +426,12 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 
 	public Schema getSchemaInScope(EObject obj) {
 		var editorFile = getContainer(obj, EditorFile.class);
-		for (var file : getAllFilesInScope(editorFile)) {
-			if (file.getSchema() != null)
-				return file.getSchema();
+		if (editorFile.getSchema() != null)
+			return editorFile.getSchema();
+		
+		for (var otherFile : getAllFilesInScope(editorFile)) {
+			if (otherFile.getSchema() != null)
+				return otherFile.getSchema();
 		}
 		return null;
 	}

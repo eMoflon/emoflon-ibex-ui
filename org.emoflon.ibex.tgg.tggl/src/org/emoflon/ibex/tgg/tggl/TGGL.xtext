@@ -7,10 +7,10 @@ generate tGGL "http://www.emoflon.org/ibex/tgg/tggl/TGGL"
 
 @Override
 EditorFile:
-	imports += Import
-	using += Using
+	imports += Import*
+	using += Using*
 	(schema = Schema)?
-  	rules += TGGRule
+  	rules += TGGRule*
   	(library = AttributeConditionDefinitionLibrary)?
 ;
 
@@ -30,19 +30,19 @@ Schema:
 	'schema' name = QualifiedName
 		
 	('source' '{'
-		sourceTypes += [ecore::EPackage | QualifiedName]
+		sourceTypes += [ecore::EPackage | QualifiedName]*
 	'}')? 
 	
 	('target' '{'
-		targetTypes += [ecore::EPackage | QualifiedName]
+		targetTypes += [ecore::EPackage | QualifiedName]*
 	'}')? 
 
 	('correspondence' '{'
-		correspondenceTypes += CorrespondenceType
+		correspondenceTypes += CorrespondenceType*
 	'}')?	
 	
 	('attributeConditions' '{'
-		attributeCondDefs += AttributeConditionDefinition
+		attributeCondDefs += AttributeConditionDefinition*
 	'}')? 
 ;
 
@@ -73,7 +73,7 @@ AttributeConditionDefinitionLibrary:
 ;
 
 CorrespondenceType:
-	name = ID ('extends' super=[CorrespondenceType]) | ('{'
+	name = ID ('extends' super=[CorrespondenceType])? ('{'
 		'src->' source = [ecore::EClass | QualifiedName]  
 		'trg->' target = [ecore::EClass | QualifiedName]
 	'}')
