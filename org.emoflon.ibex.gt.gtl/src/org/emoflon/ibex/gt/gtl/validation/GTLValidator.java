@@ -288,7 +288,7 @@ public class GTLValidator extends AbstractGTLValidator {
 		// TODO: Fixme -> Make an exception for the EcorePackage metamodel
 	}
 
-	// Rule Checks
+	// Rulew Checks
 
 	@Check
 	protected void checkRuleNameForbidden(SlimRule rule) {

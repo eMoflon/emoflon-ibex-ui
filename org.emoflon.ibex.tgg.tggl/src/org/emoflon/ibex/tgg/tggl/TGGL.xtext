@@ -68,7 +68,7 @@ Binding:
 AttributeConditionDefinitionLibrary:
 	'library' name = QualifiedName
 	'{'
-		attributeCondDefs += AttributeConditionDefinition
+		(attributeCondDefs += AttributeConditionDefinition)*
 	'}'
 ;
 
@@ -123,7 +123,7 @@ SlimRuleNode:
 	name = ID ':' type=[ecore::EClass | QualifiedName] ('{'
 		(contextEdges += SlimRuleEdgeContext |
 		createdEdges += SlimRuleEdgeCreation |
-		assignments += SlimRuleAttributeAssignment)
+		assignments += SlimRuleAttributeAssignment)*
 	'}')?
 ;
 
@@ -141,11 +141,11 @@ TGGRule:
 	'}')? 
 	
 	('correspondence' '{'
-		correspondenceNodes += CorrespondenceNode	
+		(correspondenceNodes += CorrespondenceNode)*	
 	'}')? 
 
 	('attributeConditions' '{'
-		attrConditions += AttributeCondition
+		(attrConditions += AttributeCondition)*
 	'}')? 
 ;
 
