@@ -4,7 +4,9 @@ import java.io.IOException;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
 
 public final class SlimGTEMFUtils {
 	public static EPackage loadMetamodel(URI uri) throws IOException {
@@ -48,7 +50,8 @@ public final class SlimGTEMFUtils {
 			var resource = resourceSet.createResource(URI.createURI(uri));
 			try {
 			    resource.load(null);
-			catch(IOException) {
+			}
+			catch(IOException e) {
 				return null;
 			}
 			if(resource != null && !resource.getContents().isEmpty()) {
