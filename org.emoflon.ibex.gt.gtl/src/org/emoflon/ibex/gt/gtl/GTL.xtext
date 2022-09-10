@@ -8,8 +8,8 @@ generate gTL "http://www.emoflon.org/ibex/gt/gtl/GTL"
 @Override
 EditorFile:
 	package = PackageDeclaration
-	imports += Import
-	importedPatterns += PatternImport
+	(imports += Import)*
+	(importedPatterns += PatternImport)*
 	rules += SlimRule
 ;
 
@@ -23,7 +23,7 @@ PatternImport :
 ;
 
 @Override
-SlimRule:
+SlimRule: {SlimRule}
 	(abstract?='abstract')? 
 	type = GTLRuleType 
 	name = ID 
@@ -35,7 +35,7 @@ SlimRule:
 			deletedNodes += GTLRuleNodeDeletion 		|
 			atrConditions += SlimRuleAttributeCondition |
 			//watchDogs += GTLRuleWatchDogs 				|
-			invocations += SlimRuleInvocation)
+			invocations += SlimRuleInvocation)*
 	'}' 
 	(stochastic ?='@' probability = ValueExpression)?
 ;
@@ -77,7 +77,7 @@ SlimRuleNode:
 		createdEdges += SlimRuleEdgeCreation |
 		deletedEdges += GTLRuleEdgeDeletion |
 		edgeIterators += GTLEdgeIterator |
-		assignments += SlimRuleAttributeAssignment)
+		assignments += SlimRuleAttributeAssignment)*
 	'}')?
 ;
 
