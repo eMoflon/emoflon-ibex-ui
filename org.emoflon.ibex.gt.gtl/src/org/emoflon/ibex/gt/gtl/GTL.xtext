@@ -50,19 +50,20 @@ enum GTLRuleType :
 ;
 
 GTLRuleRefinement:
-	name = (GTLRuleRefinementPlain | GTLRuleRefinementAliased)
+	GTLRuleRefinementPlain | GTLRuleRefinementAliased
 ;
 
-GTLRuleRefinementPlain:
-	name=[SlimRule|ID]
+GTLRuleRefinementPlain returns GTLRuleRefinement : {GTLRuleRefinementPlain}
+	superRule=[SlimRule|ID]
 ;
 
-GTLRuleRefinementAliased:
+
+GTLRuleRefinementAliased returns GTLRuleRefinement : {GTLRuleRefinementAliased}
 	superRule=[SlimRule|ID] 'as' name=ID
 ;
 
 GTLRuleRefinmentNode:
-	refinement=[GTLRuleRefinement|ID] '.' refinementNode=[SlimRuleNode|ID]
+	superRule=[ecore::EObject|ID] '.' refinementNode=[SlimRuleNode|ID]
 ;
 
 GTLRuleNodeDeletion :

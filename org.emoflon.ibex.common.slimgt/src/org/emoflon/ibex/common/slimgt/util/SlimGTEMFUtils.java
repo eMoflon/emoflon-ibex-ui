@@ -9,6 +9,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
+import org.eclipse.xtext.EcoreUtil2;
 
 public final class SlimGTEMFUtils {
 	public static EPackage loadMetamodel(URI uri) throws IOException {
@@ -39,6 +40,10 @@ public final class SlimGTEMFUtils {
 						+ ", can not load model.");
 			}
 		}
+
+		EcoreUtil2.resolveLazyCrossReferences(metamodel.eResource(), () -> false);
+		EcoreUtil2.resolveAll(metamodel, () -> false);
+
 		return metamodel;
 	}
 

@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.eclipse.emf.ecore.EObject;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeContext;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeCreation;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleNodeDeletion;
@@ -64,9 +65,22 @@ public final class GTLModelUtil {
 
 	public static Optional<SlimRule> refinementToRule(final GTLRuleRefinement refinement) {
 		SlimRule rule = null;
-		if (refinement.getName() instanceof GTLRuleRefinementPlain plainRefinement) {
-			rule = plainRefinement.getName();
-		} else if (refinement.getName() instanceof GTLRuleRefinementAliased aliasedRefinement) {
+		if (refinement instanceof GTLRuleRefinementPlain plainRefinement) {
+			rule = plainRefinement.getSuperRule();
+		} else if (refinement instanceof GTLRuleRefinementAliased aliasedRefinement) {
+			rule = aliasedRefinement.getSuperRule();
+		} else {
+			return Optional.empty();
+		}
+
+		return Optional.of(rule);
+	}
+
+	public static Optional<SlimRule> refinementNodeToRule(final EObject refinement) {
+		SlimRule rule = null;
+		if (refinement instanceof SlimRule plainRefinement) {
+			rule = plainRefinement;
+		} else if (refinement instanceof GTLRuleRefinementAliased aliasedRefinement) {
 			rule = aliasedRefinement.getSuperRule();
 		} else {
 			return Optional.empty();
@@ -102,7 +116,7 @@ public final class GTLModelUtil {
 				// Handle nodes that refine nodes of the current super rule
 				root.getContextNodes().stream().map(n -> (SlimRuleNode) n.getContext()).filter(n -> n.isRefining())
 						.filter(n -> {
-							Optional<SlimRule> otherRule = refinementToRule(n.getRefinement().getRefinement());
+							Optional<SlimRule> otherRule = refinementNodeToRule(n.getRefinement().getSuperRule());
 							if (otherRule.isPresent()) {
 								return otherRule.get().equals(superRule);
 							} else {
@@ -126,7 +140,7 @@ public final class GTLModelUtil {
 				// Handle nodes that refine nodes of the current super rule
 				root.getCreatedNodes().stream().map(n -> (SlimRuleNode) n.getCreation()).filter(n -> n.isRefining())
 						.filter(n -> {
-							Optional<SlimRule> otherRule = refinementToRule(n.getRefinement().getRefinement());
+							Optional<SlimRule> otherRule = refinementNodeToRule(n.getRefinement().getSuperRule());
 							if (otherRule.isPresent()) {
 								return otherRule.get().equals(superRule);
 							} else {
@@ -149,7 +163,7 @@ public final class GTLModelUtil {
 
 				// Handle nodes that refine nodes of the current super rule
 				root.getDeletedNodes().stream().map(n -> n.getDeletion()).filter(n -> n.isRefining()).filter(n -> {
-					Optional<SlimRule> otherRule = refinementToRule(n.getRefinement().getRefinement());
+					Optional<SlimRule> otherRule = refinementNodeToRule(n.getRefinement().getSuperRule());
 					if (otherRule.isPresent()) {
 						return otherRule.get().equals(superRule);
 					} else {

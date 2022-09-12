@@ -389,7 +389,7 @@ public class GTLValidator extends AbstractGTLValidator {
 
 		if (refinementCount > 1) {
 			error(String.format("The rule/pattern '%s' may not be refined more than once.", superRule.get().getName()),
-					GTLPackage.Literals.GTL_RULE_REFINEMENT__NAME);
+					GTLPackage.Literals.GTL_RULE_REFINEMENT__SUPER_RULE);
 		}
 	}
 
@@ -428,7 +428,7 @@ public class GTLValidator extends AbstractGTLValidator {
 
 		if (currentRule.getType() == GTLRuleType.PATTERN && superRule.get().getType() == GTLRuleType.RULE) {
 			error(String.format("The a pattern may not refine a rule ('%s').", superRule.get().getName()),
-					GTLPackage.Literals.GTL_RULE_REFINEMENT__NAME);
+					GTLPackage.Literals.GTL_RULE_REFINEMENT__SUPER_RULE);
 		}
 
 	}
@@ -504,12 +504,17 @@ public class GTLValidator extends AbstractGTLValidator {
 		if (!((SlimRuleNode) node.getContext()).isRefining())
 			return;
 
+		if (((SlimRuleNode) node.getContext()).getRefinement() == null)
+			return;
+
+		if (((SlimRuleNode) node.getContext()).getRefinement().getRefinementNode() == null)
+			return;
+
 		SlimRuleNode superNode = ((SlimRuleNode) node.getContext()).getRefinement().getRefinementNode();
 		SlimRuleNodeContext superContext = SlimGTModelUtil.getContainer(superNode, SlimRuleNodeContext.class);
 
 		if (superContext == null) {
-			error("A context node may only refine another context node.",
-					SlimGTPackage.Literals.SLIM_RULE__CONTEXT_NODES);
+			error("A context node may only refine another context node.", SlimGTPackage.Literals.SLIM_RULE_NODE__NAME);
 		}
 
 	}
