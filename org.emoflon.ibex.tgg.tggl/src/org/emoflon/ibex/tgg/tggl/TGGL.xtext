@@ -96,7 +96,7 @@ LocalVariable:
 ;
 
 TGGLRuleRefinement:
-	name = (TGGLRuleRefinementPlain | TGGLRuleRefinementAliased)
+	(TGGLRuleRefinementPlain | TGGLRuleRefinementAliased)
 ;
 
 TGGLRuleRefinementPlain:

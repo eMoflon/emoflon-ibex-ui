@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import org.eclipse.xtext.scoping.impl.FilteringScope;
@@ -161,8 +162,6 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 			tggRule = plain.getName();
 		else if(refinement instanceof TGGLRuleRefinementAliased aliased)
 			tggRule = aliased.getSuperRule();
-		else 				
-			throw new RuntimeException("Expected element of type TGGLRuleRefinementPlain or TGGLRuleRefinementAliased but got " + refinement);
 
 		Collection<EObject> nodes = null;
 		switch(getDomainType(context)) {
@@ -184,15 +183,14 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		var tggRule = getContainer(context, TGGRule.class);
 		var refinedRules = new HashSet<EObject>();
 		for(var refinement : tggRule.getRefinements()) {
-			var refinementName = refinement.getName();
-			if(refinementName instanceof TGGLRuleRefinementPlain plain) {
+			if(refinement instanceof TGGLRuleRefinementPlain plain) {
+				EcoreUtil2.resolveAll(plain.getName());
 				refinedRules.add(plain);
 			}
-			else if(refinementName instanceof TGGLRuleRefinementAliased aliased) {
+			else if(refinement instanceof TGGLRuleRefinementAliased aliased) {
 				refinedRules.add(aliased);
-				refinedRules.add(aliased.getSuperRule());
-			} else 
-				throw new RuntimeException("Expected element of type TGGLRuleRefinementPlain or TGGLRuleRefinementAliased but got " + refinementName);
+//				refinedRules.add(aliased.getSuperRule());
+			} 
 		}
 		return Scopes.scopeFor(refinedRules);
 	}
@@ -331,13 +329,12 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 			
 			// extract refined rule from refinements
 			for(var refinement : currentRule.getRefinements()) {
-				var refinementID = refinement.getName();
-				if(refinementID instanceof TGGLRuleRefinementPlain plain)
+				if(refinement instanceof TGGLRuleRefinementPlain plain)
 					ruleCandidates.add(plain.getName());
-				else if(refinementID instanceof TGGLRuleRefinementAliased aliased) 
+				else if(refinement instanceof TGGLRuleRefinementAliased aliased) 
 					ruleCandidates.add(aliased.getSuperRule());
 				else
-					throw new RuntimeException("Expected element of type TGGLRuleRefinementPlain or TGGLRuleRefinementAliased but got " + refinementID);
+					throw new RuntimeException("Expected element of type TGGLRuleRefinementPlain or TGGLRuleRefinementAliased but got " + refinement);
 			}
 
 			Set<EObject> newNodes = new HashSet<>();
