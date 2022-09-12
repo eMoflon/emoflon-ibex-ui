@@ -27,6 +27,7 @@ import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import org.eclipse.xtext.scoping.impl.FilteringScope;
+import org.emoflon.ibex.common.slimgt.scoping.SlimGTAliasedTypeScope;
 import org.emoflon.ibex.common.slimgt.slimGT.PackageReference;
 import org.emoflon.ibex.common.slimgt.slimGT.PackageReferenceAlias;
 import org.emoflon.ibex.common.slimgt.slimGT.PackageReferencePlain;
@@ -401,10 +402,11 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 
 	private IScope getTypes(EObject context, EReference reference, DomainType domain) {
 		var schema = getSchemaInScope(context);
-
+		var editorFile = getContainer(schema, EditorFile.class);
+		
 		switch (domain) {
 		case SOURCE:
-			return Scopes.scopeFor(getTypes(schema.getSourceTypes()));
+			return new SlimGTAliasedTypeScope(schema.getSourceTypes(), editorFile.getImports(), getTypes(schema.getSourceTypes()));
 		case CORRESPONDENCE:
 			return Scopes.scopeFor(schema.getCorrespondenceTypes());
 		case TARGET:
@@ -435,6 +437,8 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 				packages.add(plain.getImportedPackage());
 			if(packageReference instanceof PackageReferenceAlias alias)
 				packages.add(alias.getImportedPackage());
+			if(packageReference instanceof EPackage pkg) 
+				packages.add(pkg);
 		}
 		return packages;
 	}

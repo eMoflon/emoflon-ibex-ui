@@ -1,15 +1,14 @@
 package org.emoflon.ibex.common.slimgt.scoping;
 
 import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.DefaultDeclarativeQualifiedNameProvider;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -17,23 +16,16 @@ import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.Scopes;
 import org.eclipse.xtext.scoping.impl.SimpleScope;
 import org.emoflon.ibex.common.slimgt.slimGT.Import;
-import org.emoflon.ibex.common.slimgt.slimGT.PackageReference;
 import org.emoflon.ibex.common.slimgt.slimGT.PackageReferenceAlias;
-import org.emoflon.ibex.common.slimgt.slimGT.PackageReferencePlain;
 
 import com.google.common.collect.Iterables;
 import com.google.inject.Provider;
 
 public class SlimGTAliasedTypeScope extends SimpleScope {
 
-	public SlimGTAliasedTypeScope(Collection<? extends EPackage> packages, Collection<? extends Import> imports) {
-		super(new SimpleScope(Scopes.scopedElementsFor(getPackagesWithAlias(packages, imports), new AliasedNamedProvider())),
-				Scopes.scopedElementsFor(packages, new RootPackageAwareQualifiedNamedProvider()));
-	}
-
-	private static Collection<EObject> getPackagesWithAlias(Collection<? extends EPackage> packages, Collection<? extends Import> imports) {
-		var aliasedPackages = imports.parallelStream().flatMap(i -> i.getPackageAliases().stream()).map(a -> a.getImportedPackage()).toList();
-		return packages.parallelStream().filter(aliasedPackages::contains).collect(Collectors.toSet());
+	public SlimGTAliasedTypeScope(Collection<EObject> packages, Collection<Import> imports, Collection<? extends EObject> objects) {
+		super(new SimpleScope(Scopes.scopedElementsFor(objects, new AliasedNamedProvider(imports))),
+				Scopes.scopedElementsFor(objects, new RootPackageAwareQualifiedNamedProvider()));
 	}
 
 	@Override
@@ -58,14 +50,40 @@ public class SlimGTAliasedTypeScope extends SimpleScope {
 
 class AliasedNamedProvider extends DefaultDeclarativeQualifiedNameProvider {
 
+	private Map<String, PackageReferenceAlias> package2alias = new HashMap<>();
+	
+	public AliasedNamedProvider(Collection<Import> imports) {
+		for(var reference : imports.stream().flatMap(i -> i.getPackageAliases().stream()).toList()) {
+			if(reference instanceof PackageReferenceAlias alias)
+				package2alias.put(getFQN(alias.getImportedPackage()), alias);
+		}
+	}
+	
+	private String getFQN(EPackage pkg) {
+		String fqn = "";
+		EPackage currentPkg = pkg;
+		while(currentPkg != null) {
+			fqn = currentPkg.getName() + "." + fqn;
+			if(currentPkg.getESuperPackage() == null)
+				break;
+			currentPkg = currentPkg.getESuperPackage();
+		}
+		
+		if(currentPkg == null)
+			return null;
+		
+		fqn = currentPkg.getNsURI() + " - " + currentPkg.getNsPrefix() + " - " + fqn;
+		return fqn;
+	}
+	
 	@Override
 	public QualifiedName getFullyQualifiedName(EObject obj) {
-		if (obj instanceof Import imp) {
-			for(PackageReference packageReference : imp.getPackageAliases()) {
-				if(packageReference instanceof PackageReferenceAlias alias) {
-					IQualifiedNameConverter converter = new IQualifiedNameConverter.DefaultImpl();
-					return converter.toQualifiedName(alias.getName());
-				}
+		if (obj instanceof EClass eClass) {
+			var pkg = eClass.getEPackage();
+			if(package2alias.containsKey(getFQN(pkg))) {
+				var alias = package2alias.get(getFQN(pkg));
+				IQualifiedNameConverter converter = new IQualifiedNameConverter.DefaultImpl();
+				return converter.toQualifiedName(alias.getName() + "." + eClass.getName());
 			}
 		}
 		
@@ -77,12 +95,15 @@ class RootPackageAwareQualifiedNamedProvider extends DefaultDeclarativeQualified
 
 	@Override
 	public QualifiedName getFullyQualifiedName(EObject obj) {
-		if (obj instanceof EPackage) {
-			EPackage pack = EPackage.class.cast(obj);
-			if (pack.eContainer() == null) {
-				IQualifiedNameConverter converter = new IQualifiedNameConverter.DefaultImpl();
-				return converter.toQualifiedName(pack.getName());
+		if (obj instanceof EClass eClass) {
+			String fqn = "";
+			EPackage currentPkg = eClass.getEPackage();
+			while(currentPkg != null) {
+				fqn = currentPkg.getName() + "." + fqn;
+				currentPkg = currentPkg.getESuperPackage();
 			}
+			IQualifiedNameConverter converter = new IQualifiedNameConverter.DefaultImpl();
+			return converter.toQualifiedName(fqn + eClass.getName());
 		}
 
 		return super.getFullyQualifiedName(obj);
