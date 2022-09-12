@@ -406,11 +406,11 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		
 		switch (domain) {
 		case SOURCE:
-			return new SlimGTAliasedTypeScope(schema.getSourceTypes(), editorFile.getImports(), getTypes(schema.getSourceTypes()));
+			return new SlimGTAliasedTypeScope(editorFile.getImports(), getTypes(schema.getSourceTypes()));
 		case CORRESPONDENCE:
 			return Scopes.scopeFor(schema.getCorrespondenceTypes());
 		case TARGET:
-			return Scopes.scopeFor(getTypes(schema.getTargetTypes()));
+			return new SlimGTAliasedTypeScope(editorFile.getImports(), getTypes(schema.getTargetTypes()));
 		}
 		return IScope.NULLSCOPE;
 	}

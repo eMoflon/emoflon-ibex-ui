@@ -23,7 +23,7 @@ import com.google.inject.Provider;
 
 public class SlimGTAliasedTypeScope extends SimpleScope {
 
-	public SlimGTAliasedTypeScope(Collection<EObject> packages, Collection<Import> imports, Collection<? extends EObject> objects) {
+	public SlimGTAliasedTypeScope(Collection<Import> imports, Collection<? extends EObject> objects) {
 		super(new SimpleScope(Scopes.scopedElementsFor(objects, new AliasedNamedProvider(imports))),
 				Scopes.scopedElementsFor(objects, new RootPackageAwareQualifiedNamedProvider()));
 	}
