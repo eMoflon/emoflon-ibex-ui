@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.xtext.EcoreUtil2;
 import org.emoflon.ibex.common.slimgt.slimGT.EditorFile;
+import org.emoflon.ibex.common.slimgt.slimGT.Import;
 
 public final class SlimGTModelUtil {
 	@SuppressWarnings("unchecked")
@@ -81,6 +82,27 @@ public final class SlimGTModelUtil {
 			allPackages.add(ePackage);
 			allPackages.addAll(getElements((EObject) ePackage, EPackage.class));
 		}
+		return allPackages;
+	}
+	
+	/**
+	 * Returns all EPackages imported into the given file
+	 * 
+	 * @param file the SlimGT file
+	 */
+	public static Collection<EPackage> getPackages(final Import imp) {
+		var allPackages = new HashSet<EPackage>();
+		EPackage ePackage = null;
+		try {
+			ePackage = SlimGTEMFUtils.loadMetamodel(imp.getName());
+		} catch (Exception e) {
+		}
+
+		if (ePackage == null)
+			return allPackages;
+
+		allPackages.add(ePackage);
+		allPackages.addAll(getElements((EObject) ePackage, EPackage.class));
 		return allPackages;
 	}
 

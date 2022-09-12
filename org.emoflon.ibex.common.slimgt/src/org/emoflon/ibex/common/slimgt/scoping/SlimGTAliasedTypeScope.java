@@ -16,24 +16,24 @@ import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.Scopes;
 import org.eclipse.xtext.scoping.impl.SimpleScope;
+import org.emoflon.ibex.common.slimgt.slimGT.Import;
+import org.emoflon.ibex.common.slimgt.slimGT.PackageReference;
+import org.emoflon.ibex.common.slimgt.slimGT.PackageReferenceAlias;
+import org.emoflon.ibex.common.slimgt.slimGT.PackageReferencePlain;
 
 import com.google.common.collect.Iterables;
 import com.google.inject.Provider;
 
-public class SlimGTQualifiedNameScope extends SimpleScope {
+public class SlimGTAliasedTypeScope extends SimpleScope {
 
-	public SlimGTQualifiedNameScope(Collection<? extends EObject> objects) {
-		super(new SimpleScope(Scopes.scopedElementsFor(accountForSubPackages(objects), new DefaultDeclarativeQualifiedNameProvider())),
-				Scopes.scopedElementsFor(accountForSubPackages(objects), new RootPackageAwareQualifiedNamedProvider()));
+	public SlimGTAliasedTypeScope(Collection<? extends EPackage> packages, Collection<? extends Import> imports) {
+		super(new SimpleScope(Scopes.scopedElementsFor(getPackagesWithAlias(packages, imports), new AliasedNamedProvider())),
+				Scopes.scopedElementsFor(packages, new RootPackageAwareQualifiedNamedProvider()));
 	}
 
-	private static Collection<EObject> accountForSubPackages(Collection<? extends EObject> objects) {
-		Set<EObject> allPackages = objects.stream().flatMap(o -> EcoreUtil2.getAllContentsOfType(o, EPackage.class).stream())
-				.collect(Collectors.toCollection(LinkedHashSet::new));
-
-		allPackages.addAll(objects);
-
-		return allPackages;
+	private static Collection<EObject> getPackagesWithAlias(Collection<? extends EPackage> packages, Collection<? extends Import> imports) {
+		var aliasedPackages = imports.parallelStream().flatMap(i -> i.getPackageAliases().stream()).map(a -> a.getImportedPackage()).toList();
+		return packages.parallelStream().filter(aliasedPackages::contains).collect(Collectors.toSet());
 	}
 
 	@Override
@@ -56,6 +56,23 @@ public class SlimGTQualifiedNameScope extends SimpleScope {
 
 }
 
+class AliasedNamedProvider extends DefaultDeclarativeQualifiedNameProvider {
+
+	@Override
+	public QualifiedName getFullyQualifiedName(EObject obj) {
+		if (obj instanceof Import imp) {
+			for(PackageReference packageReference : imp.getPackageAliases()) {
+				if(packageReference instanceof PackageReferenceAlias alias) {
+					IQualifiedNameConverter converter = new IQualifiedNameConverter.DefaultImpl();
+					return converter.toQualifiedName(alias.getName());
+				}
+			}
+		}
+		
+		return super.getFullyQualifiedName(obj);
+	}
+}
+
 class RootPackageAwareQualifiedNamedProvider extends DefaultDeclarativeQualifiedNameProvider {
 
 	@Override
@@ -64,7 +81,7 @@ class RootPackageAwareQualifiedNamedProvider extends DefaultDeclarativeQualified
 			EPackage pack = EPackage.class.cast(obj);
 			if (pack.eContainer() == null) {
 				IQualifiedNameConverter converter = new IQualifiedNameConverter.DefaultImpl();
-				return converter.toQualifiedName(pack.getNsPrefix() + "." + pack.getName());
+				return converter.toQualifiedName(pack.getName());
 			}
 		}
 

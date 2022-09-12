@@ -8,7 +8,6 @@ generate tGGL "http://www.emoflon.org/ibex/tgg/tggl/TGGL"
 @Override
 EditorFile:
 	imports += Import*
-	using += Using*
 	(schema = Schema)?
   	rules += TGGRule*
   	(library = AttributeConditionDefinitionLibrary)?
@@ -30,11 +29,11 @@ Schema:
 	'schema' name = QualifiedName
 	'{'	
 		('source' '{'
-			sourceTypes += [ecore::EPackage | QualifiedName]*
+			sourceTypes += [ecore::EObject|ID]*
 		'}')? 
 		
 		('target' '{'
-			targetTypes += [ecore::EPackage | QualifiedName]*
+			targetTypes += [ecore::EObject|ID]*
 		'}')? 
 	
 		('correspondence' '{'

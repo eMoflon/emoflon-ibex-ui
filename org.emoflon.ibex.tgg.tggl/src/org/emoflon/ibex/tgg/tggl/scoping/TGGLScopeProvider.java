@@ -27,7 +27,9 @@ import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import org.eclipse.xtext.scoping.impl.FilteringScope;
-import org.emoflon.ibex.common.slimgt.scoping.SlimGTQualifiedNameScope;
+import org.emoflon.ibex.common.slimgt.slimGT.PackageReference;
+import org.emoflon.ibex.common.slimgt.slimGT.PackageReferenceAlias;
+import org.emoflon.ibex.common.slimgt.slimGT.PackageReferencePlain;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRule;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
@@ -396,17 +398,18 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 
 		switch (domain) {
 		case SOURCE:
-			return new SlimGTQualifiedNameScope(getTypes(schema.getSourceTypes()));
+			return Scopes.scopeFor(getTypes(schema.getSourceTypes()));
 		case CORRESPONDENCE:
 			return Scopes.scopeFor(schema.getCorrespondenceTypes());
 		case TARGET:
-			return new SlimGTQualifiedNameScope(getTypes(schema.getTargetTypes()));
+			return Scopes.scopeFor(getTypes(schema.getTargetTypes()));
 		}
 		return IScope.NULLSCOPE;
 	}
 
-	public Collection<EClass> getTypes(Collection<EPackage> packages) {
+	public Collection<EClass> getTypes(Collection<PackageReference> packageReferences) {
 		var types = new HashSet<EClass>();
+		var packages = getReferencedPackages(packageReferences);
 		var packageCandidates = new HashSet<EPackage>(packages);
 		while (!packageCandidates.isEmpty()) {
 			var pkg = packageCandidates.iterator().next();
@@ -417,6 +420,17 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 			}
 		}
 		return types;
+	}
+	
+	public Collection<EPackage> getReferencedPackages(Collection<PackageReference> packageReferences) {
+		var packages = new HashSet<EPackage>();
+		for(var packageReference : packageReferences) {
+			if(packageReference instanceof PackageReferencePlain plain)
+				packages.add(plain.getImportedPackage());
+			if(packageReference instanceof PackageReferenceAlias alias)
+				packages.add(alias.getImportedPackage());
+		}
+		return packages;
 	}
 
 	public Collection<TGGRule> getAllRulesInScope(EObject obj) {
