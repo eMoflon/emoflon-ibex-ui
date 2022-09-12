@@ -106,7 +106,6 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		if (isTGGRuleRefinmentNodeNode(context, reference))
 			return getTargetNodesFromRefinedRule(context, reference);
 		
-		
 		return super.getScopeInternal(context, reference);
 	}
 
@@ -156,12 +155,8 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 
 	private IScope getTargetNodesFromRefinedRule(EObject context, EReference reference) {
 		var ruleRefinementNode = (TGGLRuleRefinementNode) context;
-		TGGRule tggRule = null;
 		var refinement = ruleRefinementNode.getRefinement();
-		if(refinement instanceof TGGLRuleRefinementPlain plain) 
-			tggRule = plain.getName();
-		else if(refinement instanceof TGGLRuleRefinementAliased aliased)
-			tggRule = aliased.getSuperRule().getName();
+		var tggRule = extractTGGRule(refinement);
 
 		Collection<EObject> nodes = null;
 		switch(getDomainType(context)) {
@@ -179,18 +174,26 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		return Scopes.scopeFor(nodes);
 	}
 
+	private TGGRule extractTGGRule(EObject refinement) {
+		if(refinement instanceof TGGRule tggRule)
+			return tggRule;
+		if(refinement instanceof TGGLRuleRefinementPlain plain) 
+			return plain.getSuperRule();
+		if(refinement instanceof TGGLRuleRefinementAliased aliased)
+			return ((TGGLRuleRefinementPlain) aliased.getSuperRule()).getSuperRule();
+		return null;
+	}
+
 	private IScope getRefinedRules(EObject context, EReference reference) {
 		var tggRule = getContainer(context, TGGRule.class);
 		var refinedRules = new HashSet<EObject>();
 		for(var refinement : tggRule.getRefinements()) {
 			if(refinement instanceof TGGLRuleRefinementPlain plain) {
-				EcoreUtil2.resolveAll(plain.getName());
-				refinedRules.add(plain);
+				refinedRules.add(plain.getSuperRule());
 			}
 			else if(refinement instanceof TGGLRuleRefinementAliased aliased) {
 				refinedRules.add(aliased);
-				refinedRules.add(aliased.getSuperRule());
-//				refinedRules.add(aliased.getSuperRule());
+				refinedRules.add(((TGGLRuleRefinementPlain) aliased.getSuperRule()).getSuperRule());
 			} 
 		}
 		return Scopes.scopeFor(refinedRules);
@@ -330,12 +333,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 			
 			// extract refined rule from refinements
 			for(var refinement : currentRule.getRefinements()) {
-				if(refinement instanceof TGGLRuleRefinementPlain plain)
-					ruleCandidates.add(plain.getName());
-				else if(refinement instanceof TGGLRuleRefinementAliased aliased) 
-					ruleCandidates.add(aliased.getSuperRule().getName());
-				else
-					throw new RuntimeException("Expected element of type TGGLRuleRefinementPlain or TGGLRuleRefinementAliased but got " + refinement);
+				ruleCandidates.add(extractTGGRule(refinement));
 			}
 
 			Set<EObject> newNodes = new HashSet<>();

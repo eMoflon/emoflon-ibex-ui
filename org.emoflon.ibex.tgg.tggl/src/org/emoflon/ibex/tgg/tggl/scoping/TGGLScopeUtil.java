@@ -90,7 +90,7 @@ public class TGGLScopeUtil {
 	
 	public static boolean isTGGRuleRefinementPlainName(EObject context, EReference reference) {
 		return context instanceof TGGRule && //
-				reference == TGGLPackage.Literals.TGGL_RULE_REFINEMENT_PLAIN__NAME;
+				reference == TGGLPackage.Literals.TGGL_RULE_REFINEMENT_PLAIN__SUPER_RULE;
 	}
 	
 	public static boolean isTGGRuleRefinmentNodeRefinement(EObject context, EReference reference) {
