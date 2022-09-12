@@ -114,8 +114,14 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 	private IScope getPackagesFromImports(EObject context, EReference reference) {
 		var schema = getSchemaInScope(context);
 		var editorFile = getContainer(schema, EditorFile.class);
+		
+		var output = new LinkedList<EObject>();
+		var packageRefs = editorFile.getImports().stream().flatMap(i -> i.getPackageAliases().stream()).toList();
 		var packages = getPackages(editorFile);
-		return Scopes.scopeFor(packages);
+
+		output.addAll(packageRefs);
+		output.addAll(packages);
+		return Scopes.scopeFor(output);
 	}
 
 	private IScope getCorrespondenceReferencedNodes(EObject context, EReference reference) {
@@ -407,7 +413,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		return IScope.NULLSCOPE;
 	}
 
-	public Collection<EClass> getTypes(Collection<PackageReference> packageReferences) {
+	public Collection<EClass> getTypes(Collection<EObject> packageReferences) {
 		var types = new HashSet<EClass>();
 		var packages = getReferencedPackages(packageReferences);
 		var packageCandidates = new HashSet<EPackage>(packages);
@@ -422,7 +428,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		return types;
 	}
 	
-	public Collection<EPackage> getReferencedPackages(Collection<PackageReference> packageReferences) {
+	public Collection<EPackage> getReferencedPackages(Collection<EObject> packageReferences) {
 		var packages = new HashSet<EPackage>();
 		for(var packageReference : packageReferences) {
 			if(packageReference instanceof PackageReferencePlain plain)
