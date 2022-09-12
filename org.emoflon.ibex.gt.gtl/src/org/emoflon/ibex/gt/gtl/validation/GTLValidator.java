@@ -490,7 +490,7 @@ public class GTLValidator extends AbstractGTLValidator {
 		SlimRuleNodeCreation superCreation = SlimGTModelUtil.getContainer(superNode, SlimRuleNodeCreation.class);
 
 		if (superCreation == null) {
-			error("A node creation may only refine another node creation.",
+			error("A node creation may only refine another node creation.", superCreation,
 					SlimGTPackage.Literals.SLIM_RULE__CREATED_NODES);
 		}
 
@@ -514,7 +514,8 @@ public class GTLValidator extends AbstractGTLValidator {
 		SlimRuleNodeContext superContext = SlimGTModelUtil.getContainer(superNode, SlimRuleNodeContext.class);
 
 		if (superContext == null) {
-			error("A context node may only refine another context node.", SlimGTPackage.Literals.SLIM_RULE_NODE__NAME);
+			error("A context node may only refine another context node.", superContext,
+					SlimGTPackage.Literals.SLIM_RULE_NODE__CONTEXT_EDGES);
 		}
 
 	}
@@ -531,7 +532,7 @@ public class GTLValidator extends AbstractGTLValidator {
 		GTLRuleNodeDeletion superDeletion = SlimGTModelUtil.getContainer(superNode, GTLRuleNodeDeletion.class);
 
 		if (superDeletion == null) {
-			error("A node deletion may only refine another node deletion.",
+			error("A node deletion may only refine another node deletion.", superDeletion,
 					GTLPackage.Literals.SLIM_RULE__DELETED_NODES);
 		}
 
@@ -544,10 +545,10 @@ public class GTLValidator extends AbstractGTLValidator {
 
 		SlimRule currentRule = SlimGTModelUtil.getContainer(node, SlimRule.class);
 		long nodeCount = currentRule.getContextNodes().stream().map(n -> n.getContext())
+				.filter(n -> n.getName() != null).filter(n -> n.getName().equals(node.getName())).count();
+		nodeCount += currentRule.getDeletedNodes().stream().map(n -> n.getDeletion()).filter(n -> n.getName() != null)
 				.filter(n -> n.getName().equals(node.getName())).count();
-		nodeCount += currentRule.getDeletedNodes().stream().map(n -> n.getDeletion())
-				.filter(n -> n.getName().equals(node.getName())).count();
-		nodeCount += currentRule.getCreatedNodes().stream().map(n -> n.getCreation())
+		nodeCount += currentRule.getCreatedNodes().stream().map(n -> n.getCreation()).filter(n -> n.getName() != null)
 				.filter(n -> n.getName().equals(node.getName())).count();
 
 		if (nodeCount > 1) {
