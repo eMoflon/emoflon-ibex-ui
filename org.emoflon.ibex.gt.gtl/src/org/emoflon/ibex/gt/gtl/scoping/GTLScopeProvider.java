@@ -29,6 +29,7 @@ import org.eclipse.xtext.scoping.Scopes;
 import org.emoflon.ibex.common.slimgt.scoping.SlimGTScopeUtil;
 import org.emoflon.ibex.common.slimgt.slimGT.CountExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.NodeAttributeExpression;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeCreation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMapping;
@@ -42,6 +43,8 @@ import org.emoflon.ibex.gt.gtl.gTL.GTLEdgeIteratorAttributeExpression;
 import org.emoflon.ibex.gt.gtl.gTL.GTLEdgeIteratorReference;
 import org.emoflon.ibex.gt.gtl.gTL.GTLParameterExpression;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinement;
+import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementAliased;
+import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementPlain;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinmentNode;
 import org.emoflon.ibex.gt.gtl.gTL.PatternImport;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRule;
@@ -120,7 +123,7 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 			return scopeForPatternImportPattern((PatternImport) context, reference);
 		}
 		if (GTLScopeUtil.isGTLRuleRefinementRule(context, reference)) {
-			return scopeForRuleRefinementRule((GTLRuleRefinement) context, reference);
+			return scopeForRuleRefinementRule(context, reference);
 		}
 		if (GTLScopeUtil.isGTLRuleRefinementNodeRefinement(context, reference)) {
 			return scopeForRuleRefinementNodeRefinement(context, reference);
@@ -130,6 +133,9 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 		}
 		if (SlimGTScopeUtil.isSlimRuleNodeType(context, reference)) {
 			return scopeForSlimRuleNodeType((SlimRuleNode) context, reference);
+		}
+		if (SlimGTScopeUtil.isSlimRuleEdgeTarget(context, reference)) {
+			return scopeForSlimEdgeTarget((SlimRuleEdge) context, reference);
 		}
 		if (SlimGTScopeUtil.isSlimRuleNodeMappingSrc(context, reference)) {
 			return scopeForNodeMappingSrc((SlimRuleNodeMapping) context, reference);
@@ -179,7 +185,7 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 			return scopeForValueOrArithmeticExpression(context, reference);
 		}
 
-		return super.getScope(context, reference);
+		return super.getScopeInternal(context, reference);
 	}
 
 	protected IScope scopeForPatternImportPattern(PatternImport context, EReference reference) {
@@ -228,21 +234,29 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 		}
 	}
 
-	protected IScope scopeForRuleRefinementRule(GTLRuleRefinement context, EReference reference) {
+	protected IScope scopeForRuleRefinementRule(EObject context, EReference reference) {
 		EditorFile currentFile = SlimGTModelUtil.getContainer(context, EditorFile.class);
-		return Scopes.scopeFor(getAllRulesInScope(currentFile));
+		SlimRule currentRule = SlimGTModelUtil.getContainer(context, SlimRule.class);
+		Collection<SlimRule> allRules = getAllRulesInScope(currentFile);
+		allRules.remove(currentRule);
+		return Scopes.scopeFor(allRules);
 	}
 
 	protected IScope scopeForRuleRefinementNodeRefinement(EObject context, EReference reference) {
 		SlimRule currentRule = SlimGTModelUtil.getContainer(context, SlimRule.class);
-		return Scopes.scopeFor(currentRule.getRefinement());
+		Collection<EObject> refinements = currentRule.getRefinement().stream()
+				.filter(ref -> (ref instanceof GTLRuleRefinementPlain)).map(ref -> (GTLRuleRefinementPlain) ref)
+				.map(ref -> ref.getSuperRule()).collect(Collectors.toSet());
+		refinements.addAll(currentRule.getRefinement().stream().filter(ref -> (ref instanceof GTLRuleRefinementAliased))
+				.map(ref -> (GTLRuleRefinementAliased) ref).collect(Collectors.toSet()));
+		return Scopes.scopeFor(refinements);
 	}
 
 	protected IScope scopeForRuleRefinementNodeNode(GTLRuleRefinmentNode context, EReference reference) {
-		if (context.getRefinement() == null)
+		if (context.getSuperRule() == null)
 			return IScope.NULLSCOPE;
 
-		Optional<SlimRule> optRule = GTLModelUtil.refinementToRule(context.getRefinement());
+		Optional<SlimRule> optRule = GTLModelUtil.refinementNodeToRule(context.getSuperRule());
 		if (!optRule.isPresent())
 			return IScope.NULLSCOPE;
 
@@ -259,11 +273,27 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 			if (ruleNode.getRefinement() == null || ruleNode.getRefinement().getRefinementNode() == null)
 				return IScope.NULLSCOPE;
 			EditorFile ef = SlimGTModelUtil.getContainer(context, EditorFile.class);
-			return Scopes.scopeFor(SlimGTModelUtil.getClasses(ef).stream().filter(
-					cls -> cls.getEAllSuperTypes().contains(ruleNode.getRefinement().getRefinementNode().getType()))
-					.collect(Collectors.toSet()));
+
+//			return Scopes.scopeFor(SlimGTModelUtil.getClasses(ef).stream().filter(
+//					cls -> cls.getEAllSuperTypes().contains(ruleNode.getRefinement().getRefinementNode().getType()))
+//					.collect(Collectors.toSet()));
+			return Scopes.scopeFor(SlimGTModelUtil.getClasses(ef));
 		}
 
+	}
+
+	protected IScope scopeForSlimEdgeTarget(SlimRuleEdge context, EReference reference) {
+		SlimRule currentRule = SlimGTModelUtil.getContainer(context, SlimRule.class);
+		// Find nodes with correct type. Allowed: Exact type match or target type is a
+		// subtype of the edge type.
+		Collection<SlimRuleNode> allRuleNodes = GTLModelUtil.getAllRuleNodes(currentRule).stream()
+//				.filter(rn -> rn.getType().equals(context.getType().getEType()))
+//						|| rn.eClass().getEAllSuperTypes().contains(context.getType().getEType()))
+				.collect(Collectors.toSet());
+		// TODO: Prohibit self-edges?
+//		allRuleNodes.remove(currentRuleNode);
+
+		return Scopes.scopeFor(allRuleNodes);
 	}
 
 	protected IScope scopeForNodeMappingSrc(SlimRuleNodeMapping context, EReference reference) {

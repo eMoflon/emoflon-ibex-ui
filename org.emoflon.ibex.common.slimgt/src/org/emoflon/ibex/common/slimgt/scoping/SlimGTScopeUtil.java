@@ -27,6 +27,10 @@ public final class SlimGTScopeUtil {
 		return context instanceof SlimRuleEdge && reference == SlimGTPackage.Literals.SLIM_RULE_EDGE__TYPE;
 	}
 
+	public static boolean isSlimRuleEdgeTarget(final EObject context, final EReference reference) {
+		return context instanceof SlimRuleEdge && reference == SlimGTPackage.Literals.SLIM_RULE_EDGE__TARGET;
+	}
+
 	public static boolean isSlimRuleAttributeAssignmentType(final EObject context, final EReference reference) {
 		return context instanceof SlimRuleAttributeAssignment
 				&& reference == SlimGTPackage.Literals.SLIM_RULE_ATTRIBUTE_ASSIGNMENT__TYPE;

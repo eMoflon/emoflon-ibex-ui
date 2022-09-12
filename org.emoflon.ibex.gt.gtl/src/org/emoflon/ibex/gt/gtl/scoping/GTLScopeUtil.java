@@ -22,14 +22,13 @@ public final class GTLScopeUtil {
 	public static boolean isGTLRuleRefinementRule(final EObject context, final EReference reference) {
 		return (context instanceof SlimRule || context instanceof GTLRuleRefinement)
 				&& (reference == GTLPackage.Literals.SLIM_RULE__REFINEMENT
-						|| reference == GTLPackage.Literals.GTL_RULE_REFINEMENT__NAME
-						|| reference == GTLPackage.Literals.GTL_RULE_REFINEMENT_ALIASED__SUPER_RULE);
+						|| reference == GTLPackage.Literals.GTL_RULE_REFINEMENT__SUPER_RULE);
 	}
 
 	public static boolean isGTLRuleRefinementNodeRefinement(final EObject context, final EReference reference) {
 		return (context instanceof SlimRuleNode || context instanceof GTLRuleRefinmentNode)
 				&& (reference == GTLPackage.Literals.SLIM_RULE_NODE__REFINEMENT
-						|| reference == GTLPackage.Literals.GTL_RULE_REFINMENT_NODE__REFINEMENT);
+						|| reference == GTLPackage.Literals.GTL_RULE_REFINMENT_NODE__SUPER_RULE);
 	}
 
 	public static boolean isGTLRuleRefinementNodeNode(final EObject context, final EReference reference) {
