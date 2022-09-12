@@ -1,6 +1,8 @@
 package org.emoflon.ibex.common.slimgt.util;
 
+import java.io.IOException;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -9,6 +11,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.xtext.EcoreUtil2;
 import org.emoflon.ibex.common.slimgt.slimGT.EditorFile;
@@ -55,6 +58,33 @@ public final class SlimGTModelUtil {
 		dataTypes.addAll(getElements(EcorePackage.eINSTANCE, EDataType.class));
 
 		return dataTypes;
+	}
+	
+	
+	
+	/**
+	 * Returns all EPackages imported into the given file
+	 * 
+	 * @param file the SlimGT file
+	 */
+	public static Collection<EPackage> getPackages(final EditorFile file) {
+		var imports = file.getImports();
+		var allPackages = new HashSet<EPackage>();
+		
+		for(var imp : imports) {
+			EPackage ePackage = null;
+			try {
+				ePackage = SlimGTEMFUtils.loadMetamodel(imp.getName());
+			} catch (Exception e) {
+			}
+			
+			if(ePackage == null)
+				continue;
+			
+			allPackages.add(ePackage);
+			allPackages.addAll(getElements((EObject) ePackage, EPackage.class));
+		}
+		return allPackages;
 	}
 
 	/**
