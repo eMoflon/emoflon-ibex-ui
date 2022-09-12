@@ -161,7 +161,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		if(refinement instanceof TGGLRuleRefinementPlain plain) 
 			tggRule = plain.getName();
 		else if(refinement instanceof TGGLRuleRefinementAliased aliased)
-			tggRule = aliased.getSuperRule();
+			tggRule = aliased.getSuperRule().getName();
 
 		Collection<EObject> nodes = null;
 		switch(getDomainType(context)) {
@@ -189,6 +189,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 			}
 			else if(refinement instanceof TGGLRuleRefinementAliased aliased) {
 				refinedRules.add(aliased);
+				refinedRules.add(aliased.getSuperRule());
 //				refinedRules.add(aliased.getSuperRule());
 			} 
 		}
@@ -332,7 +333,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 				if(refinement instanceof TGGLRuleRefinementPlain plain)
 					ruleCandidates.add(plain.getName());
 				else if(refinement instanceof TGGLRuleRefinementAliased aliased) 
-					ruleCandidates.add(aliased.getSuperRule());
+					ruleCandidates.add(aliased.getSuperRule().getName());
 				else
 					throw new RuntimeException("Expected element of type TGGLRuleRefinementPlain or TGGLRuleRefinementAliased but got " + refinement);
 			}
