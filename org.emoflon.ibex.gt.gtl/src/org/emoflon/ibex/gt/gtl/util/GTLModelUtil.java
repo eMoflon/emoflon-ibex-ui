@@ -2,7 +2,7 @@ package org.emoflon.ibex.gt.gtl.util;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -25,31 +25,31 @@ import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNode;
 public final class GTLModelUtil {
 
 	public static Collection<SlimRuleNode> getAllRuleNodes(SlimRule context) {
-		Set<SlimRuleNode> nodes = new HashSet<>();
+		Set<SlimRuleNode> nodes = new LinkedHashSet<>();
 		getAllRuleNodes(context, new HashMap<>(), new HashMap<>(), nodes);
 		return nodes;
 	}
 
 	public static Collection<SlimRuleNode> getAllContextRuleNodes(SlimRule context) {
-		Set<SlimRuleNode> nodes = new HashSet<>();
+		Set<SlimRuleNode> nodes = new LinkedHashSet<>();
 		getAllRuleNodes(context, new HashMap<>(), new HashMap<>(), nodes);
 		return nodes.stream().filter(n -> n.eContainer() instanceof SlimRuleNodeContext).collect(Collectors.toSet());
 	}
 
 	public static Collection<SlimRuleNode> getAllCreatedRuleNodes(SlimRule context) {
-		Set<SlimRuleNode> nodes = new HashSet<>();
+		Set<SlimRuleNode> nodes = new LinkedHashSet<>();
 		getAllRuleNodes(context, new HashMap<>(), new HashMap<>(), nodes);
 		return nodes.stream().filter(n -> n.eContainer() instanceof SlimRuleNodeCreation).collect(Collectors.toSet());
 	}
 
 	public static Collection<SlimRuleNode> getAllDeletedRuleNodes(SlimRule context) {
-		Set<SlimRuleNode> nodes = new HashSet<>();
+		Set<SlimRuleNode> nodes = new LinkedHashSet<>();
 		getAllRuleNodes(context, new HashMap<>(), new HashMap<>(), nodes);
 		return nodes.stream().filter(n -> n.eContainer() instanceof GTLRuleNodeDeletion).collect(Collectors.toSet());
 	}
 
 	public static Collection<SlimRuleNode> getAllDeletedAndContextRuleNodes(SlimRule context) {
-		Set<SlimRuleNode> nodes = new HashSet<>();
+		Set<SlimRuleNode> nodes = new LinkedHashSet<>();
 		getAllRuleNodes(context, new HashMap<>(), new HashMap<>(), nodes);
 		return nodes.stream().filter(
 				n -> n.eContainer() instanceof GTLRuleNodeDeletion || n.eContainer() instanceof SlimRuleNodeContext)
@@ -57,7 +57,7 @@ public final class GTLModelUtil {
 	}
 
 	public static Collection<SlimRuleNode> getAllCreatedAndContextRuleNodes(SlimRule context) {
-		Set<SlimRuleNode> nodes = new HashSet<>();
+		Set<SlimRuleNode> nodes = new LinkedHashSet<>();
 		getAllRuleNodes(context, new HashMap<>(), new HashMap<>(), nodes);
 		return nodes.stream().filter(
 				n -> n.eContainer() instanceof SlimRuleNodeCreation || n.eContainer() instanceof SlimRuleNodeContext)

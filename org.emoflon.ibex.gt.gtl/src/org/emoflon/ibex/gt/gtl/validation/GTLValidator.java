@@ -24,12 +24,15 @@ import org.eclipse.xtext.validation.Check;
 import org.emoflon.ibex.common.slimgt.slimGT.Import;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeAssignment;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdgeContext;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdgeCreation;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
 import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtils;
 import org.emoflon.ibex.common.slimgt.validation.SlimGTValidatorUtils;
 import org.emoflon.ibex.gt.gtl.gTL.EditorFile;
 import org.emoflon.ibex.gt.gtl.gTL.GTLPackage;
 import org.emoflon.ibex.gt.gtl.gTL.GTLParameterExpression;
+import org.emoflon.ibex.gt.gtl.gTL.GTLRuleEdgeDeletion;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleNodeDeletion;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinement;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementAliased;
@@ -544,17 +547,28 @@ public class GTLValidator extends AbstractGTLValidator {
 			return;
 
 		SlimRule currentRule = SlimGTModelUtil.getContainer(node, SlimRule.class);
-		long nodeCount = currentRule.getContextNodes().stream().map(n -> n.getContext()).filter(n -> n != null)
-				.filter(n -> n.getName() != null).filter(n -> n.getName().equals(node.getName())).count();
-		nodeCount += currentRule.getDeletedNodes().stream().map(n -> n.getDeletion()).filter(n -> n != null)
-				.filter(n -> n.getName() != null).filter(n -> n.getName().equals(node.getName())).count();
-		nodeCount += currentRule.getCreatedNodes().stream().map(n -> n.getCreation()).filter(n -> n != null)
+		long nodeCount = GTLModelUtil.getAllRuleNodes(currentRule).stream().filter(n -> n != null)
 				.filter(n -> n.getName() != null).filter(n -> n.getName().equals(node.getName())).count();
 
 		if (nodeCount > 1) {
 			error(String.format("The node name '%s' may not be defined more than once within this pattern.",
 					node.getName()), SlimGTPackage.Literals.SLIM_RULE_NODE__NAME);
 		}
+	}
+
+	@Check
+	protected void edgeOperationUnique(SlimRuleEdgeContext edge) {
+
+	}
+
+	@Check
+	protected void edgeOperationUnique(SlimRuleEdgeCreation edge) {
+
+	}
+
+	@Check
+	protected void edgeOperationUnique(GTLRuleEdgeDeletion edge) {
+
 	}
 
 	// Arithmetic Expession Checks
