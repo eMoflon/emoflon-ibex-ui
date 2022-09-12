@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import org.eclipse.xtext.scoping.impl.FilteringScope;
+import org.emoflon.ibex.common.slimgt.scoping.SlimGTQualifiedNameScope;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRule;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
@@ -68,7 +69,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		// node type references
 		if (isSlimRuleNodeType(context, reference))
 			return getTypes(context, reference, getDomainType(context));
-		if(isCorrespondenceNodeType(context, reference))
+		if (isCorrespondenceNodeType(context, reference))
 			return getTypes(context, reference, DomainType.CORRESPONDENCE);
 		
 		if (isCorrespondenceSourceType(context, reference))
@@ -79,6 +80,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		// edge target references
 		if (isEdgeTargetReference(context, reference))
 			return getEdgeTargetReference(context, reference);
+		
 		if (isCorrespondenceNodeSource(context, reference))
 			return getCorrespondenceReferencedNodes(context, reference);
 		if (isCorrespondenceNodeTarget(context, reference))
@@ -91,12 +93,18 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 			return getMappingTargetNodes(context, reference);
 
 		// refinement references
+		if (isTGGRuleRefinements(context, reference))
+			return getTGGRuleCandidates(context, reference);
 		if (isTGGRuleRefinementAliasedSuperRule(context, reference))
 			return getTGGRuleCandidates(context, reference);
+		if (isTGGRuleRefinementPlainName(context, reference))
+			return getTGGRuleCandidates(context, reference);
+		
 		if (isTGGRuleRefinmentNodeRefinement(context, reference))
 			return getRefinedRules(context, reference);
 		if (isTGGRuleRefinmentNodeNode(context, reference))
 			return getTargetNodesFromRefinedRule(context, reference);
+		
 		
 		return super.getScopeInternal(context, reference);
 	}
@@ -176,14 +184,15 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		var tggRule = getContainer(context, TGGRule.class);
 		var refinedRules = new HashSet<EObject>();
 		for(var refinement : tggRule.getRefinements()) {
-			if(refinement instanceof TGGLRuleRefinementPlain plain) {
+			var refinementName = refinement.getName();
+			if(refinementName instanceof TGGLRuleRefinementPlain plain) {
 				refinedRules.add(plain);
 			}
-			else if(refinement instanceof TGGLRuleRefinementAliased aliased) {
+			else if(refinementName instanceof TGGLRuleRefinementAliased aliased) {
 				refinedRules.add(aliased);
 				refinedRules.add(aliased.getSuperRule());
 			} else 
-				throw new RuntimeException("Expected element of type TGGLRuleRefinementPlain or TGGLRuleRefinementAliased but got " + refinement);
+				throw new RuntimeException("Expected element of type TGGLRuleRefinementPlain or TGGLRuleRefinementAliased but got " + refinementName);
 		}
 		return Scopes.scopeFor(refinedRules);
 	}
@@ -226,7 +235,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 	}
 
 	private IScope getTGGRuleCandidates(EObject context, EReference reference) {
-		var rule = (TGGRule) context;
+		var rule = getContainer(context, TGGRule.class);
 		var rules = getAllRulesInScope(context);
 
 		// remove self reference
@@ -348,7 +357,8 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 			
 			for(var newNode : newNodes) {
 				var tggNode = (org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNode) newNode;
-				refinedNodes.add(tggNode.getRefinement().getNode());
+				if(tggNode.getRefinement() != null)
+					refinedNodes.add(tggNode.getRefinement().getNode());
 				
 				// only add nodes that have not been refined and thus have been overlapped with another node
 				if(!refinedNodes.contains(tggNode)) {
@@ -390,11 +400,11 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 
 		switch (domain) {
 		case SOURCE:
-			return Scopes.scopeFor(getTypes(schema.getSourceTypes()));
+			return new SlimGTQualifiedNameScope(getTypes(schema.getSourceTypes()));
 		case CORRESPONDENCE:
 			return Scopes.scopeFor(schema.getCorrespondenceTypes());
 		case TARGET:
-			return Scopes.scopeFor(getTypes(schema.getTargetTypes()));
+			return new SlimGTQualifiedNameScope(getTypes(schema.getTargetTypes()));
 		}
 		return IScope.NULLSCOPE;
 	}

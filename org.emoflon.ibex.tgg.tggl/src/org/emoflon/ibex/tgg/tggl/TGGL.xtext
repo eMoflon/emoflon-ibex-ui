@@ -28,22 +28,23 @@ QualifiedNameWithWildcard:
 
 Schema:
 	'schema' name = QualifiedName
+	'{'	
+		('source' '{'
+			sourceTypes += [ecore::EPackage | QualifiedName]*
+		'}')? 
 		
-	('source' '{'
-		sourceTypes += [ecore::EPackage | QualifiedName]*
-	'}')? 
+		('target' '{'
+			targetTypes += [ecore::EPackage | QualifiedName]*
+		'}')? 
 	
-	('target' '{'
-		targetTypes += [ecore::EPackage | QualifiedName]*
-	'}')? 
-
-	('correspondence' '{'
-		correspondenceTypes += CorrespondenceType*
-	'}')?	
-	
-	('attributeConditions' '{'
-		attributeCondDefs += AttributeConditionDefinition*
-	'}')? 
+		('correspondence' '{'
+			correspondenceTypes += CorrespondenceType*
+		'}')?	
+		
+		('attributeConditions' '{'
+			attributeCondDefs += AttributeConditionDefinition*
+		'}')?
+	'}' 
 ;
 
 AttributeConditionDefinition:
@@ -95,7 +96,7 @@ LocalVariable:
 ;
 
 TGGLRuleRefinement:
-	'refines' name = (TGGLRuleRefinementPlain | TGGLRuleRefinementAliased)
+	name = (TGGLRuleRefinementPlain | TGGLRuleRefinementAliased)
 ;
 
 TGGLRuleRefinementPlain:
@@ -130,23 +131,24 @@ SlimRuleNode:
 TGGRule:
 	(abstract ?= 'abstract')? 
 	'rule' name = ID 
-	('refines' refinements += [TGGLRuleRefinement] (',' refinements += [TGGLRuleRefinement])*)? 
+	('refines' refinements += TGGLRuleRefinement (',' refinements += TGGLRuleRefinement)*)? 
+	'{'
+		('source' '{'
+			sourceRule = SlimRule 
+		'}')? 	
 		
-	('source' '{'
-		sourceRule = SlimRule 
-	'}')? 	
+		('target' '{'
+			targetRule = SlimRule 
+		'}')? 
+		
+		('correspondence' '{'
+			(correspondenceNodes += CorrespondenceNode)*	
+		'}')? 
 	
-	('target' '{'
-		targetRule = SlimRule 
-	'}')? 
-	
-	('correspondence' '{'
-		(correspondenceNodes += CorrespondenceNode)*	
-	'}')? 
-
-	('attributeConditions' '{'
-		(attrConditions += AttributeCondition)*
-	'}')? 
+		('attributeConditions' '{'
+			(attrConditions += AttributeCondition)*
+		'}')? 
+	'}'
 ;
 
 CorrespondenceNode:
