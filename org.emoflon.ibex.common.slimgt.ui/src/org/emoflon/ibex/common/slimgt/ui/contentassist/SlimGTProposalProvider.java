@@ -23,7 +23,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
-import org.eclipse.xtext.RuleCall;
+import org.eclipse.xtext.Assignment;
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
 import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtils;
@@ -35,9 +35,9 @@ import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtils;
  */
 public class SlimGTProposalProvider extends AbstractSlimGTProposalProvider {
 	@Override
-	public void complete_Import(EObject model, RuleCall ruleCall, ContentAssistContext context,
+	public void completeImport_Name(EObject model, Assignment assignment, ContentAssistContext context,
 			ICompletionProposalAcceptor acceptor) {
-		super.complete_Import(model, ruleCall, context, acceptor);
+		super.completeImport_Name(model, assignment, context, acceptor);
 
 		String[] lines = context.getCurrentNode().getText().split("\n");
 		lines = lines[0].split("\r");
@@ -95,7 +95,7 @@ public class SlimGTProposalProvider extends AbstractSlimGTProposalProvider {
 
 		// Pull packages from the registry
 		EPackage.Registry.INSTANCE.keySet().forEach(uri -> {
-			path2model.putIfAbsent(uri, (EPackage) EPackage.Registry.INSTANCE.get(uri));
+			path2model.putIfAbsent(uri, EPackage.Registry.INSTANCE.getEPackage(uri));
 		});
 
 		for (String path : path2model.keySet()) {
@@ -105,11 +105,12 @@ public class SlimGTProposalProvider extends AbstractSlimGTProposalProvider {
 			int cursor = replacement.length();
 			replacement = replacement + rest;
 
-			int replacementLength = (currentSelection.isBlank())
+			int replacementLength = (currentSelection.isBlank() && context.getCurrentNode().getText().length() > 1)
 					? context.getCurrentNode().getText().length() - currentSelection.length() - 1
 					: context.getCurrentNode().getText().length() - currentSelection.length();
 
 			acceptor.accept(new CompletionProposal(replacement, context.getOffset(), replacementLength, cursor));
 		}
 	}
+
 }

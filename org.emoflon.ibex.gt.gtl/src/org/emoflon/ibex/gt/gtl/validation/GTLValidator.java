@@ -269,8 +269,8 @@ public class GTLValidator extends AbstractGTLValidator {
 	 */
 	@Check
 	public void checkNumbeOfImportedMetamodels(PatternImport pImport) {
-		if (!pImport.isImportingAll() && (pImport.getPattern() == null || pImport.getPattern().getName() == null))
-			return;
+//		if (!pImport.isImportingAll() && (pImport.getPattern() == null || pImport.getPattern().getName() == null))
+//			return;
 
 		// TODO: Fixme -> Make an exception for the EcorePackage metamodel
 
@@ -303,8 +303,10 @@ public class GTLValidator extends AbstractGTLValidator {
 
 	@Check
 	protected void checkRuleNameInvalidSymbols(SlimRule rule) {
-		if (rule.getName() == null)
+		if (rule.getName() == null) {
 			error("Pattern/rule name may not be null.", GTLPackage.Literals.SLIM_RULE__NAME);
+			return;
+		}
 
 		if (rule.getName().isBlank()) {
 			error("Pattern/rule name must not be empty!", GTLPackage.Literals.SLIM_RULE__NAME);

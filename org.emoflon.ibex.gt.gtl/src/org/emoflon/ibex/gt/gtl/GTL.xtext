@@ -10,7 +10,7 @@ EditorFile:
 	package = PackageDeclaration
 	(imports += Import)*
 	(importedPatterns += PatternImport)*
-	rules += SlimRule
+	(rules += SlimRule)*
 ;
 
 
