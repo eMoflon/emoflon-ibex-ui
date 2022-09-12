@@ -21,7 +21,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.xtext.Assignment;
 import org.eclipse.xtext.EcoreUtil2;
-import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
@@ -35,10 +34,12 @@ import org.emoflon.ibex.gt.gtl.ui.builder.GTLNature;
  * on how to customize the content assistant.
  */
 public class GTLProposalProvider extends AbstractGTLProposalProvider {
+
 	@Override
-	public void complete_PackageDeclaration(EObject model, RuleCall ruleCall, ContentAssistContext context,
+	public void completePackageDeclaration_Name(EObject model, Assignment assignment, ContentAssistContext context,
 			ICompletionProposalAcceptor acceptor) {
-		super.complete_PackageDeclaration(model, ruleCall, context, acceptor);
+		// TODO Auto-generated method stub
+		super.completePackageDeclaration_Name(model, assignment, context, acceptor);
 
 		IProject currentProject = SlimGTWorkspaceUtils.getCurrentProject(model.eResource());
 
@@ -82,7 +83,7 @@ public class GTLProposalProvider extends AbstractGTLProposalProvider {
 			return;
 		}
 
-		String pkgName = "\"" + pkgBuilder.toString() + "\"";
+		String pkgName = pkgBuilder.toString();
 
 		if (!currentSelection.isBlank() && !pkgName.contains(currentSelection))
 			return;
@@ -92,7 +93,7 @@ public class GTLProposalProvider extends AbstractGTLProposalProvider {
 		int cursor = pkgName.length();
 		pkgName = pkgName + rest;
 
-		int replacementLength = (currentSelection.isBlank())
+		int replacementLength = (currentSelection.isBlank() && context.getCurrentNode().getText().length() > 1)
 				? context.getCurrentNode().getText().length() - currentSelection.length() - 1
 				: context.getCurrentNode().getText().length() - currentSelection.length();
 
