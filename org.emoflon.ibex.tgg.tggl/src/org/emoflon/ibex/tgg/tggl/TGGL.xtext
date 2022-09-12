@@ -104,7 +104,7 @@ TGGLRuleRefinementPlain returns TGGLRuleRefinement : {TGGLRuleRefinementPlain}
 ;
 
 TGGLRuleRefinementAliased returns TGGLRuleRefinement : {TGGLRuleRefinementAliased}
-	superRule=TGGLRuleRefinementPlain 'as' name=ID
+	superRule=[TGGRule|ID] 'as' name=ID
 ;
 
 TGGLRuleRefinementNode:

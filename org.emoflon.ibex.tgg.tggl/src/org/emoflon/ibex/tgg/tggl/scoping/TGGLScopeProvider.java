@@ -98,8 +98,8 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 			return getTGGRuleCandidates(context, reference);
 		if (isTGGRuleRefinementAliasedSuperRule(context, reference))
 			return getTGGRuleCandidates(context, reference);
-		if (isTGGRuleRefinementPlainName(context, reference))
-			return getTGGRuleCandidates(context, reference);
+//		if (isTGGRuleRefinementPlainName(context, reference))
+//			return getTGGRuleCandidates(context, reference);
 		
 		if (isTGGRuleRefinmentNodeRefinement(context, reference))
 			return getRefinedRules(context, reference);
@@ -180,7 +180,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		if(refinement instanceof TGGLRuleRefinementPlain plain) 
 			return plain.getSuperRule();
 		if(refinement instanceof TGGLRuleRefinementAliased aliased)
-			return ((TGGLRuleRefinementPlain) aliased.getSuperRule()).getSuperRule();
+			return aliased.getSuperRule();
 		return null;
 	}
 
@@ -189,11 +189,11 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		var refinedRules = new HashSet<EObject>();
 		for(var refinement : tggRule.getRefinements()) {
 			if(refinement instanceof TGGLRuleRefinementPlain plain) {
-				refinedRules.add(plain.getSuperRule());
+				refinedRules.add(plain);
 			}
 			else if(refinement instanceof TGGLRuleRefinementAliased aliased) {
 				refinedRules.add(aliased);
-				refinedRules.add(((TGGLRuleRefinementPlain) aliased.getSuperRule()).getSuperRule());
+				refinedRules.add(aliased.getSuperRule());
 			} 
 		}
 		return Scopes.scopeFor(refinedRules);
