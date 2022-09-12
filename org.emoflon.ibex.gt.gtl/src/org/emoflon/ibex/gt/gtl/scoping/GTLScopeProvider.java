@@ -267,10 +267,11 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 	protected IScope scopeForSlimRuleNodeType(org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode context,
 			EReference reference) {
 		SlimRuleNode ruleNode = (SlimRuleNode) context;
-		if (!ruleNode.isRefining()) {
+		if (!GTLModelUtil.ruleNodeIsRefining(ruleNode)) {
 			return super.scopeForSlimRuleNodeType(context, reference);
 		} else {
-			if (ruleNode.getRefinement() == null || ruleNode.getRefinement().getRefinementNode() == null)
+			if (GTLModelUtil.getRefinementNode(ruleNode) == null
+					|| GTLModelUtil.getRefinementNode(ruleNode).getRefinementNode() == null)
 				return IScope.NULLSCOPE;
 
 			EditorFile ef = SlimGTModelUtil.getContainer(context, EditorFile.class);
@@ -278,11 +279,11 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 			Collection<EClass> superTypes = SlimGTModelUtil.getClasses(ef).stream()
 					.filter(cls -> cls.getEAllSuperTypes() != null && cls.getEAllSuperTypes().size() > 0)
 					.filter(cls -> cls.getEAllSuperTypes().stream()
-							.filter(superCls -> superCls.getName()
-									.equals(ruleNode.getRefinement().getRefinementNode().getType().getName()))
+							.filter(superCls -> superCls.getName().equals(
+									GTLModelUtil.getRefinementNode(ruleNode).getRefinementNode().getType().getName()))
 							.findAny().isPresent())
 					.collect(Collectors.toSet());
-			superTypes.add(ruleNode.getRefinement().getRefinementNode().getType());
+			superTypes.add(GTLModelUtil.getRefinementNode(ruleNode).getRefinementNode().getType());
 
 			return Scopes.scopeFor(superTypes);
 		}

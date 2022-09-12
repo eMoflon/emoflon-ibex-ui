@@ -24,8 +24,6 @@ import org.eclipse.xtext.validation.Check;
 import org.emoflon.ibex.common.slimgt.slimGT.Import;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeAssignment;
-import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeContext;
-import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeCreation;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
 import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtils;
 import org.emoflon.ibex.common.slimgt.validation.SlimGTValidatorUtils;
@@ -41,6 +39,8 @@ import org.emoflon.ibex.gt.gtl.gTL.PatternImport;
 import org.emoflon.ibex.gt.gtl.gTL.SlimParameter;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRule;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNode;
+import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNodeContext;
+import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNodeCreation;
 import org.emoflon.ibex.gt.gtl.util.GTLModelUtil;
 
 /**
@@ -483,10 +483,10 @@ public class GTLValidator extends AbstractGTLValidator {
 		if (node.getCreation() == null)
 			return;
 
-		if (!((SlimRuleNode) node.getCreation()).isRefining())
+		if (!node.isRefining())
 			return;
 
-		SlimRuleNode superNode = ((SlimRuleNode) node.getCreation()).getRefinement().getRefinementNode();
+		SlimRuleNode superNode = node.getRefinement().getRefinementNode();
 		SlimRuleNodeCreation superCreation = SlimGTModelUtil.getContainer(superNode, SlimRuleNodeCreation.class);
 
 		if (superCreation == null) {
@@ -501,16 +501,16 @@ public class GTLValidator extends AbstractGTLValidator {
 		if (node.getContext() == null)
 			return;
 
-		if (!((SlimRuleNode) node.getContext()).isRefining())
+		if (!node.isRefining())
 			return;
 
-		if (((SlimRuleNode) node.getContext()).getRefinement() == null)
+		if (node.getRefinement() == null)
 			return;
 
-		if (((SlimRuleNode) node.getContext()).getRefinement().getRefinementNode() == null)
+		if (node.getRefinement().getRefinementNode() == null)
 			return;
 
-		SlimRuleNode superNode = ((SlimRuleNode) node.getContext()).getRefinement().getRefinementNode();
+		SlimRuleNode superNode = node.getRefinement().getRefinementNode();
 		SlimRuleNodeContext superContext = SlimGTModelUtil.getContainer(superNode, SlimRuleNodeContext.class);
 
 		if (superContext == null) {
@@ -525,10 +525,10 @@ public class GTLValidator extends AbstractGTLValidator {
 		if (node.getDeletion() == null)
 			return;
 
-		if (!node.getDeletion().isRefining())
+		if (!node.isRefining())
 			return;
 
-		SlimRuleNode superNode = node.getDeletion().getRefinement().getRefinementNode();
+		SlimRuleNode superNode = node.getRefinement().getRefinementNode();
 		GTLRuleNodeDeletion superDeletion = SlimGTModelUtil.getContainer(superNode, GTLRuleNodeDeletion.class);
 
 		if (superDeletion == null) {
@@ -544,12 +544,12 @@ public class GTLValidator extends AbstractGTLValidator {
 			return;
 
 		SlimRule currentRule = SlimGTModelUtil.getContainer(node, SlimRule.class);
-		long nodeCount = currentRule.getContextNodes().stream().map(n -> n.getContext())
+		long nodeCount = currentRule.getContextNodes().stream().map(n -> n.getContext()).filter(n -> n != null)
 				.filter(n -> n.getName() != null).filter(n -> n.getName().equals(node.getName())).count();
-		nodeCount += currentRule.getDeletedNodes().stream().map(n -> n.getDeletion()).filter(n -> n.getName() != null)
-				.filter(n -> n.getName().equals(node.getName())).count();
-		nodeCount += currentRule.getCreatedNodes().stream().map(n -> n.getCreation()).filter(n -> n.getName() != null)
-				.filter(n -> n.getName().equals(node.getName())).count();
+		nodeCount += currentRule.getDeletedNodes().stream().map(n -> n.getDeletion()).filter(n -> n != null)
+				.filter(n -> n.getName() != null).filter(n -> n.getName().equals(node.getName())).count();
+		nodeCount += currentRule.getCreatedNodes().stream().map(n -> n.getCreation()).filter(n -> n != null)
+				.filter(n -> n.getName() != null).filter(n -> n.getName().equals(node.getName())).count();
 
 		if (nodeCount > 1) {
 			error(String.format("The node name '%s' may not be defined more than once within this pattern.",
