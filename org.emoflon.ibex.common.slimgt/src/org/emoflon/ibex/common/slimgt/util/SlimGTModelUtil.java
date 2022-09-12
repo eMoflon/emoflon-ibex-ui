@@ -1,6 +1,5 @@
 package org.emoflon.ibex.common.slimgt.util;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
@@ -59,9 +58,7 @@ public final class SlimGTModelUtil {
 
 		return dataTypes;
 	}
-	
-	
-	
+
 	/**
 	 * Returns all EPackages imported into the given file
 	 * 
@@ -70,17 +67,17 @@ public final class SlimGTModelUtil {
 	public static Collection<EPackage> getPackages(final EditorFile file) {
 		var imports = file.getImports();
 		var allPackages = new HashSet<EPackage>();
-		
-		for(var imp : imports) {
+
+		for (var imp : imports) {
 			EPackage ePackage = null;
 			try {
 				ePackage = SlimGTEMFUtils.loadMetamodel(imp.getName());
 			} catch (Exception e) {
 			}
-			
-			if(ePackage == null)
+
+			if (ePackage == null)
 				continue;
-			
+
 			allPackages.add(ePackage);
 			allPackages.addAll(getElements((EObject) ePackage, EPackage.class));
 		}

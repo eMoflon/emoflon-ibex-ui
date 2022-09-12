@@ -5,6 +5,8 @@ import java.io.IOException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
 
@@ -39,28 +41,28 @@ public final class SlimGTEMFUtils {
 		}
 		return metamodel;
 	}
-	
+
 	public static EPackage loadMetamodelInternal(String uri) throws IOException {
-		var metamodel = EPackage.Registry.INSTANCE.getEPackage(uri);
+		EPackage metamodel = EPackage.Registry.INSTANCE.getEPackage(uri);
 		if (metamodel == null || metamodel.eIsProxy()) {
-			var resourceSet = new ResourceSetImpl();
-			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("ecore", new EcoreResourceFactoryImpl());
+			ResourceSet resourceSet = new ResourceSetImpl();
+			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("ecore",
+					new EcoreResourceFactoryImpl());
 			EcorePackage.eINSTANCE.eClass();
-			
-			var resource = resourceSet.createResource(URI.createURI(uri));
+
+			Resource resource = resourceSet.createResource(URI.createURI(uri));
 			try {
-			    resource.load(null);
-			}
-			catch(IOException e) {
+				resource.load(null);
+			} catch (IOException e) {
 				return null;
 			}
-			if(resource != null && !resource.getContents().isEmpty()) {
-				if(resource.getContents().get(0) instanceof EPackage ePackage)
+			if (resource != null && !resource.getContents().isEmpty()) {
+				if (resource.getContents().get(0) instanceof EPackage ePackage)
 					metamodel = ePackage;
 			}
 		}
-		
+
 		return metamodel;
 	}
-	
+
 }
