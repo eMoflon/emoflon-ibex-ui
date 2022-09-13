@@ -69,18 +69,18 @@ GTLRuleRefinmentNode:
 @Override
 SlimRuleNodeContext:
 	(refining ?= '@refines'  refinement=GTLRuleRefinmentNode)?
-	(local?='local')? context = SlimRuleNode
+	'[=]' (local?='local')? context = SlimRuleNode
 ;
 
 @Override
 SlimRuleNodeCreation:
 	(refining ?= '@refines'  refinement=GTLRuleRefinmentNode)?
-	'++' creation = SlimRuleNode
+	'[+]' creation = SlimRuleNode
 ;
 
 GTLRuleNodeDeletion :
 	(refining ?= '@refines'  refinement=GTLRuleRefinmentNode)?
-	'--' deletion = SlimRuleNode
+	'[-]' deletion = SlimRuleNode
 ;
 
 @Override
@@ -95,7 +95,7 @@ SlimRuleNode:
 ;
 
 GTLRuleEdgeDeletion:
-	'--' deletion = SlimRuleSimpleEdge
+	'[-]' deletion = SlimRuleSimpleEdge
 ;
 
 GTLRuleWatchDogs:
@@ -137,5 +137,5 @@ GTLEdgeIteratorReference:
 ;
 
 enum EdgeIteratorOperator:
-	CREATE = '++' | DELETE = '--'
+	CREATE = '[+]' | DELETE = '[-]'
 ;

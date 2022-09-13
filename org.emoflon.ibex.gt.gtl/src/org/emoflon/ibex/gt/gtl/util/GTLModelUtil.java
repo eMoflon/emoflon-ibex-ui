@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeContext;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeCreation;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleNodeDeletion;
@@ -273,6 +274,18 @@ public final class GTLModelUtil {
 				getAllSuperRules(superRule, rules);
 			}
 		}
+	}
+
+	public static LinkedList<SlimRuleNode> getRuleNodeRefinementHierarchy(SlimRuleNode context) {
+		LinkedList<SlimRuleNode> nodes = new LinkedList<>();
+
+		return nodes;
+	}
+
+	public static Collection<SlimRuleEdge> getAllEdges(SlimRuleNode context) {
+		List<SlimRuleEdge> edges = new LinkedList<>();
+
+		return edges;
 	}
 
 }
