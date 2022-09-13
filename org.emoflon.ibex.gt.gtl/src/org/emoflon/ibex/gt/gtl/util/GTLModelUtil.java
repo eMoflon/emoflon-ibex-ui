@@ -2,18 +2,19 @@ package org.emoflon.ibex.gt.gtl.util;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeContext;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeCreation;
+import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleNodeDeletion;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinement;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementAliased;
@@ -26,41 +27,44 @@ import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNode;
 public final class GTLModelUtil {
 
 	public static Collection<SlimRuleNode> getAllRuleNodes(SlimRule context) {
-		Set<SlimRuleNode> nodes = new LinkedHashSet<>();
-		getAllRuleNodes(context, new HashMap<>(), new HashMap<>(), nodes);
-		return nodes;
+		Map<SlimRuleNode, RuleNodeHierarchy> nodes = new LinkedHashMap<>();
+		getAllRuleNodes(context, new HashMap<>(), nodes);
+		return nodes.keySet();
 	}
 
 	public static Collection<SlimRuleNode> getAllContextRuleNodes(SlimRule context) {
-		Set<SlimRuleNode> nodes = new LinkedHashSet<>();
-		getAllRuleNodes(context, new HashMap<>(), new HashMap<>(), nodes);
-		return nodes.stream().filter(n -> n.eContainer() instanceof SlimRuleNodeContext).collect(Collectors.toSet());
+		Map<SlimRuleNode, RuleNodeHierarchy> nodes = new LinkedHashMap<>();
+		getAllRuleNodes(context, new HashMap<>(), nodes);
+		return nodes.keySet().stream().filter(n -> n.eContainer() instanceof SlimRuleNodeContext)
+				.collect(Collectors.toSet());
 	}
 
 	public static Collection<SlimRuleNode> getAllCreatedRuleNodes(SlimRule context) {
-		Set<SlimRuleNode> nodes = new LinkedHashSet<>();
-		getAllRuleNodes(context, new HashMap<>(), new HashMap<>(), nodes);
-		return nodes.stream().filter(n -> n.eContainer() instanceof SlimRuleNodeCreation).collect(Collectors.toSet());
+		Map<SlimRuleNode, RuleNodeHierarchy> nodes = new LinkedHashMap<>();
+		getAllRuleNodes(context, new HashMap<>(), nodes);
+		return nodes.keySet().stream().filter(n -> n.eContainer() instanceof SlimRuleNodeCreation)
+				.collect(Collectors.toSet());
 	}
 
 	public static Collection<SlimRuleNode> getAllDeletedRuleNodes(SlimRule context) {
-		Set<SlimRuleNode> nodes = new LinkedHashSet<>();
-		getAllRuleNodes(context, new HashMap<>(), new HashMap<>(), nodes);
-		return nodes.stream().filter(n -> n.eContainer() instanceof GTLRuleNodeDeletion).collect(Collectors.toSet());
+		Map<SlimRuleNode, RuleNodeHierarchy> nodes = new LinkedHashMap<>();
+		getAllRuleNodes(context, new HashMap<>(), nodes);
+		return nodes.keySet().stream().filter(n -> n.eContainer() instanceof GTLRuleNodeDeletion)
+				.collect(Collectors.toSet());
 	}
 
 	public static Collection<SlimRuleNode> getAllDeletedAndContextRuleNodes(SlimRule context) {
-		Set<SlimRuleNode> nodes = new LinkedHashSet<>();
-		getAllRuleNodes(context, new HashMap<>(), new HashMap<>(), nodes);
-		return nodes.stream().filter(
+		Map<SlimRuleNode, RuleNodeHierarchy> nodes = new LinkedHashMap<>();
+		getAllRuleNodes(context, new HashMap<>(), nodes);
+		return nodes.keySet().stream().filter(
 				n -> n.eContainer() instanceof GTLRuleNodeDeletion || n.eContainer() instanceof SlimRuleNodeContext)
 				.collect(Collectors.toSet());
 	}
 
 	public static Collection<SlimRuleNode> getAllCreatedAndContextRuleNodes(SlimRule context) {
-		Set<SlimRuleNode> nodes = new LinkedHashSet<>();
-		getAllRuleNodes(context, new HashMap<>(), new HashMap<>(), nodes);
-		return nodes.stream().filter(
+		Map<SlimRuleNode, RuleNodeHierarchy> nodes = new LinkedHashMap<>();
+		getAllRuleNodes(context, new HashMap<>(), nodes);
+		return nodes.keySet().stream().filter(
 				n -> n.eContainer() instanceof SlimRuleNodeCreation || n.eContainer() instanceof SlimRuleNodeContext)
 				.collect(Collectors.toSet());
 	}
@@ -115,22 +119,20 @@ public final class GTLModelUtil {
 		}
 	}
 
-	public static void getAllRuleNodes(SlimRule root, Map<SlimRuleNode, SlimRuleNode> super2Node,
-			Map<SlimRuleNode, SlimRuleNode> node2Super, Set<SlimRuleNode> nodes) {
+	public static void getAllRuleNodes(SlimRule root, Map<SlimRuleNode, RuleNodeHierarchy> super2Node,
+			Map<SlimRuleNode, RuleNodeHierarchy> nodes) {
 		if (root.isRefining()) {
-			// Add nodes with no explicit refinements to super2Node
-			root.getContextNodes().stream().map(n -> (SlimRuleNode) n.getContext()).filter(n -> !ruleNodeIsRefining(n))
-					.filter(n -> !super2Node.containsKey(n)).forEach(n -> {
-						nodes.add(n);
-					});
-			root.getCreatedNodes().stream().map(n -> (SlimRuleNode) n.getCreation()).filter(n -> !ruleNodeIsRefining(n))
-					.filter(n -> !super2Node.containsKey(n)).forEach(n -> {
-						nodes.add(n);
-					});
-			root.getDeletedNodes().stream().map(n -> n.getDeletion()).filter(n -> !ruleNodeIsRefining(n))
-					.filter(n -> !super2Node.containsKey(n)).forEach(n -> {
-						nodes.add(n);
-					});
+			// Add nodes with no explicit refinements to node
+			List<SlimRuleNode> unrefinedNodes = root.getContextNodes().stream().map(n -> (SlimRuleNode) n.getContext())
+					.filter(n -> !ruleNodeIsRefining(n)).filter(n -> !super2Node.containsKey(n))
+					.collect(Collectors.toList());
+			unrefinedNodes.addAll(root.getCreatedNodes().stream().map(n -> (SlimRuleNode) n.getCreation())
+					.filter(n -> !ruleNodeIsRefining(n)).filter(n -> !super2Node.containsKey(n))
+					.collect(Collectors.toList()));
+			unrefinedNodes.addAll(
+					root.getDeletedNodes().stream().map(n -> n.getDeletion()).filter(n -> !ruleNodeIsRefining(n))
+							.filter(n -> !super2Node.containsKey(n)).collect(Collectors.toList()));
+			unrefinedNodes.forEach(n -> nodes.put(n, new RuleNodeHierarchy(n)));
 
 			for (GTLRuleRefinement refinement : root.getRefinement()) {
 				Optional<SlimRule> ruleOpt = refinementToRule(refinement);
@@ -140,7 +142,17 @@ public final class GTLModelUtil {
 				SlimRule superRule = ruleOpt.get();
 
 				// Handle nodes that refine nodes of the current super rule
-				root.getContextNodes().stream().map(n -> (SlimRuleNode) n.getContext())
+				List<SlimRuleNode> refinedNodes = root.getContextNodes().stream()
+						.map(n -> (SlimRuleNode) n.getContext()).filter(n -> ruleNodeIsRefining(n)).filter(n -> {
+							Optional<SlimRule> otherRule = refinementNodeToRule(
+									GTLModelUtil.getRefinementNode(n).getSuperRule());
+							if (otherRule.isPresent()) {
+								return otherRule.get().equals(superRule);
+							} else {
+								return false;
+							}
+						}).collect(Collectors.toList());
+				refinedNodes.addAll(root.getCreatedNodes().stream().map(n -> (SlimRuleNode) n.getCreation())
 						.filter(n -> ruleNodeIsRefining(n)).filter(n -> {
 							Optional<SlimRule> otherRule = refinementNodeToRule(
 									GTLModelUtil.getRefinementNode(n).getSuperRule());
@@ -149,23 +161,8 @@ public final class GTLModelUtil {
 							} else {
 								return false;
 							}
-						}).forEach(n -> {
-							SlimRuleNode superNode = GTLModelUtil.getRefinementNode(n).getRefinementNode();
-							// If this node is a super node to a node below -> flatten hierarchy and don't
-							// add to allNodes
-							if (super2Node.containsKey(n)) {
-								super2Node.replace(superNode, super2Node.get(n));
-								node2Super.replace(super2Node.get(superNode), superNode);
-							} else { // If this node is not a super node itself -> add relation to maps and to
-										// allNodes
-								super2Node.put(superNode, n);
-								node2Super.put(n, superNode);
-								nodes.add(n);
-							}
-						});
-
-				// Handle nodes that refine nodes of the current super rule
-				root.getCreatedNodes().stream().map(n -> (SlimRuleNode) n.getCreation())
+						}).collect(Collectors.toList()));
+				refinedNodes.addAll(root.getDeletedNodes().stream().map(n -> n.getDeletion())
 						.filter(n -> ruleNodeIsRefining(n)).filter(n -> {
 							Optional<SlimRule> otherRule = refinementNodeToRule(
 									GTLModelUtil.getRefinementNode(n).getSuperRule());
@@ -174,63 +171,49 @@ public final class GTLModelUtil {
 							} else {
 								return false;
 							}
-						}).forEach(n -> {
-							SlimRuleNode superNode = GTLModelUtil.getRefinementNode(n).getRefinementNode();
-							// If this node is a super node to a node below -> flatten hierarchy and don't
-							// add to allNodes
-							if (super2Node.containsKey(n)) {
-								super2Node.replace(superNode, super2Node.get(n));
-								node2Super.replace(super2Node.get(superNode), superNode);
-							} else { // If this node is not a super node itself -> add relation to maps and to
-										// allNodes
-								super2Node.put(superNode, n);
-								node2Super.put(n, superNode);
-								nodes.add(n);
-							}
-						});
+						}).collect(Collectors.toList()));
 
-				// Handle nodes that refine nodes of the current super rule
-				root.getDeletedNodes().stream().map(n -> n.getDeletion()).filter(n -> ruleNodeIsRefining(n))
-						.filter(n -> {
-							Optional<SlimRule> otherRule = refinementNodeToRule(
-									GTLModelUtil.getRefinementNode(n).getSuperRule());
-							if (otherRule.isPresent()) {
-								return otherRule.get().equals(superRule);
-							} else {
-								return false;
-							}
-						}).forEach(n -> {
-							SlimRuleNode superNode = GTLModelUtil.getRefinementNode(n).getRefinementNode();
-							// If this node is a super node to a node below -> flatten hierarchy and don't
-							// add to allNodes
-							if (super2Node.containsKey(n)) {
-								super2Node.replace(superNode, super2Node.get(n));
-								node2Super.replace(super2Node.get(superNode), superNode);
-							} else { // If this node is not a super node itself -> add relation to maps and to
-										// allNodes
-								super2Node.put(superNode, n);
-								node2Super.put(n, superNode);
-								nodes.add(n);
-							}
-						});
+				refinedNodes.forEach(n -> {
+					SlimRuleNode superNode = GTLModelUtil.getRefinementNode(n).getRefinementNode();
+					// If this node is a super node to a node below -> flatten hierarchy and don't
+					// add to allNodes
+					if (super2Node.containsKey(n)) {
+						// Update the nodes hierarchy model
+						RuleNodeHierarchy subNode = super2Node.get(n);
+						subNode.superNodes().add(superNode);
+						LinkedList<SlimRuleNode> path = subNode.finalSuper2Path().get(n);
+						path.add(superNode);
+						subNode.finalSuper2Path().put(superNode, path);
+						subNode.finalSuper2Path().remove(n);
 
-				getAllRuleNodes(superRule, super2Node, node2Super, nodes);
+						// Update and flatten crawled hierarchy
+						super2Node.put(superNode, subNode);
+						super2Node.remove(n);
+					} else { // If this node is not a super node itself -> add relation to maps and to
+								// allNodes
+						RuleNodeHierarchy subNode = new RuleNodeHierarchy(n);
+						LinkedList<SlimRuleNode> path = new LinkedList<>();
+						path.add(n);
+						path.add(superNode);
+						subNode.finalSuper2Path().put(superNode, path);
+						subNode.superNodes().add(superNode);
+
+						super2Node.put(superNode, subNode);
+						nodes.put(n, subNode);
+					}
+				});
+
+				getAllRuleNodes(superRule, super2Node, nodes);
 			}
 		} else {
 			// No refinements or root node of refinement hierarchy
-			root.getContextNodes().stream().map(n -> n.getContext()).filter(n -> !super2Node.containsKey(n))
-					.forEach(n -> {
-						nodes.add((SlimRuleNode) n);
-					});
-			root.getCreatedNodes().stream().map(n -> n.getCreation()).filter(n -> !super2Node.containsKey(n))
-					.forEach(n -> {
-						nodes.add((SlimRuleNode) n);
-
-					});
-			root.getDeletedNodes().stream().map(n -> n.getDeletion()).filter(n -> !super2Node.containsKey(n))
-					.forEach(n -> {
-						nodes.add(n);
-					});
+			List<SlimRuleNode> rootNodes = root.getContextNodes().stream().map(n -> n.getContext())
+					.filter(n -> !super2Node.containsKey(n)).map(n -> (SlimRuleNode) n).collect(Collectors.toList());
+			rootNodes.addAll(root.getCreatedNodes().stream().map(n -> n.getCreation())
+					.filter(n -> !super2Node.containsKey(n)).map(n -> (SlimRuleNode) n).collect(Collectors.toList()));
+			rootNodes.addAll(root.getDeletedNodes().stream().map(n -> n.getDeletion())
+					.filter(n -> !super2Node.containsKey(n)).collect(Collectors.toList()));
+			rootNodes.forEach(n -> nodes.put(n, new RuleNodeHierarchy(n)));
 		}
 	}
 
@@ -276,15 +259,21 @@ public final class GTLModelUtil {
 		}
 	}
 
-	public static LinkedList<SlimRuleNode> getRuleNodeRefinementHierarchy(SlimRuleNode context) {
-		LinkedList<SlimRuleNode> nodes = new LinkedList<>();
+	public static Collection<SlimRuleNode> getRuleNodeAllSuperNodes(SlimRuleNode context) {
+		SlimRule currentRule = SlimGTModelUtil.getContainer(context, SlimRule.class);
+		Map<SlimRuleNode, RuleNodeHierarchy> nodes = new LinkedHashMap<>();
+		getAllRuleNodes(currentRule, new HashMap<>(), nodes);
 
-		return nodes;
+		if (nodes.containsKey(context)) {
+			return nodes.get(context).superNodes();
+		} else {
+			return new HashSet<>();
+		}
 	}
 
-	public static Collection<SlimRuleEdge> getAllEdges(SlimRuleNode context) {
+	public static Collection<SlimRuleEdge> getRuleNodeAllEdges(SlimRuleNode context) {
 		List<SlimRuleEdge> edges = new LinkedList<>();
-
+		// TODO: Use rule node hierarchy to get alle edges
 		return edges;
 	}
 
