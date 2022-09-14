@@ -13,6 +13,10 @@ EditorFile:
 	(rules += SlimRule)*
 ;
 
+@Override
+Import:
+	'import' name = STRING
+;
 
 PackageDeclaration:
 	'package' name = QualifiedName
@@ -66,13 +70,25 @@ GTLRuleRefinmentNode:
 	superRule=[ecore::EObject|ID] '.' refinementNode=[SlimRuleNode|ID]
 ;
 
+@Override
+SlimRuleNodeContext:
+	(refining ?= '@refines'  refinement=GTLRuleRefinmentNode)?
+	'[=]' (local?='local')? context = SlimRuleNode
+;
+
+@Override
+SlimRuleNodeCreation:
+	(refining ?= '@refines'  refinement=GTLRuleRefinmentNode)?
+	'[+]' creation = SlimRuleNode
+;
+
 GTLRuleNodeDeletion :
-	'--' deletion = SlimRuleNode
+	(refining ?= '@refines'  refinement=GTLRuleRefinmentNode)?
+	'[-]' deletion = SlimRuleNode
 ;
 
 @Override
 SlimRuleNode:
-	(refining ?= '@refines'  refinement=GTLRuleRefinmentNode)?
 	name = ID ':' type=[ecore::EClass] ('{'
 		(contextEdges += SlimRuleEdgeContext |
 		createdEdges += SlimRuleEdgeCreation |
@@ -83,7 +99,7 @@ SlimRuleNode:
 ;
 
 GTLRuleEdgeDeletion:
-	'--' deletion = SlimRuleSimpleEdge
+	'[-]' deletion = SlimRuleSimpleEdge
 ;
 
 GTLRuleWatchDogs:
@@ -125,5 +141,5 @@ GTLEdgeIteratorReference:
 ;
 
 enum EdgeIteratorOperator:
-	CREATE = '++' | DELETE = '--'
+	CREATE = '[+]' | DELETE = '[-]'
 ;

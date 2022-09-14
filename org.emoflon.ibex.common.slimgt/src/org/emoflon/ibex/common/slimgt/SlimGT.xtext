@@ -33,11 +33,11 @@ SlimRule: {SlimRule}
 ;
 
 SlimRuleNodeContext:
-	(local?='local')? context = SlimRuleNode
+	'[=]' (local?='local')? context = SlimRuleNode
 ;
 
 SlimRuleNodeCreation: 
-	'++' creation = SlimRuleNode 
+	'[+]' creation = SlimRuleNode
 ;
 
 SlimRuleNode:
@@ -49,11 +49,11 @@ SlimRuleNode:
 ;
 
 SlimRuleEdgeContext:
-	context = SlimRuleEdge
+	'[=]' context = SlimRuleEdge
 ;
 
 SlimRuleEdgeCreation:
-	'++' creation = SlimRuleSimpleEdge
+	'[+]' creation = SlimRuleSimpleEdge
 ;
 
 SlimRuleEdge:
@@ -73,7 +73,7 @@ SlimRuleAttributeAssignment:
 ;
 
 SlimRuleAttributeCondition:
-	'#' lhs=ValueExpression operator=RelationalOperator rhs=ValueExpression
+	'[#]' lhs=ValueExpression operator=RelationalOperator rhs=ValueExpression
 ;
 
 enum RelationalOperator:

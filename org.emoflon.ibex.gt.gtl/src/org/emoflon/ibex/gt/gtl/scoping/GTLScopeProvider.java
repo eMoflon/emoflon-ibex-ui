@@ -267,17 +267,25 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 	protected IScope scopeForSlimRuleNodeType(org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode context,
 			EReference reference) {
 		SlimRuleNode ruleNode = (SlimRuleNode) context;
-		if (!ruleNode.isRefining()) {
+		if (!GTLModelUtil.ruleNodeIsRefining(ruleNode)) {
 			return super.scopeForSlimRuleNodeType(context, reference);
 		} else {
-			if (ruleNode.getRefinement() == null || ruleNode.getRefinement().getRefinementNode() == null)
+			if (GTLModelUtil.getRefinementNode(ruleNode) == null
+					|| GTLModelUtil.getRefinementNode(ruleNode).getRefinementNode() == null)
 				return IScope.NULLSCOPE;
+
 			EditorFile ef = SlimGTModelUtil.getContainer(context, EditorFile.class);
 
-//			return Scopes.scopeFor(SlimGTModelUtil.getClasses(ef).stream().filter(
-//					cls -> cls.getEAllSuperTypes().contains(ruleNode.getRefinement().getRefinementNode().getType()))
-//					.collect(Collectors.toSet()));
-			return Scopes.scopeFor(SlimGTModelUtil.getClasses(ef));
+			Collection<EClass> superTypes = SlimGTModelUtil.getClasses(ef).stream()
+					.filter(cls -> cls.getEAllSuperTypes() != null && cls.getEAllSuperTypes().size() > 0)
+					.filter(cls -> cls.getEAllSuperTypes().stream()
+							.filter(superCls -> superCls.getName().equals(
+									GTLModelUtil.getRefinementNode(ruleNode).getRefinementNode().getType().getName()))
+							.findAny().isPresent())
+					.collect(Collectors.toSet());
+			superTypes.add(GTLModelUtil.getRefinementNode(ruleNode).getRefinementNode().getType());
+
+			return Scopes.scopeFor(superTypes);
 		}
 
 	}
@@ -287,8 +295,10 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 		// Find nodes with correct type. Allowed: Exact type match or target type is a
 		// subtype of the edge type.
 		Collection<SlimRuleNode> allRuleNodes = GTLModelUtil.getAllRuleNodes(currentRule).stream()
-//				.filter(rn -> rn.getType().equals(context.getType().getEType()))
-//						|| rn.eClass().getEAllSuperTypes().contains(context.getType().getEType()))
+				.filter(sn -> sn.getType().getName().equals(context.getType().getEType().getName())
+						|| sn.getType().getEAllSuperTypes().stream()
+								.filter(superCls -> superCls.getName().equals(context.getType().getEType().getName()))
+								.findAny().isPresent())
 				.collect(Collectors.toSet());
 		// TODO: Prohibit self-edges?
 //		allRuleNodes.remove(currentRuleNode);

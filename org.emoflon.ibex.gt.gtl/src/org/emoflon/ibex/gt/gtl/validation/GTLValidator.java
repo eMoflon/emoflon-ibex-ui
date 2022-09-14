@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -18,20 +19,24 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.validation.Check;
 import org.emoflon.ibex.common.slimgt.slimGT.Import;
+import org.emoflon.ibex.common.slimgt.slimGT.NodeAttributeExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeAssignment;
-import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeContext;
-import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeCreation;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdgeContext;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdgeCreation;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
 import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtils;
 import org.emoflon.ibex.common.slimgt.validation.SlimGTValidatorUtils;
 import org.emoflon.ibex.gt.gtl.gTL.EditorFile;
 import org.emoflon.ibex.gt.gtl.gTL.GTLPackage;
 import org.emoflon.ibex.gt.gtl.gTL.GTLParameterExpression;
+import org.emoflon.ibex.gt.gtl.gTL.GTLRuleEdgeDeletion;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleNodeDeletion;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinement;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementAliased;
@@ -41,7 +46,10 @@ import org.emoflon.ibex.gt.gtl.gTL.PatternImport;
 import org.emoflon.ibex.gt.gtl.gTL.SlimParameter;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRule;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNode;
+import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNodeContext;
+import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNodeCreation;
 import org.emoflon.ibex.gt.gtl.util.GTLModelUtil;
+import org.emoflon.ibex.gt.gtl.util.RuleNodeHierarchy;
 
 /**
  * This class contains custom validation rules.
@@ -483,14 +491,14 @@ public class GTLValidator extends AbstractGTLValidator {
 		if (node.getCreation() == null)
 			return;
 
-		if (!((SlimRuleNode) node.getCreation()).isRefining())
+		if (!node.isRefining())
 			return;
 
-		SlimRuleNode superNode = ((SlimRuleNode) node.getCreation()).getRefinement().getRefinementNode();
+		SlimRuleNode superNode = node.getRefinement().getRefinementNode();
 		SlimRuleNodeCreation superCreation = SlimGTModelUtil.getContainer(superNode, SlimRuleNodeCreation.class);
 
 		if (superCreation == null) {
-			error("A node creation may only refine another node creation.",
+			error("A node creation may only refine another node creation.", superCreation,
 					SlimGTPackage.Literals.SLIM_RULE__CREATED_NODES);
 		}
 
@@ -501,20 +509,21 @@ public class GTLValidator extends AbstractGTLValidator {
 		if (node.getContext() == null)
 			return;
 
-		if (!((SlimRuleNode) node.getContext()).isRefining())
+		if (!node.isRefining())
 			return;
 
-		if (((SlimRuleNode) node.getContext()).getRefinement() == null)
+		if (node.getRefinement() == null)
 			return;
 
-		if (((SlimRuleNode) node.getContext()).getRefinement().getRefinementNode() == null)
+		if (node.getRefinement().getRefinementNode() == null)
 			return;
 
-		SlimRuleNode superNode = ((SlimRuleNode) node.getContext()).getRefinement().getRefinementNode();
+		SlimRuleNode superNode = node.getRefinement().getRefinementNode();
 		SlimRuleNodeContext superContext = SlimGTModelUtil.getContainer(superNode, SlimRuleNodeContext.class);
 
 		if (superContext == null) {
-			error("A context node may only refine another context node.", SlimGTPackage.Literals.SLIM_RULE_NODE__NAME);
+			error("A context node may only refine another context node.", superContext,
+					SlimGTPackage.Literals.SLIM_RULE_NODE__CONTEXT_EDGES);
 		}
 
 	}
@@ -524,14 +533,14 @@ public class GTLValidator extends AbstractGTLValidator {
 		if (node.getDeletion() == null)
 			return;
 
-		if (!node.getDeletion().isRefining())
+		if (!node.isRefining())
 			return;
 
-		SlimRuleNode superNode = node.getDeletion().getRefinement().getRefinementNode();
+		SlimRuleNode superNode = node.getRefinement().getRefinementNode();
 		GTLRuleNodeDeletion superDeletion = SlimGTModelUtil.getContainer(superNode, GTLRuleNodeDeletion.class);
 
 		if (superDeletion == null) {
-			error("A node deletion may only refine another node deletion.",
+			error("A node deletion may only refine another node deletion.", superDeletion,
 					GTLPackage.Literals.SLIM_RULE__DELETED_NODES);
 		}
 
@@ -543,12 +552,8 @@ public class GTLValidator extends AbstractGTLValidator {
 			return;
 
 		SlimRule currentRule = SlimGTModelUtil.getContainer(node, SlimRule.class);
-		long nodeCount = currentRule.getContextNodes().stream().map(n -> n.getContext())
-				.filter(n -> n.getName().equals(node.getName())).count();
-		nodeCount += currentRule.getDeletedNodes().stream().map(n -> n.getDeletion())
-				.filter(n -> n.getName().equals(node.getName())).count();
-		nodeCount += currentRule.getCreatedNodes().stream().map(n -> n.getCreation())
-				.filter(n -> n.getName().equals(node.getName())).count();
+		long nodeCount = GTLModelUtil.getAllRuleNodes(currentRule).stream().filter(n -> n != null)
+				.filter(n -> n.getName() != null).filter(n -> n.getName().equals(node.getName())).count();
 
 		if (nodeCount > 1) {
 			error(String.format("The node name '%s' may not be defined more than once within this pattern.",
@@ -556,10 +561,112 @@ public class GTLValidator extends AbstractGTLValidator {
 		}
 	}
 
+	@Check
+	protected void checkedgeOperationUnique(SlimRuleEdgeContext edge) {
+		SlimRuleEdge currentEdge = edge.getContext();
+		if (isEdgeRedefined(currentEdge)) {
+			error(String.format("The edge with type <%s> and and target <%s> may not be defined twice.",
+					currentEdge.getType().getName(), currentEdge.getTarget().getName()),
+					SlimGTPackage.Literals.SLIM_RULE_EDGE_CONTEXT__CONTEXT);
+		}
+	}
+
+	@Check
+	protected void checkedgeOperationUnique(SlimRuleEdgeCreation edge) {
+		SlimRuleEdge currentEdge = edge.getCreation();
+		if (isEdgeRedefined(currentEdge)) {
+			error(String.format("The edge with type <%s> and and target <%s> may not be defined twice.",
+					currentEdge.getType().getName(), currentEdge.getTarget().getName()),
+					SlimGTPackage.Literals.SLIM_RULE_EDGE_CREATION__CREATION);
+		}
+	}
+
+	@Check
+	protected void checkedgeOperationUnique(GTLRuleEdgeDeletion edge) {
+		SlimRuleEdge currentEdge = edge.getDeletion();
+		if (isEdgeRedefined(currentEdge)) {
+			error(String.format("The edge with type <%s> and and target <%s> may not be defined twice.",
+					currentEdge.getType().getName(), currentEdge.getTarget().getName()),
+					GTLPackage.Literals.GTL_RULE_EDGE_DELETION__DELETION);
+		}
+	}
+
+	protected boolean isEdgeRedefined(SlimRuleEdge edge) {
+		if (edge.getType() == null || edge.getTarget() == null)
+			return false;
+
+		SlimRuleNode currentRuleNode = SlimGTModelUtil.getContainer(edge, SlimRuleNode.class);
+		SlimRule currentRule = SlimGTModelUtil.getContainer(edge, SlimRule.class);
+		Map<SlimRuleNode, RuleNodeHierarchy> ruleNodeHierarchy = GTLModelUtil.getAllRuleNodeHierarchy(currentRule);
+		Collection<SlimRuleEdge> allEdges = GTLModelUtil.getRuleNodeAllEdges(currentRuleNode, ruleNodeHierarchy);
+		RuleNodeHierarchy targetHierarchy = ruleNodeHierarchy.get(edge.getTarget());
+		if (targetHierarchy == null)
+			return false;
+
+		for (SlimRuleEdge other : allEdges) {
+			if (edge.equals(other))
+				continue;
+
+			if (other.getType() == null || other.getTarget() == null)
+				continue;
+
+			if (other.getType().getName().equals(edge.getType().getName())
+					&& (other.getTarget().equals(edge.getTarget())
+							|| targetHierarchy.superNodes().contains(other.getTarget()))) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	@Check
+	protected void checkAssignemtUnique(SlimRuleAttributeAssignment assignment) {
+		if (assignment.getType() == null)
+			return;
+
+		SlimRuleNode currentRuleNode = SlimGTModelUtil.getContainer(assignment, SlimRuleNode.class);
+		Collection<SlimRuleAttributeAssignment> assignments = GTLModelUtil
+				.getRuleNodeAllAttributeAssignments(currentRuleNode);
+		for (SlimRuleAttributeAssignment other : assignments) {
+			if (other.equals(assignment))
+				continue;
+
+			if (other.getType() == null)
+				continue;
+
+			if (other.getType().getName().equals(assignment.getType().getName())) {
+				error(String.format("Assignment to attribute <%s> may only happen once per node.",
+						assignment.getType().getName()), SlimGTPackage.Literals.SLIM_RULE_ATTRIBUTE_ASSIGNMENT__TYPE);
+			}
+		}
+	}
+
 	// Arithmetic Expession Checks
 
 	@Check
-	protected void parameterOnlyInAssignment(GTLParameterExpression paramExpression) {
+	protected void checkAttributeInAssignmentIsNotAssignedTo(NodeAttributeExpression attributeExpression) {
+		SlimRuleNode node = (SlimRuleNode) attributeExpression.getNode();
+		EAttribute attribute = attributeExpression.getFeature();
+
+		if (node == null || attribute == null)
+			return;
+
+		SlimRuleAttributeAssignment assignment = SlimGTModelUtil.getContainer(attributeExpression,
+				SlimRuleAttributeAssignment.class);
+		// If the attribute expression is not part of an assignment -> no problem
+		if (assignment == null)
+			return;
+
+		// Attributes that get values assigned to themselves may not be part of other
+		// assignments, except for their own assignments to allow for increments,
+		// but only once.
+
+		// TODO: finish
+	}
+
+	@Check
+	protected void checkParameterOnlyInAssignment(GTLParameterExpression paramExpression) {
 		SlimRuleAttributeAssignment assignment = SlimGTModelUtil.getContainer(paramExpression,
 				SlimRuleAttributeAssignment.class);
 		if (assignment == null) {
