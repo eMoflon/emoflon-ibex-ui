@@ -143,6 +143,9 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 		if (SlimGTScopeUtil.isSlimRuleNodeMappingTrg(context, reference)) {
 			return scopeForNodeMappingTrg((SlimRuleNodeMapping) context, reference);
 		}
+		if (SlimGTScopeUtil.isSlimRuleInvocationPattern(context, reference)) {
+			return scopeForInvocationSupportPattern((SlimRuleInvocation) context, reference);
+		}
 		if (GTLScopeUtil.isGTLEdgeIteratorType(context, reference)) {
 			return scopeForGTLEdgeIteratorType((GTLEdgeIterator) context, reference);
 		}
@@ -367,6 +370,14 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 		return IScope.NULLSCOPE;
 	}
 
+	private IScope scopeForInvocationSupportPattern(SlimRuleInvocation context, EReference reference) {
+		EditorFile ef = SlimGTModelUtil.getContainer(context, EditorFile.class);
+		SlimRule rule = SlimGTModelUtil.getContainer(context, SlimRule.class);
+
+		return Scopes.scopeFor(getAllRulesInScope(ef).stream().filter(r -> !r.equals(rule))
+				.filter(r -> r.getParameters() == null || r.getParameters().size() == 0).collect(Collectors.toList()));
+	}
+
 	protected IScope scopeForParameterExpressionParameter(GTLParameterExpression context, EReference reference) {
 		SlimRule currentRule = SlimGTModelUtil.getContainer(context, SlimRule.class);
 		return Scopes.scopeFor(GTLModelUtil.getAllParameters(currentRule));
@@ -376,7 +387,8 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 		EditorFile ef = SlimGTModelUtil.getContainer(context, EditorFile.class);
 		SlimRule rule = SlimGTModelUtil.getContainer(context, SlimRule.class);
 
-		return Scopes.scopeFor(ef.getRules().stream().filter(r -> !r.equals(rule)).collect(Collectors.toList()));
+		return Scopes.scopeFor(getAllRulesInScope(ef).stream().filter(r -> !r.equals(rule))
+				.filter(r -> r.getParameters() == null || r.getParameters().size() == 0).collect(Collectors.toList()));
 	}
 
 	protected IScope scopeForValueOrArithmeticExpression(EObject context, EReference reference) {

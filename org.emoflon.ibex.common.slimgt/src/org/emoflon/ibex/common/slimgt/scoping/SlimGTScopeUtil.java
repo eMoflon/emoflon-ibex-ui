@@ -10,6 +10,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimParameter;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeAssignment;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMapping;
 import org.emoflon.ibex.common.slimgt.slimGT.ValueExpression;
@@ -48,6 +49,11 @@ public final class SlimGTScopeUtil {
 
 	public static boolean isEnumExpressionLiteral(final EObject context, final EReference reference) {
 		return context instanceof EnumExpression && reference == SlimGTPackage.Literals.ENUM_EXPRESSION__LITERAL;
+	}
+
+	public static boolean isSlimRuleInvocationPattern(EObject context, EReference reference) {
+		return context instanceof SlimRuleInvocation
+				&& reference == SlimGTPackage.Literals.SLIM_RULE_INVOCATION__SUPPORT_PATTERN;
 	}
 
 	public static boolean isCountExpressionPattern(EObject context, EReference reference) {

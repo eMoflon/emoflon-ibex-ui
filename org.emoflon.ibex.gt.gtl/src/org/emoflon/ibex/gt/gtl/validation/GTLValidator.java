@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeAssignment;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdgeContext;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdgeCreation;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
 import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtils;
 import org.emoflon.ibex.common.slimgt.validation.SlimGTValidatorUtils;
@@ -561,8 +563,10 @@ public class GTLValidator extends AbstractGTLValidator {
 		}
 	}
 
+	// Edge checks
+
 	@Check
-	protected void checkedgeOperationUnique(SlimRuleEdgeContext edge) {
+	protected void checkEdgeOperationUnique(SlimRuleEdgeContext edge) {
 		SlimRuleEdge currentEdge = edge.getContext();
 		if (isEdgeRedefined(currentEdge)) {
 			error(String.format("The edge with type <%s> and and target <%s> may not be defined twice.",
@@ -572,7 +576,7 @@ public class GTLValidator extends AbstractGTLValidator {
 	}
 
 	@Check
-	protected void checkedgeOperationUnique(SlimRuleEdgeCreation edge) {
+	protected void checkEdgeOperationUnique(SlimRuleEdgeCreation edge) {
 		SlimRuleEdge currentEdge = edge.getCreation();
 		if (isEdgeRedefined(currentEdge)) {
 			error(String.format("The edge with type <%s> and and target <%s> may not be defined twice.",
@@ -582,7 +586,7 @@ public class GTLValidator extends AbstractGTLValidator {
 	}
 
 	@Check
-	protected void checkedgeOperationUnique(GTLRuleEdgeDeletion edge) {
+	protected void checkEdgeOperationUnique(GTLRuleEdgeDeletion edge) {
 		SlimRuleEdge currentEdge = edge.getDeletion();
 		if (isEdgeRedefined(currentEdge)) {
 			error(String.format("The edge with type <%s> and and target <%s> may not be defined twice.",
@@ -620,8 +624,10 @@ public class GTLValidator extends AbstractGTLValidator {
 		return false;
 	}
 
+	// Assignment Checks
+
 	@Check
-	protected void checkAssignemtUnique(SlimRuleAttributeAssignment assignment) {
+	protected void checkAssignmentUnique(SlimRuleAttributeAssignment assignment) {
 		if (assignment.getType() == null)
 			return;
 
@@ -643,6 +649,57 @@ public class GTLValidator extends AbstractGTLValidator {
 		}
 	}
 
+	// Invocation Checks
+
+	@Check
+	protected void supportPatternNotAbstract(SlimRuleInvocation invocation) {
+		if (invocation.getSupportPattern() == null)
+			return;
+
+		if (((SlimRule) invocation.getSupportPattern()).isAbstract()) {
+			error("Invoked patterns or rules may not be abstract.",
+					SlimGTPackage.Literals.SLIM_RULE_INVOCATION__SUPPORT_PATTERN);
+		}
+	}
+
+	@Check
+	protected void supportPatternNoCycle(SlimRuleInvocation invocation) {
+		if (invocation.getSupportPattern() == null)
+			return;
+
+		SlimRule currentRule = SlimGTModelUtil.getContainer(invocation, SlimRule.class);
+		Set<SlimRule> traversedRules = new HashSet<>();
+		traversedRules.add(currentRule);
+
+		if (invocationHierarchyHasCycle(invocation, traversedRules)) {
+			error("Invoked pattern <%s> leads to an invocation cycle, which is not allowed.",
+					SlimGTPackage.Literals.SLIM_RULE_INVOCATION__SUPPORT_PATTERN);
+		}
+	}
+
+	protected boolean invocationHierarchyHasCycle(SlimRuleInvocation current, Set<SlimRule> traversedRules) {
+		if (current.getSupportPattern() == null)
+			return false;
+
+		SlimRule invokee = (SlimRule) current.getSupportPattern();
+
+		if (traversedRules.contains(invokee))
+			return true;
+
+		traversedRules.add(invokee);
+
+		if (invokee.getInvocations() == null)
+			return false;
+
+		for (SlimRuleInvocation other : invokee.getInvocations()) {
+			if (invocationHierarchyHasCycle(other, traversedRules)) {
+				return true;
+			}
+		}
+
+		return false;
+
+	}
 	// Arithmetic Expession Checks
 
 	@Check
