@@ -19,10 +19,12 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.validation.Check;
 import org.emoflon.ibex.common.slimgt.slimGT.Import;
+import org.emoflon.ibex.common.slimgt.slimGT.NodeAttributeExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeAssignment;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
@@ -560,32 +562,32 @@ public class GTLValidator extends AbstractGTLValidator {
 	}
 
 	@Check
-	protected void edgeOperationUnique(SlimRuleEdgeContext edge) {
+	protected void checkedgeOperationUnique(SlimRuleEdgeContext edge) {
 		SlimRuleEdge currentEdge = edge.getContext();
 		if (isEdgeRedefined(currentEdge)) {
-			error(String.format("Edges of the same type <%s> and with the same target <%s> may not be defined twice.",
+			error(String.format("The edge with type <%s> and and target <%s> may not be defined twice.",
 					currentEdge.getType().getName(), currentEdge.getTarget().getName()),
 					SlimGTPackage.Literals.SLIM_RULE_EDGE_CONTEXT__CONTEXT);
 		}
 	}
 
 	@Check
-	protected void edgeOperationUnique(SlimRuleEdgeCreation edge) {
+	protected void checkedgeOperationUnique(SlimRuleEdgeCreation edge) {
 		SlimRuleEdge currentEdge = edge.getCreation();
 		if (isEdgeRedefined(currentEdge)) {
-			error(String.format("Edges of the same type <%s> and with the same target <%s> may not be defined twice.",
+			error(String.format("The edge with type <%s> and and target <%s> may not be defined twice.",
 					currentEdge.getType().getName(), currentEdge.getTarget().getName()),
-					SlimGTPackage.Literals.SLIM_RULE_EDGE_CONTEXT__CONTEXT);
+					SlimGTPackage.Literals.SLIM_RULE_EDGE_CREATION__CREATION);
 		}
 	}
 
 	@Check
-	protected void edgeOperationUnique(GTLRuleEdgeDeletion edge) {
+	protected void checkedgeOperationUnique(GTLRuleEdgeDeletion edge) {
 		SlimRuleEdge currentEdge = edge.getDeletion();
 		if (isEdgeRedefined(currentEdge)) {
-			error(String.format("Edges of the same type <%s> and with the same target <%s> may not be defined twice.",
+			error(String.format("The edge with type <%s> and and target <%s> may not be defined twice.",
 					currentEdge.getType().getName(), currentEdge.getTarget().getName()),
-					SlimGTPackage.Literals.SLIM_RULE_EDGE_CONTEXT__CONTEXT);
+					GTLPackage.Literals.GTL_RULE_EDGE_DELETION__DELETION);
 		}
 	}
 
@@ -617,10 +619,54 @@ public class GTLValidator extends AbstractGTLValidator {
 
 		return false;
 	}
+
+	@Check
+	protected void checkAssignemtUnique(SlimRuleAttributeAssignment assignment) {
+		if (assignment.getType() == null)
+			return;
+
+		SlimRuleNode currentRuleNode = SlimGTModelUtil.getContainer(assignment, SlimRuleNode.class);
+		Collection<SlimRuleAttributeAssignment> assignments = GTLModelUtil
+				.getRuleNodeAllAttributeAssignments(currentRuleNode);
+		for (SlimRuleAttributeAssignment other : assignments) {
+			if (other.equals(assignment))
+				continue;
+
+			if (other.getType() == null)
+				continue;
+
+			if (other.getType().getName().equals(assignment.getType().getName())) {
+				error(String.format("Assignment to attribute <%s> may only happen once per node.",
+						assignment.getType().getName()), SlimGTPackage.Literals.SLIM_RULE_ATTRIBUTE_ASSIGNMENT__TYPE);
+			}
+		}
+	}
+
 	// Arithmetic Expession Checks
 
 	@Check
-	protected void parameterOnlyInAssignment(GTLParameterExpression paramExpression) {
+	protected void checkAttributeInAssignmentIsNotAssignedTo(NodeAttributeExpression attributeExpression) {
+		SlimRuleNode node = (SlimRuleNode) attributeExpression.getNode();
+		EAttribute attribute = attributeExpression.getFeature();
+
+		if (node == null || attribute == null)
+			return;
+
+		SlimRuleAttributeAssignment assignment = SlimGTModelUtil.getContainer(attributeExpression,
+				SlimRuleAttributeAssignment.class);
+		// If the attribute expression is not part of an assignment -> no problem
+		if (assignment == null)
+			return;
+
+		// Attributes that get values assigned to themselves may not be part of other
+		// assignments, except for their own assignments to allow for increments,
+		// but only once.
+
+		// TODO: finish
+	}
+
+	@Check
+	protected void checkParameterOnlyInAssignment(GTLParameterExpression paramExpression) {
 		SlimRuleAttributeAssignment assignment = SlimGTModelUtil.getContainer(paramExpression,
 				SlimRuleAttributeAssignment.class);
 		if (assignment == null) {

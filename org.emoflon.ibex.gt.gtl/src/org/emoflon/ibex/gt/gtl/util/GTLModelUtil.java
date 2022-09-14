@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeAssignment;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeContext;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeCreation;
@@ -309,6 +310,12 @@ public final class GTLModelUtil {
 			node.getDeletedEdges().stream().map(e -> e.getDeletion()).forEach(e -> edges.add(e));
 		}
 		return edges;
+	}
+
+	public static Collection<SlimRuleAttributeAssignment> getRuleNodeAllAttributeAssignments(SlimRuleNode context) {
+		List<SlimRuleNode> nodes = List.of(context);
+		nodes.addAll(getRuleNodeAllSuperNodes(context));
+		return nodes.stream().flatMap(n -> n.getAssignments().stream()).collect(Collectors.toList());
 	}
 
 }
