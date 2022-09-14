@@ -638,6 +638,7 @@ public class GTLValidator extends AbstractGTLValidator {
 			if (other.getType().getName().equals(assignment.getType().getName())) {
 				error(String.format("Assignment to attribute <%s> may only happen once per node.",
 						assignment.getType().getName()), SlimGTPackage.Literals.SLIM_RULE_ATTRIBUTE_ASSIGNMENT__TYPE);
+				return;
 			}
 		}
 	}
@@ -652,6 +653,7 @@ public class GTLValidator extends AbstractGTLValidator {
 		if (node == null || attribute == null)
 			return;
 
+		SlimRuleNode ownNode = SlimGTModelUtil.getContainer(attributeExpression, SlimRuleNode.class);
 		SlimRuleAttributeAssignment assignment = SlimGTModelUtil.getContainer(attributeExpression,
 				SlimRuleAttributeAssignment.class);
 		// If the attribute expression is not part of an assignment -> no problem
@@ -661,8 +663,24 @@ public class GTLValidator extends AbstractGTLValidator {
 		// Attributes that get values assigned to themselves may not be part of other
 		// assignments, except for their own assignments to allow for increments,
 		// but only once.
+		if (node.equals(ownNode) && attribute.getName().equals(assignment.getType().getName()))
+			return;
 
-		// TODO: finish
+		SlimRule currentRule = SlimGTModelUtil.getContainer(ownNode, SlimRule.class);
+		Collection<SlimRuleAttributeAssignment> allAssignments = GTLModelUtil.getAllAttributeAssignments(currentRule);
+		for (SlimRuleAttributeAssignment other : allAssignments) {
+			if (other.equals(assignment))
+				continue;
+
+			SlimRuleNode otherNode = SlimGTModelUtil.getContainer(other, SlimRuleNode.class);
+			if (otherNode.equals(node) && other.getType().getName().equals(attribute.getName())) {
+				error(String.format(
+						"References to attributes within attribute assignment calculations that are themselves subject to an assignment are not permitted.",
+						assignment.getType().getName()), SlimGTPackage.Literals.NODE_ATTRIBUTE_EXPRESSION__FEATURE);
+				return;
+			}
+
+		}
 	}
 
 	@Check

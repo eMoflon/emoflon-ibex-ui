@@ -318,4 +318,15 @@ public final class GTLModelUtil {
 		return nodes.stream().flatMap(n -> n.getAssignments().stream()).collect(Collectors.toList());
 	}
 
+	public static Collection<SlimRuleAttributeAssignment> getAllAttributeAssignments(SlimRule context) {
+		List<SlimRuleNode> nodes = new LinkedList<>();
+		Map<SlimRuleNode, RuleNodeHierarchy> hierarchy = getAllRuleNodeHierarchy(context);
+		getAllRuleNodes(context).forEach(n -> {
+			nodes.add(n);
+			nodes.addAll(getRuleNodeAllSuperNodes(n, hierarchy));
+		});
+
+		return nodes.stream().flatMap(n -> n.getAssignments().stream()).collect(Collectors.toList());
+	}
+
 }
