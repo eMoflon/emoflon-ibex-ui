@@ -4,6 +4,8 @@
 package org.emoflon.ibex.common.slimgt.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.xtext.ui.editor.contentassist.PrefixMatcher;
+import org.emoflon.ibex.common.slimgt.ui.contentassist.MyFQNPrefixMatcher;
 
 /**
  * Use this class to register components to be used within the Eclipse IDE.
@@ -12,5 +14,12 @@ public class SlimGTUiModule extends AbstractSlimGTUiModule {
 
 	public SlimGTUiModule(AbstractUIPlugin plugin) {
 		super(plugin);
+	}
+	
+	@Override
+	public Class<? extends PrefixMatcher> bindPrefixMatcher() {
+
+		// TODO Auto-generated method stub
+		return MyFQNPrefixMatcher.class;
 	}
 }

@@ -37,7 +37,7 @@ SlimRuleNodeContext:
 ;
 
 SlimRuleNodeCreation: 
-	'++' creation = SlimRuleNode
+	'++' creation = SlimRuleNode 
 ;
 
 SlimRuleNode:
