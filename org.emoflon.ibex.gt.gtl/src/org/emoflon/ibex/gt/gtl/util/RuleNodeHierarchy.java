@@ -17,7 +17,7 @@ import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNode;
  *                        from the root node
  * @param superNodes      All super nodes above the root node
  */
-record RuleNodeHierarchy(SlimRuleNode node, Map<SlimRuleNode, LinkedList<SlimRuleNode>> finalSuper2Path,
+public record RuleNodeHierarchy(SlimRuleNode node, Map<SlimRuleNode, LinkedList<SlimRuleNode>> finalSuper2Path,
 		Set<SlimRuleNode> superNodes) {
 
 	public RuleNodeHierarchy(SlimRuleNode node) {

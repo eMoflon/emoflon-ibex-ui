@@ -259,6 +259,12 @@ public final class GTLModelUtil {
 		}
 	}
 
+	public static Map<SlimRuleNode, RuleNodeHierarchy> getAllRuleNodeHierarchy(SlimRule context) {
+		Map<SlimRuleNode, RuleNodeHierarchy> nodes = new LinkedHashMap<>();
+		getAllRuleNodes(context, new HashMap<>(), nodes);
+		return nodes;
+	}
+
 	public static Collection<SlimRuleNode> getRuleNodeAllSuperNodes(SlimRuleNode context) {
 		SlimRule currentRule = SlimGTModelUtil.getContainer(context, SlimRule.class);
 		Map<SlimRuleNode, RuleNodeHierarchy> nodes = new LinkedHashMap<>();
@@ -271,9 +277,37 @@ public final class GTLModelUtil {
 		}
 	}
 
+	public static Collection<SlimRuleNode> getRuleNodeAllSuperNodes(SlimRuleNode context,
+			Map<SlimRuleNode, RuleNodeHierarchy> ruleNodeHierarchy) {
+		if (ruleNodeHierarchy.containsKey(context)) {
+			return ruleNodeHierarchy.get(context).superNodes();
+		} else {
+			return new HashSet<>();
+		}
+	}
+
 	public static Collection<SlimRuleEdge> getRuleNodeAllEdges(SlimRuleNode context) {
 		List<SlimRuleEdge> edges = new LinkedList<>();
-		// TODO: Use rule node hierarchy to get alle edges
+		List<SlimRuleNode> nodes = List.of(context);
+		nodes.addAll(getRuleNodeAllSuperNodes(context));
+		for (SlimRuleNode node : nodes) {
+			node.getContextEdges().stream().map(e -> e.getContext()).forEach(e -> edges.add(e));
+			node.getCreatedEdges().stream().map(e -> e.getCreation()).forEach(e -> edges.add(e));
+			node.getDeletedEdges().stream().map(e -> e.getDeletion()).forEach(e -> edges.add(e));
+		}
+		return edges;
+	}
+
+	public static Collection<SlimRuleEdge> getRuleNodeAllEdges(SlimRuleNode context,
+			Map<SlimRuleNode, RuleNodeHierarchy> ruleNodeHierarchy) {
+		List<SlimRuleEdge> edges = new LinkedList<>();
+		List<SlimRuleNode> nodes = List.of(context);
+		nodes.addAll(getRuleNodeAllSuperNodes(context, ruleNodeHierarchy));
+		for (SlimRuleNode node : nodes) {
+			node.getContextEdges().stream().map(e -> e.getContext()).forEach(e -> edges.add(e));
+			node.getCreatedEdges().stream().map(e -> e.getCreation()).forEach(e -> edges.add(e));
+			node.getDeletedEdges().stream().map(e -> e.getDeletion()).forEach(e -> edges.add(e));
+		}
 		return edges;
 	}
 

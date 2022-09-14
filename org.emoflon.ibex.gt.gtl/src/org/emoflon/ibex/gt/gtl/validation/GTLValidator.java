@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -24,6 +25,7 @@ import org.eclipse.xtext.validation.Check;
 import org.emoflon.ibex.common.slimgt.slimGT.Import;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeAssignment;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdgeContext;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdgeCreation;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
@@ -45,6 +47,7 @@ import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNode;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNodeContext;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNodeCreation;
 import org.emoflon.ibex.gt.gtl.util.GTLModelUtil;
+import org.emoflon.ibex.gt.gtl.util.RuleNodeHierarchy;
 
 /**
  * This class contains custom validation rules.
@@ -558,19 +561,62 @@ public class GTLValidator extends AbstractGTLValidator {
 
 	@Check
 	protected void edgeOperationUnique(SlimRuleEdgeContext edge) {
-
+		SlimRuleEdge currentEdge = edge.getContext();
+		if (isEdgeRedefined(currentEdge)) {
+			error(String.format("Edges of the same type <%s> and with the same target <%s> may not be defined twice.",
+					currentEdge.getType().getName(), currentEdge.getTarget().getName()),
+					SlimGTPackage.Literals.SLIM_RULE_EDGE_CONTEXT__CONTEXT);
+		}
 	}
 
 	@Check
 	protected void edgeOperationUnique(SlimRuleEdgeCreation edge) {
-
+		SlimRuleEdge currentEdge = edge.getCreation();
+		if (isEdgeRedefined(currentEdge)) {
+			error(String.format("Edges of the same type <%s> and with the same target <%s> may not be defined twice.",
+					currentEdge.getType().getName(), currentEdge.getTarget().getName()),
+					SlimGTPackage.Literals.SLIM_RULE_EDGE_CONTEXT__CONTEXT);
+		}
 	}
 
 	@Check
 	protected void edgeOperationUnique(GTLRuleEdgeDeletion edge) {
-
+		SlimRuleEdge currentEdge = edge.getDeletion();
+		if (isEdgeRedefined(currentEdge)) {
+			error(String.format("Edges of the same type <%s> and with the same target <%s> may not be defined twice.",
+					currentEdge.getType().getName(), currentEdge.getTarget().getName()),
+					SlimGTPackage.Literals.SLIM_RULE_EDGE_CONTEXT__CONTEXT);
+		}
 	}
 
+	protected boolean isEdgeRedefined(SlimRuleEdge edge) {
+		if (edge.getType() == null || edge.getTarget() == null)
+			return false;
+
+		SlimRuleNode currentRuleNode = SlimGTModelUtil.getContainer(edge, SlimRuleNode.class);
+		SlimRule currentRule = SlimGTModelUtil.getContainer(edge, SlimRule.class);
+		Map<SlimRuleNode, RuleNodeHierarchy> ruleNodeHierarchy = GTLModelUtil.getAllRuleNodeHierarchy(currentRule);
+		Collection<SlimRuleEdge> allEdges = GTLModelUtil.getRuleNodeAllEdges(currentRuleNode, ruleNodeHierarchy);
+		RuleNodeHierarchy targetHierarchy = ruleNodeHierarchy.get(edge.getTarget());
+		if (targetHierarchy == null)
+			return false;
+
+		for (SlimRuleEdge other : allEdges) {
+			if (edge.equals(other))
+				continue;
+
+			if (other.getType() == null || other.getTarget() == null)
+				continue;
+
+			if (other.getType().getName().equals(edge.getType().getName())
+					&& (other.getTarget().equals(edge.getTarget())
+							|| targetHierarchy.superNodes().contains(other.getTarget()))) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 	// Arithmetic Expession Checks
 
 	@Check
