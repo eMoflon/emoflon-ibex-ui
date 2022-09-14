@@ -28,7 +28,6 @@ import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import org.emoflon.ibex.common.slimgt.scoping.SlimGTScopeUtil;
 import org.emoflon.ibex.common.slimgt.slimGT.CountExpression;
-import org.emoflon.ibex.common.slimgt.slimGT.NodeAttributeExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeCreation;
@@ -37,9 +36,9 @@ import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
 import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtils;
 import org.emoflon.ibex.gt.gtl.gTL.EdgeIteratorOperator;
 import org.emoflon.ibex.gt.gtl.gTL.EditorFile;
+import org.emoflon.ibex.gt.gtl.gTL.GTLAttributeExpression;
 import org.emoflon.ibex.gt.gtl.gTL.GTLEdgeIterator;
 import org.emoflon.ibex.gt.gtl.gTL.GTLEdgeIteratorAttributeAssignment;
-import org.emoflon.ibex.gt.gtl.gTL.GTLEdgeIteratorAttributeExpression;
 import org.emoflon.ibex.gt.gtl.gTL.GTLEdgeIteratorReference;
 import org.emoflon.ibex.gt.gtl.gTL.GTLParameterExpression;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinement;
@@ -149,14 +148,6 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 		if (GTLScopeUtil.isGTLEdgeIteratorSubType(context, reference)) {
 			return scopeForGTLEdgeIteratorSubType((GTLEdgeIterator) context, reference);
 		}
-		if (GTLScopeUtil.isGTLEdgeIteratorAttributeExpressionIterator(context, reference)) {
-			return scopeForGTLEdgeIteratorAttributeExpressionIterator((GTLEdgeIteratorAttributeExpression) context,
-					reference);
-		}
-		if (GTLScopeUtil.isGTLEdgeIteratorAttributeExpressionAttribute(context, reference)) {
-			return scopeForGTLEdgeIteratorAttributeExpressionAttribute((GTLEdgeIteratorAttributeExpression) context,
-					reference);
-		}
 		if (GTLScopeUtil.isGTLEdgeIteratorReferenceSource(context, reference)) {
 			return scopeForGTLEdgeIteratorReferenceSource((GTLEdgeIteratorReference) context, reference);
 		}
@@ -172,11 +163,11 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 		if (SlimGTScopeUtil.isCountExpressionPattern(context, reference)) {
 			return scopeForCountExpressionPattern((CountExpression) context, reference);
 		}
-		if (SlimGTScopeUtil.isNodeAttributeExpressionNode(context, reference)) {
-			return scopeForNodeAttributeExpressionNode((NodeAttributeExpression) context, reference);
+		if (GTLScopeUtil.isGTLAttributeExpressionNode(context, reference)) {
+			return scopeForGTLAttributeExpressionNode((GTLAttributeExpression) context, reference);
 		}
-		if (SlimGTScopeUtil.isNodeAttributeExpressionFeature(context, reference)) {
-			return scopeForNodeAttributeExpressionFeature((NodeAttributeExpression) context, reference);
+		if (GTLScopeUtil.isGTLAttributeExpressionFeature(context, reference)) {
+			return scopeForGTLAttributeExpressionFeature((GTLAttributeExpression) context, reference);
 		}
 		if (GTLScopeUtil.isGTLEdgeIteratorAttributeAssignment(context)) {
 			return scopeForGTLEdgeIteratorAttributeAssignment((GTLEdgeIteratorAttributeAssignment) context, reference);
@@ -386,16 +377,48 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 
 	protected IScope scopeForValueOrArithmeticExpression(EObject context, EReference reference) {
 		SlimRule rule = SlimGTModelUtil.getContainer(context, SlimRule.class);
-		return Scopes.scopeFor(GTLModelUtil.getAllDeletedAndContextRuleNodes(rule));
+		GTLEdgeIterator itr = SlimGTModelUtil.getContainer(context, GTLEdgeIterator.class);
+		if (itr == null) {
+			return Scopes.scopeFor(GTLModelUtil.getAllDeletedAndContextRuleNodes(rule));
+		} else {
+			List<EObject> scope = List.of(itr);
+			scope.addAll(GTLModelUtil.getAllDeletedAndContextRuleNodes(rule));
+			return Scopes.scopeFor(scope);
+		}
 	}
 
-	protected IScope scopeForNodeAttributeExpressionFeature(NodeAttributeExpression context, EReference reference) {
+	protected IScope scopeForGTLAttributeExpressionNode(GTLAttributeExpression context, EReference reference) {
 		SlimRule rule = SlimGTModelUtil.getContainer(context, SlimRule.class);
-		return Scopes.scopeFor(GTLModelUtil.getAllDeletedAndContextRuleNodes(rule));
+		GTLEdgeIterator itr = SlimGTModelUtil.getContainer(context, GTLEdgeIterator.class);
+		if (itr == null) {
+			return Scopes.scopeFor(GTLModelUtil.getAllDeletedAndContextRuleNodes(rule));
+		} else {
+			List<EObject> scope = List.of(itr);
+			if (context.eContainer() instanceof GTLEdgeIteratorAttributeAssignment) {
+				scope.addAll(GTLModelUtil.getAllCreatedAndContextRuleNodes(rule));
+			} else {
+				scope.addAll(GTLModelUtil.getAllDeletedAndContextRuleNodes(rule));
+			}
+
+			return Scopes.scopeFor(scope);
+		}
 	}
 
-	protected IScope scopeForNodeAttributeExpressionNode(NodeAttributeExpression context, EReference reference) {
-		return Scopes.scopeFor(context.getNode().getType().getEAllAttributes());
+	protected IScope scopeForGTLAttributeExpressionFeature(GTLAttributeExpression context, EReference reference) {
+		if (context.getNode() == null)
+			return IScope.NULLSCOPE;
+
+		if (context.getNode() instanceof GTLEdgeIterator itr) {
+			if (itr.isCasting() && itr.getSubType() != null) {
+				return Scopes.scopeFor(itr.getSubType().getEAllAttributes());
+			} else {
+				return Scopes.scopeFor(((EClass) itr.getType().getEType()).getEAllAttributes());
+			}
+		} else if (context.getNode() instanceof SlimRuleNode node) {
+			return Scopes.scopeFor(node.getType().getEAllAttributes());
+		} else {
+			return IScope.NULLSCOPE;
+		}
 	}
 
 	protected IScope scopeForGTLEdgeIteratorType(GTLEdgeIterator context, EReference reference) {
@@ -414,35 +437,13 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 				.collect(Collectors.toSet()));
 	}
 
-	protected IScope scopeForGTLEdgeIteratorAttributeExpressionIterator(GTLEdgeIteratorAttributeExpression context,
-			EReference reference) {
-		GTLEdgeIterator itr = SlimGTModelUtil.getContainer(context, GTLEdgeIterator.class);
-		if (itr == null)
-			return IScope.NULLSCOPE;
-
-		return Scopes.scopeFor(List.of(itr));
-	}
-
-	protected IScope scopeForGTLEdgeIteratorAttributeExpressionAttribute(GTLEdgeIteratorAttributeExpression context,
-			EReference reference) {
-		GTLEdgeIterator itr = SlimGTModelUtil.getContainer(context, GTLEdgeIterator.class);
-		if (itr == null)
-			return IScope.NULLSCOPE;
-
-		if (itr.getType() != null && itr.getSubType() != null) {
-			return Scopes.scopeFor(itr.getSubType().getEAllAttributes());
-		} else if (itr.getType() != null && itr.getSubType() == null) {
-			return Scopes.scopeFor(((EClass) itr.getType().getEType()).getEAllAttributes());
-		} else {
-			return IScope.NULLSCOPE;
-		}
-
-	}
-
 	protected IScope scopeForGTLEdgeIteratorAttributeAssignment(GTLEdgeIteratorAttributeAssignment context,
 			EReference reference) {
 		SlimRule rule = SlimGTModelUtil.getContainer(context, SlimRule.class);
-		return Scopes.scopeFor(GTLModelUtil.getAllCreatedAndContextRuleNodes(rule));
+		GTLEdgeIterator itr = SlimGTModelUtil.getContainer(context, GTLEdgeIterator.class);
+		List<EObject> scope = List.of(itr);
+		scope.addAll(GTLModelUtil.getAllCreatedAndContextRuleNodes(rule));
+		return Scopes.scopeFor(scope);
 	}
 
 	protected IScope scopeForGTLEdgeIteratorReferenceSource(GTLEdgeIteratorReference context, EReference reference) {
@@ -461,6 +462,9 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 
 	protected IScope scopeForGTLEdgeIteratorReferenceType(GTLEdgeIteratorReference context, EReference reference) {
 		if (context.getSource() == null)
+			return IScope.NULLSCOPE;
+
+		if (context.getSource().getType() == null)
 			return IScope.NULLSCOPE;
 
 		return Scopes.scopeFor(context.getSource().getType().getEAllReferences());
