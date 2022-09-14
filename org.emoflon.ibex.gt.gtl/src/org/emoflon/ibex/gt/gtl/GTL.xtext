@@ -38,7 +38,7 @@ SlimRule: {SlimRule}
 			createdNodes += SlimRuleNodeCreation 		|
 			deletedNodes += GTLRuleNodeDeletion 		|
 			atrConditions += SlimRuleAttributeCondition |
-			//watchDogs += GTLRuleWatchDogs 				|
+			//watchDogs += GTLRuleWatchDog 				|
 			invocations += SlimRuleInvocation)*
 	'}' 
 	(stochastic ?='@' probability = ValueExpression)?
@@ -102,8 +102,8 @@ GTLRuleEdgeDeletion:
 	'[-]' deletion = SlimRuleSimpleEdge
 ;
 
-GTLRuleWatchDogs:
-	'watch' '(' nodeAttribute=NodeAttributeExpression ')'
+GTLRuleWatchDog:
+	'watch' '(' nodeAttribute=GTLAttributeExpression ')'
 ;
 
 @Override

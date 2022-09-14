@@ -11,6 +11,7 @@ import org.emoflon.ibex.gt.gtl.gTL.GTLParameterExpression;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleNodeDeletion;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinement;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinmentNode;
+import org.emoflon.ibex.gt.gtl.gTL.GTLRuleWatchDog;
 import org.emoflon.ibex.gt.gtl.gTL.PatternImport;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRule;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNodeContext;
@@ -81,5 +82,10 @@ public final class GTLScopeUtil {
 	public static boolean isGTLEdgeIteratorReferenceTarget(final EObject context, final EReference reference) {
 		return context instanceof GTLEdgeIteratorReference
 				&& reference == GTLPackage.Literals.GTL_EDGE_ITERATOR_REFERENCE__TARGET;
+	}
+
+	public static boolean isGTLRuleWatchDogNode(final EObject context, final EReference reference) {
+		return context instanceof GTLRuleWatchDog
+				&& reference == GTLPackage.Literals.GTL_RULE_WATCH_DOG__NODE_ATTRIBUTE;
 	}
 }
