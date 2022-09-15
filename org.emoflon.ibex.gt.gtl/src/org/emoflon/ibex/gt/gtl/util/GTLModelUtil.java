@@ -11,11 +11,21 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
+import org.emoflon.ibex.common.slimgt.slimGT.ArithmeticExpression;
+import org.emoflon.ibex.common.slimgt.slimGT.BracketExpression;
+import org.emoflon.ibex.common.slimgt.slimGT.CountExpression;
+import org.emoflon.ibex.common.slimgt.slimGT.ExpArithmeticExpression;
+import org.emoflon.ibex.common.slimgt.slimGT.MinMaxArithmeticExpression;
+import org.emoflon.ibex.common.slimgt.slimGT.ProductArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeAssignment;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeCondition;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
-import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeContext;
-import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeCreation;
+import org.emoflon.ibex.common.slimgt.slimGT.StochasticArithmeticExpression;
+import org.emoflon.ibex.common.slimgt.slimGT.SumArithmeticExpression;
+import org.emoflon.ibex.common.slimgt.slimGT.UnaryArithmeticExpression;
+import org.emoflon.ibex.common.slimgt.slimGT.ValueExpression;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
+import org.emoflon.ibex.gt.gtl.gTL.ExpressionOperand;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleNodeDeletion;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinement;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementAliased;
@@ -24,6 +34,8 @@ import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinmentNode;
 import org.emoflon.ibex.gt.gtl.gTL.SlimParameter;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRule;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNode;
+import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNodeContext;
+import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNodeCreation;
 
 public final class GTLModelUtil {
 
@@ -327,6 +339,92 @@ public final class GTLModelUtil {
 		});
 
 		return nodes.stream().flatMap(n -> n.getAssignments().stream()).collect(Collectors.toList());
+	}
+
+	public static Collection<CountExpression> getAllCountExpression(SlimRule context) {
+		List<CountExpression> countExpr = new LinkedList<>();
+		for (SlimRuleAttributeCondition cond : context.getAtrConditions()) {
+			if (cond.getLhs() != null)
+				countExpr.addAll(getFindCountExpressionInValueExpression(cond.getLhs()));
+			if (cond.getRhs() != null)
+				countExpr.addAll(getFindCountExpressionInValueExpression(cond.getRhs()));
+		}
+
+		if (context.isStochastic() && context.getProbability() != null)
+			countExpr.addAll(getFindCountExpressionInValueExpression(context.getProbability()));
+
+		for (org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeContext node : context.getContextNodes()) {
+			if (node.getContext() != null)
+				countExpr.addAll(getRuleNodeAllCountExpression((SlimRuleNode) node.getContext()));
+		}
+
+		for (org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeCreation node : context.getCreatedNodes()) {
+			if (node.getCreation() != null)
+				countExpr.addAll(getRuleNodeAllCountExpression((SlimRuleNode) node.getCreation()));
+		}
+
+		for (GTLRuleNodeDeletion node : context.getDeletedNodes()) {
+			if (node.getDeletion() != null)
+				countExpr.addAll(getRuleNodeAllCountExpression(node.getDeletion()));
+		}
+
+		return countExpr;
+	}
+
+	public static Collection<CountExpression> getRuleNodeAllCountExpression(SlimRuleNode context) {
+		List<CountExpression> countExpr = new LinkedList<>();
+		for (SlimRuleAttributeAssignment asgn : context.getAssignments()) {
+			if (asgn.getValue() == null)
+				continue;
+
+			countExpr.addAll(getFindCountExpressionInValueExpression(asgn.getValue()));
+		}
+		return countExpr;
+	}
+
+	public static Collection<CountExpression> getFindCountExpressionInValueExpression(ValueExpression context) {
+		return getFindCountExpressionInArithmeticExpression((ArithmeticExpression) context);
+	}
+
+	public static Collection<CountExpression> getFindCountExpressionInArithmeticExpression(
+			ArithmeticExpression context) {
+		List<CountExpression> countExpr = new LinkedList<>();
+		getFindCountExpressionInArithmeticExpression(context, countExpr);
+		return countExpr;
+	}
+
+	public static void getFindCountExpressionInArithmeticExpression(ArithmeticExpression context,
+			Collection<CountExpression> countExpr) {
+		if (context instanceof SumArithmeticExpression sum) {
+			getFindCountExpressionInArithmeticExpression(sum.getLeft(), countExpr);
+			getFindCountExpressionInArithmeticExpression(sum.getRight(), countExpr);
+		} else if (context instanceof ProductArithmeticExpression prod) {
+			getFindCountExpressionInArithmeticExpression(prod.getLeft(), countExpr);
+			getFindCountExpressionInArithmeticExpression(prod.getRight(), countExpr);
+		} else if (context instanceof ExpArithmeticExpression exp) {
+			getFindCountExpressionInArithmeticExpression(exp.getLeft(), countExpr);
+			getFindCountExpressionInArithmeticExpression(exp.getRight(), countExpr);
+		} else if (context instanceof StochasticArithmeticExpression stoc) {
+			getFindCountExpressionInArithmeticExpression(stoc.getMean(), countExpr);
+			if (stoc.isHasSd())
+				getFindCountExpressionInArithmeticExpression(stoc.getSd(), countExpr);
+		} else if (context instanceof MinMaxArithmeticExpression minMax) {
+			getFindCountExpressionInArithmeticExpression(minMax.getLeft(), countExpr);
+			getFindCountExpressionInArithmeticExpression(minMax.getRight(), countExpr);
+		} else if (context instanceof UnaryArithmeticExpression un) {
+			getFindCountExpressionInArithmeticExpression(un.getOperand(), countExpr);
+		} else if (context instanceof BracketExpression brack) {
+			getFindCountExpressionInArithmeticExpression(brack.getOperand(), countExpr);
+		} else if (context instanceof ExpressionOperand op) {
+			if (op.getOperand() instanceof CountExpression count) {
+				countExpr.add(count);
+				return;
+			} else {
+				return;
+			}
+		} else {
+			return;
+		}
 	}
 
 }

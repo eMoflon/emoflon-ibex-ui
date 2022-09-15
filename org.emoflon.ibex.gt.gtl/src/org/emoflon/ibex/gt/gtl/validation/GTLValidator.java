@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.validation.Check;
+import org.emoflon.ibex.common.slimgt.slimGT.CountExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.Import;
 import org.emoflon.ibex.common.slimgt.slimGT.NodeAttributeExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
@@ -32,10 +33,13 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdgeContext;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdgeCreation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
+import org.emoflon.ibex.common.slimgt.slimGT.ValueExpression;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
 import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtils;
 import org.emoflon.ibex.common.slimgt.validation.SlimGTValidatorUtils;
 import org.emoflon.ibex.gt.gtl.gTL.EditorFile;
+import org.emoflon.ibex.gt.gtl.gTL.ExpressionOperand;
+import org.emoflon.ibex.gt.gtl.gTL.GTLEdgeIterator;
 import org.emoflon.ibex.gt.gtl.gTL.GTLPackage;
 import org.emoflon.ibex.gt.gtl.gTL.GTLParameterExpression;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleEdgeDeletion;
@@ -649,10 +653,21 @@ public class GTLValidator extends AbstractGTLValidator {
 		}
 	}
 
+	@Check
+	protected void checkAssignmentNotInLocal(SlimRuleAttributeAssignment assignment) {
+		SlimRuleNodeContext context = SlimGTModelUtil.getContainer(assignment, SlimRuleNodeContext.class);
+		if (context != null && context.isLocal()) {
+			error("Assignments may only be performed in a non-local node.", context,
+					SlimGTPackage.Literals.SLIM_RULE_NODE_CONTEXT__LOCAL);
+			return;
+		}
+
+	}
+
 	// Invocation Checks
 
 	@Check
-	protected void supportPatternNotAbstract(SlimRuleInvocation invocation) {
+	protected void checkSupportPatternNotAbstract(SlimRuleInvocation invocation) {
 		if (invocation.getSupportPattern() == null)
 			return;
 
@@ -663,7 +678,7 @@ public class GTLValidator extends AbstractGTLValidator {
 	}
 
 	@Check
-	protected void supportPatternNoCycle(SlimRuleInvocation invocation) {
+	protected void checkSupportPatternNoCycle(SlimRuleInvocation invocation) {
 		if (invocation.getSupportPattern() == null)
 			return;
 
@@ -677,17 +692,58 @@ public class GTLValidator extends AbstractGTLValidator {
 		}
 	}
 
-	protected boolean invocationHierarchyHasCycle(SlimRuleInvocation current, Set<SlimRule> traversedRules) {
-		if (current.getSupportPattern() == null)
-			return false;
+	@Check
+	protected void checkCountInvocationInLocal(CountExpression countExpression) {
+		SlimRuleNodeContext context = SlimGTModelUtil.getContainer(countExpression, SlimRuleNodeContext.class);
+		if (context != null && context.isLocal()) {
+			warning("Count expressions in locals nodes will lead to errors when using the democles pattern matcher, since it does not support count expressions natively.",
+					context, SlimGTPackage.Literals.SLIM_RULE_NODE_CONTEXT__LOCAL);
+			return;
+		}
+	}
 
-		SlimRule invokee = (SlimRule) current.getSupportPattern();
+	@Check
+	protected void checkCountInvocationNoCycle(CountExpression countExpression) {
+		if (countExpression.getInvokedPatten() == null)
+			return;
+
+		SlimRule currentRule = SlimGTModelUtil.getContainer(countExpression, SlimRule.class);
+		Set<SlimRule> traversedRules = new HashSet<>();
+		traversedRules.add(currentRule);
+
+		if (invocationHierarchyHasCycle(countExpression, traversedRules)) {
+			error("Count expression: invoked pattern <%s> leads to an invocation cycle, which is not allowed.",
+					SlimGTPackage.Literals.COUNT_EXPRESSION__INVOKED_PATTEN);
+		}
+	}
+
+	@Check
+	protected void checkCountInvocationNotInIterator(CountExpression countExpression) {
+		GTLEdgeIterator itr = SlimGTModelUtil.getContainer(countExpression, GTLEdgeIterator.class);
+
+		if (itr != null) {
+			error("Count pattern <%s> invocations are not allowed within iterator constructs.", itr,
+					GTLPackage.Literals.GTL_EDGE_ITERATOR__ITERATOR_ATTRIBUTES);
+		}
+	}
+
+	protected boolean invocationHierarchyHasCycle(EObject someInvocation, Set<SlimRule> traversedRules) {
+		SlimRule invokee = null;
+		if (someInvocation instanceof CountExpression countExpression && countExpression.getInvokedPatten() != null) {
+			invokee = (SlimRule) countExpression.getInvokedPatten();
+		} else if (someInvocation instanceof SlimRuleInvocation ruleInvocation
+				&& ruleInvocation.getSupportPattern() != null) {
+			invokee = (SlimRule) ruleInvocation.getSupportPattern();
+		} else {
+			return false;
+		}
 
 		if (traversedRules.contains(invokee))
 			return true;
 
 		traversedRules.add(invokee);
 
+		// Check for plain invocations
 		if (invokee.getInvocations() == null)
 			return false;
 
@@ -697,9 +753,18 @@ public class GTLValidator extends AbstractGTLValidator {
 			}
 		}
 
+		// Check for count invocations
+		Collection<CountExpression> countInvocations = GTLModelUtil.getAllCountExpression(invokee);
+		for (CountExpression other : countInvocations) {
+			if (invocationHierarchyHasCycle(other, traversedRules)) {
+				return true;
+			}
+		}
+
 		return false;
 
 	}
+
 	// Arithmetic Expession Checks
 
 	@Check
@@ -747,6 +812,16 @@ public class GTLValidator extends AbstractGTLValidator {
 		if (assignment == null) {
 			error("Parameter expressions may only be used in attribute assignments.",
 					GTLPackage.Literals.GTL_PARAMETER_EXPRESSION__PARAMETER);
+		}
+	}
+
+	@Check
+	protected void checkValueExpressionInLocal(ValueExpression valueExpression) {
+		SlimRuleNodeContext context = SlimGTModelUtil.getContainer(valueExpression, SlimRuleNodeContext.class);
+		if (context != null && context.isLocal() && !(valueExpression instanceof ExpressionOperand)) {
+			warning("Arithmetic expressions in locals nodes will lead to errors when using the democles pattern matcher, since it does not support arithmetic expressions natively.",
+					context, SlimGTPackage.Literals.SLIM_RULE_NODE_CONTEXT__LOCAL);
+			return;
 		}
 	}
 }
