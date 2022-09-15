@@ -5,11 +5,23 @@ import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 generate slimGT "http://www.emoflon.org/ibex/common/slimgt/SlimGT"
 
 EditorFile:
-	(imports += Import)*
+	(imports += Import)* 
 ;
 
 Import:
-	'import' name = STRING
+	'import' name = STRING (packageAliases+=PackageReferenceAlias)*
+;
+
+PackageReferencePlain returns PackageReference : {PackageReferencePlain}
+	importedPackage = [ecore::EPackage | QualifiedName]
+;
+
+PackageReferenceAlias returns PackageReference : {PackageReferenceAlias}
+	'using' importedPackage=[ecore::EPackage] 'as' name=ID
+;
+
+PackageReference:
+	PackageReferencePlain | PackageReferenceAlias
 ;
 
 SlimRule: {SlimRule}

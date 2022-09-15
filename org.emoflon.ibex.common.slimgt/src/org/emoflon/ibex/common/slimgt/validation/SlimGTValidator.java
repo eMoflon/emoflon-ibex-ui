@@ -67,6 +67,11 @@ public class SlimGTValidator extends AbstractSlimGTValidator {
 
 	@Check
 	protected void checkMetamodelImports(Import imp) {
+		if(imp == null) {
+			error("Expected an import URI after the import statement.", SlimGTPackage.Literals.IMPORT__NAME);
+			return;
+		}
+		
 		ResourceSet rs = new ResourceSetImpl();
 		rs.getResourceFactoryRegistry().getExtensionToFactoryMap().put("ecore", new EcoreResourceFactoryImpl());
 		EcorePackage.eINSTANCE.eClass();

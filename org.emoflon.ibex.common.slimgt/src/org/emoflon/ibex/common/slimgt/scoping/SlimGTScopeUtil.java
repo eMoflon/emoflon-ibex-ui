@@ -6,6 +6,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.ArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.CountExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.EnumExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.NodeAttributeExpression;
+import org.emoflon.ibex.common.slimgt.slimGT.PackageReferenceAlias;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimParameter;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeAssignment;
@@ -73,5 +74,10 @@ public final class SlimGTScopeUtil {
 	public static boolean isNodeAttributeExpressionFeature(EObject context, EReference reference) {
 		return context instanceof NodeAttributeExpression
 				&& reference == SlimGTPackage.Literals.NODE_ATTRIBUTE_EXPRESSION__FEATURE;
+	}
+
+	public static boolean isPackageReferenceAliasImportedPackage(EObject context, EReference reference) {
+		return context instanceof PackageReferenceAlias
+				&& reference == SlimGTPackage.Literals.PACKAGE_REFERENCE__IMPORTED_PACKAGE;
 	}
 }

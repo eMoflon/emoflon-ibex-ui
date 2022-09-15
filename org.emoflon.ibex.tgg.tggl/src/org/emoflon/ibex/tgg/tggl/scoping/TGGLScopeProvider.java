@@ -23,9 +23,14 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import org.eclipse.xtext.scoping.impl.FilteringScope;
+import org.emoflon.ibex.common.slimgt.scoping.SlimGTAliasedTypeScope;
+import org.emoflon.ibex.common.slimgt.slimGT.PackageReference;
+import org.emoflon.ibex.common.slimgt.slimGT.PackageReferenceAlias;
+import org.emoflon.ibex.common.slimgt.slimGT.PackageReferencePlain;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRule;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
@@ -68,7 +73,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		// node type references
 		if (isSlimRuleNodeType(context, reference))
 			return getTypes(context, reference, getDomainType(context));
-		if(isCorrespondenceNodeType(context, reference))
+		if (isCorrespondenceNodeType(context, reference))
 			return getTypes(context, reference, DomainType.CORRESPONDENCE);
 		
 		if (isCorrespondenceSourceType(context, reference))
@@ -79,6 +84,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		// edge target references
 		if (isEdgeTargetReference(context, reference))
 			return getEdgeTargetReference(context, reference);
+		
 		if (isCorrespondenceNodeSource(context, reference))
 			return getCorrespondenceReferencedNodes(context, reference);
 		if (isCorrespondenceNodeTarget(context, reference))
@@ -91,8 +97,13 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 			return getMappingTargetNodes(context, reference);
 
 		// refinement references
+		if (isTGGRuleRefinements(context, reference))
+			return getTGGRuleCandidates(context, reference);
 		if (isTGGRuleRefinementAliasedSuperRule(context, reference))
 			return getTGGRuleCandidates(context, reference);
+//		if (isTGGRuleRefinementPlainName(context, reference))
+//			return getTGGRuleCandidates(context, reference);
+		
 		if (isTGGRuleRefinmentNodeRefinement(context, reference))
 			return getRefinedRules(context, reference);
 		if (isTGGRuleRefinmentNodeNode(context, reference))
@@ -104,8 +115,14 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 	private IScope getPackagesFromImports(EObject context, EReference reference) {
 		var schema = getSchemaInScope(context);
 		var editorFile = getContainer(schema, EditorFile.class);
+		
+		var output = new LinkedList<EObject>();
+		var packageRefs = editorFile.getImports().stream().flatMap(i -> i.getPackageAliases().stream()).toList();
 		var packages = getPackages(editorFile);
-		return Scopes.scopeFor(packages);
+
+		output.addAll(packageRefs);
+		output.addAll(packages);
+		return Scopes.scopeFor(output);
 	}
 
 	private IScope getCorrespondenceReferencedNodes(EObject context, EReference reference) {
@@ -147,14 +164,8 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 
 	private IScope getTargetNodesFromRefinedRule(EObject context, EReference reference) {
 		var ruleRefinementNode = (TGGLRuleRefinementNode) context;
-		TGGRule tggRule = null;
 		var refinement = ruleRefinementNode.getRefinement();
-		if(refinement instanceof TGGLRuleRefinementPlain plain) 
-			tggRule = plain.getName();
-		else if(refinement instanceof TGGLRuleRefinementAliased aliased)
-			tggRule = aliased.getSuperRule();
-		else 				
-			throw new RuntimeException("Expected element of type TGGLRuleRefinementPlain or TGGLRuleRefinementAliased but got " + refinement);
+		var tggRule = extractTGGRule(refinement);
 
 		Collection<EObject> nodes = null;
 		switch(getDomainType(context)) {
@@ -172,6 +183,16 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		return Scopes.scopeFor(nodes);
 	}
 
+	private TGGRule extractTGGRule(EObject refinement) {
+		if(refinement instanceof TGGRule tggRule)
+			return tggRule;
+		if(refinement instanceof TGGLRuleRefinementPlain plain) 
+			return plain.getSuperRule();
+		if(refinement instanceof TGGLRuleRefinementAliased aliased)
+			return aliased.getSuperRule();
+		return null;
+	}
+
 	private IScope getRefinedRules(EObject context, EReference reference) {
 		var tggRule = getContainer(context, TGGRule.class);
 		var refinedRules = new HashSet<EObject>();
@@ -182,8 +203,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 			else if(refinement instanceof TGGLRuleRefinementAliased aliased) {
 				refinedRules.add(aliased);
 				refinedRules.add(aliased.getSuperRule());
-			} else 
-				throw new RuntimeException("Expected element of type TGGLRuleRefinementPlain or TGGLRuleRefinementAliased but got " + refinement);
+			} 
 		}
 		return Scopes.scopeFor(refinedRules);
 	}
@@ -226,7 +246,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 	}
 
 	private IScope getTGGRuleCandidates(EObject context, EReference reference) {
-		var rule = (TGGRule) context;
+		var rule = getContainer(context, TGGRule.class);
 		var rules = getAllRulesInScope(context);
 
 		// remove self reference
@@ -322,13 +342,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 			
 			// extract refined rule from refinements
 			for(var refinement : currentRule.getRefinements()) {
-				var refinementID = refinement.getName();
-				if(refinementID instanceof TGGLRuleRefinementPlain plain)
-					ruleCandidates.add(plain.getName());
-				else if(refinementID instanceof TGGLRuleRefinementAliased aliased) 
-					ruleCandidates.add(aliased.getSuperRule());
-				else
-					throw new RuntimeException("Expected element of type TGGLRuleRefinementPlain or TGGLRuleRefinementAliased but got " + refinementID);
+				ruleCandidates.add(extractTGGRule(refinement));
 			}
 
 			Set<EObject> newNodes = new HashSet<>();
@@ -348,7 +362,8 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 			
 			for(var newNode : newNodes) {
 				var tggNode = (org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNode) newNode;
-				refinedNodes.add(tggNode.getRefinement().getNode());
+				if(tggNode.getRefinement() != null)
+					refinedNodes.add(tggNode.getRefinement().getNode());
 				
 				// only add nodes that have not been refined and thus have been overlapped with another node
 				if(!refinedNodes.contains(tggNode)) {
@@ -387,20 +402,22 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 
 	private IScope getTypes(EObject context, EReference reference, DomainType domain) {
 		var schema = getSchemaInScope(context);
-
+		var editorFile = getContainer(schema, EditorFile.class);
+		
 		switch (domain) {
 		case SOURCE:
-			return Scopes.scopeFor(getTypes(schema.getSourceTypes()));
+			return new SlimGTAliasedTypeScope(editorFile.getImports(), getTypes(schema.getSourceTypes()));
 		case CORRESPONDENCE:
 			return Scopes.scopeFor(schema.getCorrespondenceTypes());
 		case TARGET:
-			return Scopes.scopeFor(getTypes(schema.getTargetTypes()));
+			return new SlimGTAliasedTypeScope(editorFile.getImports(), getTypes(schema.getTargetTypes()));
 		}
 		return IScope.NULLSCOPE;
 	}
 
-	public Collection<EClass> getTypes(Collection<EPackage> packages) {
+	public Collection<EClass> getTypes(Collection<EObject> packageReferences) {
 		var types = new HashSet<EClass>();
+		var packages = getReferencedPackages(packageReferences);
 		var packageCandidates = new HashSet<EPackage>(packages);
 		while (!packageCandidates.isEmpty()) {
 			var pkg = packageCandidates.iterator().next();
@@ -411,6 +428,19 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 			}
 		}
 		return types;
+	}
+	
+	public Collection<EPackage> getReferencedPackages(Collection<EObject> packageReferences) {
+		var packages = new HashSet<EPackage>();
+		for(var packageReference : packageReferences) {
+			if(packageReference instanceof PackageReferencePlain plain)
+				packages.add(plain.getImportedPackage());
+			if(packageReference instanceof PackageReferenceAlias alias)
+				packages.add(alias.getImportedPackage());
+			if(packageReference instanceof EPackage pkg) 
+				packages.add(pkg);
+		}
+		return packages;
 	}
 
 	public Collection<TGGRule> getAllRulesInScope(EObject obj) {

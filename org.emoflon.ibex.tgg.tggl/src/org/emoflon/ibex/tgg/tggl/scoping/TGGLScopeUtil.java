@@ -78,10 +78,20 @@ public class TGGLScopeUtil {
 				reference == SlimGTPackage.Literals.SLIM_RULE_NODE_MAPPING__TRG_NODE; //
 	}
 	
-	public static boolean isTGGRuleRefinementAliasedSuperRule(EObject context, EReference reference) {
-		return context instanceof TGGLRuleRefinementAliased && //
-				reference == TGGLPackage.Literals.TGGL_RULE_REFINEMENT_ALIASED__SUPER_RULE;
+	public static boolean isTGGRuleRefinements(EObject context, EReference reference) {
+		return context instanceof TGGRule && //
+				reference == TGGLPackage.Literals.TGG_RULE__REFINEMENTS;
 	}
+	
+	public static boolean isTGGRuleRefinementAliasedSuperRule(EObject context, EReference reference) {
+		return context instanceof TGGRule && //
+				reference == TGGLPackage.Literals.TGGL_RULE_REFINEMENT__SUPER_RULE;
+	}
+	
+//	public static boolean isTGGRuleRefinementPlainName(EObject context, EReference reference) {
+//		return context instanceof TGGRule && //
+//				reference == TGGLPackage.Literals.TGGL_RULE_REFINEMENT_PLAIN__SUPER_RULE;
+//	}
 	
 	public static boolean isTGGRuleRefinmentNodeRefinement(EObject context, EReference reference) {
 		return context instanceof TGGLRuleRefinementNode && //

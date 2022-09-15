@@ -8,7 +8,6 @@ generate tGGL "http://www.emoflon.org/ibex/tgg/tggl/TGGL"
 @Override
 EditorFile:
 	imports += Import*
-	using += Using*
 	(schema = Schema)?
   	rules += TGGRule*
   	(library = AttributeConditionDefinitionLibrary)?
@@ -28,22 +27,23 @@ QualifiedNameWithWildcard:
 
 Schema:
 	'schema' name = QualifiedName
+	'{'	
+		('source' '{'
+			sourceTypes += [ecore::EObject|ID]*
+		'}')? 
 		
-	('source' '{'
-		sourceTypes += [ecore::EPackage | QualifiedName]*
-	'}')? 
+		('target' '{'
+			targetTypes += [ecore::EObject|ID]*
+		'}')? 
 	
-	('target' '{'
-		targetTypes += [ecore::EPackage | QualifiedName]*
-	'}')? 
-
-	('correspondence' '{'
-		correspondenceTypes += CorrespondenceType*
-	'}')?	
-	
-	('attributeConditions' '{'
-		attributeCondDefs += AttributeConditionDefinition*
-	'}')? 
+		('correspondence' '{'
+			correspondenceTypes += CorrespondenceType*
+		'}')?	
+		
+		('attributeConditions' '{'
+			attributeCondDefs += AttributeConditionDefinition*
+		'}')?
+	'}' 
 ;
 
 AttributeConditionDefinition:
@@ -95,23 +95,23 @@ LocalVariable:
 ;
 
 TGGLRuleRefinement:
-	'refines' name = (TGGLRuleRefinementPlain | TGGLRuleRefinementAliased)
+	TGGLRuleRefinementPlain | TGGLRuleRefinementAliased
 ;
 
-TGGLRuleRefinementPlain:
-	name=[TGGRule|ID]
+TGGLRuleRefinementPlain returns TGGLRuleRefinement : {TGGLRuleRefinementPlain}
+	superRule=[TGGRule|ID]
 ;
 
-TGGLRuleRefinementAliased:
+TGGLRuleRefinementAliased returns TGGLRuleRefinement : {TGGLRuleRefinementAliased}
 	superRule=[TGGRule|ID] 'as' name=ID
 ;
 
 TGGLRuleRefinementNode:
-	'@' 'refines' refinement=[TGGLRuleRefinement|ID] '.' node=[SlimRuleNode|ID]
+	'@' 'refines' refinement=[ecore::EObject|ID] '.' node=[SlimRuleNode|ID]
 ;
 
 TGGLRuleRefinementCorrespondence:
-	'@' 'refines' refinement=[TGGLRuleRefinement|ID] '.' node=[CorrespondenceNode|ID]
+	'@' 'refines' refinement=[ecore::EObject|ID] '.' node=[CorrespondenceNode|ID]
 ;
 
 /* ------------- */
@@ -130,23 +130,24 @@ SlimRuleNode:
 TGGRule:
 	(abstract ?= 'abstract')? 
 	'rule' name = ID 
-	('refines' refinements += [TGGLRuleRefinement] (',' refinements += [TGGLRuleRefinement])*)? 
+	('refines' refinements += TGGLRuleRefinement (',' refinements += TGGLRuleRefinement)*)? 
+	'{'
+		('source' '{'
+			sourceRule = SlimRule 
+		'}')? 	
 		
-	('source' '{'
-		sourceRule = SlimRule 
-	'}')? 	
+		('target' '{'
+			targetRule = SlimRule 
+		'}')? 
+		
+		('correspondence' '{'
+			(correspondenceNodes += CorrespondenceNode)*	
+		'}')? 
 	
-	('target' '{'
-		targetRule = SlimRule 
-	'}')? 
-	
-	('correspondence' '{'
-		(correspondenceNodes += CorrespondenceNode)*	
-	'}')? 
-
-	('attributeConditions' '{'
-		(attrConditions += AttributeCondition)*
-	'}')? 
+		('attributeConditions' '{'
+			(attrConditions += AttributeCondition)*
+		'}')? 
+	'}'
 ;
 
 CorrespondenceNode:

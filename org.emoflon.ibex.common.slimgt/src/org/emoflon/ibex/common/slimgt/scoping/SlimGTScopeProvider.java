@@ -3,11 +3,13 @@
  */
 package org.emoflon.ibex.common.slimgt.scoping;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.EcoreUtil2;
@@ -16,11 +18,15 @@ import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import org.emoflon.ibex.common.slimgt.slimGT.EditorFile;
 import org.emoflon.ibex.common.slimgt.slimGT.EnumExpression;
+import org.emoflon.ibex.common.slimgt.slimGT.Import;
+import org.emoflon.ibex.common.slimgt.slimGT.PackageReferenceAlias;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimParameter;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeAssignment;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode;
+import org.emoflon.ibex.common.slimgt.util.SlimGTEMFUtils;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
+import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtils;
 
 /**
  * This class contains custom scoping description.
@@ -89,7 +95,15 @@ public class SlimGTScopeProvider extends AbstractSlimGTScopeProvider {
 		if (SlimGTScopeUtil.isSlimRuleAttributeAssignmentType(context, reference)) {
 			return scopeForlimRuleAttributeAssignmentType((SlimRuleAttributeAssignment) context, reference);
 		}
+		if (SlimGTScopeUtil.isPackageReferenceAliasImportedPackage(context, reference))
+			return scopeForPackageReferenceAliasImportedPackage((PackageReferenceAlias) context, reference);
 		return super.getScope(context, reference);
+	}
+
+	private IScope scopeForPackageReferenceAliasImportedPackage(PackageReferenceAlias context, EReference reference) {
+		var imp = SlimGTModelUtil.getContainer(context, Import.class);
+		var packages = SlimGTModelUtil.getPackages(imp);
+		return Scopes.scopeFor(packages);
 	}
 
 	protected IScope scopeForParameterType(SlimParameter context, EReference reference) {
