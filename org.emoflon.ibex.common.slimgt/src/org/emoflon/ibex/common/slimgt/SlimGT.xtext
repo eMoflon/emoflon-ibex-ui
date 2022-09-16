@@ -73,7 +73,7 @@ SlimRuleAttributeAssignment:
 ;
 
 SlimRuleAttributeCondition:
-	'[#]' lhs=ValueExpression operator=RelationalOperator rhs=ValueExpression
+	'[#]' expression=BooleanExpression
 ;
 
 enum RelationalOperator:
@@ -164,6 +164,47 @@ ArithmeticLiteral:
 
 Constant:
 	value = ConstantLiteral
+;
+
+BooleanExpression:
+	BooleanImplication
+;
+
+BooleanImplication returns BooleanExpression:
+	BooleanDisjunction({BooleanImplication.left = current} '=>' right=BooleanDisjunction)*
+;
+
+BooleanDisjunction returns BooleanExpression:
+	BooleanConjunction({BooleanDisjunction.left = current} operator=DisjunctionOperator right=BooleanConjunction)*
+;
+
+BooleanConjunction returns BooleanExpression:
+	BooleanNegation({BooleanConjunction.left = current} operator=ConjunctionOperator right=BooleanNegation)*
+;
+
+BooleanNegation returns BooleanExpression:
+	'!' operand=BooleanBracket | BooleanBracket
+;
+
+BooleanBracket returns BooleanExpression:
+	'[' operand=BooleanExpression ']'  | RelationalExpression | BooleanExpressionOperand
+;
+
+RelationalExpression:
+	lhs=ValueExpression operator=RelationalOperator rhs=ValueExpression
+;
+
+BooleanExpressionOperand:
+	operand = (NodeAttributeExpression | BooleanLiteral)
+;
+
+enum DisjunctionOperator:
+  OR='|' |
+  XOR='^'
+;
+
+enum ConjunctionOperator:
+  AND='&'
 ;
 
 enum ConstantLiteral:

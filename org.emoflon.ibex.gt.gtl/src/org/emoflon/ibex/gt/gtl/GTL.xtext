@@ -111,6 +111,10 @@ ExpressionOperand:
 	operand = (GTLAttributeExpression | CountExpression | ArithmeticLiteral | EnumExpression | GTLParameterExpression | Constant)
 ;
 
+@Override
+BooleanExpressionOperand:
+	operand = (GTLAttributeExpression | GTLParameterExpression | BooleanLiteral)
+;
 
 GTLAttributeExpression:
 	node = [ecore::EObject|ID] '.' feature = [ecore::EAttribute]
