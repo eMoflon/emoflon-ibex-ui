@@ -34,7 +34,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeCreation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMapping;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
-import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtils;
+import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtil;
 import org.emoflon.ibex.gt.gtl.gTL.EdgeIteratorOperator;
 import org.emoflon.ibex.gt.gtl.gTL.EditorFile;
 import org.emoflon.ibex.gt.gtl.gTL.GTLAttributeExpression;
@@ -66,7 +66,7 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 		ef.getImportedPatterns().forEach(pi -> ruleSet.add(pi.getPattern()));
 		ruleSet.addAll(ef.getRules());
 
-		IProject currentProject = SlimGTWorkspaceUtils.getCurrentProject(ef.eResource());
+		IProject currentProject = SlimGTWorkspaceUtil.getCurrentProject(ef.eResource());
 		String currentFile = ef.eResource().getURI().toString().replace("platform:/resource/", "")
 				.replace(currentProject.getName(), "");
 		currentFile = currentProject.getLocation().toPortableString() + currentFile;
@@ -83,7 +83,7 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 
 			File projectFile = new File(project.getLocation().toPortableString());
 			List<File> gtFiles = new LinkedList<>();
-			SlimGTWorkspaceUtils.gatherFilesWithEnding(gtFiles, projectFile, ".gtl", true);
+			SlimGTWorkspaceUtil.gatherFilesWithEnding(gtFiles, projectFile, ".gtl", true);
 
 			for (File gtFile : gtFiles) {
 				URI gtModelUri;
@@ -205,7 +205,7 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 				return IScope.NULLSCOPE;
 		} else {
 			// 2. Case: relative path
-			IProject currentProject = SlimGTWorkspaceUtils.getCurrentProject(context.eResource());
+			IProject currentProject = SlimGTWorkspaceUtil.getCurrentProject(context.eResource());
 			if (currentProject == null)
 				return IScope.NULLSCOPE;
 

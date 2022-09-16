@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.validation.Check;
+import org.emoflon.ibex.common.slimgt.slimGT.ArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.CountExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.Import;
 import org.emoflon.ibex.common.slimgt.slimGT.NodeAttributeExpression;
@@ -35,8 +36,10 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdgeCreation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
 import org.emoflon.ibex.common.slimgt.slimGT.ValueExpression;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
-import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtils;
-import org.emoflon.ibex.common.slimgt.validation.SlimGTValidatorUtils;
+import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtil;
+import org.emoflon.ibex.common.slimgt.validation.DataTypeParseResult;
+import org.emoflon.ibex.common.slimgt.validation.SlimGTValidatorUtil;
+import org.emoflon.ibex.common.slimgt.validation.ValueExpressionDataType;
 import org.emoflon.ibex.gt.gtl.gTL.EditorFile;
 import org.emoflon.ibex.gt.gtl.gTL.ExpressionOperand;
 import org.emoflon.ibex.gt.gtl.gTL.GTLEdgeIterator;
@@ -54,6 +57,7 @@ import org.emoflon.ibex.gt.gtl.gTL.SlimRule;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNode;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNodeContext;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNodeCreation;
+import org.emoflon.ibex.gt.gtl.util.GTLArithmeticUtil;
 import org.emoflon.ibex.gt.gtl.util.GTLModelUtil;
 import org.emoflon.ibex.gt.gtl.util.RuleNodeHierarchy;
 
@@ -89,7 +93,7 @@ public class GTLValidator extends AbstractGTLValidator {
 	}
 
 	public Optional<EditorFile> loadGTLModelByRelativePath(final EObject context, final String path) {
-		IProject currentProject = SlimGTWorkspaceUtils.getCurrentProject(context.eResource());
+		IProject currentProject = SlimGTWorkspaceUtil.getCurrentProject(context.eResource());
 		Resource resource = null;
 		URI gtModelUri = null;
 		String absolutePath = null;
@@ -132,7 +136,7 @@ public class GTLValidator extends AbstractGTLValidator {
 	public Collection<EditorFile> loadAllEditorFilesInPackage(final EditorFile ef) {
 		Collection<EditorFile> pkgScope = new LinkedList<>();
 
-		IProject currentProject = SlimGTWorkspaceUtils.getCurrentProject(ef.eResource());
+		IProject currentProject = SlimGTWorkspaceUtil.getCurrentProject(ef.eResource());
 		String currentFile = ef.eResource().getURI().toString().replace("platform:/resource/", "")
 				.replace(currentProject.getName(), "");
 		currentFile = currentProject.getLocation().toPortableString() + currentFile;
@@ -149,7 +153,7 @@ public class GTLValidator extends AbstractGTLValidator {
 
 			File projectFile = new File(project.getLocation().toPortableString());
 			List<File> gtFiles = new LinkedList<>();
-			SlimGTWorkspaceUtils.gatherFilesWithEnding(gtFiles, projectFile, ".gtl", true);
+			SlimGTWorkspaceUtil.gatherFilesWithEnding(gtFiles, projectFile, ".gtl", true);
 
 			for (File gtFile : gtFiles) {
 				URI gtModelUri;
@@ -309,7 +313,7 @@ public class GTLValidator extends AbstractGTLValidator {
 		if (rule.getName() == null)
 			return;
 
-		if (SlimGTValidatorUtils.RULE_NAME_BACKLIST.contains(rule.getName())) {
+		if (SlimGTValidatorUtil.RULE_NAME_BACKLIST.contains(rule.getName())) {
 			error(String.format("Pattern/rule '%s' is a java keyword or an emf class and, hence, forbidden.",
 					rule.getName()), GTLPackage.Literals.SLIM_RULE__NAME);
 		}
@@ -822,6 +826,38 @@ public class GTLValidator extends AbstractGTLValidator {
 			warning("Arithmetic expressions in locals nodes will lead to errors when using the democles pattern matcher, since it does not support arithmetic expressions natively.",
 					context, SlimGTPackage.Literals.SLIM_RULE_NODE_CONTEXT__LOCAL);
 			return;
+		}
+	}
+
+	@Override
+	protected void checkValueTypeConflicts(ValueExpression expr) {
+		DataTypeParseResult parseResult = GTLArithmeticUtil.parseDataType(expr);
+		if (parseResult.errorOccurred()) {
+			parseResult.context2Location().forEach((context, locations) -> {
+				List<ValueExpressionDataType> errors = parseResult.context2ErrorTypes().get(context);
+				errors.forEach(e -> {
+					locations.forEach(l -> {
+						error(String.format("Error <%s> in arithmetic expression.", e), context, l);
+					});
+				});
+
+			});
+		}
+	}
+
+	@Override
+	protected void checkArithmeticTypeConflicts(ArithmeticExpression expr) {
+		DataTypeParseResult parseResult = GTLArithmeticUtil.parseDataType(expr);
+		if (parseResult.errorOccurred()) {
+			parseResult.context2Location().forEach((context, locations) -> {
+				List<ValueExpressionDataType> errors = parseResult.context2ErrorTypes().get(context);
+				errors.forEach(e -> {
+					locations.forEach(l -> {
+						error(String.format("Error <%s> in arithmetic expression.", e), context, l);
+					});
+				});
+
+			});
 		}
 	}
 }

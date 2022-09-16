@@ -15,7 +15,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
-public final class SlimGTWorkspaceUtils {
+public final class SlimGTWorkspaceUtil {
 	public static void gatherFilesWithEnding(Collection<File> gtFiles, File root, String ending, boolean ignoreBin) {
 		if (root.isDirectory() && root.exists()) {
 			if (ignoreBin && root.getName().equals("bin"))

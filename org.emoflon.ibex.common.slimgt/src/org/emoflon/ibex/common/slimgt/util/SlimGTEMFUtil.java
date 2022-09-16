@@ -11,7 +11,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
 import org.eclipse.xtext.EcoreUtil2;
 
-public final class SlimGTEMFUtils {
+public final class SlimGTEMFUtil {
 	public static EPackage loadMetamodel(URI uri) throws IOException {
 		return loadMetamodel(uri.toString());
 	}

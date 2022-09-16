@@ -24,7 +24,7 @@ import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
-import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtils;
+import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtil;
 import org.emoflon.ibex.gt.gtl.gTL.EditorFile;
 import org.emoflon.ibex.gt.gtl.ui.builder.GTLNature;
 
@@ -41,7 +41,7 @@ public class GTLProposalProvider extends AbstractGTLProposalProvider {
 		// TODO Auto-generated method stub
 		super.completePackageDeclaration_Name(model, assignment, context, acceptor);
 
-		IProject currentProject = SlimGTWorkspaceUtils.getCurrentProject(model.eResource());
+		IProject currentProject = SlimGTWorkspaceUtil.getCurrentProject(model.eResource());
 
 		String[] lines = context.getCurrentNode().getText().split("\n");
 		lines = lines[0].split("\r");
@@ -104,7 +104,7 @@ public class GTLProposalProvider extends AbstractGTLProposalProvider {
 	public void completePatternImport_File(EObject model, Assignment assignment, ContentAssistContext context,
 			ICompletionProposalAcceptor acceptor) {
 		super.completePatternImport_File(model, assignment, context, acceptor);
-		IProject currentProject = SlimGTWorkspaceUtils.getCurrentProject(model.eResource());
+		IProject currentProject = SlimGTWorkspaceUtil.getCurrentProject(model.eResource());
 		String currentFile = model.eResource().getURI().toString().replace("platform:/resource/", "")
 				.replace(currentProject.getName(), "");
 		currentFile = currentProject.getLocation().toPortableString() + currentFile;
@@ -129,7 +129,7 @@ public class GTLProposalProvider extends AbstractGTLProposalProvider {
 
 			File projectFile = new File(project.getLocation().toPortableString());
 			List<File> gtlFiles = new LinkedList<>();
-			SlimGTWorkspaceUtils.gatherFilesWithEnding(gtlFiles, projectFile, ".gtl", true);
+			SlimGTWorkspaceUtil.gatherFilesWithEnding(gtlFiles, projectFile, ".gtl", true);
 
 			for (File gtFile : gtlFiles) {
 

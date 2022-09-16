@@ -27,7 +27,7 @@ import org.eclipse.xtext.Assignment;
 import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
-import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtils;
+import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtil;
 
 /**
  * See
@@ -63,7 +63,7 @@ public class SlimGTProposalProvider extends AbstractSlimGTProposalProvider {
 
 			File projectFile = new File(project.getLocation().toPortableString());
 			List<File> ecoreFiles = new LinkedList<>();
-			SlimGTWorkspaceUtils.gatherFilesWithEnding(ecoreFiles, projectFile, ".ecore", true);
+			SlimGTWorkspaceUtil.gatherFilesWithEnding(ecoreFiles, projectFile, ".ecore", true);
 
 			for (File ecoreFile : ecoreFiles) {
 

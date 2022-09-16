@@ -4,6 +4,7 @@
 package org.emoflon.ibex.common.slimgt.validation;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
@@ -16,8 +17,11 @@ import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.validation.Check;
+import org.emoflon.ibex.common.slimgt.slimGT.ArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.Import;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
+import org.emoflon.ibex.common.slimgt.slimGT.ValueExpression;
+import org.emoflon.ibex.common.slimgt.util.SlimGTArithmeticUtil;
 
 /**
  * This class contains custom validation rules.
@@ -67,11 +71,11 @@ public class SlimGTValidator extends AbstractSlimGTValidator {
 
 	@Check
 	protected void checkMetamodelImports(Import imp) {
-		if(imp == null) {
+		if (imp == null) {
 			error("Expected an import URI after the import statement.", SlimGTPackage.Literals.IMPORT__NAME);
 			return;
 		}
-		
+
 		ResourceSet rs = new ResourceSetImpl();
 		rs.getResourceFactoryRegistry().getExtensionToFactoryMap().put("ecore", new EcoreResourceFactoryImpl());
 		EcorePackage.eINSTANCE.eClass();
@@ -90,6 +94,38 @@ public class SlimGTValidator extends AbstractSlimGTValidator {
 		if (metaModel == null)
 			error("Imported metamodel could not be loaded.", SlimGTPackage.Literals.IMPORT__NAME);
 
+	}
+
+	@Check
+	protected void checkValueTypeConflicts(ValueExpression expr) {
+		DataTypeParseResult parseResult = SlimGTArithmeticUtil.parseDataType(expr);
+		if (parseResult.errorOccurred()) {
+			parseResult.context2Location().forEach((context, locations) -> {
+				List<ValueExpressionDataType> errors = parseResult.context2ErrorTypes().get(context);
+				errors.forEach(e -> {
+					locations.forEach(l -> {
+						error(String.format("Error <%s> in arithmetic expression.", e), context, l);
+					});
+				});
+
+			});
+		}
+	}
+
+	@Check
+	protected void checkArithmeticTypeConflicts(ArithmeticExpression expr) {
+		DataTypeParseResult parseResult = SlimGTArithmeticUtil.parseDataType(expr);
+		if (parseResult.errorOccurred()) {
+			parseResult.context2Location().forEach((context, locations) -> {
+				List<ValueExpressionDataType> errors = parseResult.context2ErrorTypes().get(context);
+				errors.forEach(e -> {
+					locations.forEach(l -> {
+						error(String.format("Error <%s> in arithmetic expression.", e), context, l);
+					});
+				});
+
+			});
+		}
 	}
 
 }
