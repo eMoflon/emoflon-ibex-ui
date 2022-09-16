@@ -108,12 +108,12 @@ GTLRuleWatchDog:
 
 @Override
 ExpressionOperand:
-	operand = (GTLAttributeExpression | CountExpression | ArithmeticLiteral | EnumExpression | GTLParameterExpression | Constant)
+	{ExpressionOperand} operand = (GTLAttributeExpression | CountExpression | ArithmeticLiteral | EnumExpression | GTLParameterExpression | Constant)
 ;
 
 @Override
 BooleanExpressionOperand:
-	operand = (GTLAttributeExpression | GTLParameterExpression | BooleanLiteral)
+	{BooleanExpressionOperand} operand = (GTLAttributeExpression | GTLParameterExpression | BooleanLiteral)
 ;
 
 GTLAttributeExpression:

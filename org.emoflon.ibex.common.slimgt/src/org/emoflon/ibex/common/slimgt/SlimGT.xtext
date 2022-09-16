@@ -143,7 +143,7 @@ BracketExpression returns ArithmeticExpression: {BracketExpression}
 ;
 
 ExpressionOperand:
-	operand = (NodeAttributeExpression | CountExpression | ArithmeticLiteral | EnumExpression | Constant)
+	{ExpressionOperand} operand = (NodeAttributeExpression | CountExpression | ArithmeticLiteral | EnumExpression | Constant)
 ;
 
 NodeAttributeExpression:
@@ -183,11 +183,11 @@ BooleanConjunction returns BooleanExpression:
 ;
 
 BooleanNegation returns BooleanExpression:
-	'!' operand=BooleanBracket | BooleanBracket
+	{BooleanNegation} '!' operand=BooleanBracket | BooleanBracket
 ;
 
 BooleanBracket returns BooleanExpression:
-	'[' operand=BooleanExpression ']'  | RelationalExpression | BooleanExpressionOperand
+	{BooleanBracket} '[' operand=BooleanExpression ']'  | RelationalExpression | BooleanExpressionOperand
 ;
 
 RelationalExpression:
@@ -195,7 +195,7 @@ RelationalExpression:
 ;
 
 BooleanExpressionOperand:
-	operand = (NodeAttributeExpression | BooleanLiteral)
+	{BooleanExpressionOperand} operand = (NodeAttributeExpression | BooleanLiteral)
 ;
 
 enum DisjunctionOperator:

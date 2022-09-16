@@ -87,7 +87,7 @@ AttributeCondition:
 
 @Override
 ExpressionOperand:
-	operand = (NodeAttributeExpression | ArithmeticLiteral | EnumExpression | Constant)
+	{ExpressionOperand} operand = (NodeAttributeExpression | ArithmeticLiteral | EnumExpression | Constant)
 ;
 
 LocalVariable:

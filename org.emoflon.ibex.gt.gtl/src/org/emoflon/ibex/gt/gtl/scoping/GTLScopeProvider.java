@@ -27,6 +27,7 @@ import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import org.emoflon.ibex.common.slimgt.scoping.SlimGTScopeUtil;
+import org.emoflon.ibex.common.slimgt.slimGT.BooleanExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.CountExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
@@ -181,6 +182,9 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 		}
 		if (SlimGTScopeUtil.isValueOrArithmeticExpression(context)) {
 			return scopeForValueOrArithmeticExpression(context, reference);
+		}
+		if (SlimGTScopeUtil.isBooleanExpression(context)) {
+			return scopeForBooleanExpression((BooleanExpression) context, reference);
 		}
 
 		return super.getScopeInternal(context, reference);
@@ -401,6 +405,11 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 			scope.addAll(GTLModelUtil.getAllDeletedAndContextRuleNodes(rule));
 			return Scopes.scopeFor(scope);
 		}
+	}
+
+	private IScope scopeForBooleanExpression(BooleanExpression context, EReference reference) {
+		SlimRule rule = SlimGTModelUtil.getContainer(context, SlimRule.class);
+		return Scopes.scopeFor(GTLModelUtil.getAllDeletedAndContextRuleNodes(rule));
 	}
 
 	protected IScope scopeForGTLAttributeExpressionNode(GTLAttributeExpression context, EReference reference) {

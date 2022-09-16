@@ -3,7 +3,7 @@
  */
 package org.emoflon.ibex.common.slimgt.scoping;
 
-import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,9 +24,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimParameter;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeAssignment;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode;
-import org.emoflon.ibex.common.slimgt.util.SlimGTEMFUtils;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
-import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtils;
 
 /**
  * This class contains custom scoping description.
@@ -101,8 +99,8 @@ public class SlimGTScopeProvider extends AbstractSlimGTScopeProvider {
 	}
 
 	private IScope scopeForPackageReferenceAliasImportedPackage(PackageReferenceAlias context, EReference reference) {
-		var imp = SlimGTModelUtil.getContainer(context, Import.class);
-		var packages = SlimGTModelUtil.getPackages(imp);
+		Import imp = SlimGTModelUtil.getContainer(context, Import.class);
+		Collection<EPackage> packages = SlimGTModelUtil.getPackages(imp);
 		return Scopes.scopeFor(packages);
 	}
 
