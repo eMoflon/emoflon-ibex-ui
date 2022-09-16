@@ -307,11 +307,25 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		} else
 			throw new RuntimeException("Cannot resolve type for context element " + context);
 
+//		for(var node : nodes) {
+//			if(node.getType().eIsProxy())
+//				System.out.println(node);
+//		}
+		
 		final EClass finalTargetType = targetType;
-		nodes = nodes.parallelStream() //
-				.filter(n -> finalTargetType.isSuperTypeOf(n.eClass())) //
-				.collect(Collectors.toSet()); //
+//		nodes = nodes.parallelStream() //
+//				.filter(n -> finalTargetType.isSuperTypeOf(n.eClass())) //
+//				.collect(Collectors.toSet()); //
 
+		// Find nodes with correct type. Allowed: Exact type match or target type is a
+		// subtype of the edge type.
+		nodes = nodes.stream()
+					.filter(sn -> sn.getType().getName().equals(finalTargetType.getName())
+							|| sn.getType().getEAllSuperTypes().stream()
+									.filter(superCls -> superCls.getName().equals(finalTargetType.getName()))
+									.findAny().isPresent())
+					.collect(Collectors.toSet());
+		
 		return nodes;
 	}
 	
