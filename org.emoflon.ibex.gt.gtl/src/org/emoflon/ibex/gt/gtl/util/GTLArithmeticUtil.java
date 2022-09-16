@@ -1,6 +1,7 @@
 package org.emoflon.ibex.gt.gtl.util;
 
 import java.util.List;
+import java.util.Set;
 
 import org.emoflon.ibex.common.slimgt.slimGT.ArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.ArithmeticLiteral;
@@ -31,34 +32,35 @@ import org.emoflon.ibex.gt.gtl.gTL.GTLParameterExpression;
 
 public final class GTLArithmeticUtil {
 
-	public static DataTypeParseResult parseDataType(ValueExpression expression) throws UnsupportedOperationException {
-		return parseDataType((ArithmeticExpression) expression);
+	public static DataTypeParseResult parseDominantDataType(ValueExpression expression)
+			throws UnsupportedOperationException {
+		return parseDominantDataType((ArithmeticExpression) expression);
 	}
 
-	public static DataTypeParseResult parseDataType(ArithmeticExpression expression)
+	public static DataTypeParseResult parseDominantDataType(ArithmeticExpression expression)
 			throws UnsupportedOperationException {
 		if (expression instanceof SumArithmeticExpression sum) {
-			DataTypeParseResult lhs = parseDataType(sum.getLeft());
-			DataTypeParseResult rhs = parseDataType(sum.getRight());
+			DataTypeParseResult lhs = parseDominantDataType(sum.getLeft());
+			DataTypeParseResult rhs = parseDominantDataType(sum.getRight());
 			return DataTypeParseResult.mergeResult(lhs, rhs, sum,
 					List.of(SlimGTPackage.Literals.SUM_ARITHMETIC_EXPRESSION__LEFT,
 							SlimGTPackage.Literals.SUM_ARITHMETIC_EXPRESSION__RIGHT));
 		} else if (expression instanceof ProductArithmeticExpression prod) {
-			DataTypeParseResult lhs = parseDataType(prod.getLeft());
-			DataTypeParseResult rhs = parseDataType(prod.getRight());
+			DataTypeParseResult lhs = parseDominantDataType(prod.getLeft());
+			DataTypeParseResult rhs = parseDominantDataType(prod.getRight());
 			return DataTypeParseResult.mergeResult(lhs, rhs, prod,
 					List.of(SlimGTPackage.Literals.PRODUCT_ARITHMETIC_EXPRESSION__LEFT,
 							SlimGTPackage.Literals.PRODUCT_ARITHMETIC_EXPRESSION__RIGHT));
 		} else if (expression instanceof ExpArithmeticExpression exp) {
-			DataTypeParseResult lhs = parseDataType(exp.getLeft());
-			DataTypeParseResult rhs = parseDataType(exp.getRight());
+			DataTypeParseResult lhs = parseDominantDataType(exp.getLeft());
+			DataTypeParseResult rhs = parseDominantDataType(exp.getRight());
 			return DataTypeParseResult.mergeResult(lhs, rhs, exp,
 					List.of(SlimGTPackage.Literals.EXP_ARITHMETIC_EXPRESSION__LEFT,
 							SlimGTPackage.Literals.EXP_ARITHMETIC_EXPRESSION__RIGHT));
 		} else if (expression instanceof StochasticArithmeticExpression stoc) {
-			DataTypeParseResult lhs = parseDataType(stoc.getMean());
+			DataTypeParseResult lhs = parseDominantDataType(stoc.getMean());
 			if (stoc.isHasSd()) {
-				DataTypeParseResult rhs = parseDataType(stoc.getSd());
+				DataTypeParseResult rhs = parseDominantDataType(stoc.getSd());
 				return DataTypeParseResult.mergeResult(lhs, rhs, stoc,
 						List.of(SlimGTPackage.Literals.STOCHASTIC_ARITHMETIC_EXPRESSION__MEAN,
 								SlimGTPackage.Literals.STOCHASTIC_ARITHMETIC_EXPRESSION__SD));
@@ -67,15 +69,15 @@ public final class GTLArithmeticUtil {
 			}
 
 		} else if (expression instanceof MinMaxArithmeticExpression minMax) {
-			DataTypeParseResult lhs = parseDataType(minMax.getLeft());
-			DataTypeParseResult rhs = parseDataType(minMax.getRight());
+			DataTypeParseResult lhs = parseDominantDataType(minMax.getLeft());
+			DataTypeParseResult rhs = parseDominantDataType(minMax.getRight());
 			return DataTypeParseResult.mergeResult(lhs, rhs, minMax,
 					List.of(SlimGTPackage.Literals.MIN_MAX_ARITHMETIC_EXPRESSION__LEFT,
 							SlimGTPackage.Literals.MIN_MAX_ARITHMETIC_EXPRESSION__RIGHT));
 		} else if (expression instanceof UnaryArithmeticExpression un) {
-			return parseDataType(un.getOperand());
+			return parseDominantDataType(un.getOperand());
 		} else if (expression instanceof BracketExpression brack) {
-			return parseDataType(brack.getOperand());
+			return parseDominantDataType(brack.getOperand());
 		} else if (expression instanceof ExpressionOperand op) {
 			if (op.getOperand() instanceof GTLAttributeExpression gae) {
 				return SlimGTArithmeticUtil.attributeToParseResult(gae,
@@ -104,6 +106,66 @@ public final class GTLArithmeticUtil {
 					return new DataTypeParseResult(ValueExpressionDataType.DOUBLE);
 				} else if (con.getValue() == ConstantLiteral.NULL) {
 					return new DataTypeParseResult(ValueExpressionDataType.NULL);
+				} else {
+					throw new UnsupportedOperationException("Unkown arithmetic constant: " + con.getValue());
+				}
+			} else {
+				throw new UnsupportedOperationException("Unkown arithmetic operand type: " + op.getOperand());
+			}
+		} else {
+			throw new UnsupportedOperationException("Unkown arithmetic operation type: " + expression);
+		}
+	}
+
+	public static void parseAllDataTypes(ArithmeticExpression expression, Set<ValueExpressionDataType> dataTypes)
+			throws UnsupportedOperationException {
+		if (expression instanceof SumArithmeticExpression sum) {
+			parseAllDataTypes(sum.getLeft(), dataTypes);
+			parseAllDataTypes(sum.getRight(), dataTypes);
+		} else if (expression instanceof ProductArithmeticExpression prod) {
+			parseAllDataTypes(prod.getLeft(), dataTypes);
+			parseAllDataTypes(prod.getRight(), dataTypes);
+		} else if (expression instanceof ExpArithmeticExpression exp) {
+			parseAllDataTypes(exp.getLeft(), dataTypes);
+			parseAllDataTypes(exp.getRight(), dataTypes);
+		} else if (expression instanceof StochasticArithmeticExpression stoc) {
+			parseAllDataTypes(stoc.getMean(), dataTypes);
+			if (stoc.isHasSd()) {
+				parseAllDataTypes(stoc.getSd(), dataTypes);
+			}
+		} else if (expression instanceof MinMaxArithmeticExpression minMax) {
+			parseAllDataTypes(minMax.getLeft(), dataTypes);
+			parseAllDataTypes(minMax.getRight(), dataTypes);
+		} else if (expression instanceof UnaryArithmeticExpression un) {
+			parseAllDataTypes(un.getOperand(), dataTypes);
+		} else if (expression instanceof BracketExpression brack) {
+			parseAllDataTypes(brack.getOperand(), dataTypes);
+		} else if (expression instanceof ExpressionOperand op) {
+			if (op.getOperand() instanceof GTLAttributeExpression nae) {
+				dataTypes.add(SlimGTArithmeticUtil.attributeToDataType(nae.getFeature()));
+			} else if (op.getOperand() instanceof GTLParameterExpression param) {
+				dataTypes.add(SlimGTArithmeticUtil.typeToDataType(param.getParameter().getType()));
+			} else if (op.getOperand() instanceof CountExpression count) {
+				dataTypes.add(ValueExpressionDataType.INTEGER);
+			} else if (op.getOperand() instanceof ArithmeticLiteral lit) {
+				if (lit.getValue() instanceof DoubleLiteral) {
+					dataTypes.add(ValueExpressionDataType.DOUBLE);
+				} else if (lit.getValue() instanceof IntegerLiteral) {
+					dataTypes.add(ValueExpressionDataType.INTEGER);
+				} else if (lit.getValue() instanceof StringLiteral) {
+					dataTypes.add(ValueExpressionDataType.STRING);
+				} else if (lit.getValue() instanceof BooleanLiteral) {
+					dataTypes.add(ValueExpressionDataType.BOOLEAN);
+				} else {
+					throw new UnsupportedOperationException("Unkown arithmetic literal type: " + lit.getValue());
+				}
+			} else if (op.getOperand() instanceof EnumExpression en) {
+				dataTypes.add(ValueExpressionDataType.ENUM);
+			} else if (op.getOperand() instanceof Constant con) {
+				if (con.getValue() == ConstantLiteral.E || con.getValue() == ConstantLiteral.PI) {
+					dataTypes.add(ValueExpressionDataType.DOUBLE);
+				} else if (con.getValue() == ConstantLiteral.NULL) {
+					dataTypes.add(ValueExpressionDataType.NULL);
 				} else {
 					throw new UnsupportedOperationException("Unkown arithmetic constant: " + con.getValue());
 				}

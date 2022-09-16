@@ -35,11 +35,11 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdgeContext;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdgeCreation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
 import org.emoflon.ibex.common.slimgt.slimGT.ValueExpression;
+import org.emoflon.ibex.common.slimgt.util.SlimGTArithmeticUtil;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
 import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtil;
 import org.emoflon.ibex.common.slimgt.validation.DataTypeParseResult;
 import org.emoflon.ibex.common.slimgt.validation.SlimGTValidatorUtil;
-import org.emoflon.ibex.common.slimgt.validation.ValueExpressionDataType;
 import org.emoflon.ibex.gt.gtl.gTL.EditorFile;
 import org.emoflon.ibex.gt.gtl.gTL.ExpressionOperand;
 import org.emoflon.ibex.gt.gtl.gTL.GTLEdgeIterator;
@@ -57,7 +57,6 @@ import org.emoflon.ibex.gt.gtl.gTL.SlimRule;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNode;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNodeContext;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNodeCreation;
-import org.emoflon.ibex.gt.gtl.util.GTLArithmeticUtil;
 import org.emoflon.ibex.gt.gtl.util.GTLModelUtil;
 import org.emoflon.ibex.gt.gtl.util.RuleNodeHierarchy;
 
@@ -830,34 +829,7 @@ public class GTLValidator extends AbstractGTLValidator {
 	}
 
 	@Override
-	protected void checkValueTypeConflicts(ValueExpression expr) {
-		DataTypeParseResult parseResult = GTLArithmeticUtil.parseDataType(expr);
-		if (parseResult.errorOccurred()) {
-			parseResult.context2Location().forEach((context, locations) -> {
-				List<ValueExpressionDataType> errors = parseResult.context2ErrorTypes().get(context);
-				errors.forEach(e -> {
-					locations.forEach(l -> {
-						error(String.format("Error <%s> in arithmetic expression.", e), context, l);
-					});
-				});
-
-			});
-		}
-	}
-
-	@Override
-	protected void checkArithmeticTypeConflicts(ArithmeticExpression expr) {
-		DataTypeParseResult parseResult = GTLArithmeticUtil.parseDataType(expr);
-		if (parseResult.errorOccurred()) {
-			parseResult.context2Location().forEach((context, locations) -> {
-				List<ValueExpressionDataType> errors = parseResult.context2ErrorTypes().get(context);
-				errors.forEach(e -> {
-					locations.forEach(l -> {
-						error(String.format("Error <%s> in arithmetic expression.", e), context, l);
-					});
-				});
-
-			});
-		}
+	protected DataTypeParseResult getDataTypeConflicts(ArithmeticExpression expr) {
+		return SlimGTArithmeticUtil.parseDominantDataType(expr);
 	}
 }
