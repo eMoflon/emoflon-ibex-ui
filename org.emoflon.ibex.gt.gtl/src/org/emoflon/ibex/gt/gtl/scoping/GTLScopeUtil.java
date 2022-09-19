@@ -31,8 +31,9 @@ public final class GTLScopeUtil {
 	}
 
 	public static boolean isGTLRuleRefinementNodeRefinement(final EObject context, final EReference reference) {
-		return (context instanceof SlimRuleNodeContext || context instanceof SlimRuleNodeCreation
-				|| context instanceof GTLRuleNodeDeletion || context instanceof GTLRuleRefinmentNode)
+		return (context instanceof SlimRule || context instanceof SlimRuleNodeContext
+				|| context instanceof SlimRuleNodeCreation || context instanceof GTLRuleNodeDeletion
+				|| context instanceof GTLRuleRefinmentNode)
 				&& (reference == GTLPackage.Literals.GTL_RULE_NODE_DELETION__REFINEMENT
 						|| reference == GTLPackage.Literals.SLIM_RULE_NODE_CREATION__REFINEMENT
 						|| reference == GTLPackage.Literals.SLIM_RULE_NODE_CONTEXT__REFINEMENT

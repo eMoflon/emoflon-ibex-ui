@@ -696,7 +696,8 @@ public class GTLValidator extends AbstractGTLValidator {
 		traversedRules.add(currentRule);
 
 		if (invocationHierarchyHasCycle(invocation, traversedRules)) {
-			error("Invoked pattern <%s> leads to an invocation cycle, which is not allowed.",
+			error(String.format("Invoked pattern <%s> leads to an invocation cycle, which is not allowed.",
+					((SlimRule) invocation.getSupportPattern()).getName()),
 					SlimGTPackage.Literals.SLIM_RULE_INVOCATION__SUPPORT_PATTERN);
 		}
 	}
@@ -721,7 +722,9 @@ public class GTLValidator extends AbstractGTLValidator {
 		traversedRules.add(currentRule);
 
 		if (invocationHierarchyHasCycle(countExpression, traversedRules)) {
-			error("Count expression: invoked pattern <%s> leads to an invocation cycle, which is not allowed.",
+			error(String.format(
+					"Count expression: invoked pattern <%s> leads to an invocation cycle, which is not allowed.",
+					((SlimRule) countExpression.getInvokedPatten()).getName()),
 					SlimGTPackage.Literals.COUNT_EXPRESSION__INVOKED_PATTEN);
 		}
 	}

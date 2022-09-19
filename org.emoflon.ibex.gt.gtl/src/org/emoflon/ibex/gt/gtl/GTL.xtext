@@ -72,18 +72,18 @@ GTLRuleRefinmentNode:
 
 @Override
 SlimRuleNodeContext:
-	(refining ?= '@refines'  refinement=GTLRuleRefinmentNode)?
+	(refining ?= '@refines='  refinement=GTLRuleRefinmentNode)?
 	'[=]' (local?='local')? context = SlimRuleNode
 ;
 
 @Override
 SlimRuleNodeCreation:
-	(refining ?= '@refines'  refinement=GTLRuleRefinmentNode)?
+	(refining ?= '@refines+'  refinement=GTLRuleRefinmentNode)?
 	'[+]' creation = SlimRuleNode
 ;
 
 GTLRuleNodeDeletion :
-	(refining ?= '@refines'  refinement=GTLRuleRefinmentNode)?
+	(refining ?= '@refines-'  refinement=GTLRuleRefinmentNode)?
 	'[-]' deletion = SlimRuleNode
 ;
 
