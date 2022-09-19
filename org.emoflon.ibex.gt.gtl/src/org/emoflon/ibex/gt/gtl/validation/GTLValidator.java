@@ -804,7 +804,7 @@ public class GTLValidator extends AbstractGTLValidator {
 				continue;
 
 			SlimRuleNode otherNode = SlimGTModelUtil.getContainer(other, SlimRuleNode.class);
-			if (otherNode.equals(node) && other.getType() != null
+			if (otherNode.equals(node) && other.getType() != null && other.getType().getName() != null
 					&& other.getType().getName().equals(attribute.getName())) {
 				error(String.format(
 						"References to attributes within attribute assignment calculations that are themselves subject to an assignment are not permitted.",

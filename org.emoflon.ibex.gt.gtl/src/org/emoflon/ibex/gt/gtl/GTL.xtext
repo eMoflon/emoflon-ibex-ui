@@ -38,7 +38,7 @@ SlimRule: {SlimRule}
 			createdNodes += SlimRuleNodeCreation 		|
 			deletedNodes += GTLRuleNodeDeletion 		|
 			atrConditions += SlimRuleAttributeCondition |
-			//watchDogs += GTLRuleWatchDog 				|
+			watchDogs += GTLRuleWatchDog 				|
 			invocations += SlimRuleInvocation)*
 	'}' 
 	(stochastic ?='@' probability = ValueExpression)?
@@ -127,7 +127,7 @@ GTLEdgeIterator:
 ;
 
 GTLEdgeIteratorAttributeAssignment:
-	attribute = (NodeAttributeExpression | GTLIteratorAttributeExpression) ':=' value=ValueExpression
+	attribute = (NodeAttributeExpression | GTLIteratorAttributeExpression) ':=' value=ValueExpression ';'
 ;
 
 GTLEdgeIteratorReference:

@@ -69,11 +69,11 @@ SlimRuleTransitiveEdge returns SlimRuleEdge: {SlimRuleTransitiveEdge}
 ;
 
 SlimRuleAttributeAssignment:
-	'.' type=[ecore::EAttribute] ':=' value=ValueExpression
+	'.' type=[ecore::EAttribute] ':=' value=ValueExpression ';'
 ;
 
 SlimRuleAttributeCondition:
-	'[#]' expression=BooleanExpression
+	'[#]' expression=BooleanExpression ';'
 ;
 
 enum RelationalOperator:
