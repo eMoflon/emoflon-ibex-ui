@@ -308,7 +308,8 @@ public final class GTLModelUtil {
 
 	public static Collection<SlimRuleEdge> getRuleNodeAllEdges(SlimRuleNode context) {
 		List<SlimRuleEdge> edges = new LinkedList<>();
-		List<SlimRuleNode> nodes = List.of(context);
+		List<SlimRuleNode> nodes = new LinkedList<>();
+		nodes.add(context);
 		nodes.addAll(getRuleNodeAllSuperNodes(context));
 		for (SlimRuleNode node : nodes) {
 			node.getContextEdges().stream().map(e -> e.getContext()).forEach(e -> edges.add(e));
@@ -321,7 +322,8 @@ public final class GTLModelUtil {
 	public static Collection<SlimRuleEdge> getRuleNodeAllEdges(SlimRuleNode context,
 			Map<SlimRuleNode, RuleNodeHierarchy> ruleNodeHierarchy) {
 		List<SlimRuleEdge> edges = new LinkedList<>();
-		List<SlimRuleNode> nodes = List.of(context);
+		List<SlimRuleNode> nodes = new LinkedList<>();
+		nodes.add(context);
 		nodes.addAll(getRuleNodeAllSuperNodes(context, ruleNodeHierarchy));
 		for (SlimRuleNode node : nodes) {
 			node.getContextEdges().stream().map(e -> e.getContext()).forEach(e -> edges.add(e));
@@ -332,7 +334,8 @@ public final class GTLModelUtil {
 	}
 
 	public static Collection<SlimRuleAttributeAssignment> getRuleNodeAllAttributeAssignments(SlimRuleNode context) {
-		List<SlimRuleNode> nodes = List.of(context);
+		List<SlimRuleNode> nodes = new LinkedList<>();
+		nodes.add(context);
 		nodes.addAll(getRuleNodeAllSuperNodes(context));
 		return nodes.stream().flatMap(n -> n.getAssignments().stream()).collect(Collectors.toList());
 	}
@@ -420,8 +423,7 @@ public final class GTLModelUtil {
 		return getCountExpressionInArithmeticExpression((ArithmeticExpression) context);
 	}
 
-	public static Collection<CountExpression> getCountExpressionInArithmeticExpression(
-			ArithmeticExpression context) {
+	public static Collection<CountExpression> getCountExpressionInArithmeticExpression(ArithmeticExpression context) {
 		List<CountExpression> countExpr = new LinkedList<>();
 		getCountExpressionInArithmeticExpression(context, countExpr);
 		return countExpr;

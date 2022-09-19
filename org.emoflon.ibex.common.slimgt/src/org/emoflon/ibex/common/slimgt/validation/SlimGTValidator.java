@@ -105,7 +105,12 @@ public class SlimGTValidator extends AbstractSlimGTValidator {
 
 	@Check
 	protected void checkSumDataTypes(SumArithmeticExpression expr) {
-		DataTypeParseResult parseResult = checkDataTypeConflicts(expr);
+		DataTypeParseResult parseResult;
+		try {
+			parseResult = checkDataTypeConflicts(expr);
+		} catch (Exception e) {
+			return;
+		}
 
 		if (!(parseResult.type() == ValueExpressionDataType.DOUBLE
 				|| parseResult.type() == ValueExpressionDataType.STRING
@@ -119,7 +124,12 @@ public class SlimGTValidator extends AbstractSlimGTValidator {
 
 	@Check
 	protected void checkProductDataTypes(ProductArithmeticExpression expr) {
-		DataTypeParseResult parseResult = checkDataTypeConflicts(expr);
+		DataTypeParseResult parseResult;
+		try {
+			parseResult = checkDataTypeConflicts(expr);
+		} catch (Exception e) {
+			return;
+		}
 
 		if (!(parseResult.type() == ValueExpressionDataType.DOUBLE
 				|| parseResult.type() == ValueExpressionDataType.INTEGER)) {
@@ -132,7 +142,12 @@ public class SlimGTValidator extends AbstractSlimGTValidator {
 
 	@Check
 	protected void checkExpDataTypes(ExpArithmeticExpression expr) {
-		DataTypeParseResult parseResult = checkDataTypeConflicts(expr);
+		DataTypeParseResult parseResult;
+		try {
+			parseResult = checkDataTypeConflicts(expr);
+		} catch (Exception e) {
+			return;
+		}
 
 		if (!(parseResult.type() == ValueExpressionDataType.DOUBLE
 				|| parseResult.type() == ValueExpressionDataType.INTEGER)) {
@@ -145,7 +160,12 @@ public class SlimGTValidator extends AbstractSlimGTValidator {
 
 	@Check
 	protected void checkStochasticDataTypes(StochasticArithmeticExpression expr) {
-		DataTypeParseResult parseResult = checkDataTypeConflicts(expr);
+		DataTypeParseResult parseResult;
+		try {
+			parseResult = checkDataTypeConflicts(expr);
+		} catch (Exception e) {
+			return;
+		}
 
 		if (!(parseResult.type() == ValueExpressionDataType.DOUBLE
 				|| parseResult.type() == ValueExpressionDataType.INTEGER)) {
@@ -159,7 +179,12 @@ public class SlimGTValidator extends AbstractSlimGTValidator {
 
 	@Check
 	protected void checkMinMaxDataTypes(MinMaxArithmeticExpression expr) {
-		DataTypeParseResult parseResult = checkDataTypeConflicts(expr);
+		DataTypeParseResult parseResult;
+		try {
+			parseResult = checkDataTypeConflicts(expr);
+		} catch (Exception e) {
+			return;
+		}
 
 		if (!(parseResult.type() == ValueExpressionDataType.DOUBLE
 				|| parseResult.type() == ValueExpressionDataType.STRING
@@ -173,7 +198,12 @@ public class SlimGTValidator extends AbstractSlimGTValidator {
 
 	@Check
 	protected void checkUnaryDataType(UnaryArithmeticExpression expr) {
-		DataTypeParseResult parseResult = checkDataTypeConflicts(expr);
+		DataTypeParseResult parseResult;
+		try {
+			parseResult = checkDataTypeConflicts(expr);
+		} catch (Exception e) {
+			return;
+		}
 
 		if (!(parseResult.type() == ValueExpressionDataType.DOUBLE
 				|| parseResult.type() == ValueExpressionDataType.INTEGER)) {
@@ -184,7 +214,12 @@ public class SlimGTValidator extends AbstractSlimGTValidator {
 
 	@Check
 	protected void checkBracketDataType(BracketExpression expr) {
-		DataTypeParseResult parseResult = checkDataTypeConflicts(expr);
+		DataTypeParseResult parseResult;
+		try {
+			parseResult = checkDataTypeConflicts(expr);
+		} catch (Exception e) {
+			return;
+		}
 
 		if (!(parseResult.type() == ValueExpressionDataType.DOUBLE
 				|| parseResult.type() == ValueExpressionDataType.INTEGER)) {
@@ -193,7 +228,7 @@ public class SlimGTValidator extends AbstractSlimGTValidator {
 		}
 	}
 
-	protected DataTypeParseResult checkDataTypeConflicts(ArithmeticExpression expr) {
+	protected DataTypeParseResult checkDataTypeConflicts(ArithmeticExpression expr) throws Exception {
 		DataTypeParseResult parseResult = getDataTypeConflicts(expr);
 		if (parseResult.errorOccurred()) {
 			parseResult.context2Location().forEach((context, locations) -> {
@@ -210,7 +245,7 @@ public class SlimGTValidator extends AbstractSlimGTValidator {
 		return parseResult;
 	}
 
-	protected DataTypeParseResult getDataTypeConflicts(ArithmeticExpression expr) {
+	protected DataTypeParseResult getDataTypeConflicts(ArithmeticExpression expr) throws Exception {
 		return SlimGTArithmeticUtil.parseDominantDataType(expr);
 	}
 
@@ -222,8 +257,18 @@ public class SlimGTValidator extends AbstractSlimGTValidator {
 		if (expr.getRhs() == null)
 			return;
 
-		DataTypeParseResult lhsType = getDataTypeConflicts((ArithmeticExpression) expr.getLhs());
-		DataTypeParseResult rhsType = getDataTypeConflicts((ArithmeticExpression) expr.getRhs());
+		DataTypeParseResult lhsType;
+		try {
+			lhsType = getDataTypeConflicts((ArithmeticExpression) expr.getLhs());
+		} catch (Exception e) {
+			return;
+		}
+		DataTypeParseResult rhsType;
+		try {
+			rhsType = getDataTypeConflicts((ArithmeticExpression) expr.getRhs());
+		} catch (Exception e) {
+			return;
+		}
 
 		if (lhsType.type() == rhsType.type())
 			return;

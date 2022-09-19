@@ -638,6 +638,9 @@ public class GTLValidator extends AbstractGTLValidator {
 		if (assignment.getType() == null)
 			return;
 
+		if (assignment.getType().getName() == null)
+			return;
+
 		SlimRuleNode currentRuleNode = SlimGTModelUtil.getContainer(assignment, SlimRuleNode.class);
 		Collection<SlimRuleAttributeAssignment> assignments = GTLModelUtil
 				.getRuleNodeAllAttributeAssignments(currentRuleNode);
@@ -646,6 +649,9 @@ public class GTLValidator extends AbstractGTLValidator {
 				continue;
 
 			if (other.getType() == null)
+				continue;
+
+			if (other.getType().getName() == null)
 				continue;
 
 			if (other.getType().getName().equals(assignment.getType().getName())) {
@@ -798,7 +804,8 @@ public class GTLValidator extends AbstractGTLValidator {
 				continue;
 
 			SlimRuleNode otherNode = SlimGTModelUtil.getContainer(other, SlimRuleNode.class);
-			if (otherNode.equals(node) && other.getType().getName().equals(attribute.getName())) {
+			if (otherNode.equals(node) && other.getType() != null
+					&& other.getType().getName().equals(attribute.getName())) {
 				error(String.format(
 						"References to attributes within attribute assignment calculations that are themselves subject to an assignment are not permitted.",
 						assignment.getType().getName()), SlimGTPackage.Literals.NODE_ATTRIBUTE_EXPRESSION__FEATURE);
@@ -829,7 +836,7 @@ public class GTLValidator extends AbstractGTLValidator {
 	}
 
 	@Override
-	protected DataTypeParseResult getDataTypeConflicts(ArithmeticExpression expr) {
+	protected DataTypeParseResult getDataTypeConflicts(ArithmeticExpression expr) throws Exception {
 		return SlimGTArithmeticUtil.parseDominantDataType(expr);
 	}
 }

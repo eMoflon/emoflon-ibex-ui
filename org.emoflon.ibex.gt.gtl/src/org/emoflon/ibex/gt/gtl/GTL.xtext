@@ -103,21 +103,16 @@ GTLRuleEdgeDeletion:
 ;
 
 GTLRuleWatchDog:
-	'watch' '(' nodeAttribute=GTLAttributeExpression ')'
+	'watch' '(' nodeAttribute=NodeAttributeExpression ')'
 ;
 
 @Override
 ExpressionOperand:
-	{ExpressionOperand} operand = (GTLAttributeExpression | CountExpression | ArithmeticLiteral | EnumExpression | GTLParameterExpression | Constant)
+	{ExpressionOperand} operand = (NodeAttributeExpression | GTLIteratorAttributeExpression | CountExpression | ArithmeticLiteral | EnumExpression | GTLParameterExpression | Constant)
 ;
 
-@Override
-BooleanExpressionOperand:
-	{BooleanExpressionOperand} operand = (GTLAttributeExpression | GTLParameterExpression | BooleanLiteral)
-;
-
-GTLAttributeExpression:
-	node = [ecore::EObject|ID] '.' feature = [ecore::EAttribute]
+GTLIteratorAttributeExpression:
+	'iterator.' feature = [ecore::EAttribute]
 ;
 
 GTLParameterExpression:
@@ -132,7 +127,7 @@ GTLEdgeIterator:
 ;
 
 GTLEdgeIteratorAttributeAssignment:
-	attribute = GTLAttributeExpression ':=' value=ValueExpression
+	attribute = (NodeAttributeExpression | GTLIteratorAttributeExpression) ':=' value=ValueExpression
 ;
 
 GTLEdgeIteratorReference:

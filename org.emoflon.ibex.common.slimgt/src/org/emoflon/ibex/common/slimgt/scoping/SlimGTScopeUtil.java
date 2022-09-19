@@ -4,7 +4,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.emoflon.ibex.common.slimgt.slimGT.ArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.BooleanExpression;
-import org.emoflon.ibex.common.slimgt.slimGT.BooleanExpressionOperand;
 import org.emoflon.ibex.common.slimgt.slimGT.CountExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.EnumExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.NodeAttributeExpression;
@@ -12,6 +11,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.PackageReferenceAlias;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimParameter;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeAssignment;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeCondition;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode;
@@ -78,6 +78,16 @@ public final class SlimGTScopeUtil {
 				&& reference == SlimGTPackage.Literals.NODE_ATTRIBUTE_EXPRESSION__FEATURE;
 	}
 
+	public static boolean isAttributeConditionExpressionNode(EObject context, EReference reference) {
+		return context instanceof SlimRuleAttributeCondition
+				&& reference == SlimGTPackage.Literals.NODE_ATTRIBUTE_EXPRESSION__NODE;
+	}
+
+	public static boolean isAttributeConditionxpressionFeature(EObject context, EReference reference) {
+		return context instanceof SlimRuleAttributeCondition
+				&& reference == SlimGTPackage.Literals.NODE_ATTRIBUTE_EXPRESSION__FEATURE;
+	}
+
 	public static boolean isPackageReferenceAliasImportedPackage(EObject context, EReference reference) {
 		return context instanceof PackageReferenceAlias
 				&& reference == SlimGTPackage.Literals.PACKAGE_REFERENCE__IMPORTED_PACKAGE;
@@ -85,10 +95,5 @@ public final class SlimGTScopeUtil {
 
 	public static boolean isBooleanExpression(EObject context) {
 		return context instanceof BooleanExpression;
-	}
-
-	public static boolean isBooleanExpressionOperandOperand(EObject context, EReference reference) {
-		return context instanceof BooleanExpressionOperand
-				&& reference == SlimGTPackage.Literals.BOOLEAN_EXPRESSION_OPERAND__OPERAND;
 	}
 }

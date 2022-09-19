@@ -35,13 +35,11 @@ import org.emoflon.ibex.common.slimgt.validation.ValueExpressionDataType;
 
 public final class SlimGTArithmeticUtil {
 
-	public static DataTypeParseResult parseDominantDataType(ValueExpression expression)
-			throws UnsupportedOperationException {
+	public static DataTypeParseResult parseDominantDataType(ValueExpression expression) throws Exception {
 		return parseDominantDataType((ArithmeticExpression) expression);
 	}
 
-	public static DataTypeParseResult parseDominantDataType(ArithmeticExpression expression)
-			throws UnsupportedOperationException {
+	public static DataTypeParseResult parseDominantDataType(ArithmeticExpression expression) throws Exception {
 		if (expression instanceof SumArithmeticExpression sum) {
 			DataTypeParseResult lhs = parseDominantDataType(sum.getLeft());
 			DataTypeParseResult rhs = parseDominantDataType(sum.getRight());
@@ -118,12 +116,12 @@ public final class SlimGTArithmeticUtil {
 	}
 
 	public static DataTypeParseResult attributeToParseResult(EObject context, EStructuralFeature location,
-			EAttribute attribute) {
+			EAttribute attribute) throws Exception {
 		return typeToParseResult(context, location, attribute.getEType());
 	}
 
 	public static DataTypeParseResult typeToParseResult(EObject context, EStructuralFeature location,
-			EClassifier dataType) {
+			EClassifier dataType) throws Exception {
 		if (dataType == EcorePackage.Literals.EBYTE || dataType == EcorePackage.Literals.ESHORT
 				|| dataType == EcorePackage.Literals.EINT || dataType == EcorePackage.Literals.ELONG) {
 			return new DataTypeParseResult(ValueExpressionDataType.INTEGER);
@@ -143,20 +141,18 @@ public final class SlimGTArithmeticUtil {
 		}
 	}
 
-	public static Set<ValueExpressionDataType> parseAllDataTypes(ValueExpression expression)
-			throws UnsupportedOperationException {
+	public static Set<ValueExpressionDataType> parseAllDataTypes(ValueExpression expression) throws Exception {
 		return parseAllDataTypes((ArithmeticExpression) expression);
 	}
 
-	public static Set<ValueExpressionDataType> parseAllDataTypes(ArithmeticExpression expression)
-			throws UnsupportedOperationException {
+	public static Set<ValueExpressionDataType> parseAllDataTypes(ArithmeticExpression expression) throws Exception {
 		Set<ValueExpressionDataType> dataTypes = new HashSet<>();
 		parseAllDataTypes(expression, dataTypes);
 		return dataTypes;
 	}
 
 	public static void parseAllDataTypes(ArithmeticExpression expression, Set<ValueExpressionDataType> dataTypes)
-			throws UnsupportedOperationException {
+			throws Exception {
 		if (expression instanceof SumArithmeticExpression sum) {
 			parseAllDataTypes(sum.getLeft(), dataTypes);
 			parseAllDataTypes(sum.getRight(), dataTypes);
@@ -213,7 +209,7 @@ public final class SlimGTArithmeticUtil {
 		}
 	}
 
-	public static ValueExpressionDataType attributeToDataType(EAttribute attribute) {
+	public static ValueExpressionDataType attributeToDataType(EAttribute attribute) throws Exception {
 		return typeToDataType(attribute.getEType());
 	}
 

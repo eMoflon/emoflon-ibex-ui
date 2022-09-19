@@ -15,6 +15,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.EnumExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.ExpArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.IntegerLiteral;
 import org.emoflon.ibex.common.slimgt.slimGT.MinMaxArithmeticExpression;
+import org.emoflon.ibex.common.slimgt.slimGT.NodeAttributeExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.ProductArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
 import org.emoflon.ibex.common.slimgt.slimGT.StochasticArithmeticExpression;
@@ -26,19 +27,17 @@ import org.emoflon.ibex.common.slimgt.util.SlimGTArithmeticUtil;
 import org.emoflon.ibex.common.slimgt.validation.DataTypeParseResult;
 import org.emoflon.ibex.common.slimgt.validation.ValueExpressionDataType;
 import org.emoflon.ibex.gt.gtl.gTL.ExpressionOperand;
-import org.emoflon.ibex.gt.gtl.gTL.GTLAttributeExpression;
+import org.emoflon.ibex.gt.gtl.gTL.GTLIteratorAttributeExpression;
 import org.emoflon.ibex.gt.gtl.gTL.GTLPackage;
 import org.emoflon.ibex.gt.gtl.gTL.GTLParameterExpression;
 
 public final class GTLArithmeticUtil {
 
-	public static DataTypeParseResult parseDominantDataType(ValueExpression expression)
-			throws UnsupportedOperationException {
+	public static DataTypeParseResult parseDominantDataType(ValueExpression expression) throws Exception {
 		return parseDominantDataType((ArithmeticExpression) expression);
 	}
 
-	public static DataTypeParseResult parseDominantDataType(ArithmeticExpression expression)
-			throws UnsupportedOperationException {
+	public static DataTypeParseResult parseDominantDataType(ArithmeticExpression expression) throws Exception {
 		if (expression instanceof SumArithmeticExpression sum) {
 			DataTypeParseResult lhs = parseDominantDataType(sum.getLeft());
 			DataTypeParseResult rhs = parseDominantDataType(sum.getRight());
@@ -79,9 +78,12 @@ public final class GTLArithmeticUtil {
 		} else if (expression instanceof BracketExpression brack) {
 			return parseDominantDataType(brack.getOperand());
 		} else if (expression instanceof ExpressionOperand op) {
-			if (op.getOperand() instanceof GTLAttributeExpression gae) {
+			if (op.getOperand() instanceof NodeAttributeExpression gae) {
 				return SlimGTArithmeticUtil.attributeToParseResult(gae,
-						GTLPackage.Literals.GTL_ATTRIBUTE_EXPRESSION__FEATURE, gae.getFeature());
+						SlimGTPackage.Literals.NODE_ATTRIBUTE_EXPRESSION__FEATURE, gae.getFeature());
+			} else if (op.getOperand() instanceof GTLIteratorAttributeExpression ie) {
+				return SlimGTArithmeticUtil.attributeToParseResult(ie,
+						GTLPackage.Literals.GTL_ITERATOR_ATTRIBUTE_EXPRESSION__FEATURE, ie.getFeature());
 			} else if (op.getOperand() instanceof GTLParameterExpression param) {
 				return SlimGTArithmeticUtil.typeToParseResult(param,
 						GTLPackage.Literals.GTL_PARAMETER_EXPRESSION__PARAMETER, param.getParameter().getType());
@@ -118,7 +120,7 @@ public final class GTLArithmeticUtil {
 	}
 
 	public static void parseAllDataTypes(ArithmeticExpression expression, Set<ValueExpressionDataType> dataTypes)
-			throws UnsupportedOperationException {
+			throws Exception {
 		if (expression instanceof SumArithmeticExpression sum) {
 			parseAllDataTypes(sum.getLeft(), dataTypes);
 			parseAllDataTypes(sum.getRight(), dataTypes);
@@ -141,7 +143,9 @@ public final class GTLArithmeticUtil {
 		} else if (expression instanceof BracketExpression brack) {
 			parseAllDataTypes(brack.getOperand(), dataTypes);
 		} else if (expression instanceof ExpressionOperand op) {
-			if (op.getOperand() instanceof GTLAttributeExpression nae) {
+			if (op.getOperand() instanceof NodeAttributeExpression nae) {
+				dataTypes.add(SlimGTArithmeticUtil.attributeToDataType(nae.getFeature()));
+			} else if (op.getOperand() instanceof GTLIteratorAttributeExpression nae) {
 				dataTypes.add(SlimGTArithmeticUtil.attributeToDataType(nae.getFeature()));
 			} else if (op.getOperand() instanceof GTLParameterExpression param) {
 				dataTypes.add(SlimGTArithmeticUtil.typeToDataType(param.getParameter().getType()));
