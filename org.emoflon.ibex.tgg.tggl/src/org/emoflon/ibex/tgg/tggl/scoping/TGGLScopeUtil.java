@@ -2,6 +2,7 @@ package org.emoflon.ibex.tgg.tggl.scoping;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.emoflon.ibex.common.slimgt.slimGT.NodeAttributeExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRule;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
@@ -10,6 +11,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeContext;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeCreation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMapping;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleSimpleEdge;
+import org.emoflon.ibex.tgg.tggl.tGGL.AttributeCondition;
 import org.emoflon.ibex.tgg.tggl.tGGL.CorrespondenceNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.CorrespondenceType;
 import org.emoflon.ibex.tgg.tggl.tGGL.Schema;
@@ -63,6 +65,17 @@ public class TGGLScopeUtil {
 	public static boolean isCorrespondenceNodeTarget(EObject context, EReference reference) {
 		return context instanceof CorrespondenceNode && //
 				reference == TGGLPackage.Literals.CORRESPONDENCE_NODE__TARGET;
+	}
+	
+	public static boolean isNodeAttributeExpressionFeature(EObject context, EReference reference) {
+		return context instanceof NodeAttributeExpression && // 
+				reference == SlimGTPackage.Literals.NODE_ATTRIBUTE_EXPRESSION__FEATURE;
+	}
+	
+	public static boolean isTGGRuleConditionName(EObject context, EReference reference) {
+		return (context instanceof TGGRule || 
+				context instanceof AttributeCondition) && //
+				reference == TGGLPackage.Literals.ATTRIBUTE_CONDITION__NAME;
 	}
 	
 	public static boolean isEdgeTargetReference(EObject context, EReference reference) {

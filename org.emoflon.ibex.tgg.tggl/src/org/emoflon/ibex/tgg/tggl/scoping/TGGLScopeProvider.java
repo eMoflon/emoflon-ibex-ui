@@ -28,6 +28,7 @@ import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import org.eclipse.xtext.scoping.impl.FilteringScope;
 import org.emoflon.ibex.common.slimgt.scoping.SlimGTAliasedTypeScope;
+import org.emoflon.ibex.common.slimgt.slimGT.NodeAttributeExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.PackageReference;
 import org.emoflon.ibex.common.slimgt.slimGT.PackageReferenceAlias;
 import org.emoflon.ibex.common.slimgt.slimGT.PackageReferencePlain;
@@ -40,6 +41,8 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeCreation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMapping;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleSimpleEdge;
 import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtils;
+import org.emoflon.ibex.tgg.tggl.tGGL.AttributeCondition;
+import org.emoflon.ibex.tgg.tggl.tGGL.AttributeConditionDefinition;
 import org.emoflon.ibex.tgg.tggl.tGGL.CorrespondenceNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.CorrespondenceType;
 import org.emoflon.ibex.tgg.tggl.tGGL.EditorFile;
@@ -93,6 +96,10 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		if (isCorrespondenceNodeTarget(context, reference))
 			return getCorrespondenceReferencedNodes(context, reference);
 		
+		// attribute feature
+		if (isNodeAttributeExpressionFeature(context, reference))
+			return getNodeAttributeExpressionFeatures(context);
+		
 		// mapping references
 		if (isRuleNodeMappingSource(context, reference))
 			return getMappingSourceNodes(context, reference);
@@ -110,7 +117,39 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		if (isCorrespondenceNodeNode(context, reference))
 			return getTargetNodesFromRefinedRule(context, reference);
 		
+		// attribute conditions
+		if (isTGGRuleConditionName(context, reference))
+			return getCondition(context, reference);
+		
 		return super.getScopeInternal(context, reference);
+	}
+
+	private IScope getCondition(EObject context, EReference reference) {
+		var conditionDefinitions = new HashSet<AttributeConditionDefinition>();
+		var editorFiles = getAllFilesInScope(context);
+		var thisEditorFile = getContainer(context, EditorFile.class);
+		editorFiles.add(thisEditorFile);
+		
+		for(var editorFile : editorFiles) {
+			for(var library : editorFile.getLibraries()) {
+				conditionDefinitions.addAll(library.getAttributeCondDefs());
+			}
+		}
+		
+		return new TGGLFQAttributeConditionScope(conditionDefinitions);
+	}
+
+	private IScope getNodeAttributeExpressionFeatures(EObject context) {
+		var slimNode = getContainer(context, SlimRuleNode.class);
+		if (slimNode != null) {
+			return Scopes.scopeFor(slimNode.getType().getEAllAttributes());
+		}
+		
+		var nodeAttributeExpression = getContainer(context, NodeAttributeExpression.class);
+		if (nodeAttributeExpression != null) {
+			return Scopes.scopeFor(nodeAttributeExpression.getNode().getType().getEAllAttributes());
+		}
+		return IScope.NULLSCOPE;
 	}
 
 	private IScope getPackagesFromImports(EObject context, EReference reference) {
@@ -394,15 +433,19 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 			Set<EObject> newNodes = new HashSet<>();
 			switch (domain) {
 			case SOURCE:
-				newNodes.addAll(getSlimRuleNodesFromContext(rule.getSourceRule().getContextNodes()));
-				newNodes.addAll(getSlimRuleNodesFromCreation(rule.getSourceRule().getCreatedNodes()));
+				if(currentRule.getSourceRule() != null) {
+					newNodes.addAll(getSlimRuleNodesFromContext(currentRule.getSourceRule().getContextNodes()));
+					newNodes.addAll(getSlimRuleNodesFromCreation(currentRule.getSourceRule().getCreatedNodes()));
+				}
 				break;
 			case CORRESPONDENCE:
-				newNodes.addAll(rule.getCorrespondenceNodes());
+				newNodes.addAll(currentRule.getCorrespondenceNodes());
 				break;
 			case TARGET:
-				newNodes.addAll(getSlimRuleNodesFromContext(rule.getTargetRule().getContextNodes()));
-				newNodes.addAll(getSlimRuleNodesFromCreation(rule.getTargetRule().getCreatedNodes()));
+				if(currentRule.getTargetRule() != null) {
+					newNodes.addAll(getSlimRuleNodesFromContext(currentRule.getTargetRule().getContextNodes()));
+					newNodes.addAll(getSlimRuleNodesFromCreation(currentRule.getTargetRule().getCreatedNodes()));
+				}
 				break;
 			}
 			
@@ -481,7 +524,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 				correspondenceTypes = filterCorrespondenceTypesIfNoSubType(correspondenceTypes, corrType);
 			return Scopes.scopeFor(correspondenceTypes);
 		case TARGET:
-			var targetTypes = getTypes(schema.getSourceTypes());
+			var targetTypes = getTypes(schema.getTargetTypes());
 			if(refinedType != null && refinedType instanceof EClass refinedEClass)
 				targetTypes = filterTypesIfNoSubType(targetTypes, refinedEClass);
 			return new SlimGTAliasedTypeScope(editorFile.getImports(), targetTypes);
