@@ -69,11 +69,11 @@ SlimRuleTransitiveEdge returns SlimRuleEdge: {SlimRuleTransitiveEdge}
 ;
 
 SlimRuleAttributeAssignment:
-	'.' type=[ecore::EAttribute] ':=' value=ValueExpression
+	'.' type=[ecore::EAttribute] ':=' value=ValueExpression ';'
 ;
 
 SlimRuleAttributeCondition:
-	'[#]' expression=BooleanExpression
+	'[#]' expression=BooleanExpression ';'
 ;
 
 enum RelationalOperator:
@@ -147,7 +147,7 @@ ExpressionOperand:
 ;
 
 NodeAttributeExpression:
-	node = [SlimRuleNode|ID] '.' feature = [ecore::EAttribute]
+	{NodeAttributeExpression} node = [SlimRuleNode|ID] '.' feature = [ecore::EAttribute]
 ;
 
 CountExpression:
@@ -187,15 +187,11 @@ BooleanNegation returns BooleanExpression:
 ;
 
 BooleanBracket returns BooleanExpression:
-	{BooleanBracket} '[' operand=BooleanExpression ']'  | RelationalExpression | BooleanExpressionOperand
+	{BooleanBracket} '[' operand=BooleanExpression ']'  | RelationalExpression
 ;
 
 RelationalExpression:
-	lhs=ValueExpression operator=RelationalOperator rhs=ValueExpression
-;
-
-BooleanExpressionOperand:
-	{BooleanExpressionOperand} operand = (NodeAttributeExpression | BooleanLiteral)
+	ValueExpression ({RelationalExpression.lhs = current} relation=RelationalOperator rhs=ValueExpression)?
 ;
 
 enum DisjunctionOperator:

@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.validation.Check;
+import org.emoflon.ibex.common.slimgt.slimGT.ArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.CountExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.Import;
 import org.emoflon.ibex.common.slimgt.slimGT.NodeAttributeExpression;
@@ -34,9 +35,11 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdgeContext;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdgeCreation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
 import org.emoflon.ibex.common.slimgt.slimGT.ValueExpression;
+import org.emoflon.ibex.common.slimgt.util.SlimGTArithmeticUtil;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
-import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtils;
-import org.emoflon.ibex.common.slimgt.validation.SlimGTValidatorUtils;
+import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtil;
+import org.emoflon.ibex.common.slimgt.validation.DataTypeParseResult;
+import org.emoflon.ibex.common.slimgt.validation.SlimGTValidatorUtil;
 import org.emoflon.ibex.gt.gtl.gTL.EditorFile;
 import org.emoflon.ibex.gt.gtl.gTL.ExpressionOperand;
 import org.emoflon.ibex.gt.gtl.gTL.GTLEdgeIterator;
@@ -89,7 +92,7 @@ public class GTLValidator extends AbstractGTLValidator {
 	}
 
 	public Optional<EditorFile> loadGTLModelByRelativePath(final EObject context, final String path) {
-		IProject currentProject = SlimGTWorkspaceUtils.getCurrentProject(context.eResource());
+		IProject currentProject = SlimGTWorkspaceUtil.getCurrentProject(context.eResource());
 		Resource resource = null;
 		URI gtModelUri = null;
 		String absolutePath = null;
@@ -132,7 +135,7 @@ public class GTLValidator extends AbstractGTLValidator {
 	public Collection<EditorFile> loadAllEditorFilesInPackage(final EditorFile ef) {
 		Collection<EditorFile> pkgScope = new LinkedList<>();
 
-		IProject currentProject = SlimGTWorkspaceUtils.getCurrentProject(ef.eResource());
+		IProject currentProject = SlimGTWorkspaceUtil.getCurrentProject(ef.eResource());
 		String currentFile = ef.eResource().getURI().toString().replace("platform:/resource/", "")
 				.replace(currentProject.getName(), "");
 		currentFile = currentProject.getLocation().toPortableString() + currentFile;
@@ -149,7 +152,7 @@ public class GTLValidator extends AbstractGTLValidator {
 
 			File projectFile = new File(project.getLocation().toPortableString());
 			List<File> gtFiles = new LinkedList<>();
-			SlimGTWorkspaceUtils.gatherFilesWithEnding(gtFiles, projectFile, ".gtl", true);
+			SlimGTWorkspaceUtil.gatherFilesWithEnding(gtFiles, projectFile, ".gtl", true);
 
 			for (File gtFile : gtFiles) {
 				URI gtModelUri;
@@ -309,7 +312,7 @@ public class GTLValidator extends AbstractGTLValidator {
 		if (rule.getName() == null)
 			return;
 
-		if (SlimGTValidatorUtils.RULE_NAME_BACKLIST.contains(rule.getName())) {
+		if (SlimGTValidatorUtil.RULE_NAME_BACKLIST.contains(rule.getName())) {
 			error(String.format("Pattern/rule '%s' is a java keyword or an emf class and, hence, forbidden.",
 					rule.getName()), GTLPackage.Literals.SLIM_RULE__NAME);
 		}
@@ -635,6 +638,9 @@ public class GTLValidator extends AbstractGTLValidator {
 		if (assignment.getType() == null)
 			return;
 
+		if (assignment.getType().getName() == null)
+			return;
+
 		SlimRuleNode currentRuleNode = SlimGTModelUtil.getContainer(assignment, SlimRuleNode.class);
 		Collection<SlimRuleAttributeAssignment> assignments = GTLModelUtil
 				.getRuleNodeAllAttributeAssignments(currentRuleNode);
@@ -643,6 +649,9 @@ public class GTLValidator extends AbstractGTLValidator {
 				continue;
 
 			if (other.getType() == null)
+				continue;
+
+			if (other.getType().getName() == null)
 				continue;
 
 			if (other.getType().getName().equals(assignment.getType().getName())) {
@@ -687,7 +696,8 @@ public class GTLValidator extends AbstractGTLValidator {
 		traversedRules.add(currentRule);
 
 		if (invocationHierarchyHasCycle(invocation, traversedRules)) {
-			error("Invoked pattern <%s> leads to an invocation cycle, which is not allowed.",
+			error(String.format("Invoked pattern <%s> leads to an invocation cycle, which is not allowed.",
+					((SlimRule) invocation.getSupportPattern()).getName()),
 					SlimGTPackage.Literals.SLIM_RULE_INVOCATION__SUPPORT_PATTERN);
 		}
 	}
@@ -712,7 +722,9 @@ public class GTLValidator extends AbstractGTLValidator {
 		traversedRules.add(currentRule);
 
 		if (invocationHierarchyHasCycle(countExpression, traversedRules)) {
-			error("Count expression: invoked pattern <%s> leads to an invocation cycle, which is not allowed.",
+			error(String.format(
+					"Count expression: invoked pattern <%s> leads to an invocation cycle, which is not allowed.",
+					((SlimRule) countExpression.getInvokedPatten()).getName()),
 					SlimGTPackage.Literals.COUNT_EXPRESSION__INVOKED_PATTEN);
 		}
 	}
@@ -795,7 +807,8 @@ public class GTLValidator extends AbstractGTLValidator {
 				continue;
 
 			SlimRuleNode otherNode = SlimGTModelUtil.getContainer(other, SlimRuleNode.class);
-			if (otherNode.equals(node) && other.getType().getName().equals(attribute.getName())) {
+			if (otherNode.equals(node) && other.getType() != null && other.getType().getName() != null
+					&& other.getType().getName().equals(attribute.getName())) {
 				error(String.format(
 						"References to attributes within attribute assignment calculations that are themselves subject to an assignment are not permitted.",
 						assignment.getType().getName()), SlimGTPackage.Literals.NODE_ATTRIBUTE_EXPRESSION__FEATURE);
@@ -823,5 +836,10 @@ public class GTLValidator extends AbstractGTLValidator {
 					context, SlimGTPackage.Literals.SLIM_RULE_NODE_CONTEXT__LOCAL);
 			return;
 		}
+	}
+
+	@Override
+	protected DataTypeParseResult getDataTypeConflicts(ArithmeticExpression expr) throws Exception {
+		return SlimGTArithmeticUtil.parseDominantDataType(expr);
 	}
 }

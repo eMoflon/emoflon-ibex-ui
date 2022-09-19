@@ -2,10 +2,12 @@ package org.emoflon.ibex.gt.gtl.scoping;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-import org.emoflon.ibex.gt.gtl.gTL.GTLAttributeExpression;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeCondition;
 import org.emoflon.ibex.gt.gtl.gTL.GTLEdgeIterator;
 import org.emoflon.ibex.gt.gtl.gTL.GTLEdgeIteratorAttributeAssignment;
 import org.emoflon.ibex.gt.gtl.gTL.GTLEdgeIteratorReference;
+import org.emoflon.ibex.gt.gtl.gTL.GTLIteratorAttributeExpression;
 import org.emoflon.ibex.gt.gtl.gTL.GTLPackage;
 import org.emoflon.ibex.gt.gtl.gTL.GTLParameterExpression;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleNodeDeletion;
@@ -29,8 +31,9 @@ public final class GTLScopeUtil {
 	}
 
 	public static boolean isGTLRuleRefinementNodeRefinement(final EObject context, final EReference reference) {
-		return (context instanceof SlimRuleNodeContext || context instanceof SlimRuleNodeCreation
-				|| context instanceof GTLRuleNodeDeletion || context instanceof GTLRuleRefinmentNode)
+		return (context instanceof SlimRule || context instanceof SlimRuleNodeContext
+				|| context instanceof SlimRuleNodeCreation || context instanceof GTLRuleNodeDeletion
+				|| context instanceof GTLRuleRefinmentNode)
 				&& (reference == GTLPackage.Literals.GTL_RULE_NODE_DELETION__REFINEMENT
 						|| reference == GTLPackage.Literals.SLIM_RULE_NODE_CREATION__REFINEMENT
 						|| reference == GTLPackage.Literals.SLIM_RULE_NODE_CONTEXT__REFINEMENT
@@ -55,14 +58,19 @@ public final class GTLScopeUtil {
 		return context instanceof GTLEdgeIterator && reference == GTLPackage.Literals.GTL_EDGE_ITERATOR__SUB_TYPE;
 	}
 
-	public static boolean isGTLAttributeExpressionNode(final EObject context, final EReference reference) {
-		return context instanceof GTLAttributeExpression
-				&& reference == GTLPackage.Literals.GTL_ATTRIBUTE_EXPRESSION__NODE;
+	public static boolean isAttributeConditionExpressionNode(EObject context, EReference reference) {
+		return context instanceof SlimRuleAttributeCondition
+				&& reference == SlimGTPackage.Literals.NODE_ATTRIBUTE_EXPRESSION__NODE;
 	}
 
-	public static boolean isGTLAttributeExpressionFeature(final EObject context, final EReference reference) {
-		return context instanceof GTLAttributeExpression
-				&& reference == GTLPackage.Literals.GTL_ATTRIBUTE_EXPRESSION__FEATURE;
+	public static boolean isAttributeConditionExpressionFeature(EObject context, EReference reference) {
+		return context instanceof SlimRuleAttributeCondition
+				&& reference == SlimGTPackage.Literals.NODE_ATTRIBUTE_EXPRESSION__FEATURE;
+	}
+
+	public static boolean isIteratorAttributeExpressionFeature(final EObject context, final EReference reference) {
+		return context instanceof GTLIteratorAttributeExpression
+				&& reference == GTLPackage.Literals.GTL_ITERATOR_ATTRIBUTE_EXPRESSION__FEATURE;
 	}
 
 	public static boolean isGTLEdgeIteratorAttributeAssignment(final EObject context) {

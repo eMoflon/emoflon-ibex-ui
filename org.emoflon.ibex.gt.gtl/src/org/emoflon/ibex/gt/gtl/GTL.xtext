@@ -38,7 +38,7 @@ SlimRule: {SlimRule}
 			createdNodes += SlimRuleNodeCreation 		|
 			deletedNodes += GTLRuleNodeDeletion 		|
 			atrConditions += SlimRuleAttributeCondition |
-			//watchDogs += GTLRuleWatchDog 				|
+			watchDogs += GTLRuleWatchDog 				|
 			invocations += SlimRuleInvocation)*
 	'}' 
 	(stochastic ?='@' probability = ValueExpression)?
@@ -72,18 +72,18 @@ GTLRuleRefinmentNode:
 
 @Override
 SlimRuleNodeContext:
-	(refining ?= '@refines'  refinement=GTLRuleRefinmentNode)?
+	(refining ?= '@refines='  refinement=GTLRuleRefinmentNode)?
 	'[=]' (local?='local')? context = SlimRuleNode
 ;
 
 @Override
 SlimRuleNodeCreation:
-	(refining ?= '@refines'  refinement=GTLRuleRefinmentNode)?
+	(refining ?= '@refines+'  refinement=GTLRuleRefinmentNode)?
 	'[+]' creation = SlimRuleNode
 ;
 
 GTLRuleNodeDeletion :
-	(refining ?= '@refines'  refinement=GTLRuleRefinmentNode)?
+	(refining ?= '@refines-'  refinement=GTLRuleRefinmentNode)?
 	'[-]' deletion = SlimRuleNode
 ;
 
@@ -103,21 +103,16 @@ GTLRuleEdgeDeletion:
 ;
 
 GTLRuleWatchDog:
-	'watch' '(' nodeAttribute=GTLAttributeExpression ')'
+	'watch' '(' nodeAttribute=NodeAttributeExpression ')'
 ;
 
 @Override
 ExpressionOperand:
-	{ExpressionOperand} operand = (GTLAttributeExpression | CountExpression | ArithmeticLiteral | EnumExpression | GTLParameterExpression | Constant)
+	{ExpressionOperand} operand = (NodeAttributeExpression | GTLIteratorAttributeExpression | CountExpression | ArithmeticLiteral | EnumExpression | GTLParameterExpression | Constant)
 ;
 
-@Override
-BooleanExpressionOperand:
-	{BooleanExpressionOperand} operand = (GTLAttributeExpression | GTLParameterExpression | BooleanLiteral)
-;
-
-GTLAttributeExpression:
-	node = [ecore::EObject|ID] '.' feature = [ecore::EAttribute]
+GTLIteratorAttributeExpression:
+	'iterator.' feature = [ecore::EAttribute]
 ;
 
 GTLParameterExpression:
@@ -132,7 +127,7 @@ GTLEdgeIterator:
 ;
 
 GTLEdgeIteratorAttributeAssignment:
-	attribute = GTLAttributeExpression ':=' value=ValueExpression
+	attribute = (NodeAttributeExpression | GTLIteratorAttributeExpression) ':=' value=ValueExpression ';'
 ;
 
 GTLEdgeIteratorReference:

@@ -48,7 +48,7 @@ public final class SlimGTModelUtil {
 	public static Collection<EDataType> getDatatypes(final EditorFile file) {
 		Set<EDataType> dataTypes = file.getImports().stream().map(i -> {
 			try {
-				return Optional.of(SlimGTEMFUtils.loadMetamodel(i.getName()));
+				return Optional.of(SlimGTEMFUtil.loadMetamodel(i.getName()));
 			} catch (Exception e) {
 				return Optional.empty();
 			}
@@ -72,7 +72,7 @@ public final class SlimGTModelUtil {
 		for (var imp : imports) {
 			EPackage ePackage = null;
 			try {
-				ePackage = SlimGTEMFUtils.loadMetamodel(imp.getName());
+				ePackage = SlimGTEMFUtil.loadMetamodel(imp.getName());
 			} catch (Exception e) {
 			}
 
@@ -94,7 +94,7 @@ public final class SlimGTModelUtil {
 		var allPackages = new HashSet<EPackage>();
 		EPackage ePackage = null;
 		try {
-			ePackage = SlimGTEMFUtils.loadMetamodel(imp.getName());
+			ePackage = SlimGTEMFUtil.loadMetamodel(imp.getName());
 		} catch (Exception e) {
 		}
 
@@ -114,7 +114,7 @@ public final class SlimGTModelUtil {
 	public static Collection<EClass> getClasses(final EditorFile file) {
 		return file.getImports().stream().map(i -> {
 			try {
-				return Optional.of(SlimGTEMFUtils.loadMetamodel(i.getName()));
+				return Optional.of(SlimGTEMFUtil.loadMetamodel(i.getName()));
 			} catch (Exception e) {
 				return Optional.empty();
 			}
@@ -131,7 +131,7 @@ public final class SlimGTModelUtil {
 	public static Collection<EEnum> getEnums(final EditorFile file) {
 		return file.getImports().stream().map(i -> {
 			try {
-				return Optional.of(SlimGTEMFUtils.loadMetamodel(i.getName()));
+				return Optional.of(SlimGTEMFUtil.loadMetamodel(i.getName()));
 			} catch (Exception e) {
 				return Optional.empty();
 			}

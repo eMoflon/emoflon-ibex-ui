@@ -2,7 +2,7 @@ package org.emoflon.ibex.common.slimgt.validation;
 
 import java.util.Set;
 
-public final class SlimGTValidatorUtils {
+public final class SlimGTValidatorUtil {
 	/**
 	 * The list of invalid node names.
 	 */
