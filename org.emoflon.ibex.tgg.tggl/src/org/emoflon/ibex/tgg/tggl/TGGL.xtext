@@ -111,8 +111,8 @@ TGGRuleRefinementNode:
 	node=[SlimRuleNode|QualifiedName]
 ;
 
-TGGLRuleRefinementCorrespondence: 
-	refinement=[ecore::EObject|ID] '.' node=[CorrespondenceNode|ID]
+TGGLRuleRefinementCorrespondenceNode: 
+	node=[CorrespondenceNode|QualifiedName]
 ;
 
 /* ------------- */
@@ -121,13 +121,13 @@ TGGLRuleRefinementCorrespondence:
 
 @Override
 SlimRuleNodeContext: {SlimRuleNodeContext}
-	('@refines' refinement=TGGRuleRefinementNode WS)?
+	(refining ?= '@refines' refinement=TGGRuleRefinementNode)?
 	'[=]' (local?='local')? context = SlimRuleNode
 ;
 
 @Override
 SlimRuleNodeCreation: {SlimRuleNodeCreation}
-	('@refines' refinement=TGGRuleRefinementNode)?
+	(refining ?= '@refines' refinement=TGGRuleRefinementNode)?
 	'[+]' creation = SlimRuleNode
 ;
 
@@ -164,8 +164,8 @@ TGGRule:
 ;
 
 CorrespondenceNode:
-	(refinement=TGGLRuleRefinementCorrespondence)?
-	(created ?= '++')? name = ID ':' type = [CorrespondenceType | QualifiedName] '{'
+	(refining ?= '@refines' refinement=TGGLRuleRefinementCorrespondenceNode)?
+	(creation ?= '[+]' | context?='[=]') name = ID ':' type = [CorrespondenceType | QualifiedName] '{'
 		'src->' source = [SlimRuleNode|ID]
 		'trg->' target = [SlimRuleNode|ID]
 	'}' 

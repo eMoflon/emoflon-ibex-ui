@@ -14,6 +14,7 @@ import org.emoflon.ibex.tgg.tggl.tGGL.CorrespondenceNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.CorrespondenceType;
 import org.emoflon.ibex.tgg.tggl.tGGL.Schema;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLPackage;
+import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementCorrespondenceNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRule;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRuleRefinementNode;
 
@@ -107,5 +108,12 @@ public class TGGLScopeUtil {
 				context instanceof SlimRuleNodeCreation || //
 				context instanceof SlimRuleNodeContext ) && //
 				reference == TGGLPackage.Literals.TGG_RULE_REFINEMENT_NODE__NODE;
+	}
+	
+	public static boolean isCorrespondenceNodeNode(EObject context, EReference reference) {
+		return (context instanceof SlimRule || //
+				context instanceof CorrespondenceNode || //
+				context instanceof TGGLRuleRefinementCorrespondenceNode ) && //
+				reference == TGGLPackage.Literals.TGGL_RULE_REFINEMENT_CORRESPONDENCE_NODE__NODE;
 	}
 }

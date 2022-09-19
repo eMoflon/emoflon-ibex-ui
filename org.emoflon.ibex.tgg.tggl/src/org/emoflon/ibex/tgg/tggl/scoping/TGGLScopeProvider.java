@@ -45,6 +45,7 @@ import org.emoflon.ibex.tgg.tggl.tGGL.EditorFile;
 import org.emoflon.ibex.tgg.tggl.tGGL.Schema;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLPackage;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementAliased;
+import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementCorrespondenceNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementPlain;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRule;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRuleRefinementNode;
@@ -102,12 +103,10 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 			return getTGGRuleCandidates(context, reference);
 		if (isTGGRuleRefinementAliasedSuperRule(context, reference))
 			return getTGGRuleCandidates(context, reference);
-//		if (isTGGRuleRefinementPlainName(context, reference))
-//			return getTGGRuleCandidates(context, reference);
-		
-//		if (isSlimRuleNodeRefinement(context, reference))
-//			return getRefinedRules(context, reference);
+
 		if (isSlimRuleNodeNode(context, reference))
+			return getTargetNodesFromRefinedRule(context, reference);
+		if (isCorrespondenceNodeNode(context, reference))
 			return getTargetNodesFromRefinedRule(context, reference);
 		
 		return super.getScopeInternal(context, reference);
@@ -158,8 +157,16 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		default:
 			throw new RuntimeException("Should not occur");
 		}
+		final EClass finalTargetType = referencedType;
+		// Find nodes with correct type. Allowed: Exact type match or target type is a
+		// subtype of the edge type.
+		nodes = nodes.stream()
+					.filter(sn -> sn.getType().getName().equals(finalTargetType.getName())
+							|| sn.getType().getEAllSuperTypes().stream()
+									.filter(superCls -> superCls.getName().equals(finalTargetType.getName()))
+									.findAny().isPresent())
+					.collect(Collectors.toSet());
 		
-		nodes = nodes.stream().filter(n -> referencedType.isSuperTypeOf(n.getType())).toList();
 		return Scopes.scopeFor(nodes);
 	}
 
@@ -307,16 +314,8 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		} else
 			throw new RuntimeException("Cannot resolve type for context element " + context);
 
-//		for(var node : nodes) {
-//			if(node.getType().eIsProxy())
-//				System.out.println(node);
-//		}
 		
 		final EClass finalTargetType = targetType;
-//		nodes = nodes.parallelStream() //
-//				.filter(n -> finalTargetType.isSuperTypeOf(n.eClass())) //
-//				.collect(Collectors.toSet()); //
-
 		// Find nodes with correct type. Allowed: Exact type match or target type is a
 		// subtype of the edge type.
 		nodes = nodes.stream()
@@ -381,28 +380,33 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 			}
 			
 			for(var newNode : newNodes) {
-				var tggNode = (org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNode) newNode;
-				var refinement = getRuleRefinementNode(tggNode);
-				if(refinement != null)
-					refinedNodes.add(refinement.getNode());
+				var refinement = getRuleRefinementNode(newNode);
+				if(refinement != null && refinement instanceof TGGRuleRefinementNode nodeRefinement)
+					refinedNodes.add(nodeRefinement.getNode());
+				if(refinement != null && refinement instanceof TGGLRuleRefinementCorrespondenceNode corrRefinement)
+					refinedNodes.add(corrRefinement.getNode());
 				
 				// only add nodes that have not been refined and thus have been overlapped with another node
-				if(!refinedNodes.contains(tggNode)) {
-					nodes.add(tggNode);
+				if(!refinedNodes.contains(newNode)) {
+					nodes.add(newNode);
 				}
 			}
 		}
 		return nodes;
 	}
 	
-	private TGGRuleRefinementNode getRuleRefinementNode(EObject context) {
+	private EObject getRuleRefinementNode(EObject context) {
 		var contextNode = getContainer(context, org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNodeContext.class);
 		if (contextNode != null) 
-			return ((org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNodeContext) contextNode).getRefinement();
+			return contextNode.getRefinement();
 		
 		var creationNode = getContainer(context, org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNodeCreation.class);
 		if (creationNode != null) 
-			return ((org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNodeCreation) creationNode).getRefinement();
+			return creationNode.getRefinement();
+		
+		var correspondenceNode = getContainer(context, CorrespondenceNode.class);
+		if (correspondenceNode != null) 
+			return correspondenceNode.getRefinement();
 		return null;
 	}
 
@@ -425,7 +429,8 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		}
 
 		// else it must be a correspondence node
-		if (tggRule.getCorrespondenceNodes().contains(context)) {
+		var correspondence = getContainer(context, CorrespondenceNode.class);
+		if (tggRule.getCorrespondenceNodes().contains(correspondence)) {
 			return DomainType.CORRESPONDENCE;
 		}
 
