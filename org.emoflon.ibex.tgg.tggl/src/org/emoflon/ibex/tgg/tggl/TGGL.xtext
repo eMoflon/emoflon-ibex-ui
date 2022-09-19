@@ -106,20 +106,33 @@ TGGLRuleRefinementAliased returns TGGLRuleRefinement : {TGGLRuleRefinementAliase
 	superRule=[TGGRule|ID] 'as' name=ID
 ;
 
-TGGLRuleRefinementNode:
-	'@' 'refines' refinement=[ecore::EObject|ID] '.' node=[SlimRuleNode|ID]
+
+TGGRuleRefinementNode: 
+	node=[SlimRuleNode|QualifiedName]
 ;
 
-TGGLRuleRefinementCorrespondence:
-	'@' 'refines' refinement=[ecore::EObject|ID] '.' node=[CorrespondenceNode|ID]
+TGGLRuleRefinementCorrespondence: 
+	refinement=[ecore::EObject|ID] '.' node=[CorrespondenceNode|ID]
 ;
 
 /* ------------- */
 /*   TGG RULES   */
 /* ------------- */
+
 @Override
-SlimRuleNode:
-	(refinement=TGGLRuleRefinementNode)?
+SlimRuleNodeContext: {SlimRuleNodeContext}
+	('@refines' refinement=TGGRuleRefinementNode WS)?
+	'[=]' (local?='local')? context = SlimRuleNode
+;
+
+@Override
+SlimRuleNodeCreation: {SlimRuleNodeCreation}
+	('@refines' refinement=TGGRuleRefinementNode)?
+	'[+]' creation = SlimRuleNode
+;
+
+@Override
+SlimRuleNode: {SlimRuleNode}
 	name = ID ':' type=[ecore::EClass | QualifiedName] ('{'
 		(contextEdges += SlimRuleEdgeContext |
 		createdEdges += SlimRuleEdgeCreation |

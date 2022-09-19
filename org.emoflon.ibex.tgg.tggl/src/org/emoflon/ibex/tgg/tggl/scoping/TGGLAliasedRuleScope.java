@@ -1,4 +1,4 @@
-package org.emoflon.ibex.common.slimgt.scoping;
+package org.emoflon.ibex.tgg.tggl.scoping;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -18,17 +18,21 @@ import org.eclipse.xtext.scoping.impl.SimpleScope;
 import org.emoflon.ibex.common.slimgt.slimGT.Import;
 import org.emoflon.ibex.common.slimgt.slimGT.PackageReferenceAlias;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode;
+import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
+import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinement;
+import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementAliased;
+import org.emoflon.ibex.tgg.tggl.tGGL.TGGRule;
 
 import com.google.common.collect.Iterables;
 import com.google.inject.Provider;
 
-public class SlimGTAliasedTypeScope extends SimpleScope {
+public class TGGLAliasedRuleScope extends SimpleScope {
 
-	public SlimGTAliasedTypeScope(Collection<Import> imports, Collection<? extends EObject> objects) {
-		super(new SimpleScope(Scopes.scopedElementsFor(objects, new AliasedNamedProvider(imports))),
-				Scopes.scopedElementsFor(objects, new RootPackageAwareQualifiedNamedProvider()));
+	public TGGLAliasedRuleScope(Collection<TGGLRuleRefinementAliased> ruleRefinementAliases, Collection<? extends EObject> objects) {
+		super(new SimpleScope(Scopes.scopedElementsFor(objects, new RuleAliasedNamedProvider(ruleRefinementAliases))),
+				Scopes.scopedElementsFor(objects, new RuleAwareQualifiedNamedProvider()));
 	}
-
+	
 	@Override
 	public Iterable<IEObjectDescription> getElements(final EObject object) {
 		Iterable<IEObjectDescription> defaultImpl = super.getElements(object);
@@ -49,62 +53,46 @@ public class SlimGTAliasedTypeScope extends SimpleScope {
 
 }
 
-class AliasedNamedProvider extends DefaultDeclarativeQualifiedNameProvider {
+class RuleAliasedNamedProvider extends DefaultDeclarativeQualifiedNameProvider {
 
-	private Map<String, PackageReferenceAlias> package2alias = new HashMap<>();
+	private Map<String, String> ruleName2alias = new HashMap<>();
 	
-	public AliasedNamedProvider(Collection<Import> imports) {
-		for(var reference : imports.stream().flatMap(i -> i.getPackageAliases().stream()).toList()) {
-			if(reference instanceof PackageReferenceAlias alias)
-				package2alias.put(getFQN(alias.getImportedPackage()), alias);
+	public RuleAliasedNamedProvider(Collection<TGGLRuleRefinementAliased> aliases) {
+		for(var alias : aliases) {
+			ruleName2alias.put(alias.getSuperRule().getName(), alias.getName());
 		}
-	}
-	
-	private String getFQN(EPackage pkg) {
-		String fqn = "";
-		EPackage currentPkg = pkg;
-		while(currentPkg != null) {
-			fqn = currentPkg.getName() + "." + fqn;
-			if(currentPkg.getESuperPackage() == null)
-				break;
-			currentPkg = currentPkg.getESuperPackage();
-		}
-		
-		if(currentPkg == null)
-			return null;
-		
-		fqn = currentPkg.getNsURI() + " - " + currentPkg.getNsPrefix() + " - " + fqn;
-		return fqn;
 	}
 	
 	@Override
 	public QualifiedName getFullyQualifiedName(EObject obj) {
-		if (obj instanceof EClass eClass) {
-			var pkg = eClass.getEPackage();
-			if(package2alias.containsKey(getFQN(pkg))) {
-				var alias = package2alias.get(getFQN(pkg));
-				IQualifiedNameConverter converter = new IQualifiedNameConverter.DefaultImpl();
-				return converter.toQualifiedName(alias.getName() + "." + eClass.getName());
-			}
+		
+		if(obj instanceof SlimRuleNode node) {
+			var tggRule = SlimGTModelUtil.getContainer(obj, TGGRule.class);
+			if(tggRule == null)
+				return super.getFullyQualifiedName(obj);
+			
+			if(!ruleName2alias.containsKey(tggRule.getName()))
+				return super.getFullyQualifiedName(obj);
+			
+			IQualifiedNameConverter converter = new IQualifiedNameConverter.DefaultImpl();
+			return converter.toQualifiedName(ruleName2alias.get(tggRule.getName()) + "." + node.getName());
 		}
 		
 		return super.getFullyQualifiedName(obj);
 	}
 }
 
-class RootPackageAwareQualifiedNamedProvider extends DefaultDeclarativeQualifiedNameProvider {
+class RuleAwareQualifiedNamedProvider extends DefaultDeclarativeQualifiedNameProvider {
 
 	@Override
 	public QualifiedName getFullyQualifiedName(EObject obj) {
-		if (obj instanceof EClass eClass) {
-			String fqn = "";
-			EPackage currentPkg = eClass.getEPackage();
-			while(currentPkg != null) {
-				fqn = currentPkg.getName() + "." + fqn;
-				currentPkg = currentPkg.getESuperPackage();
-			}
+		if(obj instanceof SlimRuleNode node) {
+			var tggRule = SlimGTModelUtil.getContainer(obj, TGGRule.class);
+			if(tggRule == null)
+				return super.getFullyQualifiedName(obj);
+			
 			IQualifiedNameConverter converter = new IQualifiedNameConverter.DefaultImpl();
-			return converter.toQualifiedName(fqn + eClass.getName());
+			return converter.toQualifiedName(tggRule.getName() + "." + node.getName());
 		}
 		
 		return super.getFullyQualifiedName(obj);
