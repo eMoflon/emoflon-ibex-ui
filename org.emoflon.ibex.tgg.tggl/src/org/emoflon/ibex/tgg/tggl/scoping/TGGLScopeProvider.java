@@ -41,6 +41,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMapping;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleSimpleEdge;
 import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtils;
 import org.emoflon.ibex.tgg.tggl.tGGL.CorrespondenceNode;
+import org.emoflon.ibex.tgg.tggl.tGGL.CorrespondenceType;
 import org.emoflon.ibex.tgg.tggl.tGGL.EditorFile;
 import org.emoflon.ibex.tgg.tggl.tGGL.Schema;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLPackage;
@@ -158,14 +159,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 			throw new RuntimeException("Should not occur");
 		}
 		final EClass finalTargetType = referencedType;
-		// Find nodes with correct type. Allowed: Exact type match or target type is a
-		// subtype of the edge type.
-		nodes = nodes.stream()
-					.filter(sn -> sn.getType().getName().equals(finalTargetType.getName())
-							|| sn.getType().getEAllSuperTypes().stream()
-									.filter(superCls -> superCls.getName().equals(finalTargetType.getName()))
-									.findAny().isPresent())
-					.collect(Collectors.toSet());
+		nodes = filterSlimNodesIfNotSubType(nodes, finalTargetType);
 		
 		return Scopes.scopeFor(nodes);
 	}
@@ -318,14 +312,47 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		final EClass finalTargetType = targetType;
 		// Find nodes with correct type. Allowed: Exact type match or target type is a
 		// subtype of the edge type.
-		nodes = nodes.stream()
-					.filter(sn -> sn.getType().getName().equals(finalTargetType.getName())
-							|| sn.getType().getEAllSuperTypes().stream()
-									.filter(superCls -> superCls.getName().equals(finalTargetType.getName()))
-									.findAny().isPresent())
-					.collect(Collectors.toSet());
+		nodes = filterSlimNodesIfNotSubType(nodes, finalTargetType);
 		
 		return nodes;
+	}
+	
+	private Collection<EClass> filterTypesIfNoSubType(Collection<EClass> types, final EClass superType) {
+		types = types.stream()
+				.filter(sn -> sn.getName().equals(superType.getName())
+						|| sn.getEAllSuperTypes().stream()
+								.filter(superCls -> superCls.getName().equals(superType.getName()))
+								.findAny().isPresent())
+				.collect(Collectors.toSet());
+		return types;
+	}
+
+	private Collection<SlimRuleNode> filterSlimNodesIfNotSubType(Collection<SlimRuleNode> nodes, final EClass superType) {
+		nodes = nodes.stream()
+					.filter(sn -> sn.getType().getName().equals(superType.getName())
+							|| sn.getType().getEAllSuperTypes().stream()
+									.filter(superCls -> superCls.getName().equals(superType.getName()))
+									.findAny().isPresent())
+					.collect(Collectors.toSet());
+		return nodes;
+	}
+	
+	private Collection<CorrespondenceNode> filterCorrespondenceNodesIfNotSubType(Collection<CorrespondenceNode> nodes, final CorrespondenceType finalTargetType) {
+		nodes = nodes.stream()
+					.filter(sn -> sn.getType().getName().equals(finalTargetType.getName())
+							|| getEAllSuperTypes(sn.getType()).contains(finalTargetType))
+					.collect(Collectors.toSet());
+		return nodes;
+	}
+	
+	private Collection<CorrespondenceType> getEAllSuperTypes(CorrespondenceType corrType) {
+		var superTypes = new HashSet<CorrespondenceType>();
+		var superType = corrType;
+		while(superType != null) {
+			superTypes.add(superType);
+			superType = superType.getSuper();
+		}
+		return superTypes;
 	}
 	
 	private Collection<CorrespondenceNode> toCorrespondenceNodes(Collection<EObject> objects) {
@@ -441,15 +468,54 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		var schema = getSchemaInScope(context);
 		var editorFile = getContainer(schema, EditorFile.class);
 		
+		var refinedType = getRefinedType(context);
 		switch (domain) {
 		case SOURCE:
-			return new SlimGTAliasedTypeScope(editorFile.getImports(), getTypes(schema.getSourceTypes()));
+			var sourceTypes = getTypes(schema.getSourceTypes());
+			if(refinedType != null && refinedType instanceof EClass refinedEClass)
+				sourceTypes = filterTypesIfNoSubType(sourceTypes, refinedEClass);
+			return new SlimGTAliasedTypeScope(editorFile.getImports(), sourceTypes);
 		case CORRESPONDENCE:
-			return Scopes.scopeFor(schema.getCorrespondenceTypes());
+			Collection<CorrespondenceType> correspondenceTypes = schema.getCorrespondenceTypes();
+			if(refinedType != null && refinedType instanceof CorrespondenceType corrType)
+				correspondenceTypes = filterCorrespondenceTypesIfNoSubType(correspondenceTypes, corrType);
+			return Scopes.scopeFor(correspondenceTypes);
 		case TARGET:
-			return new SlimGTAliasedTypeScope(editorFile.getImports(), getTypes(schema.getTargetTypes()));
+			var targetTypes = getTypes(schema.getSourceTypes());
+			if(refinedType != null && refinedType instanceof EClass refinedEClass)
+				targetTypes = filterTypesIfNoSubType(targetTypes, refinedEClass);
+			return new SlimGTAliasedTypeScope(editorFile.getImports(), targetTypes);
 		}
 		return IScope.NULLSCOPE;
+	}
+
+	private Collection<CorrespondenceType> filterCorrespondenceTypesIfNoSubType(Collection<CorrespondenceType> correspondenceTypes, CorrespondenceType corrType) {
+		correspondenceTypes = correspondenceTypes.stream().filter(ct -> getEAllSuperTypes(ct).contains(corrType)).toList();
+		return correspondenceTypes;
+	}
+
+	private EObject getRefinedType(EObject context) {
+		var creationNode = getContainer(context, org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNodeCreation.class);
+		if(creationNode != null) {
+			var refinement = creationNode.getRefinement();
+			if(refinement != null) 
+				return refinement.getNode().getType();
+		}
+		
+		var contextNode = getContainer(context, org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNodeCreation.class);
+		if(contextNode != null) {
+			var refinement = contextNode.getRefinement();
+			if(refinement != null) 
+				return refinement.getNode().getType();
+		}
+		
+		var correspondenceNode = getContainer(context, CorrespondenceNode.class);
+		if(correspondenceNode != null) {
+			var refinement = correspondenceNode.getRefinement();
+			if(refinement != null) 
+				return refinement.getNode().getType();
+		}
+		return null;
 	}
 
 	public Collection<EClass> getTypes(Collection<EObject> packageReferences) {
