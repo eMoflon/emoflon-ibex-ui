@@ -46,8 +46,8 @@ import org.emoflon.ibex.gt.gtl.gTL.GTLIteratorAttributeExpression;
 import org.emoflon.ibex.gt.gtl.gTL.GTLParameterExpression;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinement;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementAliased;
+import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementNode;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementPlain;
-import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinmentNode;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleWatchDog;
 import org.emoflon.ibex.gt.gtl.gTL.PatternImport;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRule;
@@ -132,7 +132,7 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 			return scopeForRuleRefinementNodeRefinement(context, reference);
 		}
 		if (GTLScopeUtil.isGTLRuleRefinementNodeNode(context, reference)) {
-			return scopeForRuleRefinementNodeNode((GTLRuleRefinmentNode) context, reference);
+			return scopeForRuleRefinementNodeNode((GTLRuleRefinementNode) context, reference);
 		}
 		if (SlimGTScopeUtil.isSlimRuleNodeType(context, reference)) {
 			return scopeForSlimRuleNodeType((SlimRuleNode) context, reference);
@@ -174,7 +174,7 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 			return scopeForAttributeConditionExpressionNode((SlimRuleAttributeCondition) context, reference);
 		}
 		if (SlimGTScopeUtil.isNodeAttributeExpressionNode(context, reference)) {
-			return scopeForAttributeExpressionNode((NodeAttributeExpression) context, reference);
+			return scopeForAttributeExpressionNode(context, reference);
 		}
 		if (SlimGTScopeUtil.isNodeAttributeExpressionFeature(context, reference)) {
 			return scopeForAttributeExpressionFeature((NodeAttributeExpression) context, reference);
@@ -262,7 +262,7 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 		return Scopes.scopeFor(refinements);
 	}
 
-	protected IScope scopeForRuleRefinementNodeNode(GTLRuleRefinmentNode context, EReference reference) {
+	protected IScope scopeForRuleRefinementNodeNode(GTLRuleRefinementNode context, EReference reference) {
 		if (context.getSuperRule() == null)
 			return IScope.NULLSCOPE;
 
@@ -366,15 +366,16 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 		}
 
 		container = SlimGTModelUtil.getContainer(context, SlimRuleInvocation.class);
-		if (container != null && container instanceof SlimRuleInvocation invocation) {
-			SlimRule trgRule = (SlimRule) invocation.getSupportPattern();
+		if (container != null && container instanceof SlimRuleInvocation invocation
+				&& invocation.getSupportPattern() != null
+				&& invocation.getSupportPattern() instanceof SlimRule trgRule) {
 			Collection<SlimRuleNode> allRuleNodes = GTLModelUtil.getAllDeletedAndContextRuleNodes(trgRule);
 			return Scopes.scopeFor(allRuleNodes);
 		}
 
 		container = SlimGTModelUtil.getContainer(context, CountExpression.class);
-		if (container != null && container instanceof CountExpression count) {
-			SlimRule trgRule = (SlimRule) count.getInvokedPatten();
+		if (container != null && container instanceof CountExpression count && count.getInvokedPatten() != null
+				&& count.getInvokedPatten() instanceof SlimRule trgRule) {
 			Collection<SlimRuleNode> allRuleNodes = GTLModelUtil.getAllDeletedAndContextRuleNodes(trgRule);
 			return Scopes.scopeFor(allRuleNodes);
 		}
@@ -419,16 +420,19 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 		return Scopes.scopeFor(GTLModelUtil.getAllDeletedAndContextRuleNodes(rule));
 	}
 
-	protected IScope scopeForAttributeExpressionNode(NodeAttributeExpression context, EReference reference) {
+	protected IScope scopeForAttributeExpressionNode(EObject context, EReference reference) {
 		SlimRule rule = SlimGTModelUtil.getContainer(context, SlimRule.class);
 		return Scopes.scopeFor(GTLModelUtil.getAllDeletedAndContextRuleNodes(rule));
 	}
 
 	protected IScope scopeForAttributeExpressionFeature(NodeAttributeExpression context, EReference reference) {
-		if (context.getNode() == null)
+		if (context.getNodeExpression() == null)
 			return IScope.NULLSCOPE;
 
-		return Scopes.scopeFor(context.getNode().getType().getEAllAttributes());
+		if (context.getNodeExpression().getNode() == null)
+			return IScope.NULLSCOPE;
+
+		return Scopes.scopeFor(context.getNodeExpression().getNode().getType().getEAllAttributes());
 	}
 
 	protected IScope scopeForIteratorAttributeExpressionFeature(GTLIteratorAttributeExpression context,

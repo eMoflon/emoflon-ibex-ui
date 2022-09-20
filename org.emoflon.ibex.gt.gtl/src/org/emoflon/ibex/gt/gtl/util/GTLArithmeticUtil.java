@@ -3,6 +3,7 @@ package org.emoflon.ibex.gt.gtl.util;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.emf.ecore.EcorePackage;
 import org.emoflon.ibex.common.slimgt.slimGT.ArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.ArithmeticLiteral;
 import org.emoflon.ibex.common.slimgt.slimGT.BooleanLiteral;
@@ -16,6 +17,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.ExpArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.IntegerLiteral;
 import org.emoflon.ibex.common.slimgt.slimGT.MinMaxArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.NodeAttributeExpression;
+import org.emoflon.ibex.common.slimgt.slimGT.NodeExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.ProductArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
 import org.emoflon.ibex.common.slimgt.slimGT.StochasticArithmeticExpression;
@@ -78,7 +80,10 @@ public final class GTLArithmeticUtil {
 		} else if (expression instanceof BracketExpression brack) {
 			return parseDominantDataType(brack.getOperand());
 		} else if (expression instanceof ExpressionOperand op) {
-			if (op.getOperand() instanceof NodeAttributeExpression gae) {
+			if (op.getOperand() instanceof NodeExpression ne) {
+				return SlimGTArithmeticUtil.typeToParseResult(ne, SlimGTPackage.Literals.NODE_EXPRESSION__NODE,
+						EcorePackage.Literals.EOBJECT);
+			} else if (op.getOperand() instanceof NodeAttributeExpression gae) {
 				return SlimGTArithmeticUtil.attributeToParseResult(gae,
 						SlimGTPackage.Literals.NODE_ATTRIBUTE_EXPRESSION__FEATURE, gae.getFeature());
 			} else if (op.getOperand() instanceof GTLIteratorAttributeExpression ie) {
@@ -143,7 +148,9 @@ public final class GTLArithmeticUtil {
 		} else if (expression instanceof BracketExpression brack) {
 			parseAllDataTypes(brack.getOperand(), dataTypes);
 		} else if (expression instanceof ExpressionOperand op) {
-			if (op.getOperand() instanceof NodeAttributeExpression nae) {
+			if (op.getOperand() instanceof NodeExpression ne) {
+				dataTypes.add(ValueExpressionDataType.OBJECT);
+			} else if (op.getOperand() instanceof NodeAttributeExpression nae) {
 				dataTypes.add(SlimGTArithmeticUtil.attributeToDataType(nae.getFeature()));
 			} else if (op.getOperand() instanceof GTLIteratorAttributeExpression nae) {
 				dataTypes.add(SlimGTArithmeticUtil.attributeToDataType(nae.getFeature()));

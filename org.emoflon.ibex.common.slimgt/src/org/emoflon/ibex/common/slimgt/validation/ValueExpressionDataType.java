@@ -1,18 +1,19 @@
 package org.emoflon.ibex.common.slimgt.validation;
 
-import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EcorePackage;
 
 public enum ValueExpressionDataType {
 	INTEGER("Integer", EcorePackage.Literals.EINT), DOUBLE("Double", EcorePackage.Literals.EDOUBLE),
 	STRING("String", EcorePackage.Literals.ESTRING), ENUM("ENUM", EcorePackage.Literals.EENUMERATOR),
-	BOOLEAN("Boolean", EcorePackage.Literals.EBOOLEAN), DATE("Date", EcorePackage.Literals.EDATE), NULL("Null", null),
-	UNSUPPORTED("Unsupported", null), CONFLICT("Conflict", null);
+	BOOLEAN("Boolean", EcorePackage.Literals.EBOOLEAN), DATE("Date", EcorePackage.Literals.EDATE),
+	OBJECT("Object", EcorePackage.Literals.EOBJECT), NULL("Null", null), UNSUPPORTED("Unsupported", null),
+	CONFLICT("Conflict", null);
 
 	final public String name;
-	final public EDataType type;
+	final public EClassifier type;
 
-	private ValueExpressionDataType(final String name, final EDataType type) {
+	private ValueExpressionDataType(final String name, final EClassifier type) {
 		this.name = name;
 		this.type = type;
 	}
@@ -78,6 +79,15 @@ public enum ValueExpressionDataType {
 		switch (type) {
 		case NULL:
 			return NULL;
+		default:
+			return CONFLICT;
+		}
+	}
+
+	public static ValueExpressionDataType mergeWithObject(ValueExpressionDataType type) {
+		switch (type) {
+		case OBJECT:
+			return OBJECT;
 		default:
 			return CONFLICT;
 		}

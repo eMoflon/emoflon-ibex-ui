@@ -12,7 +12,7 @@ import org.emoflon.ibex.gt.gtl.gTL.GTLPackage;
 import org.emoflon.ibex.gt.gtl.gTL.GTLParameterExpression;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleNodeDeletion;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinement;
-import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinmentNode;
+import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementNode;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleWatchDog;
 import org.emoflon.ibex.gt.gtl.gTL.PatternImport;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRule;
@@ -33,16 +33,16 @@ public final class GTLScopeUtil {
 	public static boolean isGTLRuleRefinementNodeRefinement(final EObject context, final EReference reference) {
 		return (context instanceof SlimRule || context instanceof SlimRuleNodeContext
 				|| context instanceof SlimRuleNodeCreation || context instanceof GTLRuleNodeDeletion
-				|| context instanceof GTLRuleRefinmentNode)
+				|| context instanceof GTLRuleRefinementNode)
 				&& (reference == GTLPackage.Literals.GTL_RULE_NODE_DELETION__REFINEMENT
 						|| reference == GTLPackage.Literals.SLIM_RULE_NODE_CREATION__REFINEMENT
 						|| reference == GTLPackage.Literals.SLIM_RULE_NODE_CONTEXT__REFINEMENT
-						|| reference == GTLPackage.Literals.GTL_RULE_REFINMENT_NODE__SUPER_RULE);
+						|| reference == GTLPackage.Literals.GTL_RULE_REFINEMENT_NODE__SUPER_RULE);
 	}
 
 	public static boolean isGTLRuleRefinementNodeNode(final EObject context, final EReference reference) {
-		return context instanceof GTLRuleRefinmentNode
-				&& reference == GTLPackage.Literals.GTL_RULE_REFINMENT_NODE__REFINEMENT_NODE;
+		return context instanceof GTLRuleRefinementNode
+				&& reference == GTLPackage.Literals.GTL_RULE_REFINEMENT_NODE__REFINEMENT_NODE;
 	}
 
 	public static boolean isGTLParameterExpressionParameter(final EObject context, final EReference reference) {
@@ -60,7 +60,7 @@ public final class GTLScopeUtil {
 
 	public static boolean isAttributeConditionExpressionNode(EObject context, EReference reference) {
 		return context instanceof SlimRuleAttributeCondition
-				&& reference == SlimGTPackage.Literals.NODE_ATTRIBUTE_EXPRESSION__NODE;
+				&& reference != SlimGTPackage.Literals.NODE_ATTRIBUTE_EXPRESSION__FEATURE;
 	}
 
 	public static boolean isAttributeConditionExpressionFeature(EObject context, EReference reference) {

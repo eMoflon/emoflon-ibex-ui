@@ -24,6 +24,14 @@ PackageReference:
 	PackageReferencePlain | PackageReferenceAlias
 ;
 
+SlimRuleAnnotation:
+	'config' '(' configurations += SlimRuleConfiguration (',' configurations += SlimRuleConfiguration)* ')'
+;
+
+enum SlimRuleConfiguration:
+	DISABLE_INJECTIVITY_CONSTRAINTS = 'disable-injectivity-constraints'
+;
+
 SlimRule: {SlimRule}
 	(contextNodes += SlimRuleNodeContext |
 	createdNodes += SlimRuleNodeCreation |
@@ -94,11 +102,11 @@ SlimRuleNodeMapping:
 ;
 
 SlimRuleNodeMappings:
-	'['mappings+=SlimRuleNodeMapping (',' mappings+=SlimRuleNodeMapping)*']'
+	{SlimRuleNodeMappings} '['(mappings+=SlimRuleNodeMapping (',' mappings+=SlimRuleNodeMapping)*)?']'
 ;
 
 SlimRuleInvocation :
-	type=SlimRuleInvocationType supportPattern=[SlimRule|ID] (mappings=SlimRuleNodeMappings)?
+	type=SlimRuleInvocationType '(' supportPattern=[SlimRule|ID] ')' mappings=SlimRuleNodeMappings
 ;
 
 enum SlimRuleInvocationType :
@@ -147,15 +155,19 @@ ExpressionOperand:
 ;
 
 NodeAttributeExpression:
-	{NodeAttributeExpression} node = [SlimRuleNode|ID] '.' feature = [ecore::EAttribute]
+	NodeExpression ({NodeAttributeExpression.nodeExpression = current} '.' feature = [ecore::EAttribute])?
+;
+
+NodeExpression:
+	{NodeExpression} node = [SlimRuleNode|ID]
 ;
 
 CountExpression:
-	'count' '(' invokedPatten = [SlimRule|ID] ')' (mappings=SlimRuleNodeMappings)?
+	'count' '(' invokedPatten = [SlimRule|ID] ')' mappings=SlimRuleNodeMappings
 ;
 
 EnumExpression:
- 	'enum::' literal=[ecore::EEnumLiteral]
+ 	'enums.' literal=[ecore::EEnumLiteral]
 ;
 
 ArithmeticLiteral:

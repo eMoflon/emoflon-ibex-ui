@@ -83,6 +83,9 @@ public record DataTypeParseResult(ValueExpressionDataType type, boolean errorOcc
 		case STRING -> {
 			yield ValueExpressionDataType.mergeWithString(result2.type);
 		}
+		case OBJECT -> {
+			yield ValueExpressionDataType.mergeWithObject(result2.type);
+		}
 		default -> {
 			yield ValueExpressionDataType.CONFLICT;
 		}

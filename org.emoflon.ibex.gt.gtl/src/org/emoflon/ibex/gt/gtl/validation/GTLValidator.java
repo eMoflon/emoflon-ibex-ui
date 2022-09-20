@@ -28,8 +28,11 @@ import org.emoflon.ibex.common.slimgt.slimGT.ArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.CountExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.Import;
 import org.emoflon.ibex.common.slimgt.slimGT.NodeAttributeExpression;
+import org.emoflon.ibex.common.slimgt.slimGT.NodeExpression;
+import org.emoflon.ibex.common.slimgt.slimGT.RelationalExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeAssignment;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleConfiguration;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdgeContext;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdgeCreation;
@@ -401,8 +404,12 @@ public class GTLValidator extends AbstractGTLValidator {
 		if (!superRule.isPresent())
 			return;
 
+		if (superRule.get().getName() == null)
+			return;
+
 		long refinementCount = GTLModelUtil.getAllSuperRules(currentRule).stream()
-				.filter(rule -> rule.getName().equals(superRule.get().getName())).count();
+				.filter(rule -> rule.getName() != null).filter(rule -> rule.getName().equals(superRule.get().getName()))
+				.count();
 
 		if (refinementCount > 1) {
 			error(String.format("The rule/pattern '%s' may not be refined more than once.", superRule.get().getName()),
@@ -418,7 +425,8 @@ public class GTLValidator extends AbstractGTLValidator {
 			return;
 
 		long refinementCount = GTLModelUtil.getAllSuperRules(currentRule).stream()
-				.filter(rule -> rule.getName().equals(refinement.getName())).count();
+				.filter(rule -> rule.getName() != null).filter(rule -> rule.getName().equals(refinement.getName()))
+				.count();
 
 		if (refinementCount > 1) {
 			error(String.format("The refinement alias '%s' collides with a super pattern/rule name.",
@@ -680,7 +688,7 @@ public class GTLValidator extends AbstractGTLValidator {
 		if (invocation.getSupportPattern() == null)
 			return;
 
-		if (((SlimRule) invocation.getSupportPattern()).isAbstract()) {
+		if (invocation.getSupportPattern() instanceof SlimRule slimRule && slimRule.isAbstract()) {
 			error("Invoked patterns or rules may not be abstract.",
 					SlimGTPackage.Literals.SLIM_RULE_INVOCATION__SUPPORT_PATTERN);
 		}
@@ -741,10 +749,12 @@ public class GTLValidator extends AbstractGTLValidator {
 
 	protected boolean invocationHierarchyHasCycle(EObject someInvocation, Set<SlimRule> traversedRules) {
 		SlimRule invokee = null;
-		if (someInvocation instanceof CountExpression countExpression && countExpression.getInvokedPatten() != null) {
+		if (someInvocation instanceof CountExpression countExpression && countExpression.getInvokedPatten() != null
+				&& countExpression.getInvokedPatten() instanceof SlimRule) {
 			invokee = (SlimRule) countExpression.getInvokedPatten();
 		} else if (someInvocation instanceof SlimRuleInvocation ruleInvocation
-				&& ruleInvocation.getSupportPattern() != null) {
+				&& ruleInvocation.getSupportPattern() != null
+				&& ruleInvocation.getSupportPattern() instanceof SlimRule) {
 			invokee = (SlimRule) ruleInvocation.getSupportPattern();
 		} else {
 			return false;
@@ -781,7 +791,11 @@ public class GTLValidator extends AbstractGTLValidator {
 
 	@Check
 	protected void checkAttributeInAssignmentIsNotAssignedTo(NodeAttributeExpression attributeExpression) {
-		SlimRuleNode node = (SlimRuleNode) attributeExpression.getNode();
+		if (attributeExpression.getNodeExpression() == null || attributeExpression.getNodeExpression().getNode() == null
+				|| !(attributeExpression.getNodeExpression().getNode() instanceof SlimRuleNode))
+			return;
+
+		SlimRuleNode node = (SlimRuleNode) attributeExpression.getNodeExpression().getNode();
 		EAttribute attribute = attributeExpression.getFeature();
 
 		if (node == null || attribute == null)
@@ -841,5 +855,38 @@ public class GTLValidator extends AbstractGTLValidator {
 	@Override
 	protected DataTypeParseResult getDataTypeConflicts(ArithmeticExpression expr) throws Exception {
 		return SlimGTArithmeticUtil.parseDominantDataType(expr);
+	}
+
+	@Check
+	protected void checkNodesInConstraintsAndAnnotatedRulesOnly(NodeExpression expr) {
+		if (expr.eContainer() instanceof NodeAttributeExpression)
+			return;
+
+		RelationalExpression relation = SlimGTModelUtil.getContainer(expr, RelationalExpression.class);
+		SlimRule currentRule = SlimGTModelUtil.getContainer(relation, SlimRule.class);
+		if (!(currentRule instanceof SlimRule))
+			return;
+
+		if (relation == null) {
+			error("Node expressions may only be used in relational expressions.",
+					SlimGTPackage.Literals.NODE_EXPRESSION__NODE);
+			return;
+		}
+		if (!currentRule.isConfigured()) {
+			error("Node constraints may only be used in annotated rules, where the automatic creation of injectivity constraints is disabled.",
+					SlimGTPackage.Literals.NODE_EXPRESSION__NODE);
+			return;
+		}
+		if (currentRule.getConfiguration() == null || currentRule.getConfiguration().getConfigurations() == null
+				|| currentRule.getConfiguration().getConfigurations().size() == 0) {
+			error("Node constraints may only be used in annotated rules, where the automatic creation of injectivity constraints is disabled.",
+					SlimGTPackage.Literals.NODE_EXPRESSION__NODE);
+			return;
+		}
+
+		if (!currentRule.getConfiguration().getConfigurations()
+				.contains(SlimRuleConfiguration.DISABLE_INJECTIVITY_CONSTRAINTS))
+			error("Node constraints may only be used in annotated rules, where the automatic creation of injectivity constraints is disabled.",
+					SlimGTPackage.Literals.NODE_EXPRESSION__NODE);
 	}
 }

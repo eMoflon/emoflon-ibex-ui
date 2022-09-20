@@ -23,6 +23,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.ExpressionOperand;
 import org.emoflon.ibex.common.slimgt.slimGT.IntegerLiteral;
 import org.emoflon.ibex.common.slimgt.slimGT.MinMaxArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.NodeAttributeExpression;
+import org.emoflon.ibex.common.slimgt.slimGT.NodeExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.ProductArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
 import org.emoflon.ibex.common.slimgt.slimGT.StochasticArithmeticExpression;
@@ -80,7 +81,10 @@ public final class SlimGTArithmeticUtil {
 		} else if (expression instanceof BracketExpression brack) {
 			return parseDominantDataType(brack.getOperand());
 		} else if (expression instanceof ExpressionOperand op) {
-			if (op.getOperand() instanceof NodeAttributeExpression nae) {
+			if (op.getOperand() instanceof NodeExpression ne) {
+				return typeToParseResult(ne, SlimGTPackage.Literals.NODE_EXPRESSION__NODE,
+						EcorePackage.Literals.EOBJECT);
+			} else if (op.getOperand() instanceof NodeAttributeExpression nae) {
 				return attributeToParseResult(nae, SlimGTPackage.Literals.NODE_ATTRIBUTE_EXPRESSION__FEATURE,
 						nae.getFeature());
 			} else if (op.getOperand() instanceof CountExpression count) {
@@ -136,6 +140,8 @@ public final class SlimGTArithmeticUtil {
 			return new DataTypeParseResult(ValueExpressionDataType.BOOLEAN);
 		} else if (dataType == EcorePackage.Literals.EDATE) {
 			return new DataTypeParseResult(ValueExpressionDataType.DATE);
+		} else if (dataType == EcorePackage.Literals.EOBJECT) {
+			return new DataTypeParseResult(ValueExpressionDataType.OBJECT);
 		} else {
 			return new DataTypeParseResult(ValueExpressionDataType.UNSUPPORTED, context, location);
 		}
@@ -175,7 +181,9 @@ public final class SlimGTArithmeticUtil {
 		} else if (expression instanceof BracketExpression brack) {
 			parseAllDataTypes(brack.getOperand(), dataTypes);
 		} else if (expression instanceof ExpressionOperand op) {
-			if (op.getOperand() instanceof NodeAttributeExpression nae) {
+			if (op.getOperand() instanceof NodeExpression ne) {
+				dataTypes.add(ValueExpressionDataType.OBJECT);
+			} else if (op.getOperand() instanceof NodeAttributeExpression nae) {
 				dataTypes.add(attributeToDataType(nae.getFeature()));
 			} else if (op.getOperand() instanceof CountExpression count) {
 				dataTypes.add(ValueExpressionDataType.INTEGER);
@@ -228,6 +236,8 @@ public final class SlimGTArithmeticUtil {
 			return ValueExpressionDataType.BOOLEAN;
 		} else if (dataType == EcorePackage.Literals.EDATE) {
 			return ValueExpressionDataType.DATE;
+		} else if (dataType == EcorePackage.Literals.EOBJECT) {
+			return ValueExpressionDataType.OBJECT;
 		} else {
 			return ValueExpressionDataType.UNSUPPORTED;
 		}

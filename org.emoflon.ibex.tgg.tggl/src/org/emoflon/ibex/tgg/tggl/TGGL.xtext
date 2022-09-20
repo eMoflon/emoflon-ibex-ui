@@ -87,7 +87,7 @@ ExpressionOperand:
 ;
 
 LocalVariable:
-	name = ID
+	'$' name = ID
 ;
 
 TGGLRuleRefinement:
