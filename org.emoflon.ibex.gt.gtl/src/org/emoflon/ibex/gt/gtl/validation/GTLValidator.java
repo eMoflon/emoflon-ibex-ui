@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.validation.Check;
 import org.emoflon.ibex.common.slimgt.slimGT.ArithmeticExpression;
+import org.emoflon.ibex.common.slimgt.slimGT.BooleanExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.CountExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.Import;
 import org.emoflon.ibex.common.slimgt.slimGT.NodeAttributeExpression;
@@ -38,7 +39,6 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdgeContext;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdgeCreation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
 import org.emoflon.ibex.common.slimgt.slimGT.ValueExpression;
-import org.emoflon.ibex.common.slimgt.util.SlimGTArithmeticUtil;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
 import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtil;
 import org.emoflon.ibex.common.slimgt.validation.DataTypeParseResult;
@@ -60,6 +60,7 @@ import org.emoflon.ibex.gt.gtl.gTL.SlimRule;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNode;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNodeContext;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNodeCreation;
+import org.emoflon.ibex.gt.gtl.util.GTLArithmeticUtil;
 import org.emoflon.ibex.gt.gtl.util.GTLModelUtil;
 import org.emoflon.ibex.gt.gtl.util.RuleNodeHierarchy;
 
@@ -854,7 +855,12 @@ public class GTLValidator extends AbstractGTLValidator {
 
 	@Override
 	protected DataTypeParseResult getDataTypeConflicts(ArithmeticExpression expr) throws Exception {
-		return SlimGTArithmeticUtil.parseDominantDataType(expr);
+		return GTLArithmeticUtil.parseDominantDataType(expr);
+	}
+
+	@Override
+	protected DataTypeParseResult getDataTypeConflicts(BooleanExpression expr) throws Exception {
+		return GTLArithmeticUtil.parseDominantDataType(expr);
 	}
 
 	@Check

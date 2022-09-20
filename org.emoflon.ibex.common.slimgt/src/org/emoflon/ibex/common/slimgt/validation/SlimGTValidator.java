@@ -18,6 +18,12 @@ import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.validation.Check;
 import org.emoflon.ibex.common.slimgt.slimGT.ArithmeticExpression;
+import org.emoflon.ibex.common.slimgt.slimGT.BooleanBracket;
+import org.emoflon.ibex.common.slimgt.slimGT.BooleanConjunction;
+import org.emoflon.ibex.common.slimgt.slimGT.BooleanDisjunction;
+import org.emoflon.ibex.common.slimgt.slimGT.BooleanExpression;
+import org.emoflon.ibex.common.slimgt.slimGT.BooleanImplication;
+import org.emoflon.ibex.common.slimgt.slimGT.BooleanNegation;
 import org.emoflon.ibex.common.slimgt.slimGT.BracketExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.ExpArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.Import;
@@ -115,9 +121,9 @@ public class SlimGTValidator extends AbstractSlimGTValidator {
 		if (!(parseResult.type() == ValueExpressionDataType.DOUBLE
 				|| parseResult.type() == ValueExpressionDataType.STRING
 				|| parseResult.type() == ValueExpressionDataType.INTEGER)) {
-			error(String.format("Error <%s> data type is not allowed in sum expressions.", parseResult.type()),
+			error(String.format("Error <%s> data type is not allowed in a sum.", parseResult.type()),
 					SlimGTPackage.Literals.SUM_ARITHMETIC_EXPRESSION__LEFT);
-			error(String.format("Error <%s> data type is not allowed in sum expressions.", parseResult.type()),
+			error(String.format("Error <%s> data type is not allowed in a sum.", parseResult.type()),
 					SlimGTPackage.Literals.SUM_ARITHMETIC_EXPRESSION__RIGHT);
 		}
 	}
@@ -133,9 +139,9 @@ public class SlimGTValidator extends AbstractSlimGTValidator {
 
 		if (!(parseResult.type() == ValueExpressionDataType.DOUBLE
 				|| parseResult.type() == ValueExpressionDataType.INTEGER)) {
-			error(String.format("Error <%s> data type is not allowed in sum expressions.", parseResult.type()),
+			error(String.format("Error <%s> data type is not allowed in a product.", parseResult.type()),
 					SlimGTPackage.Literals.PRODUCT_ARITHMETIC_EXPRESSION__LEFT);
-			error(String.format("Error <%s> data type is not allowed in sum expressions.", parseResult.type()),
+			error(String.format("Error <%s> data type is not allowed in a product.", parseResult.type()),
 					SlimGTPackage.Literals.PRODUCT_ARITHMETIC_EXPRESSION__RIGHT);
 		}
 	}
@@ -151,9 +157,9 @@ public class SlimGTValidator extends AbstractSlimGTValidator {
 
 		if (!(parseResult.type() == ValueExpressionDataType.DOUBLE
 				|| parseResult.type() == ValueExpressionDataType.INTEGER)) {
-			error(String.format("Error <%s> data type is not allowed in sum expressions.", parseResult.type()),
+			error(String.format("Error <%s> data type is not allowed in exponential expressions.", parseResult.type()),
 					SlimGTPackage.Literals.EXP_ARITHMETIC_EXPRESSION__LEFT);
-			error(String.format("Error <%s> data type is not allowed in sum expressions.", parseResult.type()),
+			error(String.format("Error <%s> data type is not allowed in exponential expressions.", parseResult.type()),
 					SlimGTPackage.Literals.EXP_ARITHMETIC_EXPRESSION__RIGHT);
 		}
 	}
@@ -169,11 +175,11 @@ public class SlimGTValidator extends AbstractSlimGTValidator {
 
 		if (!(parseResult.type() == ValueExpressionDataType.DOUBLE
 				|| parseResult.type() == ValueExpressionDataType.INTEGER)) {
-			error(String.format("Error <%s> data type is not allowed in sum expressions.", parseResult.type()),
+			error(String.format("Error <%s> data type is not allowed in stochastic expressions.", parseResult.type()),
 					SlimGTPackage.Literals.STOCHASTIC_ARITHMETIC_EXPRESSION__MEAN);
 			if (expr.isHasSd())
-				error(String.format("Error <%s> data type is not allowed in sum expressions.", parseResult.type()),
-						SlimGTPackage.Literals.STOCHASTIC_ARITHMETIC_EXPRESSION__SD);
+				error(String.format("Error <%s> data type is not allowed in stochastic expressions.",
+						parseResult.type()), SlimGTPackage.Literals.STOCHASTIC_ARITHMETIC_EXPRESSION__SD);
 		}
 	}
 
@@ -189,10 +195,10 @@ public class SlimGTValidator extends AbstractSlimGTValidator {
 		if (!(parseResult.type() == ValueExpressionDataType.DOUBLE
 				|| parseResult.type() == ValueExpressionDataType.STRING
 				|| parseResult.type() == ValueExpressionDataType.INTEGER)) {
-			error(String.format("Error <%s> data type is not allowed in sum expressions.", parseResult.type()),
-					SlimGTPackage.Literals.STOCHASTIC_ARITHMETIC_EXPRESSION__MEAN);
-			error(String.format("Error <%s> data type is not allowed in sum expressions.", parseResult.type()),
-					SlimGTPackage.Literals.STOCHASTIC_ARITHMETIC_EXPRESSION__SD);
+			error(String.format("Error <%s> data type is not allowed in stochastic expressions.", parseResult.type()),
+					SlimGTPackage.Literals.MIN_MAX_ARITHMETIC_EXPRESSION__LEFT);
+			error(String.format("Error <%s> data type is not allowed in stochastic expressions.", parseResult.type()),
+					SlimGTPackage.Literals.MIN_MAX_ARITHMETIC_EXPRESSION__RIGHT);
 		}
 	}
 
@@ -207,8 +213,8 @@ public class SlimGTValidator extends AbstractSlimGTValidator {
 
 		if (!(parseResult.type() == ValueExpressionDataType.DOUBLE
 				|| parseResult.type() == ValueExpressionDataType.INTEGER)) {
-			error(String.format("Error <%s> data type is not allowed in sum expressions.", parseResult.type()),
-					SlimGTPackage.Literals.UNARY_ARITHMETIC_EXPRESSION__OPERAND);
+			error(String.format("Error <%s> data type is not allowed in unary arithmetic expressions.",
+					parseResult.type()), SlimGTPackage.Literals.UNARY_ARITHMETIC_EXPRESSION__OPERAND);
 		}
 	}
 
@@ -223,8 +229,89 @@ public class SlimGTValidator extends AbstractSlimGTValidator {
 
 		if (!(parseResult.type() == ValueExpressionDataType.DOUBLE
 				|| parseResult.type() == ValueExpressionDataType.INTEGER)) {
-			error(String.format("Error <%s> data type is not allowed in sum expressions.", parseResult.type()),
-					SlimGTPackage.Literals.BRACKET_EXPRESSION__OPERAND);
+			error(String.format("Error <%s> data type is not allowed in arithmetic bracket expressions.",
+					parseResult.type()), SlimGTPackage.Literals.BRACKET_EXPRESSION__OPERAND);
+		}
+	}
+
+	@Check
+	protected void checkImplicationDataTypes(BooleanImplication expr) {
+		DataTypeParseResult parseResult;
+		try {
+			parseResult = checkDataTypeConflicts(expr);
+		} catch (Exception e) {
+			return;
+		}
+
+		if (parseResult.type() != ValueExpressionDataType.BOOLEAN) {
+			error(String.format("Error <%s> data type is not allowed in boolean implication expressions.",
+					parseResult.type()), SlimGTPackage.Literals.BOOLEAN_IMPLICATION__LEFT);
+			error(String.format("Error <%s> data type is not allowed in boolean implication expressions.",
+					parseResult.type()), SlimGTPackage.Literals.BOOLEAN_IMPLICATION__LEFT);
+		}
+	}
+
+	@Check
+	protected void checkDisjunctionDataTypes(BooleanDisjunction expr) {
+		DataTypeParseResult parseResult;
+		try {
+			parseResult = checkDataTypeConflicts(expr);
+		} catch (Exception e) {
+			return;
+		}
+
+		if (parseResult.type() != ValueExpressionDataType.BOOLEAN) {
+			error(String.format("Error <%s> data type is not allowed in boolean disjunction expressions.",
+					parseResult.type()), SlimGTPackage.Literals.BOOLEAN_DISJUNCTION__LEFT);
+			error(String.format("Error <%s> data type is not allowed in boolean disjunction expressions.",
+					parseResult.type()), SlimGTPackage.Literals.BOOLEAN_DISJUNCTION__RIGHT);
+		}
+	}
+
+	@Check
+	protected void checkConjunctionDataTypes(BooleanConjunction expr) {
+		DataTypeParseResult parseResult;
+		try {
+			parseResult = checkDataTypeConflicts(expr);
+		} catch (Exception e) {
+			return;
+		}
+
+		if (parseResult.type() != ValueExpressionDataType.BOOLEAN) {
+			error(String.format("Error <%s> data type is not allowed in boolean conjunction expressions.",
+					parseResult.type()), SlimGTPackage.Literals.BOOLEAN_CONJUNCTION__LEFT);
+			error(String.format("Error <%s> data type is not allowed in boolean conjunction expressions.",
+					parseResult.type()), SlimGTPackage.Literals.BOOLEAN_CONJUNCTION__RIGHT);
+		}
+	}
+
+	@Check
+	protected void checkNegationDataTypes(BooleanNegation expr) {
+		DataTypeParseResult parseResult;
+		try {
+			parseResult = checkDataTypeConflicts(expr);
+		} catch (Exception e) {
+			return;
+		}
+
+		if (parseResult.type() != ValueExpressionDataType.BOOLEAN) {
+			error(String.format("Error <%s> data type is not allowed in boolean negation expressions.",
+					parseResult.type()), SlimGTPackage.Literals.BOOLEAN_NEGATION__OPERAND);
+		}
+	}
+
+	@Check
+	protected void checkBracketDataTypes(BooleanBracket expr) {
+		DataTypeParseResult parseResult;
+		try {
+			parseResult = checkDataTypeConflicts(expr);
+		} catch (Exception e) {
+			return;
+		}
+
+		if (parseResult.type() != ValueExpressionDataType.BOOLEAN) {
+			error(String.format("Error <%s> data type is not allowed in boolean bracket expressions.",
+					parseResult.type()), SlimGTPackage.Literals.BOOLEAN_BRACKET__OPERAND);
 		}
 	}
 
@@ -235,7 +322,26 @@ public class SlimGTValidator extends AbstractSlimGTValidator {
 				List<ValueExpressionDataType> errors = parseResult.context2ErrorTypes().get(context);
 				errors.forEach(e -> {
 					locations.forEach(l -> {
-						error(String.format("Error <%s> in arithmetic expression.", e), context, l);
+						error(String.format("Error <%s> in arithmetic expression of type <%s>.", e,
+								context.eClass().getName()), context, l);
+					});
+				});
+
+			});
+		}
+
+		return parseResult;
+	}
+
+	protected DataTypeParseResult checkDataTypeConflicts(BooleanExpression expr) throws Exception {
+		DataTypeParseResult parseResult = getDataTypeConflicts(expr);
+		if (parseResult.errorOccurred()) {
+			parseResult.context2Location().forEach((context, locations) -> {
+				List<ValueExpressionDataType> errors = parseResult.context2ErrorTypes().get(context);
+				errors.forEach(e -> {
+					locations.forEach(l -> {
+						error(String.format("Error <%s> in boolean expression of type <%s>.", e,
+								context.eClass().getName()), context, l);
 					});
 				});
 
@@ -246,6 +352,10 @@ public class SlimGTValidator extends AbstractSlimGTValidator {
 	}
 
 	protected DataTypeParseResult getDataTypeConflicts(ArithmeticExpression expr) throws Exception {
+		return SlimGTArithmeticUtil.parseDominantDataType(expr);
+	}
+
+	protected DataTypeParseResult getDataTypeConflicts(BooleanExpression expr) throws Exception {
 		return SlimGTArithmeticUtil.parseDominantDataType(expr);
 	}
 

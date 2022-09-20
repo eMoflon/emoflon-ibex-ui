@@ -59,10 +59,11 @@ public enum ValueExpressionDataType {
 	}
 
 	public static ValueExpressionDataType mergeWithBoolean(ValueExpressionDataType type) {
-		if (type != BOOLEAN) {
-			return CONFLICT;
-		} else {
+		switch (type) {
+		case BOOLEAN:
 			return BOOLEAN;
+		default:
+			return CONFLICT;
 		}
 	}
 
