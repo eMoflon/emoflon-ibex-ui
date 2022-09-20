@@ -9,8 +9,8 @@ generate tGGL "http://www.emoflon.org/ibex/tgg/tggl/TGGL"
 EditorFile:
 	imports += Import*
 	(schema = Schema)?
+  	libraries += AttributeConditionDefinitionLibrary*
   	rules += TGGRule*
-  	(library = AttributeConditionDefinitionLibrary)?
 ;
 
 Using:
@@ -39,10 +39,6 @@ Schema:
 		('correspondence' '{'
 			correspondenceTypes += CorrespondenceType*
 		'}')?	
-		
-		('attributeConditions' '{'
-			attributeCondDefs += AttributeConditionDefinition*
-		'}')?
 	'}' 
 ;
 
@@ -66,7 +62,7 @@ Binding:
 ;
 
 AttributeConditionDefinitionLibrary:
-	'library' name = QualifiedName
+	'library' name = ID
 	'{'
 		(attributeCondDefs += AttributeConditionDefinition)*
 	'}'
@@ -80,7 +76,7 @@ CorrespondenceType:
 ;
 
 AttributeCondition:
-	name = [AttributeConditionDefinition] 
+	name = [AttributeConditionDefinition | QualifiedName] 
 	'(' values += (LocalVariable | ExpressionOperand) 
 		(',' values += (LocalVariable | ExpressionOperand))* ')'
 ;
@@ -111,8 +107,8 @@ TGGRuleRefinementNode:
 	node=[SlimRuleNode|QualifiedName]
 ;
 
-TGGLRuleRefinementCorrespondence: 
-	refinement=[ecore::EObject|ID] '.' node=[CorrespondenceNode|ID]
+TGGLRuleRefinementCorrespondenceNode: 
+	node=[CorrespondenceNode|QualifiedName]
 ;
 
 /* ------------- */
@@ -121,13 +117,13 @@ TGGLRuleRefinementCorrespondence:
 
 @Override
 SlimRuleNodeContext: {SlimRuleNodeContext}
-	('@refines' refinement=TGGRuleRefinementNode WS)?
+	(refining ?= '@refines' refinement=TGGRuleRefinementNode)?
 	'[=]' (local?='local')? context = SlimRuleNode
 ;
 
 @Override
 SlimRuleNodeCreation: {SlimRuleNodeCreation}
-	('@refines' refinement=TGGRuleRefinementNode)?
+	(refining ?= '@refines' refinement=TGGRuleRefinementNode)?
 	'[+]' creation = SlimRuleNode
 ;
 
@@ -164,8 +160,8 @@ TGGRule:
 ;
 
 CorrespondenceNode:
-	(refinement=TGGLRuleRefinementCorrespondence)?
-	(created ?= '++')? name = ID ':' type = [CorrespondenceType | QualifiedName] '{'
+	(refining ?= '@refines' refinement=TGGLRuleRefinementCorrespondenceNode)?
+	(creation ?= '[+]' | context?='[=]') name = ID ':' type = [CorrespondenceType | QualifiedName] '{'
 		'src->' source = [SlimRuleNode|ID]
 		'trg->' target = [SlimRuleNode|ID]
 	'}' 

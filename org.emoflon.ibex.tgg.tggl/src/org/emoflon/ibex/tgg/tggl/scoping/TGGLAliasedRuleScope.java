@@ -19,6 +19,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.Import;
 import org.emoflon.ibex.common.slimgt.slimGT.PackageReferenceAlias;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
+import org.emoflon.ibex.tgg.tggl.tGGL.CorrespondenceNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinement;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementAliased;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRule;
@@ -78,6 +79,19 @@ class RuleAliasedNamedProvider extends DefaultDeclarativeQualifiedNameProvider {
 			return converter.toQualifiedName(ruleName2alias.get(tggRule.getName()) + "." + node.getName());
 		}
 		
+		if(obj instanceof CorrespondenceNode corrNode) {
+			var tggRule = SlimGTModelUtil.getContainer(obj, TGGRule.class);
+			if(tggRule == null)
+				return super.getFullyQualifiedName(obj);
+			
+			if(!ruleName2alias.containsKey(tggRule.getName()))
+				return super.getFullyQualifiedName(obj);
+			
+			IQualifiedNameConverter converter = new IQualifiedNameConverter.DefaultImpl();
+			return converter.toQualifiedName(ruleName2alias.get(tggRule.getName()) + "." + corrNode.getName());
+		}
+		
+		
 		return super.getFullyQualifiedName(obj);
 	}
 }
@@ -93,6 +107,14 @@ class RuleAwareQualifiedNamedProvider extends DefaultDeclarativeQualifiedNamePro
 			
 			IQualifiedNameConverter converter = new IQualifiedNameConverter.DefaultImpl();
 			return converter.toQualifiedName(tggRule.getName() + "." + node.getName());
+		}
+		if(obj instanceof CorrespondenceNode corrNode) {
+			var tggRule = SlimGTModelUtil.getContainer(obj, TGGRule.class);
+			if(tggRule == null)
+				return super.getFullyQualifiedName(obj);
+			
+			IQualifiedNameConverter converter = new IQualifiedNameConverter.DefaultImpl();
+			return converter.toQualifiedName(tggRule.getName() + "." + corrNode.getName());
 		}
 		
 		return super.getFullyQualifiedName(obj);
