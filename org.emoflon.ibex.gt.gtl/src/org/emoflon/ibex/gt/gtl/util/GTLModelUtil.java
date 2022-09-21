@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
@@ -279,6 +280,21 @@ public final class GTLModelUtil {
 		}
 	}
 
+	public static Collection<SlimRuleNode> findEdgeTargetLeafNodes(SlimRuleEdge edge,
+			Map<SlimRuleNode, RuleNodeHierarchy> hierarchyMapping) {
+		if (hierarchyMapping.containsKey(edge.getTarget()))
+			return Set.of((SlimRuleNode) edge.getTarget());
+
+		Set<SlimRuleNode> targets = new HashSet<>();
+		for (RuleNodeHierarchy hierarchy : hierarchyMapping.values()) {
+			if (hierarchy.superNodes().contains(edge.getTarget())) {
+				targets.add(hierarchy.node());
+			}
+		}
+
+		return targets;
+	}
+
 	public static Map<SlimRuleNode, RuleNodeHierarchy> getAllRuleNodeHierarchy(SlimRule context) {
 		Map<SlimRuleNode, RuleNodeHierarchy> nodes = new LinkedHashMap<>();
 		getAllRuleNodes(context, new HashMap<>(), nodes);
@@ -340,12 +356,31 @@ public final class GTLModelUtil {
 		return nodes.stream().flatMap(n -> n.getAssignments().stream()).collect(Collectors.toList());
 	}
 
+	public static Collection<SlimRuleAttributeAssignment> getRuleNodeAllAttributeAssignments(SlimRuleNode context,
+			Map<SlimRuleNode, RuleNodeHierarchy> ruleNodeHierarchy) {
+		List<SlimRuleNode> nodes = new LinkedList<>();
+		nodes.add(context);
+		nodes.addAll(getRuleNodeAllSuperNodes(context, ruleNodeHierarchy));
+		return nodes.stream().flatMap(n -> n.getAssignments().stream()).collect(Collectors.toList());
+	}
+
 	public static Collection<SlimRuleAttributeAssignment> getAllAttributeAssignments(SlimRule context) {
 		List<SlimRuleNode> nodes = new LinkedList<>();
 		Map<SlimRuleNode, RuleNodeHierarchy> hierarchy = getAllRuleNodeHierarchy(context);
 		getAllRuleNodes(context).forEach(n -> {
 			nodes.add(n);
 			nodes.addAll(getRuleNodeAllSuperNodes(n, hierarchy));
+		});
+
+		return nodes.stream().flatMap(n -> n.getAssignments().stream()).collect(Collectors.toList());
+	}
+
+	public static Collection<SlimRuleAttributeAssignment> getAllAttributeAssignments(SlimRule context,
+			Map<SlimRuleNode, RuleNodeHierarchy> ruleNodeHierarchy) {
+		List<SlimRuleNode> nodes = new LinkedList<>();
+		getAllRuleNodes(context).forEach(n -> {
+			nodes.add(n);
+			nodes.addAll(getRuleNodeAllSuperNodes(n, ruleNodeHierarchy));
 		});
 
 		return nodes.stream().flatMap(n -> n.getAssignments().stream()).collect(Collectors.toList());
