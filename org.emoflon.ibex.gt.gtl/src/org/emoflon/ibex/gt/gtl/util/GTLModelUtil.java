@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,8 @@ import org.emoflon.ibex.common.slimgt.slimGT.UnaryArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.ValueExpression;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
 import org.emoflon.ibex.gt.gtl.gTL.ExpressionOperand;
+import org.emoflon.ibex.gt.gtl.gTL.GTLEdgeIterator;
+import org.emoflon.ibex.gt.gtl.gTL.GTLEdgeIteratorReference;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleNodeDeletion;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinement;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementAliased;
@@ -261,12 +264,12 @@ public final class GTLModelUtil {
 	}
 
 	public static Collection<SlimRule> getAllSuperRules(SlimRule context) {
-		List<SlimRule> rules = new LinkedList<>();
+		Set<SlimRule> rules = new LinkedHashSet<>();
 		getAllSuperRules(context, rules);
 		return rules;
 	}
 
-	public static void getAllSuperRules(SlimRule root, List<SlimRule> rules) {
+	public static void getAllSuperRules(SlimRule root, Set<SlimRule> rules) {
 		if (root.isRefining()) {
 			for (GTLRuleRefinement refinement : root.getRefinement()) {
 				Optional<SlimRule> ruleOpt = refinementToRule(refinement);
@@ -293,6 +296,21 @@ public final class GTLModelUtil {
 		}
 
 		return targets;
+	}
+
+	public static Collection<SlimRuleNode> findItrEdgeSourceLeafNodes(GTLEdgeIteratorReference edgeItr,
+			Map<SlimRuleNode, RuleNodeHierarchy> hierarchyMapping) {
+		if (hierarchyMapping.containsKey(edgeItr.getSource()))
+			return Set.of(edgeItr.getSource());
+
+		Set<SlimRuleNode> sources = new HashSet<>();
+		for (RuleNodeHierarchy hierarchy : hierarchyMapping.values()) {
+			if (hierarchy.superNodes().contains(edgeItr.getSource())) {
+				sources.add(hierarchy.node());
+			}
+		}
+
+		return sources;
 	}
 
 	public static Map<SlimRuleNode, RuleNodeHierarchy> getAllRuleNodeHierarchy(SlimRule context) {
@@ -493,4 +511,18 @@ public final class GTLModelUtil {
 		}
 	}
 
+	public static Collection<GTLEdgeIterator> getRuleNodeAllEdgeIterators(SlimRuleNode context,
+			Map<SlimRuleNode, RuleNodeHierarchy> ruleNodeHierarchy) {
+		List<SlimRuleNode> nodes = new LinkedList<>();
+		nodes.add(context);
+		nodes.addAll(getRuleNodeAllSuperNodes(context, ruleNodeHierarchy));
+		return nodes.stream().flatMap(n -> n.getEdgeIterators().stream()).collect(Collectors.toList());
+	}
+
+	public static Collection<SlimRuleAttributeCondition> getAllAttributeCondtions(SlimRule context) {
+		Set<SlimRule> rules = new LinkedHashSet<>();
+		rules.add(context);
+		rules.addAll(getAllSuperRules(context));
+		return rules.stream().flatMap(r -> r.getAtrConditions().stream()).collect(Collectors.toList());
+	}
 }

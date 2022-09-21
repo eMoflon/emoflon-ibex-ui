@@ -27,6 +27,12 @@ import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.emoflon.ibex.common.slimgt.slimGT.ArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.ArithmeticLiteral;
+import org.emoflon.ibex.common.slimgt.slimGT.BooleanBracket;
+import org.emoflon.ibex.common.slimgt.slimGT.BooleanConjunction;
+import org.emoflon.ibex.common.slimgt.slimGT.BooleanDisjunction;
+import org.emoflon.ibex.common.slimgt.slimGT.BooleanExpression;
+import org.emoflon.ibex.common.slimgt.slimGT.BooleanImplication;
+import org.emoflon.ibex.common.slimgt.slimGT.BooleanNegation;
 import org.emoflon.ibex.common.slimgt.slimGT.BracketExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.Constant;
 import org.emoflon.ibex.common.slimgt.slimGT.CountExpression;
@@ -36,13 +42,16 @@ import org.emoflon.ibex.common.slimgt.slimGT.MinMaxArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.NodeAttributeExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.NodeExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.ProductArithmeticExpression;
+import org.emoflon.ibex.common.slimgt.slimGT.RelationalExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimGTFactory;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAnnotation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeAssignment;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeCondition;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdgeContext;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdgeCreation;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMapping;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMappings;
 import org.emoflon.ibex.common.slimgt.slimGT.StochasticArithmeticExpression;
@@ -50,14 +59,19 @@ import org.emoflon.ibex.common.slimgt.slimGT.SumArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.UnaryArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.ValueExpression;
 import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtil;
+import org.emoflon.ibex.common.slimgt.validation.ValueExpressionDataType;
 import org.emoflon.ibex.gt.gtl.gTL.EditorFile;
 import org.emoflon.ibex.gt.gtl.gTL.ExpressionOperand;
+import org.emoflon.ibex.gt.gtl.gTL.GTLEdgeIterator;
+import org.emoflon.ibex.gt.gtl.gTL.GTLEdgeIteratorAttributeAssignment;
+import org.emoflon.ibex.gt.gtl.gTL.GTLEdgeIteratorReference;
 import org.emoflon.ibex.gt.gtl.gTL.GTLFactory;
 import org.emoflon.ibex.gt.gtl.gTL.GTLIteratorAttributeExpression;
 import org.emoflon.ibex.gt.gtl.gTL.GTLPackage;
 import org.emoflon.ibex.gt.gtl.gTL.GTLParameterExpression;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleEdgeDeletion;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleNodeDeletion;
+import org.emoflon.ibex.gt.gtl.gTL.GTLRuleWatchDog;
 import org.emoflon.ibex.gt.gtl.gTL.PatternImport;
 import org.emoflon.ibex.gt.gtl.gTL.SlimParameter;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRule;
@@ -80,17 +94,26 @@ public class GTLModelFlattener {
 	protected Map<String, Map<String, List<Consumer<SlimRuleNode>>>> rule2pendingNodeJobs = Collections
 			.synchronizedMap(new HashMap<>());
 
-	public GTLModelFlattener(final EditorFile file, boolean loadCompletePackage) {
+	public GTLModelFlattener(final EditorFile file, boolean loadCompletePackage) throws Exception {
 		this.packageName = file.getPackage().getName();
 		flattenedFile = factory.createEditorFile();
 		flattenedFile.setPackage(factory.createPackageDeclaration());
 		flattenedFile.getPackage().setName(packageName);
 
 		if (loadCompletePackage) {
-
+			Collection<EditorFile> files = loadAllEditorFilesInPackage(file);
+			files.parallelStream().forEach(ef -> {
+				try {
+					flatten(ef);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			});
 		} else {
 			flatten(file);
 		}
+
+		postProcess();
 	}
 
 	public GTLModelFlattener(final Collection<EditorFile> files) throws Exception {
@@ -108,7 +131,37 @@ public class GTLModelFlattener {
 		flattenedFile = factory.createEditorFile();
 		flattenedFile.setPackage(factory.createPackageDeclaration());
 		flattenedFile.getPackage().setName(packageName);
-		files.parallelStream().forEach(ef -> flatten(ef));
+		files.parallelStream().forEach(ef -> {
+			try {
+				flatten(ef);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+
+		postProcess();
+	}
+
+	public EditorFile getFlattenedModel() {
+		return flattenedFile;
+	}
+
+	protected void postProcess() {
+		for (String ruleName : name2rule.keySet()) {
+			SlimRule flattenedRule = name2rule.get(ruleName);
+			flattenedFile.getRules().add(flattenedRule);
+
+			Map<String, SlimRuleNode> nodes = rule2nodes.get(flattenedRule);
+			for (Consumer<SlimRule> pending : pendingRuleJobs.get(ruleName)) {
+				pending.accept(flattenedRule);
+			}
+			for (String nodeName : nodes.keySet()) {
+				SlimRuleNode flattenedNode = nodes.get(nodeName);
+				for (Consumer<SlimRuleNode> pending : rule2pendingNodeJobs.get(ruleName).get(nodeName)) {
+					pending.accept(flattenedNode);
+				}
+			}
+		}
 	}
 
 	protected Resource loadResource(final Resource requester, final URI gtModelUri) {
@@ -250,7 +303,7 @@ public class GTLModelFlattener {
 		return pkgScope;
 	}
 
-	protected void flatten(EditorFile file) {
+	protected void flatten(EditorFile file) throws Exception {
 		// Add metamodel imports
 		imports.addAll(file.getImports().stream().map(i -> i.getName()).collect(Collectors.toSet()));
 
@@ -263,16 +316,27 @@ public class GTLModelFlattener {
 				if (!wildcardImport.isPresent())
 					continue;
 
-				wildcardImport.get().getRules().parallelStream().forEach(other -> flatten(other));
+				wildcardImport.get().getRules().parallelStream().forEach(other -> {
+					try {
+						flatten(other);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				});
 			}
 		}
 
 		// Flatten rules
-		file.getRules().parallelStream().forEach(rule -> flatten(rule));
-
+		file.getRules().parallelStream().forEach(rule -> {
+			try {
+				flatten(rule);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
 	}
 
-	protected void flatten(SlimRule rule) {
+	protected void flatten(SlimRule rule) throws Exception {
 		if (name2rule.containsKey(rule.getName()))
 			return;
 
@@ -306,6 +370,7 @@ public class GTLModelFlattener {
 			rule2pendingNodeJobs.put(rule.getName(), pendingMappingNodes);
 		}
 
+		// Flatten nodes
 		for (SlimRuleNode node : hierarchies.keySet()) {
 			SlimRuleNode flattenedNode = factory.createSlimRuleNode();
 
@@ -371,7 +436,166 @@ public class GTLModelFlattener {
 			}
 
 			// Flatten edge iterators and their assignments
+			for (GTLEdgeIterator iterator : GTLModelUtil.getRuleNodeAllEdgeIterators(node, hierarchies)) {
+				GTLEdgeIterator flattenedIterator = factory.createGTLEdgeIterator();
+				flattenedIterator.setName(iterator.getName());
+				flattenedIterator.setType(iterator.getType());
+				if (iterator.isCasting()) {
+					flattenedIterator.setCasting(true);
+					flattenedIterator.setSubType(iterator.getSubType());
+				}
 
+				for (GTLEdgeIteratorAttributeAssignment itrAssignment : iterator.getIteratorAttributes()) {
+					GTLEdgeIteratorAttributeAssignment flattenedItrAssignment = factory
+							.createGTLEdgeIteratorAttributeAssignment();
+					if (itrAssignment.getAttribute() instanceof NodeAttributeExpression nae) {
+						flattenedItrAssignment.setAttribute(flatten(nae, flattenedRule));
+					} else {
+						flattenedItrAssignment.setAttribute(EcoreUtil.copy(itrAssignment.getAttribute()));
+					}
+					flattenedItrAssignment.setValue(flatten(itrAssignment.getValue(), flattenedRule));
+					flattenedIterator.getIteratorAttributes().add(flattenedItrAssignment);
+				}
+
+				for (GTLEdgeIteratorReference itrEdge : iterator.getReferences()) {
+					Collection<SlimRuleNode> sources = GTLModelUtil.findItrEdgeSourceLeafNodes(itrEdge, hierarchies);
+					for (SlimRuleNode source : sources) {
+						GTLEdgeIteratorReference flattenedItrEdge = factory.createGTLEdgeIteratorReference();
+						flattenedItrEdge.setOperator(itrEdge.getOperator());
+						flattenedItrEdge.setType(itrEdge.getType());
+						flattenedItrEdge.setTarget(flattenedIterator);
+
+						if (name2Node.containsKey(source.getName())) {
+							flattenedItrEdge.setSource(name2Node.get(source.getName()));
+						} else {
+							addPendingNodeConsumer(rule.getName(), source.getName(),
+									(src) -> flattenedItrEdge.setSource(src));
+						}
+						flattenedIterator.getReferences().add(flattenedItrEdge);
+					}
+				}
+
+				flattenedNode.getEdgeIterators().add(flattenedIterator);
+			}
+		}
+
+		// Flatten attribute conditions
+		Set<SlimRuleAttributeCondition> localConditions = Collections.synchronizedSet(new HashSet<>());
+		localConditions.addAll(rule.getAtrConditions());
+
+		Collection<SlimRuleAttributeCondition> conditions = GTLModelUtil.getAllAttributeCondtions(rule);
+		conditions = conditions.parallelStream().filter(condition -> {
+			Set<ValueExpressionDataType> dataTypes = new HashSet<>();
+			try {
+				dataTypes.addAll(GTLArithmeticUtil.parseAllDataTypes(condition.getExpression()));
+			} catch (Exception e) {
+				return false;
+			}
+			if (dataTypes.contains(ValueExpressionDataType.OBJECT)) {
+				// Grab only node constraints that are part of this rule, ignore those of
+				// refinements.
+				if (localConditions.contains(condition)) {
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				return true;
+			}
+		}).collect(Collectors.toList());
+
+		for (SlimRuleAttributeCondition condition : conditions) {
+			SlimRuleAttributeCondition flattenedCondition = superFactory.createSlimRuleAttributeCondition();
+			flattenedCondition.setExpression(flatten(condition.getExpression(), flattenedRule));
+			flattenedRule.getAtrConditions().add(flattenedCondition);
+		}
+
+		// Flatten invocations
+		for (SlimRuleInvocation invocation : rule.getInvocations()) {
+			SlimRuleInvocation flattenedInvocation = superFactory.createSlimRuleInvocation();
+			SlimRule invokee = (SlimRule) invocation.getSupportPattern();
+
+			if (name2rule.containsKey(invokee.getName())) {
+				flattenedInvocation.setSupportPattern(name2rule.get(invokee.getName()));
+				flattenedInvocation.setMappings(
+						flatten(flattenedRule, name2rule.get(invokee.getName()), flattenedInvocation.getMappings()));
+			} else {
+				addPendingRuleConsumer(invokee.getName(), (r) -> {
+					flattenedInvocation.setSupportPattern(r);
+					flattenedInvocation.setMappings(flatten(flattenedRule, r, flattenedInvocation.getMappings()));
+				});
+			}
+			flattenedRule.getInvocations().add(flattenedInvocation);
+		}
+
+		// Flatten watch dogs
+		for (GTLRuleWatchDog watchDog : rule.getWatchDogs()) {
+			GTLRuleWatchDog flattenedWatchDog = factory.createGTLRuleWatchDog();
+			flattenedWatchDog.setNodeAttribute(flatten(watchDog.getNodeAttribute(), flattenedRule));
+			flattenedRule.getWatchDogs().add(flattenedWatchDog);
+		}
+	}
+
+	protected SlimRuleNodeMappings flatten(SlimRule sourceRule, SlimRule targetRule, SlimRuleNodeMappings mappings) {
+		SlimRuleNodeMappings flattenedMappings = superFactory.createSlimRuleNodeMappings();
+		Map<String, SlimRuleNode> srcNodes = rule2nodes.get(sourceRule);
+		Map<String, SlimRuleNode> trgNodes = rule2nodes.get(targetRule);
+		for (SlimRuleNodeMapping mapping : mappings.getMappings()) {
+			SlimRuleNodeMapping flattenedMapping = superFactory.createSlimRuleNodeMapping();
+			if (srcNodes.containsKey(mapping.getSrcNode().getName())) {
+				flattenedMapping.setSrcNode(srcNodes.get(mapping.getSrcNode().getName()));
+			} else {
+				addPendingNodeConsumer(sourceRule.getName(), mapping.getSrcNode().getName(), (node) -> {
+					flattenedMapping.setSrcNode(node);
+				});
+			}
+			if (trgNodes.containsKey(mapping.getTrgNode().getName())) {
+				flattenedMapping.setTrgNode(trgNodes.get(mapping.getTrgNode().getName()));
+			} else {
+				addPendingNodeConsumer(targetRule.getName(), mapping.getTrgNode().getName(), (node) -> {
+					flattenedMapping.setTrgNode(node);
+				});
+			}
+		}
+		return flattenedMappings;
+	}
+
+	protected BooleanExpression flatten(BooleanExpression expression, SlimRule container) throws Exception {
+		if (expression instanceof BooleanImplication impl) {
+			BooleanImplication flattenedImpl = superFactory.createBooleanImplication();
+			flattenedImpl.setLeft(flatten(impl.getLeft(), container));
+			flattenedImpl.setRight(flatten(impl.getRight(), container));
+			return flattenedImpl;
+		} else if (expression instanceof BooleanDisjunction disj) {
+			BooleanDisjunction flattenedDisj = superFactory.createBooleanDisjunction();
+			flattenedDisj.setOperator(disj.getOperator());
+			flattenedDisj.setLeft(flatten(disj.getLeft(), container));
+			flattenedDisj.setRight(flatten(disj.getRight(), container));
+			return flattenedDisj;
+		} else if (expression instanceof BooleanConjunction conj) {
+			BooleanConjunction flattenedConj = superFactory.createBooleanConjunction();
+			flattenedConj.setOperator(conj.getOperator());
+			flattenedConj.setLeft(flatten(conj.getLeft(), container));
+			flattenedConj.setRight(flatten(conj.getRight(), container));
+			return flattenedConj;
+		} else if (expression instanceof BooleanNegation neg) {
+			BooleanNegation flattenedNeg = superFactory.createBooleanNegation();
+			flattenedNeg.setOperand(flatten(neg.getOperand(), container));
+			return flattenedNeg;
+		} else if (expression instanceof BooleanBracket brack) {
+			BooleanBracket flattenedBrack = superFactory.createBooleanBracket();
+			flattenedBrack.setOperand(flatten(brack.getOperand(), container));
+			return flattenedBrack;
+		} else if (expression instanceof ValueExpression val) {
+			return flatten(val, container);
+		} else if (expression instanceof RelationalExpression rel) {
+			RelationalExpression flattenedRel = superFactory.createRelationalExpression();
+			flattenedRel.setRelation(rel.getRelation());
+			flattenedRel.setLhs(flatten(rel.getLhs(), container));
+			flattenedRel.setRhs(flatten(rel.getRhs(), container));
+			return flattenedRel;
+		} else {
+			throw new UnsupportedOperationException("Unkown arithmetic operation type: " + expression);
 		}
 	}
 
@@ -436,19 +660,7 @@ public class GTLModelFlattener {
 
 				flattenedOperand.setOperand(flattenedNode);
 			} else if (op.getOperand() instanceof NodeAttributeExpression nae) {
-				NodeAttributeExpression flattenedNAE = superFactory.createNodeAttributeExpression();
-				NodeExpression flattenedNode = superFactory.createNodeExpression();
-				flattenedNAE.setNodeExpression(flattenedNode);
-				flattenedNAE.setFeature(nae.getFeature());
-				Map<String, SlimRuleNode> name2Node = rule2nodes.get(container);
-				if (name2Node.containsKey(nae.getNodeExpression().getNode().getName())) {
-					flattenedNode.setNode(name2Node.get(nae.getNodeExpression().getNode().getName()));
-				} else {
-					addPendingNodeConsumer(container.getName(), nae.getNodeExpression().getNode().getName(),
-							(node) -> flattenedNode.setNode(node));
-				}
-
-				flattenedOperand.setOperand(flattenedNAE);
+				flattenedOperand.setOperand(flatten(nae, container));
 			} else if (op.getOperand() instanceof GTLIteratorAttributeExpression nae) {
 				flattenedOperand.setOperand(EcoreUtil.copy(nae));
 			} else if (op.getOperand() instanceof GTLParameterExpression param) {
@@ -486,28 +698,20 @@ public class GTLModelFlattener {
 		}
 	}
 
-	protected SlimRuleNodeMappings flatten(SlimRule sourceRule, SlimRule targetRule, SlimRuleNodeMappings mappings) {
-		SlimRuleNodeMappings flattenedMappings = superFactory.createSlimRuleNodeMappings();
-		Map<String, SlimRuleNode> srcNodes = rule2nodes.get(sourceRule);
-		Map<String, SlimRuleNode> trgNodes = rule2nodes.get(targetRule);
-		for (SlimRuleNodeMapping mapping : mappings.getMappings()) {
-			SlimRuleNodeMapping flattenedMapping = superFactory.createSlimRuleNodeMapping();
-			if (srcNodes.containsKey(mapping.getSrcNode().getName())) {
-				flattenedMapping.setSrcNode(srcNodes.get(mapping.getSrcNode().getName()));
-			} else {
-				addPendingNodeConsumer(sourceRule.getName(), mapping.getSrcNode().getName(), (node) -> {
-					flattenedMapping.setSrcNode(node);
-				});
-			}
-			if (trgNodes.containsKey(mapping.getTrgNode().getName())) {
-				flattenedMapping.setTrgNode(trgNodes.get(mapping.getTrgNode().getName()));
-			} else {
-				addPendingNodeConsumer(targetRule.getName(), mapping.getTrgNode().getName(), (node) -> {
-					flattenedMapping.setTrgNode(node);
-				});
-			}
+	protected NodeAttributeExpression flatten(NodeAttributeExpression expression, SlimRule container) {
+		NodeAttributeExpression flattenedNAE = superFactory.createNodeAttributeExpression();
+		NodeExpression flattenedNode = superFactory.createNodeExpression();
+		flattenedNAE.setNodeExpression(flattenedNode);
+		flattenedNAE.setFeature(expression.getFeature());
+		Map<String, SlimRuleNode> name2Node = rule2nodes.get(container);
+		if (name2Node.containsKey(expression.getNodeExpression().getNode().getName())) {
+			flattenedNode.setNode(name2Node.get(expression.getNodeExpression().getNode().getName()));
+		} else {
+			addPendingNodeConsumer(container.getName(), expression.getNodeExpression().getNode().getName(),
+					(node) -> flattenedNode.setNode(node));
 		}
-		return flattenedMappings;
+
+		return flattenedNAE;
 	}
 
 	protected void addPendingRuleConsumer(final String rule, final Consumer<SlimRule> consumer) {
