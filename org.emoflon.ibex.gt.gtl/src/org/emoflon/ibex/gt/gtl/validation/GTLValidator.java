@@ -53,6 +53,7 @@ import org.emoflon.ibex.gt.gtl.gTL.GTLRuleNodeDeletion;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinement;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementAliased;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleType;
+import org.emoflon.ibex.gt.gtl.gTL.GTLRuleWatchDog;
 import org.emoflon.ibex.gt.gtl.gTL.PackageDeclaration;
 import org.emoflon.ibex.gt.gtl.gTL.PatternImport;
 import org.emoflon.ibex.gt.gtl.gTL.SlimParameter;
@@ -241,6 +242,53 @@ public class GTLValidator extends AbstractGTLValidator {
 					GTLPackage.Literals.PATTERN_IMPORT__FILE);
 		}
 
+	}
+
+	@Check
+	protected void checkImportNoCycles(PatternImport imp) {
+		Set<EditorFile> efs = new HashSet<>();
+		EditorFile ef = SlimGTModelUtil.getContainer(imp, EditorFile.class);
+		efs.add(ef);
+
+		if (importHasCycles(imp, efs)) {
+			error("Import target at <" + imp.getFile().getValue() + "> contains a dependency cycle.",
+					GTLPackage.Literals.PATTERN_IMPORT__FILE);
+		}
+	}
+
+	protected boolean importHasCycles(PatternImport imp, Set<EditorFile> efs) {
+		Optional<EditorFile> optFile = loadGTLModelByImport(imp);
+		if (!optFile.isPresent())
+			return false;
+
+		EditorFile other = optFile.get();
+		if (efs.contains(other))
+			return true;
+
+		efs.add(other);
+
+		for (PatternImport otherImp : other.getImportedPatterns()) {
+			if (importHasCycles(otherImp, efs)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	@Check
+	protected void checkNoPackageImports(PatternImport imp) {
+		Optional<EditorFile> optFile = loadGTLModelByImport(imp);
+		if (!optFile.isPresent())
+			return;
+
+		EditorFile current = SlimGTModelUtil.getContainer(imp, EditorFile.class);
+		EditorFile other = optFile.get();
+		if (current.getPackage().getName().equals(other.getPackage().getName())) {
+			error("Import target at <" + imp.getFile().getValue()
+					+ "> is part of the package and, hence, all patterns and rules are already available within the current scope.",
+					GTLPackage.Literals.PATTERN_IMPORT__FILE);
+		}
 	}
 
 	/**
@@ -894,5 +942,26 @@ public class GTLValidator extends AbstractGTLValidator {
 				.contains(SlimRuleConfiguration.DISABLE_INJECTIVITY_CONSTRAINTS))
 			error("Node constraints may only be used in annotated rules, where the automatic creation of injectivity constraints is disabled.",
 					SlimGTPackage.Literals.NODE_EXPRESSION__NODE);
+	}
+
+	@Check
+	protected void checkWatchDogNodes(GTLRuleWatchDog watchDog) {
+		if (watchDog.getNodeAttribute() == null)
+			return;
+
+		if (watchDog.getNodeAttribute().getNodeExpression() == null)
+			return;
+
+		if (watchDog.getNodeAttribute().getFeature() == null)
+			return;
+
+		if (watchDog.getNodeAttribute().getNodeExpression().getNode() == null)
+			return;
+
+		SlimRuleNode node = (SlimRuleNode) watchDog.getNodeAttribute().getNodeExpression().getNode();
+		if (node.eContainer() instanceof SlimRuleNodeCreation) {
+			error("Only attributes of context (or deleted) nodes may be watched.",
+					watchDog.getNodeAttribute().getNodeExpression(), SlimGTPackage.Literals.NODE_EXPRESSION__NODE);
+		}
 	}
 }
