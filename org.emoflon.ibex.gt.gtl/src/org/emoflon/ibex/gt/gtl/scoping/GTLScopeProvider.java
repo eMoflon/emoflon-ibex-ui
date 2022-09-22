@@ -520,13 +520,29 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 	}
 
 	protected IScope scopeForGTLEdgeIteratorReferenceType(GTLEdgeIteratorReference context, EReference reference) {
+		GTLEdgeIterator itr = SlimGTModelUtil.getContainer(context, GTLEdgeIterator.class);
+		if (itr == null)
+			return IScope.NULLSCOPE;
+
+		if (context.getOperator() == null)
+			return IScope.NULLSCOPE;
+
 		if (context.getSource() == null)
 			return IScope.NULLSCOPE;
 
 		if (context.getSource().getType() == null)
 			return IScope.NULLSCOPE;
 
-		return Scopes.scopeFor(context.getSource().getType().getEAllReferences());
+		if (context.getOperator() == EdgeIteratorOperator.CREATE) {
+			return Scopes.scopeFor(context.getSource().getType().getEAllReferences());
+		} else {
+			if (itr.getType() != null) {
+				return Scopes.scopeFor(List.of(itr.getType()));
+			} else {
+				return IScope.NULLSCOPE;
+			}
+		}
+
 	}
 
 	protected IScope scopeForGTLEdgeIteratorReferenceTarget(GTLEdgeIteratorReference context, EReference reference) {
