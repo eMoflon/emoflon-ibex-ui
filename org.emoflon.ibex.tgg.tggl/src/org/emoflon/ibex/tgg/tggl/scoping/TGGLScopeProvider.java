@@ -40,7 +40,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeContext;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeCreation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMapping;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleSimpleEdge;
-import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtils;
+import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtil;
 import org.emoflon.ibex.tgg.tggl.tGGL.AttributeCondition;
 import org.emoflon.ibex.tgg.tggl.tGGL.AttributeConditionDefinition;
 import org.emoflon.ibex.tgg.tggl.tGGL.CorrespondenceNode;
@@ -616,7 +616,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		var editorFile = getContainer(obj, EditorFile.class);
 		Collection<EditorFile> editorFiles = new HashSet<>();
 
-		IProject currentProject = SlimGTWorkspaceUtils.getCurrentProject(editorFile.eResource());
+		IProject currentProject = SlimGTWorkspaceUtil.getCurrentProject(editorFile.eResource());
 		String currentFile = editorFile.eResource().getURI().toString().replace("platform:/resource/", "")
 				.replace(currentProject.getName(), "");
 		currentFile = currentProject.getLocation().toPortableString() + currentFile;
@@ -624,7 +624,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 
 		File projectFile = new File(currentProject.getLocation().toPortableString());
 		List<File> tggFiles = new LinkedList<>();
-		SlimGTWorkspaceUtils.gatherFilesWithEnding(tggFiles, projectFile, ".tggl", true);
+		SlimGTWorkspaceUtil.gatherFilesWithEnding(tggFiles, projectFile, ".tggl", true);
 
 		for (File tggFile : tggFiles) {
 			URI tggModelUri;
