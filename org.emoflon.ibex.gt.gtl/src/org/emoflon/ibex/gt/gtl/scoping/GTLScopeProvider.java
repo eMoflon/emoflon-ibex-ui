@@ -23,14 +23,13 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import org.emoflon.ibex.common.slimgt.scoping.SlimGTScopeUtil;
 import org.emoflon.ibex.common.slimgt.slimGT.BooleanExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.CountExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.NodeAttributeExpression;
-import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeCondition;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleCondition;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeCreation;
@@ -46,8 +45,8 @@ import org.emoflon.ibex.gt.gtl.gTL.GTLIteratorAttributeExpression;
 import org.emoflon.ibex.gt.gtl.gTL.GTLParameterExpression;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinement;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementAliased;
+import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementNode;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementPlain;
-import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinmentNode;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleWatchDog;
 import org.emoflon.ibex.gt.gtl.gTL.PatternImport;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRule;
@@ -63,10 +62,72 @@ import org.emoflon.ibex.gt.gtl.util.GTLModelUtil;
  */
 public class GTLScopeProvider extends AbstractGTLScopeProvider {
 
-	public Collection<SlimRule> getAllRulesInScope(EditorFile ef) {
-		Set<SlimRule> ruleSet = new HashSet<>();
-		ef.getImportedPatterns().forEach(pi -> ruleSet.add(pi.getPattern()));
-		ruleSet.addAll(ef.getRules());
+	public Optional<EditorFile> loadGTLModelByFullPath(final EObject context, final String path) {
+		Resource resource = null;
+		URI gtModelUri = null;
+		EditorFile file = null;
+
+		File importFile = new File(path);
+		if (importFile.exists() && importFile.isFile() && importFile.isAbsolute()) {
+			gtModelUri = URI.createFileURI(path);
+			try {
+				resource = loadResource(context.eResource(), gtModelUri);
+				file = (EditorFile) resource.getContents().get(0);
+			} catch (Exception e) {
+				return Optional.empty();
+			}
+		}
+
+		if (file == null) {
+			return Optional.empty();
+		} else {
+			return Optional.of(file);
+		}
+	}
+
+	public Optional<EditorFile> loadGTLModelByRelativePath(final EObject context, final String path) {
+		IProject currentProject = SlimGTWorkspaceUtil.getCurrentProject(context.eResource());
+		Resource resource = null;
+		URI gtModelUri = null;
+		String absolutePath = null;
+		EditorFile file = null;
+
+		try {
+			absolutePath = Paths.get(currentProject.getLocation().toPortableString()).resolve(Paths.get(path)).toFile()
+					.getCanonicalPath();
+		} catch (IOException e1) {
+			return Optional.empty();
+		}
+
+		gtModelUri = URI.createFileURI(absolutePath);
+		try {
+			resource = loadResource(context.eResource(), gtModelUri);
+			file = (EditorFile) resource.getContents().get(0);
+		} catch (Exception e) {
+			return Optional.empty();
+		}
+
+		if (file == null) {
+			return Optional.empty();
+		} else {
+			return Optional.of(file);
+		}
+	}
+
+	public Optional<EditorFile> loadGTLModelByImport(final PatternImport imp) {
+		String currentImport = imp.getFile().getValue().replace("\"", "");
+		File importFile = new File(currentImport);
+		Optional<EditorFile> optFile = null;
+		if (importFile.exists() && importFile.isFile() && importFile.isAbsolute()) {
+			optFile = loadGTLModelByFullPath(imp, currentImport);
+		} else {
+			optFile = loadGTLModelByRelativePath(imp, currentImport);
+		}
+		return optFile;
+	}
+
+	public Collection<EditorFile> loadAllEditorFilesInPackage(final EditorFile ef) {
+		Collection<EditorFile> pkgScope = new LinkedList<>();
 
 		IProject currentProject = SlimGTWorkspaceUtil.getCurrentProject(ef.eResource());
 		String currentFile = ef.eResource().getURI().toString().replace("platform:/resource/", "")
@@ -111,11 +172,34 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 
 				if (gtlModel instanceof EditorFile otherEditorFile) {
 					if (otherEditorFile.getPackage().getName().equals(ef.getPackage().getName())) {
-						ruleSet.addAll(otherEditorFile.getRules());
+						pkgScope.add(otherEditorFile);
 					}
 				}
 			}
 		}
+
+		return pkgScope;
+	}
+
+	public Collection<SlimRule> getAllRulesInScope(EditorFile ef) {
+		Set<SlimRule> ruleSet = new HashSet<>();
+
+		// Add directly imported patterns
+		ef.getImportedPatterns().stream().filter(pi -> !pi.isImportingAll())
+				.forEach(pi -> ruleSet.add(pi.getPattern()));
+		ruleSet.addAll(ef.getRules());
+
+		// Add imported patterns by wildcard
+		ef.getImportedPatterns().stream().filter(pi -> pi.isImportingAll()).forEach(pi -> {
+			Optional<EditorFile> optEditorFile = loadGTLModelByImport(pi);
+			if (optEditorFile.isPresent()) {
+				ruleSet.addAll(optEditorFile.get().getRules());
+			}
+		});
+
+		// Add patterns in package name
+		Collection<EditorFile> scope = loadAllEditorFilesInPackage(ef);
+		scope.forEach(other -> ruleSet.addAll(other.getRules()));
 
 		return ruleSet;
 	}
@@ -132,7 +216,7 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 			return scopeForRuleRefinementNodeRefinement(context, reference);
 		}
 		if (GTLScopeUtil.isGTLRuleRefinementNodeNode(context, reference)) {
-			return scopeForRuleRefinementNodeNode((GTLRuleRefinmentNode) context, reference);
+			return scopeForRuleRefinementNodeNode((GTLRuleRefinementNode) context, reference);
 		}
 		if (SlimGTScopeUtil.isSlimRuleNodeType(context, reference)) {
 			return scopeForSlimRuleNodeType((SlimRuleNode) context, reference);
@@ -171,10 +255,10 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 			return scopeForCountExpressionPattern((CountExpression) context, reference);
 		}
 		if (GTLScopeUtil.isAttributeConditionExpressionNode(context, reference)) {
-			return scopeForAttributeConditionExpressionNode((SlimRuleAttributeCondition) context, reference);
+			return scopeForAttributeConditionExpressionNode((SlimRuleCondition) context, reference);
 		}
 		if (SlimGTScopeUtil.isNodeAttributeExpressionNode(context, reference)) {
-			return scopeForAttributeExpressionNode((NodeAttributeExpression) context, reference);
+			return scopeForAttributeExpressionNode(context, reference);
 		}
 		if (SlimGTScopeUtil.isNodeAttributeExpressionFeature(context, reference)) {
 			return scopeForAttributeExpressionFeature((NodeAttributeExpression) context, reference);
@@ -203,42 +287,9 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 				|| context.getFile().getValue().isBlank())
 			return IScope.NULLSCOPE;
 
-		Resource resource = null;
-		String currentImport = context.getFile().getValue().replace("\"", "");
-		File importFile = new File(currentImport);
-		if (importFile.exists() && importFile.isFile() && importFile.isAbsolute()) {
-			URI gtModelUri = URI.createFileURI(currentImport);
-			resource = loadResource(context.eResource(), gtModelUri);
-			if (resource == null)
-				return IScope.NULLSCOPE;
-		} else {
-			// 2. Case: relative path
-			IProject currentProject = SlimGTWorkspaceUtil.getCurrentProject(context.eResource());
-			if (currentProject == null)
-				return IScope.NULLSCOPE;
-
-			String absolutePath = null;
-			try {
-				absolutePath = Paths.get(currentProject.getLocation().toPortableString())
-						.resolve(Paths.get(currentImport)).toFile().getCanonicalPath();
-			} catch (IOException e) {
-				return IScope.NULLSCOPE;
-			}
-			URI gtModelUri = URI.createFileURI(absolutePath);
-			resource = loadResource(context.eResource(), gtModelUri);
-			if (resource == null)
-				return IScope.NULLSCOPE;
-		}
-
-		Set<String> allPatterns = new HashSet<>();
-		EditorFile currentFile = SlimGTModelUtil.getContainer(context, EditorFile.class);
-		currentFile.getRules().forEach(p -> allPatterns.add(p.getName()));
-
-		EcoreUtil2.resolveLazyCrossReferences(resource, () -> false);
-		EObject gtModel = resource.getContents().get(0);
-		if (gtModel instanceof EditorFile gtlFile) {
-			return Scopes.scopeFor(gtlFile.getRules().stream().filter(p -> !allPatterns.contains(p.getName()))
-					.collect(Collectors.toList()));
+		Optional<EditorFile> optEditorFile = loadGTLModelByImport(context);
+		if (optEditorFile.isPresent()) {
+			return Scopes.scopeFor(optEditorFile.get().getRules());
 		} else {
 			return IScope.NULLSCOPE;
 		}
@@ -262,7 +313,7 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 		return Scopes.scopeFor(refinements);
 	}
 
-	protected IScope scopeForRuleRefinementNodeNode(GTLRuleRefinmentNode context, EReference reference) {
+	protected IScope scopeForRuleRefinementNodeNode(GTLRuleRefinementNode context, EReference reference) {
 		if (context.getSuperRule() == null)
 			return IScope.NULLSCOPE;
 
@@ -366,15 +417,16 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 		}
 
 		container = SlimGTModelUtil.getContainer(context, SlimRuleInvocation.class);
-		if (container != null && container instanceof SlimRuleInvocation invocation) {
-			SlimRule trgRule = (SlimRule) invocation.getSupportPattern();
+		if (container != null && container instanceof SlimRuleInvocation invocation
+				&& invocation.getSupportPattern() != null
+				&& invocation.getSupportPattern() instanceof SlimRule trgRule) {
 			Collection<SlimRuleNode> allRuleNodes = GTLModelUtil.getAllDeletedAndContextRuleNodes(trgRule);
 			return Scopes.scopeFor(allRuleNodes);
 		}
 
 		container = SlimGTModelUtil.getContainer(context, CountExpression.class);
-		if (container != null && container instanceof CountExpression count) {
-			SlimRule trgRule = (SlimRule) count.getInvokedPatten();
+		if (container != null && container instanceof CountExpression count && count.getSupportPattern() != null
+				&& count.getSupportPattern() instanceof SlimRule trgRule) {
 			Collection<SlimRuleNode> allRuleNodes = GTLModelUtil.getAllDeletedAndContextRuleNodes(trgRule);
 			return Scopes.scopeFor(allRuleNodes);
 		}
@@ -413,22 +465,24 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 		return Scopes.scopeFor(GTLModelUtil.getAllDeletedAndContextRuleNodes(rule));
 	}
 
-	protected IScope scopeForAttributeConditionExpressionNode(SlimRuleAttributeCondition context,
-			EReference reference) {
+	protected IScope scopeForAttributeConditionExpressionNode(SlimRuleCondition context, EReference reference) {
 		SlimRule rule = SlimGTModelUtil.getContainer(context, SlimRule.class);
 		return Scopes.scopeFor(GTLModelUtil.getAllDeletedAndContextRuleNodes(rule));
 	}
 
-	protected IScope scopeForAttributeExpressionNode(NodeAttributeExpression context, EReference reference) {
+	protected IScope scopeForAttributeExpressionNode(EObject context, EReference reference) {
 		SlimRule rule = SlimGTModelUtil.getContainer(context, SlimRule.class);
 		return Scopes.scopeFor(GTLModelUtil.getAllDeletedAndContextRuleNodes(rule));
 	}
 
 	protected IScope scopeForAttributeExpressionFeature(NodeAttributeExpression context, EReference reference) {
-		if (context.getNode() == null)
+		if (context.getNodeExpression() == null)
 			return IScope.NULLSCOPE;
 
-		return Scopes.scopeFor(context.getNode().getType().getEAllAttributes());
+		if (context.getNodeExpression().getNode() == null)
+			return IScope.NULLSCOPE;
+
+		return Scopes.scopeFor(context.getNodeExpression().getNode().getType().getEAllAttributes());
 	}
 
 	protected IScope scopeForIteratorAttributeExpressionFeature(GTLIteratorAttributeExpression context,

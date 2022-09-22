@@ -28,6 +28,7 @@ PatternImport :
 
 @Override
 SlimRule: {SlimRule}
+	(configured?='@' configuration = SlimRuleAnnotation)?
 	(abstract?='abstract')? 
 	type = GTLRuleType 
 	name = ID 
@@ -37,11 +38,12 @@ SlimRule: {SlimRule}
 			(contextNodes += SlimRuleNodeContext 		|
 			createdNodes += SlimRuleNodeCreation 		|
 			deletedNodes += GTLRuleNodeDeletion 		|
-			atrConditions += SlimRuleAttributeCondition |
+			conditions += SlimRuleCondition |
 			watchDogs += GTLRuleWatchDog 				|
 			invocations += SlimRuleInvocation)*
 	'}' 
-	(stochastic ?='@' probability = ValueExpression)?
+	(stochastic ?='@rate' probability = ValueExpression)?
+	';'
 ;
 
 @Override
@@ -66,24 +68,24 @@ GTLRuleRefinementAliased returns GTLRuleRefinement : {GTLRuleRefinementAliased}
 	superRule=[SlimRule|ID] 'as' name=ID
 ;
 
-GTLRuleRefinmentNode:
+GTLRuleRefinementNode:
 	superRule=[ecore::EObject|ID] '.' refinementNode=[SlimRuleNode|ID]
 ;
 
 @Override
 SlimRuleNodeContext:
-	(refining ?= '@refines='  refinement=GTLRuleRefinmentNode)?
+	(refining ?= '@refines='  refinement=GTLRuleRefinementNode)?
 	'[=]' (local?='local')? context = SlimRuleNode
 ;
 
 @Override
 SlimRuleNodeCreation:
-	(refining ?= '@refines+'  refinement=GTLRuleRefinmentNode)?
+	(refining ?= '@refines+'  refinement=GTLRuleRefinementNode)?
 	'[+]' creation = SlimRuleNode
 ;
 
 GTLRuleNodeDeletion :
-	(refining ?= '@refines-'  refinement=GTLRuleRefinmentNode)?
+	(refining ?= '@refines-'  refinement=GTLRuleRefinementNode)?
 	'[-]' deletion = SlimRuleNode
 ;
 

@@ -11,7 +11,13 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.emoflon.ibex.common.slimgt.slimGT.ArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.ArithmeticLiteral;
+import org.emoflon.ibex.common.slimgt.slimGT.BooleanBracket;
+import org.emoflon.ibex.common.slimgt.slimGT.BooleanConjunction;
+import org.emoflon.ibex.common.slimgt.slimGT.BooleanDisjunction;
+import org.emoflon.ibex.common.slimgt.slimGT.BooleanExpression;
+import org.emoflon.ibex.common.slimgt.slimGT.BooleanImplication;
 import org.emoflon.ibex.common.slimgt.slimGT.BooleanLiteral;
+import org.emoflon.ibex.common.slimgt.slimGT.BooleanNegation;
 import org.emoflon.ibex.common.slimgt.slimGT.BracketExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.Constant;
 import org.emoflon.ibex.common.slimgt.slimGT.ConstantLiteral;
@@ -23,7 +29,9 @@ import org.emoflon.ibex.common.slimgt.slimGT.ExpressionOperand;
 import org.emoflon.ibex.common.slimgt.slimGT.IntegerLiteral;
 import org.emoflon.ibex.common.slimgt.slimGT.MinMaxArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.NodeAttributeExpression;
+import org.emoflon.ibex.common.slimgt.slimGT.NodeExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.ProductArithmeticExpression;
+import org.emoflon.ibex.common.slimgt.slimGT.RelationalExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
 import org.emoflon.ibex.common.slimgt.slimGT.StochasticArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.StringLiteral;
@@ -34,6 +42,38 @@ import org.emoflon.ibex.common.slimgt.validation.DataTypeParseResult;
 import org.emoflon.ibex.common.slimgt.validation.ValueExpressionDataType;
 
 public final class SlimGTArithmeticUtil {
+
+	public static DataTypeParseResult parseDominantDataType(BooleanExpression expression) throws Exception {
+		if (expression instanceof BooleanImplication impl) {
+			DataTypeParseResult lhs = parseDominantDataType(impl.getLeft());
+			DataTypeParseResult rhs = parseDominantDataType(impl.getRight());
+			return DataTypeParseResult.mergeResult(lhs, rhs, impl,
+					List.of(SlimGTPackage.Literals.BOOLEAN_IMPLICATION__LEFT,
+							SlimGTPackage.Literals.BOOLEAN_IMPLICATION__RIGHT));
+		} else if (expression instanceof BooleanDisjunction disj) {
+			DataTypeParseResult lhs = parseDominantDataType(disj.getLeft());
+			DataTypeParseResult rhs = parseDominantDataType(disj.getRight());
+			return DataTypeParseResult.mergeResult(lhs, rhs, disj,
+					List.of(SlimGTPackage.Literals.BOOLEAN_DISJUNCTION__LEFT,
+							SlimGTPackage.Literals.BOOLEAN_DISJUNCTION__RIGHT));
+		} else if (expression instanceof BooleanConjunction conj) {
+			DataTypeParseResult lhs = parseDominantDataType(conj.getLeft());
+			DataTypeParseResult rhs = parseDominantDataType(conj.getRight());
+			return DataTypeParseResult.mergeResult(lhs, rhs, conj,
+					List.of(SlimGTPackage.Literals.BOOLEAN_CONJUNCTION__LEFT,
+							SlimGTPackage.Literals.BOOLEAN_CONJUNCTION__RIGHT));
+		} else if (expression instanceof BooleanNegation neg) {
+			return parseDominantDataType(neg.getOperand());
+		} else if (expression instanceof BooleanBracket brack) {
+			return parseDominantDataType(brack.getOperand());
+		} else if (expression instanceof ValueExpression val) {
+			return parseDominantDataType(val);
+		} else if (expression instanceof RelationalExpression rel) {
+			return new DataTypeParseResult(ValueExpressionDataType.BOOLEAN);
+		} else {
+			throw new UnsupportedOperationException("Unkown arithmetic operation type: " + expression);
+		}
+	}
 
 	public static DataTypeParseResult parseDominantDataType(ValueExpression expression) throws Exception {
 		return parseDominantDataType((ArithmeticExpression) expression);
@@ -80,7 +120,10 @@ public final class SlimGTArithmeticUtil {
 		} else if (expression instanceof BracketExpression brack) {
 			return parseDominantDataType(brack.getOperand());
 		} else if (expression instanceof ExpressionOperand op) {
-			if (op.getOperand() instanceof NodeAttributeExpression nae) {
+			if (op.getOperand() instanceof NodeExpression ne) {
+				return typeToParseResult(ne, SlimGTPackage.Literals.NODE_EXPRESSION__NODE,
+						EcorePackage.Literals.EOBJECT);
+			} else if (op.getOperand() instanceof NodeAttributeExpression nae) {
 				return attributeToParseResult(nae, SlimGTPackage.Literals.NODE_ATTRIBUTE_EXPRESSION__FEATURE,
 						nae.getFeature());
 			} else if (op.getOperand() instanceof CountExpression count) {
@@ -136,8 +179,40 @@ public final class SlimGTArithmeticUtil {
 			return new DataTypeParseResult(ValueExpressionDataType.BOOLEAN);
 		} else if (dataType == EcorePackage.Literals.EDATE) {
 			return new DataTypeParseResult(ValueExpressionDataType.DATE);
+		} else if (dataType == EcorePackage.Literals.EOBJECT) {
+			return new DataTypeParseResult(ValueExpressionDataType.OBJECT);
 		} else {
 			return new DataTypeParseResult(ValueExpressionDataType.UNSUPPORTED, context, location);
+		}
+	}
+
+	public static Set<ValueExpressionDataType> parseAllDataTypes(BooleanExpression expression) throws Exception {
+		Set<ValueExpressionDataType> dataTypes = new HashSet<>();
+		parseAllDataTypes(expression, dataTypes);
+		return dataTypes;
+	}
+
+	public static void parseAllDataTypes(BooleanExpression expression, Set<ValueExpressionDataType> dataTypes)
+			throws Exception {
+		if (expression instanceof BooleanImplication impl) {
+			parseAllDataTypes(impl.getLeft(), dataTypes);
+			parseAllDataTypes(impl.getRight(), dataTypes);
+		} else if (expression instanceof BooleanDisjunction disj) {
+			parseAllDataTypes(disj.getLeft(), dataTypes);
+			parseAllDataTypes(disj.getRight(), dataTypes);
+		} else if (expression instanceof BooleanConjunction conj) {
+			parseAllDataTypes(conj.getLeft(), dataTypes);
+			parseAllDataTypes(conj.getRight(), dataTypes);
+		} else if (expression instanceof BooleanNegation neg) {
+			parseAllDataTypes(neg.getOperand(), dataTypes);
+		} else if (expression instanceof BooleanBracket brack) {
+			parseAllDataTypes(brack.getOperand(), dataTypes);
+		} else if (expression instanceof ValueExpression val) {
+			parseAllDataTypes(val, dataTypes);
+		} else if (expression instanceof RelationalExpression rel) {
+			dataTypes.add(ValueExpressionDataType.BOOLEAN);
+		} else {
+			throw new UnsupportedOperationException("Unkown arithmetic operation type: " + expression);
 		}
 	}
 
@@ -175,7 +250,9 @@ public final class SlimGTArithmeticUtil {
 		} else if (expression instanceof BracketExpression brack) {
 			parseAllDataTypes(brack.getOperand(), dataTypes);
 		} else if (expression instanceof ExpressionOperand op) {
-			if (op.getOperand() instanceof NodeAttributeExpression nae) {
+			if (op.getOperand() instanceof NodeExpression ne) {
+				dataTypes.add(ValueExpressionDataType.OBJECT);
+			} else if (op.getOperand() instanceof NodeAttributeExpression nae) {
 				dataTypes.add(attributeToDataType(nae.getFeature()));
 			} else if (op.getOperand() instanceof CountExpression count) {
 				dataTypes.add(ValueExpressionDataType.INTEGER);
@@ -228,6 +305,8 @@ public final class SlimGTArithmeticUtil {
 			return ValueExpressionDataType.BOOLEAN;
 		} else if (dataType == EcorePackage.Literals.EDATE) {
 			return ValueExpressionDataType.DATE;
+		} else if (dataType == EcorePackage.Literals.EOBJECT) {
+			return ValueExpressionDataType.OBJECT;
 		} else {
 			return ValueExpressionDataType.UNSUPPORTED;
 		}
