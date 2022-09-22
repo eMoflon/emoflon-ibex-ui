@@ -273,7 +273,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		var supportPattern = invocation.getSupportPattern();
 
 		Set<SlimRuleNode> nodeCandidates = new HashSet<>();
-		var sourceNode = mapping.getSrcNode();
+		var sourceNode = mapping.getSource();
 
 		// only show nodes with correct mode (context/creation)
 		var creationNode = getContainer(sourceNode, SlimRuleNodeCreation.class);

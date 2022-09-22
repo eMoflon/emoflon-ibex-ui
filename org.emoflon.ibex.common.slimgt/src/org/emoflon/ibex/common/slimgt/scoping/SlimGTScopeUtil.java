@@ -12,7 +12,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.PackageReferenceAlias;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimParameter;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeAssignment;
-import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeCondition;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleCondition;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode;
@@ -43,12 +43,12 @@ public final class SlimGTScopeUtil {
 
 	public static boolean isSlimRuleNodeMappingSrc(final EObject context, final EReference reference) {
 		return context instanceof SlimRuleNodeMapping
-				&& reference == SlimGTPackage.Literals.SLIM_RULE_NODE_MAPPING__SRC_NODE;
+				&& reference == SlimGTPackage.Literals.SLIM_RULE_NODE_MAPPING__SOURCE;
 	}
 
 	public static boolean isSlimRuleNodeMappingTrg(final EObject context, final EReference reference) {
 		return context instanceof SlimRuleNodeMapping
-				&& reference == SlimGTPackage.Literals.SLIM_RULE_NODE_MAPPING__TRG_NODE;
+				&& reference == SlimGTPackage.Literals.SLIM_RULE_NODE_MAPPING__TARGET;
 	}
 
 	public static boolean isEnumExpressionLiteral(final EObject context, final EReference reference) {
@@ -62,7 +62,7 @@ public final class SlimGTScopeUtil {
 
 	public static boolean isCountExpressionPattern(EObject context, EReference reference) {
 		return context instanceof CountExpression
-				&& reference == SlimGTPackage.Literals.COUNT_EXPRESSION__INVOKED_PATTEN;
+				&& reference == SlimGTPackage.Literals.COUNT_EXPRESSION__SUPPORT_PATTERN;
 	}
 
 	public static boolean isValueOrArithmeticExpression(EObject context) {
@@ -80,12 +80,12 @@ public final class SlimGTScopeUtil {
 	}
 
 	public static boolean isAttributeConditionExpressionNode(EObject context, EReference reference) {
-		return context instanceof SlimRuleAttributeCondition
+		return context instanceof SlimRuleCondition
 				&& reference != SlimGTPackage.Literals.NODE_ATTRIBUTE_EXPRESSION__FEATURE;
 	}
 
 	public static boolean isAttributeConditionxpressionFeature(EObject context, EReference reference) {
-		return context instanceof SlimRuleAttributeCondition
+		return context instanceof SlimRuleCondition
 				&& reference == SlimGTPackage.Literals.NODE_ATTRIBUTE_EXPRESSION__FEATURE;
 	}
 

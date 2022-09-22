@@ -723,7 +723,7 @@ public class GTLValidator extends AbstractGTLValidator {
 
 	@Check
 	protected void checkCountInvocationNoCycle(CountExpression countExpression) {
-		if (countExpression.getInvokedPatten() == null)
+		if (countExpression.getSupportPattern() == null)
 			return;
 
 		SlimRule currentRule = SlimGTModelUtil.getContainer(countExpression, SlimRule.class);
@@ -733,8 +733,8 @@ public class GTLValidator extends AbstractGTLValidator {
 		if (invocationHierarchyHasCycle(countExpression, traversedRules)) {
 			error(String.format(
 					"Count expression: invoked pattern <%s> leads to an invocation cycle, which is not allowed.",
-					((SlimRule) countExpression.getInvokedPatten()).getName()),
-					SlimGTPackage.Literals.COUNT_EXPRESSION__INVOKED_PATTEN);
+					((SlimRule) countExpression.getSupportPattern()).getName()),
+					SlimGTPackage.Literals.COUNT_EXPRESSION__SUPPORT_PATTERN);
 		}
 	}
 
@@ -750,9 +750,9 @@ public class GTLValidator extends AbstractGTLValidator {
 
 	protected boolean invocationHierarchyHasCycle(EObject someInvocation, Set<SlimRule> traversedRules) {
 		SlimRule invokee = null;
-		if (someInvocation instanceof CountExpression countExpression && countExpression.getInvokedPatten() != null
-				&& countExpression.getInvokedPatten() instanceof SlimRule) {
-			invokee = (SlimRule) countExpression.getInvokedPatten();
+		if (someInvocation instanceof CountExpression countExpression && countExpression.getSupportPattern() != null
+				&& countExpression.getSupportPattern() instanceof SlimRule) {
+			invokee = (SlimRule) countExpression.getSupportPattern();
 		} else if (someInvocation instanceof SlimRuleInvocation ruleInvocation
 				&& ruleInvocation.getSupportPattern() != null
 				&& ruleInvocation.getSupportPattern() instanceof SlimRule) {

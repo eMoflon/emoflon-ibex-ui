@@ -27,7 +27,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.MinMaxArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.ProductArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.RelationalExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeAssignment;
-import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeCondition;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleCondition;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.StochasticArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.SumArithmeticExpression;
@@ -406,7 +406,7 @@ public final class GTLModelUtil {
 
 	public static Collection<CountExpression> getAllCountExpression(SlimRule context) {
 		List<CountExpression> countExpr = new LinkedList<>();
-		for (SlimRuleAttributeCondition cond : context.getAtrConditions()) {
+		for (SlimRuleCondition cond : context.getConditions()) {
 			if (cond.getExpression() != null)
 				countExpr.addAll(getCountExpressionInBooleanExpression(cond.getExpression()));
 		}
@@ -519,10 +519,10 @@ public final class GTLModelUtil {
 		return nodes.stream().flatMap(n -> n.getEdgeIterators().stream()).collect(Collectors.toList());
 	}
 
-	public static Collection<SlimRuleAttributeCondition> getAllAttributeCondtions(SlimRule context) {
+	public static Collection<SlimRuleCondition> getAllAttributeCondtions(SlimRule context) {
 		Set<SlimRule> rules = new LinkedHashSet<>();
 		rules.add(context);
 		rules.addAll(getAllSuperRules(context));
-		return rules.stream().flatMap(r -> r.getAtrConditions().stream()).collect(Collectors.toList());
+		return rules.stream().flatMap(r -> r.getConditions().stream()).collect(Collectors.toList());
 	}
 }

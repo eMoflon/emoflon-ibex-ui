@@ -38,7 +38,7 @@ SlimRule: {SlimRule}
 			(contextNodes += SlimRuleNodeContext 		|
 			createdNodes += SlimRuleNodeCreation 		|
 			deletedNodes += GTLRuleNodeDeletion 		|
-			atrConditions += SlimRuleAttributeCondition |
+			conditions += SlimRuleCondition |
 			watchDogs += GTLRuleWatchDog 				|
 			invocations += SlimRuleInvocation)*
 	'}' 

@@ -29,7 +29,7 @@ import org.emoflon.ibex.common.slimgt.scoping.SlimGTScopeUtil;
 import org.emoflon.ibex.common.slimgt.slimGT.BooleanExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.CountExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.NodeAttributeExpression;
-import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeCondition;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleCondition;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeCreation;
@@ -255,7 +255,7 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 			return scopeForCountExpressionPattern((CountExpression) context, reference);
 		}
 		if (GTLScopeUtil.isAttributeConditionExpressionNode(context, reference)) {
-			return scopeForAttributeConditionExpressionNode((SlimRuleAttributeCondition) context, reference);
+			return scopeForAttributeConditionExpressionNode((SlimRuleCondition) context, reference);
 		}
 		if (SlimGTScopeUtil.isNodeAttributeExpressionNode(context, reference)) {
 			return scopeForAttributeExpressionNode(context, reference);
@@ -425,8 +425,8 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 		}
 
 		container = SlimGTModelUtil.getContainer(context, CountExpression.class);
-		if (container != null && container instanceof CountExpression count && count.getInvokedPatten() != null
-				&& count.getInvokedPatten() instanceof SlimRule trgRule) {
+		if (container != null && container instanceof CountExpression count && count.getSupportPattern() != null
+				&& count.getSupportPattern() instanceof SlimRule trgRule) {
 			Collection<SlimRuleNode> allRuleNodes = GTLModelUtil.getAllDeletedAndContextRuleNodes(trgRule);
 			return Scopes.scopeFor(allRuleNodes);
 		}
@@ -465,8 +465,7 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 		return Scopes.scopeFor(GTLModelUtil.getAllDeletedAndContextRuleNodes(rule));
 	}
 
-	protected IScope scopeForAttributeConditionExpressionNode(SlimRuleAttributeCondition context,
-			EReference reference) {
+	protected IScope scopeForAttributeConditionExpressionNode(SlimRuleCondition context, EReference reference) {
 		SlimRule rule = SlimGTModelUtil.getContainer(context, SlimRule.class);
 		return Scopes.scopeFor(GTLModelUtil.getAllDeletedAndContextRuleNodes(rule));
 	}

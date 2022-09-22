@@ -3,7 +3,7 @@ package org.emoflon.ibex.gt.gtl.scoping;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
-import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeCondition;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleCondition;
 import org.emoflon.ibex.gt.gtl.gTL.GTLEdgeIterator;
 import org.emoflon.ibex.gt.gtl.gTL.GTLEdgeIteratorAttributeAssignment;
 import org.emoflon.ibex.gt.gtl.gTL.GTLEdgeIteratorReference;
@@ -59,12 +59,12 @@ public final class GTLScopeUtil {
 	}
 
 	public static boolean isAttributeConditionExpressionNode(EObject context, EReference reference) {
-		return context instanceof SlimRuleAttributeCondition
+		return context instanceof SlimRuleCondition
 				&& reference != SlimGTPackage.Literals.NODE_ATTRIBUTE_EXPRESSION__FEATURE;
 	}
 
 	public static boolean isAttributeConditionExpressionFeature(EObject context, EReference reference) {
-		return context instanceof SlimRuleAttributeCondition
+		return context instanceof SlimRuleCondition
 				&& reference == SlimGTPackage.Literals.NODE_ATTRIBUTE_EXPRESSION__FEATURE;
 	}
 

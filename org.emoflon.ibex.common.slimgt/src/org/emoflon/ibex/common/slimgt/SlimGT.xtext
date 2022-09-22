@@ -35,7 +35,7 @@ enum SlimRuleConfiguration:
 SlimRule: {SlimRule}
 	(contextNodes += SlimRuleNodeContext |
 	createdNodes += SlimRuleNodeCreation |
-	atrConditions += SlimRuleAttributeCondition |
+	conditions += SlimRuleCondition |
 	invocations += SlimRuleInvocation
 	)*
 ;
@@ -80,7 +80,7 @@ SlimRuleAttributeAssignment:
 	'.' type=[ecore::EAttribute] ':=' value=ValueExpression ';'
 ;
 
-SlimRuleAttributeCondition:
+SlimRuleCondition:
 	'[#]' expression=BooleanExpression ';'
 ;
 
@@ -98,7 +98,7 @@ SlimParameter:
 ;
 
 SlimRuleNodeMapping:
-	srcNode = [SlimRuleNode|ID] '=' trgNode = [SlimRuleNode|ID]
+	source = [SlimRuleNode|ID] '=' target = [SlimRuleNode|ID]
 ;
 
 SlimRuleNodeMappings:
@@ -163,7 +163,7 @@ NodeExpression:
 ;
 
 CountExpression:
-	'count' '(' invokedPatten = [SlimRule|ID] ')' mappings=SlimRuleNodeMappings
+	'count' '(' supportPattern = [SlimRule|ID] ')' mappings=SlimRuleNodeMappings
 ;
 
 EnumExpression:

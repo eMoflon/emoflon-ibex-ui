@@ -47,7 +47,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimGTFactory;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAnnotation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeAssignment;
-import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeCondition;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleCondition;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdgeContext;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdgeCreation;
@@ -480,10 +480,10 @@ public class GTLModelFlattener {
 		}
 
 		// Flatten attribute conditions
-		Set<SlimRuleAttributeCondition> localConditions = Collections.synchronizedSet(new HashSet<>());
-		localConditions.addAll(rule.getAtrConditions());
+		Set<SlimRuleCondition> localConditions = Collections.synchronizedSet(new HashSet<>());
+		localConditions.addAll(rule.getConditions());
 
-		Collection<SlimRuleAttributeCondition> conditions = GTLModelUtil.getAllAttributeCondtions(rule);
+		Collection<SlimRuleCondition> conditions = GTLModelUtil.getAllAttributeCondtions(rule);
 		conditions = conditions.parallelStream().filter(condition -> {
 			Set<ValueExpressionDataType> dataTypes = new HashSet<>();
 			try {
@@ -504,10 +504,10 @@ public class GTLModelFlattener {
 			}
 		}).collect(Collectors.toList());
 
-		for (SlimRuleAttributeCondition condition : conditions) {
-			SlimRuleAttributeCondition flattenedCondition = superFactory.createSlimRuleAttributeCondition();
+		for (SlimRuleCondition condition : conditions) {
+			SlimRuleCondition flattenedCondition = superFactory.createSlimRuleCondition();
 			flattenedCondition.setExpression(flatten(condition.getExpression(), flattenedRule));
-			flattenedRule.getAtrConditions().add(flattenedCondition);
+			flattenedRule.getConditions().add(flattenedCondition);
 		}
 
 		// Flatten invocations
@@ -542,18 +542,18 @@ public class GTLModelFlattener {
 		Map<String, SlimRuleNode> trgNodes = rule2nodes.get(targetRule);
 		for (SlimRuleNodeMapping mapping : mappings.getMappings()) {
 			SlimRuleNodeMapping flattenedMapping = superFactory.createSlimRuleNodeMapping();
-			if (srcNodes.containsKey(mapping.getSrcNode().getName())) {
-				flattenedMapping.setSrcNode(srcNodes.get(mapping.getSrcNode().getName()));
+			if (srcNodes.containsKey(mapping.getSource().getName())) {
+				flattenedMapping.setSource(srcNodes.get(mapping.getSource().getName()));
 			} else {
-				addPendingNodeConsumer(sourceRule.getName(), mapping.getSrcNode().getName(), (node) -> {
-					flattenedMapping.setSrcNode(node);
+				addPendingNodeConsumer(sourceRule.getName(), mapping.getSource().getName(), (node) -> {
+					flattenedMapping.setSource(node);
 				});
 			}
-			if (trgNodes.containsKey(mapping.getTrgNode().getName())) {
-				flattenedMapping.setTrgNode(trgNodes.get(mapping.getTrgNode().getName()));
+			if (trgNodes.containsKey(mapping.getTarget().getName())) {
+				flattenedMapping.setTarget(trgNodes.get(mapping.getTarget().getName()));
 			} else {
-				addPendingNodeConsumer(targetRule.getName(), mapping.getTrgNode().getName(), (node) -> {
-					flattenedMapping.setTrgNode(node);
+				addPendingNodeConsumer(targetRule.getName(), mapping.getTarget().getName(), (node) -> {
+					flattenedMapping.setTarget(node);
 				});
 			}
 		}
@@ -669,16 +669,16 @@ public class GTLModelFlattener {
 				flattenedParam.setParameter(name2Parameter.get(param.getParameter().getName()));
 				flattenedOperand.setOperand(flattenedParam);
 			} else if (op.getOperand() instanceof CountExpression count) {
-				SlimRule invokee = (SlimRule) count.getInvokedPatten();
+				SlimRule invokee = (SlimRule) count.getSupportPattern();
 				CountExpression flattenedCount = superFactory.createCountExpression();
 				if (name2rule.containsKey(invokee.getName())) {
-					flattenedCount.setInvokedPatten(name2rule.get(invokee.getName()));
+					flattenedCount.setSupportPattern(name2rule.get(invokee.getName()));
 					flattenedCount
 							.setMappings(flatten(container, name2rule.get(invokee.getName()), count.getMappings()));
 					flattenedOperand.setOperand(flattenedCount);
 				} else {
 					addPendingRuleConsumer(invokee.getName(), (rule) -> {
-						flattenedCount.setInvokedPatten(rule);
+						flattenedCount.setSupportPattern(rule);
 						flattenedCount.setMappings(flatten(container, rule, count.getMappings()));
 						flattenedOperand.setOperand(flattenedCount);
 					});
