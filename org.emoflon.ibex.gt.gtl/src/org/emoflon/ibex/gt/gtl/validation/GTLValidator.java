@@ -38,6 +38,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdgeContext;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdgeCreation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMappings;
 import org.emoflon.ibex.common.slimgt.slimGT.ValueExpression;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
 import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtil;
@@ -791,7 +792,7 @@ public class GTLValidator extends AbstractGTLValidator {
 		GTLEdgeIterator itr = SlimGTModelUtil.getContainer(countExpression, GTLEdgeIterator.class);
 
 		if (itr != null) {
-			error("Count pattern <%s> invocations are not allowed within iterator constructs.", itr,
+			error("Count pattern invocations are not allowed within iterator constructs.", itr,
 					GTLPackage.Literals.GTL_EDGE_ITERATOR__ITERATOR_ATTRIBUTES);
 		}
 	}
@@ -834,6 +835,60 @@ public class GTLValidator extends AbstractGTLValidator {
 
 		return false;
 
+	}
+
+	@Check
+	protected void invocationMappingsProperties(SlimRuleNodeMappings mappings) {
+		SlimRule currentRule = SlimGTModelUtil.getContainer(mappings, SlimRule.class);
+		boolean sourceAutomaticConstraintsDisabled = false;
+		if (currentRule.isConfigured() && currentRule.getConfiguration() != null
+				&& currentRule.getConfiguration().getConfigurations() != null && currentRule.getConfiguration()
+						.getConfigurations().contains(SlimRuleConfiguration.DISABLE_INJECTIVITY_CONSTRAINTS)) {
+			sourceAutomaticConstraintsDisabled = true;
+		}
+
+		SlimRule invokee = null;
+		if (mappings.eContainer() instanceof CountExpression count) {
+			invokee = (SlimRule) count.getSupportPattern();
+		} else if (mappings.eContainer() instanceof SlimRuleInvocation invocation) {
+			invokee = (SlimRule) invocation.getSupportPattern();
+		} else {
+			return;
+		}
+
+		boolean targetAutomaticConstraintsDisabled = false;
+		if (invokee.isConfigured() && invokee.getConfiguration() != null
+				&& invokee.getConfiguration().getConfigurations() != null && invokee.getConfiguration()
+						.getConfigurations().contains(SlimRuleConfiguration.DISABLE_INJECTIVITY_CONSTRAINTS)) {
+			targetAutomaticConstraintsDisabled = true;
+		}
+
+		Set<SlimRuleNode> srcNodes = mappings.getMappings().stream().filter(m -> m.getSource() != null)
+				.filter(m -> m.getSource() instanceof SlimRuleNode).map(m -> (SlimRuleNode) m.getSource())
+				.collect(Collectors.toSet());
+		Set<SlimRuleNode> trgNodes = mappings.getMappings().stream().filter(m -> m.getTarget() != null)
+				.filter(m -> m.getTarget() instanceof SlimRuleNode).map(m -> (SlimRuleNode) m.getTarget())
+				.collect(Collectors.toSet());
+
+		for (SlimRuleNode node : srcNodes) {
+			long count = mappings.getMappings().stream().filter(m -> m.getSource() != null)
+					.filter(m -> m.getSource().equals(node)).count();
+			if (count > 1 && !targetAutomaticConstraintsDisabled) {
+				error(String.format(
+						"With the automatic creation of injectivity constraints in target rule <%s> being active, the mapping of multiple different target nodes onto the same source node will lead to zero found matches.",
+						invokee.getName()), SlimGTPackage.Literals.SLIM_RULE_NODE_MAPPINGS__MAPPINGS);
+			}
+		}
+
+		for (SlimRuleNode node : trgNodes) {
+			long count = mappings.getMappings().stream().filter(m -> m.getTarget() != null)
+					.filter(m -> m.getTarget().equals(node)).count();
+			if (count > 1 && !sourceAutomaticConstraintsDisabled) {
+				error(String.format(
+						"With the automatic creation of injectivity constraints in source rule <%s> being active, the mapping of multiple different source nodes onto the same target node will lead to zero found matches.",
+						invokee.getName()), SlimGTPackage.Literals.SLIM_RULE_NODE_MAPPINGS__MAPPINGS);
+			}
+		}
 	}
 
 	// Arithmetic Expession Checks

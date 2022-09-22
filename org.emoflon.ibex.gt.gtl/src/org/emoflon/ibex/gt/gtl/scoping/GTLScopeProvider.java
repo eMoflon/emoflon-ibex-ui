@@ -43,7 +43,6 @@ import org.emoflon.ibex.gt.gtl.gTL.GTLEdgeIteratorAttributeAssignment;
 import org.emoflon.ibex.gt.gtl.gTL.GTLEdgeIteratorReference;
 import org.emoflon.ibex.gt.gtl.gTL.GTLIteratorAttributeExpression;
 import org.emoflon.ibex.gt.gtl.gTL.GTLParameterExpression;
-import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinement;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementAliased;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementNode;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementPlain;
@@ -369,51 +368,36 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 
 	protected IScope scopeForNodeMappingSrc(SlimRuleNodeMapping context, EReference reference) {
 		SlimRule currentRule = SlimGTModelUtil.getContainer(context, SlimRule.class);
-		EObject container = SlimGTModelUtil.getContainer(context, GTLRuleRefinement.class);
-		if (container != null && container instanceof GTLRuleRefinement refinement) {
-			Collection<SlimRuleNode> allRuleNodes = GTLModelUtil.getAllRuleNodes(currentRule);
-			allRuleNodes.removeAll(currentRule.getContextNodes().stream().map(cn -> (SlimRuleNode) cn.getContext())
-					.collect(Collectors.toSet()));
-			allRuleNodes.removeAll(
-					currentRule.getDeletedNodes().stream().map(cn -> cn.getDeletion()).collect(Collectors.toSet()));
-			return Scopes.scopeFor(allRuleNodes);
-		}
-
-		container = SlimGTModelUtil.getContainer(context, SlimRuleInvocation.class);
+		EObject container = SlimGTModelUtil.getContainer(context, SlimRuleInvocation.class);
 		if (container != null && container instanceof SlimRuleInvocation invocation) {
-			Set<SlimRuleNode> allRuleNodes = new HashSet<>();
-			allRuleNodes.addAll(currentRule.getContextNodes().stream().map(cn -> (SlimRuleNode) cn.getContext())
-					.collect(Collectors.toSet()));
-			allRuleNodes.addAll(
-					currentRule.getDeletedNodes().stream().map(cn -> cn.getDeletion()).collect(Collectors.toSet()));
-			return Scopes.scopeFor(allRuleNodes);
+			return Scopes.scopeFor(GTLModelUtil.getAllDeletedAndContextRuleNodes(currentRule));
 		}
-
 		container = SlimGTModelUtil.getContainer(context, CountExpression.class);
 		if (container != null && container instanceof CountExpression count) {
-			Set<SlimRuleNode> allRuleNodes = new HashSet<>();
-			allRuleNodes.addAll(currentRule.getContextNodes().stream().map(cn -> (SlimRuleNode) cn.getContext())
-					.collect(Collectors.toSet()));
-			allRuleNodes.addAll(
-					currentRule.getDeletedNodes().stream().map(cn -> cn.getDeletion()).collect(Collectors.toSet()));
-			return Scopes.scopeFor(allRuleNodes);
+			return Scopes.scopeFor(GTLModelUtil.getAllDeletedAndContextRuleNodes(currentRule));
 		}
 
 		return IScope.NULLSCOPE;
 	}
 
 	protected IScope scopeForNodeMappingTrg(SlimRuleNodeMapping context, EReference reference) {
-		SlimRule currentRule = SlimGTModelUtil.getContainer(context, SlimRule.class);
-		EObject container = SlimGTModelUtil.getContainer(context, GTLRuleRefinement.class);
-		if (container != null && container instanceof GTLRuleRefinement refinement) {
-			Set<SlimRuleNode> allRuleNodes = new HashSet<>();
-			allRuleNodes.addAll(currentRule.getContextNodes().stream().map(cn -> (SlimRuleNode) cn.getContext())
-					.collect(Collectors.toSet()));
-			allRuleNodes.addAll(
-					currentRule.getDeletedNodes().stream().map(cn -> cn.getDeletion()).collect(Collectors.toSet()));
-			allRuleNodes.addAll(currentRule.getCreatedNodes().stream().map(cn -> (SlimRuleNode) cn.getCreation())
-					.collect(Collectors.toSet()));
-			return Scopes.scopeFor(allRuleNodes);
+		EObject container = SlimGTModelUtil.getContainer(context, SlimRuleInvocation.class);
+		if (container != null && container instanceof SlimRuleInvocation invocation) {
+			if (invocation.getSupportPattern() != null
+					&& invocation.getSupportPattern() instanceof SlimRule otherRule) {
+				return Scopes.scopeFor(GTLModelUtil.getAllDeletedAndContextRuleNodes(otherRule));
+			} else {
+				return IScope.NULLSCOPE;
+			}
+
+		}
+		container = SlimGTModelUtil.getContainer(context, CountExpression.class);
+		if (container != null && container instanceof CountExpression count) {
+			if (count.getSupportPattern() != null && count.getSupportPattern() instanceof SlimRule otherRule) {
+				return Scopes.scopeFor(GTLModelUtil.getAllDeletedAndContextRuleNodes(otherRule));
+			} else {
+				return IScope.NULLSCOPE;
+			}
 		}
 
 		container = SlimGTModelUtil.getContainer(context, SlimRuleInvocation.class);
