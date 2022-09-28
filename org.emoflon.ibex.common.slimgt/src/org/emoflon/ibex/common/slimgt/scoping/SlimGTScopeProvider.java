@@ -4,16 +4,10 @@
 package org.emoflon.ibex.common.slimgt.scoping;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.EcoreUtil2;
-import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import org.emoflon.ibex.common.slimgt.slimGT.EditorFile;
@@ -25,6 +19,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeAssignment;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
+import org.emoflon.ibex.common.slimgt.util.XtextResourceManager;
 
 /**
  * This class contains custom scoping description.
@@ -35,33 +30,7 @@ import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
  */
 public class SlimGTScopeProvider extends AbstractSlimGTScopeProvider {
 
-	protected Map<Resource, Map<URI, Resource>> resourceCache = new HashMap<>();
-
-	protected Resource loadResource(final Resource requester, final URI gtModelUri) {
-		Map<URI, Resource> cache = resourceCache.get(requester);
-		if (cache == null) {
-			cache = new HashMap<>();
-			resourceCache.put(requester, cache);
-		}
-
-		Resource other = cache.get(gtModelUri);
-		if (other == null) {
-			XtextResourceSet rs = new XtextResourceSet();
-			try {
-				other = rs.getResource(gtModelUri, true);
-			} catch (Exception e) {
-				return other;
-			}
-			cache.put(gtModelUri, other);
-
-			if (other == null)
-				return other;
-
-			EcoreUtil2.resolveLazyCrossReferences(other, () -> false);
-		}
-
-		return other;
-	}
+	protected XtextResourceManager resourceManager = new XtextResourceManager();
 
 	@Override
 	public IScope getScope(EObject context, EReference reference) {

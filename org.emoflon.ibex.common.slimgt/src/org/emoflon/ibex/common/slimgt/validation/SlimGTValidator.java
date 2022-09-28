@@ -3,9 +3,7 @@
  */
 package org.emoflon.ibex.common.slimgt.validation;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EPackage;
@@ -14,8 +12,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
-import org.eclipse.xtext.EcoreUtil2;
-import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.validation.Check;
 import org.emoflon.ibex.common.slimgt.slimGT.ArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.BooleanBracket;
@@ -35,6 +31,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.StochasticArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.SumArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.UnaryArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.util.SlimGTArithmeticUtil;
+import org.emoflon.ibex.common.slimgt.util.XtextResourceManager;
 
 /**
  * This class contains custom validation rules.
@@ -44,33 +41,7 @@ import org.emoflon.ibex.common.slimgt.util.SlimGTArithmeticUtil;
  */
 public class SlimGTValidator extends AbstractSlimGTValidator {
 
-	protected Map<Resource, Map<URI, Resource>> resourceCache = new HashMap<>();
-
-	protected Resource loadResource(final Resource requester, final URI gtModelUri) {
-		Map<URI, Resource> cache = resourceCache.get(requester);
-		if (cache == null) {
-			cache = new HashMap<>();
-			resourceCache.put(requester, cache);
-		}
-
-		Resource other = cache.get(gtModelUri);
-		if (other == null) {
-			XtextResourceSet rs = new XtextResourceSet();
-			try {
-				other = rs.getResource(gtModelUri, true);
-			} catch (Exception e) {
-				return other;
-			}
-			cache.put(gtModelUri, other);
-
-			if (other == null)
-				return other;
-
-			EcoreUtil2.resolveLazyCrossReferences(other, () -> false);
-		}
-
-		return other;
-	}
+	protected XtextResourceManager resourceManager = new XtextResourceManager();
 
 	/**
 	 * This prevents all exceptions being "swallowed" by the default validator

@@ -1,8 +1,5 @@
 package org.emoflon.ibex.gt.gtl.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,16 +12,9 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xtext.EcoreUtil2;
-import org.eclipse.xtext.resource.XtextResourceSet;
 import org.emoflon.ibex.common.slimgt.slimGT.ArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.ArithmeticLiteral;
 import org.emoflon.ibex.common.slimgt.slimGT.BooleanBracket;
@@ -59,7 +49,6 @@ import org.emoflon.ibex.common.slimgt.slimGT.SumArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.UnaryArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.ValueExpression;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
-import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtil;
 import org.emoflon.ibex.common.slimgt.validation.ValueExpressionDataType;
 import org.emoflon.ibex.gt.gtl.gTL.EditorFile;
 import org.emoflon.ibex.gt.gtl.gTL.ExpressionOperand;
@@ -82,8 +71,9 @@ import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNodeCreation;
 
 public class GTLModelFlattener {
 
-	protected SlimGTFactory superFactory = SlimGTPackage.eINSTANCE.getSlimGTFactory();
-	protected GTLFactory factory = GTLPackage.eINSTANCE.getGTLFactory();
+	final protected GTLResourceManager gtlManager;
+	final protected SlimGTFactory superFactory = SlimGTPackage.eINSTANCE.getSlimGTFactory();
+	final protected GTLFactory factory = GTLPackage.eINSTANCE.getGTLFactory();
 	protected String packageName = null;
 	protected EditorFile flattenedFile = null;
 	protected Map<URI, Resource> resourceCache = Collections.synchronizedMap(new HashMap<>());
@@ -96,13 +86,20 @@ public class GTLModelFlattener {
 			.synchronizedMap(new HashMap<>());
 
 	public GTLModelFlattener(final EditorFile file, boolean loadCompletePackage) throws Exception {
+		this(new GTLResourceManager(), file, loadCompletePackage);
+	}
+
+	public GTLModelFlattener(final GTLResourceManager gtlManager, final EditorFile file, boolean loadCompletePackage)
+			throws Exception {
+		this.gtlManager = gtlManager;
+
 		this.packageName = file.getPackage().getName();
 		flattenedFile = factory.createEditorFile();
 		flattenedFile.setPackage(factory.createPackageDeclaration());
 		flattenedFile.getPackage().setName(packageName);
 
 		if (loadCompletePackage) {
-			Collection<EditorFile> files = loadAllEditorFilesInPackage(file);
+			Collection<EditorFile> files = gtlManager.loadAllEditorFilesInPackage(file);
 			files.parallelStream().forEach(ef -> {
 				try {
 					flatten(ef);
@@ -118,6 +115,12 @@ public class GTLModelFlattener {
 	}
 
 	public GTLModelFlattener(final Collection<EditorFile> files) throws Exception {
+		this(new GTLResourceManager(), files);
+	}
+
+	public GTLModelFlattener(final GTLResourceManager gtlManager, final Collection<EditorFile> files) throws Exception {
+		this.gtlManager = gtlManager;
+
 		for (EditorFile file : files) {
 			if (packageName == null) {
 				packageName = file.getPackage().getName();
@@ -169,145 +172,6 @@ public class GTLModelFlattener {
 		}
 	}
 
-	protected Resource loadResource(final Resource requester, final URI gtModelUri) {
-		Resource other = resourceCache.get(gtModelUri);
-		if (other == null) {
-			XtextResourceSet rs = new XtextResourceSet();
-			try {
-				other = rs.getResource(gtModelUri, true);
-			} catch (Exception e) {
-				return other;
-			}
-			resourceCache.put(gtModelUri, other);
-
-			if (other == null)
-				return other;
-
-			EcoreUtil2.resolveLazyCrossReferences(other, () -> false);
-		}
-
-		return other;
-	}
-
-	public Optional<EditorFile> loadGTLModelByFullPath(final EObject context, final String path) {
-		Resource resource = null;
-		URI gtModelUri = null;
-		EditorFile file = null;
-
-		File importFile = new File(path);
-		if (importFile.exists() && importFile.isFile() && importFile.isAbsolute()) {
-			gtModelUri = URI.createFileURI(path);
-			try {
-				resource = loadResource(context.eResource(), gtModelUri);
-				file = (EditorFile) resource.getContents().get(0);
-			} catch (Exception e) {
-				return Optional.empty();
-			}
-		}
-
-		if (file == null) {
-			return Optional.empty();
-		} else {
-			return Optional.of(file);
-		}
-	}
-
-	public Optional<EditorFile> loadGTLModelByRelativePath(final EObject context, final String path) {
-		IProject currentProject = SlimGTWorkspaceUtil.getCurrentProject(context.eResource());
-		Resource resource = null;
-		URI gtModelUri = null;
-		String absolutePath = null;
-		EditorFile file = null;
-
-		try {
-			absolutePath = Paths.get(currentProject.getLocation().toPortableString()).resolve(Paths.get(path)).toFile()
-					.getCanonicalPath();
-		} catch (IOException e1) {
-			return Optional.empty();
-		}
-
-		gtModelUri = URI.createFileURI(absolutePath);
-		try {
-			resource = loadResource(context.eResource(), gtModelUri);
-			file = (EditorFile) resource.getContents().get(0);
-		} catch (Exception e) {
-			return Optional.empty();
-		}
-
-		if (file == null) {
-			return Optional.empty();
-		} else {
-			return Optional.of(file);
-		}
-	}
-
-	public Optional<EditorFile> loadGTLModelByImport(final PatternImport imp) {
-		String currentImport = imp.getFile().getValue().replace("\"", "");
-		File importFile = new File(currentImport);
-		Optional<EditorFile> optFile = null;
-		if (importFile.exists() && importFile.isFile() && importFile.isAbsolute()) {
-			optFile = loadGTLModelByFullPath(imp, currentImport);
-		} else {
-			optFile = loadGTLModelByRelativePath(imp, currentImport);
-		}
-		return optFile;
-	}
-
-	public Collection<EditorFile> loadAllEditorFilesInPackage(final EditorFile ef) {
-		Collection<EditorFile> pkgScope = new LinkedList<>();
-
-		IProject currentProject = SlimGTWorkspaceUtil.getCurrentProject(ef.eResource());
-		String currentFile = ef.eResource().getURI().toString().replace("platform:/resource/", "")
-				.replace(currentProject.getName(), "");
-		currentFile = currentProject.getLocation().toPortableString() + currentFile;
-		currentFile = currentFile.replace("/", "\\");
-
-		IWorkspace ws = ResourcesPlugin.getWorkspace();
-		for (IProject project : ws.getRoot().getProjects()) {
-			try {
-				if (!project.hasNature("org.emoflon.ibex.gt.gtl.ui.nature"))
-					continue;
-			} catch (CoreException e) {
-				continue;
-			}
-
-			File projectFile = new File(project.getLocation().toPortableString());
-			List<File> gtFiles = new LinkedList<>();
-			SlimGTWorkspaceUtil.gatherFilesWithEnding(gtFiles, projectFile, ".gtl", true);
-
-			for (File gtFile : gtFiles) {
-				URI gtModelUri;
-				try {
-					gtModelUri = URI.createFileURI(gtFile.getCanonicalPath());
-				} catch (IOException e) {
-					continue;
-				}
-
-				String fileString = gtModelUri.toFileString();
-
-				if (fileString.equals(currentFile))
-					continue;
-
-				Resource resource = loadResource(ef.eResource(), gtModelUri);
-				if (resource == null)
-					continue;
-
-				EObject gtlModel = resource.getContents().get(0);
-
-				if (gtlModel == null)
-					continue;
-
-				if (gtlModel instanceof EditorFile otherEditorFile) {
-					if (otherEditorFile.getPackage().getName().equals(ef.getPackage().getName())) {
-						pkgScope.add(otherEditorFile);
-					}
-				}
-			}
-		}
-
-		return pkgScope;
-	}
-
 	protected void flatten(EditorFile file) throws Exception {
 		// Add metamodel imports
 		imports.addAll(file.getImports().stream().map(i -> i.getName()).collect(Collectors.toSet()));
@@ -318,11 +182,11 @@ public class GTLModelFlattener {
 				EditorFile otherFile = SlimGTModelUtil.getContainer(pi.getPattern(), EditorFile.class);
 				// Resolve possible dependencies through refinements and invocations through
 				// recursive flattening.
-				GTLModelFlattener flattener = new GTLModelFlattener(otherFile, true);
+				GTLModelFlattener flattener = new GTLModelFlattener(gtlManager, otherFile, true);
 				SlimRule flattenedRule = flattener.getFlattenedRule(pi.getPattern().getName());
 				insertFlattenedRule(flattenedRule);
 			} else {
-				Optional<EditorFile> wildcardImport = loadGTLModelByImport(pi);
+				Optional<EditorFile> wildcardImport = gtlManager.loadGTLModelByImport(pi);
 				if (!wildcardImport.isPresent())
 					continue;
 
@@ -332,7 +196,7 @@ public class GTLModelFlattener {
 						.collect(Collectors.toSet());
 				// Resolve possible dependencies through refinements and invocations through
 				// recursive flattening.
-				GTLModelFlattener flattener = new GTLModelFlattener(wildcardImport.get(), true);
+				GTLModelFlattener flattener = new GTLModelFlattener(gtlManager, wildcardImport.get(), true);
 				flattener.getFlattenedModel().getRules().stream()
 						.filter(other -> otherRuleNames.contains(other.getName()))
 						.forEach(other -> insertFlattenedRule(other));
