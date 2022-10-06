@@ -20,6 +20,7 @@ Require-Bundle: org.eclipse.xtext,
  org.moflon.core.utilities
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.emoflon.ibex.common.slimgt,
+ org.emoflon.ibex.common.slimgt.build,
  org.emoflon.ibex.common.slimgt.generator,
  org.emoflon.ibex.common.slimgt.parser.antlr,
  org.emoflon.ibex.common.slimgt.parser.antlr.internal,
