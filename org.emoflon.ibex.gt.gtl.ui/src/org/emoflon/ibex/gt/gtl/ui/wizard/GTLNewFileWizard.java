@@ -51,7 +51,29 @@ public class GTLNewFileWizard extends Wizard implements INewWizard {
 	@Override
 	public boolean performFinish() {
 		IFile file = mainPage.createNewFile();
-		GTLNewFileInitialContents.initFileContent(file);
+		String pkg = "";
+		StringBuilder sb = new StringBuilder();
+		String[] fqn = file.getLocation().toPortableString().toString().split("src/");
+		if (fqn.length != 2) {
+			pkg = "replace me!";
+		} else {
+			String[] segments = fqn[1].split("/");
+			for (String seg : segments) {
+				if (seg.contains(".gtl"))
+					break;
+
+				sb.append(seg + ".");
+			}
+		}
+
+		pkg = sb.toString();
+		if (pkg.length() < 1) {
+			pkg = "replace me!";
+		} else if (pkg.length() > 0 && pkg.endsWith(".")) {
+			pkg = pkg.substring(0, pkg.length() - 1);
+		}
+
+		GTLNewFileInitialContents.initFileContent(file, pkg);
 		UiUtilities.openDefaultEditorForFile(file);
 		return file != null;
 	}

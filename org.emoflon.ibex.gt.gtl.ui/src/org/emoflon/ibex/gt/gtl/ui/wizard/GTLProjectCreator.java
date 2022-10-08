@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.xtext.ui.util.PluginProjectFactory;
 import org.eclipse.xtext.ui.wizard.AbstractPluginProjectCreator;
 import org.eclipse.xtext.ui.wizard.DefaultProjectInfo;
@@ -25,11 +26,18 @@ public class GTLProjectCreator extends AbstractPluginProjectCreator {
 
 	@Override
 	protected PluginProjectFactory createProjectFactory() {
-		final PluginProjectFactory projectFactory = super.createProjectFactory();
+		final PluginProjectFactory projectFactory = new PluginProjectFactory();
+		projectFactory.setWorkspace(ResourcesPlugin.getWorkspace());
+		projectFactory.setWorkbench(PlatformUI.getWorkbench());
 		projectFactory.setWithPluginXml(false);
 		IClasspathEntry cpEntry = JavaRuntime.getDefaultJREContainerEntry();
 		projectFactory.setJreContainerEntry(cpEntry);
 		return projectFactory;
+	}
+
+	@Override
+	protected String getPrimaryModelFileExtension() {
+		return ".gtl";
 	}
 
 	@Override
@@ -103,7 +111,9 @@ public class GTLProjectCreator extends AbstractPluginProjectCreator {
 
 	@Override
 	protected void enhanceProject(final IProject project, final IProgressMonitor monitor) throws CoreException {
-		GTLNewFileInitialContents.generateInitialContents(project);
+		String basePackage = project.getName().substring(0, 1).toLowerCase()
+				+ project.getName().substring(1, project.getName().length()) + ".example";
+		GTLNewFileInitialContents.generateInitialContents(project, basePackage);
 		project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 	}
 }

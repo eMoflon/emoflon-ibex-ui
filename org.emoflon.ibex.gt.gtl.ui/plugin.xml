@@ -449,7 +449,7 @@
     <image
           icon="icons/gt-project.gif"
           id="org.emoflon.ibex.gt.gtl.ui.NatureImage"
-          natureId="org.emoflon.ibex.gt.gtl.ui.NatureImage">
+          natureId="org.emoflon.ibex.gt.gtl.ui.nature">
     </image>
  </extension>
  <extension

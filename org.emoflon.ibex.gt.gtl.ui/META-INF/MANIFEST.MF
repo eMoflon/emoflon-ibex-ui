@@ -21,7 +21,8 @@ Require-Bundle: org.emoflon.ibex.common.slimgt;bundle-version="1.0.0",
  org.moflon.core.ui,
  org.eclipse.jdt.core,
  org.moflon.core.plugins,
- org.eclipse.jdt.launching
+ org.eclipse.jdt.launching,
+ com.google.inject
 Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.emoflon.ibex.gt.gtl.ui.internal,
