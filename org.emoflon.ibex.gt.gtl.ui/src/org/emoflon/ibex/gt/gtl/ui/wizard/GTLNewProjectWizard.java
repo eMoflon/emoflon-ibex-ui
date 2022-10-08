@@ -15,8 +15,8 @@ public class GTLNewProjectWizard extends XtextNewProjectWizard {
 
 	protected WizardNewProjectCreationPage mainPage;
 
-	public GTLNewProjectWizard(final GTLProjectCreator projectCreator) {
-		super(projectCreator);
+	public GTLNewProjectWizard() {
+		super(new GTLProjectCreator());
 		this.setWindowTitle(PROJECT_WIZARD_TITLE);
 	}
 

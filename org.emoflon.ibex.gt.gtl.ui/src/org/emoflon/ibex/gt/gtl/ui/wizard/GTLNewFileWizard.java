@@ -9,10 +9,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
-import org.eclipse.xtext.resource.FileExtensionProvider;
 import org.moflon.core.ui.UiUtilities;
-
-import com.google.inject.Inject;
 
 /**
  * The wizard for creating a new .gtl file.
@@ -24,12 +21,6 @@ public class GTLNewFileWizard extends Wizard implements INewWizard {
 
 	private WizardNewFileCreationPage mainPage;
 	private IStructuredSelection selection;
-
-	@Inject
-	private GTLNewFileInitialContents initialContents;
-
-	@Inject
-	FileExtensionProvider fileExtensionProvider;
 
 	public GTLNewFileWizard() {
 		super();
@@ -53,14 +44,14 @@ public class GTLNewFileWizard extends Wizard implements INewWizard {
 		mainPage = new WizardNewFileCreationPage(GTL_FILE_WIZARD_TITLE, this.selection);
 		mainPage.setTitle(GTL_FILE_WIZARD_TITLE);
 		mainPage.setDescription(GTL_FILE_WIZARD_DESCRIPTION);
-		mainPage.setFileExtension(fileExtensionProvider.getPrimaryFileExtension());
+		mainPage.setFileExtension(".gtl");
 		this.addPage(mainPage);
 	}
 
 	@Override
 	public boolean performFinish() {
 		IFile file = mainPage.createNewFile();
-		initialContents.initFileContent(file);
+		GTLNewFileInitialContents.initFileContent(file);
 		UiUtilities.openDefaultEditorForFile(file);
 		return file != null;
 	}

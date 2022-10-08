@@ -1,9 +1,9 @@
 package org.emoflon.ibex.gt.gtl.ui.wizard
 
 import org.eclipse.core.resources.IProject
-import org.eclipse.xtext.generator.IFileSystemAccess2
-import org.eclipse.xtext.resource.FileExtensionProvider
 import java.io.ByteArrayInputStream
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.nio.charset.StandardCharsets
 import org.eclipse.core.resources.IFile
 
@@ -15,24 +15,24 @@ class GTLNewFileInitialContents {
 	/**
 	 * Init project files.
 	 */
-	def static generateInitialContents(FileExtensionProvider fileExtensionProvider, IFileSystemAccess2 fsa, IProject project) {
+	def static generateInitialContents(IProject project) {
 
 		val packagePath = project.name.replace(".", "/")
 
 		// Add a file with an example rule.
-		fsa.generateFile(
-			"src/" + packagePath + "/Rules." + fileExtensionProvider.primaryFileExtension,
-			getFileContent(packagePath)
-		)
-
+		val examplePath = '''«project.location.toPortableString»/src/«packagePath»/Rules.gtl'''
+		val fileContent = getFileContent(packagePath)
+		Files.write(Paths.get(examplePath), fileContent.bytes)
+		
 		// Add a .gitignore
-		fsa.generateFile(
-			".gitignore",
-			'''
-				/bin/
-				/src-gen/
-			'''
-		)
+		val gitIgnoreContent = 
+		'''
+		/bin/
+		/src-gen/
+		'''
+		
+		val gitIgnorePath = '''«project.location.toPortableString»/.gitignore'''
+		Files.write(Paths.get(gitIgnorePath), gitIgnoreContent.bytes)
 	}
 
 	/**
