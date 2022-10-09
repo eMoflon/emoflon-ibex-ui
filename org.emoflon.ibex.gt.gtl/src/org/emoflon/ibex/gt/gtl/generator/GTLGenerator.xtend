@@ -14,6 +14,14 @@ import org.emoflon.ibex.common.slimgt.build.SlimGTBuilderExtension
 import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtil
 import java.util.HashSet
 import org.eclipse.core.resources.IProject
+import java.util.LinkedList
+import java.io.File
+import java.util.HashMap
+import java.util.Collection
+import org.emoflon.ibex.gt.gtl.gTL.EditorFile
+import org.emoflon.ibex.gt.gtl.util.GTLResourceManager
+import java.util.Optional
+import org.emoflon.ibex.gt.gtl.util.GTLModelFlattener
 
 /**
  * Generates code from your model files on save.
@@ -40,9 +48,35 @@ class GTLGenerator extends AbstractGenerator {
 			resourceSet = lResource
 		}
 		
+		val files = new LinkedList
+		SlimGTWorkspaceUtil.gatherFilesWithEnding(files, new File(iProject.location.toPortableString), ".gtl", true)
+		
+		val manager = new GTLResourceManager();
+		val pkg2Files = new HashMap<String, Collection<EditorFile>>
+		for(File f : files) {
+			val efOpt = manager.loadGTLModelByFullPath(input, f.canonicalPath)
+			if(efOpt.isPresent) {
+				val ef = efOpt.get
+				var editorFiles = pkg2Files.get(ef.package.name)
+				if(editorFiles === null) {
+					editorFiles = new LinkedList
+					pkg2Files.put(ef.package.name, editorFiles)
+				}
+				editorFiles.add(ef)
+			}
+		}
+		
+		val pkg2flattened = new HashMap<String, EditorFile>
+		for(String pkg : pkg2Files.keySet) {
+			val efs = pkg2Files.get(pkg)
+			val flattener = new GTLModelFlattener(manager, efs)
+			val flattenedEf = flattener.flattenedModel
+			pkg2flattened.put(pkg, flattenedEf)
+		}
+		
 		ExtensionsUtil
 			.collectExtensions(SlimGTBuilderExtension.BUILDER_EXTENSON_ID, "class", typeof(SlimGTBuilderExtension))
 			.filter[builder | builder.hasProperNature(iProject)]
-			.forEach[builder | builder.build(iProject)];
+			.forEach[builder | pkg2flattened.values.forEach[ef | builder.build(iProject, ef)]];
 	}
 }

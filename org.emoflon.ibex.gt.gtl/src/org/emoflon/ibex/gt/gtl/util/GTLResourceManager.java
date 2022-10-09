@@ -35,6 +35,10 @@ public class GTLResourceManager {
 	}
 
 	public Optional<EditorFile> loadGTLModelByFullPath(final EObject context, final String path) {
+		return loadGTLModelByFullPath(context.eResource(), path);
+	}
+
+	public Optional<EditorFile> loadGTLModelByFullPath(final Resource requester, final String path) {
 		Resource resource = null;
 		URI gtModelUri = null;
 		EditorFile file = null;
@@ -43,7 +47,7 @@ public class GTLResourceManager {
 		if (importFile.exists() && importFile.isFile() && importFile.isAbsolute()) {
 			gtModelUri = URI.createFileURI(path);
 			try {
-				resource = xtextResources.loadResource(context.eResource(), gtModelUri);
+				resource = xtextResources.loadResource(requester, gtModelUri);
 				file = (EditorFile) resource.getContents().get(0);
 			} catch (Exception e) {
 				return Optional.empty();
@@ -58,7 +62,11 @@ public class GTLResourceManager {
 	}
 
 	public Optional<EditorFile> loadGTLModelByRelativePath(final EObject context, final String path) {
-		IProject currentProject = SlimGTWorkspaceUtil.getCurrentProject(context.eResource());
+		return loadGTLModelByRelativePath(context.eResource(), path);
+	}
+
+	public Optional<EditorFile> loadGTLModelByRelativePath(final Resource requester, final String path) {
+		IProject currentProject = SlimGTWorkspaceUtil.getCurrentProject(requester);
 		Resource resource = null;
 		URI gtModelUri = null;
 		String absolutePath = null;
@@ -73,7 +81,7 @@ public class GTLResourceManager {
 
 		gtModelUri = URI.createFileURI(absolutePath);
 		try {
-			resource = xtextResources.loadResource(context.eResource(), gtModelUri);
+			resource = xtextResources.loadResource(requester, gtModelUri);
 			file = (EditorFile) resource.getContents().get(0);
 		} catch (Exception e) {
 			return Optional.empty();
