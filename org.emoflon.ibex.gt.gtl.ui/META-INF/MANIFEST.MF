@@ -25,7 +25,8 @@ Require-Bundle: org.emoflon.ibex.common.slimgt;bundle-version="1.0.0",
  com.google.inject
 Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Export-Package: org.emoflon.ibex.gt.gtl.ui.internal,
- org.emoflon.ibex.gt.gtl.ui.quickfix,
- org.emoflon.ibex.gt.gtl.ui.contentassist
+Export-Package: org.emoflon.ibex.gt.gtl.ui.builder,
+ org.emoflon.ibex.gt.gtl.ui.contentassist,
+ org.emoflon.ibex.gt.gtl.ui.internal,
+ org.emoflon.ibex.gt.gtl.ui.quickfix
 Bundle-Activator: org.emoflon.ibex.gt.gtl.ui.internal.GtlActivator
