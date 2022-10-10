@@ -35,12 +35,15 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMapping;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleSimpleEdge;
 import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtil;
 import org.emoflon.ibex.tgg.tggl.tGGL.AttributeConditionDefinition;
-import org.emoflon.ibex.tgg.tggl.tGGL.CorrespondenceNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.CorrespondenceType;
 import org.emoflon.ibex.tgg.tggl.tGGL.EditorFile;
 import org.emoflon.ibex.tgg.tggl.tGGL.Schema;
 import org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNodeContext;
 import org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNodeCreation;
+import org.emoflon.ibex.tgg.tggl.tGGL.TGGCorrRule;
+import org.emoflon.ibex.tgg.tggl.tGGL.TGGCorrespondenceNode;
+import org.emoflon.ibex.tgg.tggl.tGGL.TGGCorrespondenceNodeContext;
+import org.emoflon.ibex.tgg.tggl.tGGL.TGGCorrespondenceNodeCreation;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGDomainRule;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLPackage;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementAliased;
@@ -161,9 +164,9 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 	}
 
 	private IScope getCorrespondenceReferencedNodes(EObject context, EReference reference) {
-		var corrNode = (CorrespondenceNode) context;
+		var corrNode = (TGGCorrespondenceNode) context;
 		var domain = DomainType.SOURCE;
-		if (reference == TGGLPackage.Literals.CORRESPONDENCE_NODE__TARGET)
+		if (reference == TGGLPackage.Literals.TGG_CORRESPONDENCE_NODE__TARGET)
 			domain = DomainType.TARGET;
 
 		var tggRule = getContainer(context, TGGRule.class);
@@ -316,9 +319,9 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 			nodes = getSourceNodes(tggRule);
 			break;
 		case CORRESPONDENCE:
-			if (reference == TGGLPackage.Literals.CORRESPONDENCE_NODE__SOURCE)
+			if (reference == TGGLPackage.Literals.TGG_CORRESPONDENCE_NODE__SOURCE)
 				nodes = getSourceNodes(tggRule);
-			if (reference == TGGLPackage.Literals.CORRESPONDENCE_NODE__TARGET)
+			if (reference == TGGLPackage.Literals.TGG_CORRESPONDENCE_NODE__TARGET)
 				nodes = getTargetNodes(tggRule);
 			break;
 		case TARGET:
@@ -333,10 +336,10 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		EClass targetType = null;
 		if (context instanceof SlimRuleSimpleEdge edge) {
 			targetType = (EClass) edge.getType().getEType();
-		} else if (context instanceof CorrespondenceNode correspondence) {
-			if (reference == TGGLPackage.Literals.CORRESPONDENCE_NODE__SOURCE)
+		} else if (context instanceof TGGCorrespondenceNode correspondence) {
+			if (reference == TGGLPackage.Literals.TGG_CORRESPONDENCE_NODE__SOURCE)
 				targetType = correspondence.getType().getSource();
-			if (reference == TGGLPackage.Literals.CORRESPONDENCE_NODE__TARGET)
+			if (reference == TGGLPackage.Literals.TGG_CORRESPONDENCE_NODE__TARGET)
 				targetType = correspondence.getType().getTarget();
 
 		} else
@@ -368,8 +371,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		return nodes;
 	}
 
-	private Collection<CorrespondenceNode> filterCorrespondenceNodesIfNotSubType(Collection<CorrespondenceNode> nodes,
-			final CorrespondenceType finalTargetType) {
+	private Collection<TGGCorrespondenceNode> filterCorrespondenceNodesIfNotSubType(Collection<TGGCorrespondenceNode> nodes, final CorrespondenceType finalTargetType) {
 		nodes = nodes.stream().filter(sn -> sn.getType().getName().equals(finalTargetType.getName())
 				|| getEAllSuperTypes(sn.getType()).contains(finalTargetType)).collect(Collectors.toSet());
 		return nodes;
@@ -385,8 +387,8 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		return superTypes;
 	}
 
-	private Collection<CorrespondenceNode> toCorrespondenceNodes(Collection<EObject> objects) {
-		return objects.stream().map(o -> (CorrespondenceNode) o).toList();
+	private Collection<TGGCorrespondenceNode> toCorrespondenceNodes(Collection<EObject> objects) {
+		return objects.stream().map(o -> (TGGCorrespondenceNode) o).toList();
 	}
 
 	private Collection<SlimRuleNode> toSlimNodes(Collection<EObject> objects) {
@@ -397,7 +399,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		return toSlimNodes(getNodesFromDomain(rule, DomainType.SOURCE));
 	}
 
-	public Collection<CorrespondenceNode> getCorrespondenceNodes(TGGRule rule) {
+	public Collection<TGGCorrespondenceNode> getCorrespondenceNodes(TGGRule rule) {
 		return toCorrespondenceNodes(getNodesFromDomain(rule, DomainType.CORRESPONDENCE));
 	}
 
@@ -430,7 +432,8 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 				}
 				break;
 			case CORRESPONDENCE:
-				newNodes.addAll(currentRule.getCorrespondenceNodes());
+				newNodes.addAll(getCorrespondenceNodesFromContext(currentRule.getCorrRule().getContextCorrespondenceNodes()));
+				newNodes.addAll(getCorrespondenceNodesFromCreation(currentRule.getCorrRule().getCreatedCorrespondenceNodes()));
 				break;
 			case TARGET:
 				if (currentRule.getTargetRule() != null) {
@@ -466,9 +469,13 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		if (creationNode != null)
 			return creationNode.getRefinement();
 
-		var correspondenceNode = getContainer(context, CorrespondenceNode.class);
-		if (correspondenceNode != null)
-			return correspondenceNode.getRefinement();
+		var contextCorrespondenceNode = getContainer(context, TGGCorrespondenceNodeContext.class);
+		if (contextCorrespondenceNode != null)
+			return contextCorrespondenceNode.getRefinement();
+		
+		var creationCorrespondenceNode = getContainer(context, TGGCorrespondenceNodeCreation.class);
+		if (creationCorrespondenceNode != null)
+			return creationCorrespondenceNode.getRefinement();
 		return null;
 	}
 
@@ -477,6 +484,14 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 	}
 
 	private Collection<SlimRuleNode> getSlimRuleNodesFromCreation(Collection<SlimRuleNodeCreation> createdElements) {
+		return createdElements.stream().map(c -> c.getCreation()).toList();
+	}
+	
+	private Collection<TGGCorrespondenceNode> getCorrespondenceNodesFromContext(Collection<TGGCorrespondenceNodeContext> contextElements) {
+		return contextElements.stream().map(c -> c.getContext()).toList();
+	}
+
+	private Collection<TGGCorrespondenceNode> getCorrespondenceNodesFromCreation(Collection<TGGCorrespondenceNodeCreation> createdElements) {
 		return createdElements.stream().map(c -> c.getCreation()).toList();
 	}
 
@@ -491,8 +506,8 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		}
 
 		// else it must be a correspondence node
-		var correspondence = getContainer(context, CorrespondenceNode.class);
-		if (tggRule.getCorrespondenceNodes().contains(correspondence)) {
+		var corrRule = getContainer(context, TGGCorrRule.class);
+		if (corrRule != null) {
 			return DomainType.CORRESPONDENCE;
 		}
 
@@ -546,9 +561,16 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 				return refinement.getNode().getType();
 		}
 
-		var correspondenceNode = getContainer(context, CorrespondenceNode.class);
-		if (correspondenceNode != null) {
-			var refinement = correspondenceNode.getRefinement();
+		var contextCorrespondenceNode = getContainer(context, TGGCorrespondenceNodeContext.class);
+		if (contextCorrespondenceNode != null) {
+			var refinement = contextCorrespondenceNode.getRefinement();
+			if (refinement != null)
+				return refinement.getNode().getType();
+		}
+		
+		var creationCorrespondenceNode = getContainer(context, TGGCorrespondenceNodeCreation.class);
+		if (creationCorrespondenceNode != null) {
+			var refinement = creationCorrespondenceNode.getRefinement();
 			if (refinement != null)
 				return refinement.getNode().getType();
 		}

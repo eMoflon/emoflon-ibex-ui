@@ -11,9 +11,9 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeCreation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMapping;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleSimpleEdge;
 import org.emoflon.ibex.tgg.tggl.tGGL.AttributeCondition;
-import org.emoflon.ibex.tgg.tggl.tGGL.CorrespondenceNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.CorrespondenceType;
 import org.emoflon.ibex.tgg.tggl.tGGL.Schema;
+import org.emoflon.ibex.tgg.tggl.tGGL.TGGCorrespondenceNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLPackage;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementCorrespondenceNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRule;
@@ -42,8 +42,8 @@ public class TGGLScopeUtil {
 	}
 
 	public static boolean isCorrespondenceNodeType(EObject context, EReference reference) {
-		return context instanceof CorrespondenceNode //
-				&& reference == TGGLPackage.Literals.CORRESPONDENCE_NODE__TYPE;
+		return context instanceof TGGCorrespondenceNode //
+				&& reference == TGGLPackage.Literals.TGG_CORRESPONDENCE_NODE__TYPE;
 	}
 
 	public static boolean isCorrespondenceSourceType(EObject context, EReference reference) {
@@ -57,13 +57,13 @@ public class TGGLScopeUtil {
 	}
 
 	public static boolean isCorrespondenceNodeSource(EObject context, EReference reference) {
-		return context instanceof CorrespondenceNode && //
-				reference == TGGLPackage.Literals.CORRESPONDENCE_NODE__SOURCE;
+		return context instanceof TGGCorrespondenceNode && //
+				reference == TGGLPackage.Literals.TGG_CORRESPONDENCE_NODE__SOURCE;
 	}
 
 	public static boolean isCorrespondenceNodeTarget(EObject context, EReference reference) {
-		return context instanceof CorrespondenceNode && //
-				reference == TGGLPackage.Literals.CORRESPONDENCE_NODE__TARGET;
+		return context instanceof TGGCorrespondenceNode && //
+				reference == TGGLPackage.Literals.TGG_CORRESPONDENCE_NODE__TARGET;
 	}
 
 	public static boolean isNodeAttributeExpressionFeature(EObject context, EReference reference) {
@@ -79,8 +79,8 @@ public class TGGLScopeUtil {
 	public static boolean isEdgeTargetReference(EObject context, EReference reference) {
 		return context instanceof SlimRuleSimpleEdge && //
 				(reference == SlimGTPackage.Literals.SLIM_RULE_EDGE__TARGET || //
-						reference == TGGLPackage.Literals.CORRESPONDENCE_NODE__SOURCE || //
-						reference == TGGLPackage.Literals.CORRESPONDENCE_NODE__TARGET); //
+						reference == TGGLPackage.Literals.TGG_CORRESPONDENCE_NODE__SOURCE || //
+						reference == TGGLPackage.Literals.TGG_CORRESPONDENCE_NODE__TARGET); //
 	}
 
 	public static boolean isRuleNodeMappingSource(EObject context, EReference reference) {
@@ -123,7 +123,7 @@ public class TGGLScopeUtil {
 
 	public static boolean isCorrespondenceNodeNode(EObject context, EReference reference) {
 		return (context instanceof SlimRule || //
-				context instanceof CorrespondenceNode || //
+				context instanceof TGGCorrespondenceNode || //
 				context instanceof TGGLRuleRefinementCorrespondenceNode) && //
 				reference == TGGLPackage.Literals.TGGL_RULE_REFINEMENT_CORRESPONDENCE_NODE__NODE;
 	}
