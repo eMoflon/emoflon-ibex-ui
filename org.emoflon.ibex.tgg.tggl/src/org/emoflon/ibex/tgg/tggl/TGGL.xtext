@@ -11,6 +11,7 @@ EditorFile:
 	(schema = Schema)?
   	libraries += AttributeConditionDefinitionLibrary*
   	rules += TGGRule*
+  	patterns += SlimRule*
 ;
 
 Using:
@@ -108,7 +109,7 @@ TGGRuleRefinementNode:
 ;
 
 TGGLRuleRefinementCorrespondenceNode: 
-	node=[CorrespondenceNode|QualifiedName]
+	node=[TGGCorrespondenceNode|QualifiedName]
 ;
 
 /* ------------- */
@@ -117,13 +118,13 @@ TGGLRuleRefinementCorrespondenceNode:
 
 @Override
 SlimRuleNodeContext: {SlimRuleNodeContext}
-	(refining ?= '@refines' refinement=TGGRuleRefinementNode)?
+	(refining ?= '@refines=' refinement=TGGRuleRefinementNode)?
 	'[=]' (local?='local')? context = SlimRuleNode
 ;
 
 @Override
 SlimRuleNodeCreation: {SlimRuleNodeCreation}
-	(refining ?= '@refines' refinement=TGGRuleRefinementNode)?
+	(refining ?= '@refines+' refinement=TGGRuleRefinementNode)?
 	'[+]' creation = SlimRuleNode
 ;
 
@@ -137,20 +138,21 @@ SlimRuleNode: {SlimRuleNode}
 ;
 
 TGGRule:
+	(configured?='@' configuration = SlimRuleAnnotation)?
 	(abstract ?= 'abstract')? 
 	'rule' name = ID 
 	('refines' refinements += TGGLRuleRefinement (',' refinements += TGGLRuleRefinement)*)? 
 	'{'
 		('source' '{'
-			sourceRule = SlimRule 
+			sourceRule = TGGDomainRule 
 		'}')? 	
 		
 		('target' '{'
-			targetRule = SlimRule 
+			targetRule = TGGDomainRule 
 		'}')? 
 		
 		('correspondence' '{'
-			(correspondenceNodes += CorrespondenceNode)*	
+			corrRule = TGGCorrRule
 		'}')? 
 	
 		('attributeConditions' '{'
@@ -159,9 +161,43 @@ TGGRule:
 	'}'
 ;
 
-CorrespondenceNode:
-	(refining ?= '@refines' refinement=TGGLRuleRefinementCorrespondenceNode)?
-	(creation ?= '[+]' | context?='[=]') name = ID ':' type = [CorrespondenceType | QualifiedName] '{'
+TGGCorrRule: {TGGCorrRule}
+	(contextCorrespondenceNodes += TGGCorrespondenceNodeContext |
+	createdCorrespondenceNodes += TGGCorrespondenceNodeCreation)*
+;
+
+@Override
+SlimRule: {SlimRule}
+	(configured?='@' configuration = SlimRuleAnnotation)?
+	'pattern' 
+	name = ID 
+	(refining ?= 'refines' refinement+=GTLRuleRefinement (',' refinement+=GTLRuleRefinement)*)? 
+	'{'
+			(contextNodes += SlimRuleNodeContext 		|
+			conditions += SlimRuleCondition |
+			invocations += SlimRuleInvocation)*
+	'}' 
+;
+
+TGGDomainRule: {TGGDomainRule}
+	(contextNodes += SlimRuleNodeContext |
+	createdNodes += SlimRuleNodeCreation |
+	conditions += SlimRuleCondition |
+	invocations += SlimRuleInvocation)*
+;
+
+TGGCorrespondenceNodeContext:
+	(refining ?= '@refines=' refinement=TGGLRuleRefinementCorrespondenceNode)?
+	'[=]' context = TGGCorrespondenceNode
+;
+
+TGGCorrespondenceNodeCreation:
+	(refining ?= '@refines+' refinement=TGGLRuleRefinementCorrespondenceNode)?
+	'[+]' creation = TGGCorrespondenceNode
+;
+
+TGGCorrespondenceNode:
+	name = ID ':' type = [CorrespondenceType | QualifiedName] '{'
 		'src->' source = [SlimRuleNode|ID]
 		'trg->' target = [SlimRuleNode|ID]
 	'}' 

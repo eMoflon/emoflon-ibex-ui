@@ -40,6 +40,19 @@ SlimRule: {SlimRule}
 	)*
 ;
 
+GTLRuleRefinement:
+	GTLRuleRefinementPlain | GTLRuleRefinementAliased
+;
+
+GTLRuleRefinementPlain returns GTLRuleRefinement : {GTLRuleRefinementPlain}
+	superRule=[SlimRule|ID]
+;
+
+
+GTLRuleRefinementAliased returns GTLRuleRefinement : {GTLRuleRefinementAliased}
+	superRule=[SlimRule|ID] 'as' name=ID
+;
+
 SlimRuleNodeContext:
 	'[=]' (local?='local')? context = SlimRuleNode
 ;

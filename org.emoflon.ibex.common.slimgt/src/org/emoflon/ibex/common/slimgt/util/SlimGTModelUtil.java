@@ -29,6 +29,13 @@ public final class SlimGTModelUtil {
 		return (T) current;
 	}
 
+	public static <T> Collection<T> castCollection(Collection<?> collection, Class<T> clazz) {
+		return collection.stream() //
+//				.filter(clazz::isInstance) //
+				.map(clazz::cast) //
+				.collect(Collectors.toSet());
+	}
+	
 	/**
 	 * Returns all objects from the given resource.
 	 * 

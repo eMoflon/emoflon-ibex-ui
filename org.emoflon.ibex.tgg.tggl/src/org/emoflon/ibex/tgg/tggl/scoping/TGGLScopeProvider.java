@@ -3,25 +3,8 @@
  */
 package org.emoflon.ibex.tgg.tggl.scoping;
 
-import static org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil.getContainer;
-import static org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil.getPackages;
-import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isCorrespondenceNodeNode;
-import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isCorrespondenceNodeSource;
-import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isCorrespondenceNodeTarget;
-import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isCorrespondenceNodeType;
-import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isCorrespondenceSourceType;
-import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isCorrespondenceTargetType;
-import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isEdgeTargetReference;
-import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isNodeAttributeExpressionFeature;
-import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isRuleNodeMappingSource;
-import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isRuleNodeMappingTarget;
-import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isSchemaSourceTypes;
-import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isSchemaTargetTypes;
-import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isSlimRuleNodeNode;
-import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isSlimRuleNodeType;
-import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isTGGRuleConditionName;
-import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isTGGRuleRefinementAliasedSuperRule;
-import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isTGGRuleRefinements;
+import static org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil.*;
+import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,8 +31,6 @@ import org.emoflon.ibex.common.slimgt.slimGT.PackageReferencePlain;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRule;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode;
-import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeContext;
-import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeCreation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMapping;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleSimpleEdge;
 import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtil;
@@ -58,6 +39,9 @@ import org.emoflon.ibex.tgg.tggl.tGGL.CorrespondenceNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.CorrespondenceType;
 import org.emoflon.ibex.tgg.tggl.tGGL.EditorFile;
 import org.emoflon.ibex.tgg.tggl.tGGL.Schema;
+import org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNodeContext;
+import org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNodeCreation;
+import org.emoflon.ibex.tgg.tggl.tGGL.TGGDomainRule;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLPackage;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementAliased;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementCorrespondenceNode;
@@ -278,11 +262,11 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		// only show nodes with correct mode (context/creation)
 		var creationNode = getContainer(sourceNode, SlimRuleNodeCreation.class);
 		if (creationNode != null) {
-			nodeCandidates.addAll(getSlimRuleNodesFromCreation(supportPattern.getCreatedNodes()));
+			nodeCandidates.addAll(getSlimRuleNodesFromCreation(castCollection(supportPattern.getCreatedNodes(), SlimRuleNodeCreation.class)));
 		}
 		var contextNode = getContainer(sourceNode, SlimRuleNodeContext.class);
 		if (contextNode != null) {
-			nodeCandidates.addAll(getSlimRuleNodesFromContext(supportPattern.getContextNodes()));
+			nodeCandidates.addAll(getSlimRuleNodesFromContext(castCollection(supportPattern.getContextNodes(), SlimRuleNodeContext.class)));
 		}
 
 		// only show nodes that have a matching type
@@ -498,7 +482,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 
 	private DomainType getDomainType(EObject context) {
 		var tggRule = getContainer(context, TGGRule.class);
-		var rule = getContainer(context, SlimRule.class);
+		var rule = getContainer(context, TGGDomainRule.class);
 		if (rule != null) {
 			if (tggRule.getSourceRule().equals(rule))
 				return DomainType.SOURCE;
