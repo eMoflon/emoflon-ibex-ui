@@ -1,4 +1,4 @@
-package org.emoflon.ibex.tgg.tggl.scoping;
+package org.emoflon.ibex.tgg.tggl.scoping.scopes;
 
 import java.util.Collection;
 import java.util.HashMap;

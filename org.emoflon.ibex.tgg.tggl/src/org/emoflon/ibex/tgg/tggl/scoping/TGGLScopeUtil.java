@@ -14,6 +14,8 @@ import org.emoflon.ibex.tgg.tggl.tGGL.AttributeCondition;
 import org.emoflon.ibex.tgg.tggl.tGGL.CorrespondenceType;
 import org.emoflon.ibex.tgg.tggl.tGGL.Schema;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGCorrespondenceNode;
+import org.emoflon.ibex.tgg.tggl.tGGL.TGGCorrespondenceNodeContext;
+import org.emoflon.ibex.tgg.tggl.tGGL.TGGCorrespondenceNodeCreation;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLPackage;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementCorrespondenceNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRule;
@@ -102,16 +104,16 @@ public class TGGLScopeUtil {
 		return context instanceof TGGRule && //
 				reference == TGGLPackage.Literals.TGGL_RULE_REFINEMENT__SUPER_RULE;
 	}
+	
+	public static boolean isSlimRuleRefinements(EObject context, EReference reference) {
+		return context instanceof SlimRule && //
+				reference == SlimGTPackage.Literals.GTL_RULE_REFINEMENT;
+	}
 
-//	public static boolean isTGGRuleRefinementPlainName(EObject context, EReference reference) {
-//		return context instanceof TGGRule && //
-//				reference == TGGLPackage.Literals.TGGL_RULE_REFINEMENT_PLAIN__SUPER_RULE;
-//	}
-
-//	public static boolean isSlimRuleNodeRefinement(EObject context, EReference reference) {
-//		return context instanceof SlimRule  && //
-//				reference == TGGLPackage.Literals.TGG_RULE_REFINEMENT_NODE__REFINEMENT;
-//	}
+	public static boolean isSlimRuleRefinementAliasedSuperRule(EObject context, EReference reference) {
+		return context instanceof SlimRule && //
+				reference == SlimGTPackage.Literals.GTL_RULE_REFINEMENT__SUPER_RULE;
+	}
 
 	public static boolean isSlimRuleNodeNode(EObject context, EReference reference) {
 		return (context instanceof SlimRule || //
@@ -123,7 +125,8 @@ public class TGGLScopeUtil {
 
 	public static boolean isCorrespondenceNodeNode(EObject context, EReference reference) {
 		return (context instanceof SlimRule || //
-				context instanceof TGGCorrespondenceNode || //
+				context instanceof TGGCorrespondenceNodeContext || //
+				context instanceof TGGCorrespondenceNodeCreation || //
 				context instanceof TGGLRuleRefinementCorrespondenceNode) && //
 				reference == TGGLPackage.Literals.TGGL_RULE_REFINEMENT_CORRESPONDENCE_NODE__NODE;
 	}
