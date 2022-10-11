@@ -16,6 +16,8 @@ import org.eclipse.xtext.EcoreUtil2;
 import org.emoflon.ibex.common.slimgt.slimGT.EditorFile;
 import org.emoflon.ibex.common.slimgt.slimGT.Import;
 
+import com.google.common.base.Objects;
+
 public final class SlimGTModelUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> T getContainer(EObject node, Class<T> clazz) {
@@ -29,13 +31,6 @@ public final class SlimGTModelUtil {
 		return (T) current;
 	}
 
-	public static <T> Collection<T> castCollection(Collection<?> collection, Class<T> clazz) {
-		return collection.stream() //
-//				.filter(clazz::isInstance) //
-				.map(clazz::cast) //
-				.collect(Collectors.toSet());
-	}
-	
 	/**
 	 * Returns all objects from the given resource.
 	 * 

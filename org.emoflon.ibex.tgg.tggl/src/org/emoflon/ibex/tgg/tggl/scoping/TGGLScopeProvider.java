@@ -53,6 +53,7 @@ import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementCorrespondenceNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementPlain;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRule;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRuleRefinementNode;
+import static org.emoflon.ibex.common.slimgt.util.SlimGTCollectionUtil.*;
 
 /**
  * This class contains custom scoping description.
@@ -235,6 +236,36 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 			case TARGET:
 				nodes.addAll(getNodesFromDomain(refinedRule, DomainType.TARGET));
 				break;
+			default:
+				throw new RuntimeException("This case should never occur.");
+			}
+
+			if (ruleRefinement instanceof TGGLRuleRefinementAliased alias)
+				ruleAliases.add(alias);
+		}
+
+		return new TGGLAliasedRuleScope(ruleAliases, nodes);
+	}
+	
+	private IScope getTargetNodesFromRefinedPattern(EObject context, EReference reference) {
+		var pattern = getContainer(context, SlimRule.class);
+
+		Collection<EObject> nodes = new HashSet<>();
+		Collection<TGGLRuleRefinementAliased> ruleAliases = new HashSet<>();
+		for (var ruleRefinement : pattern.getRefinement()) {
+			var refinedRule = ruleRefinement.getSuperRule();
+			switch (getDomainType(context)) {
+			case SOURCE:
+				nodes.addAll(getNodesFromDomain(refinedRule, DomainType.SOURCE));
+				break;
+			case CORRESPONDENCE:
+				nodes.addAll(getNodesFromDomain(refinedRule, DomainType.CORRESPONDENCE));
+				break;
+			case TARGET:
+				nodes.addAll(getNodesFromDomain(refinedRule, DomainType.TARGET));
+				break;
+			default:
+				throw new RuntimeException("This case should never occur.");
 			}
 
 			if (ruleRefinement instanceof TGGLRuleRefinementAliased alias)
@@ -318,19 +349,12 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 	}
 
 	private IScope getEdgeTargetReference(EObject context, EReference reference) {
-		switch (getDomainType(context)) {
-		case SOURCE:
-			return Scopes.scopeFor(getTargetNodes(context, reference, DomainType.SOURCE));
-		case CORRESPONDENCE:
-			return Scopes.scopeFor(getTargetNodes(context, reference, DomainType.CORRESPONDENCE));
-		case TARGET:
-			return Scopes.scopeFor(getTargetNodes(context, reference, DomainType.TARGET));
-		}
-		throw new RuntimeException("Could not resolve edge targets for " + context);
+		return Scopes.scopeFor(getTargetNodes(context, reference, getDomainType(context)));
 	}
 
 	private Collection<SlimRuleNode> getTargetNodes(EObject context, EReference reference, DomainType domain) {
 		var tggRule = getContainer(context, TGGRule.class);
+		var pattern = getContainer(context, SlimRule.class);
 
 		Collection<SlimRuleNode> nodes = null;
 		switch (domain) {
@@ -345,6 +369,9 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 			break;
 		case TARGET:
 			nodes = getTargetNodes(tggRule);
+			break;
+		case SOURCE_AND_TARGET: 
+			nodes = getSlimRuleNodesFromContext(castCollection(pattern.getContextNodes(), SlimRuleNodeContext.class));
 			break;
 		default:
 			break;
@@ -544,22 +571,31 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 
 		var refinedType = getRefinedType(context);
 		switch (domain) {
-		case SOURCE:
-			var sourceTypes = getTypes(schema.getSourceTypes());
-			if (refinedType != null && refinedType instanceof EClass refinedEClass)
-				sourceTypes = filterTypesIfNoSubType(sourceTypes, refinedEClass);
-			return new SlimGTAliasedTypeScope(editorFile.getImports(), sourceTypes);
-		case CORRESPONDENCE:
-			Collection<CorrespondenceType> correspondenceTypes = schema.getCorrespondenceTypes();
-			if (refinedType != null && refinedType instanceof CorrespondenceType corrType)
-				correspondenceTypes = filterCorrespondenceTypesIfNoSubType(correspondenceTypes, corrType);
-			return Scopes.scopeFor(correspondenceTypes);
-		case TARGET:
-			var targetTypes = getTypes(schema.getTargetTypes());
-			if (refinedType != null && refinedType instanceof EClass refinedEClass)
-				targetTypes = filterTypesIfNoSubType(targetTypes, refinedEClass);
-			return new SlimGTAliasedTypeScope(editorFile.getImports(), targetTypes);
-		case SOURCE_AND_TARGET:
+			case SOURCE: {
+				var sourceTypes = getTypes(schema.getSourceTypes());
+				if (refinedType != null && refinedType instanceof EClass refinedEClass)
+					sourceTypes = filterTypesIfNoSubType(sourceTypes, refinedEClass);
+				return new SlimGTAliasedTypeScope(editorFile.getImports(), sourceTypes);
+			}
+			case CORRESPONDENCE: {
+				Collection<CorrespondenceType> correspondenceTypes = schema.getCorrespondenceTypes();
+				if (refinedType != null && refinedType instanceof CorrespondenceType corrType)
+					correspondenceTypes = filterCorrespondenceTypesIfNoSubType(correspondenceTypes, corrType);
+				return Scopes.scopeFor(correspondenceTypes);
+			}
+			case TARGET: {
+				var targetTypes = getTypes(schema.getTargetTypes());
+				if (refinedType != null && refinedType instanceof EClass refinedEClass)
+					targetTypes = filterTypesIfNoSubType(targetTypes, refinedEClass);
+				return new SlimGTAliasedTypeScope(editorFile.getImports(), targetTypes);
+			}
+			case SOURCE_AND_TARGET: {
+				var types = getTypes(schema.getSourceTypes());
+				types.addAll(getTypes(schema.getTargetTypes()));
+				if (refinedType != null && refinedType instanceof EClass refinedEClass)
+					types = filterTypesIfNoSubType(types, refinedEClass);
+				return new SlimGTAliasedTypeScope(editorFile.getImports(), types);
+			}
 		}
 		return IScope.NULLSCOPE;
 	}
