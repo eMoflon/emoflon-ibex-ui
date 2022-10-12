@@ -6,6 +6,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.NodeAttributeExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRule;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeAssignment;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleCondition;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeContext;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeCreation;
@@ -77,6 +78,11 @@ public class TGGLScopeUtil {
 	
 	public static boolean isNodeExpressionNode(EObject context, EReference reference) {
 		return (context instanceof SlimRuleAttributeAssignment) && //
+				reference == SlimGTPackage.Literals.NODE_EXPRESSION__NODE;
+	}
+	
+	public static boolean isRuleConditionNode(EObject context, EReference reference) {
+		return (context instanceof SlimRuleCondition) && //
 				reference == SlimGTPackage.Literals.NODE_EXPRESSION__NODE;
 	}
 

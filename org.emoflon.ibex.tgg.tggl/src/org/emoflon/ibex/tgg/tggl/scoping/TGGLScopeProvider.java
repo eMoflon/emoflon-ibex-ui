@@ -105,6 +105,8 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 			return getNodeAttributeExpressionFeatures(context, reference);
 		if (isNodeExpressionNode(context, reference))
 			return getNodeExpressionNode(context, reference);
+		if (isRuleConditionNode(context, reference))
+			return getNodeExpressionNode(context, reference);
 		
 		// mapping references
 		if (isRuleNodeMappingSource(context, reference))
