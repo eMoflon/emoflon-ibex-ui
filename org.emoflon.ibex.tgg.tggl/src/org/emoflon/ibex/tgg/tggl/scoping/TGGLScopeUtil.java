@@ -5,10 +5,12 @@ import org.eclipse.emf.ecore.EReference;
 import org.emoflon.ibex.common.slimgt.slimGT.NodeAttributeExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRule;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeAssignment;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeContext;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeCreation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMapping;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMappings;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleSimpleEdge;
 import org.emoflon.ibex.tgg.tggl.tGGL.AttributeCondition;
 import org.emoflon.ibex.tgg.tggl.tGGL.CorrespondenceType;
@@ -72,6 +74,11 @@ public class TGGLScopeUtil {
 		return context instanceof NodeAttributeExpression && //
 				reference == SlimGTPackage.Literals.NODE_ATTRIBUTE_EXPRESSION__FEATURE;
 	}
+	
+	public static boolean isNodeExpressionNode(EObject context, EReference reference) {
+		return (context instanceof SlimRuleAttributeAssignment) && //
+				reference == SlimGTPackage.Literals.NODE_EXPRESSION__NODE;
+	}
 
 	public static boolean isTGGRuleConditionName(EObject context, EReference reference) {
 		return (context instanceof TGGRule || context instanceof AttributeCondition) && //
@@ -86,12 +93,14 @@ public class TGGLScopeUtil {
 	}
 
 	public static boolean isRuleNodeMappingSource(EObject context, EReference reference) {
-		return context instanceof SlimRuleNodeMapping && //
+		return (context instanceof SlimRuleNodeMappings || //
+				context instanceof SlimRuleNodeMapping) && //
 				reference == SlimGTPackage.Literals.SLIM_RULE_NODE_MAPPING__SOURCE; //
 	}
 
 	public static boolean isRuleNodeMappingTarget(EObject context, EReference reference) {
-		return context instanceof SlimRuleNodeMapping && //
+		return (context instanceof SlimRuleNodeMappings || //
+				context instanceof SlimRuleNodeMapping) && //
 				reference == SlimGTPackage.Literals.SLIM_RULE_NODE_MAPPING__TARGET; //
 	}
 

@@ -83,6 +83,11 @@ AttributeCondition:
 ;
 
 @Override
+NodeExpression: 
+	{NodeExpression} node = [SlimRuleNode|ID]
+;
+
+@Override
 ExpressionOperand:
 	{ExpressionOperand} operand = (NodeAttributeExpression | ArithmeticLiteral | EnumExpression | Constant)
 ;
@@ -171,7 +176,7 @@ SlimRule: {SlimRule}
 	(configured?='@' configuration = SlimRuleAnnotation)?
 	'pattern' 
 	name = ID 
-	(refining ?= 'refines' refinement+=GTLRuleRefinement (',' refinement+=GTLRuleRefinement)*)? 
+	(refining ?= 'refines' refinements+=GTLRuleRefinement (',' refinements+=GTLRuleRefinement)*)? 
 	'{'
 			(contextNodes += SlimRuleNodeContext 		|
 			conditions += SlimRuleCondition |
