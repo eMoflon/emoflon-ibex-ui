@@ -15,6 +15,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMappings;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleSimpleEdge;
 import org.emoflon.ibex.tgg.tggl.tGGL.AttributeCondition;
 import org.emoflon.ibex.tgg.tggl.tGGL.CorrespondenceType;
+import org.emoflon.ibex.tgg.tggl.tGGL.NodeExpression;
 import org.emoflon.ibex.tgg.tggl.tGGL.Schema;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGCorrespondenceNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGCorrespondenceNodeContext;
@@ -72,17 +73,21 @@ public class TGGLScopeUtil {
 	}
 
 	public static boolean isNodeAttributeExpressionFeature(EObject context, EReference reference) {
-		return context instanceof NodeAttributeExpression && //
+		return (context instanceof NodeAttributeExpression || //
+				context instanceof NodeExpression) && //
 				reference == SlimGTPackage.Literals.NODE_ATTRIBUTE_EXPRESSION__FEATURE;
 	}
 	
 	public static boolean isNodeExpressionNode(EObject context, EReference reference) {
-		return (context instanceof SlimRuleAttributeAssignment) && //
+		return (context instanceof SlimRuleAttributeAssignment || //
+				context instanceof NodeExpression) && //
 				reference == SlimGTPackage.Literals.NODE_EXPRESSION__NODE;
 	}
 	
 	public static boolean isRuleConditionNode(EObject context, EReference reference) {
-		return (context instanceof SlimRuleCondition) && //
+		return (context instanceof SlimRuleCondition || //
+				context instanceof AttributeCondition || //
+				context instanceof NodeExpression) && //
 				reference == SlimGTPackage.Literals.NODE_EXPRESSION__NODE;
 	}
 

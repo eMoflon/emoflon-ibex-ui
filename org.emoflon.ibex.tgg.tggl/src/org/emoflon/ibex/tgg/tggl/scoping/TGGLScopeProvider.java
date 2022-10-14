@@ -505,6 +505,15 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 					newNodes.addAll(getSlimRuleNodesFromCreation(currentRule.getTargetRule().getCreatedNodes()));
 				}
 				break;
+			case SOURCE_AND_TARGET: 
+				if (currentRule.getSourceRule() != null) {
+					newNodes.addAll(getSlimRuleNodesFromContext(currentRule.getSourceRule().getContextNodes()));
+					newNodes.addAll(getSlimRuleNodesFromCreation(currentRule.getSourceRule().getCreatedNodes()));
+				}
+				if (currentRule.getTargetRule() != null) {
+					newNodes.addAll(getSlimRuleNodesFromContext(currentRule.getTargetRule().getContextNodes()));
+					newNodes.addAll(getSlimRuleNodesFromCreation(currentRule.getTargetRule().getCreatedNodes()));
+				}
 			}
 
 			for (var newNode : newNodes) {
@@ -613,7 +622,8 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 			return DomainType.SOURCE_AND_TARGET;
 		}
 		
-		throw new RuntimeException("Could not identify domain of element " + context);
+		return DomainType.SOURCE_AND_TARGET;
+//		throw new RuntimeException("Could not identify domain of element " + context);
 	}
 
 	private IScope getTypes(EObject context, EReference reference, DomainType domain) {
