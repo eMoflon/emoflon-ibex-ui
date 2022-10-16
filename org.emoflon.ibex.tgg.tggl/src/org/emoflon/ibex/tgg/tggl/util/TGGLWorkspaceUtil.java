@@ -36,6 +36,7 @@ public class TGGLWorkspaceUtil {
 		XtextResourceManager resourceManager = new XtextResourceManager();
 				
 		var editorFile = getContainer(obj, EditorFile.class);
+		var rs = editorFile.eResource().getResourceSet();
 		Collection<EditorFile> editorFiles = new HashSet<>();
 
 		IProject currentProject = SlimGTWorkspaceUtil.getCurrentProject(editorFile.eResource());
@@ -61,7 +62,7 @@ public class TGGLWorkspaceUtil {
 			if (fileString.equals(currentFile))
 				continue;
 
-			Resource resource = resourceManager.loadResource(editorFile.eResource(), tggModelUri);
+			Resource resource = resourceManager.loadResource(rs, editorFile.eResource(), tggModelUri);
 			if (resource == null)
 				continue;
 
@@ -75,6 +76,10 @@ public class TGGLWorkspaceUtil {
 			}
 		}
 		return editorFiles;
+	}
+	
+	public Collection<EditorFile> getAllResolvedFilesInScope(EObject obj) {
+		return getAllResolvedFilesInScope(obj.eResource());
 	}
 	
 	public Collection<EditorFile> getAllResolvedFilesInScope(Resource input) {

@@ -57,6 +57,8 @@ import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementCorrespondenceNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementPlain;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRule;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRuleRefinementNode;
+import org.emoflon.ibex.tgg.tggl.util.TGGLWorkspaceUtil;
+
 import static org.emoflon.ibex.common.slimgt.util.SlimGTCollectionUtil.*;
 
 /**

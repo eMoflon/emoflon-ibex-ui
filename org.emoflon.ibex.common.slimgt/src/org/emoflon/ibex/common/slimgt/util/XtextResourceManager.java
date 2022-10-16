@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.XtextResourceSet;
 
@@ -37,7 +38,7 @@ public class XtextResourceManager {
 		return other;
 	}
 	
-	public Resource loadResource(final XtextResourceSet rs, final Resource requester, final URI gtModelUri) {
+	public Resource loadResource(final ResourceSet rs, final Resource requester, final URI gtModelUri) {
 		Map<URI, Resource> cache = resourceCache.get(requester);
 		if (cache == null) {
 			cache = new HashMap<>();

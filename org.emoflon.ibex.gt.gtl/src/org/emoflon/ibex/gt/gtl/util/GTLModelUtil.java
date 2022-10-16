@@ -96,9 +96,9 @@ public final class GTLModelUtil {
 	public static Optional<SlimRule> refinementToRule(final GTLRuleRefinement refinement) {
 		SlimRule rule = null;
 		if (refinement instanceof GTLRuleRefinementPlain plainRefinement) {
-			rule = plainRefinement.getSuperRule();
+			rule = (SlimRule) plainRefinement.getSuperRule();
 		} else if (refinement instanceof GTLRuleRefinementAliased aliasedRefinement) {
-			rule = aliasedRefinement.getSuperRule();
+			rule = (SlimRule) aliasedRefinement.getSuperRule();
 		} else {
 			return Optional.empty();
 		}
@@ -111,7 +111,7 @@ public final class GTLModelUtil {
 		if (refinement instanceof SlimRule plainRefinement) {
 			rule = plainRefinement;
 		} else if (refinement instanceof GTLRuleRefinementAliased aliasedRefinement) {
-			rule = aliasedRefinement.getSuperRule();
+			rule = (SlimRule) aliasedRefinement.getSuperRule();
 		} else {
 			return Optional.empty();
 		}

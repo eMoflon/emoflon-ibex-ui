@@ -55,6 +55,23 @@ enum GTLRuleType :
 	PATTERN = 'pattern' | RULE = 'rule'
 ;
 
+@Override
+GTLRuleRefinement:
+	GTLRuleRefinementPlain | GTLRuleRefinementAliased
+;
+
+
+@Override
+GTLRuleRefinementPlain returns GTLRuleRefinement : {GTLRuleRefinementPlain}
+	superRule=[SlimRule|ID]
+;
+
+
+@Override
+GTLRuleRefinementAliased returns GTLRuleRefinement : {GTLRuleRefinementAliased}
+	superRule=[SlimRule|ID] 'as' name=ID
+;
+
 GTLRuleRefinementNode:
 	superRule=[ecore::EObject|ID] '.' refinementNode=[SlimRuleNode|ID]
 ;

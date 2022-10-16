@@ -335,7 +335,7 @@ public class GTLValidator extends AbstractGTLValidator {
 
 		if (refinementCount > 1) {
 			error(String.format("The rule/pattern '%s' may not be refined more than once.", superRule.get().getName()),
-					GTLPackage.Literals.GTL_RULE_REFINEMENT__SUPER_RULE);
+					SlimGTPackage.Literals.GTL_RULE_REFINEMENT__SUPER_RULE);
 		}
 	}
 
@@ -375,7 +375,7 @@ public class GTLValidator extends AbstractGTLValidator {
 
 		if (currentRule.getType() == GTLRuleType.PATTERN && superRule.get().getType() == GTLRuleType.RULE) {
 			error(String.format("The a pattern may not refine a rule ('%s').", superRule.get().getName()),
-					GTLPackage.Literals.GTL_RULE_REFINEMENT__SUPER_RULE);
+					SlimGTPackage.Literals.GTL_RULE_REFINEMENT__SUPER_RULE);
 		}
 
 	}

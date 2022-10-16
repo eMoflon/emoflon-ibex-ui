@@ -3,19 +3,10 @@
  */
 package org.emoflon.ibex.tgg.tggl.generator
 
-import com.google.inject.Inject
-import java.util.List
 import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.jdt.internal.core.JavaProject
 import org.eclipse.xtext.generator.AbstractGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
-import org.eclipse.xtext.resource.IContainer
-import org.eclipse.xtext.resource.IResourceDescription
-import org.eclipse.xtext.resource.IResourceDescriptions
-import org.eclipse.xtext.resource.SynchronizedXtextResourceSet
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
-import org.emoflon.ibex.tgg.tggl.tGGL.EditorFile
 import org.emoflon.ibex.tgg.tggl.util.TGGLModelFlattener
 
 /**
