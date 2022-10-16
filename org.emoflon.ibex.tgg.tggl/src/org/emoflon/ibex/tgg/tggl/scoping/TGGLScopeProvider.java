@@ -5,6 +5,7 @@ package org.emoflon.ibex.tgg.tggl.scoping;
 
 import static org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil.*;
 import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.*;
+import static org.emoflon.ibex.tgg.tggl.util.TGGLWorkspaceUtil.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -759,48 +760,4 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		}
 		return null;
 	}
-
-	public Collection<EditorFile> getAllFilesInScope(EObject obj) {
-		var editorFile = getContainer(obj, EditorFile.class);
-		Collection<EditorFile> editorFiles = new HashSet<>();
-
-		IProject currentProject = SlimGTWorkspaceUtil.getCurrentProject(editorFile.eResource());
-		String currentFile = editorFile.eResource().getURI().toString().replace("platform:/resource/", "")
-				.replace(currentProject.getName(), "");
-		currentFile = currentProject.getLocation().toPortableString() + currentFile;
-		currentFile = currentFile.replace("/", "\\");
-
-		File projectFile = new File(currentProject.getLocation().toPortableString());
-		List<File> tggFiles = new LinkedList<>();
-		SlimGTWorkspaceUtil.gatherFilesWithEnding(tggFiles, projectFile, ".tggl", true);
-
-		for (File tggFile : tggFiles) {
-			URI tggModelUri;
-			try {
-				tggModelUri = URI.createFileURI(tggFile.getCanonicalPath());
-			} catch (IOException e) {
-				continue;
-			}
-
-			String fileString = tggModelUri.toFileString();
-
-			if (fileString.equals(currentFile))
-				continue;
-
-			Resource resource = resourceManager.loadResource(editorFile.eResource(), tggModelUri);
-			if (resource == null)
-				continue;
-
-			EObject tggModel = resource.getContents().get(0);
-
-			if (tggModel == null)
-				continue;
-
-			if (tggModel instanceof EditorFile otherEditorFile) {
-				editorFiles.add(otherEditorFile);
-			}
-		}
-		return editorFiles;
-	}
-
 }
