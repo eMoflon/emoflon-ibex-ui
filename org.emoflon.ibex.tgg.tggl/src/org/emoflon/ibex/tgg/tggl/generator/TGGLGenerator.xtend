@@ -8,6 +8,9 @@ import org.eclipse.xtext.generator.AbstractGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
 import org.emoflon.ibex.tgg.tggl.util.TGGLModelFlattener
+import org.eclipse.xtext.resource.IContainer
+import com.google.inject.Inject
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
 
 /**
  * Generates code from your model files on save.
@@ -17,8 +20,14 @@ import org.emoflon.ibex.tgg.tggl.util.TGGLModelFlattener
 class TGGLGenerator extends AbstractGenerator {
 	var oldFsa = null
 	
+	@Inject
+  	ResourceDescriptionsProvider resourceDescriptionsProvider;
+ 
+    @Inject
+ 	IContainer.Manager containerManager;
+	
 	override void doGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
-		new TGGLModelFlattener().flatten(input);
+		new TGGLModelFlattener().flatten(resourceDescriptionsProvider, containerManager, input);
 			
 		// trick to avoid xtext triggering endless loops
 		if(oldFsa !== null && oldFsa.hashCode == fsa.hashCode) 

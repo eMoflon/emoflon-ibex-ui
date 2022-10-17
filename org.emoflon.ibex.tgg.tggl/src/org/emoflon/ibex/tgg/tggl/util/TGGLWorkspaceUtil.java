@@ -26,12 +26,6 @@ import com.google.inject.Inject;
 
 public class TGGLWorkspaceUtil {
 	
-	@Inject
-  	private ResourceDescriptionsProvider resourceDescriptionsProvider;
- 
-    @Inject
- 	private IContainer.Manager containerManager;
-	
 	public static Collection<EditorFile> getAllFilesInScope(EObject obj) {
 		XtextResourceManager resourceManager = new XtextResourceManager();
 				
@@ -78,16 +72,16 @@ public class TGGLWorkspaceUtil {
 		return editorFiles;
 	}
 	
-	public Collection<EditorFile> getAllResolvedFilesInScope(EObject obj) {
-		return getAllResolvedFilesInScope(obj.eResource());
+	public Collection<EditorFile> getAllResolvedFilesInScope(InjectionContainer container, EObject obj) {
+		return getAllResolvedFilesInScope(container, obj.eResource());
 	}
 	
-	public Collection<EditorFile> getAllResolvedFilesInScope(Resource input) {
+	public Collection<EditorFile> getAllResolvedFilesInScope(InjectionContainer container, Resource input) {
 		var resourceSet = input.getResourceSet();
 		
-		var index = (IResourceDescriptions) resourceDescriptionsProvider.createResourceDescriptions();
+		var index = (IResourceDescriptions) container.resourceDescriptionsProvider().createResourceDescriptions();
 		var resDesc = (IResourceDescription) index.getResourceDescription(input.getURI());
-		var visibleContainers = (List<IContainer>) containerManager.getVisibleContainers(resDesc, index);
+		var visibleContainers = (List<IContainer>) container.containerManager().getVisibleContainers(resDesc, index);
 		
 		var editorFiles = new LinkedList<EditorFile>();
 		
