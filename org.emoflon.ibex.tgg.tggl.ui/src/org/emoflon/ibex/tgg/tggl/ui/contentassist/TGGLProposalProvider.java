@@ -5,9 +5,14 @@ package org.emoflon.ibex.tgg.tggl.ui.contentassist;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.Assignment;
+import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
+import org.emoflon.ibex.tgg.tggl.tGGL.SlimRule;
+import org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNode;
+
+import static org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil.*;
 
 /**
  * See https://www.eclipse.org/Xtext/documentation/310_eclipse_support.html#content-assist
@@ -16,23 +21,26 @@ import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
 public class TGGLProposalProvider extends AbstractTGGLProposalProvider {
 	
 	@Override
-	public void complete_QualifiedName(EObject model, RuleCall ruleCall, ContentAssistContext context,
+	public void completeKeyword(Keyword keyword, ContentAssistContext contentAssistContext,
 			ICompletionProposalAcceptor acceptor) {
-		// TODO Auto-generated method stub
-		super.complete_QualifiedName(model, ruleCall, context, acceptor);
-	}
-	
-	@Override
-	public void completeSchema_SourceTypes(EObject model, Assignment assignment, ContentAssistContext context,
-			ICompletionProposalAcceptor acceptor) {
-		// TODO Auto-generated method stub
-		super.completeSchema_SourceTypes(model, assignment, context, acceptor);
-	}
-	
-	@Override
-	public void completeCorrespondenceType_Source(EObject model, Assignment assignment, ContentAssistContext context,
-			ICompletionProposalAcceptor acceptor) {
-		// TODO Auto-generated method stub
-		super.completeCorrespondenceType_Source(model, assignment, context, acceptor);
+		
+		// do not show keywords that were already typed in
+		if(keyword.getValue().equals(contentAssistContext.getPrefix()))
+			return;
+		
+		// do not suggest creation edges in patterns
+		if(keyword.getValue().equals("[+]")) {
+			if(contentAssistContext.getCurrentModel() instanceof SlimRuleNode node) {
+				var pattern = getContainer(node, SlimRule.class);
+				if(pattern != null)
+					return;
+			}
+		}
+		
+//		// most times this is not necessary
+//		if(keyword.getValue().equals("}"))
+//			return;
+		
+		super.completeKeyword(keyword, contentAssistContext, acceptor);
 	}
 }

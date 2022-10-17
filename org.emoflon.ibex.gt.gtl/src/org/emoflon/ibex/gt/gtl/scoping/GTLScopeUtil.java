@@ -27,7 +27,7 @@ public final class GTLScopeUtil {
 	public static boolean isGTLRuleRefinementRule(final EObject context, final EReference reference) {
 		return (context instanceof SlimRule || context instanceof GTLRuleRefinement)
 				&& (reference == GTLPackage.Literals.SLIM_RULE__REFINEMENT
-						|| reference == GTLPackage.Literals.GTL_RULE_REFINEMENT__SUPER_RULE);
+						|| reference == SlimGTPackage.Literals.GTL_RULE_REFINEMENT__SUPER_RULE);
 	}
 
 	public static boolean isGTLRuleRefinementNodeRefinement(final EObject context, final EReference reference) {
