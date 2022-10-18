@@ -27,6 +27,7 @@ import org.emoflon.ibex.tgg.tggl.tGGL.TGGCorrespondenceNodeContext;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGCorrespondenceNodeCreation;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGDomainRule;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLFactory;
+import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementCorrespondenceNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRule;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRuleRefinementNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.impl.TGGLFactoryImpl;
@@ -74,6 +75,9 @@ public class TGGLModelFlattener {
 
 
 	private void flatten(TGGDomainRule domainRule, TGGDomainRule superDomainRule, Collection<EObject> refinedTargets) {
+		if(superDomainRule == null)
+			return;
+		
 		// only create elements that were not refined already
 		for(var contextNode : superDomainRule.getContextNodes()) {
 			if(refinedTargets.contains(contextNode.getContext()))
@@ -104,6 +108,9 @@ public class TGGLModelFlattener {
 
 
 	private void flatten(TGGCorrRule domainRule, TGGCorrRule superDomainRule, Collection<EObject> refinedTargets) {
+		if(superDomainRule == null)
+			return;
+		
 		for(var contextNode : superDomainRule.getContextCorrespondenceNodes()) {
 			if(refinedTargets.contains(contextNode.getContext()))
 				continue;
@@ -189,12 +196,20 @@ public class TGGLModelFlattener {
 		refinedTargets.addAll(getElements(tggRule, TGGRuleRefinementNode.class).stream().map(r -> r.getNode()).toList());
 		
 		// collect correspondence nodes
-		refinedTargets.addAll(tggRule.getCorrRule().getContextCorrespondenceNodes().stream().map(n -> n.getRefinement().getNode()).toList());
-		refinedTargets.addAll(tggRule.getCorrRule().getCreatedCorrespondenceNodes().stream().map(n -> n.getRefinement().getNode()).toList());
+		refinedTargets.addAll(getElements(tggRule, TGGLRuleRefinementCorrespondenceNode.class).stream().map(r -> r.getNode()).toList());
 		
 		for(var refinement : tggRule.getRefinements()) {
 			var superRule = refinement.getSuperRule();
 			
+			if(tggRule.getSourceRule() == null && superRule.getSourceRule() != null)
+				tggRule.setSourceRule(tggFactory.createTGGDomainRule());
+			
+			if(tggRule.getCorrRule() == null && superRule.getCorrRule() != null)
+				tggRule.setCorrRule(tggFactory.createTGGCorrRule());
+			
+			if(tggRule.getTargetRule() == null && superRule.getTargetRule() != null)
+				tggRule.setTargetRule(tggFactory.createTGGDomainRule());
+				
 			flatten(tggRule.getSourceRule(), superRule.getSourceRule(), refinedTargets);
 			flatten(tggRule.getCorrRule(), superRule.getCorrRule(), refinedTargets);
 			flatten(tggRule.getTargetRule(), superRule.getTargetRule(), refinedTargets);
