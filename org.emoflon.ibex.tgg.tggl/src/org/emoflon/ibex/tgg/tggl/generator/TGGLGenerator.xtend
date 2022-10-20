@@ -27,8 +27,8 @@ class TGGLGenerator extends AbstractGenerator {
  	IContainer.Manager containerManager;
 	
 	override void doGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
-		new TGGLModelFlattener().flatten(resourceDescriptionsProvider, containerManager, input);
-			
+		var newFile = new TGGLModelFlattener().flatten(resourceDescriptionsProvider, containerManager, input);
+		
 		// trick to avoid xtext triggering endless loops
 		if(oldFsa !== null && oldFsa.hashCode == fsa.hashCode) 
 			return;

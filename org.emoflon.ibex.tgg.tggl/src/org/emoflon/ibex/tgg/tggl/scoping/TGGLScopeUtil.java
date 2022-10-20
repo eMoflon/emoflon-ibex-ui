@@ -7,6 +7,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRule;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeAssignment;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleCondition;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeContext;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeCreation;
@@ -40,6 +41,11 @@ public class TGGLScopeUtil {
 	public static boolean isSlimRuleNodeType(EObject context, EReference reference) {
 		return context instanceof SlimRuleNode //
 				&& reference == SlimGTPackage.Literals.SLIM_RULE_NODE__TYPE; //
+	}
+	
+	public static boolean isSlimRuleInvocationSupportPattern(EObject context, EReference reference) {
+		return context instanceof SlimRuleInvocation //
+				&& reference == SlimGTPackage.Literals.SLIM_RULE_INVOCATION__SUPPORT_PATTERN; //
 	}
 
 	public static boolean isCorrespondenceTypeSuper(EObject context, EReference reference) {

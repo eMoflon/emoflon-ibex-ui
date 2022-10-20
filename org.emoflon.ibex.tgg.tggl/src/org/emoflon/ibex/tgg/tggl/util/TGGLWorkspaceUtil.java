@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.resource.IContainer;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
+import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtil;
 import org.emoflon.ibex.common.slimgt.util.XtextResourceManager;
@@ -31,6 +32,8 @@ public class TGGLWorkspaceUtil {
 				
 		var editorFile = getContainer(obj, EditorFile.class);
 		var rs = editorFile.eResource().getResourceSet();
+//		rs.getResources().clear();
+		
 		Collection<EditorFile> editorFiles = new HashSet<>();
 
 		IProject currentProject = SlimGTWorkspaceUtil.getCurrentProject(editorFile.eResource());
@@ -43,6 +46,8 @@ public class TGGLWorkspaceUtil {
 		List<File> tggFiles = new LinkedList<>();
 		SlimGTWorkspaceUtil.gatherFilesWithEnding(tggFiles, projectFile, ".tggl", true);
 		
+//		XtextResourceSet rs = new XtextResourceSet();
+		
 		for (File tggFile : tggFiles) {
 			URI tggModelUri;
 			try {
@@ -52,7 +57,6 @@ public class TGGLWorkspaceUtil {
 			}
 
 			String fileString = tggModelUri.toFileString();
-
 			if (fileString.equals(currentFile))
 				continue;
 

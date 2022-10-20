@@ -83,6 +83,10 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		if (isSchemaTargetTypes(context, reference))
 			return getPackagesFromImports(context, reference);
 
+		// pattern invocation
+		if(isSlimRuleInvocationSupportPattern(context, reference))
+			return getPatterns(context, reference);
+		
 		// node type references
 		if (isSlimRuleNodeType(context, reference))
 			return getTypes(context, reference, getDomainType(context));
@@ -138,6 +142,14 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 			return getCondition(context, reference);
 
 		return super.getScopeInternal(context, reference);
+	}
+
+	private IScope getPatterns(EObject context, EReference reference) {
+		var patterns = getAllPatternsInScope(context);
+		patterns = patterns.stream().filter(pattern -> !pattern.isAbstract()).collect(Collectors.toSet());
+
+		// remove self reference
+		return Scopes.scopeFor(patterns);
 	}
 
 	private IScope getPatternCandidates(EObject context, EReference reference) {
@@ -701,7 +713,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		return null;
 	}
 
-	public Collection<EClass> getTypes(Collection<EObject> packageReferences) {
+	public static Collection<EClass> getTypes(Collection<EObject> packageReferences) {
 		var types = new HashSet<EClass>();
 		var packages = getReferencedPackages(packageReferences);
 		var packageCandidates = new HashSet<EPackage>(packages);
@@ -716,7 +728,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		return types;
 	}
 
-	public Collection<EPackage> getReferencedPackages(Collection<EObject> packageReferences) {
+	public static Collection<EPackage> getReferencedPackages(Collection<EObject> packageReferences) {
 		var packages = new HashSet<EPackage>();
 		for (var packageReference : packageReferences) {
 			if (packageReference instanceof PackageReferencePlain plain)
