@@ -891,4 +891,14 @@ public class GTLValidator extends AbstractGTLValidator {
 					watchDog.getNodeAttribute().getNodeExpression(), SlimGTPackage.Literals.NODE_EXPRESSION__NODE);
 		}
 	}
+
+	@Check
+	protected void checkIteratorForNAryEdges(GTLEdgeIterator itr) {
+		if (itr == null || itr.getType() == null)
+			return;
+
+		if (!itr.getType().isMany())
+			error("ForEach iterators can not be applied to references with multiplicity of 1.",
+					GTLPackage.Literals.GTL_EDGE_ITERATOR__TYPE);
+	}
 }
