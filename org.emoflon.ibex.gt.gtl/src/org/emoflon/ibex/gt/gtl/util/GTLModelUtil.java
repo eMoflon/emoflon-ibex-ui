@@ -120,6 +120,9 @@ public final class GTLModelUtil {
 	}
 
 	public static boolean ruleNodeIsRefining(final SlimRuleNode ruleNode) {
+		if (ruleNode == null)
+			return false;
+
 		if (ruleNode.eContainer() instanceof org.emoflon.ibex.gt.gtl.gTL.SlimRuleNodeContext context) {
 			return context.isRefining();
 		} else if (ruleNode.eContainer() instanceof org.emoflon.ibex.gt.gtl.gTL.SlimRuleNodeCreation creation) {
