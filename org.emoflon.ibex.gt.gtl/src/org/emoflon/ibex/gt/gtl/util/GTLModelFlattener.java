@@ -280,6 +280,7 @@ public class GTLModelFlattener {
 			name2Parameter.put(param.getName(), flattenedParam);
 			flattenedRule.getParameters().add(flattenedParam);
 		}
+		rule2parameters.put(flattenedRule, name2Parameter);
 
 		Map<SlimRuleNode, RuleNodeHierarchy> hierarchies = GTLModelUtil.getAllRuleNodeHierarchy(rule);
 		Map<String, SlimRuleNode> name2Node = Collections.synchronizedMap(new HashMap<>());
@@ -521,7 +522,7 @@ public class GTLModelFlattener {
 	}
 
 	protected ValueExpression flatten(ValueExpression expression, SlimRule container) {
-		return flatten(expression, container);
+		return flatten((ArithmeticExpression) expression, container);
 	}
 
 	protected ArithmeticExpression flatten(ArithmeticExpression expression, SlimRule container) {

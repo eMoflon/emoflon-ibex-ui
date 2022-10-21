@@ -36,7 +36,6 @@ import org.emoflon.ibex.gt.gtl.gTL.EditorFile;
 import org.emoflon.ibex.gt.gtl.gTL.ExpressionOperand;
 import org.emoflon.ibex.gt.gtl.gTL.GTLEdgeIterator;
 import org.emoflon.ibex.gt.gtl.gTL.GTLPackage;
-import org.emoflon.ibex.gt.gtl.gTL.GTLParameterExpression;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleEdgeDeletion;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleNodeDeletion;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinement;
@@ -805,16 +804,6 @@ public class GTLValidator extends AbstractGTLValidator {
 				return;
 			}
 
-		}
-	}
-
-	@Check
-	protected void checkParameterOnlyInAssignment(GTLParameterExpression paramExpression) {
-		SlimRuleAttributeAssignment assignment = SlimGTModelUtil.getContainer(paramExpression,
-				SlimRuleAttributeAssignment.class);
-		if (assignment == null) {
-			error("Parameter expressions may only be used in attribute assignments.",
-					GTLPackage.Literals.GTL_PARAMETER_EXPRESSION__PARAMETER);
 		}
 	}
 
