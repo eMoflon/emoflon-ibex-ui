@@ -109,7 +109,7 @@ public class BuildPropertiesManager {
 
 	protected void loadProperties() throws IOException {
 		String content = Files.readString(bpFile.toPath());
-		String[] lines = content.split("\n");
+		String[] lines = content.split("\\n");
 		String currentAttribute = null;
 		Set<String> currentValues = null;
 		for (String line : lines) {
@@ -122,13 +122,13 @@ public class BuildPropertiesManager {
 					attribute2values.put(currentAttribute, currentValues);
 				}
 				// Just to be sure: Split the current line at the value denominator ',\'
-				String[] lineValues = block[1].split(",\\");
+				String[] lineValues = block[1].split(",\\\\");
 				for (String value : lineValues) {
 					currentValues.add(value.trim());
 				}
 			} else {
 				// Just to be sure: Split the current line at the value denominator ',\'
-				String[] lineValues = line.split(",\\");
+				String[] lineValues = line.split(",\\\\");
 				for (String value : lineValues) {
 					currentValues.add(value.trim());
 				}

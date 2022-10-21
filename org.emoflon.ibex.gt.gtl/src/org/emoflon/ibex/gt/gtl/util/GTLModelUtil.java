@@ -94,6 +94,9 @@ public final class GTLModelUtil {
 	}
 
 	public static Optional<SlimRule> refinementToRule(final GTLRuleRefinement refinement) {
+		if (refinement.getSuperRule() == null || !(refinement.getSuperRule() instanceof SlimRule))
+			return Optional.empty();
+
 		SlimRule rule = null;
 		if (refinement instanceof GTLRuleRefinementPlain plainRefinement) {
 			rule = (SlimRule) plainRefinement.getSuperRule();

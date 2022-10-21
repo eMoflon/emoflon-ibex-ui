@@ -20,8 +20,9 @@ import java.util.HashMap
 import java.util.Collection
 import org.emoflon.ibex.gt.gtl.gTL.EditorFile
 import org.emoflon.ibex.gt.gtl.util.GTLResourceManager
-import java.util.Optional
 import org.emoflon.ibex.gt.gtl.util.GTLModelFlattener
+import org.apache.log4j.Logger
+import org.moflon.core.utilities.LogUtils
 
 /**
  * Generates code from your model files on save.
@@ -30,6 +31,7 @@ import org.emoflon.ibex.gt.gtl.util.GTLModelFlattener
  */
 class GTLGenerator extends AbstractGenerator {
 
+	Logger logger = Logger.getLogger(typeof(GTLGenerator));
 	var ResourceSet resourceSet = null
 	var projects = new HashSet<IProject>()
 
@@ -39,7 +41,8 @@ class GTLGenerator extends AbstractGenerator {
 		
 		// small trick to make sure that GT projects are only build once (every new build process creates new ResourceSets)
 		if(resourceSet !== null && projects.contains(iProject)) {
-			return
+//			logger.info('''Project «iProject.name» is already up to date.''')
+//			return
 		}else if(resourceSet !== null && !projects.contains(iProject)) {
 			projects.add(iProject)
 		} else {
@@ -48,6 +51,7 @@ class GTLGenerator extends AbstractGenerator {
 			resourceSet = lResource
 		}
 		
+		logger.info('''Building project «iProject.name» ...''')
 		val files = new LinkedList
 		SlimGTWorkspaceUtil.gatherFilesWithEnding(files, new File(iProject.location.toPortableString), ".gtl", true)
 		
@@ -66,17 +70,27 @@ class GTLGenerator extends AbstractGenerator {
 			}
 		}
 		
+		logger.info('''Building project «iProject.name» -> flattening gtl files ...''')
 		val pkg2flattened = new HashMap<String, EditorFile>
+		try{
+			flatten(pkg2flattened, pkg2Files, manager);
+		} catch(Exception e) {
+			LogUtils.error(logger, e)
+		}
+		
+		logger.info('''Building project «iProject.name» -> calling gtl builder extensions ...''')
+		ExtensionsUtil
+			.collectExtensions(SlimGTBuilderExtension.BUILDER_EXTENSON_ID, "builder", typeof(SlimGTBuilderExtension))
+			.filter[builder | builder.hasProperNature(iProject)]
+			.forEach[builder | pkg2flattened.values.forEach[ef | builder.build(iProject, ef)]];
+	}
+	
+	def void flatten(HashMap<String, EditorFile> pkg2flattened, HashMap<String, Collection<EditorFile>> pkg2Files, GTLResourceManager manager) {
 		for(String pkg : pkg2Files.keySet) {
 			val efs = pkg2Files.get(pkg)
 			val flattener = new GTLModelFlattener(manager, efs)
 			val flattenedEf = flattener.flattenedModel
 			pkg2flattened.put(pkg, flattenedEf)
 		}
-		
-		ExtensionsUtil
-			.collectExtensions(SlimGTBuilderExtension.BUILDER_EXTENSON_ID, "class", typeof(SlimGTBuilderExtension))
-			.filter[builder | builder.hasProperNature(iProject)]
-			.forEach[builder | pkg2flattened.values.forEach[ef | builder.build(iProject, ef)]];
 	}
 }

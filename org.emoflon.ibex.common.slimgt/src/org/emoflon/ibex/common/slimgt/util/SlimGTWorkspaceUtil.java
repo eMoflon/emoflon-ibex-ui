@@ -33,7 +33,7 @@ public final class SlimGTWorkspaceUtil {
 			return;
 		}
 	}
-	
+
 	public static synchronized IProject getCurrentProject(final Resource resource) {
 		IProject project = null;
 		IWorkbenchWindow window = null;
@@ -64,4 +64,5 @@ public final class SlimGTWorkspaceUtil {
 
 		return project;
 	}
+
 }
