@@ -3,7 +3,13 @@
  */
 package org.emoflon.ibex.tgg.tggl.ui.quickfix;
 
+import org.eclipse.xtext.ui.editor.model.IXtextDocument;
+import org.eclipse.xtext.ui.editor.model.edit.IModificationContext;
+import org.eclipse.xtext.ui.editor.quickfix.Fix;
+import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor;
+import org.eclipse.xtext.validation.Issue;
 import org.emoflon.ibex.common.slimgt.ui.quickfix.SlimGTQuickfixProvider;
+import org.emoflon.ibex.tgg.tggl.validation.IssueCodes;
 
 /**
  * Custom quickfixes.
@@ -12,15 +18,30 @@ import org.emoflon.ibex.common.slimgt.ui.quickfix.SlimGTQuickfixProvider;
  */
 public class TGGLQuickfixProvider extends SlimGTQuickfixProvider {
 
-//	@Fix(TGGLValidator.INVALID_NAME)
-//	public void capitalizeName(final Issue issue, IssueResolutionAcceptor acceptor) {
-//		acceptor.accept(issue, "Capitalize name", "Capitalize the name.", "upcase.png", new IModification() {
-//			public void apply(IModificationContext context) throws BadLocationException {
-//				IXtextDocument xtextDocument = context.getXtextDocument();
-//				String firstLetter = xtextDocument.get(issue.getOffset(), 1);
-//				xtextDocument.replace(issue.getOffset(), 1, firstLetter.toUpperCase());
-//			}
-//		});
-//	}
+	@Fix(IssueCodes.INCORRECT_BINDING_EDGE_CREATE)
+	public void changeToContextEdge(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(issue, //
+				"Change binding type", //
+				"Change binding type from 'create' to 'context'", //
+				null, //
+				(IModificationContext context) -> {
+					IXtextDocument xtextDocument = context.getXtextDocument();
+					String s = xtextDocument.get(issue.getOffset(), issue.getLength());
+					xtextDocument.replace(issue.getOffset() + s.indexOf("+"), 1, "=");
+				});
+	}
+	
+	@Fix(IssueCodes.INCORRECT_BINDING_EDGE_CONTEXT)
+	public void changeToCreateEdge(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(issue, //
+				"Change binding type", //
+				"Change binding type from 'context' to 'create'", //
+				null, //
+				(IModificationContext context) -> {
+					IXtextDocument xtextDocument = context.getXtextDocument();
+					String s = xtextDocument.get(issue.getOffset(), issue.getLength());
+					xtextDocument.replace(issue.getOffset() + s.indexOf("="), 1, "+");
+				});
+	}
 
 }

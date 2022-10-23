@@ -3,23 +3,180 @@
  */
 package org.emoflon.ibex.tgg.tggl.validation;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.eclipse.xtext.validation.Check;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdgeContext;
+import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
+import org.emoflon.ibex.common.slimgt.validation.SlimGTValidatorUtil;
+import org.emoflon.ibex.tgg.tggl.tGGL.SlimRule;
+import org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNode;
+import org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNodeContext;
+import org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNodeCreation;
+import org.emoflon.ibex.tgg.tggl.tGGL.TGGCorrRule;
+import org.emoflon.ibex.tgg.tggl.tGGL.TGGCorrespondenceNode;
+import org.emoflon.ibex.tgg.tggl.tGGL.TGGCorrespondenceNodeContext;
+import org.emoflon.ibex.tgg.tggl.tGGL.TGGCorrespondenceNodeCreation;
+import org.emoflon.ibex.tgg.tggl.tGGL.TGGDomainRule;
+import org.emoflon.ibex.tgg.tggl.tGGL.TGGLPackage;
+import org.emoflon.ibex.tgg.tggl.tGGL.TGGRule;
 
 /**
- * This class contains custom validation rules. 
+ * This class contains custom validation rules.
  *
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 public class TGGLValidator extends AbstractTGGLValidator {
-	
-//	public static final String INVALID_NAME = "invalidName";
-//
-//	@Check
-//	public void checkGreetingStartsWithCapital(Greeting greeting) {
-//		if (!Character.isUpperCase(greeting.getName().charAt(0))) {
-//			warning("Name should start with a capital",
-//					TGGLPackage.Literals.GREETING__NAME,
-//					INVALID_NAME);
-//		}
-//	}
-	
+
+	@Check
+	protected void checkRuleNameForbidden(TGGRule rule) {
+		if (rule.getName() == null)
+			return;
+
+		if (SlimGTValidatorUtil.RULE_NAME_BACKLIST.contains(rule.getName())) {
+			error(String.format("Rule '%s' is a java keyword or an emf class and, hence, forbidden.", rule.getName()),
+					TGGLPackage.Literals.TGG_RULE__NAME);
+		}
+	}
+
+	@Check
+	protected void checkPatternNameForbidden(SlimRule pattern) {
+		if (pattern.getName() == null)
+			return;
+
+		if (SlimGTValidatorUtil.RULE_NAME_BACKLIST.contains(pattern.getName())) {
+			error(String.format("Pattern '%s' is a java keyword or an emf class and, hence, forbidden.", pattern.getName()),
+					TGGLPackage.Literals.SLIM_RULE__NAME);
+		}
+	}
+
+	@Check
+	protected void checkNodeNameForbidden(SlimRuleNode node) {
+		if (node.getName() == null)
+			return;
+
+		if (SlimGTValidatorUtil.NODE_NAME_BACKLIST.contains(node.getName())) {
+			error(String.format("Node '%s' is a java keyword or an emf class and, hence, forbidden.", node.getName()),
+					SlimGTPackage.Literals.SLIM_RULE_NODE__NAME);
+		}
+	}
+
+	@Check
+	protected void checkCorrNodeNameForbidden(TGGCorrespondenceNode corrNode) {
+		if (corrNode.getName() == null)
+			return;
+
+		if (SlimGTValidatorUtil.NODE_NAME_BACKLIST.contains(corrNode.getName())) {
+			error(String.format("Node '%s' is a java keyword or an emf class and, hence, forbidden.", corrNode.getName()),
+					TGGLPackage.Literals.TGG_CORRESPONDENCE_NODE__NAME);
+		}
+	}
+
+	@Check
+	protected void checkPatternContextEdgeOnly(SlimRuleNodeContext contextNode) {
+		if (SlimGTModelUtil.getContainer(contextNode, SlimRule.class) == null)
+			return;
+
+		SlimRuleNode node = (SlimRuleNode) contextNode.getContext();
+		if (node == null)
+			return;
+
+		for (int i = 0; i < node.getCreatedEdges().size(); i++) {
+			error("Edges of binding type 'create' are forbidden in patterns.", node, SlimGTPackage.Literals.SLIM_RULE_NODE__CREATED_EDGES, i,
+					IssueCodes.INCORRECT_BINDING_EDGE_CREATE);
+		}
+	}
+
+	@Check
+	protected void checkContextEdgeWithCreateSrcForbidden(SlimRuleNodeCreation createNode) {
+		SlimRuleNode node = (SlimRuleNode) createNode.getCreation();
+		if (node == null)
+			return;
+
+		for (int i = 0; i < node.getContextEdges().size(); i++) {
+			// FIXME wrong error highlighting
+			error(String.format("Node '%s' of binding type 'create' cannot be connected via an edge of binding type 'context'.", node.getName()),
+					node, SlimGTPackage.Literals.SLIM_RULE_NODE__CREATED_EDGES, i, IssueCodes.INCORRECT_BINDING_EDGE_CONTEXT);
+		}
+	}
+
+	@Check
+	protected void checkContextEdgeWithCreateTrgForbidden(SlimRuleEdgeContext contextEdge) {
+		SlimRuleEdge edge = contextEdge.getContext();
+		if (edge == null)
+			return;
+
+		SlimRuleNode targetNode = (SlimRuleNode) edge.getTarget();
+		if (targetNode == null)
+			return;
+
+		if (SlimGTModelUtil.getContainer(targetNode, SlimRuleNodeCreation.class) != null) {
+			error("An edge of binding type 'context' cannot point to a node of binding type 'create'.", edge,
+					SlimGTPackage.Literals.SLIM_RULE_EDGE__TARGET);
+		}
+	}
+
+	@Check
+	protected void checkUniqueNodesNames(TGGRule rule) {
+		Map<String, Collection<SlimRuleNode>> name2nodes = new HashMap<>();
+
+		TGGDomainRule srcDomain = rule.getSourceRule();
+		if (srcDomain != null)
+			fillNodeNameMap(srcDomain, name2nodes);
+
+		TGGDomainRule trgDomain = rule.getTargetRule();
+		if (trgDomain != null)
+			fillNodeNameMap(trgDomain, name2nodes);
+
+		TGGCorrRule corrDomain = rule.getCorrRule();
+		if (corrDomain != null)
+			fillNodeNameMapCorr(corrDomain, name2nodes);
+
+		for (Entry<String, Collection<SlimRuleNode>> entry : name2nodes.entrySet()) {
+			if (entry.getValue().size() <= 1)
+				continue;
+
+			for (SlimRuleNode dublNode : entry.getValue()) {
+				error(String.format("A node with name '%s' does already exist in this or a refined rule.", entry.getKey()), dublNode,
+						SlimGTPackage.Literals.SLIM_RULE_NODE__NAME);
+			}
+		}
+	}
+
+	private void fillNodeNameMap(TGGDomainRule domain, Map<String, Collection<SlimRuleNode>> name2nodes) {
+		for (SlimRuleNodeContext contextNode : domain.getContextNodes()) {
+			SlimRuleNode node = (SlimRuleNode) contextNode.getContext();
+			if (node == null)
+				continue;
+			name2nodes.computeIfAbsent(node.getName(), k -> new LinkedList<>()).add(node);
+		}
+		for (SlimRuleNodeCreation createNode : domain.getCreatedNodes()) {
+			SlimRuleNode node = (SlimRuleNode) createNode.getCreation();
+			if (node == null)
+				continue;
+			name2nodes.computeIfAbsent(node.getName(), k -> new LinkedList<>()).add(node);
+		}
+	}
+
+	private void fillNodeNameMapCorr(TGGCorrRule domain, Map<String, Collection<SlimRuleNode>> name2nodes) {
+		for (TGGCorrespondenceNodeContext contextCorr : domain.getContextCorrespondenceNodes()) {
+			SlimRuleNode node = (SlimRuleNode) contextCorr.getContext();
+			if (node == null)
+				continue;
+			name2nodes.computeIfAbsent(node.getName(), k -> new LinkedList<>()).add(node);
+		}
+		for (TGGCorrespondenceNodeCreation createCorr : domain.getCreatedCorrespondenceNodes()) {
+			SlimRuleNode node = (SlimRuleNode) createCorr.getCreation();
+			if (node == null)
+				continue;
+			name2nodes.computeIfAbsent(node.getName(), k -> new LinkedList<>()).add(node);
+		}
+	}
+
 }
