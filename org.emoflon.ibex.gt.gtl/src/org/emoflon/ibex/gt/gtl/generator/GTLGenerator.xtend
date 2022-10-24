@@ -23,6 +23,8 @@ import org.emoflon.ibex.gt.gtl.util.GTLResourceManager
 import org.emoflon.ibex.gt.gtl.util.GTLModelFlattener
 import org.apache.log4j.Logger
 import org.moflon.core.utilities.LogUtils
+import org.moflon.core.utilities.EcoreUtils
+import org.eclipse.xtext.EcoreUtil2
 
 /**
  * Generates code from your model files on save.
@@ -67,6 +69,7 @@ class GTLGenerator extends AbstractGenerator {
 					pkg2Files.put(ef.package.name, editorFiles)
 				}
 				editorFiles.add(ef)
+				EcoreUtil2.resolveAll(ef)
 			}
 		}
 		
