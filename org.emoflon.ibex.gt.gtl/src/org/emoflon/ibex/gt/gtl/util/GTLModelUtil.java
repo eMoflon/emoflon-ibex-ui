@@ -42,6 +42,7 @@ import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinement;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementAliased;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementNode;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementPlain;
+import org.emoflon.ibex.gt.gtl.gTL.GTLRuleWatchDog;
 import org.emoflon.ibex.gt.gtl.gTL.SlimParameter;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRule;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNode;
@@ -85,6 +86,14 @@ public final class GTLModelUtil {
 				.collect(Collectors.toSet());
 	}
 
+	public static Collection<SlimRuleNode> getAllDeletedAndContextRuleNodesNoLocals(SlimRule context) {
+		Map<SlimRuleNode, RuleNodeHierarchy> nodes = new LinkedHashMap<>();
+		getAllRuleNodes(context, new HashMap<>(), nodes);
+		return nodes.keySet().stream().filter(n -> n.eContainer() instanceof GTLRuleNodeDeletion
+				|| (n.eContainer() instanceof SlimRuleNodeContext && !((SlimRuleNodeContext) n.eContainer()).isLocal()))
+				.collect(Collectors.toSet());
+	}
+
 	public static Collection<SlimRuleNode> getAllCreatedAndContextRuleNodes(SlimRule context) {
 		Map<SlimRuleNode, RuleNodeHierarchy> nodes = new LinkedHashMap<>();
 		getAllRuleNodes(context, new HashMap<>(), nodes);
@@ -94,6 +103,12 @@ public final class GTLModelUtil {
 	}
 
 	public static Optional<SlimRule> refinementToRule(final GTLRuleRefinement refinement) {
+		if (refinement.getSuperRule() == null)
+			return Optional.empty();
+
+		if (!(refinement.getSuperRule() instanceof SlimRule))
+			return Optional.empty();
+
 		SlimRule rule = null;
 		if (refinement instanceof GTLRuleRefinementPlain plainRefinement) {
 			rule = (SlimRule) plainRefinement.getSuperRule();
@@ -120,6 +135,9 @@ public final class GTLModelUtil {
 	}
 
 	public static boolean ruleNodeIsRefining(final SlimRuleNode ruleNode) {
+		if (ruleNode == null)
+			return false;
+
 		if (ruleNode.eContainer() instanceof org.emoflon.ibex.gt.gtl.gTL.SlimRuleNodeContext context) {
 			return context.isRefining();
 		} else if (ruleNode.eContainer() instanceof org.emoflon.ibex.gt.gtl.gTL.SlimRuleNodeCreation creation) {
@@ -346,6 +364,9 @@ public final class GTLModelUtil {
 		nodes.add(context);
 		nodes.addAll(getRuleNodeAllSuperNodes(context));
 		for (SlimRuleNode node : nodes) {
+			if (node == null)
+				continue;
+
 			node.getContextEdges().stream().map(e -> e.getContext()).forEach(e -> edges.add(e));
 			node.getCreatedEdges().stream().map(e -> e.getCreation()).forEach(e -> edges.add(e));
 			node.getDeletedEdges().stream().map(e -> e.getDeletion()).forEach(e -> edges.add(e));
@@ -360,6 +381,9 @@ public final class GTLModelUtil {
 		nodes.add(context);
 		nodes.addAll(getRuleNodeAllSuperNodes(context, ruleNodeHierarchy));
 		for (SlimRuleNode node : nodes) {
+			if (node == null)
+				continue;
+
 			node.getContextEdges().stream().map(e -> e.getContext()).forEach(e -> edges.add(e));
 			node.getCreatedEdges().stream().map(e -> e.getCreation()).forEach(e -> edges.add(e));
 			node.getDeletedEdges().stream().map(e -> e.getDeletion()).forEach(e -> edges.add(e));
@@ -380,6 +404,18 @@ public final class GTLModelUtil {
 		nodes.add(context);
 		nodes.addAll(getRuleNodeAllSuperNodes(context, ruleNodeHierarchy));
 		return nodes.stream().flatMap(n -> n.getAssignments().stream()).collect(Collectors.toList());
+	}
+
+	public static Collection<GTLRuleWatchDog> getAllWatchDogs(SlimRule context) {
+		Collection<SlimRule> superRules = getAllSuperRules(context);
+		List<GTLRuleWatchDog> watchDogs = superRules.stream()
+				.filter(rule -> rule.getWatchDogs() != null && !rule.getWatchDogs().isEmpty())
+				.flatMap(rule -> rule.getWatchDogs().stream()).collect(Collectors.toList());
+
+		if (context.getWatchDogs() != null && !context.getWatchDogs().isEmpty())
+			watchDogs.addAll(context.getWatchDogs());
+
+		return watchDogs;
 	}
 
 	public static Collection<SlimRuleAttributeAssignment> getAllAttributeAssignments(SlimRule context) {

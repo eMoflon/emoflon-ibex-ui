@@ -111,8 +111,7 @@ public class GTLProjectCreator extends AbstractPluginProjectCreator {
 
 	@Override
 	protected void enhanceProject(final IProject project, final IProgressMonitor monitor) throws CoreException {
-		String basePackage = project.getName().substring(0, 1).toLowerCase()
-				+ project.getName().substring(1, project.getName().length()) + ".example";
+		String basePackage = project.getName().toLowerCase().replace("-", "").replace("_", "") + ".example";
 		GTLNewFileInitialContents.generateInitialContents(project, basePackage);
 		project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 	}

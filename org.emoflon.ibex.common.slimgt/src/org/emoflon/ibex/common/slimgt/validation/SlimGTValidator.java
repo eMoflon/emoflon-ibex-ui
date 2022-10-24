@@ -41,7 +41,15 @@ import org.emoflon.ibex.common.slimgt.util.XtextResourceManager;
  */
 public class SlimGTValidator extends AbstractSlimGTValidator {
 
-	protected XtextResourceManager resourceManager = new XtextResourceManager();
+	final protected XtextResourceManager resourceManager;
+
+	public SlimGTValidator() {
+		resourceManager = new XtextResourceManager();
+	}
+
+	public SlimGTValidator(final XtextResourceManager resourceManager) {
+		this.resourceManager = resourceManager;
+	}
 
 	/**
 	 * This prevents all exceptions being "swallowed" by the default validator

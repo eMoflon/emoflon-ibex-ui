@@ -22,7 +22,7 @@ import com.google.inject.Injector;
  * The wizard for creating a new GT project.
  */
 public class GTLNewProjectWizard extends XtextNewProjectWizard {
-	public static final String PROJECT_WIZARD_ID = "org.emoflon.ibex.gt.gtl.ui.wizard.GTLNewProjectWizard";
+	public static final String PROJECT_WIZARD_ID = "org.emoflon.ibex.gt.gtl.ui.GTLProjectWizard";
 	public static final String PROJECT_WIZARD_TITLE = "New eMoflon Graph Transformation Project";
 	public static final String PROJECT_WIZARD_DESCRIPTION = "Create a new eMoflon Graph Transformation Project.";
 

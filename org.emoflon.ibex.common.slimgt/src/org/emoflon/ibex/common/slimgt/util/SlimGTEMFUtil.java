@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
 import org.eclipse.emf.common.util.URI;
@@ -18,9 +20,17 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
+import org.eclipse.pde.core.plugin.IPluginAttribute;
+import org.eclipse.pde.core.plugin.IPluginBase;
+import org.eclipse.pde.core.plugin.IPluginExtension;
+import org.eclipse.pde.core.plugin.IPluginModelBase;
+import org.eclipse.pde.core.plugin.IPluginObject;
+import org.eclipse.pde.core.plugin.PluginRegistry;
+import org.eclipse.pde.internal.core.plugin.PluginElement;
 import org.eclipse.xtext.EcoreUtil2;
 import org.moflon.core.utilities.ProxyResolver;
 
+@SuppressWarnings("restriction")
 public final class SlimGTEMFUtil {
 	public static EPackage loadMetamodel(URI uri) throws IOException {
 		return loadMetamodel(uri.toString());
@@ -78,6 +88,44 @@ public final class SlimGTEMFUtil {
 		}
 
 		return metamodel;
+	}
+
+	public static IProject getProjectOfEPackage(final IProject current, final EPackage ePack) {
+		IWorkspace workspace = current.getWorkspace();
+		for (IProject project : workspace.getRoot().getProjects()) {
+			if (project.equals(current))
+				continue;
+
+			IPluginModelBase pluginmodel = PluginRegistry.findModel(project);
+			if (pluginmodel == null)
+				continue;
+
+			IPluginBase pluginBase = pluginmodel.getPluginBase();
+			IPluginExtension[] ipe = pluginBase.getExtensions();
+
+			for (IPluginExtension extensionPoint : ipe) {
+				if ("org.eclipse.emf.ecore.generated_package".equals(extensionPoint.getPoint())) {
+					IPluginObject[] children = extensionPoint.getChildren();
+					for (IPluginObject child : children) {
+						if (child instanceof PluginElement) {
+							PluginElement element = (PluginElement) child;
+							IPluginAttribute attribute = element.getAttribute("uri");
+							if (attribute == null)
+								continue;
+
+							if (!ePack.getNsURI().equals(attribute.getValue()))
+								continue;
+
+							return project;
+
+						}
+					}
+				}
+
+			}
+		}
+
+		return null;
 	}
 
 	public static GenModel getGenModel(final EPackage ePack) {
