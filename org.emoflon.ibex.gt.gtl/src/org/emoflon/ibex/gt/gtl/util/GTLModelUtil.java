@@ -94,6 +94,9 @@ public final class GTLModelUtil {
 	}
 
 	public static Optional<SlimRule> refinementToRule(final GTLRuleRefinement refinement) {
+		if (refinement.getSuperRule() == null || !(refinement.getSuperRule() instanceof SlimRule))
+			return Optional.empty();
+
 		SlimRule rule = null;
 		if (refinement instanceof GTLRuleRefinementPlain plainRefinement) {
 			rule = (SlimRule) plainRefinement.getSuperRule();
@@ -120,6 +123,9 @@ public final class GTLModelUtil {
 	}
 
 	public static boolean ruleNodeIsRefining(final SlimRuleNode ruleNode) {
+		if (ruleNode == null)
+			return false;
+
 		if (ruleNode.eContainer() instanceof org.emoflon.ibex.gt.gtl.gTL.SlimRuleNodeContext context) {
 			return context.isRefining();
 		} else if (ruleNode.eContainer() instanceof org.emoflon.ibex.gt.gtl.gTL.SlimRuleNodeCreation creation) {

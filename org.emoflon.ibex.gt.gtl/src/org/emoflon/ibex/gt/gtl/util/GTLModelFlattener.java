@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -62,15 +63,17 @@ import org.emoflon.ibex.gt.gtl.gTL.GTLParameterExpression;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleEdgeDeletion;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleNodeDeletion;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleWatchDog;
+import org.emoflon.ibex.gt.gtl.gTL.Import;
 import org.emoflon.ibex.gt.gtl.gTL.PatternImport;
 import org.emoflon.ibex.gt.gtl.gTL.SlimParameter;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRule;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNode;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNodeContext;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNodeCreation;
+import org.moflon.core.utilities.LogUtils;
 
 public class GTLModelFlattener {
-
+	private Logger logger = Logger.getLogger(GTLModelFlattener.class);
 	final protected GTLResourceManager gtlManager;
 	final protected SlimGTFactory superFactory = SlimGTPackage.eINSTANCE.getSlimGTFactory();
 	final protected GTLFactory factory = GTLPackage.eINSTANCE.getGTLFactory();
@@ -104,7 +107,7 @@ public class GTLModelFlattener {
 				try {
 					flatten(ef);
 				} catch (Exception e) {
-					e.printStackTrace();
+					LogUtils.error(logger, e);
 				}
 			});
 		} else {
@@ -139,7 +142,7 @@ public class GTLModelFlattener {
 			try {
 				flatten(ef);
 			} catch (Exception e) {
-				e.printStackTrace();
+				LogUtils.error(logger, e);
 			}
 		});
 
@@ -160,15 +163,22 @@ public class GTLModelFlattener {
 			flattenedFile.getRules().add(flattenedRule);
 
 			Map<String, SlimRuleNode> nodes = rule2nodes.get(flattenedRule);
-			for (Consumer<SlimRule> pending : pendingRuleJobs.get(ruleName)) {
-				pending.accept(flattenedRule);
-			}
-			for (String nodeName : nodes.keySet()) {
-				SlimRuleNode flattenedNode = nodes.get(nodeName);
-				for (Consumer<SlimRuleNode> pending : rule2pendingNodeJobs.get(ruleName).get(nodeName)) {
-					pending.accept(flattenedNode);
+			if (pendingRuleJobs.containsKey(ruleName)) {
+				for (Consumer<SlimRule> pending : pendingRuleJobs.get(ruleName)) {
+					pending.accept(flattenedRule);
+				}
+
+				for (String nodeName : nodes.keySet()) {
+					SlimRuleNode flattenedNode = nodes.get(nodeName);
+					if (rule2pendingNodeJobs.get(ruleName).containsKey(nodeName)) {
+						for (Consumer<SlimRuleNode> pending : rule2pendingNodeJobs.get(ruleName).get(nodeName)) {
+							pending.accept(flattenedNode);
+						}
+					}
+
 				}
 			}
+
 		}
 	}
 
@@ -183,6 +193,7 @@ public class GTLModelFlattener {
 				// Resolve possible dependencies through refinements and invocations through
 				// recursive flattening.
 				GTLModelFlattener flattener = new GTLModelFlattener(gtlManager, otherFile, true);
+				imports.addAll(flattener.imports);
 				SlimRule flattenedRule = flattener.getFlattenedRule(pi.getPattern().getName());
 				insertFlattenedRule(flattenedRule);
 			} else {
@@ -197,18 +208,25 @@ public class GTLModelFlattener {
 				// Resolve possible dependencies through refinements and invocations through
 				// recursive flattening.
 				GTLModelFlattener flattener = new GTLModelFlattener(gtlManager, wildcardImport.get(), true);
+				imports.addAll(flattener.imports);
 				flattener.getFlattenedModel().getRules().stream()
 						.filter(other -> otherRuleNames.contains(other.getName()))
 						.forEach(other -> insertFlattenedRule(other));
 			}
 		}
 
+		flattenedFile.getImports().addAll(imports.stream().map(imp -> {
+			Import nImp = factory.createImport();
+			nImp.setName(imp);
+			return nImp;
+		}).collect(Collectors.toList()));
+
 		// Flatten rules
 		file.getRules().parallelStream().forEach(rule -> {
 			try {
 				flatten(rule);
 			} catch (Exception e) {
-				e.printStackTrace();
+				LogUtils.error(logger, e);
 			}
 		});
 	}
@@ -262,6 +280,7 @@ public class GTLModelFlattener {
 			name2Parameter.put(param.getName(), flattenedParam);
 			flattenedRule.getParameters().add(flattenedParam);
 		}
+		rule2parameters.put(flattenedRule, name2Parameter);
 
 		Map<SlimRuleNode, RuleNodeHierarchy> hierarchies = GTLModelUtil.getAllRuleNodeHierarchy(rule);
 		Map<String, SlimRuleNode> name2Node = Collections.synchronizedMap(new HashMap<>());
@@ -391,6 +410,7 @@ public class GTLModelFlattener {
 			try {
 				dataTypes.addAll(GTLArithmeticUtil.parseAllDataTypes(condition.getExpression()));
 			} catch (Exception e) {
+				LogUtils.error(logger, e);
 				return false;
 			}
 			if (dataTypes.contains(ValueExpressionDataType.OBJECT)) {
@@ -502,7 +522,7 @@ public class GTLModelFlattener {
 	}
 
 	protected ValueExpression flatten(ValueExpression expression, SlimRule container) {
-		return flatten(expression, container);
+		return flatten((ArithmeticExpression) expression, container);
 	}
 
 	protected ArithmeticExpression flatten(ArithmeticExpression expression, SlimRule container) {
