@@ -69,6 +69,7 @@ class GTLGenerator extends AbstractGenerator {
 					pkg2Files.put(ef.package.name, editorFiles)
 				}
 				editorFiles.add(ef)
+				EcoreUtil2.resolveLazyCrossReferences(ef.eResource, [| false]);
 				EcoreUtil2.resolveAll(ef)
 			}
 		}

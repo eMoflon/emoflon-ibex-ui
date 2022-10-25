@@ -13,7 +13,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.EcoreUtil2;
 import org.emoflon.ibex.common.slimgt.slimGT.ArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.BooleanBracket;
 import org.emoflon.ibex.common.slimgt.slimGT.BooleanConjunction;
@@ -97,9 +96,6 @@ public final class GTLModelUtil {
 	public static Optional<SlimRule> refinementToRule(final GTLRuleRefinement refinement) {
 		if (refinement.getSuperRule() == null)
 			return Optional.empty();
-
-		if (refinement.getSuperRule() != null || refinement.getSuperRule().eIsProxy())
-			EcoreUtil2.resolveAll(refinement.getSuperRule());
 
 		if (!(refinement.getSuperRule() instanceof SlimRule))
 			return Optional.empty();

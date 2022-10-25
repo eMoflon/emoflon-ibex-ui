@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -22,8 +23,10 @@ import org.emoflon.ibex.common.slimgt.util.XtextResourceManager;
 import org.emoflon.ibex.gt.gtl.gTL.EditorFile;
 import org.emoflon.ibex.gt.gtl.gTL.PatternImport;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRule;
+import org.moflon.core.utilities.LogUtils;
 
 public class GTLResourceManager {
+	Logger logger = Logger.getLogger(GTLResourceManager.class);
 	final protected XtextResourceManager xtextResources;
 
 	public GTLResourceManager() {
@@ -50,6 +53,7 @@ public class GTLResourceManager {
 				resource = xtextResources.loadResource(requester, gtModelUri);
 				file = (EditorFile) resource.getContents().get(0);
 			} catch (Exception e) {
+				LogUtils.error(logger, e);
 				return Optional.empty();
 			}
 		}
@@ -84,6 +88,7 @@ public class GTLResourceManager {
 			resource = xtextResources.loadResource(requester, gtModelUri);
 			file = (EditorFile) resource.getContents().get(0);
 		} catch (Exception e) {
+			LogUtils.error(logger, e);
 			return Optional.empty();
 		}
 
@@ -133,6 +138,7 @@ public class GTLResourceManager {
 				try {
 					gtModelUri = URI.createFileURI(gtFile.getCanonicalPath());
 				} catch (IOException e) {
+					LogUtils.error(logger, e);
 					continue;
 				}
 

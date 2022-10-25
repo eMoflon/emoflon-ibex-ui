@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.xtext.EcoreUtil2;
 import org.emoflon.ibex.common.slimgt.slimGT.ArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.ArithmeticLiteral;
 import org.emoflon.ibex.common.slimgt.slimGT.BooleanBracket;
@@ -133,6 +134,8 @@ public class GTLModelFlattener {
 							"Multiple gtl packages can not be merged into one gtl model instance.");
 				}
 			}
+
+			EcoreUtil2.resolveLazyCrossReferences(file.eResource(), () -> false);
 		}
 
 		flattenedFile = factory.createEditorFile();
@@ -167,16 +170,16 @@ public class GTLModelFlattener {
 				for (Consumer<SlimRule> pending : pendingRuleJobs.get(ruleName)) {
 					pending.accept(flattenedRule);
 				}
+			}
 
-				for (String nodeName : nodes.keySet()) {
-					SlimRuleNode flattenedNode = nodes.get(nodeName);
-					if (rule2pendingNodeJobs.get(ruleName).containsKey(nodeName)) {
-						for (Consumer<SlimRuleNode> pending : rule2pendingNodeJobs.get(ruleName).get(nodeName)) {
-							pending.accept(flattenedNode);
-						}
+			for (String nodeName : nodes.keySet()) {
+				SlimRuleNode flattenedNode = nodes.get(nodeName);
+				if (rule2pendingNodeJobs.get(ruleName).containsKey(nodeName)) {
+					for (Consumer<SlimRuleNode> pending : rule2pendingNodeJobs.get(ruleName).get(nodeName)) {
+						pending.accept(flattenedNode);
 					}
-
 				}
+
 			}
 
 		}
@@ -638,7 +641,7 @@ public class GTLModelFlattener {
 
 	protected void addPendingRuleConsumer(final String rule, final Consumer<SlimRule> consumer) {
 		List<Consumer<SlimRule>> consumers = pendingRuleJobs.get(rule);
-		if (consumer == null) {
+		if (consumers == null) {
 			consumers = Collections.synchronizedList(new LinkedList<>());
 			pendingRuleJobs.put(rule, consumers);
 		}
@@ -653,7 +656,7 @@ public class GTLModelFlattener {
 		}
 
 		List<Consumer<SlimRuleNode>> consumers = pendingMappingNodes.get(node);
-		if (consumer == null) {
+		if (consumers == null) {
 			consumers = Collections.synchronizedList(new LinkedList<>());
 			pendingMappingNodes.put(node, consumers);
 		}
