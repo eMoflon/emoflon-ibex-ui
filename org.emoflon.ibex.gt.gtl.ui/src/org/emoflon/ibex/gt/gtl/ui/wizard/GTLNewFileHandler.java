@@ -18,7 +18,7 @@ public class GTLNewFileHandler extends AbstractHandler {
 		try {
 			UiUtilities.openWizard(GTLNewFileWizard.GTL_FILE_WIZARD_ID, window);
 		} catch (final Exception e) {
-			Logger.getRootLogger().info("Cannot init New Graph Transformation File Wizard");
+			Logger.getRootLogger().error("Cannot init New Graph Transformation File Wizard");
 		}
 		return null;
 	}

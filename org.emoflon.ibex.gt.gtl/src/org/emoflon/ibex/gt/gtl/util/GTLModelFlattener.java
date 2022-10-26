@@ -351,7 +351,7 @@ public class GTLModelFlattener {
 			}
 
 			// Flatten node attribute references within attribute assignments
-			for (SlimRuleAttributeAssignment assignment : GTLModelUtil.getRuleNodeAllAttributeAssignments(flattenedNode,
+			for (SlimRuleAttributeAssignment assignment : GTLModelUtil.getRuleNodeAllAttributeAssignments(node,
 					hierarchies)) {
 				SlimRuleAttributeAssignment flattenedAssignment = superFactory.createSlimRuleAttributeAssignment();
 				flattenedAssignment.setType(assignment.getType());
