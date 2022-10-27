@@ -270,7 +270,8 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 		EditorFile ef = SlimGTModelUtil.getContainer(context, EditorFile.class);
 		SlimRule rule = SlimGTModelUtil.getContainer(context, SlimRule.class);
 
-		return Scopes.scopeFor(gtlManager.getAllRulesInScope(ef).stream().filter(r -> !r.equals(rule))
+		return Scopes.scopeFor(gtlManager.getAllRulesInScope(ef).stream()
+				.filter(r -> !r.getName().equals(rule.getName()))
 				.filter(r -> r.getParameters() == null || r.getParameters().size() == 0).collect(Collectors.toList()));
 	}
 

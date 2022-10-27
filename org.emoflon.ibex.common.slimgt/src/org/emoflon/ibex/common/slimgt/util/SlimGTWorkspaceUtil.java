@@ -1,10 +1,15 @@
 package org.emoflon.ibex.common.slimgt.util;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -63,6 +68,27 @@ public final class SlimGTWorkspaceUtil {
 		}
 
 		return project;
+	}
+
+	public static IProject getProjectOfFile(final IProject current, final File file, String ending, boolean ignoreBin) {
+		IWorkspace workspace = current.getWorkspace();
+		for (IProject project : workspace.getRoot().getProjects()) {
+			List<File> files = new LinkedList<>();
+			File projectFile = new File(project.getLocation().toPortableString());
+			gatherFilesWithEnding(files, projectFile, ending, ignoreBin);
+			Optional<File> copy = files.stream().filter(f -> {
+				try {
+					return f.getCanonicalPath().equals(file.getCanonicalPath());
+				} catch (IOException e) {
+					return false;
+				}
+			}).findFirst();
+
+			if (copy.isPresent())
+				return project;
+		}
+
+		return null;
 	}
 
 }

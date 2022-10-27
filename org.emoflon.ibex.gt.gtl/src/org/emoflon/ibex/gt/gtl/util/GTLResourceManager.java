@@ -2,6 +2,7 @@ package org.emoflon.ibex.gt.gtl.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.HashSet;
@@ -49,8 +50,16 @@ public class GTLResourceManager {
 		File importFile = new File(path);
 		if (importFile.exists() && importFile.isFile() && importFile.isAbsolute()) {
 			gtModelUri = URI.createFileURI(path);
+
+			IProject other = SlimGTWorkspaceUtil.getProjectOfFile(SlimGTWorkspaceUtil.getCurrentProject(requester),
+					new File(path), ".gtl", true);
+			if (other == null)
+				return Optional.empty();
+
+			URI platformUri = toPlatformURI(other, gtModelUri);
+
 			try {
-				resource = xtextResources.loadResource(requester, gtModelUri);
+				resource = xtextResources.loadResource(requester, platformUri);
 				file = (EditorFile) resource.getContents().get(0);
 			} catch (Exception e) {
 				LogUtils.error(logger, e);
@@ -84,8 +93,13 @@ public class GTLResourceManager {
 		}
 
 		gtModelUri = URI.createFileURI(absolutePath);
+		IProject other = SlimGTWorkspaceUtil.getProjectOfFile(currentProject, new File(absolutePath), ".gtl", true);
+		if (other == null)
+			return Optional.empty();
+
+		URI platformUri = toPlatformURI(other, gtModelUri);
 		try {
-			resource = xtextResources.loadResource(requester, gtModelUri);
+			resource = xtextResources.loadResource(requester, platformUri);
 			file = (EditorFile) resource.getContents().get(0);
 		} catch (Exception e) {
 			LogUtils.error(logger, e);
@@ -146,8 +160,8 @@ public class GTLResourceManager {
 
 				if (fileString.equals(currentFile))
 					continue;
-
-				Resource resource = xtextResources.loadResource(ef.eResource(), gtModelUri);
+				URI platformUri = toPlatformURI(project, gtModelUri);
+				Resource resource = xtextResources.loadResource(ef.eResource(), platformUri);
 				if (resource == null)
 					continue;
 
@@ -165,6 +179,14 @@ public class GTLResourceManager {
 		}
 
 		return pkgScope;
+	}
+
+	public URI toPlatformURI(IProject project, URI fileURI) {
+		String fileString = fileURI.toFileString();
+		String projectRelativePath = Path.of(project.getLocation().toPortableString()).relativize(Path.of(fileString))
+				.toFile().getPath();
+		URI uri = URI.createPlatformResourceURI(project.getName() + "/" + projectRelativePath, false);
+		return uri;
 	}
 
 	public Collection<SlimRule> getAllRulesInScope(EditorFile ef) {

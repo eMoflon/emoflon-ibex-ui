@@ -54,7 +54,7 @@ public class XtextResourceManager {
 
 		Resource other = cache.get(gtModelUri);
 		if (other == null) {
-			XtextResourceSet rs = new XtextResourceSet();
+			XtextResourceSet rs = (XtextResourceSet) requester.getResourceSet();
 			rs.addLoadOption(XtextResource.OPTION_RESOLVE_ALL, Boolean.TRUE);
 			try {
 				other = rs.getResource(gtModelUri, true);
@@ -66,7 +66,7 @@ public class XtextResourceManager {
 			if (other == null)
 				return other;
 
-			EcoreUtil2.resolveLazyCrossReferences(other, () -> false);
+//			EcoreUtil2.resolveLazyCrossReferences(other, () -> false);
 		}
 
 		return other;
