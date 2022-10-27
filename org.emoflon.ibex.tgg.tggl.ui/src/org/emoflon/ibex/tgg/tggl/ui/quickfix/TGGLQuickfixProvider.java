@@ -3,6 +3,10 @@
  */
 package org.emoflon.ibex.tgg.tggl.ui.quickfix;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.ui.editor.model.IXtextDocument;
 import org.eclipse.xtext.ui.editor.model.edit.IModificationContext;
 import org.eclipse.xtext.ui.editor.quickfix.Fix;
@@ -25,12 +29,12 @@ public class TGGLQuickfixProvider extends SlimGTQuickfixProvider {
 				"Change binding type from 'create' to 'context'", //
 				null, //
 				(IModificationContext context) -> {
-					IXtextDocument xtextDocument = context.getXtextDocument();
-					String s = xtextDocument.get(issue.getOffset(), issue.getLength());
-					xtextDocument.replace(issue.getOffset() + s.indexOf("+"), 1, "=");
+					IXtextDocument xtextDoc = context.getXtextDocument();
+					String s = xtextDoc.get(issue.getOffset(), issue.getLength());
+					xtextDoc.replace(issue.getOffset() + s.indexOf("+"), 1, "=");
 				});
 	}
-	
+
 	@Fix(IssueCodes.INCORRECT_BINDING_EDGE_CONTEXT)
 	public void changeToCreateEdge(Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, //
@@ -38,9 +42,68 @@ public class TGGLQuickfixProvider extends SlimGTQuickfixProvider {
 				"Change binding type from 'context' to 'create'", //
 				null, //
 				(IModificationContext context) -> {
-					IXtextDocument xtextDocument = context.getXtextDocument();
-					String s = xtextDocument.get(issue.getOffset(), issue.getLength());
-					xtextDocument.replace(issue.getOffset() + s.indexOf("="), 1, "+");
+					IXtextDocument xtextDoc = context.getXtextDocument();
+					String s = xtextDoc.get(issue.getOffset(), issue.getLength());
+					xtextDoc.replace(issue.getOffset() + s.indexOf("="), 1, "+");
+				});
+	}
+
+	@Fix(IssueCodes.MISSING_NODE_REFINEMENT)
+	public void addNodeRefinementStatement(Issue issue, IssueResolutionAcceptor acceptor) {
+		String duplNodeName = issue.getData()[0];
+		List<String> refinedRuleNames = Arrays.asList(issue.getData()).subList(1, issue.getData().length);
+		for (String refinedRuleName : refinedRuleNames) {
+			acceptor.accept(issue, //
+					String.format("Refine node '%s.%s'", refinedRuleName, duplNodeName), //
+					String.format("Add node refinement statement such that this node refines '%s.%s'", refinedRuleName, duplNodeName), //
+					null, //
+					(EObject element, IModificationContext context) -> {
+						String bindingString = element.eContainer().eClass().getName().contains("Context") ? "=" : "+";
+						String refineString = "@refines" + bindingString + " " + refinedRuleName + "." + duplNodeName;
+
+						// TODO make more robust to unusual formats:
+						IXtextDocument xtextDoc = context.getXtextDocument();
+						int startLineOffset = xtextDoc.getLineOffset(issue.getLineNumber() - 1);
+						String lineFragment = xtextDoc.get(startLineOffset, issue.getOffset() - startLineOffset);
+						String indentation = lineFragment.substring(0, lineFragment.indexOf('['));
+						xtextDoc.replace(startLineOffset, 0, indentation + refineString + "\n");
+					});
+		}
+	}
+
+	@Fix(IssueCodes.INCORRECT_BINDING_NODE_REFINED_CONTEXT)
+	public void changeToCreateNodeRefined(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(issue, //
+				"Change binding type of refining node", //
+				"Change binding type of refining node from 'context' to 'create'", //
+				null, //
+				(IModificationContext context) -> {
+					IXtextDocument xtextDoc = context.getXtextDocument();
+					String s = xtextDoc.get(issue.getOffset(), issue.getLength());
+
+					int indexRefineKeyword = s.indexOf("@refines=");
+					xtextDoc.replace(issue.getOffset() + indexRefineKeyword + 8, 1, "+");
+
+					int indexBindingNode = s.indexOf("[=]");
+					xtextDoc.replace(issue.getOffset() + indexBindingNode + 1, 1, "+");
+				});
+	}
+
+	@Fix(IssueCodes.INCORRECT_BINDING_NODE_REFINED_CREATE)
+	public void changeToContextNodeRefined(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(issue, //
+				"Change binding type of refining node", //
+				"Change binding type of refining node from 'context' to 'create'", //
+				null, //
+				(IModificationContext context) -> {
+					IXtextDocument xtextDoc = context.getXtextDocument();
+					String s = xtextDoc.get(issue.getOffset(), issue.getLength());
+
+					int indexRefineKeyword = s.indexOf("@refines+");
+					xtextDoc.replace(issue.getOffset() + indexRefineKeyword + 8, 1, "=");
+
+					int indexBindingNode = s.indexOf("[+]");
+					xtextDoc.replace(issue.getOffset() + indexBindingNode + 1, 1, "=");
 				});
 	}
 
