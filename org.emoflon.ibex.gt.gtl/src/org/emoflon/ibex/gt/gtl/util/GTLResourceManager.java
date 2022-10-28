@@ -165,6 +165,9 @@ public class GTLResourceManager {
 				if (resource == null)
 					continue;
 
+				if (resource.getContents().isEmpty())
+					continue;
+
 				EObject gtlModel = resource.getContents().get(0);
 
 				if (gtlModel == null)

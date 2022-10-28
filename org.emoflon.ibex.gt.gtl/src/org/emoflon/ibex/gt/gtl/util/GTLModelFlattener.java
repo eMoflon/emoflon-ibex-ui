@@ -141,7 +141,7 @@ public class GTLModelFlattener {
 		flattenedFile = factory.createEditorFile();
 		flattenedFile.setPackage(factory.createPackageDeclaration());
 		flattenedFile.getPackage().setName(packageName);
-		files.parallelStream().forEach(ef -> {
+		files.stream().forEach(ef -> {
 			try {
 				flatten(ef);
 			} catch (Exception e) {
@@ -161,6 +161,12 @@ public class GTLModelFlattener {
 	}
 
 	protected void postProcess() {
+		flattenedFile.getImports().addAll(imports.stream().map(imp -> {
+			Import nImp = factory.createImport();
+			nImp.setName(imp);
+			return nImp;
+		}).collect(Collectors.toList()));
+
 		for (String ruleName : name2rule.keySet()) {
 			SlimRule flattenedRule = name2rule.get(ruleName);
 			flattenedFile.getRules().add(flattenedRule);
@@ -217,12 +223,6 @@ public class GTLModelFlattener {
 						.forEach(other -> insertFlattenedRule(other));
 			}
 		}
-
-		flattenedFile.getImports().addAll(imports.stream().map(imp -> {
-			Import nImp = factory.createImport();
-			nImp.setName(imp);
-			return nImp;
-		}).collect(Collectors.toList()));
 
 		// Flatten rules
 		file.getRules().parallelStream().forEach(rule -> {
@@ -443,11 +443,11 @@ public class GTLModelFlattener {
 			if (name2rule.containsKey(invokee.getName())) {
 				flattenedInvocation.setSupportPattern(name2rule.get(invokee.getName()));
 				flattenedInvocation.setMappings(
-						flatten(flattenedRule, name2rule.get(invokee.getName()), flattenedInvocation.getMappings()));
+						flatten(flattenedRule, name2rule.get(invokee.getName()), invocation.getMappings()));
 			} else {
 				addPendingRuleConsumer(invokee.getName(), (r) -> {
 					flattenedInvocation.setSupportPattern(r);
-					flattenedInvocation.setMappings(flatten(flattenedRule, r, flattenedInvocation.getMappings()));
+					flattenedInvocation.setMappings(flatten(flattenedRule, r, invocation.getMappings()));
 				});
 			}
 			flattenedRule.getInvocations().add(flattenedInvocation);
@@ -481,6 +481,7 @@ public class GTLModelFlattener {
 					flattenedMapping.setTarget(node);
 				});
 			}
+			flattenedMappings.getMappings().add(flattenedMapping);
 		}
 		return flattenedMappings;
 	}

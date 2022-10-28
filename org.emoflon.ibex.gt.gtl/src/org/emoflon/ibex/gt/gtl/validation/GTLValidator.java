@@ -719,10 +719,12 @@ public class GTLValidator extends AbstractGTLValidator {
 		}
 
 		SlimRule invokee = null;
-		if (mappings.eContainer() instanceof CountExpression count) {
-			invokee = (SlimRule) count.getSupportPattern();
-		} else if (mappings.eContainer() instanceof SlimRuleInvocation invocation) {
-			invokee = (SlimRule) invocation.getSupportPattern();
+		if (mappings.eContainer() instanceof CountExpression count
+				&& count.getSupportPattern() instanceof SlimRule countInvokee) {
+			invokee = countInvokee;
+		} else if (mappings.eContainer() instanceof SlimRuleInvocation invocation
+				&& invocation.getSupportPattern() instanceof SlimRule stdInvokee) {
+			invokee = stdInvokee;
 		} else {
 			return;
 		}
