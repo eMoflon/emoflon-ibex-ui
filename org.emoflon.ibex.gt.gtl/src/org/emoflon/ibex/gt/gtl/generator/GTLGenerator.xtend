@@ -32,25 +32,19 @@ import org.eclipse.xtext.EcoreUtil2
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#code-generation
  */
 class GTLGenerator extends AbstractGenerator {
-
 	Logger logger = Logger.getLogger(typeof(GTLGenerator));
 	var ResourceSet resourceSet = null
-	var projects = new HashSet<IProject>()
 
 	override void doGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		var lResource = input.resourceSet as SynchronizedXtextResourceSet
 		val iProject = SlimGTWorkspaceUtil.getCurrentProject(input)
 		
-		// small trick to make sure that GT projects are only build once (every new build process creates new ResourceSets)
-		if(resourceSet !== null && projects.contains(iProject)) {
-//			logger.info('''Project «iProject.name» is already up to date.''')
-//			return
-		}else if(resourceSet !== null && !projects.contains(iProject)) {
-			projects.add(iProject)
-		} else {
-			projects.clear
-			projects.add(iProject)
+		if(resourceSet === null) {
 			resourceSet = lResource
+		} else if(resourceSet !== null && !resourceSet.equals(lResource)) {
+			resourceSet = lResource
+		} else {
+			return
 		}
 		
 		logger.info('''Building project «iProject.name» ...''')

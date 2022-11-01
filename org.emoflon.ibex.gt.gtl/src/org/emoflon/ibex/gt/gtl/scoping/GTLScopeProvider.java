@@ -30,6 +30,7 @@ import org.emoflon.ibex.gt.gtl.gTL.GTLEdgeIteratorAttributeAssignment;
 import org.emoflon.ibex.gt.gtl.gTL.GTLEdgeIteratorReference;
 import org.emoflon.ibex.gt.gtl.gTL.GTLIteratorAttributeExpression;
 import org.emoflon.ibex.gt.gtl.gTL.GTLParameterExpression;
+import org.emoflon.ibex.gt.gtl.gTL.GTLRuleNodeDeletion;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementAliased;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementNode;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementPlain;
@@ -37,6 +38,7 @@ import org.emoflon.ibex.gt.gtl.gTL.GTLRuleWatchDog;
 import org.emoflon.ibex.gt.gtl.gTL.PatternImport;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRule;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNode;
+import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNodeContext;
 import org.emoflon.ibex.gt.gtl.util.GTLModelUtil;
 import org.emoflon.ibex.gt.gtl.util.GTLResourceManager;
 
@@ -168,7 +170,19 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 		if (!optRule.isPresent())
 			return IScope.NULLSCOPE;
 
-		return Scopes.scopeFor(GTLModelUtil.getAllRuleNodes(optRule.get()));
+		return Scopes.scopeFor(GTLModelUtil.getAllRuleNodes(optRule.get()).stream().filter(n -> {
+			if (context.eContainer() instanceof SlimRuleNodeContext && n.eContainer() instanceof SlimRuleNodeContext) {
+				return true;
+			} else if (context.eContainer() instanceof SlimRuleNodeCreation
+					&& n.eContainer() instanceof SlimRuleNodeCreation) {
+				return true;
+			} else if (context.eContainer() instanceof GTLRuleNodeDeletion
+					&& n.eContainer() instanceof GTLRuleNodeDeletion) {
+				return true;
+			} else {
+				return false;
+			}
+		}).collect(Collectors.toList()));
 	}
 
 	@Override
