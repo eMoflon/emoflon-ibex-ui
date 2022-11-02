@@ -5,12 +5,20 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.apache.commons.io.monitor.FileAlterationListener;
+import org.apache.commons.io.monitor.FileAlterationListenerAdaptor;
+import org.apache.commons.io.monitor.FileAlterationMonitor;
+import org.apache.commons.io.monitor.FileAlterationObserver;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
@@ -29,6 +37,11 @@ import org.moflon.core.utilities.LogUtils;
 public class GTLResourceManager {
 	Logger logger = Logger.getLogger(GTLResourceManager.class);
 	final protected XtextResourceManager xtextResources;
+
+	static protected Map<String, FileAlterationObserver> observers = Collections.synchronizedMap(new HashMap<>());
+	static protected Map<String, FileAlterationListener> listeners = Collections.synchronizedMap(new HashMap<>());
+	static protected Map<String, FileAlterationMonitor> monitors = Collections.synchronizedMap(new HashMap<>());
+	protected Map<IProject, Map<String, File>> editorFilesInWS = Collections.synchronizedMap(new HashMap<>());
 
 	public GTLResourceManager() {
 		this.xtextResources = new XtextResourceManager();
@@ -143,7 +156,118 @@ public class GTLResourceManager {
 				continue;
 			}
 
+			Map<String, File> editorFiles = editorFilesInWS.get(project);
+			if (editorFiles != null) {
+				// This project is already known / watched -> return gtl files
+				return editorFiles.values().stream().map(f -> {
+					URI gtModelUri;
+					try {
+						gtModelUri = URI.createFileURI(f.getCanonicalPath());
+					} catch (IOException e) {
+						LogUtils.error(logger, e);
+						return Optional.empty();
+					}
+
+					URI platformUri = toPlatformURI(project, gtModelUri);
+
+					if (platformUri.toString().equals(ef.eResource().getURI().toString()))
+						return Optional.empty();
+
+					Resource resource = xtextResources.loadResource(ef.eResource(), platformUri);
+					if (resource == null)
+						return Optional.empty();
+
+					if (resource.getContents().isEmpty())
+						return Optional.empty();
+
+					EObject gtlModel = resource.getContents().get(0);
+
+					if (gtlModel == null)
+						return Optional.empty();
+
+					if (gtlModel instanceof EditorFile otherEditorFile) {
+						return Optional.of(otherEditorFile);
+					} else {
+						return Optional.empty();
+					}
+				}).filter(opt -> opt.isPresent()).map(opt -> (EditorFile) opt.get())
+						.filter(other -> other.getPackage().getName().equals(ef.getPackage().getName()))
+						.collect(Collectors.toSet());
+			}
+
+			// This is a new or previously unknown IProject -> register file system watcher
+			editorFiles = Collections.synchronizedMap(new HashMap<>());
+			editorFilesInWS.put(project, editorFiles);
+
 			File projectFile = new File(project.getLocation().toPortableString());
+			FileAlterationObserver observer = observers.get(project.getLocation().toPortableString());
+			if (observer == null) {
+				observer = new FileAlterationObserver(project.getLocation().toPortableString());
+				observers.put(project.getLocation().toPortableString(), observer);
+			}
+
+			FileAlterationMonitor monitor = monitors.get(project.getLocation().toPortableString());
+			if (monitor == null) {
+				monitor = new FileAlterationMonitor(1000);
+				monitors.put(project.getLocation().toPortableString(), monitor);
+			}
+
+			FileAlterationListener listener = listeners.get(project.getLocation().toPortableString());
+			if (listener != null) {
+				try {
+					monitor.stop();
+				} catch (Exception e) {
+				}
+
+				monitor.removeObserver(observer);
+				observer.removeListener(listener);
+				listeners.remove(project.getLocation().toPortableString());
+			}
+
+			listener = new FileAlterationListenerAdaptor() {
+				@Override
+				public void onFileCreate(File file) {
+					if (file.isFile() && file.getName().endsWith(".gtl")) {
+						Map<String, File> editorFiles = editorFilesInWS.get(project);
+						try {
+							editorFiles.put(file.getCanonicalPath(), file);
+						} catch (IOException e) {
+							LogUtils.error(logger, e);
+							return;
+						}
+					}
+				}
+
+				@Override
+				public void onFileDelete(File file) {
+					if (file.isFile() && file.getName().endsWith(".gtl")) {
+						Map<String, File> editorFiles = editorFilesInWS.get(project);
+						try {
+							editorFiles.remove(file.getCanonicalPath());
+						} catch (IOException e) {
+							LogUtils.error(logger, e);
+							return;
+						}
+					}
+				}
+
+				@Override
+				public void onFileChange(File file) {
+					// do nothing...
+				}
+			};
+			listeners.put(project.getLocation().toPortableString(), listener);
+
+			observer.addListener(listener);
+			monitor.addObserver(observer);
+			try {
+				monitor.start();
+			} catch (Exception e) {
+				LogUtils.error(logger, e);
+				continue;
+			}
+
+			// Crawl this project initially to get all currently present gtl files
 			List<File> gtFiles = new LinkedList<>();
 			SlimGTWorkspaceUtil.gatherFilesWithEnding(gtFiles, projectFile, ".gtl", true);
 
@@ -160,6 +284,7 @@ public class GTLResourceManager {
 
 				if (fileString.equals(currentFile))
 					continue;
+
 				URI platformUri = toPlatformURI(project, gtModelUri);
 				Resource resource = xtextResources.loadResource(ef.eResource(), platformUri);
 				if (resource == null)
@@ -174,7 +299,10 @@ public class GTLResourceManager {
 					continue;
 
 				if (gtlModel instanceof EditorFile otherEditorFile) {
-					if (otherEditorFile.getPackage().getName().equals(ef.getPackage().getName())) {
+					editorFiles.put(gtModelUri.toFileString(), gtFile);
+
+					if (otherEditorFile.getPackage().getName().equals(ef.getPackage().getName())
+							&& !fileString.equals(currentFile)) {
 						pkgScope.add(otherEditorFile);
 					}
 				}
