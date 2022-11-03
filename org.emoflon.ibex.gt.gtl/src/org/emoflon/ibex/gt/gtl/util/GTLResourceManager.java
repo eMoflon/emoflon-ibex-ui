@@ -64,12 +64,12 @@ public class GTLResourceManager {
 		if (importFile.exists() && importFile.isFile() && importFile.isAbsolute()) {
 			gtModelUri = URI.createFileURI(path);
 
-			IProject other = SlimGTWorkspaceUtil.getProjectOfFile(SlimGTWorkspaceUtil.getCurrentProject(requester),
-					new File(path), ".gtl", true);
-			if (other == null)
+			Optional<IProject> otherOpt = SlimGTWorkspaceUtil
+					.getProjectOfFile(SlimGTWorkspaceUtil.getCurrentProject(requester), new File(path), ".gtl", true);
+			if (otherOpt.isEmpty())
 				return Optional.empty();
 
-			URI platformUri = toPlatformURI(other, gtModelUri);
+			URI platformUri = toPlatformURI(otherOpt.get(), gtModelUri);
 
 			try {
 				resource = xtextResources.loadResource(requester, platformUri);
@@ -106,11 +106,12 @@ public class GTLResourceManager {
 		}
 
 		gtModelUri = URI.createFileURI(absolutePath);
-		IProject other = SlimGTWorkspaceUtil.getProjectOfFile(currentProject, new File(absolutePath), ".gtl", true);
-		if (other == null)
+		Optional<IProject> otherOpt = SlimGTWorkspaceUtil.getProjectOfFile(currentProject, new File(absolutePath),
+				".gtl", true);
+		if (otherOpt.isEmpty())
 			return Optional.empty();
 
-		URI platformUri = toPlatformURI(other, gtModelUri);
+		URI platformUri = toPlatformURI(otherOpt.get(), gtModelUri);
 		try {
 			resource = xtextResources.loadResource(requester, platformUri);
 			file = (EditorFile) resource.getContents().get(0);
