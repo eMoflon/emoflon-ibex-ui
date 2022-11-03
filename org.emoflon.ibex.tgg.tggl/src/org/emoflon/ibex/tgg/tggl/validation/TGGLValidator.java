@@ -11,16 +11,22 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.validation.Check;
 import org.emoflon.ibex.common.slimgt.slimGT.Import;
+import org.emoflon.ibex.common.slimgt.slimGT.NodeAttributeExpression;
+import org.emoflon.ibex.common.slimgt.slimGT.NodeExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeAssignment;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdgeContext;
+import org.emoflon.ibex.common.slimgt.slimGT.ValueExpression;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
 import org.emoflon.ibex.common.slimgt.validation.SlimGTValidatorUtil;
 import org.emoflon.ibex.tgg.tggl.tGGL.EditorFile;
+import org.emoflon.ibex.tgg.tggl.tGGL.ExpressionOperand;
 import org.emoflon.ibex.tgg.tggl.tGGL.SlimRule;
 import org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNodeContext;
@@ -385,6 +391,62 @@ public class TGGLValidator extends AbstractTGGLValidator {
 					}
 				}
 			}
+		}
+	}
+
+	@Check
+	public void checkOnlyOneAttributeAssignment(SlimRuleNode node) {
+		Map<EAttribute, List<SlimRuleAttributeAssignment>> type2attrAssignments = new HashMap<>();
+		for (SlimRuleAttributeAssignment attrAssignment : node.getAssignments()) {
+			EAttribute type = attrAssignment.getType();
+			type2attrAssignments.computeIfAbsent(type, k -> new LinkedList<>()).add(attrAssignment);
+		}
+
+		for (Entry<EAttribute, List<SlimRuleAttributeAssignment>> entry : type2attrAssignments.entrySet()) {
+			if (entry.getValue().size() > 1) {
+				for (SlimRuleAttributeAssignment attrAssignment : entry.getValue()) {
+					error(String.format("Attribute '%s' must not be assigned more than once.", entry.getKey().getName()), attrAssignment,
+							SlimGTPackage.Literals.SLIM_RULE_ATTRIBUTE_ASSIGNMENT__TYPE);
+				}
+			}
+		}
+	}
+
+	@Check
+	public void checkAttributeAssignmentNodeAttributeIsSpecified(SlimRuleAttributeAssignment attrAssignment) {
+		ValueExpression valueExpr = attrAssignment.getValue();
+		if (valueExpr == null || !(valueExpr instanceof ExpressionOperand exprOp))
+			return;
+
+		EObject operand = exprOp.getOperand();
+		if (operand == null || !(operand instanceof NodeAttributeExpression nodeAttrExpr))
+			return;
+
+		if (nodeAttrExpr.getFeature() == null) {
+			error("A reference to an attribute is missing for this attribute assignment.", attrAssignment,
+					SlimGTPackage.Literals.SLIM_RULE_ATTRIBUTE_ASSIGNMENT__VALUE);
+			;
+		}
+	}
+
+	@Check
+	public void checkAttributeAssignmentWithRefToItselfForbidden(SlimRuleAttributeAssignment attrAssignment) {
+		ValueExpression valueExpr = attrAssignment.getValue();
+		if (valueExpr == null || !(valueExpr instanceof ExpressionOperand exprOp))
+			return;
+
+		EObject operand = exprOp.getOperand();
+		if (operand == null || !(operand instanceof NodeAttributeExpression nodeAttrExpr))
+			return;
+
+		NodeExpression nodeExpr = nodeAttrExpr.getNodeExpression();
+		if (nodeExpr == null)
+			return;
+
+		SlimRuleNode parentNode = SlimGTModelUtil.getContainer(attrAssignment, SlimRuleNode.class);
+		if (nodeExpr.getNode().equals(parentNode)) {
+			error("Attribute assignments which reference its own node are forbidden.", nodeAttrExpr,
+					SlimGTPackage.Literals.NODE_ATTRIBUTE_EXPRESSION__NODE_EXPRESSION);
 		}
 	}
 
