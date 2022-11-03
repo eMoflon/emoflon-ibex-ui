@@ -438,6 +438,7 @@ public class GTLModelFlattener {
 		// Flatten invocations
 		for (SlimRuleInvocation invocation : rule.getInvocations()) {
 			SlimRuleInvocation flattenedInvocation = superFactory.createSlimRuleInvocation();
+			flattenedInvocation.setType(invocation.getType());
 			SlimRule invokee = (SlimRule) invocation.getSupportPattern();
 
 			if (name2rule.containsKey(invokee.getName())) {
