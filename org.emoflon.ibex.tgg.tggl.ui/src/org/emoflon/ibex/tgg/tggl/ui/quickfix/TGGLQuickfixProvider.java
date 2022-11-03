@@ -107,4 +107,29 @@ public class TGGLQuickfixProvider extends SlimGTQuickfixProvider {
 				});
 	}
 
+//	@Fix(IssueCodes.IMPORT_NOT_IN_SCHEMA_FILE)
+//	public void moveImportToSchemaFile(Issue issue, IssueResolutionAcceptor acceptor) {
+//		acceptor.accept(issue, //
+//				"Move all imports to schema file", //
+//				"Move all imports to schema file", //
+//				null, //
+//				(EObject element, IModificationContext context) -> {
+//					Collection<EditorFile> allFiles = TGGLWorkspaceUtil.getAllFilesInScope(element);
+//					for (EditorFile editorFile : allFiles) {
+//						if (editorFile.getSchema() == null)
+//							continue;
+//						
+//						EditorFile currentEditorFile = (EditorFile) element;
+//						editorFile.getImports().addAll(currentEditorFile.getImports());
+//						
+//						XtextResource xtextRes = (XtextResource) editorFile.eResource();
+//						String serialized = xtextRes.getSerializer().serialize(editorFile);
+//						Injector injector = new TGGLStandaloneSetup().createInjectorAndDoEMFRegistration();
+//						XtextDocument xtextDoc = injector.getInstance(XtextDocument.class);
+//						String string = xtextDoc.get();
+//						return;
+//					}
+//				});
+//	}
+
 }

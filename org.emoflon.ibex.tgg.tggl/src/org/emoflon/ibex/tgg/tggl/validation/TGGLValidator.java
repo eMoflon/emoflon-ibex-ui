@@ -3,19 +3,24 @@
  */
 package org.emoflon.ibex.tgg.tggl.validation;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.validation.Check;
+import org.emoflon.ibex.common.slimgt.slimGT.Import;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdgeContext;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
 import org.emoflon.ibex.common.slimgt.validation.SlimGTValidatorUtil;
+import org.emoflon.ibex.tgg.tggl.tGGL.EditorFile;
 import org.emoflon.ibex.tgg.tggl.tGGL.SlimRule;
 import org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNodeContext;
@@ -30,6 +35,7 @@ import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinement;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementCorrespondenceNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRule;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRuleRefinementNode;
+import org.emoflon.ibex.tgg.tggl.util.TGGLWorkspaceUtil;
 
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
@@ -311,6 +317,118 @@ public class TGGLValidator extends AbstractTGGLValidator {
 		TGGCorrRule corrRule = SlimGTModelUtil.getContainer(createNode, TGGCorrRule.class);
 		error("The refining node must be of the same binding type as the refined node.", corrRule,
 				TGGLPackage.Literals.TGG_CORR_RULE__CREATED_CORRESPONDENCE_NODES, IssueCodes.INCORRECT_BINDING_NODE_REFINED_CREATE);
+	}
+
+	@Check
+	public void checkOnlyOneSingleEdge(SlimRuleNode node) {
+		List<SlimRuleEdge> singleEdges = new LinkedList<>();
+
+		singleEdges.addAll(node.getContextEdges().stream() //
+				.filter(e -> e.getContext() != null) //
+				.map(e -> e.getContext()) //
+				.filter(e -> !e.getType().isMany()) //
+				.toList());
+
+		singleEdges.addAll(node.getCreatedEdges().stream() //
+				.filter(e -> e.getCreation() != null) //
+				.map(e -> e.getCreation()) //
+				.filter(e -> !e.getType().isMany()) //
+				.toList());
+
+		Map<EReference, List<SlimRuleEdge>> ref2singleEdge = new HashMap<>();
+		for (SlimRuleEdge singleEdge : singleEdges)
+			ref2singleEdge.computeIfAbsent(singleEdge.getType(), k -> new LinkedList<>()).add(singleEdge);
+
+		for (Entry<EReference, List<SlimRuleEdge>> entry : ref2singleEdge.entrySet()) {
+			if (entry.getValue().size() > 1) {
+				for (SlimRuleEdge edge : entry.getValue()) {
+					error(String.format("Edge '%s' has a max. cardinality of 1 and, hence, cannot be set more than once.", entry.getKey().getName()),
+							edge, SlimGTPackage.Literals.SLIM_RULE_EDGE__TYPE);
+				}
+			}
+		}
+	}
+
+	@Check
+	public void checkOnlyOneEdgeOfTypeBetweenTwoNodes(SlimRuleNode node) {
+		List<SlimRuleEdge> edges = new LinkedList<>();
+
+		edges.addAll(node.getContextEdges().stream() //
+				.filter(e -> e.getContext() != null) //
+				.map(e -> e.getContext()) //
+				.filter(e -> e.getType().isMany()) //
+				.toList());
+
+		edges.addAll(node.getCreatedEdges().stream() //
+				.filter(e -> e.getCreation() != null) //
+				.map(e -> e.getCreation()) //
+				.filter(e -> e.getType().isMany()) //
+				.toList());
+
+		Map<EReference, List<SlimRuleEdge>> ref2edge = new HashMap<>();
+		for (SlimRuleEdge edge : edges)
+			ref2edge.computeIfAbsent(edge.getType(), k -> new LinkedList<>()).add(edge);
+
+		for (Entry<EReference, List<SlimRuleEdge>> entry : ref2edge.entrySet()) {
+			if (entry.getValue().size() <= 1)
+				continue;
+
+			Map<SlimRuleNode, List<SlimRuleEdge>> target2edge = new HashMap<>();
+			for (SlimRuleEdge edge : entry.getValue())
+				target2edge.computeIfAbsent((SlimRuleNode) edge.getTarget(), k -> new LinkedList<>()).add(edge);
+
+			for (Entry<SlimRuleNode, List<SlimRuleEdge>> e : target2edge.entrySet()) {
+				if (e.getValue().size() > 1) {
+					for (SlimRuleEdge edge : e.getValue()) {
+						error(String.format("Edge '%s' is connected to the same node more than once.", edge.getType().getName()), edge,
+								SlimGTPackage.Literals.SLIM_RULE_EDGE__TYPE);
+					}
+				}
+			}
+		}
+	}
+
+	@Check
+	public void checkDoubleImportsForbidden(EditorFile editorFile) {
+		EList<Import> imports = editorFile.getImports();
+
+		if (imports == null || imports.size() <= 1)
+			return;
+
+		Map<String, List<Import>> name2imports = new HashMap<>();
+		for (Import imp : imports)
+			name2imports.computeIfAbsent(imp.getName(), k -> new LinkedList<>()).add(imp);
+
+		for (Entry<String, List<Import>> entry : name2imports.entrySet()) {
+			if (entry.getValue().size() <= 1)
+				continue;
+
+			for (Import imp : entry.getValue())
+				error(String.format("Ecore file '%s' must not be imported more than once.", imp.getName()), imp, SlimGTPackage.Literals.IMPORT__NAME);
+		}
+	}
+
+	@Check
+	public void checkImportsOnlyInSchemaFile(EditorFile editorFile) {
+		if (editorFile.getSchema() != null)
+			return;
+
+		for (int i = 0; i < editorFile.getImports().size(); i++) {
+			error("Imports must only be located in schema file.", editorFile, SlimGTPackage.Literals.EDITOR_FILE__IMPORTS, i,
+					IssueCodes.IMPORT_NOT_IN_SCHEMA_FILE);
+		}
+	}
+
+	@Check
+	public void checkOnlyOneSchemaInProject(EditorFile editorFile) {
+		Collection<EditorFile> allFiles = TGGLWorkspaceUtil.getAllFilesInScope(editorFile);
+		long numberOfSchemaFiles = allFiles.stream() //
+				.filter(f -> f.getSchema() != null) //
+				.count();
+
+		if (numberOfSchemaFiles > 1) {
+			error("There must be only one file with a schema in a project.", TGGLPackage.Literals.EDITOR_FILE__SCHEMA);
+		}
 	}
 
 }

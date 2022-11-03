@@ -7,5 +7,6 @@ public class IssueCodes {
 	public static final String MISSING_NODE_REFINEMENT = "missing.node.refinement";
 	public static final String INCORRECT_BINDING_NODE_REFINED_CONTEXT = "incorrect.binding.node.refined.context";
 	public static final String INCORRECT_BINDING_NODE_REFINED_CREATE = "incorrect.binding.node.refined.create";
+	public static final String IMPORT_NOT_IN_SCHEMA_FILE = "import.not.in.schema.file";
 
 }
