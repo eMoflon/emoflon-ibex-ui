@@ -9,14 +9,13 @@ import java.util.stream.Collectors;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.xtext.EcoreUtil2;
 import org.emoflon.ibex.common.slimgt.slimGT.EditorFile;
 import org.emoflon.ibex.common.slimgt.slimGT.Import;
-
-import com.google.common.base.Objects;
 
 public final class SlimGTModelUtil {
 	@SuppressWarnings("unchecked")
@@ -86,7 +85,7 @@ public final class SlimGTModelUtil {
 		}
 		return allPackages;
 	}
-	
+
 	/**
 	 * Returns all EPackages imported into the given file
 	 * 
@@ -130,7 +129,7 @@ public final class SlimGTModelUtil {
 	 * 
 	 * @param file the GT file
 	 */
-	public static Collection<EEnum> getEnums(final EditorFile file) {
+	public static Collection<EEnumLiteral> getEnums(final EditorFile file) {
 		return file.getImports().stream().map(i -> {
 			try {
 				return Optional.of(SlimGTEMFUtil.loadMetamodel(i.getName()));
@@ -138,6 +137,6 @@ public final class SlimGTModelUtil {
 				return Optional.empty();
 			}
 		}).filter(model -> model.isPresent()).flatMap(model -> getElements((EObject) model.get(), EEnum.class).stream())
-				.collect(Collectors.toSet());
+				.flatMap(enm -> enm.getELiterals().stream()).collect(Collectors.toSet());
 	}
 }

@@ -74,7 +74,7 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 			return scopeForSlimEdgeTarget((SlimRuleEdge) context, reference);
 		}
 		if (SlimGTScopeUtil.isSlimRuleNodeMappingSrc(context, reference)) {
-			return scopeForNodeMappingSrc((SlimRuleNodeMapping) context, reference);
+			return scopeForNodeMappingSrc(context, reference);
 		}
 		if (SlimGTScopeUtil.isSlimRuleNodeMappingTrg(context, reference)) {
 			return scopeForNodeMappingTrg((SlimRuleNodeMapping) context, reference);
@@ -228,7 +228,7 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 		return Scopes.scopeFor(allRuleNodes);
 	}
 
-	protected IScope scopeForNodeMappingSrc(SlimRuleNodeMapping context, EReference reference) {
+	protected IScope scopeForNodeMappingSrc(EObject context, EReference reference) {
 		SlimRule currentRule = SlimGTModelUtil.getContainer(context, SlimRule.class);
 		EObject container = SlimGTModelUtil.getContainer(context, SlimRuleInvocation.class);
 		if (container != null && container instanceof SlimRuleInvocation invocation) {

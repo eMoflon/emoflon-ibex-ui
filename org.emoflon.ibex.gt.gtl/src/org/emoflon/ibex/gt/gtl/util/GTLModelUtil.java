@@ -355,6 +355,9 @@ public final class GTLModelUtil {
 		nodes.add(context);
 		nodes.addAll(getRuleNodeAllSuperNodes(context));
 		for (SlimRuleNode node : nodes) {
+			if (node == null)
+				continue;
+
 			node.getContextEdges().stream().map(e -> e.getContext()).forEach(e -> edges.add(e));
 			node.getCreatedEdges().stream().map(e -> e.getCreation()).forEach(e -> edges.add(e));
 			node.getDeletedEdges().stream().map(e -> e.getDeletion()).forEach(e -> edges.add(e));
@@ -369,6 +372,9 @@ public final class GTLModelUtil {
 		nodes.add(context);
 		nodes.addAll(getRuleNodeAllSuperNodes(context, ruleNodeHierarchy));
 		for (SlimRuleNode node : nodes) {
+			if (node == null)
+				continue;
+
 			node.getContextEdges().stream().map(e -> e.getContext()).forEach(e -> edges.add(e));
 			node.getCreatedEdges().stream().map(e -> e.getCreation()).forEach(e -> edges.add(e));
 			node.getDeletedEdges().stream().map(e -> e.getDeletion()).forEach(e -> edges.add(e));

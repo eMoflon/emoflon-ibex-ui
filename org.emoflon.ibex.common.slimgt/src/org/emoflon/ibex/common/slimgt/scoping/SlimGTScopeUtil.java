@@ -17,6 +17,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMapping;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMappings;
 import org.emoflon.ibex.common.slimgt.slimGT.ValueExpression;
 
 public final class SlimGTScopeUtil {
@@ -42,7 +43,7 @@ public final class SlimGTScopeUtil {
 	}
 
 	public static boolean isSlimRuleNodeMappingSrc(final EObject context, final EReference reference) {
-		return context instanceof SlimRuleNodeMapping
+		return (context instanceof SlimRuleNodeMapping || context instanceof SlimRuleNodeMappings)
 				&& reference == SlimGTPackage.Literals.SLIM_RULE_NODE_MAPPING__SOURCE;
 	}
 

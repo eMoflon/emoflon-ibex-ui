@@ -465,25 +465,50 @@ public class GTLModelFlattener {
 	protected SlimRuleNodeMappings flatten(SlimRule sourceRule, SlimRule targetRule, SlimRuleNodeMappings mappings) {
 		SlimRuleNodeMappings flattenedMappings = superFactory.createSlimRuleNodeMappings();
 		Map<String, SlimRuleNode> srcNodes = rule2nodes.get(sourceRule);
-		Map<String, SlimRuleNode> trgNodes = rule2nodes.get(targetRule);
-		for (SlimRuleNodeMapping mapping : mappings.getMappings()) {
-			SlimRuleNodeMapping flattenedMapping = superFactory.createSlimRuleNodeMapping();
-			if (srcNodes.containsKey(mapping.getSource().getName())) {
-				flattenedMapping.setSource(srcNodes.get(mapping.getSource().getName()));
-			} else {
-				addPendingNodeConsumer(sourceRule.getName(), mapping.getSource().getName(), (node) -> {
-					flattenedMapping.setSource(node);
-				});
+		if (rule2nodes.containsKey(targetRule)) {
+			Map<String, SlimRuleNode> trgNodes = rule2nodes.get(targetRule);
+			for (SlimRuleNodeMapping mapping : mappings.getMappings()) {
+				SlimRuleNodeMapping flattenedMapping = superFactory.createSlimRuleNodeMapping();
+				if (srcNodes.containsKey(mapping.getSource().getName())) {
+					flattenedMapping.setSource(srcNodes.get(mapping.getSource().getName()));
+				} else {
+					addPendingNodeConsumer(sourceRule.getName(), mapping.getSource().getName(), (node) -> {
+						flattenedMapping.setSource(node);
+					});
+				}
+				if (trgNodes.containsKey(mapping.getTarget().getName())) {
+					flattenedMapping.setTarget(trgNodes.get(mapping.getTarget().getName()));
+				} else {
+					addPendingNodeConsumer(targetRule.getName(), mapping.getTarget().getName(), (node) -> {
+						flattenedMapping.setTarget(node);
+					});
+				}
+				flattenedMappings.getMappings().add(flattenedMapping);
 			}
-			if (trgNodes.containsKey(mapping.getTarget().getName())) {
-				flattenedMapping.setTarget(trgNodes.get(mapping.getTarget().getName()));
-			} else {
-				addPendingNodeConsumer(targetRule.getName(), mapping.getTarget().getName(), (node) -> {
-					flattenedMapping.setTarget(node);
-				});
-			}
-			flattenedMappings.getMappings().add(flattenedMapping);
+		} else {
+			addPendingRuleConsumer(targetRule.getName(), (trg) -> {
+				Map<String, SlimRuleNode> targetNodes = rule2nodes.get(trg);
+				for (SlimRuleNodeMapping mapping : mappings.getMappings()) {
+					SlimRuleNodeMapping flattenedMapping = superFactory.createSlimRuleNodeMapping();
+					if (srcNodes.containsKey(mapping.getSource().getName())) {
+						flattenedMapping.setSource(srcNodes.get(mapping.getSource().getName()));
+					} else {
+						addPendingNodeConsumer(sourceRule.getName(), mapping.getSource().getName(), (node) -> {
+							flattenedMapping.setSource(node);
+						});
+					}
+					if (targetNodes.containsKey(mapping.getTarget().getName())) {
+						flattenedMapping.setTarget(targetNodes.get(mapping.getTarget().getName()));
+					} else {
+						addPendingNodeConsumer(targetRule.getName(), mapping.getTarget().getName(), (node) -> {
+							flattenedMapping.setTarget(node);
+						});
+					}
+					flattenedMappings.getMappings().add(flattenedMapping);
+				}
+			});
 		}
+
 		return flattenedMappings;
 	}
 

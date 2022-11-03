@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcorePackage;
@@ -172,14 +174,13 @@ public final class SlimGTArithmeticUtil {
 			return new DataTypeParseResult(ValueExpressionDataType.DOUBLE);
 		} else if (dataType == EcorePackage.Literals.ESTRING) {
 			return new DataTypeParseResult(ValueExpressionDataType.STRING);
-		} else if (dataType == EcorePackage.Literals.EENUM || dataType == EcorePackage.Literals.EENUM_LITERAL
-				|| dataType == EcorePackage.Literals.EENUMERATOR) {
+		} else if (dataType instanceof EEnum) {
 			return new DataTypeParseResult(ValueExpressionDataType.ENUM);
 		} else if (dataType == EcorePackage.Literals.EBOOLEAN) {
 			return new DataTypeParseResult(ValueExpressionDataType.BOOLEAN);
 		} else if (dataType == EcorePackage.Literals.EDATE) {
 			return new DataTypeParseResult(ValueExpressionDataType.DATE);
-		} else if (dataType == EcorePackage.Literals.EOBJECT) {
+		} else if (dataType instanceof EClass) {
 			return new DataTypeParseResult(ValueExpressionDataType.OBJECT);
 		} else {
 			return new DataTypeParseResult(ValueExpressionDataType.UNSUPPORTED, context, location);
@@ -298,14 +299,13 @@ public final class SlimGTArithmeticUtil {
 			return ValueExpressionDataType.DOUBLE;
 		} else if (dataType == EcorePackage.Literals.ESTRING) {
 			return ValueExpressionDataType.STRING;
-		} else if (dataType == EcorePackage.Literals.EENUM || dataType == EcorePackage.Literals.EENUM_LITERAL
-				|| dataType == EcorePackage.Literals.EENUMERATOR) {
+		} else if (dataType instanceof EEnum) {
 			return ValueExpressionDataType.ENUM;
 		} else if (dataType == EcorePackage.Literals.EBOOLEAN) {
 			return ValueExpressionDataType.BOOLEAN;
 		} else if (dataType == EcorePackage.Literals.EDATE) {
 			return ValueExpressionDataType.DATE;
-		} else if (dataType == EcorePackage.Literals.EOBJECT) {
+		} else if (dataType instanceof EClass) {
 			return ValueExpressionDataType.OBJECT;
 		} else {
 			return ValueExpressionDataType.UNSUPPORTED;
