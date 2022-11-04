@@ -160,7 +160,7 @@ public class GTLResourceManager {
 			Map<String, File> editorFiles = editorFilesInWS.get(project);
 			if (editorFiles != null) {
 				// This project is already known / watched -> return gtl files
-				return editorFiles.values().stream().map(f -> {
+				pkgScope.addAll(editorFiles.values().stream().map(f -> {
 					URI gtModelUri;
 					try {
 						gtModelUri = URI.createFileURI(f.getCanonicalPath());
@@ -193,7 +193,9 @@ public class GTLResourceManager {
 					}
 				}).filter(opt -> opt.isPresent()).map(opt -> (EditorFile) opt.get())
 						.filter(other -> other.getPackage().getName().equals(ef.getPackage().getName()))
-						.collect(Collectors.toSet());
+						.collect(Collectors.toSet()));
+
+				continue;
 			}
 
 			// This is a new or previously unknown IProject -> register file system watcher
