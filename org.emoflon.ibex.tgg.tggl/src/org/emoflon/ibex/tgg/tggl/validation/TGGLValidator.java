@@ -12,21 +12,34 @@ import java.util.Map.Entry;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.xtext.validation.Check;
+import org.emoflon.ibex.common.slimgt.slimGT.ArithmeticLiteral;
+import org.emoflon.ibex.common.slimgt.slimGT.BooleanLiteral;
+import org.emoflon.ibex.common.slimgt.slimGT.Constant;
+import org.emoflon.ibex.common.slimgt.slimGT.DoubleLiteral;
+import org.emoflon.ibex.common.slimgt.slimGT.EnumExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.Import;
+import org.emoflon.ibex.common.slimgt.slimGT.IntegerLiteral;
 import org.emoflon.ibex.common.slimgt.slimGT.NodeAttributeExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.NodeExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimParameter;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeAssignment;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdgeContext;
+import org.emoflon.ibex.common.slimgt.slimGT.StringLiteral;
 import org.emoflon.ibex.common.slimgt.slimGT.ValueExpression;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
 import org.emoflon.ibex.common.slimgt.validation.SlimGTValidatorUtil;
+import org.emoflon.ibex.tgg.tggl.tGGL.AttributeCondition;
+import org.emoflon.ibex.tgg.tggl.tGGL.AttributeConditionDefinition;
 import org.emoflon.ibex.tgg.tggl.tGGL.EditorFile;
 import org.emoflon.ibex.tgg.tggl.tGGL.ExpressionOperand;
+import org.emoflon.ibex.tgg.tggl.tGGL.LocalVariable;
 import org.emoflon.ibex.tgg.tggl.tGGL.SlimRule;
 import org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNodeContext;
@@ -447,6 +460,107 @@ public class TGGLValidator extends AbstractTGGLValidator {
 		if (nodeExpr.getNode().equals(parentNode)) {
 			error("Attribute assignments which reference its own node are forbidden.", nodeAttrExpr,
 					SlimGTPackage.Literals.NODE_ATTRIBUTE_EXPRESSION__NODE_EXPRESSION);
+		}
+	}
+
+	@Check
+	public void checkCSPCorrectNumberOfArguments(AttributeCondition attrCond) {
+		AttributeConditionDefinition def = attrCond.getName();
+		if (def == null)
+			return;
+
+		int expNumber = def.getParams().size();
+		int actNumber = attrCond.getValues().size();
+		if (expNumber != actNumber) {
+			error(String.format("The number of parameters does not match the definition of attribute condition '%s'. Expected: %s, actual: %s.",
+					def.getName(), expNumber, actNumber), attrCond, TGGLPackage.Literals.ATTRIBUTE_CONDITION__NAME);
+		}
+	}
+
+	@Check
+	public void checkCSPCorrectArgumentTypes(TGGRule rule) {
+		Map<String, EDataType> locVar2TypeCache = new HashMap<>();
+
+		List<AttributeCondition> attrConds = new LinkedList<>();
+		collectAttributeConditions(rule, attrConds);
+
+		for (AttributeCondition attrCond : attrConds)
+			checkCSPCorrectArgumentTypes(attrCond, locVar2TypeCache);
+	}
+
+	private void collectAttributeConditions(TGGRule currentRule, List<AttributeCondition> attrConds) {
+		attrConds.addAll(currentRule.getAttrConditions());
+
+		for (TGGLRuleRefinement refinement : currentRule.getRefinements()) {
+			TGGRule superRule = refinement.getSuperRule();
+			if (superRule == null)
+				continue;
+
+			collectAttributeConditions(superRule, attrConds);
+		}
+	}
+
+	private void checkCSPCorrectArgumentTypes(AttributeCondition attrCond, Map<String, EDataType> locVar2TypeCache) {
+		AttributeConditionDefinition def = attrCond.getName();
+		if (def == null)
+			return;
+
+		if (def.getParams().size() != attrCond.getValues().size())
+			return;
+
+		for (int i = 0; i < def.getParams().size(); i++) {
+			SlimParameter defParam = def.getParams().get(i);
+			EObject value = attrCond.getValues().get(i);
+
+			EDataType dataType = null;
+
+			if (value instanceof LocalVariable locVar) {
+				if (locVar2TypeCache.containsKey(locVar.getName())) {
+					dataType = locVar2TypeCache.get(locVar.getName());
+				} else {
+					locVar2TypeCache.put(locVar.getName(), defParam.getType());
+					continue;
+				}
+			} else if (value instanceof ExpressionOperand exprOp) {
+				EObject op = exprOp.getOperand();
+				if (op instanceof NodeAttributeExpression nodeAttrExpr) {
+					dataType = nodeAttrExpr.getFeature().getEAttributeType();
+				} else if (op instanceof ArithmeticLiteral arithLit) {
+					EObject litVal = arithLit.getValue();
+					if (litVal instanceof DoubleLiteral)
+						dataType = EcorePackage.Literals.EDOUBLE;
+					else if (litVal instanceof IntegerLiteral)
+						dataType = EcorePackage.Literals.EINT;
+					else if (litVal instanceof StringLiteral)
+						dataType = EcorePackage.Literals.ESTRING;
+					else if (litVal instanceof BooleanLiteral)
+						dataType = EcorePackage.Literals.EBOOLEAN;
+					else
+						continue;
+				} else if (op instanceof EnumExpression enumExpr) {
+					dataType = enumExpr.getLiteral().getEEnum();
+				} else if (op instanceof Constant constant) {
+					String constLit = constant.getValue().getLiteral();
+					switch (constLit) {
+						case "e", "pi" -> {
+							dataType = EcorePackage.Literals.EDOUBLE;
+						}
+						case "null" -> {
+							continue;
+						}
+						default -> throw new IllegalArgumentException("Unexpected value: " + constLit);
+					}
+				} else {
+					continue;
+				}
+			} else {
+				continue;
+			}
+
+			if (!dataType.equals(defParam.getType())) {
+				error(String.format("Argument %s of CSP '%s' does not match its parameter type.", i + 1, attrCond.getName().getName()),
+						attrCond, TGGLPackage.Literals.ATTRIBUTE_CONDITION__VALUES, i);
+			}
 		}
 	}
 
