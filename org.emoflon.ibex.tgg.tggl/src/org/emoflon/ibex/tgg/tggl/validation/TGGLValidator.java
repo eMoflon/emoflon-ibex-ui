@@ -5,10 +5,13 @@ package org.emoflon.ibex.tgg.tggl.validation;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EAttribute;
@@ -31,6 +34,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimParameter;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeAssignment;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdge;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleEdgeContext;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
 import org.emoflon.ibex.common.slimgt.slimGT.StringLiteral;
 import org.emoflon.ibex.common.slimgt.slimGT.ValueExpression;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
@@ -558,8 +562,8 @@ public class TGGLValidator extends AbstractTGGLValidator {
 			}
 
 			if (!dataType.equals(defParam.getType())) {
-				error(String.format("Argument %s of CSP '%s' does not match its parameter type.", i + 1, attrCond.getName().getName()),
-						attrCond, TGGLPackage.Literals.ATTRIBUTE_CONDITION__VALUES, i);
+				error(String.format("Argument %s of CSP '%s' does not match its parameter type.", i + 1, attrCond.getName().getName()), attrCond,
+						TGGLPackage.Literals.ATTRIBUTE_CONDITION__VALUES, i);
 			}
 		}
 	}
@@ -605,6 +609,165 @@ public class TGGLValidator extends AbstractTGGLValidator {
 		if (numberOfSchemaFiles > 1) {
 			error("There must be only one file with a schema in a project.", TGGLPackage.Literals.EDITOR_FILE__SCHEMA);
 		}
+	}
+
+	@Check
+	public void checkSupportPatternNotAbstract(SlimRuleInvocation invocation) {
+		if (invocation.getSupportPattern() == null)
+			return;
+
+		if (invocation.getSupportPattern() instanceof SlimRule slimRule && slimRule.isAbstract()) {
+			error("Invoked patterns must not be abstract.", SlimGTPackage.Literals.SLIM_RULE_INVOCATION__SUPPORT_PATTERN);
+		}
+	}
+
+	@Check
+	public void checkSupportPatternNoCycle(SlimRuleInvocation invocation) {
+		if (invocation.getSupportPattern() == null)
+			return;
+
+		SlimRule currentRule = SlimGTModelUtil.getContainer(invocation, SlimRule.class);
+		Set<SlimRule> traversedRules = new HashSet<>();
+		traversedRules.add(currentRule);
+
+		if (invocationHierarchyHasCycle(invocation, traversedRules)) {
+			error(String.format("Invoked pattern '%s' leads to an invocation cycle, which is not allowed.",
+					((SlimRule) invocation.getSupportPattern()).getName()), SlimGTPackage.Literals.SLIM_RULE_INVOCATION__SUPPORT_PATTERN);
+		}
+	}
+
+	private boolean invocationHierarchyHasCycle(SlimRuleInvocation ruleInvocation, Set<SlimRule> traversedRules) {
+		if (ruleInvocation.getSupportPattern() == null)
+			return false;
+
+		SlimRule invokee = (SlimRule) ruleInvocation.getSupportPattern();
+
+		if (traversedRules.contains(invokee))
+			return true;
+
+		traversedRules.add(invokee);
+
+		// Check for plain invocations
+		if (invokee.getInvocations() == null)
+			return false;
+
+		for (SlimRuleInvocation other : invokee.getInvocations()) {
+			if (invocationHierarchyHasCycle(other, traversedRules)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	@Check
+	public void checkDisjointPatternNotAbstract(SlimRule pattern) {
+		if (pattern.isAbstract())
+			return;
+
+		Map<SlimRuleNode, Set<SlimRuleNode>> node2nodeSet = pattern.getContextNodes().stream() //
+				.map(cn -> (SlimRuleNode) cn.getContext()) //
+				.collect(Collectors.toMap(k -> k, k -> {
+					Set<SlimRuleNode> singleNodeSet = new HashSet<>();
+					singleNodeSet.add(k);
+					return singleNodeSet;
+				}));
+
+		List<SlimRuleNode> nodes = new LinkedList<>(node2nodeSet.keySet());
+		for (SlimRuleNode srcNode : nodes) {
+			List<SlimRuleNode> trgNodes = srcNode.getContextEdges().stream() //
+					.map(n -> (SlimRuleNode) n.getContext().getTarget()) //
+					.toList();
+
+			for (SlimRuleNode trgNode : trgNodes) {
+				Set<SlimRuleNode> srcNodeSet = node2nodeSet.get(srcNode);
+				Set<SlimRuleNode> trgNodeSet = node2nodeSet.get(trgNode);
+				if (!srcNodeSet.equals(trgNodeSet)) {
+					HashSet<SlimRuleNode> union = new HashSet<>(Sets.union(srcNodeSet, trgNodeSet));
+					node2nodeSet.put(srcNode, union);
+					node2nodeSet.put(trgNode, union);
+				}
+			}
+		}
+
+		Set<Set<SlimRuleNode>> disjointNodes = new HashSet<>(node2nodeSet.values());
+		if (disjointNodes.size() > 1) {
+			warning("Disjoint patterns should be abstract.", TGGLPackage.Literals.SLIM_RULE__NAME);
+		}
+	}
+
+	@Check
+	public void checkDisjointPatternNotAbstract(TGGRule rule) {
+		if (rule.isAbstract())
+			return;
+
+		Map<SlimRuleNode, Set<SlimRuleNode>> node2nodeSet = new HashMap<>();
+		if (rule.getSourceRule() != null)
+			fillNode2nodeSet(rule.getSourceRule(), node2nodeSet);
+		if (rule.getTargetRule() != null)
+			fillNode2nodeSet(rule.getTargetRule(), node2nodeSet);
+
+		List<SlimRuleNode> nodes = new LinkedList<>(node2nodeSet.keySet());
+		for (SlimRuleNode srcNode : nodes) {
+			List<SlimRuleNode> trgNodes = new LinkedList<>();
+			trgNodes.addAll(srcNode.getContextEdges().stream() //
+					.map(n -> (SlimRuleNode) n.getContext().getTarget()) //
+					.toList());
+			trgNodes.addAll(srcNode.getCreatedEdges().stream() //
+					.map(n -> (SlimRuleNode) n.getCreation().getTarget()) //
+					.toList());
+
+			for (SlimRuleNode trgNode : trgNodes) {
+				Set<SlimRuleNode> srcNodeSet = node2nodeSet.get(srcNode);
+				Set<SlimRuleNode> trgNodeSet = node2nodeSet.get(trgNode);
+				if (!srcNodeSet.equals(trgNodeSet)) {
+					HashSet<SlimRuleNode> union = new HashSet<>(Sets.union(srcNodeSet, trgNodeSet));
+					node2nodeSet.put(srcNode, union);
+					node2nodeSet.put(trgNode, union);
+				}
+			}
+		}
+		if (rule.getCorrRule() != null) {
+			List<TGGCorrespondenceNode> corrNodes = new LinkedList<>();
+			corrNodes.addAll(rule.getCorrRule().getContextCorrespondenceNodes().stream() //
+					.map(cn -> cn.getContext()) //
+					.toList());
+			corrNodes.addAll(rule.getCorrRule().getCreatedCorrespondenceNodes().stream() //
+					.map(cn -> cn.getCreation()) //
+					.toList());
+			
+			for (TGGCorrespondenceNode corrNode : corrNodes) {
+				Set<SlimRuleNode> srcNodeSet = node2nodeSet.get(corrNode.getSource());
+				Set<SlimRuleNode> trgNodeSet = node2nodeSet.get(corrNode.getTarget());
+				if (!srcNodeSet.equals(trgNodeSet)) {
+					HashSet<SlimRuleNode> union = new HashSet<>(Sets.union(srcNodeSet, trgNodeSet));
+					node2nodeSet.put(corrNode.getSource(), union);
+					node2nodeSet.put(corrNode.getTarget(), union);
+				}
+			}
+		}
+
+		Set<Set<SlimRuleNode>> disjointNodes = new HashSet<>(node2nodeSet.values());
+		if (disjointNodes.size() > 1) {
+			warning("Disjoint rules should be abstract.", TGGLPackage.Literals.TGG_RULE__NAME);
+		}
+	}
+
+	private void fillNode2nodeSet(TGGDomainRule rule, Map<SlimRuleNode, Set<SlimRuleNode>> node2nodeSet) {
+		node2nodeSet.putAll(rule.getContextNodes().stream() //
+				.map(cn -> (SlimRuleNode) cn.getContext()) //
+				.collect(Collectors.toMap(k -> k, k -> {
+					Set<SlimRuleNode> singleNodeSet = new HashSet<>();
+					singleNodeSet.add(k);
+					return singleNodeSet;
+				})));
+		node2nodeSet.putAll(rule.getCreatedNodes().stream() //
+				.map(cn -> (SlimRuleNode) cn.getCreation()) //
+				.collect(Collectors.toMap(k -> k, k -> {
+					Set<SlimRuleNode> singleNodeSet = new HashSet<>();
+					singleNodeSet.add(k);
+					return singleNodeSet;
+				})));
 	}
 
 }
