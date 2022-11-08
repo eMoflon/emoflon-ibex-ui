@@ -156,7 +156,7 @@ MinMaxArithmeticExpression returns ArithmeticExpression:
 ;
 
 UnaryArithmeticExpression returns ArithmeticExpression: {UnaryArithmeticExpression}
-	operator=UnaryOperator '(' operand=BracketExpression ')' | BracketExpression
+	operator=UnaryOperator '(' operand=ArithmeticExpression ')' | BracketExpression
 ;
 
 BracketExpression returns ArithmeticExpression: {BracketExpression}

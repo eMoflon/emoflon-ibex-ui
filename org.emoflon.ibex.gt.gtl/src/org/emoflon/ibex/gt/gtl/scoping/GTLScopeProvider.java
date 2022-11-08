@@ -358,7 +358,9 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 	protected IScope scopeForGTLEdgeIteratorSubType(GTLEdgeIterator context, EReference reference) {
 		EditorFile ef = SlimGTModelUtil.getContainer(context, EditorFile.class);
 		return Scopes.scopeFor(SlimGTModelUtil.getClasses(ef).stream()
-				.filter(cls -> cls.getEAllSuperTypes().contains(context.getType().getEType()))
+				.filter(cls -> cls.getEAllSuperTypes().stream()
+						.filter(sCls -> sCls.getName().equals(context.getType().getEType().getName())).findAny()
+						.isPresent())
 				.collect(Collectors.toSet()));
 	}
 
