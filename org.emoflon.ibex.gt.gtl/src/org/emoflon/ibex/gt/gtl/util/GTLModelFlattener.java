@@ -103,8 +103,9 @@ public class GTLModelFlattener {
 		flattenedFile.getPackage().setName(packageName);
 
 		if (loadCompletePackage) {
-			Collection<EditorFile> files = gtlManager.loadAllEditorFilesInPackage(file);
-			files.parallelStream().forEach(ef -> {
+			Collection<EditorFile> files = gtlManager.loadAllOtherEditorFilesInPackage(file);
+			files.add(file);
+			files.stream().forEach(ef -> {
 				try {
 					flatten(ef);
 				} catch (Exception e) {
@@ -178,6 +179,9 @@ public class GTLModelFlattener {
 				}
 			}
 
+			if (!rule2pendingNodeJobs.containsKey(ruleName))
+				continue;
+
 			for (String nodeName : nodes.keySet()) {
 				SlimRuleNode flattenedNode = nodes.get(nodeName);
 				if (rule2pendingNodeJobs.get(ruleName).containsKey(nodeName)) {
@@ -218,14 +222,14 @@ public class GTLModelFlattener {
 				// recursive flattening.
 				GTLModelFlattener flattener = new GTLModelFlattener(gtlManager, wildcardImport.get(), true);
 				imports.addAll(flattener.imports);
-				flattener.getFlattenedModel().getRules().stream()
-						.filter(other -> otherRuleNames.contains(other.getName()))
+				List<SlimRule> otherRules = new LinkedList<>(flattener.getFlattenedModel().getRules());
+				otherRules.stream().filter(other -> otherRuleNames.contains(other.getName()))
 						.forEach(other -> insertFlattenedRule(other));
 			}
 		}
 
 		// Flatten rules
-		file.getRules().parallelStream().forEach(rule -> {
+		file.getRules().stream().forEach(rule -> {
 			try {
 				flatten(rule);
 			} catch (Exception e) {
@@ -244,6 +248,7 @@ public class GTLModelFlattener {
 		flattenedRule.getCreatedNodes()
 				.forEach(n -> insertFlattenedRuleNode(flattenedRule, (SlimRuleNode) n.getCreation()));
 		flattenedRule.getDeletedNodes().forEach(n -> insertFlattenedRuleNode(flattenedRule, n.getDeletion()));
+		flattenedFile.getRules().add(flattenedRule);
 	}
 
 	protected void insertFlattenedRuleNode(SlimRule flattenedRule, SlimRuleNode flattenedRuleNode) {
@@ -408,7 +413,7 @@ public class GTLModelFlattener {
 		localConditions.addAll(rule.getConditions());
 
 		Collection<SlimRuleCondition> conditions = GTLModelUtil.getAllAttributeCondtions(rule);
-		conditions = conditions.parallelStream().filter(condition -> {
+		conditions = conditions.stream().filter(condition -> {
 			Set<ValueExpressionDataType> dataTypes = new HashSet<>();
 			try {
 				dataTypes.addAll(GTLArithmeticUtil.parseAllDataTypes(condition.getExpression()));

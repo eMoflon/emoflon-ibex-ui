@@ -173,7 +173,7 @@ public class GTLValidator extends AbstractGTLValidator {
 			return;
 
 		EditorFile ef = SlimGTModelUtil.getContainer(pImport, EditorFile.class);
-		Collection<EditorFile> pkgScope = gtlManager.loadAllEditorFilesInPackage(ef);
+		Collection<EditorFile> pkgScope = gtlManager.loadAllOtherEditorFilesInPackage(ef);
 
 		Set<String> presentNamesAndImports = ef.getRules().stream().filter(p -> p != null && p.getName() != null)
 				.map(r -> r.getName()).collect(Collectors.toSet());
@@ -284,7 +284,7 @@ public class GTLValidator extends AbstractGTLValidator {
 			return;
 
 		EditorFile ef = SlimGTModelUtil.getContainer(rule, EditorFile.class);
-		Collection<EditorFile> pkgScope = gtlManager.loadAllEditorFilesInPackage(ef);
+		Collection<EditorFile> pkgScope = gtlManager.loadAllOtherEditorFilesInPackage(ef);
 
 		Set<String> presentNamesAndImports = ef.getRules().stream().filter(p -> p != null && p.getName() != null)
 				.filter(p -> !rule.equals(p)).map(r -> r.getName()).collect(Collectors.toSet());
