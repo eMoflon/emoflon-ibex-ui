@@ -30,6 +30,7 @@ import org.emoflon.ibex.gt.gtl.gTL.GTLEdgeIteratorAttributeAssignment;
 import org.emoflon.ibex.gt.gtl.gTL.GTLEdgeIteratorReference;
 import org.emoflon.ibex.gt.gtl.gTL.GTLIteratorAttributeExpression;
 import org.emoflon.ibex.gt.gtl.gTL.GTLParameterExpression;
+import org.emoflon.ibex.gt.gtl.gTL.GTLRuleNodeDeletion;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementAliased;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementNode;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementPlain;
@@ -37,6 +38,7 @@ import org.emoflon.ibex.gt.gtl.gTL.GTLRuleWatchDog;
 import org.emoflon.ibex.gt.gtl.gTL.PatternImport;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRule;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNode;
+import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNodeContext;
 import org.emoflon.ibex.gt.gtl.util.GTLModelUtil;
 import org.emoflon.ibex.gt.gtl.util.GTLResourceManager;
 
@@ -72,7 +74,7 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 			return scopeForSlimEdgeTarget((SlimRuleEdge) context, reference);
 		}
 		if (SlimGTScopeUtil.isSlimRuleNodeMappingSrc(context, reference)) {
-			return scopeForNodeMappingSrc((SlimRuleNodeMapping) context, reference);
+			return scopeForNodeMappingSrc(context, reference);
 		}
 		if (SlimGTScopeUtil.isSlimRuleNodeMappingTrg(context, reference)) {
 			return scopeForNodeMappingTrg((SlimRuleNodeMapping) context, reference);
@@ -168,7 +170,19 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 		if (!optRule.isPresent())
 			return IScope.NULLSCOPE;
 
-		return Scopes.scopeFor(GTLModelUtil.getAllRuleNodes(optRule.get()));
+		return Scopes.scopeFor(GTLModelUtil.getAllRuleNodes(optRule.get()).stream().filter(n -> {
+			if (context.eContainer() instanceof SlimRuleNodeContext && n.eContainer() instanceof SlimRuleNodeContext) {
+				return true;
+			} else if (context.eContainer() instanceof SlimRuleNodeCreation
+					&& n.eContainer() instanceof SlimRuleNodeCreation) {
+				return true;
+			} else if (context.eContainer() instanceof GTLRuleNodeDeletion
+					&& n.eContainer() instanceof GTLRuleNodeDeletion) {
+				return true;
+			} else {
+				return false;
+			}
+		}).collect(Collectors.toList()));
 	}
 
 	@Override
@@ -214,7 +228,7 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 		return Scopes.scopeFor(allRuleNodes);
 	}
 
-	protected IScope scopeForNodeMappingSrc(SlimRuleNodeMapping context, EReference reference) {
+	protected IScope scopeForNodeMappingSrc(EObject context, EReference reference) {
 		SlimRule currentRule = SlimGTModelUtil.getContainer(context, SlimRule.class);
 		EObject container = SlimGTModelUtil.getContainer(context, SlimRuleInvocation.class);
 		if (container != null && container instanceof SlimRuleInvocation invocation) {
@@ -270,7 +284,8 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 		EditorFile ef = SlimGTModelUtil.getContainer(context, EditorFile.class);
 		SlimRule rule = SlimGTModelUtil.getContainer(context, SlimRule.class);
 
-		return Scopes.scopeFor(gtlManager.getAllRulesInScope(ef).stream().filter(r -> !r.equals(rule))
+		return Scopes.scopeFor(gtlManager.getAllRulesInScope(ef).stream()
+				.filter(r -> !r.getName().equals(rule.getName()))
 				.filter(r -> r.getParameters() == null || r.getParameters().size() == 0).collect(Collectors.toList()));
 	}
 
@@ -343,7 +358,9 @@ public class GTLScopeProvider extends AbstractGTLScopeProvider {
 	protected IScope scopeForGTLEdgeIteratorSubType(GTLEdgeIterator context, EReference reference) {
 		EditorFile ef = SlimGTModelUtil.getContainer(context, EditorFile.class);
 		return Scopes.scopeFor(SlimGTModelUtil.getClasses(ef).stream()
-				.filter(cls -> cls.getEAllSuperTypes().contains(context.getType().getEType()))
+				.filter(cls -> cls.getEAllSuperTypes().stream()
+						.filter(sCls -> sCls.getName().equals(context.getType().getEType().getName())).findAny()
+						.isPresent())
 				.collect(Collectors.toSet()));
 	}
 

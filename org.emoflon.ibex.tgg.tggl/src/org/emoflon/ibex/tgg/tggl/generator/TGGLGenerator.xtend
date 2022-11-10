@@ -3,14 +3,14 @@
  */
 package org.emoflon.ibex.tgg.tggl.generator
 
+import com.google.inject.Inject
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.AbstractGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
-import org.emoflon.ibex.tgg.tggl.util.TGGLModelFlattener
 import org.eclipse.xtext.resource.IContainer
-import com.google.inject.Inject
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
+import org.emoflon.ibex.tgg.tggl.util.TGGLModelFlattener
 
 /**
  * Generates code from your model files on save.
@@ -35,10 +35,8 @@ class TGGLGenerator extends AbstractGenerator {
 		
 		this.oldFsa = fsa
 		
-		
-		
-//		ExtensionsUtil
-//			.collectExtensions(TGGBuilderExtension.BUILDER_EXTENSON_ID, "class", typeof(TGGBuilderExtension))
-//			.forEach[builder | builder.run(iProject, input)];
+		ExtensionsUtil
+			.collectExtensions(TGGBuilderExtension.BUILDER_EXTENSON_ID, "class", typeof(TGGBuilderExtension))
+			.forEach[builder | builder.run(iProject, input)];
 	}
 }

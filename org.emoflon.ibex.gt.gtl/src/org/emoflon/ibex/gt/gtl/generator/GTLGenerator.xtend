@@ -23,6 +23,8 @@ import org.emoflon.ibex.gt.gtl.util.GTLResourceManager
 import org.emoflon.ibex.gt.gtl.util.GTLModelFlattener
 import org.apache.log4j.Logger
 import org.moflon.core.utilities.LogUtils
+import org.moflon.core.utilities.EcoreUtils
+import org.eclipse.xtext.EcoreUtil2
 
 /**
  * Generates code from your model files on save.
@@ -30,25 +32,19 @@ import org.moflon.core.utilities.LogUtils
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#code-generation
  */
 class GTLGenerator extends AbstractGenerator {
-
 	Logger logger = Logger.getLogger(typeof(GTLGenerator));
 	var ResourceSet resourceSet = null
-	var projects = new HashSet<IProject>()
 
 	override void doGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		var lResource = input.resourceSet as SynchronizedXtextResourceSet
 		val iProject = SlimGTWorkspaceUtil.getCurrentProject(input)
 		
-		// small trick to make sure that GT projects are only build once (every new build process creates new ResourceSets)
-		if(resourceSet !== null && projects.contains(iProject)) {
-//			logger.info('''Project «iProject.name» is already up to date.''')
-//			return
-		}else if(resourceSet !== null && !projects.contains(iProject)) {
-			projects.add(iProject)
-		} else {
-			projects.clear
-			projects.add(iProject)
+		if(resourceSet === null) {
 			resourceSet = lResource
+		} else if(resourceSet !== null && !resourceSet.equals(lResource)) {
+			resourceSet = lResource
+		} else {
+			return
 		}
 		
 		logger.info('''Building project «iProject.name» ...''')
@@ -67,6 +63,8 @@ class GTLGenerator extends AbstractGenerator {
 					pkg2Files.put(ef.package.name, editorFiles)
 				}
 				editorFiles.add(ef)
+				EcoreUtil2.resolveLazyCrossReferences(ef.eResource, [| false]);
+				EcoreUtil2.resolveAll(ef)
 			}
 		}
 		

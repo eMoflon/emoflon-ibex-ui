@@ -16,24 +16,17 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.resource.IContainer;
 import org.eclipse.xtext.resource.IResourceDescription;
-import org.eclipse.xtext.resource.IResourceDescriptions;
-import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtil;
 import org.emoflon.ibex.common.slimgt.util.XtextResourceManager;
 import org.emoflon.ibex.tgg.tggl.tGGL.EditorFile;
 
-import com.google.inject.Inject;
-
 public class TGGLWorkspaceUtil {
-	
+
 	public static Collection<EditorFile> getAllFilesInScope(EObject obj) {
 		XtextResourceManager resourceManager = new XtextResourceManager();
-				
+
 		var editorFile = getContainer(obj, EditorFile.class);
 		var rs = editorFile.eResource().getResourceSet();
-//		rs.getResources().clear();
-		
 		Collection<EditorFile> editorFiles = new HashSet<>();
 
 		IProject currentProject = SlimGTWorkspaceUtil.getCurrentProject(editorFile.eResource());
@@ -45,9 +38,7 @@ public class TGGLWorkspaceUtil {
 		File projectFile = new File(currentProject.getLocation().toPortableString());
 		List<File> tggFiles = new LinkedList<>();
 		SlimGTWorkspaceUtil.gatherFilesWithEnding(tggFiles, projectFile, ".tggl", true);
-		
-//		XtextResourceSet rs = new XtextResourceSet();
-		
+
 		for (File tggFile : tggFiles) {
 			URI tggModelUri;
 			try {
@@ -75,32 +66,32 @@ public class TGGLWorkspaceUtil {
 		}
 		return editorFiles;
 	}
-	
+
 	public Collection<EditorFile> getAllResolvedFilesInScope(InjectionContainer container, EObject obj) {
 		return getAllResolvedFilesInScope(container, obj.eResource());
 	}
-	
+
 	public Collection<EditorFile> getAllResolvedFilesInScope(InjectionContainer container, Resource input) {
 		var resourceSet = input.getResourceSet();
-		
-		var index = (IResourceDescriptions) container.resourceDescriptionsProvider().createResourceDescriptions();
-		var resDesc = (IResourceDescription) index.getResourceDescription(input.getURI());
-		var visibleContainers = (List<IContainer>) container.containerManager().getVisibleContainers(resDesc, index);
-		
+
+		var index = container.resourceDescriptionsProvider().createResourceDescriptions();
+		var resDesc = index.getResourceDescription(input.getURI());
+		var visibleContainers = container.containerManager().getVisibleContainers(resDesc, index);
+
 		var editorFiles = new LinkedList<EditorFile>();
-		
+
 		for (IContainer c : visibleContainers) {
 			for (IResourceDescription rd : c.getResourceDescriptions()) {
-				if(rd.getURI().toString().endsWith(".tggl")) {
+				if (rd.getURI().toString().endsWith(".tggl")) {
 					var resource = resourceSet.getResource(rd.getURI(), true);
 					EObject tggModel = resource.getContents().get(0);
 					if (tggModel == null)
 						continue;
 					if (tggModel instanceof EditorFile otherEditorFile) {
 						editorFiles.add(otherEditorFile);
-					}					
+					}
 				}
-			} 
+			}
 		}
 		EcoreUtil.resolveAll(resourceSet);
 		return editorFiles;

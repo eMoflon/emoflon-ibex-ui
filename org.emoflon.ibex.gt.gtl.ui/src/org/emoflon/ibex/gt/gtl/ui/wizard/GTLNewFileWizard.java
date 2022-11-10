@@ -15,7 +15,7 @@ import org.moflon.core.ui.UiUtilities;
  * The wizard for creating a new .gtl file.
  */
 public class GTLNewFileWizard extends Wizard implements INewWizard {
-	public static final String GTL_FILE_WIZARD_ID = "org.emoflon.ibex.gt.gtl.ui.wizard.GTLNewFileWizard";
+	public static final String GTL_FILE_WIZARD_ID = "org.emoflon.ibex.gt.gtl.ui.GTLFileWizard";
 	private static final String GTL_FILE_WIZARD_TITLE = "New eMoflon Graph Transformation File";
 	private static final String GTL_FILE_WIZARD_DESCRIPTION = "Create a new eMoflon Graph Transformation File.";
 
@@ -44,7 +44,7 @@ public class GTLNewFileWizard extends Wizard implements INewWizard {
 		mainPage = new WizardNewFileCreationPage(GTL_FILE_WIZARD_TITLE, this.selection);
 		mainPage.setTitle(GTL_FILE_WIZARD_TITLE);
 		mainPage.setDescription(GTL_FILE_WIZARD_DESCRIPTION);
-		mainPage.setFileExtension(".gtl");
+		mainPage.setFileExtension("gtl");
 		this.addPage(mainPage);
 	}
 

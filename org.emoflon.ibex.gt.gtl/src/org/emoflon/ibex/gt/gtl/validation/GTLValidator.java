@@ -5,6 +5,7 @@ package org.emoflon.ibex.gt.gtl.validation;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -172,7 +173,7 @@ public class GTLValidator extends AbstractGTLValidator {
 			return;
 
 		EditorFile ef = SlimGTModelUtil.getContainer(pImport, EditorFile.class);
-		Collection<EditorFile> pkgScope = gtlManager.loadAllEditorFilesInPackage(ef);
+		Collection<EditorFile> pkgScope = gtlManager.loadAllOtherEditorFilesInPackage(ef);
 
 		Set<String> presentNamesAndImports = ef.getRules().stream().filter(p -> p != null && p.getName() != null)
 				.map(r -> r.getName()).collect(Collectors.toSet());
@@ -283,7 +284,7 @@ public class GTLValidator extends AbstractGTLValidator {
 			return;
 
 		EditorFile ef = SlimGTModelUtil.getContainer(rule, EditorFile.class);
-		Collection<EditorFile> pkgScope = gtlManager.loadAllEditorFilesInPackage(ef);
+		Collection<EditorFile> pkgScope = gtlManager.loadAllOtherEditorFilesInPackage(ef);
 
 		Set<String> presentNamesAndImports = ef.getRules().stream().filter(p -> p != null && p.getName() != null)
 				.filter(p -> !rule.equals(p)).map(r -> r.getName()).collect(Collectors.toSet());
@@ -621,7 +622,7 @@ public class GTLValidator extends AbstractGTLValidator {
 			return;
 
 		SlimRule currentRule = SlimGTModelUtil.getContainer(invocation, SlimRule.class);
-		Set<SlimRule> traversedRules = new HashSet<>();
+		Set<SlimRule> traversedRules = new LinkedHashSet<>();
 		traversedRules.add(currentRule);
 
 		if (invocationHierarchyHasCycle(invocation, traversedRules)) {
@@ -647,7 +648,7 @@ public class GTLValidator extends AbstractGTLValidator {
 			return;
 
 		SlimRule currentRule = SlimGTModelUtil.getContainer(countExpression, SlimRule.class);
-		Set<SlimRule> traversedRules = new HashSet<>();
+		Set<SlimRule> traversedRules = new LinkedHashSet<>();
 		traversedRules.add(currentRule);
 
 		if (invocationHierarchyHasCycle(countExpression, traversedRules)) {
@@ -691,7 +692,9 @@ public class GTLValidator extends AbstractGTLValidator {
 			return false;
 
 		for (SlimRuleInvocation other : invokee.getInvocations()) {
-			if (invocationHierarchyHasCycle(other, traversedRules)) {
+			// Create new hashset for each invocation path
+			Set<SlimRule> traversed = new LinkedHashSet<>(traversedRules);
+			if (invocationHierarchyHasCycle(other, traversed)) {
 				return true;
 			}
 		}
@@ -699,7 +702,8 @@ public class GTLValidator extends AbstractGTLValidator {
 		// Check for count invocations
 		Collection<CountExpression> countInvocations = GTLModelUtil.getAllCountExpression(invokee);
 		for (CountExpression other : countInvocations) {
-			if (invocationHierarchyHasCycle(other, traversedRules)) {
+			Set<SlimRule> traversed = new LinkedHashSet<>(traversedRules);
+			if (invocationHierarchyHasCycle(other, traversed)) {
 				return true;
 			}
 		}
@@ -719,10 +723,12 @@ public class GTLValidator extends AbstractGTLValidator {
 		}
 
 		SlimRule invokee = null;
-		if (mappings.eContainer() instanceof CountExpression count) {
-			invokee = (SlimRule) count.getSupportPattern();
-		} else if (mappings.eContainer() instanceof SlimRuleInvocation invocation) {
-			invokee = (SlimRule) invocation.getSupportPattern();
+		if (mappings.eContainer() instanceof CountExpression count
+				&& count.getSupportPattern() instanceof SlimRule countInvokee) {
+			invokee = countInvokee;
+		} else if (mappings.eContainer() instanceof SlimRuleInvocation invocation
+				&& invocation.getSupportPattern() instanceof SlimRule stdInvokee) {
+			invokee = stdInvokee;
 		} else {
 			return;
 		}
