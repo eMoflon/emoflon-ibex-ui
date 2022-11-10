@@ -2,6 +2,7 @@ package org.emoflon.ibex.gt.gtl.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
@@ -13,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.monitor.FileAlterationListener;
@@ -41,6 +44,9 @@ public class GTLResourceManager {
 	static protected Map<String, FileAlterationObserver> observers = Collections.synchronizedMap(new HashMap<>());
 	static protected Map<String, FileAlterationListener> listeners = Collections.synchronizedMap(new HashMap<>());
 	static protected Map<String, FileAlterationMonitor> monitors = Collections.synchronizedMap(new HashMap<>());
+
+	static protected Pattern pkgNamePattern = Pattern.compile("^(\\s*package\\s*)(\\S*)(\\s*)");
+
 	protected Map<IProject, Map<String, File>> editorFilesInWS = Collections.synchronizedMap(new HashMap<>());
 
 	public GTLResourceManager() {
@@ -182,7 +188,19 @@ public class GTLResourceManager {
 			Map<String, File> editorFiles = editorFilesInWS.get(project);
 			if (editorFiles != null) {
 				// This project is already known / watched -> return gtl files
-				pkgScope.addAll(editorFiles.values().stream().map(f -> {
+				pkgScope.addAll(editorFiles.values().stream().filter(f -> {
+					try {
+						String content = Files.readString(f.toPath());
+						Matcher m = pkgNamePattern.matcher(content);
+						if (m.find() && m.groupCount() == 3) {
+							String pkgName = m.group(2);
+							return ef.getPackage().getName().equals(pkgName);
+						}
+						return false;
+					} catch (IOException e) {
+						return false;
+					}
+				}).map(f -> {
 					URI gtModelUri;
 					try {
 						gtModelUri = URI.createFileURI(f.getCanonicalPath());
@@ -306,9 +324,25 @@ public class GTLResourceManager {
 				}
 
 				String fileString = gtModelUri.toFileString();
+				editorFiles.put(gtModelUri.toFileString(), gtFile);
 
 				if (fileString.equals(currentFile))
 					continue;
+
+				try {
+					String content = Files.readString(gtFile.toPath());
+					Matcher m = pkgNamePattern.matcher(content);
+					if (m.find() && m.groupCount() == 3) {
+						String pkgName = m.group(2);
+						if (!ef.getPackage().getName().equals(pkgName))
+							continue;
+					} else {
+						continue;
+					}
+				} catch (IOException e) {
+					LogUtils.error(logger, e);
+					continue;
+				}
 
 				URI platformUri = toPlatformURI(project, gtModelUri);
 				Resource resource = xtextResources.loadResource(ef.eResource(), platformUri);
@@ -324,8 +358,6 @@ public class GTLResourceManager {
 					continue;
 
 				if (gtlModel instanceof EditorFile otherEditorFile) {
-					editorFiles.put(gtModelUri.toFileString(), gtFile);
-
 					if (otherEditorFile.getPackage().getName().equals(ef.getPackage().getName())
 							&& !fileString.equals(currentFile)) {
 						pkgScope.add(otherEditorFile);
@@ -337,8 +369,8 @@ public class GTLResourceManager {
 		return pkgScope;
 	}
 
-	public Collection<EditorFile> loadAllEditorFilesInWorkspaceNotInPackage(final EditorFile requester) {
-		Collection<EditorFile> pkgScope = new LinkedList<>();
+	public Collection<URI> getAllEditorFileURIsInWorkspaceNotInPackage(final EditorFile requester) {
+		Collection<URI> pkgScope = new LinkedList<>();
 
 		IProject currentProject = SlimGTWorkspaceUtil.getCurrentProject(requester.eResource());
 		String currentFile = requester.eResource().getURI().toString().replace("platform:/resource/", "")
@@ -358,7 +390,19 @@ public class GTLResourceManager {
 			Map<String, File> editorFiles = editorFilesInWS.get(project);
 			if (editorFiles != null) {
 				// This project is already known / watched -> return gtl files
-				pkgScope.addAll(editorFiles.values().stream().map(f -> {
+				pkgScope.addAll(editorFiles.values().stream().filter(f -> {
+					try {
+						String content = Files.readString(f.toPath());
+						Matcher m = pkgNamePattern.matcher(content);
+						if (m.find() && m.groupCount() == 3) {
+							String pkgName = m.group(2);
+							return !requester.getPackage().getName().equals(pkgName);
+						}
+						return false;
+					} catch (IOException e) {
+						return false;
+					}
+				}).map(f -> {
 					URI gtModelUri;
 					try {
 						gtModelUri = URI.createFileURI(f.getCanonicalPath());
@@ -372,26 +416,8 @@ public class GTLResourceManager {
 					if (platformUri.toString().equals(requester.eResource().getURI().toString()))
 						return Optional.empty();
 
-					Resource resource = xtextResources.loadResource(requester.eResource(), platformUri);
-					if (resource == null)
-						return Optional.empty();
-
-					if (resource.getContents().isEmpty())
-						return Optional.empty();
-
-					EObject gtlModel = resource.getContents().get(0);
-
-					if (gtlModel == null)
-						return Optional.empty();
-
-					if (gtlModel instanceof EditorFile otherEditorFile) {
-						return Optional.of(otherEditorFile);
-					} else {
-						return Optional.empty();
-					}
-				}).filter(opt -> opt.isPresent()).map(opt -> (EditorFile) opt.get())
-						.filter(other -> !other.getPackage().getName().equals(requester.getPackage().getName()))
-						.collect(Collectors.toSet()));
+					return Optional.of(platformUri);
+				}).filter(opt -> opt.isPresent()).map(opt -> (URI) opt.get()).collect(Collectors.toSet()));
 
 				continue;
 			}
@@ -483,30 +509,28 @@ public class GTLResourceManager {
 
 				String fileString = gtModelUri.toFileString();
 
+				editorFiles.put(gtModelUri.toFileString(), gtFile);
+
 				if (fileString.equals(currentFile))
 					continue;
 
-				URI platformUri = toPlatformURI(project, gtModelUri);
-				Resource resource = xtextResources.loadResource(requester.eResource(), platformUri);
-				if (resource == null)
-					continue;
-
-				if (resource.getContents().isEmpty())
-					continue;
-
-				EObject gtlModel = resource.getContents().get(0);
-
-				if (gtlModel == null)
-					continue;
-
-				if (gtlModel instanceof EditorFile otherEditorFile) {
-					editorFiles.put(gtModelUri.toFileString(), gtFile);
-
-					if (!otherEditorFile.getPackage().getName().equals(requester.getPackage().getName())
-							&& !fileString.equals(currentFile)) {
-						pkgScope.add(otherEditorFile);
+				try {
+					String content = Files.readString(gtFile.toPath());
+					Matcher m = pkgNamePattern.matcher(content);
+					if (m.find() && m.groupCount() == 3) {
+						String pkgName = m.group(2);
+						if (requester.getPackage().getName().equals(pkgName))
+							continue;
+					} else {
+						continue;
 					}
+				} catch (IOException e) {
+					LogUtils.error(logger, e);
+					continue;
 				}
+
+				URI platformUri = toPlatformURI(project, gtModelUri);
+				pkgScope.add(platformUri);
 			}
 		}
 
