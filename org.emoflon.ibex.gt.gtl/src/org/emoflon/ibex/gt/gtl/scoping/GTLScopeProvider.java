@@ -51,7 +51,12 @@ import org.emoflon.ibex.gt.gtl.util.GTLResourceManager;
  */
 public class GTLScopeProvider extends AbstractGTLScopeProvider {
 
-	protected GTLResourceManager gtlManager = new GTLResourceManager(resourceManager);
+	public GTLScopeProvider() {
+	}
+
+	public GTLScopeProvider(GTLResourceManager gtlResourceManager) {
+		super(gtlResourceManager);
+	}
 
 	@Override
 	public IScope getScopeInternal(EObject context, EReference reference) throws Exception {

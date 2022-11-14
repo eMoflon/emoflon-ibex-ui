@@ -38,7 +38,7 @@ import org.emoflon.ibex.gt.gtl.gTL.SlimRule;
 import org.moflon.core.utilities.LogUtils;
 
 public class GTLResourceManager {
-	Logger logger = Logger.getLogger(GTLResourceManager.class);
+	final protected Logger logger = Logger.getLogger(GTLResourceManager.class);
 	final protected XtextResourceManager xtextResources;
 
 	static protected Map<String, FileAlterationObserver> observers = Collections.synchronizedMap(new HashMap<>());
@@ -57,6 +57,10 @@ public class GTLResourceManager {
 		this.xtextResources = xtextResources;
 	}
 
+	public XtextResourceManager getXtextResourceManager() {
+		return xtextResources;
+	}
+
 	public Optional<EditorFile> loadGTLModelByFullPath(final EObject context, final String path) {
 		return loadGTLModelByFullPath(context.eResource(), path);
 	}
@@ -71,7 +75,7 @@ public class GTLResourceManager {
 			gtModelUri = URI.createFileURI(path);
 
 			Optional<IProject> otherOpt = SlimGTWorkspaceUtil
-					.getProjectOfFile(SlimGTWorkspaceUtil.getCurrentProject(requester), new File(path), ".gtl", true);
+					.getProjectOfFile(SlimGTWorkspaceUtil.getCurrentProject(requester), new File(path), true);
 			if (otherOpt.isEmpty())
 				return Optional.empty();
 
@@ -113,7 +117,7 @@ public class GTLResourceManager {
 
 		gtModelUri = URI.createFileURI(absolutePath);
 		Optional<IProject> otherOpt = SlimGTWorkspaceUtil.getProjectOfFile(currentProject, new File(absolutePath),
-				".gtl", true);
+				true);
 		if (otherOpt.isEmpty())
 			return Optional.empty();
 
@@ -241,76 +245,12 @@ public class GTLResourceManager {
 			// This is a new or previously unknown IProject -> register file system watcher
 			editorFiles = Collections.synchronizedMap(new HashMap<>());
 			editorFilesInWS.put(project, editorFiles);
-
-			File projectFile = new File(project.getLocation().toPortableString());
-			FileAlterationObserver observer = observers.get(project.getLocation().toPortableString());
-			if (observer == null) {
-				observer = new FileAlterationObserver(project.getLocation().toPortableString());
-				observers.put(project.getLocation().toPortableString(), observer);
-			}
-
-			FileAlterationMonitor monitor = monitors.get(project.getLocation().toPortableString());
-			if (monitor == null) {
-				monitor = new FileAlterationMonitor(1000);
-				monitors.put(project.getLocation().toPortableString(), monitor);
-			} else {
-				try {
-					monitor.stop();
-				} catch (Exception e) {
-				}
-			}
-
-			FileAlterationListener listener = listeners.get(project.getLocation().toPortableString());
-			if (listener != null) {
-				monitor.removeObserver(observer);
-				observer.removeListener(listener);
-				listeners.remove(project.getLocation().toPortableString());
-			}
-
-			listener = new FileAlterationListenerAdaptor() {
-				@Override
-				public void onFileCreate(File file) {
-					if (file.isFile() && file.getName().endsWith(".gtl")) {
-						Map<String, File> editorFiles = editorFilesInWS.get(project);
-						try {
-							editorFiles.put(file.getCanonicalPath(), file);
-						} catch (IOException e) {
-							LogUtils.error(logger, e);
-							return;
-						}
-					}
-				}
-
-				@Override
-				public void onFileDelete(File file) {
-					if (file.isFile() && file.getName().endsWith(".gtl")) {
-						Map<String, File> editorFiles = editorFilesInWS.get(project);
-						try {
-							editorFiles.remove(file.getCanonicalPath());
-						} catch (IOException e) {
-							LogUtils.error(logger, e);
-							return;
-						}
-					}
-				}
-
-				@Override
-				public void onFileChange(File file) {
-					// do nothing...
-				}
-			};
-			listeners.put(project.getLocation().toPortableString(), listener);
-
-			observer.addListener(listener);
-			monitor.addObserver(observer);
-			try {
-				monitor.start();
-			} catch (Exception e) {
-				LogUtils.error(logger, e);
+			if (!registerMonitor(project)) {
 				continue;
 			}
 
 			// Crawl this project initially to get all currently present gtl files
+			File projectFile = new File(project.getLocation().toPortableString());
 			List<File> gtFiles = new LinkedList<>();
 			SlimGTWorkspaceUtil.gatherFilesWithEnding(gtFiles, projectFile, ".gtl", true);
 
@@ -370,7 +310,7 @@ public class GTLResourceManager {
 	}
 
 	public Collection<URI> getAllEditorFileURIsInWorkspaceNotInPackage(final EditorFile requester) {
-		Collection<URI> pkgScope = new LinkedList<>();
+		Collection<URI> allURIs = new LinkedList<>();
 
 		IProject currentProject = SlimGTWorkspaceUtil.getCurrentProject(requester.eResource());
 		String currentFile = requester.eResource().getURI().toString().replace("platform:/resource/", "")
@@ -390,7 +330,7 @@ public class GTLResourceManager {
 			Map<String, File> editorFiles = editorFilesInWS.get(project);
 			if (editorFiles != null) {
 				// This project is already known / watched -> return gtl files
-				pkgScope.addAll(editorFiles.values().stream().filter(f -> {
+				allURIs.addAll(editorFiles.values().stream().filter(f -> {
 					try {
 						String content = Files.readString(f.toPath());
 						Matcher m = pkgNamePattern.matcher(content);
@@ -425,76 +365,15 @@ public class GTLResourceManager {
 			// This is a new or previously unknown IProject -> register file system watcher
 			editorFiles = Collections.synchronizedMap(new HashMap<>());
 			editorFilesInWS.put(project, editorFiles);
-
-			File projectFile = new File(project.getLocation().toPortableString());
-			FileAlterationObserver observer = observers.get(project.getLocation().toPortableString());
-			if (observer == null) {
-				observer = new FileAlterationObserver(project.getLocation().toPortableString());
-				observers.put(project.getLocation().toPortableString(), observer);
-			}
-
-			FileAlterationMonitor monitor = monitors.get(project.getLocation().toPortableString());
-			if (monitor == null) {
-				monitor = new FileAlterationMonitor(1000);
-				monitors.put(project.getLocation().toPortableString(), monitor);
-			}
-
-			FileAlterationListener listener = listeners.get(project.getLocation().toPortableString());
-			if (listener != null) {
-				try {
-					monitor.stop();
-				} catch (Exception e) {
-				}
-
-				monitor.removeObserver(observer);
-				observer.removeListener(listener);
-				listeners.remove(project.getLocation().toPortableString());
-			}
-
-			listener = new FileAlterationListenerAdaptor() {
-				@Override
-				public void onFileCreate(File file) {
-					if (file.isFile() && file.getName().endsWith(".gtl")) {
-						Map<String, File> editorFiles = editorFilesInWS.get(project);
-						try {
-							editorFiles.put(file.getCanonicalPath(), file);
-						} catch (IOException e) {
-							LogUtils.error(logger, e);
-							return;
-						}
-					}
-				}
-
-				@Override
-				public void onFileDelete(File file) {
-					if (file.isFile() && file.getName().endsWith(".gtl")) {
-						Map<String, File> editorFiles = editorFilesInWS.get(project);
-						try {
-							editorFiles.remove(file.getCanonicalPath());
-						} catch (IOException e) {
-							LogUtils.error(logger, e);
-							return;
-						}
-					}
-				}
-
-				@Override
-				public void onFileChange(File file) {
-					// do nothing...
-				}
-			};
-			listeners.put(project.getLocation().toPortableString(), listener);
-
-			observer.addListener(listener);
-			monitor.addObserver(observer);
-			try {
-				monitor.start();
-			} catch (Exception e) {
-				LogUtils.error(logger, e);
+			// This is a new or previously unknown IProject -> register file system watcher
+			editorFiles = Collections.synchronizedMap(new HashMap<>());
+			editorFilesInWS.put(project, editorFiles);
+			if (!registerMonitor(project)) {
 				continue;
 			}
 
 			// Crawl this project initially to get all currently present gtl files
+			File projectFile = new File(project.getLocation().toPortableString());
 			List<File> gtFiles = new LinkedList<>();
 			SlimGTWorkspaceUtil.gatherFilesWithEnding(gtFiles, projectFile, ".gtl", true);
 
@@ -530,11 +409,11 @@ public class GTLResourceManager {
 				}
 
 				URI platformUri = toPlatformURI(project, gtModelUri);
-				pkgScope.add(platformUri);
+				allURIs.add(platformUri);
 			}
 		}
 
-		return pkgScope;
+		return allURIs;
 	}
 
 	public URI toPlatformURI(IProject project, URI fileURI) {
@@ -566,5 +445,76 @@ public class GTLResourceManager {
 		scope.forEach(other -> ruleSet.addAll(other.getRules()));
 
 		return ruleSet;
+	}
+
+	protected boolean registerMonitor(IProject project) {
+		FileAlterationObserver observer = observers.get(project.getLocation().toPortableString());
+		if (observer == null) {
+			observer = new FileAlterationObserver(project.getLocation().toPortableString());
+			observers.put(project.getLocation().toPortableString(), observer);
+		}
+
+		FileAlterationMonitor monitor = monitors.get(project.getLocation().toPortableString());
+		if (monitor == null) {
+			monitor = new FileAlterationMonitor(1000);
+			monitors.put(project.getLocation().toPortableString(), monitor);
+		} else {
+			try {
+				monitor.stop();
+			} catch (Exception e) {
+			}
+		}
+
+		FileAlterationListener listener = listeners.get(project.getLocation().toPortableString());
+		if (listener != null) {
+			monitor.removeObserver(observer);
+			observer.removeListener(listener);
+			listeners.remove(project.getLocation().toPortableString());
+		}
+
+		listener = new FileAlterationListenerAdaptor() {
+			@Override
+			public void onFileCreate(File file) {
+				if (file.isFile() && file.getName().endsWith(".gtl")) {
+					Map<String, File> editorFiles = editorFilesInWS.get(project);
+					try {
+						editorFiles.put(file.getCanonicalPath(), file);
+					} catch (IOException e) {
+						LogUtils.error(logger, e);
+						return;
+					}
+				}
+			}
+
+			@Override
+			public void onFileDelete(File file) {
+				if (file.isFile() && file.getName().endsWith(".gtl")) {
+					Map<String, File> editorFiles = editorFilesInWS.get(project);
+					try {
+						editorFiles.remove(file.getCanonicalPath());
+					} catch (IOException e) {
+						LogUtils.error(logger, e);
+						return;
+					}
+				}
+			}
+
+			@Override
+			public void onFileChange(File file) {
+				// do nothing...
+			}
+		};
+		listeners.put(project.getLocation().toPortableString(), listener);
+
+		observer.addListener(listener);
+		monitor.addObserver(observer);
+		try {
+			monitor.start();
+		} catch (Exception e) {
+			LogUtils.error(logger, e);
+			return false;
+		}
+
+		return true;
 	}
 }

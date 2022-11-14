@@ -86,6 +86,14 @@ public final class GTLModelUtil {
 				.collect(Collectors.toSet());
 	}
 
+	public static Collection<SlimRuleNode> getAllDeletedAndContextRuleNodesNoLocals(SlimRule context) {
+		Map<SlimRuleNode, RuleNodeHierarchy> nodes = new LinkedHashMap<>();
+		getAllRuleNodes(context, new HashMap<>(), nodes);
+		return nodes.keySet().stream().filter(n -> n.eContainer() instanceof GTLRuleNodeDeletion
+				|| (n.eContainer() instanceof SlimRuleNodeContext && !((SlimRuleNodeContext) n.eContainer()).isLocal()))
+				.collect(Collectors.toSet());
+	}
+
 	public static Collection<SlimRuleNode> getAllCreatedAndContextRuleNodes(SlimRule context) {
 		Map<SlimRuleNode, RuleNodeHierarchy> nodes = new LinkedHashMap<>();
 		getAllRuleNodes(context, new HashMap<>(), nodes);

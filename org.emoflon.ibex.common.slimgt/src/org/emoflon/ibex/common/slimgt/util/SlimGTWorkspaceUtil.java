@@ -69,8 +69,7 @@ public final class SlimGTWorkspaceUtil {
 		return project;
 	}
 
-	public static Optional<IProject> getProjectOfFile(final IProject current, final File file, String ending,
-			boolean ignoreBin) {
+	public static Optional<IProject> getProjectOfFile(final IProject current, final File file, boolean ignoreBin) {
 		File otherProjectFile = null;
 		File cf = file;
 		while (cf != null && cf.exists()) {
