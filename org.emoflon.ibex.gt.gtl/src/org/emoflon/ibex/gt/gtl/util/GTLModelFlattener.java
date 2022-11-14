@@ -460,7 +460,7 @@ public class GTLModelFlattener {
 		}
 
 		// Flatten watch dogs
-		for (GTLRuleWatchDog watchDog : rule.getWatchDogs()) {
+		for (GTLRuleWatchDog watchDog : GTLModelUtil.getAllWatchDogs(rule)) {
 			GTLRuleWatchDog flattenedWatchDog = factory.createGTLRuleWatchDog();
 			flattenedWatchDog.setNodeAttribute(flatten(watchDog.getNodeAttribute(), flattenedRule));
 			flattenedRule.getWatchDogs().add(flattenedWatchDog);
