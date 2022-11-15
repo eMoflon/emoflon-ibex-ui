@@ -63,7 +63,12 @@ import org.emoflon.ibex.gt.gtl.util.RuleNodeHierarchy;
  */
 public class GTLValidator extends AbstractGTLValidator {
 
-	protected GTLResourceManager gtlManager = new GTLResourceManager(resourceManager);
+	public GTLValidator() {
+	}
+
+	public GTLValidator(final GTLResourceManager gtlManager) {
+		super(gtlManager);
+	}
 
 	@Check
 	public void packageValid(PackageDeclaration pkg) {

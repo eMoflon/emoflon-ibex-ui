@@ -25,12 +25,19 @@ import org.emoflon.ibex.gt.gtl.util.GTLResourceManager;
  */
 public class GTLProposalProvider extends AbstractGTLProposalProvider {
 
-	protected GTLResourceManager manager = new GTLResourceManager();
+	final protected GTLResourceManager manager;
+
+	public GTLProposalProvider() {
+		manager = new GTLResourceManager();
+	}
+
+	public GTLProposalProvider(final GTLResourceManager manager) {
+		this.manager = manager;
+	}
 
 	@Override
 	public void completePackageDeclaration_Name(EObject model, Assignment assignment, ContentAssistContext context,
 			ICompletionProposalAcceptor acceptor) {
-		// TODO Auto-generated method stub
 		super.completePackageDeclaration_Name(model, assignment, context, acceptor);
 
 		IProject currentProject = SlimGTWorkspaceUtil.getCurrentProject(model.eResource());
