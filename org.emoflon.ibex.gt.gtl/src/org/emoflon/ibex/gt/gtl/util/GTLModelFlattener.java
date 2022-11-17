@@ -280,6 +280,7 @@ public class GTLModelFlattener {
 		if (rule.isConfigured()) {
 			SlimRuleAnnotation rAn = EcoreUtil.copy(rule.getConfiguration());
 			flattenedRule.setConfiguration(rAn);
+			flattenedRule.setConfigured(true);
 		}
 		flattenedRule.setAbstract(rule.isAbstract());
 		flattenedRule.setType(rule.getType());
