@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.emoflon.ibex.tgg.integrate.internal.delta.OperationalDeltaEvaluator;
-import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict;
+import org.emoflon.ibex.tgg.runtime.strategies.integrate.conflicts.Conflict;
 
 import language.BindingType;
 import language.DomainType;

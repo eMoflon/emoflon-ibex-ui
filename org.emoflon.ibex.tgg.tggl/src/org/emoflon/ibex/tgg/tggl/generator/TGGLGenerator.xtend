@@ -35,8 +35,8 @@ class TGGLGenerator extends AbstractGenerator {
 		
 		this.oldFsa = fsa
 		
-		ExtensionsUtil
-			.collectExtensions(TGGBuilderExtension.BUILDER_EXTENSON_ID, "class", typeof(TGGBuilderExtension))
-			.forEach[builder | builder.run(iProject, input)];
+//		ExtensionsUtil
+//			.collectExtensions(TGGBuilderExtension.BUILDER_EXTENSON_ID, "class", typeof(TGGBuilderExtension))
+//			.forEach[builder | builder.run(iProject, input)];
 	}
 }

@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import org.emoflon.ibex.tgg.compiler.patterns.PatternType;
-import org.emoflon.ibex.tgg.operational.matches.ITGGMatch;
+import org.emoflon.ibex.tgg.runtime.matches.ITGGMatch;
 
 import language.TGGRule;
 
