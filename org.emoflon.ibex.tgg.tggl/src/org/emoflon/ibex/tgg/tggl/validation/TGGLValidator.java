@@ -159,6 +159,34 @@ public class TGGLValidator extends AbstractTGGLValidator {
 	}
 
 	@Check
+	public void checkUniqueRuleNames(EditorFile editorFile) {
+		Map<String, List<EObject>> name2rule = new HashMap<>();
+
+		Collection<EditorFile> allFiles = TGGLWorkspaceUtil.getAllFilesInScope(editorFile);
+		for (EditorFile file : allFiles) {
+			for (TGGRule rule : file.getRules())
+				name2rule.computeIfAbsent(rule.getName(), k -> new LinkedList<>()).add(rule);
+			for (SlimRule pattern : file.getPatterns())
+				name2rule.computeIfAbsent(pattern.getName(), k -> new LinkedList<>()).add(pattern);
+		}
+
+		for (Entry<String, List<EObject>> entry : name2rule.entrySet()) {
+			if (entry.getValue().size() <= 1)
+				continue;
+
+			for (EObject duplRule : entry.getValue()) {
+				if (!editorFile.equals(SlimGTModelUtil.getContainer(duplRule, EditorFile.class)))
+					continue;
+
+				EAttribute nameFeature = duplRule instanceof TGGRule ? //
+						TGGLPackage.Literals.TGG_RULE__NAME : //
+						TGGLPackage.Literals.SLIM_RULE__NAME;
+				error(String.format("A rule or pattern with name '%s' does already exist in this project.", entry.getKey()), duplRule, nameFeature);
+			}
+		}
+	}
+
+	@Check
 	public void checkUniqueNodesNames(TGGRule rule) {
 		Map<String, List<EObject>> name2nodes = new HashMap<>();
 		fillNodeNameMap(rule, name2nodes);
@@ -168,8 +196,11 @@ public class TGGLValidator extends AbstractTGGLValidator {
 				continue;
 
 			for (EObject duplNode : entry.getValue()) {
-				error(String.format("A node with name '%s' does already exist in this rule.", entry.getKey()), duplNode,
-						SlimGTPackage.Literals.SLIM_RULE_NODE__NAME);
+				EAttribute nameFeature = duplNode instanceof TGGCorrespondenceNode ? //
+						TGGLPackage.Literals.TGG_CORRESPONDENCE_NODE__NAME : //
+						SlimGTPackage.Literals.SLIM_RULE_NODE__NAME;
+
+				error(String.format("A node with name '%s' does already exist in this rule.", entry.getKey()), duplNode, nameFeature);
 			}
 		}
 
@@ -199,8 +230,12 @@ public class TGGLValidator extends AbstractTGGLValidator {
 						continue;
 					issueData.add(refinedRule.getName());
 				}
-				error(String.format("A node with name '%s' does already exist in a refined rule.", duplNodeName), duplRuleNode,
-						SlimGTPackage.Literals.SLIM_RULE_NODE__NAME, IssueCodes.MISSING_NODE_REFINEMENT, issueData.toArray(new String[] {}));
+
+				EAttribute nameFeature = duplRuleNode instanceof TGGCorrespondenceNode ? //
+						TGGLPackage.Literals.TGG_CORRESPONDENCE_NODE__NAME : //
+						SlimGTPackage.Literals.SLIM_RULE_NODE__NAME;
+				error(String.format("A node with name '%s' does already exist in a refined rule.", duplNodeName), duplRuleNode, nameFeature,
+						IssueCodes.MISSING_NODE_REFINEMENT, issueData.toArray(new String[] {}));
 			}
 		}
 	}
@@ -626,9 +661,10 @@ public class TGGLValidator extends AbstractTGGLValidator {
 		if (invocation.getSupportPattern() == null)
 			return;
 
-		SlimRule currentRule = SlimGTModelUtil.getContainer(invocation, SlimRule.class);
 		Set<SlimRule> traversedRules = new HashSet<>();
-		traversedRules.add(currentRule);
+		SlimRule currentPattern = SlimGTModelUtil.getContainer(invocation, SlimRule.class);
+		if (currentPattern != null)
+			traversedRules.add(currentPattern);
 
 		if (invocationHierarchyHasCycle(invocation, traversedRules)) {
 			error(String.format("Invoked pattern '%s' leads to an invocation cycle, which is not allowed.",
@@ -702,10 +738,7 @@ public class TGGLValidator extends AbstractTGGLValidator {
 			return;
 
 		Map<SlimRuleNode, Set<SlimRuleNode>> node2nodeSet = new HashMap<>();
-		if (rule.getSourceRule() != null)
-			fillNode2nodeSet(rule.getSourceRule(), node2nodeSet);
-		if (rule.getTargetRule() != null)
-			fillNode2nodeSet(rule.getTargetRule(), node2nodeSet);
+		fillNode2nodeSet(rule, node2nodeSet);
 
 		List<SlimRuleNode> nodes = new LinkedList<>(node2nodeSet.keySet());
 		for (SlimRuleNode srcNode : nodes) {
@@ -735,7 +768,7 @@ public class TGGLValidator extends AbstractTGGLValidator {
 			corrNodes.addAll(rule.getCorrRule().getCreatedCorrespondenceNodes().stream() //
 					.map(cn -> cn.getCreation()) //
 					.toList());
-			
+
 			for (TGGCorrespondenceNode corrNode : corrNodes) {
 				Set<SlimRuleNode> srcNodeSet = node2nodeSet.get(corrNode.getSource());
 				Set<SlimRuleNode> trgNodeSet = node2nodeSet.get(corrNode.getTarget());
@@ -750,6 +783,19 @@ public class TGGLValidator extends AbstractTGGLValidator {
 		Set<Set<SlimRuleNode>> disjointNodes = new HashSet<>(node2nodeSet.values());
 		if (disjointNodes.size() > 1) {
 			warning("Disjoint rules should be abstract.", TGGLPackage.Literals.TGG_RULE__NAME);
+		}
+	}
+
+	private void fillNode2nodeSet(TGGRule rule, Map<SlimRuleNode, Set<SlimRuleNode>> node2nodeSet) {
+		if (rule.getSourceRule() != null)
+			fillNode2nodeSet(rule.getSourceRule(), node2nodeSet);
+		if (rule.getTargetRule() != null)
+			fillNode2nodeSet(rule.getTargetRule(), node2nodeSet);
+
+		for (TGGLRuleRefinement refinement : rule.getRefinements()) {
+			TGGRule superRule = refinement.getSuperRule();
+			if (superRule != null)
+				fillNode2nodeSet(superRule, node2nodeSet);
 		}
 	}
 
