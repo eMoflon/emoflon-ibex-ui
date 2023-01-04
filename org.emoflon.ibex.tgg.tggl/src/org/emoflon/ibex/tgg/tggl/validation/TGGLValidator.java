@@ -41,9 +41,12 @@ import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
 import org.emoflon.ibex.common.slimgt.validation.SlimGTValidatorUtil;
 import org.emoflon.ibex.tgg.tggl.tGGL.AttributeCondition;
 import org.emoflon.ibex.tgg.tggl.tGGL.AttributeConditionDefinition;
+import org.emoflon.ibex.tgg.tggl.tGGL.AttributeConditionDefinitionLibrary;
+import org.emoflon.ibex.tgg.tggl.tGGL.CorrespondenceType;
 import org.emoflon.ibex.tgg.tggl.tGGL.EditorFile;
 import org.emoflon.ibex.tgg.tggl.tGGL.ExpressionOperand;
 import org.emoflon.ibex.tgg.tggl.tGGL.LocalVariable;
+import org.emoflon.ibex.tgg.tggl.tGGL.Schema;
 import org.emoflon.ibex.tgg.tggl.tGGL.SlimRule;
 import org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNodeContext;
@@ -182,6 +185,66 @@ public class TGGLValidator extends AbstractTGGLValidator {
 						TGGLPackage.Literals.TGG_RULE__NAME : //
 						TGGLPackage.Literals.SLIM_RULE__NAME;
 				error(String.format("A rule or pattern with name '%s' does already exist in this project.", entry.getKey()), duplRule, nameFeature);
+			}
+		}
+	}
+
+	@Check
+	public void checkUniqueConditionDefinitionLibraryNames(EditorFile editorFile) {
+		Map<String, List<AttributeConditionDefinitionLibrary>> name2lib = new HashMap<>();
+
+		Collection<EditorFile> allFiles = TGGLWorkspaceUtil.getAllFilesInScope(editorFile);
+		for (EditorFile file : allFiles) {
+			for (AttributeConditionDefinitionLibrary lib : file.getLibraries())
+				name2lib.computeIfAbsent(lib.getName(), k -> new LinkedList<>()).add(lib);
+		}
+
+		for (Entry<String, List<AttributeConditionDefinitionLibrary>> entry : name2lib.entrySet()) {
+			if (entry.getValue().size() <= 1)
+				continue;
+
+			for (AttributeConditionDefinitionLibrary duplLib : entry.getValue()) {
+				if (!editorFile.equals(SlimGTModelUtil.getContainer(duplLib, EditorFile.class)))
+					continue;
+
+				error(String.format("A library with name '%s' does already exist in this project.", entry.getKey()), duplLib,
+						TGGLPackage.Literals.ATTRIBUTE_CONDITION_DEFINITION_LIBRARY__NAME);
+			}
+		}
+	}
+
+	@Check
+	public void checkUniqueConditionDefinitionNames(AttributeConditionDefinitionLibrary library) {
+		Map<String, List<AttributeConditionDefinition>> name2def = new HashMap<>();
+
+		for (AttributeConditionDefinition def : library.getAttributeCondDefs())
+			name2def.computeIfAbsent(def.getName(), k -> new LinkedList<>()).add(def);
+
+		for (Entry<String, List<AttributeConditionDefinition>> entry : name2def.entrySet()) {
+			if (entry.getValue().size() <= 1)
+				continue;
+
+			for (AttributeConditionDefinition duplDef : entry.getValue()) {
+				error(String.format("An attribute condition definition with name '%s' does already exist in this library.", entry.getKey()), duplDef,
+						TGGLPackage.Literals.ATTRIBUTE_CONDITION_DEFINITION__NAME);
+			}
+		}
+	}
+
+	@Check
+	public void checkUniqueCorrTypeNames(Schema schema) {
+		Map<String, List<CorrespondenceType>> name2type = new HashMap<>();
+
+		for (CorrespondenceType type : schema.getCorrespondenceTypes())
+			name2type.computeIfAbsent(type.getName(), k -> new LinkedList<>()).add(type);
+
+		for (Entry<String, List<CorrespondenceType>> entry : name2type.entrySet()) {
+			if (entry.getValue().size() <= 1)
+				continue;
+
+			for (CorrespondenceType duplType : entry.getValue()) {
+				error(String.format("A correspondence type with name '%s' does already exist in this schema.", entry.getKey()), duplType,
+						TGGLPackage.Literals.CORRESPONDENCE_TYPE__NAME);
 			}
 		}
 	}
