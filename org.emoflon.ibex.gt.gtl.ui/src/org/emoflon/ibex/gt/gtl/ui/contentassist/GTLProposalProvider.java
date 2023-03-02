@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.Collection;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.xtext.Assignment;
@@ -24,12 +25,19 @@ import org.emoflon.ibex.gt.gtl.util.GTLResourceManager;
  */
 public class GTLProposalProvider extends AbstractGTLProposalProvider {
 
-	protected GTLResourceManager manager = new GTLResourceManager();
+	final protected GTLResourceManager manager;
+
+	public GTLProposalProvider() {
+		manager = new GTLResourceManager();
+	}
+
+	public GTLProposalProvider(final GTLResourceManager manager) {
+		this.manager = manager;
+	}
 
 	@Override
 	public void completePackageDeclaration_Name(EObject model, Assignment assignment, ContentAssistContext context,
 			ICompletionProposalAcceptor acceptor) {
-		// TODO Auto-generated method stub
 		super.completePackageDeclaration_Name(model, assignment, context, acceptor);
 
 		IProject currentProject = SlimGTWorkspaceUtil.getCurrentProject(model.eResource());
@@ -97,7 +105,7 @@ public class GTLProposalProvider extends AbstractGTLProposalProvider {
 		super.completePatternImport_File(model, assignment, context, acceptor);
 
 		EditorFile currentEF = SlimGTModelUtil.getContainer(model, EditorFile.class);
-		Collection<EditorFile> otherEFs = manager.loadAllEditorFilesInWorkspaceNotInPackage(currentEF);
+		Collection<URI> otherEFuris = manager.getAllEditorFileURIsInWorkspaceNotInPackage(currentEF);
 
 		String[] lines = context.getCurrentNode().getText().split("\n");
 		lines = lines[0].split("\r");
@@ -105,8 +113,8 @@ public class GTLProposalProvider extends AbstractGTLProposalProvider {
 		String currentSelection = lines[0].replace("\"", "").replace("/", "\\").trim().replace("%20", " ");
 		String rest = context.getCurrentNode().getText().replace(lines[0], "");
 
-		for (EditorFile other : otherEFs) {
-			String replacement = "\"" + other.eResource().getURI().toString() + "\"";
+		for (URI other : otherEFuris) {
+			String replacement = "\"" + other.toString() + "\"";
 			int start = (currentSelection.isBlank()) ? 0 : currentSelection.length() + 1;
 			replacement = replacement.substring(start);
 			int cursor = replacement.length();

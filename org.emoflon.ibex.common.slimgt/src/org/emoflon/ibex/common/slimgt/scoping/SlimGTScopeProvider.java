@@ -30,7 +30,15 @@ import org.emoflon.ibex.common.slimgt.util.XtextResourceManager;
  */
 public class SlimGTScopeProvider extends AbstractSlimGTScopeProvider {
 
-	protected XtextResourceManager resourceManager = new XtextResourceManager();
+	final protected XtextResourceManager resourceManager;
+
+	public SlimGTScopeProvider() {
+		resourceManager = new XtextResourceManager();
+	}
+
+	public SlimGTScopeProvider(final XtextResourceManager resourceManager) {
+		this.resourceManager = resourceManager;
+	}
 
 	@Override
 	public IScope getScope(EObject context, EReference reference) {

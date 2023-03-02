@@ -98,7 +98,7 @@ public class GTLModelFlattener {
 		this.gtlManager = gtlManager;
 
 		this.packageName = file.getPackage().getName();
-		flattenedFile = factory.createEditorFile();
+		flattenedFile = createNewEditorFile();
 		flattenedFile.setPackage(factory.createPackageDeclaration());
 		flattenedFile.getPackage().setName(packageName);
 
@@ -139,7 +139,7 @@ public class GTLModelFlattener {
 			EcoreUtil2.resolveLazyCrossReferences(file.eResource(), () -> false);
 		}
 
-		flattenedFile = factory.createEditorFile();
+		flattenedFile = createNewEditorFile();
 		flattenedFile.setPackage(factory.createPackageDeclaration());
 		flattenedFile.getPackage().setName(packageName);
 		files.stream().forEach(ef -> {
@@ -151,6 +151,11 @@ public class GTLModelFlattener {
 		});
 
 		postProcess();
+	}
+
+	protected EditorFile createNewEditorFile() {
+		EditorFile file = factory.createEditorFile();
+		return file;
 	}
 
 	public EditorFile getFlattenedModel() {
@@ -275,6 +280,7 @@ public class GTLModelFlattener {
 		if (rule.isConfigured()) {
 			SlimRuleAnnotation rAn = EcoreUtil.copy(rule.getConfiguration());
 			flattenedRule.setConfiguration(rAn);
+			flattenedRule.setConfigured(true);
 		}
 		flattenedRule.setAbstract(rule.isAbstract());
 		flattenedRule.setType(rule.getType());
@@ -460,7 +466,7 @@ public class GTLModelFlattener {
 		}
 
 		// Flatten watch dogs
-		for (GTLRuleWatchDog watchDog : rule.getWatchDogs()) {
+		for (GTLRuleWatchDog watchDog : GTLModelUtil.getAllWatchDogs(rule)) {
 			GTLRuleWatchDog flattenedWatchDog = factory.createGTLRuleWatchDog();
 			flattenedWatchDog.setNodeAttribute(flatten(watchDog.getNodeAttribute(), flattenedRule));
 			flattenedRule.getWatchDogs().add(flattenedWatchDog);

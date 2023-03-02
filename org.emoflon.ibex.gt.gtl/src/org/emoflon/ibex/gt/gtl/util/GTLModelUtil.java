@@ -42,6 +42,7 @@ import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinement;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementAliased;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementNode;
 import org.emoflon.ibex.gt.gtl.gTL.GTLRuleRefinementPlain;
+import org.emoflon.ibex.gt.gtl.gTL.GTLRuleWatchDog;
 import org.emoflon.ibex.gt.gtl.gTL.SlimParameter;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRule;
 import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNode;
@@ -82,6 +83,14 @@ public final class GTLModelUtil {
 		getAllRuleNodes(context, new HashMap<>(), nodes);
 		return nodes.keySet().stream().filter(
 				n -> n.eContainer() instanceof GTLRuleNodeDeletion || n.eContainer() instanceof SlimRuleNodeContext)
+				.collect(Collectors.toSet());
+	}
+
+	public static Collection<SlimRuleNode> getAllDeletedAndContextRuleNodesNoLocals(SlimRule context) {
+		Map<SlimRuleNode, RuleNodeHierarchy> nodes = new LinkedHashMap<>();
+		getAllRuleNodes(context, new HashMap<>(), nodes);
+		return nodes.keySet().stream().filter(n -> n.eContainer() instanceof GTLRuleNodeDeletion
+				|| (n.eContainer() instanceof SlimRuleNodeContext && !((SlimRuleNodeContext) n.eContainer()).isLocal()))
 				.collect(Collectors.toSet());
 	}
 
@@ -395,6 +404,18 @@ public final class GTLModelUtil {
 		nodes.add(context);
 		nodes.addAll(getRuleNodeAllSuperNodes(context, ruleNodeHierarchy));
 		return nodes.stream().flatMap(n -> n.getAssignments().stream()).collect(Collectors.toList());
+	}
+
+	public static Collection<GTLRuleWatchDog> getAllWatchDogs(SlimRule context) {
+		Collection<SlimRule> superRules = getAllSuperRules(context);
+		List<GTLRuleWatchDog> watchDogs = superRules.stream()
+				.filter(rule -> rule.getWatchDogs() != null && !rule.getWatchDogs().isEmpty())
+				.flatMap(rule -> rule.getWatchDogs().stream()).collect(Collectors.toList());
+
+		if (context.getWatchDogs() != null && !context.getWatchDogs().isEmpty())
+			watchDogs.addAll(context.getWatchDogs());
+
+		return watchDogs;
 	}
 
 	public static Collection<SlimRuleAttributeAssignment> getAllAttributeAssignments(SlimRule context) {
