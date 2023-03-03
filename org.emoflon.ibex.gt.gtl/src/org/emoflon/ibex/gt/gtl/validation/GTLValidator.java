@@ -3,9 +3,11 @@
  */
 package org.emoflon.ibex.gt.gtl.validation;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -13,6 +15,7 @@ import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.xtext.validation.Check;
 import org.emoflon.ibex.common.slimgt.slimGT.ArithmeticExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.BooleanExpression;
@@ -31,7 +34,9 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMappings;
 import org.emoflon.ibex.common.slimgt.slimGT.ValueExpression;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
+import org.emoflon.ibex.common.slimgt.util.XtextResourceManager;
 import org.emoflon.ibex.common.slimgt.validation.DataTypeParseResult;
+import org.emoflon.ibex.common.slimgt.validation.SlimGTValidator;
 import org.emoflon.ibex.common.slimgt.validation.SlimGTValidatorUtil;
 import org.emoflon.ibex.gt.gtl.gTL.EditorFile;
 import org.emoflon.ibex.gt.gtl.gTL.ExpressionOperand;
@@ -61,13 +66,25 @@ import org.emoflon.ibex.gt.gtl.util.RuleNodeHierarchy;
  * See
  * https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
-public class GTLValidator extends AbstractGTLValidator {
+public class GTLValidator extends SlimGTValidator {
+
+	final protected GTLResourceManager gtlManager;
 
 	public GTLValidator() {
+		super(new XtextResourceManager());
+		gtlManager = new GTLResourceManager(resourceManager);
 	}
 
 	public GTLValidator(final GTLResourceManager gtlManager) {
-		super(gtlManager);
+		super(gtlManager.getXtextResourceManager());
+		this.gtlManager = gtlManager;
+	}
+
+	@Override
+	protected List<EPackage> getEPackages() {
+		List<EPackage> result = new ArrayList<EPackage>(super.getEPackages());
+		result.add(org.emoflon.ibex.gt.gtl.gTL.GTLPackage.eINSTANCE);
+		return result;
 	}
 
 	@Check

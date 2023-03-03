@@ -13,6 +13,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
+import org.emoflon.ibex.common.slimgt.scoping.SlimGTScopeProvider;
 import org.emoflon.ibex.common.slimgt.scoping.SlimGTScopeUtil;
 import org.emoflon.ibex.common.slimgt.slimGT.BooleanExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.CountExpression;
@@ -23,6 +24,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeCreation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMapping;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
+import org.emoflon.ibex.common.slimgt.util.XtextResourceManager;
 import org.emoflon.ibex.gt.gtl.gTL.EdgeIteratorOperator;
 import org.emoflon.ibex.gt.gtl.gTL.EditorFile;
 import org.emoflon.ibex.gt.gtl.gTL.GTLEdgeIterator;
@@ -49,13 +51,18 @@ import org.emoflon.ibex.gt.gtl.util.GTLResourceManager;
  * https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#scoping
  * on how and when to use it.
  */
-public class GTLScopeProvider extends AbstractGTLScopeProvider {
+public class GTLScopeProvider extends SlimGTScopeProvider {
+
+	final protected GTLResourceManager gtlManager;
 
 	public GTLScopeProvider() {
+		super(new XtextResourceManager());
+		gtlManager = new GTLResourceManager(resourceManager);
 	}
 
 	public GTLScopeProvider(GTLResourceManager gtlResourceManager) {
-		super(gtlResourceManager);
+		super(gtlResourceManager.getXtextResourceManager());
+		this.gtlManager = gtlResourceManager;
 	}
 
 	@Override
