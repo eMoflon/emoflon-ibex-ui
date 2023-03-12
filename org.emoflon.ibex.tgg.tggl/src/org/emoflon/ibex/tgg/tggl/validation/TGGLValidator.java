@@ -29,6 +29,8 @@ import org.emoflon.ibex.common.slimgt.slimGT.Import;
 import org.emoflon.ibex.common.slimgt.slimGT.IntegerLiteral;
 import org.emoflon.ibex.common.slimgt.slimGT.NodeAttributeExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.NodeExpression;
+import org.emoflon.ibex.common.slimgt.slimGT.PackageReference;
+import org.emoflon.ibex.common.slimgt.slimGT.PackageReferenceAlias;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimGTPackage;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimParameter;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleAttributeAssignment;
@@ -58,6 +60,7 @@ import org.emoflon.ibex.tgg.tggl.tGGL.TGGCorrespondenceNodeCreation;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGDomainRule;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLPackage;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinement;
+import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementAliased;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementCorrespondenceNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRule;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRuleRefinementNode;
@@ -247,6 +250,91 @@ public class TGGLValidator extends AbstractTGGLValidator {
 						TGGLPackage.Literals.CORRESPONDENCE_TYPE__NAME);
 			}
 		}
+	}
+
+	@Check
+	public void checkNoImportAliasCollisions(EditorFile editorFile) {
+		List<Import> imports = editorFile.getImports();
+
+		if (imports == null || imports.isEmpty())
+			return;
+
+		Set<String> packageNames = new HashSet<>();
+		Map<String, List<PackageReferenceAlias>> alias2packageName = new HashMap<>();
+		for (Import imp : imports) {
+			packageNames.addAll(SlimGTModelUtil.getPackages(imp).stream() //
+					.map(p -> p.getName()) //
+					.toList());
+			for (PackageReference packageRef : imp.getPackageAliases()) {
+				if (packageRef instanceof PackageReferenceAlias alias) {
+					alias2packageName.computeIfAbsent(alias.getName(), k -> new LinkedList<>()).add(alias);
+				}
+			}
+		}
+
+		for (Entry<String, List<PackageReferenceAlias>> entry : alias2packageName.entrySet()) {
+			if (packageNames.contains(entry.getKey())) {
+				for (PackageReferenceAlias alias : entry.getValue()) {
+					error(String.format("Alias '%s' covers an imported package name.", entry.getKey()), alias,
+							SlimGTPackage.Literals.PACKAGE_REFERENCE_ALIAS__NAME);
+				}
+			}
+
+			if (entry.getValue().size() <= 1)
+				continue;
+
+			for (PackageReferenceAlias alias : entry.getValue()) {
+				error(String.format("Alias '%s' is already defined.", entry.getKey()), alias, SlimGTPackage.Literals.PACKAGE_REFERENCE_ALIAS__NAME);
+			}
+		}
+	}
+
+	@Check
+	public void checkNoRuleAliasCollisions(TGGRule rule) {
+		EList<TGGLRuleRefinement> refinements = rule.getRefinements();
+		if (refinements == null || refinements.isEmpty())
+			return;
+
+		Map<String, List<TGGLRuleRefinementAliased>> name2aliasedRefinement = new HashMap<>();
+		for (TGGLRuleRefinement refinement : refinements) {
+			if (refinement instanceof TGGLRuleRefinementAliased aliasedRefinement)
+				name2aliasedRefinement.computeIfAbsent(aliasedRefinement.getName(), k -> new LinkedList<>()).add(aliasedRefinement);
+		}
+
+		for (TGGLRuleRefinement refinement : refinements)
+			checkNoRuleAliasCollisionsRecursive(name2aliasedRefinement, refinement.getSuperRule());
+
+		for (Entry<String, List<TGGLRuleRefinementAliased>> entry : name2aliasedRefinement.entrySet()) {
+			if (entry.getValue().size() <= 1)
+				continue;
+
+			for (TGGLRuleRefinementAliased alias : entry.getValue()) {
+				error(String.format("Alias '%s' is already defined.", entry.getKey()), alias,
+						TGGLPackage.Literals.TGGL_RULE_REFINEMENT_ALIASED__NAME);
+			}
+		}
+	}
+
+	private void checkNoRuleAliasCollisionsRecursive(Map<String, List<TGGLRuleRefinementAliased>> name2aliasedRefinement, TGGRule rule) {
+		if (name2aliasedRefinement.containsKey(rule.getName())) {
+			List<TGGLRuleRefinementAliased> aliases = name2aliasedRefinement.get(rule.getName());
+			for (TGGLRuleRefinementAliased alias : aliases) {
+				error(String.format("Alias '%s' must not be the same as its rule or other refined rules.", rule.getName()), alias,
+					TGGLPackage.Literals.TGGL_RULE_REFINEMENT_ALIASED__NAME);
+			}
+		}
+
+		EList<TGGLRuleRefinement> refinements = rule.getRefinements();
+		if (refinements == null || refinements.isEmpty())
+			return;
+
+		for (TGGLRuleRefinement refinement : refinements) {
+			if (refinement instanceof TGGLRuleRefinementAliased aliasedRefinement)
+				name2aliasedRefinement.computeIfAbsent(aliasedRefinement.getName(), k -> new LinkedList<>()).add(aliasedRefinement);
+		}
+
+		for (TGGLRuleRefinement refinement : refinements)
+			checkNoRuleAliasCollisionsRecursive(name2aliasedRefinement, refinement.getSuperRule());
 	}
 
 	@Check
