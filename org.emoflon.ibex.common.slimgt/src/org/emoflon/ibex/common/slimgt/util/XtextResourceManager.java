@@ -96,4 +96,8 @@ public class XtextResourceManager {
 
 		return other;
 	}
+	
+	public void clearCache() {
+		this.resourceCache.clear();
+	}
 }

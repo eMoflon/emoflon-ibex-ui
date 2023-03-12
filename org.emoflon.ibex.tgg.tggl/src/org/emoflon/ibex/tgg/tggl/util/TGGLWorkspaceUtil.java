@@ -22,39 +22,41 @@ import org.emoflon.ibex.tgg.tggl.tGGL.EditorFile;
 
 public class TGGLWorkspaceUtil {
 
-	public static Collection<EditorFile> getAllFilesInScope(EObject obj) {
-		XtextResourceManager resourceManager = new XtextResourceManager();
+	protected static XtextResourceManager resourceManager = new XtextResourceManager();
+	
+	public static void clearResourceCache() {
+		resourceManager.clearCache();
+	}
 
-		var editorFile = getContainer(obj, EditorFile.class);
+	protected static Collection<EditorFile> getFilesInScope(EditorFile editorFile, boolean excludeOwn) {
 		var rs = editorFile.eResource().getResourceSet();
 		Collection<EditorFile> editorFiles = new HashSet<>();
 
 		IProject currentProject = SlimGTWorkspaceUtil.getCurrentProject(editorFile.eResource());
-		String currentFile = editorFile.eResource().getURI().toString().replace("platform:/resource/", "")
-				.replace(currentProject.getName(), "");
-		currentFile = currentProject.getLocation().toPortableString() + currentFile;
-		currentFile = currentFile.replace("/", "\\");
 
-		File projectFile = new File(currentProject.getLocation().toPortableString());
+		String projectPath = currentProject.getLocation().toPortableString();
 		List<File> tggFiles = new LinkedList<>();
-		SlimGTWorkspaceUtil.gatherFilesWithEnding(tggFiles, projectFile, ".tggl", true);
+		SlimGTWorkspaceUtil.gatherFilesWithEnding(tggFiles, new File(projectPath), ".tggl", true);
 
 		for (File tggFile : tggFiles) {
 			URI tggModelUri;
 			try {
-				tggModelUri = URI.createFileURI(tggFile.getCanonicalPath());
+				String filePath = tggFile.getCanonicalPath().replaceFirst(projectPath, currentProject.getName());
+				tggModelUri = URI.createPlatformResourceURI(filePath, true);
 			} catch (IOException e) {
 				continue;
 			}
 
-			String fileString = tggModelUri.toFileString();
-			if (fileString.equals(currentFile))
+			if (excludeOwn && editorFile.eResource().getURI().equals(tggModelUri))
 				continue;
 
 			Resource resource = resourceManager.loadResource(rs, editorFile.eResource(), tggModelUri);
 			if (resource == null)
 				continue;
 
+			if (resource.getContents().isEmpty())
+				continue;
+			
 			EObject tggModel = resource.getContents().get(0);
 
 			if (tggModel == null)
@@ -67,11 +69,20 @@ public class TGGLWorkspaceUtil {
 		return editorFiles;
 	}
 
-	public Collection<EditorFile> getAllResolvedFilesInScope(InjectionContainer container, EObject obj) {
+	public static Collection<EditorFile> getAllFilesInScope(EObject obj) {
+		EditorFile editorFile = getContainer(obj, EditorFile.class);
+		return getFilesInScope(editorFile, false);
+	}
+
+	public static Collection<EditorFile> getAllOtherFilesInScope(EditorFile editorFile) {
+		return getFilesInScope(editorFile, true);
+	}
+
+	public static Collection<EditorFile> getAllResolvedFilesInScope(InjectionContainer container, EObject obj) {
 		return getAllResolvedFilesInScope(container, obj.eResource());
 	}
 
-	public Collection<EditorFile> getAllResolvedFilesInScope(InjectionContainer container, Resource input) {
+	public static Collection<EditorFile> getAllResolvedFilesInScope(InjectionContainer container, Resource input) {
 		var resourceSet = input.getResourceSet();
 
 		var index = container.resourceDescriptionsProvider().createResourceDescriptions();
@@ -96,4 +107,5 @@ public class TGGLWorkspaceUtil {
 		EcoreUtil.resolveAll(resourceSet);
 		return editorFiles;
 	}
+
 }
