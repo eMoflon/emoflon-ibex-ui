@@ -17,7 +17,7 @@ PackageReferencePlain returns PackageReference : {PackageReferencePlain}
 ;
 
 PackageReferenceAlias returns PackageReference : {PackageReferenceAlias}
-	'using' importedPackage=[ecore::EPackage] 'as' name=ID
+	'using' importedPackage=[ecore::EPackage | QualifiedName] 'as' name=ID
 ;
 
 PackageReference:
