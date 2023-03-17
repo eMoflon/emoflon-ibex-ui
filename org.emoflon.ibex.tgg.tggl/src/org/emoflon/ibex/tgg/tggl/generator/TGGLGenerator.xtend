@@ -10,7 +10,9 @@ import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
 import org.eclipse.xtext.resource.IContainer
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
+import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtil
 import org.emoflon.ibex.tgg.tggl.util.TGGLModelFlattener
+import org.moflon.core.utilities.ExtensionsUtil
 
 /**
  * Generates code from your model files on save.
@@ -27,7 +29,7 @@ class TGGLGenerator extends AbstractGenerator {
  	IContainer.Manager containerManager;
 	
 	override void doGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
-		var newFile = new TGGLModelFlattener().flatten(resourceDescriptionsProvider, containerManager, input);
+		val newFile = new TGGLModelFlattener().flatten(resourceDescriptionsProvider, containerManager, input);
 		
 		// trick to avoid xtext triggering endless loops
 		if(oldFsa !== null && oldFsa.hashCode == fsa.hashCode) 
@@ -35,8 +37,10 @@ class TGGLGenerator extends AbstractGenerator {
 		
 		this.oldFsa = fsa
 		
-//		ExtensionsUtil
-//			.collectExtensions(TGGBuilderExtension.BUILDER_EXTENSON_ID, "class", typeof(TGGBuilderExtension))
-//			.forEach[builder | builder.run(iProject, input)];
+		val iProject = SlimGTWorkspaceUtil.getCurrentProject(input)
+
+		ExtensionsUtil
+			.collectExtensions(TGGBuilderExtension.BUILDER_EXTENSON_ID, "class", typeof(TGGBuilderExtension))
+			.forEach[builder | builder.run(iProject, newFile)];
 	}
 }

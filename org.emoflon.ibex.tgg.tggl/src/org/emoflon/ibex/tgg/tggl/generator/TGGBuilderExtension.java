@@ -2,6 +2,7 @@ package org.emoflon.ibex.tgg.tggl.generator;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.emoflon.ibex.tgg.tggl.tGGL.EditorFile;
 
 public interface TGGBuilderExtension {
 
@@ -13,6 +14,6 @@ public interface TGGBuilderExtension {
 	 * 
 	 * @param project the project to build
 	 */
-	public void run(IProject project, Resource schemaResource);
+	public void run(IProject project, EditorFile editorFile);
 
 }
