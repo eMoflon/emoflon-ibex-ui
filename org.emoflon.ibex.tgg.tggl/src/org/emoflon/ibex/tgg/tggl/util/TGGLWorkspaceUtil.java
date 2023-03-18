@@ -104,7 +104,7 @@ public class TGGLWorkspaceUtil {
 				}
 			}
 		}
-		EcoreUtil.resolveAll(resourceSet);
+//		EcoreUtil.resolveAll(resourceSet);
 		return editorFiles;
 	}
 

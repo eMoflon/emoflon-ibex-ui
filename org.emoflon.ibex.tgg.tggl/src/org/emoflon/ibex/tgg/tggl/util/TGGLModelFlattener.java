@@ -184,14 +184,16 @@ public class TGGLModelFlattener {
 	private void flattenTGGRule(TGGRule tggRule) {
 		if(flattenedObjects.contains(tggRule))
 			return;
+
+		createMissingDefaultElements(tggRule);
 		
 		Collection<EObject> refinedTargets = new HashSet<>();
 		// collect source and target nodes
 		refinedTargets.addAll(getElements(tggRule, TGGRuleRefinementNode.class).stream().map(r -> r.getNode()).toList());
 		
 		// collect correspondence nodes
-		refinedTargets.addAll(tggRule.getCorrRule().getContextCorrespondenceNodes().stream().map(n -> n.getRefinement().getNode()).toList());
-		refinedTargets.addAll(tggRule.getCorrRule().getCreatedCorrespondenceNodes().stream().map(n -> n.getRefinement().getNode()).toList());
+		refinedTargets.addAll(tggRule.getCorrRule().getContextCorrespondenceNodes().stream().filter(n -> n.getRefinement() != null).map(n -> n.getRefinement().getNode()).toList());
+		refinedTargets.addAll(tggRule.getCorrRule().getCreatedCorrespondenceNodes().stream().filter(n -> n.getRefinement() != null).map(n -> n.getRefinement().getNode()).toList());
 		
 		for(var refinement : tggRule.getRefinements()) {
 			var superRule = refinement.getSuperRule();
@@ -211,6 +213,16 @@ public class TGGLModelFlattener {
 		tggRule.getRefinements().clear();
 		
 		flattenedObjects.add(tggRule);
+	}
+
+
+	private void createMissingDefaultElements(TGGRule tggRule) {
+		if(tggRule.getSourceRule() == null)
+			tggRule.setSourceRule(TGGLFactory.eINSTANCE.createTGGDomainRule());
+		if(tggRule.getCorrRule() == null)
+			tggRule.setCorrRule(TGGLFactory.eINSTANCE.createTGGCorrRule());
+		if(tggRule.getTargetRule() == null)
+			tggRule.setTargetRule(TGGLFactory.eINSTANCE.createTGGDomainRule());
 	}
 
 

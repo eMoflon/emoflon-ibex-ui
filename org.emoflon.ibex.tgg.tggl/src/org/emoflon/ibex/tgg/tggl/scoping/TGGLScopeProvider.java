@@ -42,6 +42,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 import org.eclipse.xtext.resource.IContainer;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.eclipse.xtext.scoping.IScope;
@@ -166,7 +167,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		// attribute conditions
 		if (isTGGRuleConditionName(context, reference))
 			return getCondition(context, reference);
-
+		
 		return super.getScopeInternal(context, reference);
 	}
 
@@ -794,10 +795,10 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		if (editorFile.getSchema() != null)
 			return editorFile.getSchema();
 
-		for (var otherFile : getAllFilesInScope(editorFile)) {
-//		for (var otherFile : getAllResolvedFilesInScope(new org.emoflon.ibex.tgg.tggl.util.InjectionContainer(resourceDescriptionsProvider, containerManager), editorFile)) {
-			if (otherFile.getSchema() != null)
-				return otherFile.getSchema();
+//		for (var otherFile : getAllFilesInScope(editorFile)) {
+		for (var file : getAllResolvedFilesInScope(new org.emoflon.ibex.tgg.tggl.util.InjectionContainer(resourceDescriptionsProvider, containerManager), editorFile)) {
+			if (file.getSchema() != null)
+				return file.getSchema();
 		}
 		return null;
 	}
