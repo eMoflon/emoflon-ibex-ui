@@ -10,8 +10,8 @@ EditorFile:
 	imports += Import*
 	(schema = Schema)?
   	libraries += AttributeConditionDefinitionLibrary*
-  	rules += TGGRule*
-  	patterns += SlimRule*
+  	(rules += TGGRule |
+  	patterns += SlimRule)*
 ;
 
 Using:

@@ -3,26 +3,47 @@
  */
 package org.emoflon.ibex.tgg.tggl.scoping;
 
-import static org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil.*;
-import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.*;
-import static org.emoflon.ibex.tgg.tggl.util.TGGLWorkspaceUtil.*;
+import static org.emoflon.ibex.common.slimgt.util.SlimGTCollectionUtil.castCollection;
+import static org.emoflon.ibex.common.slimgt.util.SlimGTCollectionUtil.join;
+import static org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil.getContainer;
+import static org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil.getPackages;
+import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isCorrespondenceNodeNode;
+import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isCorrespondenceNodeSource;
+import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isCorrespondenceNodeTarget;
+import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isCorrespondenceNodeType;
+import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isCorrespondenceSourceType;
+import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isCorrespondenceTargetType;
+import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isEdgeTargetReference;
+import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isNodeAttributeExpressionFeature;
+import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isNodeExpressionNode;
+import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isRuleConditionNode;
+import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isRuleNodeMappingSource;
+import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isRuleNodeMappingTarget;
+import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isSchemaSourceTypes;
+import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isSchemaTargetTypes;
+import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isSlimRuleInvocationSupportPattern;
+import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isSlimRuleNodeNode;
+import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isSlimRuleNodeType;
+import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isSlimRuleRefinementAliasedSuperRule;
+import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isSlimRuleRefinements;
+import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isTGGRuleConditionName;
+import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isTGGRuleRefinementAliasedSuperRule;
+import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isTGGRuleRefinements;
+import static org.emoflon.ibex.tgg.tggl.util.TGGLWorkspaceUtil.getAllFilesInScope;
+import static org.emoflon.ibex.tgg.tggl.util.TGGLWorkspaceUtil.getAllResolvedFilesInScope;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.xtext.resource.IContainer;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import org.emoflon.ibex.common.slimgt.scoping.SlimGTAliasedTypeScope;
@@ -35,7 +56,6 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMapping;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleSimpleEdge;
-import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtil;
 import org.emoflon.ibex.tgg.tggl.scoping.scopes.TGGLAliasedPatternScope;
 import org.emoflon.ibex.tgg.tggl.scoping.scopes.TGGLAliasedRuleScope;
 import org.emoflon.ibex.tgg.tggl.scoping.scopes.TGGLFQAttributeConditionScope;
@@ -57,9 +77,9 @@ import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementCorrespondenceNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementPlain;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRule;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRuleRefinementNode;
-import org.emoflon.ibex.tgg.tggl.util.TGGLWorkspaceUtil;
+import org.emoflon.ibex.tgg.tggl.util.InjectionContainer;
 
-import static org.emoflon.ibex.common.slimgt.util.SlimGTCollectionUtil.*;
+import com.google.inject.Inject;
 
 /**
  * This class contains custom scoping description.
@@ -74,6 +94,12 @@ enum DomainType {
 
 public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 
+	@Inject
+  	public ResourceDescriptionsProvider resourceDescriptionsProvider;
+ 
+    @Inject
+ 	public IContainer.Manager containerManager;
+	
 	@Override
 	public IScope getScopeInternal(EObject context, EReference reference) throws Exception {
 
@@ -769,6 +795,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 			return editorFile.getSchema();
 
 		for (var otherFile : getAllFilesInScope(editorFile)) {
+//		for (var otherFile : getAllResolvedFilesInScope(new org.emoflon.ibex.tgg.tggl.util.InjectionContainer(resourceDescriptionsProvider, containerManager), editorFile)) {
 			if (otherFile.getSchema() != null)
 				return otherFile.getSchema();
 		}

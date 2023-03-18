@@ -9,7 +9,7 @@ EditorFile:
 ;
 
 Import:
-	'import' name = STRING (packageAliases+=PackageReferenceAlias)*
+	'import' name = STRING (packageAliases+=PackageReference)*
 ;
 
 PackageReferencePlain returns PackageReference : {PackageReferencePlain}
