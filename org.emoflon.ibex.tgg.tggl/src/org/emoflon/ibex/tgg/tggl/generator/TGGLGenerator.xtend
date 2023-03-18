@@ -10,6 +10,7 @@ import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
 import org.eclipse.xtext.resource.IContainer
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
+import org.emoflon.ibex.common.slimgt.build.SlimGTBuilderExtension
 import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtil
 import org.emoflon.ibex.tgg.tggl.util.TGGLModelFlattener
 import org.moflon.core.utilities.ExtensionsUtil
@@ -32,15 +33,16 @@ class TGGLGenerator extends AbstractGenerator {
 		val newFile = new TGGLModelFlattener().flatten(resourceDescriptionsProvider, containerManager, input);
 		
 		// trick to avoid xtext triggering endless loops
-		if(oldFsa !== null && oldFsa.hashCode == fsa.hashCode) 
-			return;
+//		if(oldFsa !== null && oldFsa.hashCode == fsa.hashCode) 
+//			return;
 		
 		this.oldFsa = fsa
 		
 		val iProject = SlimGTWorkspaceUtil.getCurrentProject(input)
 
 		ExtensionsUtil
-			.collectExtensions(TGGBuilderExtension.BUILDER_EXTENSON_ID, "class", typeof(TGGBuilderExtension))
-			.forEach[builder | builder.run(iProject, newFile)];
+			.collectExtensions(SlimGTBuilderExtension.BUILDER_EXTENSON_ID, "builder", typeof(SlimGTBuilderExtension))
+			.filter[builder | builder.hasProperNature(iProject)]
+			.forEach[builder | builder.build(iProject, newFile)];
 	}
 }

@@ -91,16 +91,6 @@ public class TGGLModelFlattener {
 			var copy = EcoreUtil.copy(createdNode);
 			domainRule.getCreatedNodes().add(copy);
 		}
-		
-		for(var contextNode : getElements(domainRule, SlimRuleNodeContext.class)) {
-			contextNode.setRefinement(null);
-			contextNode.setRefining(false);
-		}
-		
-		for(var createdNode : getElements(domainRule, SlimRuleNodeCreation.class)) {
-			createdNode.setRefinement(null);
-			createdNode.setRefining(false);
-		}
 	}
 
 
@@ -178,6 +168,7 @@ public class TGGLModelFlattener {
 		repairEdges(pattern);
 		repairNodeExpressions(pattern);
 		repairInvocationMappings(pattern);
+		removeRefinements(pattern);
 	}
 
 
@@ -199,8 +190,8 @@ public class TGGLModelFlattener {
 			var superRule = refinement.getSuperRule();
 			
 			flatten(tggRule.getSourceRule(), superRule.getSourceRule(), refinedTargets);
-			flatten(tggRule.getCorrRule(), superRule.getCorrRule(), refinedTargets);
 			flatten(tggRule.getTargetRule(), superRule.getTargetRule(), refinedTargets);
+			flatten(tggRule.getCorrRule(), superRule.getCorrRule(), refinedTargets);
 		}
 		
 		// now we have some nodes which are not connected to elements of our current rule, so we fix them
@@ -208,6 +199,7 @@ public class TGGLModelFlattener {
 		repairCorrepondencesNodes(tggRule);
 		repairNodeExpressions(tggRule);
 		repairInvocationMappings(tggRule);
+		removeRefinements(tggRule);
 		
 		// clean up refinements because we no longer need them
 		tggRule.getRefinements().clear();
@@ -216,6 +208,18 @@ public class TGGLModelFlattener {
 	}
 
 
+	private void removeRefinements(EObject root) {
+		for(var contextNode : getElements(root, SlimRuleNodeContext.class)) {
+			contextNode.setRefinement(null);
+			contextNode.setRefining(false);
+		}
+		
+		for(var createdNode : getElements(root, SlimRuleNodeCreation.class)) {
+			createdNode.setRefinement(null);
+			createdNode.setRefining(false);
+		}
+	}
+	
 	private void createMissingDefaultElements(TGGRule tggRule) {
 		if(tggRule.getSourceRule() == null)
 			tggRule.setSourceRule(TGGLFactory.eINSTANCE.createTGGDomainRule());
@@ -236,8 +240,8 @@ public class TGGLModelFlattener {
 				var source = mapping.getSource();
 				var target = mapping.getTarget();
 
-				mapping.setSource(getSlimNode(root, source.getName()));
-				mapping.setSource(getSlimNode(supportPattern, target.getName()));
+				mapping.setSource(getSlimNode(root, (SlimRuleNode) source));
+				mapping.setSource(getSlimNode(supportPattern, (SlimRuleNode) target));
 			}
 		}
 	}
@@ -247,7 +251,7 @@ public class TGGLModelFlattener {
 		var nodeExpressions = getElements(root, NodeExpression.class);
 		for(var expr : nodeExpressions) {
 			var oldNode = expr.getNode();
-			expr.setNode(getSlimNode(root, oldNode.getName()));
+			expr.setNode(getSlimNode(root, (SlimRuleNode) oldNode));
 		}
 	}
 
@@ -256,10 +260,10 @@ public class TGGLModelFlattener {
 		var nodes = getElements(tggRule, TGGCorrespondenceNode.class);
 		for(var node : nodes) {
 			var source = node.getSource();
-			node.setSource(getSlimNode(tggRule, source.getName()));
+			node.setSource(getSlimNode(tggRule, source));
 			
 			var target = node.getTarget();
-			node.setTarget(getSlimNode(tggRule, target.getName()));
+			node.setTarget(getSlimNode(tggRule, target));
 		}
 	}
 
@@ -268,14 +272,31 @@ public class TGGLModelFlattener {
 		
 		for(var edge : edges) {
 			var oldTarget = edge.getTarget();
-			edge.setTarget(getSlimNode(root, oldTarget.getName()));
+			edge.setTarget(getSlimNode(root, (SlimRuleNode) oldTarget));
 		}
 	}
 	
-	private SlimRuleNode getSlimNode(EObject root, String name) {
+	private SlimRuleNode getSlimNode(EObject root, SlimRuleNode oldNode) {
 		var nodes = getElements(root, SlimRuleNode.class);
+		
+		// first we try to figure out if there is a refinement 
 		for(var node : nodes) {
-			if(node.getName().equals(name))
+			var container = node.eContainer();
+			if(container instanceof SlimRuleNodeContext context) {
+				if(context.getRefinement() != null && context.getRefinement().getNode().getName().equals(oldNode.getName())) {
+					return context.getRefinement().getNode();
+				}
+			}
+			if(container instanceof SlimRuleNodeCreation creation) {
+				if(creation.getRefinement() != null  && creation.getRefinement().getNode().getName().equals(oldNode.getName())) {
+					return creation.getRefinement().getNode();
+				}
+			}
+		}
+		
+		// if this was not the case, we can just take the name an
+		for(var node : nodes) {
+			if(node.getName().equals(oldNode.getName()))
 				return node;
 		}
 		

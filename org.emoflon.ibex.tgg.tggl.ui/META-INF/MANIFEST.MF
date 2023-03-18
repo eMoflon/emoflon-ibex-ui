@@ -20,7 +20,8 @@ Require-Bundle: org.emoflon.ibex.tgg.tggl,
  org.emoflon.ibex.common.slimgt;bundle-version="1.0.0"
 Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Export-Package: org.emoflon.ibex.tgg.tggl.ui.contentassist,
+Export-Package: org.emoflon.ibex.tgg.tggl.ui.builder,
+ org.emoflon.ibex.tgg.tggl.ui.contentassist,
  org.emoflon.ibex.tgg.tggl.ui.internal,
  org.emoflon.ibex.tgg.tggl.ui.quickfix
 Bundle-Activator: org.emoflon.ibex.tgg.tggl.ui.internal.TgglActivator
