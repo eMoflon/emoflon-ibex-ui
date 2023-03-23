@@ -3,17 +3,16 @@ package org.emoflon.ibex.tgg.integrate.internal.delta.strategies.revokeAddition;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.emoflon.ibex.tgg.compiler.patterns.PatternType;
 import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.OperationalDeltaCommons;
 import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.ResolutionStrategyOperationalDeltaEvaluator;
+import org.emoflon.ibex.tgg.patterns.PatternType;
 import org.emoflon.ibex.tgg.runtime.matches.ITGGMatch;
 import org.emoflon.ibex.tgg.runtime.strategies.integrate.conflicts.Conflict;
 import org.emoflon.ibex.tgg.runtime.strategies.integrate.conflicts.DeletePreserveConflict;
+import org.emoflon.ibex.tgg.tggmodel.IBeXTGGModel.BindingType;
+import org.emoflon.ibex.tgg.tggmodel.IBeXTGGModel.DomainType;
+import org.emoflon.ibex.tgg.tggmodel.IBeXTGGModel.TGGRule;
 import org.emoflon.ibex.tgg.util.TGGModelUtils;
-
-import language.BindingType;
-import language.DomainType;
-import language.TGGRule;
 
 public class RevokeAdditionOperationalDeltaEvaluator extends ResolutionStrategyOperationalDeltaEvaluator {
 
@@ -37,12 +36,12 @@ public class RevokeAdditionOperationalDeltaEvaluator extends ResolutionStrategyO
 		}
 
 		int count = 0;
-		if (domainTypes.contains(DomainType.SRC) && conflict.getDomainToBePreserved().equals(DomainType.SRC)) {
-			count += countElementsToBeDeleted(conflict, DomainType.SRC);
+		if (domainTypes.contains(DomainType.SOURCE) && conflict.getDomainToBePreserved().equals(DomainType.SOURCE)) {
+			count += countElementsToBeDeleted(conflict, DomainType.SOURCE);
 		}
 
-		if (domainTypes.contains(DomainType.TRG) && conflict.getDomainToBePreserved().equals(DomainType.TRG)) {
-			count += countElementsToBeDeleted(conflict, DomainType.TRG);
+		if (domainTypes.contains(DomainType.TARGET) && conflict.getDomainToBePreserved().equals(DomainType.TARGET)) {
+			count += countElementsToBeDeleted(conflict, DomainType.TARGET);
 		}
 
 		return count;
@@ -54,7 +53,7 @@ public class RevokeAdditionOperationalDeltaEvaluator extends ResolutionStrategyO
 
 		matches.add(conflict.getMatch());
 
-		Set<TGGRule> relevantRules = conflict.integrate().getTGG().getRules().stream()
+		Set<TGGRule> relevantRules = conflict.integrate().getTGG().getRuleSet().getRules().stream()
 				.filter(rule -> OperationalDeltaCommons.ruleIsInAnyMatch(rule, matches)).collect(Collectors.toSet());
 
 		return relevantRules.stream()

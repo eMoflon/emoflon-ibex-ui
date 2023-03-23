@@ -4,19 +4,18 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
-import org.emoflon.ibex.tgg.compiler.patterns.PatternType;
 import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.OperationalDeltaCommons;
 import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.ResolutionStrategyOperationalDeltaEvaluator;
+import org.emoflon.ibex.tgg.patterns.PatternType;
 import org.emoflon.ibex.tgg.runtime.matches.ITGGMatch;
 import org.emoflon.ibex.tgg.runtime.strategies.integrate.classification.ClassifiedMatch;
 import org.emoflon.ibex.tgg.runtime.strategies.integrate.classification.DeletionType;
 import org.emoflon.ibex.tgg.runtime.strategies.integrate.conflicts.Conflict;
 import org.emoflon.ibex.tgg.runtime.strategies.integrate.conflicts.DeletePreserveConflict;
+import org.emoflon.ibex.tgg.tggmodel.IBeXTGGModel.BindingType;
+import org.emoflon.ibex.tgg.tggmodel.IBeXTGGModel.DomainType;
+import org.emoflon.ibex.tgg.tggmodel.IBeXTGGModel.TGGRule;
 import org.emoflon.ibex.tgg.util.TGGModelUtils;
-
-import language.BindingType;
-import language.DomainType;
-import language.TGGRule;
 
 public class PreferTargetOperationalDeltaEvaluator extends ResolutionStrategyOperationalDeltaEvaluator {
 
@@ -36,7 +35,7 @@ public class PreferTargetOperationalDeltaEvaluator extends ResolutionStrategyOpe
 
 	private int evaluate(DeletePreserveConflict conflict) {
 		int count = 0;
-		if (domainTypes.contains(DomainType.SRC)) {
+		if (domainTypes.contains(DomainType.SOURCE)) {
 			if (modifications.contains(BindingType.CREATE)) {
 				count += countElementsToBeCreated(conflict);
 			}
@@ -66,9 +65,9 @@ public class PreferTargetOperationalDeltaEvaluator extends ResolutionStrategyOpe
 	}
 
 	private int countGreenElementsForCorrespondingRule(ITGGMatch match) {
-		EList<TGGRule> rules = conflict.integrate().getTGG().getRules();
+		EList<TGGRule> rules = conflict.integrate().getTGG().getRuleSet().getRules();
 		return rules.stream().filter(rule -> rule.getName().equals(match.getRuleName())).findFirst()
-				.map(rule -> TGGModelUtils.getNodesByOperatorAndDomain(rule, BindingType.CREATE, DomainType.SRC).size())
+				.map(rule -> TGGModelUtils.getNodesByOperatorAndDomain(rule, BindingType.CREATE, DomainType.SOURCE).size())
 				.orElse(0);
 	}
 

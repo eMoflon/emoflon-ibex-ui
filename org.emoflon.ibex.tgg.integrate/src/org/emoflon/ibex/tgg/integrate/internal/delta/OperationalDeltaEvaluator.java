@@ -8,9 +8,8 @@ import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.preferTarget.Pre
 import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.revokeAddition.RevokeAdditionOperationalDeltaEvaluator;
 import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.revokeDeletion.RevokeDeletionOperationalDeltaEvaluator;
 import org.emoflon.ibex.tgg.runtime.strategies.integrate.conflicts.Conflict;
-
-import language.BindingType;
-import language.DomainType;
+import org.emoflon.ibex.tgg.tggmodel.IBeXTGGModel.BindingType;
+import org.emoflon.ibex.tgg.tggmodel.IBeXTGGModel.DomainType;
 
 public class OperationalDeltaEvaluator {
 

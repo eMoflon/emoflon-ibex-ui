@@ -3,10 +3,9 @@ package org.emoflon.ibex.tgg.integrate.internal.delta.strategies;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.emoflon.ibex.tgg.compiler.patterns.PatternType;
+import org.emoflon.ibex.tgg.patterns.PatternType;
 import org.emoflon.ibex.tgg.runtime.matches.ITGGMatch;
-
-import language.TGGRule;
+import org.emoflon.ibex.tgg.tggmodel.IBeXTGGModel.TGGRule;
 
 public class OperationalDeltaCommons {
 
