@@ -33,8 +33,8 @@ class TGGLGenerator extends AbstractGenerator {
 		val newFile = new TGGLModelFlattener().flatten(resourceDescriptionsProvider, containerManager, input);
 		
 		// trick to avoid xtext triggering endless loops
-//		if(oldFsa !== null && oldFsa.hashCode == fsa.hashCode) 
-//			return;
+		if(oldFsa !== null && oldFsa.hashCode == fsa.hashCode) 
+			return;
 		
 		this.oldFsa = fsa
 		

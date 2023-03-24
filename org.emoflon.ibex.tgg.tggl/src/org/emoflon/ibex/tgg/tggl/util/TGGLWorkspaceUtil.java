@@ -41,7 +41,9 @@ public class TGGLWorkspaceUtil {
 		for (File tggFile : tggFiles) {
 			URI tggModelUri;
 			try {
-				String filePath = tggFile.getCanonicalPath().replaceFirst(projectPath, currentProject.getName());
+				String filePath = tggFile.getCanonicalPath().
+						replaceAll("\\\\", "/"). // windows hack
+						replaceFirst(projectPath, currentProject.getName());
 				tggModelUri = URI.createPlatformResourceURI(filePath, true);
 			} catch (IOException e) {
 				continue;
