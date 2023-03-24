@@ -748,7 +748,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 			var pkg = packageCandidates.iterator().next();
 			packageCandidates.remove(pkg);
 			for (var classifier : pkg.getEClassifiers()) {
-				if (classifier instanceof EClass eClass && !eClass.isAbstract())
+				if (classifier instanceof EClass eClass)
 					types.add(eClass);
 			}
 		}
