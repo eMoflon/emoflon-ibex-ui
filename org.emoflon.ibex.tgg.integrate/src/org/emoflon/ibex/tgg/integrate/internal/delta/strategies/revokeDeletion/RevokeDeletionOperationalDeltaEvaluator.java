@@ -34,11 +34,11 @@ public class RevokeDeletionOperationalDeltaEvaluator extends ResolutionStrategyO
 		int count = 0;
 		if (modifications.contains(BindingType.CREATE)) {
 			if (domainTypes.contains(DomainType.SOURCE)) {
-				count += countElementsToBeCreated(conflict, PatternType.TRG, DomainType.SOURCE);
+				count += countElementsToBeCreated(conflict, PatternType.TARGET, DomainType.SOURCE);
 			}
 			
 			if (domainTypes.contains(DomainType.TARGET)) {
-				count += countElementsToBeCreated(conflict, PatternType.SRC, DomainType.TARGET);
+				count += countElementsToBeCreated(conflict, PatternType.SOURCE, DomainType.TARGET);
 			}
 		}
 		

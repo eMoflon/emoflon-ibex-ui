@@ -35,7 +35,7 @@ class DeletePreserveMergeAndPreserveOperationalDeltaEvaluator {
 		int count = 0;
 		if (domainTypes.contains(DomainType.SOURCE)) {
 			if (modifications.contains(BindingType.CREATE)) {
-				count += countElementsToBeCreated(PatternType.TRG, DomainType.SOURCE);
+				count += countElementsToBeCreated(PatternType.TARGET, DomainType.SOURCE);
 			}
 
 			if (modifications.contains(BindingType.DELETE)) {
@@ -46,7 +46,7 @@ class DeletePreserveMergeAndPreserveOperationalDeltaEvaluator {
 
 		if (domainTypes.contains(DomainType.TARGET)) {
 			if (modifications.contains(BindingType.CREATE)) {
-				count += countElementsToBeCreated(PatternType.SRC, DomainType.TARGET);
+				count += countElementsToBeCreated(PatternType.SOURCE, DomainType.TARGET);
 			}
 
 			if (modifications.contains(BindingType.DELETE)) {

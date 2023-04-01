@@ -49,7 +49,7 @@ public class PreferSourceOperationalDeltaEvaluator extends ResolutionStrategyOpe
 	}
 
 	private int countElementsToBeCreated(DeletePreserveConflict conflict) {
-		return conflict.getScopeMatches().stream().filter(match -> OperationalDeltaCommons.isOfType(match, PatternType.SRC))
+		return conflict.getScopeMatches().stream().filter(match -> OperationalDeltaCommons.isOfType(match, PatternType.SOURCE))
 				.mapToInt(match -> countGreenElementsForCorrespondingRule(match)).sum();
 	}
 
