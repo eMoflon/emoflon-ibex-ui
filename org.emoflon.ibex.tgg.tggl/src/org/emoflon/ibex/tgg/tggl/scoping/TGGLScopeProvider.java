@@ -559,11 +559,20 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 			}
 
 			for (var newNode : newNodes) {
-				var refinement = getRuleRefinementNode(newNode);
-				if (refinement != null && refinement instanceof TGGRuleRefinementNode nodeRefinement)
-					refinedNodes.add(nodeRefinement.getNode());
-				if (refinement != null && refinement instanceof TGGLRuleRefinementCorrespondenceNode corrRefinement)
-					refinedNodes.add(corrRefinement.getNode());
+				var refinements = getRuleRefinementNode(newNode);
+				if (refinements != null) {
+					for(var refinement : refinements) {
+						if(refinement instanceof TGGRuleRefinementNode nodeRefinement)
+							refinedNodes.add(nodeRefinement.getNode());
+					}
+				}
+				if (refinements != null) {
+					for(var refinement : refinements) {
+						if(refinement instanceof  TGGLRuleRefinementCorrespondenceNode corrRefinement) {
+							refinedNodes.add(corrRefinement.getNode());
+						}
+					}
+				}
 
 				// only add nodes that have not been refined and thus have been overlapped with
 				// another node
@@ -594,9 +603,13 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 			var newNodes = getSlimRuleNodesFromContext(castCollection(currentPattern.getContextNodes(), SlimRuleNodeContext.class));
 
 			for (var newNode : newNodes) {
-				var refinement = getRuleRefinementNode(newNode);
-				if (refinement != null && refinement instanceof TGGRuleRefinementNode nodeRefinement)
-					refinedNodes.add(nodeRefinement.getNode());
+				var refinements = getRuleRefinementNode(newNode);
+				if (refinements != null) {
+					for(var refinement : refinements) {
+						if(refinement instanceof TGGRuleRefinementNode nodeRefinement)
+							refinedNodes.add(nodeRefinement.getNode());
+					}
+				}
 
 				// only add nodes that have not been refined and thus have been overlapped with
 				// another node
@@ -608,7 +621,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		return nodes;
 	}
 	
-	private EObject getRuleRefinementNode(EObject context) {
+	private Collection<? extends EObject> getRuleRefinementNode(EObject context) {
 		var contextNode = getContainer(context, org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNodeContext.class);
 		if (contextNode != null)
 			return contextNode.getRefinement();
@@ -712,32 +725,88 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 	private EObject getRefinedType(EObject context) {
 		var creationNode = getContainer(context, org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNodeCreation.class);
 		if (creationNode != null) {
+			// one of the refined types must be subtype of all others (or the same), else there is none
 			var refinement = creationNode.getRefinement();
-			if (refinement != null)
-				return refinement.getNode().getType();
+			if (refinement != null && !refinement.isEmpty()) {
+				var refinedType = refinement.get(0).getNode().getType();
+				for(int i=1; i < refinement.size(); i++) {
+					var otherRefinedType = refinement.get(i).getNode().getType();
+					// we take the subtype and if one is no subtype of the other, we cannot map them together and return null
+					if(refinedType.isSuperTypeOf(otherRefinedType))
+						refinedType = otherRefinedType;
+					else if(!otherRefinedType.isSuperTypeOf(refinedType)) 
+						return null;
+				}
+				return refinedType;
+			}
 		}
 
 		var contextNode = getContainer(context, org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNodeContext.class);
 		if (contextNode != null) {
 			var refinement = contextNode.getRefinement();
-			if (refinement != null)
-				return refinement.getNode().getType();
+			if (refinement != null && !refinement.isEmpty()) {
+				var refinedType = refinement.get(0).getNode().getType();
+				for(int i=1; i < refinement.size(); i++) {
+					var otherRefinedType = refinement.get(i).getNode().getType();
+					// we take the subtype and if one is no subtype of the other, we cannot map them together and return null
+					if(refinedType.isSuperTypeOf(otherRefinedType))
+						refinedType = otherRefinedType;
+					else if(!otherRefinedType.isSuperTypeOf(refinedType)) 
+						return null;
+				}
+				return refinedType;
+			}
 		}
 
 		var contextCorrespondenceNode = getContainer(context, TGGCorrespondenceNodeContext.class);
 		if (contextCorrespondenceNode != null) {
 			var refinement = contextCorrespondenceNode.getRefinement();
-			if (refinement != null)
-				return refinement.getNode().getType();
+			if (refinement != null && !refinement.isEmpty()) {
+				var refinedType = refinement.get(0).getNode().getType();
+				for(int i=1; i < refinement.size(); i++) {
+					var otherRefinedType = refinement.get(i).getNode().getType();
+					// we take the subtype and if one is no subtype of the other, we cannot map them together and return null
+					if(isSuperCorrespondenceType(refinedType, otherRefinedType))
+						refinedType = otherRefinedType;
+					else if(!isSuperCorrespondenceType(otherRefinedType, refinedType)) 
+						return null;
+				}
+				return refinedType;
+			}
 		}
 		
 		var creationCorrespondenceNode = getContainer(context, TGGCorrespondenceNodeCreation.class);
 		if (creationCorrespondenceNode != null) {
 			var refinement = creationCorrespondenceNode.getRefinement();
-			if (refinement != null)
-				return refinement.getNode().getType();
+			if (refinement != null && !refinement.isEmpty()) {
+				var refinedType = refinement.get(0).getNode().getType();
+				for(int i=1; i < refinement.size(); i++) {
+					var otherRefinedType = refinement.get(i).getNode().getType();
+					// we take the subtype and if one is no subtype of the other, we cannot map them together and return null
+					if(isSuperCorrespondenceType(refinedType, otherRefinedType))
+						refinedType = otherRefinedType;
+					else if(!isSuperCorrespondenceType(otherRefinedType, refinedType)) 
+						return null;
+				}
+				return refinedType;
+			}
 		}
 		return null;
+	}
+	
+	private static boolean isSuperCorrespondenceType(CorrespondenceType superType, CorrespondenceType otherType) {
+		if(otherType.equals(superType))
+			return true;
+		
+		var subTypeCandidate = otherType;
+		do {
+			subTypeCandidate = subTypeCandidate.getSuper();
+			if(otherType.equals(superType))
+				return true;
+		}
+		while(otherType.getSuper() != null);
+		
+		return false;
 	}
 
 	public static Collection<EClass> getTypes(Collection<EObject> packageReferences) {

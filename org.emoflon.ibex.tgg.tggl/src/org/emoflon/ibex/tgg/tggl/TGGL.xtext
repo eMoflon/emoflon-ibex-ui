@@ -123,13 +123,13 @@ TGGLRuleRefinementCorrespondenceNode:
 
 @Override
 SlimRuleNodeContext: {SlimRuleNodeContext}
-	(refining ?= '@refines=' refinement=TGGRuleRefinementNode)?
+	(refining ?= '@refines=' refinement+=TGGRuleRefinementNode (',' refinement+=TGGRuleRefinementNode)*)?
 	'[=]' (local?='local')? context = SlimRuleNode
 ;
 
 @Override
 SlimRuleNodeCreation: {SlimRuleNodeCreation}
-	(refining ?= '@refines+' refinement=TGGRuleRefinementNode)?
+	(refining ?= '@refines+' refinement+=TGGRuleRefinementNode (',' refinement+=TGGRuleRefinementNode)* )?
 	'[+]' creation = SlimRuleNode
 ;
 
@@ -193,12 +193,12 @@ TGGDomainRule: {TGGDomainRule}
 ;
 
 TGGCorrespondenceNodeContext:
-	(refining ?= '@refines=' refinement=TGGLRuleRefinementCorrespondenceNode)?
+	(refining ?= '@refines=' refinement+=TGGLRuleRefinementCorrespondenceNode (',' refinement+=TGGLRuleRefinementCorrespondenceNode)*)?
 	'[=]' context = TGGCorrespondenceNode
 ;
 
 TGGCorrespondenceNodeCreation:
-	(refining ?= '@refines+' refinement=TGGLRuleRefinementCorrespondenceNode)?
+	(refining ?= '@refines+' refinement+=TGGLRuleRefinementCorrespondenceNode (',' refinement+=TGGLRuleRefinementCorrespondenceNode)*)?
 	'[+]' creation = TGGCorrespondenceNode
 ;
 
