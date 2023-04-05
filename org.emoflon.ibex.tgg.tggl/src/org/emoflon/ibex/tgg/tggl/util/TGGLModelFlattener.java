@@ -3,7 +3,9 @@ package org.emoflon.ibex.tgg.tggl.util;
 import static org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil.getElements;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -27,15 +29,18 @@ import org.emoflon.ibex.tgg.tggl.tGGL.TGGCorrespondenceNodeContext;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGCorrespondenceNodeCreation;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGDomainRule;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLFactory;
+import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementCorrespondenceNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRule;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRuleRefinementNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.impl.TGGLFactoryImpl;
+
 
 public class TGGLModelFlattener {
 
 	private Logger logger = Logger.getLogger(TGGLModelFlattener.class);
 	private TGGLFactory tggFactory = TGGLFactoryImpl.eINSTANCE;
 	private Collection<EObject> flattenedObjects = new HashSet<>();
+	private Map<EObject, RefinementMapping> container2refinementMapping = new HashMap<>();
 	
 	/**
 	 * Resolves all refinements by creating copies and repairing all references
@@ -46,9 +51,8 @@ public class TGGLModelFlattener {
 	 * @return
 	 */
 	public EditorFile flatten(ResourceDescriptionsProvider resourceDescriptionsProvider, IContainer.Manager manager, Resource input) {
-		var workspaceUtil = new TGGLWorkspaceUtil();
 		var container = new InjectionContainer(resourceDescriptionsProvider, manager);
-		var files = workspaceUtil.getAllResolvedFilesInScope(container, input);
+		var files = TGGLWorkspaceUtil.getAllResolvedFilesInScope(container, input);
 		
 		var mainFile = collectInformation(files);
 		flatten(mainFile);
@@ -75,13 +79,22 @@ public class TGGLModelFlattener {
 
 
 	private void flatten(TGGDomainRule domainRule, TGGDomainRule superDomainRule, Collection<EObject> refinedTargets) {
+		var refinementMapping = container2refinementMapping.get(domainRule.eContainer());
+
+		// first flatten refined created nodes because these can contain assignments
+		for(var createdNode : domainRule.getCreatedNodes()) {
+			flattenNodeCreationRefinement(createdNode);
+		}
+		
 		// only create elements that were not refined already
 		for(var contextNode : superDomainRule.getContextNodes()) {
-			if(refinedTargets.contains(contextNode.getContext()))
+			if(refinedTargets.contains(contextNode.getContext())) {
 				continue;
+			}
 			
 			var copy = EcoreUtil.copy(contextNode);
 			domainRule.getContextNodes().add(copy);
+			refinementMapping.refined2refining().put(contextNode, copy);
 		}
 		
 		for(var createdNode : superDomainRule.getCreatedNodes()) {
@@ -90,17 +103,27 @@ public class TGGLModelFlattener {
 			
 			var copy = EcoreUtil.copy(createdNode);
 			domainRule.getCreatedNodes().add(copy);
+			refinementMapping.refined2refining().put(createdNode, copy);
+		}
+		
+		// copy conditions from super rule to this rule
+		for(var superCondition : superDomainRule.getConditions()) {
+			var copy = EcoreUtil.copy(superCondition);
+			domainRule.getConditions().add(copy);
 		}
 	}
 
 
 	private void flatten(TGGCorrRule domainRule, TGGCorrRule superDomainRule, Collection<EObject> refinedTargets) {
+		var refinementMapping = container2refinementMapping.get(domainRule.eContainer());
+
 		for(var contextNode : superDomainRule.getContextCorrespondenceNodes()) {
 			if(refinedTargets.contains(contextNode.getContext()))
 				continue;
 			
 			var copy = EcoreUtil.copy(contextNode);
 			domainRule.getContextCorrespondenceNodes().add(copy);
+			refinementMapping.refined2refining().put(contextNode, copy);
 		}
 		
 		for(var createdNode : superDomainRule.getCreatedCorrespondenceNodes()) {
@@ -109,21 +132,24 @@ public class TGGLModelFlattener {
 			
 			var copy = EcoreUtil.copy(createdNode);
 			domainRule.getCreatedCorrespondenceNodes().add(copy);
+			refinementMapping.refined2refining().put(createdNode, copy);
 		}
 		
 		for(var contextNode : getElements(domainRule, TGGCorrespondenceNodeContext.class)) {
-			contextNode.setRefinement(null);
+			contextNode.getRefinement().clear();
 			contextNode.setRefining(false);
 		}
 		
 		for(var createdNode : getElements(domainRule, TGGCorrespondenceNodeCreation.class)) {
-			createdNode.setRefinement(null);
+			createdNode.getRefinement().clear();;
 			createdNode.setRefining(false);
 		}
 	}
 
 
-	private void flatten(SlimRule pattern, SlimRule superPattern, Collection<EObject> refinedTargets) {		
+	private void flatten(SlimRule pattern, SlimRule superPattern, Collection<EObject> refinedTargets) {	
+		var refinementMapping = container2refinementMapping.get(pattern);
+		
 		// only create elements that were not refined already
 		for(var contextNode : superPattern.getContextNodes()) {
 			if(refinedTargets.contains(contextNode.getContext()))
@@ -131,6 +157,7 @@ public class TGGLModelFlattener {
 			
 			var copy = EcoreUtil.copy(contextNode);
 			pattern.getContextNodes().add(copy);
+			refinementMapping.refined2refining().put(contextNode, copy);
 		}
 		
 		for(var createdNode : superPattern.getCreatedNodes()) {
@@ -139,25 +166,39 @@ public class TGGLModelFlattener {
 			
 			var copy = EcoreUtil.copy(createdNode);
 			pattern.getCreatedNodes().add(copy);
+			refinementMapping.refined2refining().put(createdNode, copy);
 		}
 		
+		// remove refinements
 		for(var contextNode : getElements(pattern, SlimRuleNodeContext.class)) {
-			contextNode.setRefinement(null);
+			contextNode.getRefinement().clear();
 			contextNode.setRefining(false);
 		}
 		
 		for(var createdNode : getElements(pattern, SlimRuleNodeCreation.class)) {
-			createdNode.setRefinement(null);
+			createdNode.getRefinement().clear();
 			createdNode.setRefining(false);
 		}
 	}
-
 
 	private void flattenPattern(SlimRule pattern) {
 		if(flattenedObjects.contains(pattern))
 			return;
 		
-		Collection<EObject> refinedTargets = getElements(pattern, TGGRuleRefinementNode.class).stream().map(r -> r.getNode()).collect(Collectors.toSet());
+		var refinementMapping = new RefinementMapping(new HashMap<>());
+		container2refinementMapping.put(pattern, refinementMapping);
+		
+		// register refinements to ease flattening and repairs 
+		Collection<EObject> refinedTargets = new HashSet<>();
+		for(var refinement : getElements(pattern, TGGRuleRefinementNode.class)) {
+			// get the node that refines this element by getting the container which has to contain exactly one
+			var refinementContainer = refinement.eContainer();
+			var node = getElements(refinementContainer, SlimRuleNode.class).iterator().next();
+			refinedTargets.add(refinement.getNode());
+			refinementMapping.refined2refining().put(refinement.getNode(), node);
+		}
+
+		// copy information from refined pattern
 		for(var refinement : pattern.getRefinements()) {
 			var superPattern = refinement.getSuperRule();
 			
@@ -175,16 +216,29 @@ public class TGGLModelFlattener {
 	private void flattenTGGRule(TGGRule tggRule) {
 		if(flattenedObjects.contains(tggRule))
 			return;
-
+		
+		var refinementMapping = new RefinementMapping(new HashMap<>());
+		container2refinementMapping.put(tggRule, refinementMapping);
+		
 		createMissingDefaultElements(tggRule);
 		
+		// register refinements to ease flattening and repairs 
 		Collection<EObject> refinedTargets = new HashSet<>();
-		// collect source and target nodes
-		refinedTargets.addAll(getElements(tggRule, TGGRuleRefinementNode.class).stream().map(r -> r.getNode()).toList());
+		for(var refinement : getElements(tggRule, TGGRuleRefinementNode.class)) {
+			// get the node that refines this element by getting the container which has to contain exactly one
+			var refinementContainer = refinement.eContainer();
+			var node = getElements(refinementContainer, SlimRuleNode.class).iterator().next();
+			refinedTargets.add(refinement.getNode());
+			refinementMapping.refined2refining().put(refinement.getNode(), node);
+		}
 		
-		// collect correspondence nodes
-		refinedTargets.addAll(tggRule.getCorrRule().getContextCorrespondenceNodes().stream().filter(n -> n.getRefinement() != null).map(n -> n.getRefinement().getNode()).toList());
-		refinedTargets.addAll(tggRule.getCorrRule().getCreatedCorrespondenceNodes().stream().filter(n -> n.getRefinement() != null).map(n -> n.getRefinement().getNode()).toList());
+		for(var refinement : getElements(tggRule, TGGLRuleRefinementCorrespondenceNode.class)) {
+			// get the node that refines this element by getting the container which has to contain exactly one
+			var refinementContainer = refinement.eContainer();
+			var node = getElements(refinementContainer, TGGCorrespondenceNode.class).iterator().next();
+			refinedTargets.add(refinement.getNode());
+			refinementMapping.refined2refining().put(refinement.getNode(), node);
+		}
 		
 		for(var refinement : tggRule.getRefinements()) {
 			var superRule = refinement.getSuperRule();
@@ -210,12 +264,12 @@ public class TGGLModelFlattener {
 
 	private void removeRefinements(EObject root) {
 		for(var contextNode : getElements(root, SlimRuleNodeContext.class)) {
-			contextNode.setRefinement(null);
+			contextNode.getRefinement().clear();;
 			contextNode.setRefining(false);
 		}
 		
 		for(var createdNode : getElements(root, SlimRuleNodeCreation.class)) {
-			createdNode.setRefinement(null);
+			createdNode.getRefinement().clear();
 			createdNode.setRefining(false);
 		}
 	}
@@ -229,6 +283,16 @@ public class TGGLModelFlattener {
 			tggRule.setTargetRule(TGGLFactory.eINSTANCE.createTGGDomainRule());
 	}
 
+	private void flattenNodeCreationRefinement(SlimRuleNodeCreation node) {
+		Collection<SlimRuleNode> refinedTargets = getElements(node, TGGRuleRefinementNode.class).stream().map(r -> r.getNode()).collect(Collectors.toSet());
+		
+		// we have to copy assignments to the refining node
+		for(var refinedTarget : refinedTargets) {
+			var copy = EcoreUtil.copy(refinedTarget);
+			
+			node.getCreation().getAssignments().addAll(copy.getAssignments());
+		}
+	}
 
 	private void repairInvocationMappings(EObject root) {
 		var invocations = getElements(root, SlimRuleInvocation.class);
@@ -245,7 +309,6 @@ public class TGGLModelFlattener {
 			}
 		}
 	}
-
 
 	private void repairNodeExpressions(EObject root) {
 		var nodeExpressions = getElements(root, NodeExpression.class);
@@ -280,18 +343,9 @@ public class TGGLModelFlattener {
 		var nodes = getElements(root, SlimRuleNode.class);
 		
 		// first we try to figure out if there is a refinement 
-		for(var node : nodes) {
-			var container = node.eContainer();
-			if(container instanceof SlimRuleNodeContext context) {
-				if(context.getRefinement() != null && context.getRefinement().getNode().getName().equals(oldNode.getName())) {
-					return context.getRefinement().getNode();
-				}
-			}
-			if(container instanceof SlimRuleNodeCreation creation) {
-				if(creation.getRefinement() != null  && creation.getRefinement().getNode().getName().equals(oldNode.getName())) {
-					return creation.getRefinement().getNode();
-				}
-			}
+		var refinementMapping = container2refinementMapping.get(root);
+		if(refinementMapping.refined2refining().containsKey(oldNode)) {
+			return (SlimRuleNode) refinementMapping.refined2refining().get(oldNode);
 		}
 		
 		// if this was not the case, we can just take the name an
@@ -327,3 +381,7 @@ public class TGGLModelFlattener {
 	}
 	
 }
+
+record RefinementMapping(Map<EObject, EObject> refined2refining) {
+	
+};
