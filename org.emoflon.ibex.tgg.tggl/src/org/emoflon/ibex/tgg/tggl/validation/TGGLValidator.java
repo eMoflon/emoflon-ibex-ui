@@ -376,7 +376,11 @@ public class TGGLValidator extends AbstractTGGLValidator {
 		for (String duplNodeName : duplicates) {
 			List<EObject> duplRuleNodes = name2nodes.get(duplNodeName);
 			for (EObject duplRuleNode : duplRuleNodes) {
-				// das wird so nicht funktionieren. Ich muss mir für alle Kollisionen anschauen, ob IRGENDEIN Knoten diesen Knoten refined
+				
+				// each node in this set is in naming conflict with an equally named node in this rule
+				for(EObject conflictNodes : name2refinementNode.get(duplNodeName)) {
+					
+				}
 				
 				String refinementNodeName = extractRefinementNodeName(duplRuleNode.eContainer());
 				if (duplNodeName.equals(refinementNodeName))
@@ -397,6 +401,20 @@ public class TGGLValidator extends AbstractTGGLValidator {
 				error(String.format("A node with name '%s' does already exist in a refined rule.", duplNodeName), duplRuleNode, nameFeature,
 						IssueCodes.MISSING_NODE_REFINEMENT, issueData.toArray(new String[] {}));
 			}
+		}
+		
+		for(var superNodeName : name2refinementNode.keySet()) {			
+			var superNodes = name2refinementNode.get(superNodeName); 
+			
+			// if a node with this name is already included in this rule, we have handled it in the loop on top
+			if(!name2nodes.containsKey(superNodeName))
+				continue;
+				
+			// if there is is only one element, then there is no conflict
+			if(superNodes.size() == 1)
+				continue;
+			
+			// if there is more than one element, then we have to make ensure uniqueness
 		}
 	}
 	
