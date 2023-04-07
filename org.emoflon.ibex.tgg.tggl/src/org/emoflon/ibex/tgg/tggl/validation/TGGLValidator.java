@@ -145,8 +145,8 @@ public class TGGLValidator extends AbstractTGGLValidator {
 
 		for (int i = 0; i < node.getContextEdges().size(); i++) {
 			// FIXME wrong error highlighting
-			error(String.format("Node '%s' of binding type 'create' cannot be connected via an edge of binding type 'context'.", node.getName()),
-					node, SlimGTPackage.Literals.SLIM_RULE_NODE__CREATED_EDGES, i, IssueCodes.INCORRECT_BINDING_EDGE_CONTEXT);
+			error(String.format("Node '%s' of binding type 'create' cannot be connected via an edge of binding type 'context'.", node.getName()), node,
+					SlimGTPackage.Literals.SLIM_RULE_NODE__CREATED_EDGES, i, IssueCodes.INCORRECT_BINDING_EDGE_CONTEXT);
 		}
 	}
 
@@ -311,8 +311,7 @@ public class TGGLValidator extends AbstractTGGLValidator {
 				continue;
 
 			for (TGGLRuleRefinementAliased alias : entry.getValue()) {
-				error(String.format("Alias '%s' is already defined.", entry.getKey()), alias,
-						TGGLPackage.Literals.TGGL_RULE_REFINEMENT_ALIASED__NAME);
+				error(String.format("Alias '%s' is already defined.", entry.getKey()), alias, TGGLPackage.Literals.TGGL_RULE_REFINEMENT_ALIASED__NAME);
 			}
 		}
 	}
@@ -322,7 +321,7 @@ public class TGGLValidator extends AbstractTGGLValidator {
 			List<TGGLRuleRefinementAliased> aliases = name2aliasedRefinement.get(rule.getName());
 			for (TGGLRuleRefinementAliased alias : aliases) {
 				error(String.format("Alias '%s' must not be the same as its rule or other refined rules.", rule.getName()), alias,
-					TGGLPackage.Literals.TGGL_RULE_REFINEMENT_ALIASED__NAME);
+						TGGLPackage.Literals.TGGL_RULE_REFINEMENT_ALIASED__NAME);
 			}
 		}
 
@@ -345,7 +344,7 @@ public class TGGLValidator extends AbstractTGGLValidator {
 		fillNodeNameMap(rule, name2nodes);
 
 		// this checks for duplicates in the rule itself
-		for (Entry<String, List<EObject>> entry : name2nodes.entrySet()) { 
+		for (Entry<String, List<EObject>> entry : name2nodes.entrySet()) {
 			if (entry.getValue().size() <= 1)
 				continue;
 
@@ -358,106 +357,165 @@ public class TGGLValidator extends AbstractTGGLValidator {
 			}
 		}
 
-		Collection<SlimRuleNode> refinementNodes = new HashSet<>();
-		Map<String, Collection<SlimRuleNode>> name2refinementNode = new HashMap<>();
-		
+		Map<String, Collection<EObject>> name2refinementNode = new HashMap<>();
+
 		for (TGGLRuleRefinement refinement : rule.getRefinements()) {
 			TGGRule superRule = refinement.getSuperRule();
 			if (superRule == null)
 				continue;
-			refinementNodes.addAll(collectAllRefinementNodes(superRule));
-			for(var refinementNode : refinementNodes) {
-				name2refinementNode.computeIfAbsent(refinementNode.getName(), k -> new LinkedList<>()).add(refinementNode);
-			}
+			for (var finalRuleNode : collectAllFinalRuleNodes(superRule))
+				name2refinementNode.computeIfAbsent(finalRuleNode.getName(), k -> new LinkedList<>()).add(finalRuleNode);
+			for (var finalCorrRuleNode : collectAllFinalCorrRuleNodes(superRule))
+				name2refinementNode.computeIfAbsent(finalCorrRuleNode.getName(), k -> new LinkedList<>()).add(finalCorrRuleNode);
 		}
 
 		// this checks for naming collisions between this rule and any refining rule
 		SetView<String> duplicates = Sets.intersection(name2nodes.keySet(), name2refinementNode.keySet());
 		for (String duplNodeName : duplicates) {
 			List<EObject> duplRuleNodes = name2nodes.get(duplNodeName);
-			for (EObject duplRuleNode : duplRuleNodes) {
-				
-				// each node in this set is in naming conflict with an equally named node in this rule
-				for(EObject conflictNodes : name2refinementNode.get(duplNodeName)) {
-					
-				}
-				
-				String refinementNodeName = extractRefinementNodeName(duplRuleNode.eContainer());
-				if (duplNodeName.equals(refinementNodeName))
-					continue;
 
+			for (EObject duplRuleNode : duplRuleNodes) {
 				List<String> issueData = new LinkedList<>();
 				issueData.add(duplNodeName);
-				for (EObject refinedRuleNode : name2nodesRefined.get(duplNodeName)) {
-					TGGRule refinedRule = SlimGTModelUtil.getContainer(refinedRuleNode, TGGRule.class);
-					if (refinedRule == null)
+				for (EObject refinementNode : name2refinementNode.get(duplNodeName)) {
+					TGGRule refinementRule = SlimGTModelUtil.getContainer(refinementNode, TGGRule.class);
+					if (refinementRule == null)
 						continue;
-					issueData.add(refinedRule.getName());
+					issueData.add(refinementRule.getName());
 				}
 
 				EAttribute nameFeature = duplRuleNode instanceof TGGCorrespondenceNode ? //
 						TGGLPackage.Literals.TGG_CORRESPONDENCE_NODE__NAME : //
 						SlimGTPackage.Literals.SLIM_RULE_NODE__NAME;
-				error(String.format("A node with name '%s' does already exist in a refined rule.", duplNodeName), duplRuleNode, nameFeature,
-						IssueCodes.MISSING_NODE_REFINEMENT, issueData.toArray(new String[] {}));
+
+				Collection<EObject> refinements = extractRefinements(duplRuleNode);
+
+				// each node in this set is in naming conflict with an equally named node in this rule
+				for (EObject conflictNode : name2refinementNode.get(duplNodeName)) {
+					// skip if there is a refinement relation
+					if (refinements.contains(conflictNode))
+						continue;
+
+					error(String.format("A node with name '%s' does already exist in a refined rule.", duplNodeName), duplRuleNode, nameFeature,
+							IssueCodes.MISSING_NODE_REFINEMENT, issueData.toArray(new String[] {}));
+				}
 			}
 		}
-		
-		for(var superNodeName : name2refinementNode.keySet()) {			
-			var superNodes = name2refinementNode.get(superNodeName); 
-			
+
+		for (var superNodeName : name2refinementNode.keySet()) {
+			var superNodes = name2refinementNode.get(superNodeName);
+
 			// if a node with this name is already included in this rule, we have handled it in the loop on top
-			if(!name2nodes.containsKey(superNodeName))
+			if (name2nodes.containsKey(superNodeName))
 				continue;
-				
-			// if there is is only one element, then there is no conflict
-			if(superNodes.size() == 1)
+
+			// if there is only one element, then there is no conflict
+			if (superNodes.size() == 1)
 				continue;
-			
-			// if there is more than one element, then we have to make ensure uniqueness
+
+			// if there is more than one element, then we have to ensure uniqueness
+			error(String.format(
+					"Multiple refinements of this rule contain nodes with the identical name '%s'. To ensure uniqueness, refine at least one of these nodes and assign a different name.",
+					superNodeName), rule, TGGLPackage.Literals.TGG_RULE__NAME);
 		}
 	}
-	
-	private Collection<SlimRuleNode> collectAllRefinementNodes(TGGRule rule) {
-		return collectAllRefinementNodes(rule, new HashSet<>());
+
+	private Collection<EObject> extractRefinements(EObject node) {
+		var container = node.eContainer();
+		var refinements = new HashSet<EObject>();
+		if (container instanceof SlimRuleNodeContext context)
+			refinements.addAll(context.getRefinement().stream().map(r -> r.getNode()).toList());
+		else if (container instanceof SlimRuleNodeCreation creation)
+			refinements.addAll(creation.getRefinement().stream().map(r -> r.getNode()).toList());
+		else if (container instanceof TGGCorrespondenceNodeContext corrContext)
+			refinements.addAll(corrContext.getRefinement().stream().map(r -> r.getNode()).toList());
+		else if (container instanceof TGGCorrespondenceNodeCreation corrCreation)
+			refinements.addAll(corrCreation.getRefinement().stream().map(r -> r.getNode()).toList());
+		return refinements;
 	}
-	
-	private Collection<SlimRuleNode> collectAllRefinementNodes(TGGRule rule, Collection<SlimRuleNode> refinedNodes) {
+
+	private Collection<SlimRuleNode> collectAllFinalRuleNodes(TGGRule rule) {
+		return collectAllFinalRuleNodes(rule, new HashSet<>());
+	}
+
+	private Collection<SlimRuleNode> collectAllFinalRuleNodes(TGGRule rule, Collection<SlimRuleNode> refinedNodes) {
 		var refinedNodesCopy = new HashSet<>(refinedNodes);
-		var refinementNodes = new HashSet<SlimRuleNode>();
-		
+		var finalRuleNodes = new HashSet<SlimRuleNode>();
+
 		var nodes = getElements(rule, SlimRuleNode.class);
-		for(var node : nodes) {
+		for (var node : nodes) {
 			var container = node.eContainer();
 			Collection<TGGRuleRefinementNode> refinements = null;
-			if(container instanceof SlimRuleNodeContext context) {  
+			if (container instanceof SlimRuleNodeContext context) {
 				refinements = context.getRefinement();
-			}
-			if(container instanceof SlimRuleNodeCreation creation) {
+			} else if (container instanceof SlimRuleNodeCreation creation) {
 				refinements = creation.getRefinement();
 			}
-			
-			// if this node has not been refined, it will be part of the final rule 
-			if(refinedNodes.contains(node)) {					
-				refinementNodes.add(node);
+
+			// if this node has not been refined, it will be part of the final rule
+			if (!refinedNodes.contains(node)) {
+				finalRuleNodes.add(node);
 			}
 
-			// we save all actual refinements as these are the nodes that we want to skip because they can no longer clash
-			for(var refinement : refinements) {
+			// we save all actual refinements as these are the nodes that we want to skip because they can no
+			// longer clash
+			for (var refinement : refinements) {
 				var refinedNode = refinement.getNode();
 				refinedNodesCopy.add(refinedNode);
 			}
 		}
-		
-		for(var refinementRule : rule.getRefinements()) {
+
+		for (var refinementRule : rule.getRefinements()) {
 			var superRule = refinementRule.getSuperRule();
 			if (superRule == null)
 				continue;
-			var newRefinementNodes = collectAllRefinementNodes(superRule, refinedNodesCopy);
-			refinementNodes.addAll(newRefinementNodes);
+			var newRefinementNodes = collectAllFinalRuleNodes(superRule, refinedNodesCopy);
+			finalRuleNodes.addAll(newRefinementNodes);
 		}
-		
-		return refinementNodes;
+
+		return finalRuleNodes;
+	}
+
+	private Collection<TGGCorrespondenceNode> collectAllFinalCorrRuleNodes(TGGRule rule) {
+		return collectAllFinalCorrRuleNodes(rule, new HashSet<>());
+	}
+
+	private Collection<TGGCorrespondenceNode> collectAllFinalCorrRuleNodes(TGGRule rule, Collection<TGGCorrespondenceNode> refinedNodes) {
+		var refinedNodesCopy = new HashSet<>(refinedNodes);
+		var finalRuleNodes = new HashSet<TGGCorrespondenceNode>();
+
+		var nodes = getElements(rule, TGGCorrespondenceNode.class);
+		for (var node : nodes) {
+			var container = node.eContainer();
+			Collection<TGGLRuleRefinementCorrespondenceNode> refinements = null;
+			if (container instanceof TGGCorrespondenceNodeContext context) {
+				refinements = context.getRefinement();
+			} else if (container instanceof TGGCorrespondenceNodeCreation creation) {
+				refinements = creation.getRefinement();
+			}
+
+			// if this node has not been refined, it will be part of the final rule
+			if (!refinedNodes.contains(node)) {
+				finalRuleNodes.add(node);
+			}
+
+			// we save all actual refinements as these are the nodes that we want to skip because they can no
+			// longer clash
+			for (var refinement : refinements) {
+				var refinedNode = refinement.getNode();
+				refinedNodesCopy.add(refinedNode);
+			}
+		}
+
+		for (var refinementRule : rule.getRefinements()) {
+			var superRule = refinementRule.getSuperRule();
+			if (superRule == null)
+				continue;
+			var newRefinementNodes = collectAllFinalCorrRuleNodes(superRule, refinedNodesCopy);
+			finalRuleNodes.addAll(newRefinementNodes);
+		}
+
+		return finalRuleNodes;
 	}
 
 	private void fillNodeNameMap(TGGRule rule, Map<String, List<EObject>> name2nodes) {
@@ -506,14 +564,14 @@ public class TGGLValidator extends AbstractTGGLValidator {
 
 	@Check
 	public void checkRefinedNodeBindingMatches(SlimRuleNodeContext contextNode) {
-		for(var refinement : contextNode.getRefinement()) {						
+		for (var refinement : contextNode.getRefinement()) {
 			SlimRuleNode refinedNode = refinement.getNode();
 			if (refinedNode == null)
 				continue;
-			
+
 			if (refinedNode.eContainer() instanceof SlimRuleNodeContext)
 				continue;
-			
+
 			TGGDomainRule domainRule = SlimGTModelUtil.getContainer(contextNode, TGGDomainRule.class);
 			error("The refining node must be of the same binding type as the refined node.", domainRule,
 					TGGLPackage.Literals.TGG_DOMAIN_RULE__CONTEXT_NODES, IssueCodes.INCORRECT_BINDING_NODE_REFINED_CONTEXT);
@@ -523,14 +581,14 @@ public class TGGLValidator extends AbstractTGGLValidator {
 
 	@Check
 	public void checkRefinedNodeBindingMatches(SlimRuleNodeCreation createNode) {
-		for(var refinement : createNode.getRefinement()) {						
+		for (var refinement : createNode.getRefinement()) {
 			SlimRuleNode refinedNode = refinement.getNode();
 			if (refinedNode == null)
 				continue;
-			
+
 			if (refinedNode.eContainer() instanceof SlimRuleNodeCreation)
 				continue;
-			
+
 			TGGDomainRule domainRule = SlimGTModelUtil.getContainer(createNode, TGGDomainRule.class);
 			error("The refining node must be of the same binding type as the refined node.", domainRule,
 					TGGLPackage.Literals.TGG_DOMAIN_RULE__CREATED_NODES, IssueCodes.INCORRECT_BINDING_NODE_REFINED_CREATE);
@@ -540,14 +598,14 @@ public class TGGLValidator extends AbstractTGGLValidator {
 
 	@Check
 	public void checkRefinedNodeBindingMatches(TGGCorrespondenceNodeContext contextNode) {
-		for(var refinement : contextNode.getRefinement()) {			
+		for (var refinement : contextNode.getRefinement()) {
 			TGGCorrespondenceNode refinedNode = refinement.getNode();
 			if (refinedNode == null)
 				continue;
-			
+
 			if (refinedNode.eContainer() instanceof TGGCorrespondenceNodeContext)
 				continue;
-			
+
 			TGGCorrRule corrRule = SlimGTModelUtil.getContainer(contextNode, TGGCorrRule.class);
 			error("The refining node must be of the same binding type as the refined node.", corrRule,
 					TGGLPackage.Literals.TGG_CORR_RULE__CONTEXT_CORRESPONDENCE_NODES, IssueCodes.INCORRECT_BINDING_NODE_REFINED_CONTEXT);
@@ -556,11 +614,11 @@ public class TGGLValidator extends AbstractTGGLValidator {
 
 	@Check
 	public void checkRefinedNodeBindingMatches(TGGCorrespondenceNodeCreation createNode) {
-		for(var refinement : createNode.getRefinement()) {
+		for (var refinement : createNode.getRefinement()) {
 			TGGCorrespondenceNode refinedNode = refinement.getNode();
 			if (refinedNode == null)
 				continue;
-			
+
 			if (refinedNode.eContainer() instanceof TGGCorrespondenceNodeCreation)
 				continue;
 
@@ -593,8 +651,8 @@ public class TGGLValidator extends AbstractTGGLValidator {
 		for (Entry<EReference, List<SlimRuleEdge>> entry : ref2singleEdge.entrySet()) {
 			if (entry.getValue().size() > 1) {
 				for (SlimRuleEdge edge : entry.getValue()) {
-					error(String.format("Edge '%s' has a max. cardinality of 1 and, hence, cannot be set more than once.", entry.getKey().getName()),
-							edge, SlimGTPackage.Literals.SLIM_RULE_EDGE__TYPE);
+					error(String.format("Edge '%s' has a max. cardinality of 1 and, hence, cannot be set more than once.", entry.getKey().getName()), edge,
+							SlimGTPackage.Literals.SLIM_RULE_EDGE__TYPE);
 				}
 			}
 		}
