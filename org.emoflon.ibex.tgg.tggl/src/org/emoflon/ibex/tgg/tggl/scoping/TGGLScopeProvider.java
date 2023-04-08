@@ -42,12 +42,12 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 import org.eclipse.xtext.resource.IContainer;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import org.emoflon.ibex.common.slimgt.scoping.SlimGTAliasedTypeScope;
+import org.emoflon.ibex.common.slimgt.slimGT.EnumExpression;
 import org.emoflon.ibex.common.slimgt.slimGT.GTLRuleRefinementAliased;
 import org.emoflon.ibex.common.slimgt.slimGT.GTLRuleRefinementPlain;
 import org.emoflon.ibex.common.slimgt.slimGT.NodeAttributeExpression;
@@ -57,6 +57,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleInvocation;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMapping;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleSimpleEdge;
+import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
 import org.emoflon.ibex.tgg.tggl.scoping.scopes.TGGLAliasedPatternScope;
 import org.emoflon.ibex.tgg.tggl.scoping.scopes.TGGLAliasedRuleScope;
 import org.emoflon.ibex.tgg.tggl.scoping.scopes.TGGLFQAttributeConditionScope;
@@ -78,7 +79,7 @@ import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementCorrespondenceNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementPlain;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRule;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRuleRefinementNode;
-import org.emoflon.ibex.tgg.tggl.util.InjectionContainer;
+import org.emoflon.ibex.tgg.tggl.util.TGGLWorkspaceUtil;
 
 import com.google.inject.Inject;
 
@@ -870,5 +871,14 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 				return file.getSchema();
 		}
 		return null;
+	}
+
+	@Override
+	protected IScope scopeForEnumExpressionLiteral(EnumExpression context, EReference reference) {
+		for (var editorFile : TGGLWorkspaceUtil.getAllFilesInScope(context)) {
+			if (!editorFile.getImports().isEmpty())
+				return Scopes.scopeFor(SlimGTModelUtil.getEnums(editorFile));
+		}
+		return super.scopeForEnumExpressionLiteral(context, reference);
 	}
 }
