@@ -213,7 +213,7 @@ public class TGGLModelFlattener {
 	}
 
 
-	private void flattenTGGRule(TGGRule tggRule) {
+	public void flattenTGGRule(TGGRule tggRule) {
 		if(flattenedObjects.contains(tggRule))
 			return;
 		
