@@ -82,11 +82,11 @@ SlimRuleEdge:
 ;
 
 SlimRuleSimpleEdge returns SlimRuleEdge: {SlimRuleSimpleEdge}
-	'-' type=[ecore::EReference] '->' target=[SlimRuleNode|ID]
+	'-' type=[ecore::EReference|ValidID] '->' target=[SlimRuleNode|ID]
 ;
 
 SlimRuleTransitiveEdge returns SlimRuleEdge: {SlimRuleTransitiveEdge}
-	'~' type=[ecore::EReference] '~>' target=[SlimRuleNode|ID]
+	'~' type=[ecore::EReference|ValidID] '~>' target=[SlimRuleNode|ID]
 ;
 
 SlimRuleAttributeAssignment:
@@ -319,3 +319,10 @@ terminal TRUE returns ecore::EBoolean:
 terminal FALSE returns ecore::EBoolean:
 	'false'
 ;
+
+ValidID:
+ID | Keywords;
+	
+Keywords:
+'import' | 'rule' | 'pattern' | 'source' | 'target' | 'using';
+

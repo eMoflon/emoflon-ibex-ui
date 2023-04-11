@@ -11,5 +11,6 @@ Require-Bundle: org.emoflon.ibex.common.slimgt,
  org.eclipse.xtext.xbase.ide,
  org.antlr.runtime;bundle-version="[3.2.0,3.2.1)"
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Export-Package: org.emoflon.ibex.common.slimgt.ide.contentassist.antlr.internal,
- org.emoflon.ibex.common.slimgt.ide.contentassist.antlr
+Export-Package: org.emoflon.ibex.common.slimgt.ide.contentassist.antlr,
+ org.emoflon.ibex.common.slimgt.ide.contentassist.antlr.internal,
+ org.emoflon.ibex.common.slimgt.ide.highlighting

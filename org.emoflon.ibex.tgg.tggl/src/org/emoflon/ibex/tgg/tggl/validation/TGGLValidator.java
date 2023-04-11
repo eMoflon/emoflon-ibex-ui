@@ -847,7 +847,7 @@ public class TGGLValidator extends AbstractTGGLValidator {
 				continue;
 			}
 
-			if (!dataType.equals(defParam.getType())) {
+			if (dataType != null && !dataType.equals(defParam.getType())) {
 				error(String.format("Argument %s of CSP '%s' does not match its parameter type.", i + 1, attrCond.getName().getName()), attrCond,
 						TGGLPackage.Literals.ATTRIBUTE_CONDITION__VALUES, i);
 			}

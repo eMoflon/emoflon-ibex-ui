@@ -4,7 +4,9 @@
 package org.emoflon.ibex.common.slimgt.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.xtext.ide.editor.syntaxcoloring.ISemanticHighlightingCalculator;
 import org.eclipse.xtext.ui.editor.contentassist.PrefixMatcher;
+import org.emoflon.ibex.common.slimgt.ide.highlighting.SlimGTSemanticHighlightingCalculator;
 import org.emoflon.ibex.common.slimgt.ui.contentassist.MyFQNPrefixMatcher;
 
 /**
@@ -18,8 +20,10 @@ public class SlimGTUiModule extends AbstractSlimGTUiModule {
 	
 	@Override
 	public Class<? extends PrefixMatcher> bindPrefixMatcher() {
-
-		// TODO Auto-generated method stub
 		return MyFQNPrefixMatcher.class;
+	}
+	
+	public Class<? extends ISemanticHighlightingCalculator> bindISemanticHighlightingCalculator () {
+		return SlimGTSemanticHighlightingCalculator.class;
 	}
 }

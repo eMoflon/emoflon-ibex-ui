@@ -18,7 +18,8 @@ Require-Bundle: org.emoflon.ibex.tgg.tggl,
  org.eclipse.xtext.builder,
  org.emoflon.ibex.common.slimgt.ui;bundle-version="1.0.0",
  org.emoflon.ibex.common.slimgt;bundle-version="1.0.0"
-Import-Package: org.apache.log4j
+Import-Package: org.apache.log4j,
+ org.emoflon.ibex.common.slimgt.ide.highlighting
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.emoflon.ibex.tgg.tggl.ui.builder,
  org.emoflon.ibex.tgg.tggl.ui.contentassist,
