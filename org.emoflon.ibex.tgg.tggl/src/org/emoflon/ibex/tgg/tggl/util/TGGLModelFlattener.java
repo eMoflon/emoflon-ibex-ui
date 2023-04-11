@@ -262,7 +262,10 @@ public class TGGLModelFlattener {
 			flatten(tggRule.getSourceRule(), superRule.getSourceRule(), refinedTargets);
 			flatten(tggRule.getTargetRule(), superRule.getTargetRule(), refinedTargets);
 			flatten(tggRule.getCorrRule(), superRule.getCorrRule(), refinedTargets);
+
+			tggRule.getAttrConditions().addAll(EcoreUtil.copyAll(superRule.getAttrConditions()));
 		}
+		
 		
 		// now we have some nodes which are not connected to elements of our current rule, so we fix them
 		repairEdges(tggRule);
