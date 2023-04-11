@@ -812,14 +812,16 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 	private static boolean isSuperCorrespondenceType(CorrespondenceType superType, CorrespondenceType otherType) {
 		if(otherType.equals(superType))
 			return true;
+		if(otherType.getSuper() == null)
+			return false;
 		
 		var subTypeCandidate = otherType;
 		do {
 			subTypeCandidate = subTypeCandidate.getSuper();
-			if(otherType.equals(superType))
+			if(subTypeCandidate.equals(superType))
 				return true;
 		}
-		while(otherType.getSuper() != null);
+		while(subTypeCandidate.getSuper() != null);
 		
 		return false;
 	}
