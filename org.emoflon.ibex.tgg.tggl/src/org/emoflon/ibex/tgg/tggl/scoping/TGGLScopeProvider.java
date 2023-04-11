@@ -686,7 +686,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		var schema = getSchemaInScope(context);
 		var editorFile = getContainer(schema, EditorFile.class);
 
-		var refinedType = getRefinedType(context);
+		var refinedType = getRefinedType(context, reference);
 		switch (domain) {
 			case SOURCE: {
 				var sourceTypes = getTypes(schema.getSourceTypes());
@@ -723,7 +723,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		return correspondenceTypes;
 	}
 
-	private EObject getRefinedType(EObject context) {
+	private EObject getRefinedType(EObject context, EReference reference) {
 		var creationNode = getContainer(context, org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNodeCreation.class);
 		if (creationNode != null) {
 			// one of the refined types must be subtype of all others (or the same), else there is none
@@ -791,6 +791,20 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 				}
 				return refinedType;
 			}
+		}
+		
+		var correspondenceType = getContainer(context, CorrespondenceType.class);
+		if(correspondenceType != null) {
+			var refinedType = correspondenceType.getSuper();
+			if(refinedType == null)
+				return null;
+			else {
+				if(reference.equals(TGGLPackage.eINSTANCE.getCorrespondenceType_Source())) 
+					return refinedType.getSource();
+				else
+					return refinedType.getTarget();
+			}
+			
 		}
 		return null;
 	}
