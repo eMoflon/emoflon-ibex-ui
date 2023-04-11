@@ -270,9 +270,15 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		EClass referencedType;
 		switch (domain) {
 		case SOURCE:
+			while(corrType.getSource() == null) {
+				corrType = corrType.getSuper();
+			}
 			referencedType = corrType.getSource();
 			break;
 		case TARGET:
+			while(corrType.getSource() == null) {
+				corrType = corrType.getSuper();
+			}
 			referencedType = corrType.getTarget();
 			break;
 		default:

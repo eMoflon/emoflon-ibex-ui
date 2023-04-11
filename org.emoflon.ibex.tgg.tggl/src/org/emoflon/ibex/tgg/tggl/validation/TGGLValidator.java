@@ -983,59 +983,59 @@ public class TGGLValidator extends AbstractTGGLValidator {
 		}
 	}
 
-	@Check
-	public void checkDisjointPatternNotAbstract(TGGRule rule) {
-		if (rule.isAbstract())
-			return;
-
-		Map<SlimRuleNode, Set<SlimRuleNode>> node2nodeSet = new HashMap<>();
-		fillNode2nodeSet(rule, node2nodeSet);
-
-		List<SlimRuleNode> nodes = new LinkedList<>(node2nodeSet.keySet());
-		for (SlimRuleNode srcNode : nodes) {
-			List<SlimRuleNode> trgNodes = new LinkedList<>();
-			trgNodes.addAll(srcNode.getContextEdges().stream() //
-					.map(n -> (SlimRuleNode) n.getContext().getTarget()) //
-					.toList());
-			trgNodes.addAll(srcNode.getCreatedEdges().stream() //
-					.map(n -> (SlimRuleNode) n.getCreation().getTarget()) //
-					.toList());
-
-			for (SlimRuleNode trgNode : trgNodes) {
-				Set<SlimRuleNode> srcNodeSet = node2nodeSet.get(srcNode);
-				Set<SlimRuleNode> trgNodeSet = node2nodeSet.get(trgNode);
-				if (!srcNodeSet.equals(trgNodeSet)) {
-					HashSet<SlimRuleNode> union = new HashSet<>(Sets.union(srcNodeSet, trgNodeSet));
-					node2nodeSet.put(srcNode, union);
-					node2nodeSet.put(trgNode, union);
-				}
-			}
-		}
-		if (rule.getCorrRule() != null) {
-			List<TGGCorrespondenceNode> corrNodes = new LinkedList<>();
-			corrNodes.addAll(rule.getCorrRule().getContextCorrespondenceNodes().stream() //
-					.map(cn -> cn.getContext()) //
-					.toList());
-			corrNodes.addAll(rule.getCorrRule().getCreatedCorrespondenceNodes().stream() //
-					.map(cn -> cn.getCreation()) //
-					.toList());
-
-			for (TGGCorrespondenceNode corrNode : corrNodes) {
-				Set<SlimRuleNode> srcNodeSet = node2nodeSet.get(corrNode.getSource());
-				Set<SlimRuleNode> trgNodeSet = node2nodeSet.get(corrNode.getTarget());
-				if (!srcNodeSet.equals(trgNodeSet)) {
-					HashSet<SlimRuleNode> union = new HashSet<>(Sets.union(srcNodeSet, trgNodeSet));
-					node2nodeSet.put(corrNode.getSource(), union);
-					node2nodeSet.put(corrNode.getTarget(), union);
-				}
-			}
-		}
-
-		Set<Set<SlimRuleNode>> disjointNodes = new HashSet<>(node2nodeSet.values());
-		if (disjointNodes.size() > 1) {
-			warning("Disjoint rules should be abstract.", TGGLPackage.Literals.TGG_RULE__NAME);
-		}
-	}
+//	@Check
+//	public void checkDisjointPatternNotAbstract(TGGRule rule) {
+//		if (rule.isAbstract())
+//			return;
+//
+//		Map<SlimRuleNode, Set<SlimRuleNode>> node2nodeSet = new HashMap<>();
+//		fillNode2nodeSet(rule, node2nodeSet);
+//
+//		List<SlimRuleNode> nodes = new LinkedList<>(node2nodeSet.keySet());
+//		for (SlimRuleNode srcNode : nodes) {
+//			List<SlimRuleNode> trgNodes = new LinkedList<>();
+//			trgNodes.addAll(srcNode.getContextEdges().stream() //
+//					.map(n -> (SlimRuleNode) n.getContext().getTarget()) //
+//					.toList());
+//			trgNodes.addAll(srcNode.getCreatedEdges().stream() //
+//					.map(n -> (SlimRuleNode) n.getCreation().getTarget()) //
+//					.toList());
+//
+//			for (SlimRuleNode trgNode : trgNodes) {
+//				Set<SlimRuleNode> srcNodeSet = node2nodeSet.get(srcNode);
+//				Set<SlimRuleNode> trgNodeSet = node2nodeSet.get(trgNode);
+//				if (!srcNodeSet.equals(trgNodeSet)) {
+//					HashSet<SlimRuleNode> union = new HashSet<>(Sets.union(srcNodeSet, trgNodeSet));
+//					node2nodeSet.put(srcNode, union);
+//					node2nodeSet.put(trgNode, union);
+//				}
+//			}
+//		}
+//		if (rule.getCorrRule() != null) {
+//			List<TGGCorrespondenceNode> corrNodes = new LinkedList<>();
+//			corrNodes.addAll(rule.getCorrRule().getContextCorrespondenceNodes().stream() //
+//					.map(cn -> cn.getContext()) //
+//					.toList());
+//			corrNodes.addAll(rule.getCorrRule().getCreatedCorrespondenceNodes().stream() //
+//					.map(cn -> cn.getCreation()) //
+//					.toList());
+//
+//			for (TGGCorrespondenceNode corrNode : corrNodes) {
+//				Set<SlimRuleNode> srcNodeSet = node2nodeSet.get(corrNode.getSource());
+//				Set<SlimRuleNode> trgNodeSet = node2nodeSet.get(corrNode.getTarget());
+//				if (!srcNodeSet.equals(trgNodeSet)) {
+//					HashSet<SlimRuleNode> union = new HashSet<>(Sets.union(srcNodeSet, trgNodeSet));
+//					node2nodeSet.put(corrNode.getSource(), union);
+//					node2nodeSet.put(corrNode.getTarget(), union);
+//				}
+//			}
+//		}
+//
+//		Set<Set<SlimRuleNode>> disjointNodes = new HashSet<>(node2nodeSet.values());
+//		if (disjointNodes.size() > 1) {
+//			warning("Disjoint rules should be abstract.", TGGLPackage.Literals.TGG_RULE__NAME);
+//		}
+//	}
 
 	private void fillNode2nodeSet(TGGRule rule, Map<SlimRuleNode, Set<SlimRuleNode>> node2nodeSet) {
 		if (rule.getSourceRule() != null)

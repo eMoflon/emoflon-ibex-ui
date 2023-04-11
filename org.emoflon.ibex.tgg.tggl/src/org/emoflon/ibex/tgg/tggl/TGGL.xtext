@@ -71,9 +71,9 @@ AttributeConditionDefinitionLibrary:
 
 CorrespondenceType:
 	name = ID ('extends' super=[CorrespondenceType])? ('{'
-		'src->' source = [ecore::EClass | QualifiedName]  
-		'trg->' target = [ecore::EClass | QualifiedName]
-	'}')
+		(hasSource?= 'src->' source = [ecore::EClass | QualifiedName])?  
+		(hasTarget?= 'trg->' target = [ecore::EClass | QualifiedName])?
+	'}')?
 ;
 
 AttributeCondition:
@@ -203,8 +203,8 @@ TGGCorrespondenceNodeCreation:
 ;
 
 TGGCorrespondenceNode:
-	name = ID ':' type = [CorrespondenceType | QualifiedName] '{'
+	name = ID ':' type = [CorrespondenceType | QualifiedName] ('{'
 		'src->' source = [SlimRuleNode|ID]
 		'trg->' target = [SlimRuleNode|ID]
-	'}' 
+	'}')?
 ;

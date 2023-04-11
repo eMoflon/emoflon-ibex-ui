@@ -136,11 +136,27 @@ public class TGGLModelFlattener {
 		}
 		
 		for(var contextNode : getElements(domainRule, TGGCorrespondenceNodeContext.class)) {
+			var corrNode = contextNode.getContext();
+			if(corrNode.getSource() == null) {
+				corrNode.setSource(contextNode.getRefinement().get(0).getNode().getSource());
+			}
+			if(corrNode.getTarget() == null) {
+				corrNode.setTarget(contextNode.getRefinement().get(0).getNode().getTarget());
+			}
+			
 			contextNode.getRefinement().clear();
 			contextNode.setRefining(false);
 		}
 		
 		for(var createdNode : getElements(domainRule, TGGCorrespondenceNodeCreation.class)) {
+			var corrNode = createdNode.getCreation();
+			if(corrNode.getSource() == null) {
+				corrNode.setSource(createdNode.getRefinement().get(0).getNode().getSource());
+			}
+			if(corrNode.getTarget() == null) {
+				corrNode.setTarget(createdNode.getRefinement().get(0).getNode().getTarget());
+			}
+			
 			createdNode.getRefinement().clear();;
 			createdNode.setRefining(false);
 		}
