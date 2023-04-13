@@ -33,8 +33,10 @@ import static org.emoflon.ibex.tgg.tggl.util.TGGLWorkspaceUtil.getAllFilesInScop
 import static org.emoflon.ibex.tgg.tggl.util.TGGLWorkspaceUtil.getAllResolvedFilesInScope;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -74,6 +76,7 @@ import org.emoflon.ibex.tgg.tggl.tGGL.TGGCorrespondenceNodeContext;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGCorrespondenceNodeCreation;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGDomainRule;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLPackage;
+import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinement;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementAliased;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementCorrespondenceNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementPlain;
@@ -305,17 +308,17 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 	private IScope getTargetNodesFromRefinedRule(EObject context, EReference reference) {
 		var tggRule = getContainer(context, TGGRule.class);
 
-		Collection<EObject> nodes = new HashSet<>();
+		Map<TGGRule, Collection<EObject>> rule2refinedNodes = new HashMap<>();
 		Collection<TGGLRuleRefinementAliased> ruleAliases = new HashSet<>();
 		for (var ruleRefinement : tggRule.getRefinements()) {
 			var refinedRule = ruleRefinement.getSuperRule();
-			nodes.addAll(getNodesFromDomain(refinedRule, getDomainType(context)));
+			rule2refinedNodes.put(refinedRule, getNodesFromDomain(refinedRule, getDomainType(context)));
 
 			if (ruleRefinement instanceof TGGLRuleRefinementAliased alias)
 				ruleAliases.add(alias);
 		}
 
-		return new TGGLAliasedRuleScope(ruleAliases, nodes);
+		return new TGGLAliasedRuleScope(ruleAliases, rule2refinedNodes);
 	}
 	
 	private IScope getTargetNodesFromRefinedPattern(EObject context, EReference reference) {

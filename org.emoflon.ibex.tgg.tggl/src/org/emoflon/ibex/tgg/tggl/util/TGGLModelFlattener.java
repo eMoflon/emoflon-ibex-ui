@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.IContainer;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
@@ -243,6 +244,9 @@ public class TGGLModelFlattener {
 		for(var refinement : getElements(tggRule, TGGRuleRefinementNode.class)) {
 			// get the node that refines this element by getting the container which has to contain exactly one
 			var refinementContainer = refinement.eContainer();
+			var nnode = NodeModelUtils.getNode(refinement);
+			var text = NodeModelUtils.getTokenText(nnode);
+			
 			var node = getElements(refinementContainer, SlimRuleNode.class).iterator().next();
 			refinedTargets.add(refinement.getNode());
 			refinementMapping.refined2refining().put(refinement.getNode(), node);
