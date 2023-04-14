@@ -30,6 +30,7 @@ import org.emoflon.ibex.tgg.tggl.tGGL.TGGCorrespondenceNodeContext;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGCorrespondenceNodeCreation;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGDomainRule;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLFactory;
+import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementAliased;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementCorrespondenceNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRule;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRuleRefinementNode;
@@ -42,6 +43,8 @@ public class TGGLModelFlattener {
 	private TGGLFactory tggFactory = TGGLFactoryImpl.eINSTANCE;
 	private Collection<EObject> flattenedObjects = new HashSet<>();
 	private Map<EObject, RefinementMapping> container2refinementMapping = new HashMap<>();
+	
+	private Map<EObject, EObject> copyOf = new HashMap<>();
 	
 	/**
 	 * Resolves all refinements by creating copies and repairing all references
@@ -89,21 +92,23 @@ public class TGGLModelFlattener {
 		
 		// only create elements that were not refined already
 		for(var contextNode : superDomainRule.getContextNodes()) {
-			if(refinedTargets.contains(contextNode.getContext())) {
+			if(isInRefinedTargets(refinedTargets, contextNode.getContext())) {
 				continue;
 			}
 			
 			var copy = EcoreUtil.copy(contextNode);
 			domainRule.getContextNodes().add(copy);
+			copyOf.put(copy.getContext(), contextNode.getContext());
 			refinementMapping.refined2refining().put(contextNode, copy);
 		}
 		
 		for(var createdNode : superDomainRule.getCreatedNodes()) {
-			if(refinedTargets.contains(createdNode.getCreation()))
+			if(isInRefinedTargets(refinedTargets, createdNode.getCreation()))
 				continue;
 			
 			var copy = EcoreUtil.copy(createdNode);
 			domainRule.getCreatedNodes().add(copy);
+			copyOf.put(copy.getCreation(), createdNode.getCreation());
 			refinementMapping.refined2refining().put(createdNode, copy);
 		}
 		
@@ -113,26 +118,27 @@ public class TGGLModelFlattener {
 			domainRule.getConditions().add(copy);
 		}
 	}
-
-
+	
 	private void flatten(TGGCorrRule domainRule, TGGCorrRule superDomainRule, Collection<EObject> refinedTargets) {
 		var refinementMapping = container2refinementMapping.get(domainRule.eContainer());
 
 		for(var contextNode : superDomainRule.getContextCorrespondenceNodes()) {
-			if(refinedTargets.contains(contextNode.getContext()))
+			if(isInRefinedTargets(refinedTargets, contextNode.getContext()))
 				continue;
 			
 			var copy = EcoreUtil.copy(contextNode);
 			domainRule.getContextCorrespondenceNodes().add(copy);
+			copyOf.put(copy.getContext(), contextNode.getContext());
 			refinementMapping.refined2refining().put(contextNode, copy);
 		}
 		
 		for(var createdNode : superDomainRule.getCreatedCorrespondenceNodes()) {
-			if(refinedTargets.contains(createdNode.getCreation()))
+			if(isInRefinedTargets(refinedTargets, createdNode.getCreation()))
 				continue;
 			
 			var copy = EcoreUtil.copy(createdNode);
 			domainRule.getCreatedCorrespondenceNodes().add(copy);
+			copyOf.put(copy.getCreation(), createdNode.getCreation());
 			refinementMapping.refined2refining().put(createdNode, copy);
 		}
 		
@@ -240,12 +246,15 @@ public class TGGLModelFlattener {
 		createMissingDefaultElements(tggRule);
 		
 		// register refinements to ease flattening and repairs 
-		Collection<EObject> refinedTargets = new HashSet<>();
+		Map<String, Collection<EObject>> ruleName2refinedTargets = new HashMap<>();
 		for(var refinement : getElements(tggRule, TGGRuleRefinementNode.class)) {
 			// get the node that refines this element by getting the container which has to contain exactly one
 			var refinementContainer = refinement.eContainer();
-			var nnode = NodeModelUtils.getNode(refinement);
-			var text = NodeModelUtils.getTokenText(nnode);
+			
+			// we have to figure out which rule's node is refined exactly
+			var refinementNode = NodeModelUtils.getNode(refinement);
+			var refinementTokenText = resolveRefinedRuleName(tggRule, NodeModelUtils.getTokenText(refinementNode));
+			var refinedTargets = ruleName2refinedTargets.computeIfAbsent(refinementTokenText, k -> new HashSet<EObject>());
 			
 			var node = getElements(refinementContainer, SlimRuleNode.class).iterator().next();
 			refinedTargets.add(refinement.getNode());
@@ -255,6 +264,12 @@ public class TGGLModelFlattener {
 		for(var refinement : getElements(tggRule, TGGLRuleRefinementCorrespondenceNode.class)) {
 			// get the node that refines this element by getting the container which has to contain exactly one
 			var refinementContainer = refinement.eContainer();
+			
+			// we have to figure out which rule's node is refined exactly
+			var refinementNode = NodeModelUtils.getNode(refinement);
+			var refinementTokenText = resolveRefinedRuleName(tggRule, NodeModelUtils.getTokenText(refinementNode));
+			var refinedTargets = ruleName2refinedTargets.computeIfAbsent(refinementTokenText, k -> new HashSet<EObject>());
+			
 			var node = getElements(refinementContainer, TGGCorrespondenceNode.class).iterator().next();
 			refinedTargets.add(refinement.getNode());
 			refinementMapping.refined2refining().put(refinement.getNode(), node);
@@ -263,9 +278,9 @@ public class TGGLModelFlattener {
 		for(var refinement : tggRule.getRefinements()) {
 			var superRule = refinement.getSuperRule();
 			
-			flatten(tggRule.getSourceRule(), superRule.getSourceRule(), refinedTargets);
-			flatten(tggRule.getTargetRule(), superRule.getTargetRule(), refinedTargets);
-			flatten(tggRule.getCorrRule(), superRule.getCorrRule(), refinedTargets);
+			flatten(tggRule.getSourceRule(), superRule.getSourceRule(), ruleName2refinedTargets.get(superRule.getName()));
+			flatten(tggRule.getTargetRule(), superRule.getTargetRule(), ruleName2refinedTargets.get(superRule.getName()));
+			flatten(tggRule.getCorrRule(), superRule.getCorrRule(), ruleName2refinedTargets.get(superRule.getName()));
 
 			tggRule.getAttrConditions().addAll(EcoreUtil.copyAll(superRule.getAttrConditions()));
 		}
@@ -284,6 +299,25 @@ public class TGGLModelFlattener {
 		flattenedObjects.add(tggRule);
 	}
 
+	/**
+	 * Resolve a refined rules name which can be given as an alias
+	 * @param rule
+	 * @param ruleNameOrAlias
+	 * @return the name of the refined rule
+	 */
+	private String resolveRefinedRuleName(TGGRule rule, String tokenText) {
+		var ruleNameOrAlias = tokenText.substring(0, tokenText.indexOf("."));
+		for(var refinement : rule.getRefinements()) {
+			if(refinement.getSuperRule().getName().equals(ruleNameOrAlias))
+				return ruleNameOrAlias;
+			if(refinement instanceof TGGLRuleRefinementAliased aliasedRefinement) {
+				if(aliasedRefinement.getName().equals(ruleNameOrAlias)) {
+					return aliasedRefinement.getSuperRule().getName();
+				}
+			}
+		}
+		throw new RuntimeException("Cannot resolve " + ruleNameOrAlias + " from " + rule.getName());
+	}
 
 	private void removeRefinements(EObject root) {
 		for(var contextNode : getElements(root, SlimRuleNodeContext.class)) {
@@ -403,7 +437,22 @@ public class TGGLModelFlattener {
 		return mainFile;
 	}
 	
+	/**
+	 * This method determines if an element is in the refined targets by traversing over its copy hierarchy
+	 * @param refinedTargets
+	 * @param node
+	 * @return
+	 */
+	private boolean isInRefinedTargets(Collection<? extends EObject> refinedTargets, EObject node) {
+		var checkedNode = node;
+		while(copyOf.containsKey(checkedNode)) {
+			checkedNode = copyOf.get(checkedNode);
+		}
+		
+		return refinedTargets.contains(checkedNode);
+	}
 }
+
 
 record RefinementMapping(Map<EObject, EObject> refined2refining) {
 	
