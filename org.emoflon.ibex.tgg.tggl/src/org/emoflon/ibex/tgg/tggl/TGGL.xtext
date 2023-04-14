@@ -78,8 +78,12 @@ CorrespondenceType:
 
 AttributeCondition:
 	name = [AttributeConditionDefinition | QualifiedName] 
-	'(' values += (LocalVariable | ExpressionOperand) 
-		(',' values += (LocalVariable | ExpressionOperand))* ')'
+	'(' values += (LocalVariable | ExpressionOperand | DerivableNodeAttributeExpression ) 
+		(',' values += (LocalVariable | ExpressionOperand | DerivableNodeAttributeExpression))* ')'
+;
+
+DerivableNodeAttributeExpression returns slimGT::ArithmeticExpression: {DerivableNodeAttributeExpression}
+	derived?=('derived') nodeExpression=NodeExpression '.' feature = [ecore::EAttribute]	
 ;
 
 @Override

@@ -16,6 +16,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeMappings;
 import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleSimpleEdge;
 import org.emoflon.ibex.tgg.tggl.tGGL.AttributeCondition;
 import org.emoflon.ibex.tgg.tggl.tGGL.CorrespondenceType;
+import org.emoflon.ibex.tgg.tggl.tGGL.DerivableNodeAttributeExpression;
 import org.emoflon.ibex.tgg.tggl.tGGL.NodeExpression;
 import org.emoflon.ibex.tgg.tggl.tGGL.Schema;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGCorrespondenceNode;
@@ -80,8 +81,10 @@ public class TGGLScopeUtil {
 
 	public static boolean isNodeAttributeExpressionFeature(EObject context, EReference reference) {
 		return (context instanceof NodeAttributeExpression || //
+				context instanceof DerivableNodeAttributeExpression ||
 				context instanceof NodeExpression) && //
-				reference == SlimGTPackage.Literals.NODE_ATTRIBUTE_EXPRESSION__FEATURE;
+				(reference == SlimGTPackage.Literals.NODE_ATTRIBUTE_EXPRESSION__FEATURE ||
+				reference == TGGLPackage.Literals.DERIVABLE_NODE_ATTRIBUTE_EXPRESSION__FEATURE);
 	}
 	
 	public static boolean isNodeExpressionNode(EObject context, EReference reference) {

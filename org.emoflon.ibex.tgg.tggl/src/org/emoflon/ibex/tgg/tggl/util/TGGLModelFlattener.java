@@ -278,9 +278,9 @@ public class TGGLModelFlattener {
 		for(var refinement : tggRule.getRefinements()) {
 			var superRule = refinement.getSuperRule();
 			
-			flatten(tggRule.getSourceRule(), superRule.getSourceRule(), ruleName2refinedTargets.get(superRule.getName()));
-			flatten(tggRule.getTargetRule(), superRule.getTargetRule(), ruleName2refinedTargets.get(superRule.getName()));
-			flatten(tggRule.getCorrRule(), superRule.getCorrRule(), ruleName2refinedTargets.get(superRule.getName()));
+			flatten(tggRule.getSourceRule(), superRule.getSourceRule(), ruleName2refinedTargets.computeIfAbsent(superRule.getName(), k -> new HashSet<EObject>()));
+			flatten(tggRule.getTargetRule(), superRule.getTargetRule(), ruleName2refinedTargets.computeIfAbsent(superRule.getName(), k -> new HashSet<EObject>()));
+			flatten(tggRule.getCorrRule(), superRule.getCorrRule(), ruleName2refinedTargets.computeIfAbsent(superRule.getName(), k -> new HashSet<EObject>()));
 
 			tggRule.getAttrConditions().addAll(EcoreUtil.copyAll(superRule.getAttrConditions()));
 		}

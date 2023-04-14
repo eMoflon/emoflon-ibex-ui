@@ -65,6 +65,7 @@ import org.emoflon.ibex.tgg.tggl.scoping.scopes.TGGLAliasedRuleScope;
 import org.emoflon.ibex.tgg.tggl.scoping.scopes.TGGLFQAttributeConditionScope;
 import org.emoflon.ibex.tgg.tggl.tGGL.AttributeConditionDefinition;
 import org.emoflon.ibex.tgg.tggl.tGGL.CorrespondenceType;
+import org.emoflon.ibex.tgg.tggl.tGGL.DerivableNodeAttributeExpression;
 import org.emoflon.ibex.tgg.tggl.tGGL.EditorFile;
 import org.emoflon.ibex.tgg.tggl.tGGL.Schema;
 import org.emoflon.ibex.tgg.tggl.tGGL.SlimRule;
@@ -216,6 +217,11 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		var nodeAttributeExpression = getContainer(context, NodeAttributeExpression.class);
 		if (nodeAttributeExpression != null) {
 			return Scopes.scopeFor(nodeAttributeExpression.getNodeExpression().getNode().getType().getEAllAttributes());
+		}
+		
+		var derivableAttributeExpression = getContainer(context, DerivableNodeAttributeExpression.class);
+		if (derivableAttributeExpression != null) {
+			return Scopes.scopeFor(derivableAttributeExpression.getNodeExpression().getNode().getType().getEAllAttributes());
 		}
 		return IScope.NULLSCOPE;
 	}
