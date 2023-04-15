@@ -81,6 +81,17 @@ public class TGGLModelFlattener {
 			
 	}
 
+	private void addEdgesFromRefinement(org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode node, org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode superNode) {
+		for(var edge : superNode.getContextEdges()) {
+			var edgeCopy = EcoreUtil.copy(edge);
+			node.getContextEdges().add(edgeCopy);
+		}
+		
+		for(var edge : superNode.getCreatedEdges()) {
+			var edgeCopy = EcoreUtil.copy(edge);
+			node.getCreatedEdges().add(edgeCopy);
+		}
+	}
 
 	private void flatten(TGGDomainRule domainRule, TGGDomainRule superDomainRule, Collection<EObject> refinedTargets) {
 		var refinementMapping = container2refinementMapping.get(domainRule.eContainer());
@@ -92,9 +103,12 @@ public class TGGLModelFlattener {
 		
 		// only create elements that were not refined already
 		for(var contextNode : superDomainRule.getContextNodes()) {
-			if(isInRefinedTargets(refinedTargets, contextNode.getContext())) {
+			var context = contextNode.getContext();
+			if(isInRefinedTargets(refinedTargets, context)) {
+				addEdgesFromRefinement((org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode) refinementMapping.refined2refining().get(context), context);
 				continue;
 			}
+			
 			
 			var copy = EcoreUtil.copy(contextNode);
 			domainRule.getContextNodes().add(copy);
@@ -103,8 +117,11 @@ public class TGGLModelFlattener {
 		}
 		
 		for(var createdNode : superDomainRule.getCreatedNodes()) {
-			if(isInRefinedTargets(refinedTargets, createdNode.getCreation()))
+			var created = createdNode.getCreation();
+			if(isInRefinedTargets(refinedTargets, created)) {
+				addEdgesFromRefinement((org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode) refinementMapping.refined2refining().get(created), created);
 				continue;
+			}
 			
 			var copy = EcoreUtil.copy(createdNode);
 			domainRule.getCreatedNodes().add(copy);
