@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
@@ -310,11 +311,20 @@ public class TGGLModelFlattener {
 		repairInvocationMappings(tggRule);
 		removeRefinements(tggRule);
 		
+		// remove duplicate elements
+		optimize(tggRule);
+		
 		// clean up refinements because we no longer need them
 		tggRule.getRefinements().clear();
 		
 		flattenedObjects.add(tggRule);
 	}
+
+	private void optimize(TGGRule tggRule) {
+		var nodes = getElements(tggRule, SlimRuleNode.class);
+		nodes.forEach(this::removeDuplicateOutgoingEdges);
+	}
+
 
 	/**
 	 * Resolve a refined rules name which can be given as an alias
@@ -477,8 +487,31 @@ public class TGGLModelFlattener {
 		
 		return checkedNode;
 	}
+	
+	private void removeDuplicateOutgoingEdges(SlimRuleNode node) {
+		var toBeRemoved = new HashSet<EObject>();
+		var allContextEdges = new HashSet<>();
+		for(var contextEdge : node.getContextEdges()) {
+			var edge = contextEdge.getContext();
+			if(!allContextEdges.add(new Edge(node, edge.getType(), edge.getTarget()))) {
+				toBeRemoved.add(contextEdge);
+			}
+		}
+		
+		var allCreatedEdges = new HashSet<>();
+		for(var createdEdge : node.getCreatedEdges()) {
+			var edge = createdEdge.getCreation();
+			if(!allCreatedEdges.add(new Edge(node, edge.getType(), edge.getTarget()))) {
+				toBeRemoved.add(createdEdge);
+			}
+		}
+		EcoreUtil.deleteAll(toBeRemoved, true);
+	}
 }
 
+record Edge(EObject source, EReference type, EObject target) {
+	
+}
 
 record RefinementMapping(Map<EObject, EObject> refined2refining) {
 	
