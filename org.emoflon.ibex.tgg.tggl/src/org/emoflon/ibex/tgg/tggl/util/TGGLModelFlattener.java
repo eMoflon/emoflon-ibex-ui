@@ -105,7 +105,7 @@ public class TGGLModelFlattener {
 		for(var contextNode : superDomainRule.getContextNodes()) {
 			var context = contextNode.getContext();
 			if(isInRefinedTargets(refinedTargets, context)) {
-				addEdgesFromRefinement((org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode) refinementMapping.refined2refining().get(context), context);
+				addEdgesFromRefinement((org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode) refinementMapping.refined2refining().get(getCopyOrigin(context)), context);
 				continue;
 			}
 			
@@ -113,20 +113,20 @@ public class TGGLModelFlattener {
 			var copy = EcoreUtil.copy(contextNode);
 			domainRule.getContextNodes().add(copy);
 			copyOf.put(copy.getContext(), contextNode.getContext());
-			refinementMapping.refined2refining().put(contextNode, copy);
+			refinementMapping.refined2refining().put(context, copy.getContext());
 		}
 		
 		for(var createdNode : superDomainRule.getCreatedNodes()) {
 			var created = createdNode.getCreation();
 			if(isInRefinedTargets(refinedTargets, created)) {
-				addEdgesFromRefinement((org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode) refinementMapping.refined2refining().get(created), created);
+				addEdgesFromRefinement((org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode) refinementMapping.refined2refining().get(getCopyOrigin(created)), created);
 				continue;
 			}
 			
 			var copy = EcoreUtil.copy(createdNode);
 			domainRule.getCreatedNodes().add(copy);
 			copyOf.put(copy.getCreation(), createdNode.getCreation());
-			refinementMapping.refined2refining().put(createdNode, copy);
+			refinementMapping.refined2refining().put(created, copy.getCreation());
 		}
 		
 		// copy conditions from super rule to this rule
@@ -467,6 +467,15 @@ public class TGGLModelFlattener {
 		}
 		
 		return refinedTargets.contains(checkedNode);
+	}
+	
+	private EObject getCopyOrigin(EObject node) {
+		var checkedNode = node;
+		while(copyOf.containsKey(checkedNode)) {
+			checkedNode = copyOf.get(checkedNode);
+		}
+		
+		return checkedNode;
 	}
 }
 
