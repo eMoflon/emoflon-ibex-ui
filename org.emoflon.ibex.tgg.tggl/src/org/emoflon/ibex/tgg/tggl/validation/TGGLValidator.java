@@ -27,6 +27,7 @@ import org.emoflon.ibex.common.slimgt.slimGT.BooleanLiteral;
 import org.emoflon.ibex.common.slimgt.slimGT.Constant;
 import org.emoflon.ibex.common.slimgt.slimGT.DoubleLiteral;
 import org.emoflon.ibex.common.slimgt.slimGT.EnumExpression;
+import org.emoflon.ibex.common.slimgt.slimGT.GTLRuleRefinement;
 import org.emoflon.ibex.common.slimgt.slimGT.Import;
 import org.emoflon.ibex.common.slimgt.slimGT.IntegerLiteral;
 import org.emoflon.ibex.common.slimgt.slimGT.NodeAttributeExpression;
@@ -145,8 +146,8 @@ public class TGGLValidator extends AbstractTGGLValidator {
 
 		for (int i = 0; i < node.getContextEdges().size(); i++) {
 			// FIXME wrong error highlighting
-			error(String.format("Node '%s' of binding type 'create' cannot be connected via an edge of binding type 'context'.", node.getName()), node,
-					SlimGTPackage.Literals.SLIM_RULE_NODE__CREATED_EDGES, i, IssueCodes.INCORRECT_BINDING_EDGE_CONTEXT);
+			error(String.format("Node '%s' of binding type 'create' cannot be connected via an edge of binding type 'context'.", node.getName()),
+					node, SlimGTPackage.Literals.SLIM_RULE_NODE__CREATED_EDGES, i, IssueCodes.INCORRECT_BINDING_EDGE_CONTEXT);
 		}
 	}
 
@@ -311,7 +312,8 @@ public class TGGLValidator extends AbstractTGGLValidator {
 				continue;
 
 			for (TGGLRuleRefinementAliased alias : entry.getValue()) {
-				error(String.format("Alias '%s' is already defined.", entry.getKey()), alias, TGGLPackage.Literals.TGGL_RULE_REFINEMENT_ALIASED__NAME);
+				error(String.format("Alias '%s' is already defined.", entry.getKey()), alias,
+						TGGLPackage.Literals.TGGL_RULE_REFINEMENT_ALIASED__NAME);
 			}
 		}
 	}
@@ -651,8 +653,8 @@ public class TGGLValidator extends AbstractTGGLValidator {
 		for (Entry<EReference, List<SlimRuleEdge>> entry : ref2singleEdge.entrySet()) {
 			if (entry.getValue().size() > 1) {
 				for (SlimRuleEdge edge : entry.getValue()) {
-					error(String.format("Edge '%s' has a max. cardinality of 1 and, hence, cannot be set more than once.", entry.getKey().getName()), edge,
-							SlimGTPackage.Literals.SLIM_RULE_EDGE__TYPE);
+					error(String.format("Edge '%s' has a max. cardinality of 1 and, hence, cannot be set more than once.", entry.getKey().getName()),
+							edge, SlimGTPackage.Literals.SLIM_RULE_EDGE__TYPE);
 				}
 			}
 		}
@@ -947,124 +949,156 @@ public class TGGLValidator extends AbstractTGGLValidator {
 		return false;
 	}
 
+	// A vertex represents all nodes which are mapped onto each other through refinements
+	class Vertex {
+		final Set<Vertex> targets;
+
+		Vertex() {
+			targets = new HashSet<>();
+		}
+	}
+
+	private void collectFlattenedPatternStructure(SlimRule pattern, Map<EObject, Vertex> allNodes2Vertices) {
+		// Updates the map, such that it maps all nodes and its refinements to its respective vertex
+		Collection<SlimRuleNode> nodes = getElements(pattern, SlimRuleNode.class);
+		for (SlimRuleNode node : nodes) {
+			Vertex vertex = allNodes2Vertices.computeIfAbsent(node, k -> new Vertex());
+
+			EObject container = node.eContainer();
+			Collection<TGGRuleRefinementNode> nodeRefinements = null;
+			if (container instanceof SlimRuleNodeContext context)
+				nodeRefinements = context.getRefinement();
+
+			for (TGGRuleRefinementNode nodeRefinement : nodeRefinements)
+				allNodes2Vertices.put(nodeRefinement.getNode(), vertex);
+		}
+
+		// Updates the edges of all vertices
+		for (SlimRuleNode srcNode : nodes) {
+			Vertex srcVertex = allNodes2Vertices.get(srcNode);
+			for (var contextEdge : srcNode.getContextEdges()) {
+				SlimRuleNode trgNode = (SlimRuleNode) contextEdge.getContext().getTarget();
+				Vertex trgVertex = allNodes2Vertices.get(trgNode);
+				srcVertex.targets.add(trgVertex);
+			}
+		}
+
+		for (GTLRuleRefinement ruleRefinement : pattern.getRefinements())
+			collectFlattenedPatternStructure((SlimRule) ruleRefinement.getSuperRule(), allNodes2Vertices);
+	}
+
+	private void collectFlattenedRuleStructure(TGGRule rule, Map<EObject, Vertex> allNodes2Vertices) {
+		// Updates the map, such that it maps all nodes and its refinements to its respective vertex
+		Collection<SlimRuleNode> nodes = getElements(rule, SlimRuleNode.class);
+		for (SlimRuleNode node : nodes) {
+			Vertex vertex = allNodes2Vertices.computeIfAbsent(node, k -> new Vertex());
+
+			EObject container = node.eContainer();
+			Collection<TGGRuleRefinementNode> nodeRefinements = null;
+			if (container instanceof SlimRuleNodeContext context)
+				nodeRefinements = context.getRefinement();
+			else if (container instanceof SlimRuleNodeCreation creation)
+				nodeRefinements = creation.getRefinement();
+
+			for (TGGRuleRefinementNode nodeRefinement : nodeRefinements)
+				allNodes2Vertices.put(nodeRefinement.getNode(), vertex);
+		}
+
+		Collection<TGGCorrespondenceNode> corrNodes = getElements(rule, TGGCorrespondenceNode.class);
+		for (TGGCorrespondenceNode corrNode : corrNodes) {
+			Vertex vertex = allNodes2Vertices.computeIfAbsent(corrNode, k -> new Vertex());
+
+			EObject container = corrNode.eContainer();
+			Collection<TGGLRuleRefinementCorrespondenceNode> nodeRefinements = null;
+			if (container instanceof TGGCorrespondenceNodeContext context)
+				nodeRefinements = context.getRefinement();
+			else if (container instanceof TGGCorrespondenceNodeCreation creation)
+				nodeRefinements = creation.getRefinement();
+
+			for (TGGLRuleRefinementCorrespondenceNode nodeRefinement : nodeRefinements)
+				allNodes2Vertices.put(nodeRefinement.getNode(), vertex);
+		}
+
+		// Updates the edges of all vertices
+		for (SlimRuleNode srcNode : nodes) {
+			Vertex srcVertex = allNodes2Vertices.get(srcNode);
+			for (var contextEdge : srcNode.getContextEdges()) {
+				SlimRuleNode trgNode = (SlimRuleNode) contextEdge.getContext().getTarget();
+				Vertex trgVertex = allNodes2Vertices.get(trgNode);
+				srcVertex.targets.add(trgVertex);
+			}
+			for (var createEdge : srcNode.getCreatedEdges()) {
+				SlimRuleNode trgNode = (SlimRuleNode) createEdge.getCreation().getTarget();
+				Vertex trgVertex = allNodes2Vertices.get(trgNode);
+				srcVertex.targets.add(trgVertex);
+			}
+		}
+		for (TGGCorrespondenceNode corrNode : corrNodes) {
+			Vertex corrVertex = allNodes2Vertices.get(corrNode);
+
+			SlimRuleNode srcNode = corrNode.getSource();
+			Vertex srcVertex = allNodes2Vertices.get(srcNode);
+			corrVertex.targets.add(srcVertex);
+
+			SlimRuleNode trgNode = corrNode.getTarget();
+			Vertex trgVertex = allNodes2Vertices.get(trgNode);
+			corrVertex.targets.add(trgVertex);
+		}
+
+		for (TGGLRuleRefinement ruleRefinement : rule.getRefinements())
+			collectFlattenedRuleStructure(ruleRefinement.getSuperRule(), allNodes2Vertices);
+	}
+
+	private Set<Set<Vertex>> groupVerticesIntoDisjointGraphs(HashMap<EObject, Vertex> allNodes2Vertices) {
+		HashSet<Vertex> allVertices = new HashSet<>(allNodes2Vertices.values());
+		Map<Vertex, Set<Vertex>> vertex2vertexSet = allVertices.stream() //
+				.collect(Collectors.toMap(k -> k, k -> {
+					Set<Vertex> vertices = new HashSet<>();
+					vertices.add(k);
+					return vertices;
+				}));
+
+		List<Vertex> vertices = new LinkedList<>(vertex2vertexSet.keySet());
+		for (var srcVertex : vertices) {
+			for (var trgVertex : srcVertex.targets) {
+				Set<Vertex> srcVertexSet = vertex2vertexSet.get(srcVertex);
+				Set<Vertex> trgVertexSet = vertex2vertexSet.get(trgVertex);
+				if (!srcVertexSet.equals(trgVertexSet)) {
+					Set<Vertex> union = new HashSet<>(Sets.union(srcVertexSet, trgVertexSet));
+					for (Vertex vertex : union)
+						vertex2vertexSet.put(vertex, union);
+				}
+			}
+		}
+		return new HashSet<>(vertex2vertexSet.values());
+	}
+
 	@Check
 	public void checkDisjointPatternNotAbstract(SlimRule pattern) {
 		if (pattern.isAbstract())
 			return;
 
-		Map<SlimRuleNode, Set<SlimRuleNode>> node2nodeSet = pattern.getContextNodes().stream() //
-				.map(cn -> (SlimRuleNode) cn.getContext()) //
-				.collect(Collectors.toMap(k -> k, k -> {
-					Set<SlimRuleNode> singleNodeSet = new HashSet<>();
-					singleNodeSet.add(k);
-					return singleNodeSet;
-				}));
+		var allNodes2Vertices = new HashMap<EObject, Vertex>();
+		collectFlattenedPatternStructure(pattern, allNodes2Vertices);
 
-		List<SlimRuleNode> nodes = new LinkedList<>(node2nodeSet.keySet());
-		for (SlimRuleNode srcNode : nodes) {
-			List<SlimRuleNode> trgNodes = srcNode.getContextEdges().stream() //
-					.map(n -> (SlimRuleNode) n.getContext().getTarget()) //
-					.toList();
-
-			for (SlimRuleNode trgNode : trgNodes) {
-				Set<SlimRuleNode> srcNodeSet = node2nodeSet.get(srcNode);
-				Set<SlimRuleNode> trgNodeSet = node2nodeSet.get(trgNode);
-				if (!srcNodeSet.equals(trgNodeSet)) {
-					HashSet<SlimRuleNode> union = new HashSet<>(Sets.union(srcNodeSet, trgNodeSet));
-					node2nodeSet.put(srcNode, union);
-					node2nodeSet.put(trgNode, union);
-				}
-			}
-		}
-
-		Set<Set<SlimRuleNode>> disjointNodes = new HashSet<>(node2nodeSet.values());
-		if (disjointNodes.size() > 1) {
-			warning("Disjoint patterns should be abstract.", TGGLPackage.Literals.SLIM_RULE__NAME);
+		Set<Set<Vertex>> disjointVertices = groupVerticesIntoDisjointGraphs(allNodes2Vertices);
+		if (disjointVertices.size() > 1) {
+			warning("This pattern is disjoint and could be computationally expensive.", TGGLPackage.Literals.SLIM_RULE__NAME);
 		}
 	}
 
-//	@Check
-//	public void checkDisjointPatternNotAbstract(TGGRule rule) {
-//		if (rule.isAbstract())
-//			return;
-//
-//		Map<SlimRuleNode, Set<SlimRuleNode>> node2nodeSet = new HashMap<>();
-//		fillNode2nodeSet(rule, node2nodeSet);
-//
-//		List<SlimRuleNode> nodes = new LinkedList<>(node2nodeSet.keySet());
-//		for (SlimRuleNode srcNode : nodes) {
-//			List<SlimRuleNode> trgNodes = new LinkedList<>();
-//			trgNodes.addAll(srcNode.getContextEdges().stream() //
-//					.map(n -> (SlimRuleNode) n.getContext().getTarget()) //
-//					.toList());
-//			trgNodes.addAll(srcNode.getCreatedEdges().stream() //
-//					.map(n -> (SlimRuleNode) n.getCreation().getTarget()) //
-//					.toList());
-//
-//			for (SlimRuleNode trgNode : trgNodes) {
-//				Set<SlimRuleNode> srcNodeSet = node2nodeSet.get(srcNode);
-//				Set<SlimRuleNode> trgNodeSet = node2nodeSet.get(trgNode);
-//				if (!srcNodeSet.equals(trgNodeSet)) {
-//					HashSet<SlimRuleNode> union = new HashSet<>(Sets.union(srcNodeSet, trgNodeSet));
-//					node2nodeSet.put(srcNode, union);
-//					node2nodeSet.put(trgNode, union);
-//				}
-//			}
-//		}
-//		if (rule.getCorrRule() != null) {
-//			List<TGGCorrespondenceNode> corrNodes = new LinkedList<>();
-//			corrNodes.addAll(rule.getCorrRule().getContextCorrespondenceNodes().stream() //
-//					.map(cn -> cn.getContext()) //
-//					.toList());
-//			corrNodes.addAll(rule.getCorrRule().getCreatedCorrespondenceNodes().stream() //
-//					.map(cn -> cn.getCreation()) //
-//					.toList());
-//
-//			for (TGGCorrespondenceNode corrNode : corrNodes) {
-//				Set<SlimRuleNode> srcNodeSet = node2nodeSet.get(corrNode.getSource());
-//				Set<SlimRuleNode> trgNodeSet = node2nodeSet.get(corrNode.getTarget());
-//				if (!srcNodeSet.equals(trgNodeSet)) {
-//					HashSet<SlimRuleNode> union = new HashSet<>(Sets.union(srcNodeSet, trgNodeSet));
-//					node2nodeSet.put(corrNode.getSource(), union);
-//					node2nodeSet.put(corrNode.getTarget(), union);
-//				}
-//			}
-//		}
-//
-//		Set<Set<SlimRuleNode>> disjointNodes = new HashSet<>(node2nodeSet.values());
-//		if (disjointNodes.size() > 1) {
-//			warning("Disjoint rules should be abstract.", TGGLPackage.Literals.TGG_RULE__NAME);
-//		}
-//	}
+	@Check
+	public void checkDisjointRuleNotAbstract(TGGRule rule) {
+		if (rule.isAbstract())
+			return;
 
-	private void fillNode2nodeSet(TGGRule rule, Map<SlimRuleNode, Set<SlimRuleNode>> node2nodeSet) {
-		if (rule.getSourceRule() != null)
-			fillNode2nodeSet(rule.getSourceRule(), node2nodeSet);
-		if (rule.getTargetRule() != null)
-			fillNode2nodeSet(rule.getTargetRule(), node2nodeSet);
+		var allNodes2Vertices = new HashMap<EObject, Vertex>();
+		collectFlattenedRuleStructure(rule, allNodes2Vertices);
 
-		for (TGGLRuleRefinement refinement : rule.getRefinements()) {
-			TGGRule superRule = refinement.getSuperRule();
-			if (superRule != null)
-				fillNode2nodeSet(superRule, node2nodeSet);
+		Set<Set<Vertex>> disjointVertices = groupVerticesIntoDisjointGraphs(allNodes2Vertices);
+		if (disjointVertices.size() > 1) {
+			warning("This rule is disjoint and could be computationally expensive.", TGGLPackage.Literals.TGG_RULE__NAME);
 		}
-	}
-
-	private void fillNode2nodeSet(TGGDomainRule rule, Map<SlimRuleNode, Set<SlimRuleNode>> node2nodeSet) {
-		node2nodeSet.putAll(rule.getContextNodes().stream() //
-				.map(cn -> (SlimRuleNode) cn.getContext()) //
-				.collect(Collectors.toMap(k -> k, k -> {
-					Set<SlimRuleNode> singleNodeSet = new HashSet<>();
-					singleNodeSet.add(k);
-					return singleNodeSet;
-				})));
-		node2nodeSet.putAll(rule.getCreatedNodes().stream() //
-				.map(cn -> (SlimRuleNode) cn.getCreation()) //
-				.collect(Collectors.toMap(k -> k, k -> {
-					Set<SlimRuleNode> singleNodeSet = new HashSet<>();
-					singleNodeSet.add(k);
-					return singleNodeSet;
-				})));
 	}
 
 }
