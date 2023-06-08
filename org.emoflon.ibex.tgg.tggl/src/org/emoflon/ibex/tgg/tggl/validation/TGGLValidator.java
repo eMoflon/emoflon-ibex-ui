@@ -633,18 +633,7 @@ public class TGGLValidator extends AbstractTGGLValidator {
 	@Check
 	public void checkOnlyOneSingleEdge(SlimRuleNode node) {
 		List<SlimRuleEdge> singleEdges = new LinkedList<>();
-
-		singleEdges.addAll(node.getContextEdges().stream() //
-				.filter(e -> e.getContext() != null) //
-				.map(e -> e.getContext()) //
-				.filter(e -> !e.getType().isMany()) //
-				.toList());
-
-		singleEdges.addAll(node.getCreatedEdges().stream() //
-				.filter(e -> e.getCreation() != null) //
-				.map(e -> e.getCreation()) //
-				.filter(e -> !e.getType().isMany()) //
-				.toList());
+		collectSingleEdges(node, singleEdges);
 
 		Map<EReference, List<SlimRuleEdge>> ref2singleEdge = new HashMap<>();
 		for (SlimRuleEdge singleEdge : singleEdges)
@@ -659,22 +648,35 @@ public class TGGLValidator extends AbstractTGGLValidator {
 			}
 		}
 	}
+	
+	private void collectSingleEdges(SlimRuleNode node, List<SlimRuleEdge> singleEdges) {
+		singleEdges.addAll(node.getContextEdges().stream() //
+				.filter(e -> e.getContext() != null) //
+				.map(e -> e.getContext()) //
+				.filter(e -> !e.getType().isMany()) //
+				.toList());
+
+		singleEdges.addAll(node.getCreatedEdges().stream() //
+				.filter(e -> e.getCreation() != null) //
+				.map(e -> e.getCreation()) //
+				.filter(e -> !e.getType().isMany()) //
+				.toList());
+		
+		EObject container = node.eContainer();
+		Collection<TGGRuleRefinementNode> nodeRefinements = null;
+		if (container instanceof SlimRuleNodeContext context)
+			nodeRefinements = context.getRefinement();
+		else if (container instanceof SlimRuleNodeCreation creation)
+			nodeRefinements = creation.getRefinement();
+		
+		for (TGGRuleRefinementNode refinementNode : nodeRefinements)
+			collectSingleEdges(refinementNode.getNode(), singleEdges);
+	}
 
 	@Check
 	public void checkOnlyOneEdgeOfTypeBetweenTwoNodes(SlimRuleNode node) {
 		List<SlimRuleEdge> edges = new LinkedList<>();
-
-		edges.addAll(node.getContextEdges().stream() //
-				.filter(e -> e.getContext() != null) //
-				.map(e -> e.getContext()) //
-				.filter(e -> e.getType().isMany()) //
-				.toList());
-
-		edges.addAll(node.getCreatedEdges().stream() //
-				.filter(e -> e.getCreation() != null) //
-				.map(e -> e.getCreation()) //
-				.filter(e -> e.getType().isMany()) //
-				.toList());
+		collectManyEdges(node, edges);
 
 		Map<EReference, List<SlimRuleEdge>> ref2edge = new HashMap<>();
 		for (SlimRuleEdge edge : edges)
@@ -697,6 +699,30 @@ public class TGGLValidator extends AbstractTGGLValidator {
 				}
 			}
 		}
+	}
+	
+	private void collectManyEdges(SlimRuleNode node, List<SlimRuleEdge> manyEdges) {
+		manyEdges.addAll(node.getContextEdges().stream() //
+				.filter(e -> e.getContext() != null) //
+				.map(e -> e.getContext()) //
+				.filter(e -> e.getType().isMany()) //
+				.toList());
+
+		manyEdges.addAll(node.getCreatedEdges().stream() //
+				.filter(e -> e.getCreation() != null) //
+				.map(e -> e.getCreation()) //
+				.filter(e -> e.getType().isMany()) //
+				.toList());
+		
+		EObject container = node.eContainer();
+		Collection<TGGRuleRefinementNode> nodeRefinements = null;
+		if (container instanceof SlimRuleNodeContext context)
+			nodeRefinements = context.getRefinement();
+		else if (container instanceof SlimRuleNodeCreation creation)
+			nodeRefinements = creation.getRefinement();
+		
+		for (TGGRuleRefinementNode refinementNode : nodeRefinements)
+			collectManyEdges(refinementNode.getNode(), manyEdges);
 	}
 
 	@Check
