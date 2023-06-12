@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -642,13 +643,16 @@ public class TGGLValidator extends AbstractTGGLValidator {
 		for (Entry<EReference, List<SlimRuleEdge>> entry : ref2singleEdge.entrySet()) {
 			if (entry.getValue().size() > 1) {
 				for (SlimRuleEdge edge : entry.getValue()) {
+					if (!Objects.equals(edge.eResource(), node.eResource()))
+						continue;
+
 					error(String.format("Edge '%s' has a max. cardinality of 1 and, hence, cannot be set more than once.", entry.getKey().getName()),
 							edge, SlimGTPackage.Literals.SLIM_RULE_EDGE__TYPE);
 				}
 			}
 		}
 	}
-	
+
 	private void collectSingleEdges(SlimRuleNode node, List<SlimRuleEdge> singleEdges) {
 		singleEdges.addAll(node.getContextEdges().stream() //
 				.filter(e -> e.getContext() != null) //
@@ -661,14 +665,14 @@ public class TGGLValidator extends AbstractTGGLValidator {
 				.map(e -> e.getCreation()) //
 				.filter(e -> !e.getType().isMany()) //
 				.toList());
-		
+
 		EObject container = node.eContainer();
 		Collection<TGGRuleRefinementNode> nodeRefinements = null;
 		if (container instanceof SlimRuleNodeContext context)
 			nodeRefinements = context.getRefinement();
 		else if (container instanceof SlimRuleNodeCreation creation)
 			nodeRefinements = creation.getRefinement();
-		
+
 		for (TGGRuleRefinementNode refinementNode : nodeRefinements)
 			collectSingleEdges(refinementNode.getNode(), singleEdges);
 	}
@@ -693,6 +697,9 @@ public class TGGLValidator extends AbstractTGGLValidator {
 			for (Entry<SlimRuleNode, List<SlimRuleEdge>> e : target2edge.entrySet()) {
 				if (e.getValue().size() > 1) {
 					for (SlimRuleEdge edge : e.getValue()) {
+						if (!Objects.equals(edge.eResource(), node.eResource()))
+							continue;
+
 						error(String.format("Edge '%s' is connected to the same node more than once.", edge.getType().getName()), edge,
 								SlimGTPackage.Literals.SLIM_RULE_EDGE__TYPE);
 					}
@@ -700,7 +707,7 @@ public class TGGLValidator extends AbstractTGGLValidator {
 			}
 		}
 	}
-	
+
 	private void collectManyEdges(SlimRuleNode node, List<SlimRuleEdge> manyEdges) {
 		manyEdges.addAll(node.getContextEdges().stream() //
 				.filter(e -> e.getContext() != null) //
@@ -713,14 +720,14 @@ public class TGGLValidator extends AbstractTGGLValidator {
 				.map(e -> e.getCreation()) //
 				.filter(e -> e.getType().isMany()) //
 				.toList());
-		
+
 		EObject container = node.eContainer();
 		Collection<TGGRuleRefinementNode> nodeRefinements = null;
 		if (container instanceof SlimRuleNodeContext context)
 			nodeRefinements = context.getRefinement();
 		else if (container instanceof SlimRuleNodeCreation creation)
 			nodeRefinements = creation.getRefinement();
-		
+
 		for (TGGRuleRefinementNode refinementNode : nodeRefinements)
 			collectManyEdges(refinementNode.getNode(), manyEdges);
 	}
