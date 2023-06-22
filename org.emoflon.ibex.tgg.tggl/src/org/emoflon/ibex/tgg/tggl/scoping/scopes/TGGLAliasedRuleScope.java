@@ -28,7 +28,7 @@ public class TGGLAliasedRuleScope extends SimpleScope {
 		super(calculcateScopes(ruleRefinementAliases, rule2refinedNodes));
 	}
 	
-	public static Iterable<IEObjectDescription> calculcateScopes(Collection<TGGLRuleRefinementAliased> ruleRefinementAliases, Map<TGGRule, Collection<EObject>> rule2refinedNodes) {
+	private static Iterable<IEObjectDescription> calculcateScopes(Collection<TGGLRuleRefinementAliased> ruleRefinementAliases, Map<TGGRule, Collection<EObject>> rule2refinedNodes) {
 		Map<String, String> ruleName2alias = new HashMap<>();
 
 		for(var alias : ruleRefinementAliases) {

@@ -451,7 +451,7 @@ public class TGGLModelFlattener {
 		
 		EcoreUtil.resolveAll(r);
 		
-		for(var file : files) {
+		for(var file : copies) {
 			if(file.getSchema() != null)
 				mainFile.setSchema(file.getSchema());
 			

@@ -4,6 +4,7 @@ import static org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil.getContainer;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -85,16 +86,35 @@ public class TGGLWorkspaceUtil {
 	}
 
 	public static Collection<EditorFile> getAllResolvedFilesInScope(InjectionContainer container, Resource input) {
+		var editorFiles = new LinkedList<EditorFile>();
+
 		var resourceSet = input.getResourceSet();
 
 		var index = container.resourceDescriptionsProvider().createResourceDescriptions();
 		var resDesc = index.getResourceDescription(input.getURI());
-		var visibleContainers = container.containerManager().getVisibleContainers(resDesc, index);
-
-		var editorFiles = new LinkedList<EditorFile>();
-
-		for (IContainer c : visibleContainers) {
-			for (IResourceDescription rd : c.getResourceDescriptions()) {
+		if(resDesc == null) {
+			var files = new LinkedList<File>();
+			var project = SlimGTWorkspaceUtil.getCurrentProject(input);
+			var projectFolder = new File(project.getLocation().toPortableString());
+			SlimGTWorkspaceUtil.gatherFilesWithEnding(files, projectFolder, ".tggl", true);
+			
+			for(var file : files) {
+				var platformUri = toPlatformURI(project, file.getAbsolutePath());
+				var resource = resourceSet.getResource(platformUri, true);
+				EObject tggModel = resource.getContents().get(0);
+				if (tggModel == null)
+					continue;
+				if (tggModel instanceof EditorFile otherEditorFile) {
+					editorFiles.add(otherEditorFile);
+				}
+			}
+		}
+		else {
+			
+			var cont = container.containerManager().getContainer(resDesc, index);
+			
+			var descriptions = cont.getResourceDescriptions();
+			for (IResourceDescription rd : descriptions) {
 				if (rd.getURI().toString().endsWith(".tggl")) {
 					var resource = resourceSet.getResource(rd.getURI(), true);
 					EObject tggModel = resource.getContents().get(0);
@@ -105,9 +125,17 @@ public class TGGLWorkspaceUtil {
 					}
 				}
 			}
+//		}
 		}
+		
 //		EcoreUtil.resolveAll(resourceSet);
 		return editorFiles;
 	}
 
+	public static URI toPlatformURI(IProject project, String path) {
+		String projectRelativePath = Path.of(project.getLocation().toPortableString()).relativize(Path.of(path))
+				.toFile().getPath();
+		URI uri = URI.createPlatformResourceURI(project.getName() + "/" + projectRelativePath, false);
+		return uri;
+	}
 }

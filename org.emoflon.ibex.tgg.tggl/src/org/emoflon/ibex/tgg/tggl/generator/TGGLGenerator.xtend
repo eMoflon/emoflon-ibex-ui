@@ -14,6 +14,7 @@ import org.emoflon.ibex.common.slimgt.build.SlimGTBuilderExtension
 import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtil
 import org.emoflon.ibex.tgg.tggl.util.TGGLModelFlattener
 import org.moflon.core.utilities.ExtensionsUtil
+import org.emoflon.ibex.tgg.tggl.tGGL.EditorFile
 
 /**
  * Generates code from your model files on save.
@@ -30,11 +31,20 @@ class TGGLGenerator extends AbstractGenerator {
  	IContainer.Manager containerManager;
 	
 	override void doGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
-		val newFile = new TGGLModelFlattener().flatten(resourceDescriptionsProvider, containerManager, input);
+		if(input.contents.empty)
+			return;
+			
+		var content = input.contents.get(0)
+		if(content instanceof EditorFile) {
+			if(content.schema == null)
+				return
+		}
 		
 		// trick to avoid xtext triggering endless loops
 		if(oldFsa !== null && oldFsa.hashCode == fsa.hashCode) 
 			return;
+		
+		val newFile = new TGGLModelFlattener().flatten(resourceDescriptionsProvider, containerManager, input);
 		
 		this.oldFsa = fsa
 		
