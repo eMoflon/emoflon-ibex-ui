@@ -36,6 +36,7 @@ import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementCorrespondenceNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRule;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRuleRefinementNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.impl.TGGLFactoryImpl;
+import org.moflon.core.utilities.eMoflonEMFUtil;
 
 
 public class TGGLModelFlattener {
@@ -46,6 +47,8 @@ public class TGGLModelFlattener {
 	private Map<EObject, RefinementMapping> container2refinementMapping = new HashMap<>();
 	
 	private Map<EObject, EObject> copyOf = new HashMap<>();
+	
+	private Map<EObject, EObject> copied2originalFileContents;
 	
 	/**
 	 * Resolves all refinements by creating copies and repairing all references
@@ -269,8 +272,11 @@ public class TGGLModelFlattener {
 			// get the node that refines this element by getting the container which has to contain exactly one
 			var refinementContainer = refinement.eContainer();
 			
+			// since the copied refinement does not contain eAdapters, we retrieve the original one here
+			EObject originalRefinement = this.copied2originalFileContents.get(refinement);
+			
 			// we have to figure out which rule's node is refined exactly
-			var refinementNode = NodeModelUtils.getNode(refinement);
+			var refinementNode = NodeModelUtils.getNode(originalRefinement);
 			var refinementTokenText = resolveRefinedRuleName(tggRule, NodeModelUtils.getTokenText(refinementNode));
 			var refinedTargets = ruleName2refinedTargets.computeIfAbsent(refinementTokenText, k -> new HashSet<EObject>());
 			
@@ -283,8 +289,11 @@ public class TGGLModelFlattener {
 			// get the node that refines this element by getting the container which has to contain exactly one
 			var refinementContainer = refinement.eContainer();
 			
+			// since the copied refinement does not contain eAdapters, we retrieve the original one here
+			EObject originalRefinement = this.copied2originalFileContents.get(refinement);
+			
 			// we have to figure out which rule's node is refined exactly
-			var refinementNode = NodeModelUtils.getNode(refinement);
+			var refinementNode = NodeModelUtils.getNode(originalRefinement);
 			var refinementTokenText = resolveRefinedRuleName(tggRule, NodeModelUtils.getTokenText(refinementNode));
 			var refinedTargets = ruleName2refinedTargets.computeIfAbsent(refinementTokenText, k -> new HashSet<EObject>());
 			
@@ -445,7 +454,10 @@ public class TGGLModelFlattener {
 	private EditorFile collectInformation(Collection<EditorFile> files) {
 		var mainFile = tggFactory.createEditorFile();
 		
-		var copies = EcoreUtil.copyAll(files);
+		var copyResult = eMoflonEMFUtil.copyAll(files);
+		var copies = copyResult.copies();
+		this.copied2originalFileContents = copyResult.copies2originals();
+		
 		XtextResource r = new XtextResource();
 		r.getContents().addAll(copies);
 		

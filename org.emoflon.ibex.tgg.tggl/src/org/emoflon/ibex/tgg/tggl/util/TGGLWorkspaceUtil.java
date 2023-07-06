@@ -14,8 +14,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xtext.resource.IContainer;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtil;
 import org.emoflon.ibex.common.slimgt.util.XtextResourceManager;
