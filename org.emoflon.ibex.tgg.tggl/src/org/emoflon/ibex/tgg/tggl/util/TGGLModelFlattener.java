@@ -49,6 +49,7 @@ public class TGGLModelFlattener {
 	private Map<EObject, EObject> copyOf = new HashMap<>();
 	
 	private Map<EObject, EObject> copied2originalFileContents;
+	private Map<EObject, EObject> original2copiedFileContents;
 	
 	/**
 	 * Resolves all refinements by creating copies and repairing all references
@@ -67,6 +68,26 @@ public class TGGLModelFlattener {
 		return mainFile;
 	}
 	
+	/**
+	 * Collect all project files based on the given eObject.
+	 * Then, resolves all refinements by creating copies and repairing all references
+	 * 
+	 * @param eObject
+	 * @return the flattened copy of eObject
+	 */
+	@SuppressWarnings("unchecked")
+	public <T extends EObject> T flatten(T eObject) {
+		Collection<EditorFile> files = TGGLWorkspaceUtil.getAllFilesInScope(eObject);
+		
+		var mainFile = collectInformation(files);
+		flatten(mainFile);
+		EObject flattenedObject = original2copiedFileContents.get(eObject);
+		return (T) flattenedObject;
+	}
+	
+	public EObject getOriginalEObject(EObject eObjectOfFlattenedModel) {
+		return copied2originalFileContents.get(eObjectOfFlattenedModel);
+	}
 	
 	private void flatten(EditorFile mainFile) {
 		for(var pattern : mainFile.getPatterns()) {
@@ -185,7 +206,7 @@ public class TGGLModelFlattener {
 				corrNode.setTarget(createdNode.getRefinement().get(0).getNode().getTarget());
 			}
 			
-			createdNode.getRefinement().clear();;
+			createdNode.getRefinement().clear();
 			createdNode.setRefining(false);
 		}
 	}
@@ -257,7 +278,7 @@ public class TGGLModelFlattener {
 	}
 
 
-	public void flattenTGGRule(TGGRule tggRule) {
+	private void flattenTGGRule(TGGRule tggRule) {
 		if(flattenedObjects.contains(tggRule))
 			return;
 		
@@ -457,6 +478,7 @@ public class TGGLModelFlattener {
 		var copyResult = eMoflonEMFUtil.copyAll(files);
 		var copies = copyResult.copies();
 		this.copied2originalFileContents = copyResult.copies2originals();
+		this.original2copiedFileContents = copyResult.originals2copies();
 		
 		XtextResource r = new XtextResource();
 		r.getContents().addAll(copies);

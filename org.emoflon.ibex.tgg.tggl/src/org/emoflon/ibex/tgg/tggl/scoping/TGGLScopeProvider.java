@@ -30,7 +30,6 @@ import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isTGGRuleCondition
 import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isTGGRuleRefinementAliasedSuperRule;
 import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isTGGRuleRefinements;
 import static org.emoflon.ibex.tgg.tggl.util.TGGLWorkspaceUtil.getAllFilesInScope;
-import static org.emoflon.ibex.tgg.tggl.util.TGGLWorkspaceUtil.getAllResolvedFilesInScope;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -77,7 +76,6 @@ import org.emoflon.ibex.tgg.tggl.tGGL.TGGCorrespondenceNodeContext;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGCorrespondenceNodeCreation;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGDomainRule;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLPackage;
-import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinement;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementAliased;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementCorrespondenceNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementPlain;
@@ -896,8 +894,8 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		if (editorFile.getSchema() != null)
 			return editorFile.getSchema();
 
-//		for (var otherFile : getAllFilesInScope(editorFile)) {
-		for (var file : getAllResolvedFilesInScope(new org.emoflon.ibex.tgg.tggl.util.InjectionContainer(resourceDescriptionsProvider, containerManager), editorFile)) {
+		for (var file : getAllFilesInScope(editorFile)) {
+//		for (var file : getAllResolvedFilesInScope(new org.emoflon.ibex.tgg.tggl.util.InjectionContainer(resourceDescriptionsProvider, containerManager), editorFile)) {
 			if (file.getSchema() != null)
 				return file.getSchema();
 		}

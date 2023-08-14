@@ -28,7 +28,6 @@ import org.emoflon.ibex.common.slimgt.slimGT.BooleanLiteral;
 import org.emoflon.ibex.common.slimgt.slimGT.Constant;
 import org.emoflon.ibex.common.slimgt.slimGT.DoubleLiteral;
 import org.emoflon.ibex.common.slimgt.slimGT.EnumExpression;
-import org.emoflon.ibex.common.slimgt.slimGT.GTLRuleRefinement;
 import org.emoflon.ibex.common.slimgt.slimGT.Import;
 import org.emoflon.ibex.common.slimgt.slimGT.IntegerLiteral;
 import org.emoflon.ibex.common.slimgt.slimGT.NodeAttributeExpression;
@@ -68,6 +67,7 @@ import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementAliased;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementCorrespondenceNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRule;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRuleRefinementNode;
+import org.emoflon.ibex.tgg.tggl.util.TGGLModelFlattener;
 import org.emoflon.ibex.tgg.tggl.util.TGGLWorkspaceUtil;
 
 import com.google.common.collect.Sets;
@@ -982,7 +982,6 @@ public class TGGLValidator extends AbstractTGGLValidator {
 		return false;
 	}
 
-	// A vertex represents all nodes which are mapped onto each other through refinements
 	class Vertex {
 		final Set<Vertex> targets;
 
@@ -991,22 +990,14 @@ public class TGGLValidator extends AbstractTGGLValidator {
 		}
 	}
 
-	private void collectFlattenedPatternStructure(SlimRule pattern, Map<EObject, Vertex> allNodes2Vertices) {
-		// Updates the map, such that it maps all nodes and its refinements to its respective vertex
+	private Collection<Vertex> convertPatternToVertexSet(SlimRule pattern) {
+		var allNodes2Vertices = new HashMap<EObject, Vertex>();
+
 		Collection<SlimRuleNode> nodes = getElements(pattern, SlimRuleNode.class);
-		for (SlimRuleNode node : nodes) {
-			Vertex vertex = allNodes2Vertices.computeIfAbsent(node, k -> new Vertex());
+		for (SlimRuleNode node : nodes)
+			allNodes2Vertices.put(node, new Vertex());
 
-			EObject container = node.eContainer();
-			Collection<TGGRuleRefinementNode> nodeRefinements = null;
-			if (container instanceof SlimRuleNodeContext context)
-				nodeRefinements = context.getRefinement();
-
-			for (TGGRuleRefinementNode nodeRefinement : nodeRefinements)
-				allNodes2Vertices.put(nodeRefinement.getNode(), vertex);
-		}
-
-		// Updates the edges of all vertices
+		// Update edges of all vertices
 		for (SlimRuleNode srcNode : nodes) {
 			Vertex srcVertex = allNodes2Vertices.get(srcNode);
 			for (var contextEdge : srcNode.getContextEdges()) {
@@ -1015,44 +1006,22 @@ public class TGGLValidator extends AbstractTGGLValidator {
 				srcVertex.targets.add(trgVertex);
 			}
 		}
-
-		for (GTLRuleRefinement ruleRefinement : pattern.getRefinements())
-			collectFlattenedPatternStructure((SlimRule) ruleRefinement.getSuperRule(), allNodes2Vertices);
+		
+		return allNodes2Vertices.values();
 	}
 
-	private void collectFlattenedRuleStructure(TGGRule rule, Map<EObject, Vertex> allNodes2Vertices) {
-		// Updates the map, such that it maps all nodes and its refinements to its respective vertex
+	private Collection<Vertex> convertRuleToVertexSet(TGGRule rule) {
+		var allNodes2Vertices = new HashMap<EObject, Vertex>();
+
 		Collection<SlimRuleNode> nodes = getElements(rule, SlimRuleNode.class);
-		for (SlimRuleNode node : nodes) {
-			Vertex vertex = allNodes2Vertices.computeIfAbsent(node, k -> new Vertex());
-
-			EObject container = node.eContainer();
-			Collection<TGGRuleRefinementNode> nodeRefinements = null;
-			if (container instanceof SlimRuleNodeContext context)
-				nodeRefinements = context.getRefinement();
-			else if (container instanceof SlimRuleNodeCreation creation)
-				nodeRefinements = creation.getRefinement();
-
-			for (TGGRuleRefinementNode nodeRefinement : nodeRefinements)
-				allNodes2Vertices.put(nodeRefinement.getNode(), vertex);
-		}
+		for (var node : nodes)
+			allNodes2Vertices.put(node, new Vertex());
 
 		Collection<TGGCorrespondenceNode> corrNodes = getElements(rule, TGGCorrespondenceNode.class);
-		for (TGGCorrespondenceNode corrNode : corrNodes) {
-			Vertex vertex = allNodes2Vertices.computeIfAbsent(corrNode, k -> new Vertex());
+		for (var corrNode : corrNodes)
+			allNodes2Vertices.put(corrNode, new Vertex());
 
-			EObject container = corrNode.eContainer();
-			Collection<TGGLRuleRefinementCorrespondenceNode> nodeRefinements = null;
-			if (container instanceof TGGCorrespondenceNodeContext context)
-				nodeRefinements = context.getRefinement();
-			else if (container instanceof TGGCorrespondenceNodeCreation creation)
-				nodeRefinements = creation.getRefinement();
-
-			for (TGGLRuleRefinementCorrespondenceNode nodeRefinement : nodeRefinements)
-				allNodes2Vertices.put(nodeRefinement.getNode(), vertex);
-		}
-
-		// Updates the edges of all vertices
+		// Update edges of all vertices
 		for (SlimRuleNode srcNode : nodes) {
 			Vertex srcVertex = allNodes2Vertices.get(srcNode);
 			for (var contextEdge : srcNode.getContextEdges()) {
@@ -1078,12 +1047,10 @@ public class TGGLValidator extends AbstractTGGLValidator {
 			corrVertex.targets.add(trgVertex);
 		}
 
-		for (TGGLRuleRefinement ruleRefinement : rule.getRefinements())
-			collectFlattenedRuleStructure(ruleRefinement.getSuperRule(), allNodes2Vertices);
+		return allNodes2Vertices.values();
 	}
 
-	private Set<Set<Vertex>> groupVerticesIntoDisjointGraphs(HashMap<EObject, Vertex> allNodes2Vertices) {
-		HashSet<Vertex> allVertices = new HashSet<>(allNodes2Vertices.values());
+	private Set<Set<Vertex>> groupVerticesIntoDisjointGraphs(Collection<Vertex> allVertices) {
 		Map<Vertex, Set<Vertex>> vertex2vertexSet = allVertices.stream() //
 				.collect(Collectors.toMap(k -> k, k -> {
 					Set<Vertex> vertices = new HashSet<>();
@@ -1111,10 +1078,11 @@ public class TGGLValidator extends AbstractTGGLValidator {
 		if (pattern.isAbstract())
 			return;
 
-		var allNodes2Vertices = new HashMap<EObject, Vertex>();
-		collectFlattenedPatternStructure(pattern, allNodes2Vertices);
+		var modelFlattener = new TGGLModelFlattener();
+		SlimRule flattenedPattern = modelFlattener.flatten(pattern);
 
-		Set<Set<Vertex>> disjointVertices = groupVerticesIntoDisjointGraphs(allNodes2Vertices);
+		Collection<Vertex> vertices = convertPatternToVertexSet(flattenedPattern);
+		Set<Set<Vertex>> disjointVertices = groupVerticesIntoDisjointGraphs(vertices);
 		if (disjointVertices.size() > 1) {
 			warning("This pattern is disjoint and could be computationally expensive.", TGGLPackage.Literals.SLIM_RULE__NAME);
 		}
@@ -1125,10 +1093,11 @@ public class TGGLValidator extends AbstractTGGLValidator {
 		if (rule.isAbstract())
 			return;
 
-		var allNodes2Vertices = new HashMap<EObject, Vertex>();
-		collectFlattenedRuleStructure(rule, allNodes2Vertices);
+		var modelFlattener = new TGGLModelFlattener();
+		TGGRule flattenedRule = modelFlattener.flatten(rule);
 
-		Set<Set<Vertex>> disjointVertices = groupVerticesIntoDisjointGraphs(allNodes2Vertices);
+		Collection<Vertex> vertices = convertRuleToVertexSet(flattenedRule);
+		Set<Set<Vertex>> disjointVertices = groupVerticesIntoDisjointGraphs(vertices);
 		if (disjointVertices.size() > 1) {
 			warning("This rule is disjoint and could be computationally expensive.", TGGLPackage.Literals.TGG_RULE__NAME);
 		}
