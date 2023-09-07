@@ -29,13 +29,14 @@ import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isSlimRuleRefineme
 import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isTGGRuleConditionName;
 import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isTGGRuleRefinementAliasedSuperRule;
 import static org.emoflon.ibex.tgg.tggl.scoping.TGGLScopeUtil.isTGGRuleRefinements;
-import static org.emoflon.ibex.tgg.tggl.util.TGGLWorkspaceUtil.getAllFilesInScope;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -81,6 +82,7 @@ import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementCorrespondenceNode;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGLRuleRefinementPlain;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRule;
 import org.emoflon.ibex.tgg.tggl.tGGL.TGGRuleRefinementNode;
+import org.emoflon.ibex.tgg.tggl.util.InjectionContainer;
 import org.emoflon.ibex.tgg.tggl.util.TGGLWorkspaceUtil;
 
 import com.google.inject.Inject;
@@ -96,6 +98,10 @@ enum DomainType {
 	SOURCE, CORRESPONDENCE, TARGET, SOURCE_AND_TARGET
 }
 
+enum FileFetchingMode {
+	XTEXT, CUSTOM
+}
+
 public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 
 	@Inject
@@ -103,6 +109,8 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
  
     @Inject
  	public IContainer.Manager containerManager;
+    
+    
 	
 	@Override
 	public IScope getScopeInternal(EObject context, EReference reference) throws Exception {
@@ -193,7 +201,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 
 	private IScope getCondition(EObject context, EReference reference) {
 		var conditionDefinitions = new HashSet<AttributeConditionDefinition>();
-		var editorFiles = getAllFilesInScope(context);
+		var editorFiles = getAllFilesInScope(context, FileFetchingMode.CUSTOM);
 		var thisEditorFile = getContainer(context, EditorFile.class);
 		editorFiles.add(thisEditorFile);
 
@@ -241,7 +249,10 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 
 	private IScope getPackagesFromImports(EObject context, EReference reference) {
 		var schema = getSchemaInScope(context);
-		var editorFile = getContainer(schema, EditorFile.class);
+		if (schema.isEmpty())
+			return IScope.NULLSCOPE;
+		
+		var editorFile = getContainer(schema.get(), EditorFile.class);
 
 		var output = new LinkedList<EObject>();
 		var packageRefs = editorFile.getImports().stream().flatMap(i -> i.getPackageAliases().stream()).toList();
@@ -341,24 +352,24 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		return new TGGLAliasedPatternScope(ruleAliases, nodes);
 	}
 
-	private TGGRule extractTGGRule(EObject refinement) {
+	private Optional<TGGRule> extractTGGRule(EObject refinement) {
 		if (refinement instanceof TGGRule tggRule)
-			return tggRule;
+			return Optional.of(tggRule);
 		if (refinement instanceof TGGLRuleRefinementPlain plain)
-			return plain.getSuperRule();
+			return Optional.ofNullable(plain.getSuperRule());
 		if (refinement instanceof TGGLRuleRefinementAliased aliased)
-			return aliased.getSuperRule();
-		return null;
+			return Optional.ofNullable(aliased.getSuperRule());
+		return Optional.empty();
 	}
 	
-	private SlimRule extractPattern(EObject refinement) {
+	private Optional<SlimRule> extractPattern(EObject refinement) {
 		if (refinement instanceof SlimRule pattern)
-			return pattern;
+			return Optional.of(pattern);
 		if (refinement instanceof GTLRuleRefinementPlain plain)
-			return (SlimRule) plain.getSuperRule();
+			return Optional.ofNullable((SlimRule) plain.getSuperRule());
 		if (refinement instanceof GTLRuleRefinementAliased aliased)
-			return (SlimRule) aliased.getSuperRule();
-		return null;
+			return Optional.ofNullable((SlimRule) aliased.getSuperRule());
+		return Optional.empty();
 	}
 
 	private IScope getRefinedRules(EObject context, EReference reference) {
@@ -540,7 +551,9 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 
 			// extract refined rule from refinements
 			for (var refinement : currentRule.getRefinements()) {
-				ruleCandidates.add(extractTGGRule(refinement));
+				var extractedRule = extractTGGRule(refinement);
+				if (extractedRule.isPresent())
+				ruleCandidates.add(extractedRule.get());
 			}
 
 			Set<EObject> newNodes = new HashSet<>();
@@ -573,7 +586,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 			}
 
 			for (var newNode : newNodes) {
-				var refinements = getRuleRefinementNode(newNode);
+				var refinements = getRuleRefinementNodes(newNode);
 				if (refinements != null) {
 					for(var refinement : refinements) {
 						if(refinement instanceof TGGRuleRefinementNode nodeRefinement)
@@ -611,13 +624,15 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 
 			// extract refined rule from refinements
 			for (var refinement : currentPattern.getRefinements()) {
-				patternCandidates.add(extractPattern(refinement));
+				var extractedPattern = extractPattern(refinement);
+				if (extractedPattern.isPresent())
+					patternCandidates.add(extractedPattern.get());
 			}
 
 			var newNodes = getSlimRuleNodesFromContext(castCollection(currentPattern.getContextNodes(), SlimRuleNodeContext.class));
 
 			for (var newNode : newNodes) {
-				var refinements = getRuleRefinementNode(newNode);
+				var refinements = getRuleRefinementNodes(newNode);
 				if (refinements != null) {
 					for(var refinement : refinements) {
 						if(refinement instanceof TGGRuleRefinementNode nodeRefinement)
@@ -635,7 +650,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		return nodes;
 	}
 	
-	private Collection<? extends EObject> getRuleRefinementNode(EObject context) {
+	private Collection<? extends EObject> getRuleRefinementNodes(EObject context) {
 		var contextNode = getContainer(context, org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNodeContext.class);
 		if (contextNode != null)
 			return contextNode.getRefinement();
@@ -651,7 +666,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		var creationCorrespondenceNode = getContainer(context, TGGCorrespondenceNodeCreation.class);
 		if (creationCorrespondenceNode != null)
 			return creationCorrespondenceNode.getRefinement();
-		return null;
+		return Collections.emptyList();
 	}
 
 	private Collection<SlimRuleNode> getSlimRuleNodesFromContext(Collection<SlimRuleNodeContext> contextElements) {
@@ -697,31 +712,34 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 
 	private IScope getTypes(EObject context, EReference reference, DomainType domain) {
 		var schema = getSchemaInScope(context);
-		var editorFile = getContainer(schema, EditorFile.class);
+		if (schema.isEmpty())
+			return IScope.NULLSCOPE;
+		
+		var editorFile = getContainer(schema.get(), EditorFile.class);
 
 		var refinedType = getRefinedType(context, reference);
 		switch (domain) {
 			case SOURCE: {
-				var sourceTypes = getTypes(schema.getSourceTypes());
-				if (refinedType != null && refinedType instanceof EClass refinedEClass)
+				var sourceTypes = getTypes(schema.get().getSourceTypes());
+				if (refinedType.isPresent() && refinedType.get() instanceof EClass refinedEClass)
 					sourceTypes = filterTypesIfNoSubType(sourceTypes, refinedEClass);
 				return new SlimGTAliasedTypeScope(editorFile.getImports(), sourceTypes);
 			}
 			case CORRESPONDENCE: {
-				Collection<CorrespondenceType> correspondenceTypes = schema.getCorrespondenceTypes();
-				if (refinedType != null && refinedType instanceof CorrespondenceType corrType)
+				Collection<CorrespondenceType> correspondenceTypes = schema.get().getCorrespondenceTypes();
+				if (refinedType.isPresent() && refinedType.get() instanceof CorrespondenceType corrType)
 					correspondenceTypes = filterCorrespondenceTypesIfNoSubType(correspondenceTypes, corrType);
 				return Scopes.scopeFor(correspondenceTypes);
 			}
 			case TARGET: {
-				var targetTypes = getTypes(schema.getTargetTypes());
-				if (refinedType != null && refinedType instanceof EClass refinedEClass)
+				var targetTypes = getTypes(schema.get().getTargetTypes());
+				if (refinedType.isPresent() && refinedType.get() instanceof EClass refinedEClass)
 					targetTypes = filterTypesIfNoSubType(targetTypes, refinedEClass);
 				return new SlimGTAliasedTypeScope(editorFile.getImports(), targetTypes);
 			}
 			case SOURCE_AND_TARGET: {
-				var types = join(getTypes(schema.getSourceTypes()), getTypes(schema.getTargetTypes()));
-				if (refinedType != null && refinedType instanceof EClass refinedEClass)
+				var types = join(getTypes(schema.get().getSourceTypes()), getTypes(schema.get().getTargetTypes()));
+				if (refinedType.isPresent() && refinedType.get() instanceof EClass refinedEClass)
 					types = filterTypesIfNoSubType(types, refinedEClass);
 				return new SlimGTAliasedTypeScope(editorFile.getImports(), types);
 			}
@@ -736,7 +754,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		return correspondenceTypes;
 	}
 
-	private EObject getRefinedType(EObject context, EReference reference) {
+	private Optional<EObject> getRefinedType(EObject context, EReference reference) {
 		var creationNode = getContainer(context, org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNodeCreation.class);
 		if (creationNode != null) {
 			// one of the refined types must be subtype of all others (or the same), else there is none
@@ -749,9 +767,9 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 					if(refinedType.isSuperTypeOf(otherRefinedType))
 						refinedType = otherRefinedType;
 					else if(!otherRefinedType.isSuperTypeOf(refinedType)) 
-						return null;
+						return Optional.empty();
 				}
-				return refinedType;
+				return Optional.of(refinedType);
 			}
 		}
 
@@ -766,9 +784,9 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 					if(refinedType.isSuperTypeOf(otherRefinedType))
 						refinedType = otherRefinedType;
 					else if(!otherRefinedType.isSuperTypeOf(refinedType)) 
-						return null;
+						return Optional.empty();
 				}
-				return refinedType;
+				return Optional.of(refinedType);
 			}
 		}
 
@@ -783,9 +801,9 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 					if(isSuperCorrespondenceType(refinedType, otherRefinedType))
 						refinedType = otherRefinedType;
 					else if(!isSuperCorrespondenceType(otherRefinedType, refinedType)) 
-						return null;
+						return Optional.empty();
 				}
-				return refinedType;
+				return Optional.of(refinedType);
 			}
 		}
 		
@@ -800,9 +818,9 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 					if(isSuperCorrespondenceType(refinedType, otherRefinedType))
 						refinedType = otherRefinedType;
 					else if(!isSuperCorrespondenceType(otherRefinedType, refinedType)) 
-						return null;
+						return Optional.empty();
 				}
-				return refinedType;
+				return Optional.of(refinedType);
 			}
 		}
 		
@@ -810,16 +828,16 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		if(correspondenceType != null) {
 			var refinedType = correspondenceType.getSuper();
 			if(refinedType == null)
-				return null;
+				return Optional.empty();
 			else {
 				if(reference.equals(TGGLPackage.eINSTANCE.getCorrespondenceType_Source())) 
-					return refinedType.getSource();
+					return Optional.ofNullable(refinedType.getSource());
 				else
-					return refinedType.getTarget();
+					return Optional.ofNullable(refinedType.getTarget());
 			}
 			
 		}
-		return null;
+		return Optional.empty();
 	}
 	
 	private static boolean isSuperCorrespondenceType(CorrespondenceType superType, CorrespondenceType otherType) {
@@ -872,7 +890,7 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		Collection<TGGRule> ruleSet = new HashSet<>();
 		ruleSet.addAll(ef.getRules());
 
-		for (var file : getAllFilesInScope(ef)) {
+		for (var file : getAllFilesInScope(ef, FileFetchingMode.CUSTOM)) {
 			ruleSet.addAll(file.getRules());
 		}
 		return ruleSet;
@@ -883,23 +901,35 @@ public class TGGLScopeProvider extends AbstractTGGLScopeProvider {
 		Collection<SlimRule> patternSet = new HashSet<>();
 		patternSet.addAll(ef.getPatterns());
 
-		for (var file : getAllFilesInScope(ef)) {
+		for (var file : getAllFilesInScope(ef, FileFetchingMode.CUSTOM)) {
 			patternSet.addAll(file.getPatterns());
 		}
 		return patternSet;
 	}
 	
-	public Schema getSchemaInScope(EObject obj) {
+	public Optional<Schema> getSchemaInScope(EObject obj) {
 		var editorFile = getContainer(obj, EditorFile.class);
 		if (editorFile.getSchema() != null)
-			return editorFile.getSchema();
-
-		for (var file : getAllFilesInScope(editorFile)) {
-//		for (var file : getAllResolvedFilesInScope(new org.emoflon.ibex.tgg.tggl.util.InjectionContainer(resourceDescriptionsProvider, containerManager), editorFile)) {
+			return Optional.ofNullable(editorFile.getSchema());
+		
+		for (var file : getAllFilesInScope(editorFile, FileFetchingMode.XTEXT)) {
 			if (file.getSchema() != null)
-				return file.getSchema();
+				return Optional.ofNullable(file.getSchema());
 		}
-		return null;
+
+		for (var file : getAllFilesInScope(editorFile, FileFetchingMode.CUSTOM)) {
+			if (file.getSchema() != null)
+				return Optional.ofNullable(file.getSchema());
+		}
+		return Optional.empty();
+	}
+	
+	private Collection<EditorFile> getAllFilesInScope(EObject obj, FileFetchingMode mode) {
+		return switch (mode) {
+			case XTEXT -> TGGLWorkspaceUtil.getAllResolvedFilesInScope(new InjectionContainer(resourceDescriptionsProvider, containerManager), obj);
+			case CUSTOM -> TGGLWorkspaceUtil.getAllFilesInScope(obj);
+			default -> throw new IllegalArgumentException("Unexpected value: " + mode);
+		};
 	}
 
 	@Override
