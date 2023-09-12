@@ -1,6 +1,6 @@
 package org.emoflon.ibex.tgg.integrate.generator
 
-import javax.inject.Inject
+import com.google.inject.Inject;
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.naming.QualifiedName
 import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict
