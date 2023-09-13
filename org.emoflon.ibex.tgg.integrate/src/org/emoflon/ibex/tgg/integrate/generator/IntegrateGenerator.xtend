@@ -3,7 +3,7 @@
  */
 package org.emoflon.ibex.tgg.integrate.generator
 
-import javax.inject.Inject
+import com.google.inject.Inject;
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.AbstractGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess2
