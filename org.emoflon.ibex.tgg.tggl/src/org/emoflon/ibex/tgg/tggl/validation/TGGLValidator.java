@@ -640,17 +640,17 @@ public class TGGLValidator extends AbstractTGGLValidator {
 		for (SlimRuleEdge singleEdge : singleEdges)
 			ref2singleEdge.computeIfAbsent(singleEdge.getType(), k -> new LinkedList<>()).add(singleEdge);
 
-		for (Entry<EReference, List<SlimRuleEdge>> entry : ref2singleEdge.entrySet()) {
-			if (entry.getValue().size() > 1) {
-				for (SlimRuleEdge edge : entry.getValue()) {
-					if (!Objects.equals(edge.eResource(), node.eResource()))
-						continue;
-
-					error(String.format("Edge '%s' has a max. cardinality of 1 and, hence, cannot be set more than once.", entry.getKey().getName()),
-							edge, SlimGTPackage.Literals.SLIM_RULE_EDGE__TYPE);
-				}
-			}
-		}
+//		for (Entry<EReference, List<SlimRuleEdge>> entry : ref2singleEdge.entrySet()) {
+//			if (entry.getValue().size() > 1) {
+//				for (SlimRuleEdge edge : entry.getValue()) {
+//					if (!Objects.equals(edge.eResource(), node.eResource()))
+//						continue;
+//
+//					error(String.format("Edge '%s' has a max. cardinality of 1 and, hence, cannot be set more than once.", entry.getKey().getName()),
+//							edge, SlimGTPackage.Literals.SLIM_RULE_EDGE__TYPE);
+//				}
+//			}
+//		}
 	}
 
 	private void collectSingleEdges(SlimRuleNode node, List<SlimRuleEdge> singleEdges) {
