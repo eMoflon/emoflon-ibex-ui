@@ -2,8 +2,8 @@ package org.emoflon.ibex.tgg.editor.defaults;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
-import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -22,8 +22,7 @@ public class AttrCondDefLibraryProvider {
 		IPath pathToLib = new Path(path);
 		IFile attrLibFile = project.getFile(pathToLib);
 		if (attrLibFile.exists()) {
-			File file = new File(attrLibFile.getLocation().toString());
-			String contents = FileUtils.readFileToString(file, (String) null);
+			String contents = Files.readString(attrLibFile.getLocation().toPath());
 			if (!contents.equals(defaultLib)) {
 				WorkspaceHelper.addAllFoldersAndFile(project, pathToLib, defaultLib, new NullProgressMonitor());
 			}
