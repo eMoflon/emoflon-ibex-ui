@@ -460,7 +460,8 @@ public class GTLResourceManager {
 			monitors.put(project.getLocation().toPortableString(), monitor);
 		} else {
 			try {
-				monitor.stop();
+				// Set the timeout to 1L to **NOT** wait for the other thread(s)
+				monitor.stop(1L);
 			} catch (Exception e) {
 			}
 		}
