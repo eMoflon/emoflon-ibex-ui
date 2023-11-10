@@ -2,3 +2,5 @@
 /model/generated/
 plugin.xml_gen
 !*/.gitkeep
+src-gen/
+
