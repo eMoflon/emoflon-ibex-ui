@@ -12,21 +12,21 @@ class DefaultFilesHelper {
 		
 		for(String name : metamodelNames) {
 			sb.append(name);
-			sb.append(System.lineSeparator());
+			sb.append(java.lang.System.lineSeparator());
 		}
 		return sb.toString();
 	}
 
 	static def generateDefaultSchema(String projectName, List<String> importURIs, List<String> sourceMetamodels,
 		List<String> targetMetamodels) {
-		var String importSection = "// Add imports here" + System.lineSeparator();
+		var String importSection = "// Add imports here" + java.lang.System.lineSeparator();
 		if (importURIs !== null && importURIs.size() > 0) {
 			val StringBuilder sb = new StringBuilder();
 			for (String modelURI : importURIs) {
 				sb.append("#import \"");
 				sb.append(modelURI);
 				sb.append("\"")
-				sb.append(System.lineSeparator());
+				sb.append(java.lang.System.lineSeparator());
 			}
 
 			importSection = sb.toString();
