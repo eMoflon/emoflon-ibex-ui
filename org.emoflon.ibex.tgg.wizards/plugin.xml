@@ -262,7 +262,7 @@
 	<extension point="org.eclipse.xtext.builder.participant">
 		<participant
 			class="org.emoflon.ibex.tgg.tggl.ui.TGGLExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"
-			fileExtensions="tgg"/>
+			fileExtensions="tggl"/>
 	</extension>
 	<extension point="org.eclipse.ui.preferencePages">
 		<page

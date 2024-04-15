@@ -12,7 +12,6 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -29,6 +28,8 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.INewWizard;
+import org.eclipse.xtext.ui.wizard.DefaultProjectInfo;
+import org.eclipse.xtext.ui.wizard.IExtendedProjectInfo;
 import org.emoflon.ibex.tgg.compiler.builder.AttrCondDefLibraryProvider;
 import org.emoflon.ibex.tgg.compiler.codegen.DefaultFilesHelper;
 import org.emoflon.ibex.tgg.compiler.defaults.TGGBuildUtil;
@@ -40,6 +41,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 public class NewIntegrationWizard extends AbstractMoflonWizard implements INewWizard {
+
+	private TGGLProjectCreator creator = new TGGLProjectCreator();
+
 	protected AbstractMoflonProjectInfoPage projectInfo;
 	protected AbstractMoflonMetaModelSelectionPage srcSelection;
 	protected AbstractMoflonMetaModelSelectionPage trgSelection;
@@ -75,12 +79,15 @@ public class NewIntegrationWizard extends AbstractMoflonWizard implements INewWi
 		return null;
 	}
 
-	protected void createProject(IProgressMonitor monitor, IProject project) throws CoreException {
-		final SubMonitor subMon = SubMonitor.convert(monitor, "Creating " + project.getName(), 3);
+	protected IProject createProject(IProgressMonitor monitor) throws CoreException {
+		final SubMonitor subMon = SubMonitor.convert(monitor, "Creating " + projectInfo.getProjectName(), 3);
 
 		// Create project
-		project.create(subMon.split(1));
-		project.open(subMon.split(1));
+//		project.create(subMon.split(1));
+//		project.open(subMon.split(1));
+		creator.setProjectInfo(getProjectInfo());
+		IProject project = creator.createProject(subMon);
+		return project;
 	}
 
 	protected void generateDefaultFiles(final IProgressMonitor monitor, IProject project) throws CoreException {
@@ -170,9 +177,8 @@ public class NewIntegrationWizard extends AbstractMoflonWizard implements INewWi
 		try {
 			final SubMonitor subMon = SubMonitor.convert(monitor, "Creating eMoflon::Ibex project", 12);
 
-			String projectName = projectInfo.getProjectName();
-			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
-			createProject(subMon.split(3), project);
+//			 = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+			IProject project = createProject(subMon.split(3));
 			getMetamodelURIs(subMon.split(3), srcSelection.getSelectedMetaModels(), true);
 			getMetamodelURIs(subMon.split(3), trgSelection.getSelectedMetaModels(), false);
 			generateDefaultFiles(subMon.split(3), project);
@@ -181,4 +187,12 @@ public class NewIntegrationWizard extends AbstractMoflonWizard implements INewWi
 		}
 	}
 
+	protected IExtendedProjectInfo getProjectInfo() {
+		DefaultProjectInfo projectInfo = new DefaultProjectInfo();
+		projectInfo.setProjectName(this.projectInfo.getProjectName());
+		if (this.projectInfo.getProjectLocation() != null) {
+			projectInfo.setLocationPath(this.projectInfo.getProjectLocation());
+		}
+		return projectInfo;
+	}
 }
