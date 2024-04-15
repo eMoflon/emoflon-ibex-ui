@@ -8,6 +8,7 @@ import org.eclipse.xtext.ide.editor.syntaxcoloring.ISemanticHighlightingCalculat
 import org.eclipse.xtext.ui.editor.contentassist.PrefixMatcher;
 import org.emoflon.ibex.common.slimgt.ide.highlighting.SlimGTSemanticHighlightingCalculator;
 import org.emoflon.ibex.common.slimgt.ui.contentassist.MyFQNPrefixMatcher;
+import org.emoflon.ibex.tgg.tggl.ui.AbstractTGGLUiModule;
 
 /**
  * Use this class to register components to be used within the Eclipse IDE.

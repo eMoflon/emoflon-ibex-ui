@@ -11,6 +11,7 @@ import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
 import org.emoflon.ibex.tgg.tggl.tGGL.SlimRule;
 import org.emoflon.ibex.tgg.tggl.tGGL.SlimRuleNode;
+import org.emoflon.ibex.tgg.tggl.ui.contentassist.AbstractTGGLProposalProvider;
 
 import static org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil.*;
 

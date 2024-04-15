@@ -20,7 +20,7 @@ Require-Bundle: org.moflon.core.ui,
  org.eclipse.xtend.lib.macro,
  org.emoflon.ibex.tgg.tggmodel;bundle-version="0.1.0",
  org.emoflon.ibex.tgg.tggl,
- org.emoflon.ibex.tgg.compiler,
  org.eclipse.xtext.ui,
  org.eclipse.xtext.xbase,
- org.moflon.core.utilities
+ org.moflon.core.utilities,
+ org.emoflon.ibex.tgg.compiler

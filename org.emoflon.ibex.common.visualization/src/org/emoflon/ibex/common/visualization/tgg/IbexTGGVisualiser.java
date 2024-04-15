@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -15,12 +16,10 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.emoflon.ibex.tgg.compiler.defaults.TGGBuildUtil;
 import org.emoflon.ibex.tgg.tggl.tGGL.EditorFile;
-import org.emoflon.ibex.tgg.tggl.util.TGGLModelFlattener;
 import org.emoflon.ibex.tgg.tggmodel.IBeXTGGModel.TGGModel;
 import org.moflon.core.ui.visualisation.EMoflonPlantUMLGenerator;
 import org.moflon.core.ui.visualisation.common.EMoflonDiagramTextProvider;
 import org.moflon.core.utilities.MoflonUtil;
-import org.eclipse.emf.ecore.EObject;
 
 public class IbexTGGVisualiser implements EMoflonDiagramTextProvider {
 
@@ -33,7 +32,7 @@ public class IbexTGGVisualiser implements EMoflonDiagramTextProvider {
 		try {
 			String body = maybeVisualiseTGGRule(editor, selection) //
 //					.orElse(maybeVisualiseTGGSchema(editor, selection)//
-							.orElse(defaultDiagramBody());
+					.orElse(defaultDiagramBody());
 			lastDiagramBody = Optional.of(body);
 		} catch (Exception e) {
 			logger.warn("Unable to visualise current state in editor, reverting to last diagram if available.");
@@ -59,9 +58,8 @@ public class IbexTGGVisualiser implements EMoflonDiagramTextProvider {
 
 	private TGGModel loadTGG(String projectName) {
 		ResourceSet rs = new ResourceSetImpl();
-		Resource tgg = rs.getResource(URI.createPlatformResourceURI(projectName + "/" + TGGBuildUtil.MODEL_FOLDER
-				+ "/" + MoflonUtil.lastCapitalizedSegmentOf(projectName) + TGGBuildUtil.INTERNAL_TGG_MODEL_EXTENSION, true),
-				true);
+		Resource tgg = rs
+				.getResource(URI.createPlatformResourceURI(projectName + "/" + TGGBuildUtil.MODEL_FOLDER + "/" + MoflonUtil.lastCapitalizedSegmentOf(projectName) + TGGBuildUtil.INTERNAL_TGG_MODEL_EXTENSION, true), true);
 		return (TGGModel) tgg.getContents().get(0);
 	}
 
@@ -89,8 +87,8 @@ public class IbexTGGVisualiser implements EMoflonDiagramTextProvider {
 			for (final var rule : file.getRules()) {
 				ICompositeNode object = NodeModelUtils.getNode(rule);
 				if (selectionStart >= object.getStartLine() && selectionEnd <= object.getEndLine()) {
-					for(var tggRule : model.getRuleSet().getRules()) {
-						if(tggRule.getName().equals(rule.getName()))
+					for (var tggRule : model.getRuleSet().getRules()) {
+						if (tggRule.getName().equals(rule.getName()))
 							return IBeXTggXmiPlantUMLGenerator.visualizeTGGRule(tggRule);
 					}
 				}
@@ -122,10 +120,10 @@ public class IbexTGGVisualiser implements EMoflonDiagramTextProvider {
 	public boolean supportsEditor(IEditorPart editor) {
 		return extractTGGFileFromEditor(editor).isPresent();
 	}
-	
+
 	@Override
 	public boolean supportsSelection(ISelection selection) {
-		//Note: If the editor is detected correctly, this must be true anyways!
+		// Note: If the editor is detected correctly, this must be true anyways!
 		return true;
 	}
 
@@ -133,8 +131,7 @@ public class IbexTGGVisualiser implements EMoflonDiagramTextProvider {
 		try {
 			return Optional.of(editor) //
 					.flatMap(maybeCast(XtextEditor.class)) //
-					.map(e -> e.getDocument().readOnly(res -> res.getContents().get(0)))
-					.flatMap(maybeCast(EditorFile.class));
+					.map(e -> e.getDocument().readOnly(res -> res.getContents().get(0))).flatMap(maybeCast(EditorFile.class));
 		} catch (Exception e) {
 			return Optional.empty();
 		}
