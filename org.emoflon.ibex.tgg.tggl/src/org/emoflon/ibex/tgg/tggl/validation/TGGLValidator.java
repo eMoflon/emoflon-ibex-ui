@@ -76,7 +76,8 @@ import com.google.common.collect.Sets.SetView;
 /**
  * This class contains custom validation rules.
  *
- * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
+ * See
+ * https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 public class TGGLValidator extends AbstractTGGLValidator {
 
@@ -86,8 +87,7 @@ public class TGGLValidator extends AbstractTGGLValidator {
 			return;
 
 		if (SlimGTValidatorUtil.RULE_NAME_BACKLIST.contains(rule.getName())) {
-			error(String.format("Rule '%s' is a java keyword or an emf class and, hence, forbidden.", rule.getName()),
-					TGGLPackage.Literals.TGG_RULE__NAME);
+			error(String.format("Rule '%s' is a java keyword or an emf class and, hence, forbidden.", rule.getName()), TGGLPackage.Literals.TGG_RULE__NAME);
 		}
 	}
 
@@ -97,8 +97,7 @@ public class TGGLValidator extends AbstractTGGLValidator {
 			return;
 
 		if (SlimGTValidatorUtil.RULE_NAME_BACKLIST.contains(pattern.getName())) {
-			error(String.format("Pattern '%s' is a java keyword or an emf class and, hence, forbidden.", pattern.getName()),
-					TGGLPackage.Literals.SLIM_RULE__NAME);
+			error(String.format("Pattern '%s' is a java keyword or an emf class and, hence, forbidden.", pattern.getName()), TGGLPackage.Literals.SLIM_RULE__NAME);
 		}
 	}
 
@@ -108,8 +107,7 @@ public class TGGLValidator extends AbstractTGGLValidator {
 			return;
 
 		if (SlimGTValidatorUtil.NODE_NAME_BACKLIST.contains(node.getName())) {
-			error(String.format("Node '%s' is a java keyword or an emf class and, hence, forbidden.", node.getName()),
-					SlimGTPackage.Literals.SLIM_RULE_NODE__NAME);
+			error(String.format("Node '%s' is a java keyword or an emf class and, hence, forbidden.", node.getName()), SlimGTPackage.Literals.SLIM_RULE_NODE__NAME);
 		}
 	}
 
@@ -119,8 +117,7 @@ public class TGGLValidator extends AbstractTGGLValidator {
 			return;
 
 		if (SlimGTValidatorUtil.NODE_NAME_BACKLIST.contains(corrNode.getName())) {
-			error(String.format("Node '%s' is a java keyword or an emf class and, hence, forbidden.", corrNode.getName()),
-					TGGLPackage.Literals.TGG_CORRESPONDENCE_NODE__NAME);
+			error(String.format("Node '%s' is a java keyword or an emf class and, hence, forbidden.", corrNode.getName()), TGGLPackage.Literals.TGG_CORRESPONDENCE_NODE__NAME);
 		}
 	}
 
@@ -134,8 +131,7 @@ public class TGGLValidator extends AbstractTGGLValidator {
 			return;
 
 		for (int i = 0; i < node.getCreatedEdges().size(); i++) {
-			error("Edges of binding type 'create' are forbidden in patterns.", node, SlimGTPackage.Literals.SLIM_RULE_NODE__CREATED_EDGES, i,
-					IssueCodes.INCORRECT_BINDING_EDGE_CREATE);
+			error("Edges of binding type 'create' are forbidden in patterns.", node, SlimGTPackage.Literals.SLIM_RULE_NODE__CREATED_EDGES, i, IssueCodes.INCORRECT_BINDING_EDGE_CREATE);
 		}
 	}
 
@@ -147,8 +143,8 @@ public class TGGLValidator extends AbstractTGGLValidator {
 
 		for (int i = 0; i < node.getContextEdges().size(); i++) {
 			// FIXME wrong error highlighting
-			error(String.format("Node '%s' of binding type 'create' cannot be connected via an edge of binding type 'context'.", node.getName()),
-					node, SlimGTPackage.Literals.SLIM_RULE_NODE__CREATED_EDGES, i, IssueCodes.INCORRECT_BINDING_EDGE_CONTEXT);
+			error(String.format("Node '%s' of binding type 'create' cannot be connected via an edge of binding type 'context'.", node.getName()), node, SlimGTPackage.Literals.SLIM_RULE_NODE__CREATED_EDGES, i,
+					IssueCodes.INCORRECT_BINDING_EDGE_CONTEXT);
 		}
 	}
 
@@ -163,8 +159,7 @@ public class TGGLValidator extends AbstractTGGLValidator {
 			return;
 
 		if (SlimGTModelUtil.getContainer(targetNode, SlimRuleNodeCreation.class) != null) {
-			error("An edge of binding type 'context' cannot point to a node of binding type 'create'.", edge,
-					SlimGTPackage.Literals.SLIM_RULE_EDGE__TARGET);
+			error("An edge of binding type 'context' cannot point to a node of binding type 'create'.", edge, SlimGTPackage.Literals.SLIM_RULE_EDGE__TARGET);
 		}
 	}
 
@@ -214,8 +209,7 @@ public class TGGLValidator extends AbstractTGGLValidator {
 				if (!editorFile.equals(SlimGTModelUtil.getContainer(duplLib, EditorFile.class)))
 					continue;
 
-				error(String.format("A library with name '%s' does already exist in this project.", entry.getKey()), duplLib,
-						TGGLPackage.Literals.ATTRIBUTE_CONDITION_DEFINITION_LIBRARY__NAME);
+				error(String.format("A library with name '%s' does already exist in this project.", entry.getKey()), duplLib, TGGLPackage.Literals.ATTRIBUTE_CONDITION_DEFINITION_LIBRARY__NAME);
 			}
 		}
 	}
@@ -232,8 +226,7 @@ public class TGGLValidator extends AbstractTGGLValidator {
 				continue;
 
 			for (AttributeConditionDefinition duplDef : entry.getValue()) {
-				error(String.format("An attribute condition definition with name '%s' does already exist in this library.", entry.getKey()), duplDef,
-						TGGLPackage.Literals.ATTRIBUTE_CONDITION_DEFINITION__NAME);
+				error(String.format("An attribute condition definition with name '%s' does already exist in this library.", entry.getKey()), duplDef, TGGLPackage.Literals.ATTRIBUTE_CONDITION_DEFINITION__NAME);
 			}
 		}
 	}
@@ -250,8 +243,7 @@ public class TGGLValidator extends AbstractTGGLValidator {
 				continue;
 
 			for (CorrespondenceType duplType : entry.getValue()) {
-				error(String.format("A correspondence type with name '%s' does already exist in this schema.", entry.getKey()), duplType,
-						TGGLPackage.Literals.CORRESPONDENCE_TYPE__NAME);
+				error(String.format("A correspondence type with name '%s' does already exist in this schema.", entry.getKey()), duplType, TGGLPackage.Literals.CORRESPONDENCE_TYPE__NAME);
 			}
 		}
 	}
@@ -279,8 +271,7 @@ public class TGGLValidator extends AbstractTGGLValidator {
 		for (Entry<String, List<PackageReferenceAlias>> entry : alias2packageName.entrySet()) {
 			if (packageNames.contains(entry.getKey())) {
 				for (PackageReferenceAlias alias : entry.getValue()) {
-					error(String.format("Alias '%s' covers an imported package name.", entry.getKey()), alias,
-							SlimGTPackage.Literals.PACKAGE_REFERENCE_ALIAS__NAME);
+					error(String.format("Alias '%s' covers an imported package name.", entry.getKey()), alias, SlimGTPackage.Literals.PACKAGE_REFERENCE_ALIAS__NAME);
 				}
 			}
 
@@ -313,8 +304,7 @@ public class TGGLValidator extends AbstractTGGLValidator {
 				continue;
 
 			for (TGGLRuleRefinementAliased alias : entry.getValue()) {
-				error(String.format("Alias '%s' is already defined.", entry.getKey()), alias,
-						TGGLPackage.Literals.TGGL_RULE_REFINEMENT_ALIASED__NAME);
+				error(String.format("Alias '%s' is already defined.", entry.getKey()), alias, TGGLPackage.Literals.TGGL_RULE_REFINEMENT_ALIASED__NAME);
 			}
 		}
 	}
@@ -323,8 +313,7 @@ public class TGGLValidator extends AbstractTGGLValidator {
 		if (name2aliasedRefinement.containsKey(rule.getName())) {
 			List<TGGLRuleRefinementAliased> aliases = name2aliasedRefinement.get(rule.getName());
 			for (TGGLRuleRefinementAliased alias : aliases) {
-				error(String.format("Alias '%s' must not be the same as its rule or other refined rules.", rule.getName()), alias,
-						TGGLPackage.Literals.TGGL_RULE_REFINEMENT_ALIASED__NAME);
+				error(String.format("Alias '%s' must not be the same as its rule or other refined rules.", rule.getName()), alias, TGGLPackage.Literals.TGGL_RULE_REFINEMENT_ALIASED__NAME);
 			}
 		}
 
@@ -393,14 +382,14 @@ public class TGGLValidator extends AbstractTGGLValidator {
 
 				Collection<EObject> refinements = extractRefinements(duplRuleNode);
 
-				// each node in this set is in naming conflict with an equally named node in this rule
+				// each node in this set is in naming conflict with an equally named node in
+				// this rule
 				for (EObject conflictNode : name2refinementNode.get(duplNodeName)) {
 					// skip if there is a refinement relation
 					if (refinements.contains(conflictNode))
 						continue;
 
-					error(String.format("A node with name '%s' does already exist in a refined rule.", duplNodeName), duplRuleNode, nameFeature,
-							IssueCodes.MISSING_NODE_REFINEMENT, issueData.toArray(new String[] {}));
+					error(String.format("A node with name '%s' does already exist in a refined rule.", duplNodeName), duplRuleNode, nameFeature, IssueCodes.MISSING_NODE_REFINEMENT, issueData.toArray(new String[] {}));
 				}
 			}
 		}
@@ -408,7 +397,8 @@ public class TGGLValidator extends AbstractTGGLValidator {
 		for (var superNodeName : name2refinementNode.keySet()) {
 			var superNodes = name2refinementNode.get(superNodeName);
 
-			// if a node with this name is already included in this rule, we have handled it in the loop on top
+			// if a node with this name is already included in this rule, we have handled it
+			// in the loop on top
 			if (name2nodes.containsKey(superNodeName))
 				continue;
 
@@ -417,9 +407,8 @@ public class TGGLValidator extends AbstractTGGLValidator {
 				continue;
 
 			// if there is more than one element, then we have to ensure uniqueness
-			error(String.format(
-					"Multiple refinements of this rule contain nodes with the identical name '%s'. To ensure uniqueness, refine at least one of these nodes and assign a different name.",
-					superNodeName), rule, TGGLPackage.Literals.TGG_RULE__NAME);
+			error(String.format("Multiple refinements of this rule contain nodes with the identical name '%s'. To ensure uniqueness, refine at least one of these nodes and assign a different name.", superNodeName), rule,
+					TGGLPackage.Literals.TGG_RULE__NAME);
 		}
 	}
 
@@ -460,7 +449,8 @@ public class TGGLValidator extends AbstractTGGLValidator {
 				finalRuleNodes.add(node);
 			}
 
-			// we save all actual refinements as these are the nodes that we want to skip because they can no
+			// we save all actual refinements as these are the nodes that we want to skip
+			// because they can no
 			// longer clash
 			for (var refinement : refinements) {
 				var refinedNode = refinement.getNode();
@@ -502,7 +492,8 @@ public class TGGLValidator extends AbstractTGGLValidator {
 				finalRuleNodes.add(node);
 			}
 
-			// we save all actual refinements as these are the nodes that we want to skip because they can no
+			// we save all actual refinements as these are the nodes that we want to skip
+			// because they can no
 			// longer clash
 			for (var refinement : refinements) {
 				var refinedNode = refinement.getNode();
@@ -576,8 +567,7 @@ public class TGGLValidator extends AbstractTGGLValidator {
 				continue;
 
 			TGGDomainRule domainRule = SlimGTModelUtil.getContainer(contextNode, TGGDomainRule.class);
-			error("The refining node must be of the same binding type as the refined node.", domainRule,
-					TGGLPackage.Literals.TGG_DOMAIN_RULE__CONTEXT_NODES, IssueCodes.INCORRECT_BINDING_NODE_REFINED_CONTEXT);
+			error("The refining node must be of the same binding type as the refined node.", domainRule, TGGLPackage.Literals.TGG_DOMAIN_RULE__CONTEXT_NODES, IssueCodes.INCORRECT_BINDING_NODE_REFINED_CONTEXT);
 		}
 
 	}
@@ -593,8 +583,7 @@ public class TGGLValidator extends AbstractTGGLValidator {
 				continue;
 
 			TGGDomainRule domainRule = SlimGTModelUtil.getContainer(createNode, TGGDomainRule.class);
-			error("The refining node must be of the same binding type as the refined node.", domainRule,
-					TGGLPackage.Literals.TGG_DOMAIN_RULE__CREATED_NODES, IssueCodes.INCORRECT_BINDING_NODE_REFINED_CREATE);
+			error("The refining node must be of the same binding type as the refined node.", domainRule, TGGLPackage.Literals.TGG_DOMAIN_RULE__CREATED_NODES, IssueCodes.INCORRECT_BINDING_NODE_REFINED_CREATE);
 		}
 
 	}
@@ -610,8 +599,7 @@ public class TGGLValidator extends AbstractTGGLValidator {
 				continue;
 
 			TGGCorrRule corrRule = SlimGTModelUtil.getContainer(contextNode, TGGCorrRule.class);
-			error("The refining node must be of the same binding type as the refined node.", corrRule,
-					TGGLPackage.Literals.TGG_CORR_RULE__CONTEXT_CORRESPONDENCE_NODES, IssueCodes.INCORRECT_BINDING_NODE_REFINED_CONTEXT);
+			error("The refining node must be of the same binding type as the refined node.", corrRule, TGGLPackage.Literals.TGG_CORR_RULE__CONTEXT_CORRESPONDENCE_NODES, IssueCodes.INCORRECT_BINDING_NODE_REFINED_CONTEXT);
 		}
 	}
 
@@ -626,8 +614,7 @@ public class TGGLValidator extends AbstractTGGLValidator {
 				continue;
 
 			TGGCorrRule corrRule = SlimGTModelUtil.getContainer(createNode, TGGCorrRule.class);
-			error("The refining node must be of the same binding type as the refined node.", corrRule,
-					TGGLPackage.Literals.TGG_CORR_RULE__CREATED_CORRESPONDENCE_NODES, IssueCodes.INCORRECT_BINDING_NODE_REFINED_CREATE);
+			error("The refining node must be of the same binding type as the refined node.", corrRule, TGGLPackage.Literals.TGG_CORR_RULE__CREATED_CORRESPONDENCE_NODES, IssueCodes.INCORRECT_BINDING_NODE_REFINED_CREATE);
 		}
 	}
 
@@ -700,8 +687,7 @@ public class TGGLValidator extends AbstractTGGLValidator {
 						if (!Objects.equals(edge.eResource(), node.eResource()))
 							continue;
 
-						error(String.format("Edge '%s' is connected to the same node more than once.", edge.getType().getName()), edge,
-								SlimGTPackage.Literals.SLIM_RULE_EDGE__TYPE);
+						error(String.format("Edge '%s' is connected to the same node more than once.", edge.getType().getName()), edge, SlimGTPackage.Literals.SLIM_RULE_EDGE__TYPE);
 					}
 				}
 			}
@@ -743,8 +729,7 @@ public class TGGLValidator extends AbstractTGGLValidator {
 		for (Entry<EAttribute, List<SlimRuleAttributeAssignment>> entry : type2attrAssignments.entrySet()) {
 			if (entry.getValue().size() > 1) {
 				for (SlimRuleAttributeAssignment attrAssignment : entry.getValue()) {
-					error(String.format("Attribute '%s' must not be assigned more than once.", entry.getKey().getName()), attrAssignment,
-							SlimGTPackage.Literals.SLIM_RULE_ATTRIBUTE_ASSIGNMENT__TYPE);
+					error(String.format("Attribute '%s' must not be assigned more than once.", entry.getKey().getName()), attrAssignment, SlimGTPackage.Literals.SLIM_RULE_ATTRIBUTE_ASSIGNMENT__TYPE);
 				}
 			}
 		}
@@ -761,8 +746,7 @@ public class TGGLValidator extends AbstractTGGLValidator {
 			return;
 
 		if (nodeAttrExpr.getFeature() == null) {
-			error("A reference to an attribute is missing for this attribute assignment.", attrAssignment,
-					SlimGTPackage.Literals.SLIM_RULE_ATTRIBUTE_ASSIGNMENT__VALUE);
+			error("A reference to an attribute is missing for this attribute assignment.", attrAssignment, SlimGTPackage.Literals.SLIM_RULE_ATTRIBUTE_ASSIGNMENT__VALUE);
 			;
 		}
 	}
@@ -783,8 +767,7 @@ public class TGGLValidator extends AbstractTGGLValidator {
 
 		SlimRuleNode parentNode = SlimGTModelUtil.getContainer(attrAssignment, SlimRuleNode.class);
 		if (nodeExpr.getNode().equals(parentNode)) {
-			error("Attribute assignments which reference its own node are forbidden.", nodeAttrExpr,
-					SlimGTPackage.Literals.NODE_ATTRIBUTE_EXPRESSION__NODE_EXPRESSION);
+			error("Attribute assignments which reference its own node are forbidden.", nodeAttrExpr, SlimGTPackage.Literals.NODE_ATTRIBUTE_EXPRESSION__NODE_EXPRESSION);
 		}
 	}
 
@@ -797,8 +780,8 @@ public class TGGLValidator extends AbstractTGGLValidator {
 		int expNumber = def.getParams().size();
 		int actNumber = attrCond.getValues().size();
 		if (expNumber != actNumber) {
-			error(String.format("The number of parameters does not match the definition of attribute condition '%s'. Expected: %s, actual: %s.",
-					def.getName(), expNumber, actNumber), attrCond, TGGLPackage.Literals.ATTRIBUTE_CONDITION__NAME);
+			error(String.format("The number of parameters does not match the definition of attribute condition '%s'. Expected: %s, actual: %s.", def.getName(), expNumber, actNumber), attrCond,
+					TGGLPackage.Literals.ATTRIBUTE_CONDITION__NAME);
 		}
 	}
 
@@ -867,13 +850,13 @@ public class TGGLValidator extends AbstractTGGLValidator {
 				} else if (op instanceof Constant constant) {
 					String constLit = constant.getValue().getLiteral();
 					switch (constLit) {
-						case "e", "pi" -> {
-							dataType = EcorePackage.Literals.EDOUBLE;
-						}
-						case "null" -> {
-							continue;
-						}
-						default -> throw new IllegalArgumentException("Unexpected value: " + constLit);
+					case "e", "pi" -> {
+						dataType = EcorePackage.Literals.EDOUBLE;
+					}
+					case "null" -> {
+						continue;
+					}
+					default -> throw new IllegalArgumentException("Unexpected value: " + constLit);
 					}
 				} else {
 					continue;
@@ -883,8 +866,7 @@ public class TGGLValidator extends AbstractTGGLValidator {
 			}
 
 			if (dataType != null && !dataType.getInstanceClassName().equals(defParam.getType().getInstanceClassName())) {
-				error(String.format("Argument %s of CSP '%s' does not match its parameter type.", i + 1, attrCond.getName().getName()), attrCond,
-						TGGLPackage.Literals.ATTRIBUTE_CONDITION__VALUES, i);
+				error(String.format("Argument %s of CSP '%s' does not match its parameter type.", i + 1, attrCond.getName().getName()), attrCond, TGGLPackage.Literals.ATTRIBUTE_CONDITION__VALUES, i);
 			}
 		}
 	}
@@ -915,8 +897,7 @@ public class TGGLValidator extends AbstractTGGLValidator {
 			return;
 
 		for (int i = 0; i < editorFile.getImports().size(); i++) {
-			error("Imports must only be located in schema file.", editorFile, SlimGTPackage.Literals.EDITOR_FILE__IMPORTS, i,
-					IssueCodes.IMPORT_NOT_IN_SCHEMA_FILE);
+			error("Imports must only be located in schema file.", editorFile, SlimGTPackage.Literals.EDITOR_FILE__IMPORTS, i, IssueCodes.IMPORT_NOT_IN_SCHEMA_FILE);
 		}
 	}
 
@@ -953,8 +934,8 @@ public class TGGLValidator extends AbstractTGGLValidator {
 			traversedRules.add(currentPattern);
 
 		if (invocationHierarchyHasCycle(invocation, traversedRules)) {
-			error(String.format("Invoked pattern '%s' leads to an invocation cycle, which is not allowed.",
-					((SlimRule) invocation.getSupportPattern()).getName()), SlimGTPackage.Literals.SLIM_RULE_INVOCATION__SUPPORT_PATTERN);
+			error(String.format("Invoked pattern '%s' leads to an invocation cycle, which is not allowed.", ((SlimRule) invocation.getSupportPattern()).getName()),
+					SlimGTPackage.Literals.SLIM_RULE_INVOCATION__SUPPORT_PATTERN);
 		}
 	}
 
@@ -1006,7 +987,7 @@ public class TGGLValidator extends AbstractTGGLValidator {
 				srcVertex.targets.add(trgVertex);
 			}
 		}
-		
+
 		return allNodes2Vertices.values();
 	}
 
@@ -1085,6 +1066,29 @@ public class TGGLValidator extends AbstractTGGLValidator {
 		Set<Set<Vertex>> disjointVertices = groupVerticesIntoDisjointGraphs(vertices);
 		if (disjointVertices.size() > 1) {
 			warning("This pattern is disjoint and could be computationally expensive.", TGGLPackage.Literals.SLIM_RULE__NAME);
+		}
+	}
+
+	@Check
+	public void checkNoAbstractNodeTypes(TGGRule rule) {
+		if (rule.isAbstract())
+			return;
+
+		var modelFlattener = new TGGLModelFlattener();
+		TGGRule flattenedRule = modelFlattener.flatten(rule);
+
+		var sourceNodes = flattenedRule.getSourceRule().getCreatedNodes().stream().map(c -> c.getCreation()).toList();
+		var targetNodes = flattenedRule.getTargetRule().getCreatedNodes().stream().map(c -> c.getCreation()).toList();
+
+		for (var node : sourceNodes) {
+			if (node.getType().isAbstract()) {
+				error("The node " + node.getName() + " is of an abstract type and cannot be instantiated.", TGGLPackage.Literals.TGG_RULE__NAME);
+			}
+		}
+		for (var node : targetNodes) {
+			if (node.getType().isAbstract()) {
+				error("The node " + node.getName() + " is of an abstract type and cannot be instantiated.", TGGLPackage.Literals.TGG_RULE__NAME);
+			}
 		}
 	}
 
