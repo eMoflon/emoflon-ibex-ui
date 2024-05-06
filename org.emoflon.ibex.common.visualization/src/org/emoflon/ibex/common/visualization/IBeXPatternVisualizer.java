@@ -1,18 +1,24 @@
 package org.emoflon.ibex.common.visualization;
 
-import java.util.Collection;
 import java.util.Optional;
 
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.presentation.EcoreEditor;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.IEditorPart;
-import org.emoflon.ibex.common.coremodel.IBeXCoreModel.IBeXPatternSet;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+import org.eclipse.xtext.ui.editor.XtextEditor;
+import org.emoflon.ibex.common.transformation.SlimGtToIBeXCoreTransformer;
+import org.emoflon.ibex.gt.gtl.gTL.EditorFile;
+import org.emoflon.ibex.gt.gtl.gTL.SlimRule;
+import org.emoflon.ibex.gt.gtl.util.GTLModelFlattener;
+import org.emoflon.ibex.gt.gtl.util.GTLResourceManager;
+import org.emoflon.ibex.gt.gtmodel.IBeXGTModel.GTModel;
 import org.emoflon.ibex.gt.gtmodel.IBeXGTModel.GTPattern;
 import org.emoflon.ibex.gt.gtmodel.IBeXGTModel.GTRule;
-import org.moflon.core.ui.VisualiserUtilities;
+import org.emoflon.ibex.gt.gtmodel.IBeXGTModel.IBeXGTModelFactory;
+import org.emoflon.ibex.gt.transformation.GTLtoGTModelTransformer;
 import org.moflon.core.ui.visualisation.common.EMoflonDiagramTextProvider;
 
 /**
@@ -23,11 +29,33 @@ public class IBeXPatternVisualizer implements EMoflonDiagramTextProvider {
 
 	@Override
 	public String getDiagramBody(final IEditorPart editor, final ISelection selection) {
-		if (selection instanceof IStructuredSelection structuredSelection) {
-			return visualizeSelection(structuredSelection);
+		EditorFile editorFile = maybeCast(XtextEditor.class).apply(editor)
+				.map(file -> file.getDocument().readOnly(doc -> doc.getContents().get(0))) //
+				.flatMap(maybeCast(EditorFile.class)).get();
+
+		IProject project = maybeCast(XtextEditor.class).apply(editor) //
+				.map(file -> file.getResource().getProject()) //
+				.get();
+
+		TextSelection textSelection = (TextSelection) selection;
+		for (SlimRule rule : editorFile.getRules()) {
+			ICompositeNode object = NodeModelUtils.getNode(rule);
+			if (object.getStartLine() <= textSelection.getStartLine() + 1
+					&& object.getEndLine() >= textSelection.getEndLine() + 1) {
+				try {
+					return visualizeSelection(project, editorFile, rule);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 		}
 
-		throw new IllegalArgumentException("Invalid selection: " + selection);
+		try {
+			return visualizeSelection(project, editorFile, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	/**
@@ -35,57 +63,46 @@ public class IBeXPatternVisualizer implements EMoflonDiagramTextProvider {
 	 * 
 	 * @param selection the selection
 	 * @return the PlantUMl code for the visualization
+	 * @throws Exception
 	 */
-	private static String visualizeSelection(final IStructuredSelection selection) {
-		Object element = selection.getFirstElement();
+	private static String visualizeSelection(final IProject project, final EditorFile editorFile,
+			final SlimRule selection) throws Exception {
+		GTLResourceManager manager = new GTLResourceManager();
+		GTLModelFlattener flattener = new GTLModelFlattener(manager, editorFile, true);
+		EditorFile flattened = flattener.getFlattenedModel();
+		SlimGtToIBeXCoreTransformer<EditorFile, GTModel, IBeXGTModelFactory> transformer = new GTLtoGTModelTransformer(
+				flattened, project);
+		GTModel model = transformer.transform();
 
-		if (isPatternSet(element)) {
-			return IBeXPatternPlantUMLGenerator.visualizePatternInvocations((IBeXPatternSet) element);
+		if (selection != null) {
+			Optional<GTRule> candidateRule = model.getRuleSet().getRules().stream()
+					.filter(rule -> rule.getName().equals(selection.getName())).findFirst();
+			if (candidateRule.isPresent()) {
+				return IBeXPatternPlantUMLGenerator.visualizeRule(candidateRule.get());
+			}
+			Optional<GTPattern> candidatePattern = model.getPatternSet().getPatterns().stream()
+					.filter(pattern -> pattern.getName().equals(selection.getName()))
+					.map(pattern -> (GTPattern) pattern).findFirst();
+			if (candidatePattern.isPresent()) {
+				return IBeXPatternPlantUMLGenerator.visualizeContextPattern(candidatePattern.get());
+			}
 		}
-
-		if (isPattern(element)) {
-			return IBeXPatternPlantUMLGenerator.visualizeContextPattern((GTPattern) element);
-		}
-
-		if (isRule(element)) {
-			return IBeXPatternPlantUMLGenerator.visualizeRule((GTRule) element);
-		}
-
-		throw new IllegalArgumentException("Invalid selection: " + element);
+		return IBeXPatternPlantUMLGenerator.visualizePatternInvocations(model.getPatternSet());
 	}
 
 	@Override
 	public boolean supportsEditor(final IEditorPart editor) {
 		return Optional.of(editor) //
-				.flatMap(maybeCast(EcoreEditor.class)) //
-				.map(EcoreEditor::getSelection) //
-				.flatMap(maybeCast(TreeSelection.class)) //
-				.map(TreeSelection::getFirstElement) //
-				.filter(o -> isPatternSet(o) || isPattern(o) || isRule(o)) //
+				.flatMap(maybeCast(XtextEditor.class)) //
+				.map(file -> file.getDocument().readOnly(doc -> doc.getContents().get(0))) //
+				.flatMap(maybeCast(EditorFile.class)) //
 				.isPresent();
 	}
 
 	@Override
 	public boolean supportsSelection(ISelection selection) {
-		Collection<EObject> elements = VisualiserUtilities.extractEcoreSelection(selection);
-		if (elements == null)
-			return false;
-
-		return elements.stream()
-				.filter(elt -> elt.eClass().getEPackage().getName().contains("org.emoflon.ibex.patternmodel")).findAny()
-				.isPresent();
-	}
-
-	private static boolean isPatternSet(final Object object) {
-		return object instanceof IBeXPatternSet;
-	}
-
-	private static boolean isPattern(final Object object) {
-		return object instanceof GTPattern;
-	}
-
-	private static boolean isRule(final Object object) {
-		return object instanceof GTRule;
+		// Note: If the editor is detected correctly, this must be true anyways!
+		return true;
 	}
 
 }

@@ -11,6 +11,7 @@ Import-Package: org.apache.log4j
 Require-Bundle: org.moflon.core.ui,
  org.eclipse.ui.workbench,
  org.eclipse.jface,
+ org.emoflon.ibex.common.slimgt;bundle-version="1.0.0",
  org.emoflon.ibex.common.coremodel,
  org.emoflon.ibex.gt.gtmodel,
  org.eclipse.emf.ecore.editor,
@@ -23,4 +24,7 @@ Require-Bundle: org.moflon.core.ui,
  org.eclipse.xtext.ui,
  org.eclipse.xtext.xbase,
  org.moflon.core.utilities,
- org.emoflon.ibex.tgg.compiler
+ org.emoflon.ibex.tgg.compiler,
+ org.emoflon.ibex.gt.gtl,
+ org.emoflon.ibex.common,
+ org.emoflon.ibex.gt

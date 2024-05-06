@@ -47,9 +47,9 @@ class IBeXPatternPlantUMLGenerator {
 			«commonLayoutSettings»
 			
 			skinparam class {
-				BorderColor<<SIGNATURE>> «ContextColor»
+				BorderColor<<CONTEXT>> «ContextColor»
 				BorderColor<<LOCAL>> «LocalColor»
-				FontColor<<SIGNATURE>> «ContextColor»
+				FontColor<<CONTEXT>> «ContextColor»
 				FontColor<<LOCAL>> «LocalColor»
 			}
 			
@@ -68,9 +68,9 @@ class IBeXPatternPlantUMLGenerator {
 		val packageName = prefix + pattern.name
 		'''
 			package "«packageName»" «IF !positive»#FFCCCC«ENDIF» {}
-			«visualizeNodes(pattern.signatureNodes, 'SIGNATURE', packageName)»
+			«visualizeNodes(pattern.signatureNodes, 'CONTEXT', packageName)»
 			«visualizeNodes(pattern.localNodes, 'LOCAL', packageName)»
-			«visualizeEdges(pattern.edges, ContextColor, packageName)»
+			«visualizeEdges(pattern.edges, ContextColor, packageName, '')»
 			«var j = 0»
 			«FOR invocation : pattern.invocations»
 				«val newPrefix = j++ + "\\"»
@@ -87,6 +87,7 @@ class IBeXPatternPlantUMLGenerator {
 	 * Visualizes the create pattern.
 	 */
 	static def String visualizeRule(GTRule rule) {
+		val packageName = rule.name
 		'''
 			«commonLayoutSettings»
 			
@@ -94,19 +95,34 @@ class IBeXPatternPlantUMLGenerator {
 				BorderColor<<CONTEXT>> «ContextColor»
 				BorderColor<<CREATE>> «CreateColor»
 				FontColor<<CONTEXT>> «ContextColor»
+				BorderColor<<LOCAL>> «LocalColor»
+				FontColor<<LOCAL>> «LocalColor»
 				FontColor<<CREATE>> «CreateColor»
 				BorderColor<<DELETE>> «DeleteColor»
 				FontColor<<DELETE>> «DeleteColor»
 			}
 			
-			«visualizeNodes(rule.allNodes.filter[n | rule.precondition.signatureNodes.contains(n) && rule.postcondition.signatureNodes.contains(n)].toList, 'CONTEXT', '')»
-			«visualizeNodes(rule.creation.nodes, 'CREATE', '')»
-			«visualizeEdges(rule.creation.edges, CreateColor, '')»
-			«visualizeNodes(rule.deletion.nodes, 'DELETE', '')»
-			«visualizeEdges(rule.deletion.edges, DeleteColor, '')»
+			package "«packageName»" {}
+			
+			«visualizeNodes(rule.precondition.signatureNodes.filter[n | !rule.deletion.nodes.contains(n)].toList, 'CONTEXT', packageName)»
+			«visualizeNodes(rule.precondition.localNodes.toList, 'LOCAL', packageName)»
+			«visualizeEdges(rule.precondition.edges.filter[e | !rule.deletion.edges.contains(e)].toList, ContextColor, packageName, '')»
+			«visualizeNodes(rule.creation.nodes, 'CREATE', packageName)»
+			«visualizeEdges(rule.creation.edges, CreateColor, packageName, '++')»
+			«visualizeNodes(rule.deletion.nodes, 'DELETE', packageName)»
+			«visualizeEdges(rule.deletion.edges, DeleteColor, packageName, '--')»
+
+			«var j = 0»
+			«FOR invocation : rule.precondition.invocations»
+			«val newPrefix = j++ + "\\"»
+			«printPattern(invocation.invocation as GTPattern, newPrefix, invocation.positive)»				
+			«FOR mapEntry : invocation.mapping.entrySet»
+			"«node(mapEntry.key, packageName)»" #--# "«node(mapEntry.value, newPrefix + invocation.invocation.name)»"
+			«ENDFOR»
+			«ENDFOR»
 			
 			center footer
-				= Create Pattern «rule.name»
+				= Rule «rule.name»
 			end footer
 		'''
 	}
@@ -132,10 +148,10 @@ class IBeXPatternPlantUMLGenerator {
 	/**
 	 * Outputs the edges.
 	 */
-	private static def String visualizeEdges(List<IBeXEdge> edges, String color, String nodePrefix) {
+	private static def String visualizeEdges(List<IBeXEdge> edges, String color, String nodePrefix, String op) {
 		'''
 			«FOR edge : edges»
-				"«node(edge.source, nodePrefix)»" -[#«color»]-> "«node(edge.target, nodePrefix)»": «» <color:«color»>«edge.type.name»
+				"«node(edge.source, nodePrefix)»" -[#«color»]-> "«node(edge.target, nodePrefix)»": «» <color:«color»>«op»«edge.type.name»
 			«ENDFOR»
 		'''
 	}
