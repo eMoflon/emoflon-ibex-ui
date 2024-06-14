@@ -36,8 +36,8 @@ class GTFormatter extends AbstractFormatter2 {
 		// Empty line after imports.
 		formatList(file.imports, document, 0, 1, 2)
 
-		val lastPattern = NodeModelUtils.getNode(file.patterns.last)
-		val lastCondition = NodeModelUtils.getNode(file.conditions.last)
+		val lastPattern = NodeModelUtils.getNode(file.patterns.lastOrNull)
+		val lastCondition = NodeModelUtils.getNode(file.conditions.lastOrNull)
 		val isLastElementACondition = //
 			if (lastPattern === null || lastCondition === null)
 				false

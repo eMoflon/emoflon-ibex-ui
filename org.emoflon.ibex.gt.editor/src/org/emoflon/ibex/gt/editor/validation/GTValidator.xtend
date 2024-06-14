@@ -1295,7 +1295,7 @@ class GTValidator extends AbstractGTValidator {
 		for (name : sortedNames.subList(0, names.size - 1)) {
 			s += "'" + name + "'"
 		}
-		return s + " and '" + sortedNames.last + "'"
+		return s + " and '" + sortedNames.lastOrNull + "'"
 	}
 
 	// stochastic function validation

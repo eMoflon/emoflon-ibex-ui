@@ -15,7 +15,7 @@ Require-Bundle: org.emoflon.ibex.tgg.editor,
  org.eclipse.xtext.ui,
  org.moflon.core.ui,
  org.moflon.core.utilities
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Export-Package: org.emoflon.ibex.tgg.editor.ide.admin,
  org.emoflon.ibex.tgg.editor.ide.contentassist.antlr,
  org.emoflon.ibex.tgg.editor.ide.contentassist.antlr.internal,
