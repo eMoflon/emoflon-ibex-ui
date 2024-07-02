@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.emoflon.ibex.tgg.integrate.api.resolution.ResolutionExecuter;
-import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict;
-import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.ConflictContainer;
+import org.emoflon.ibex.tgg.runtime.strategies.integrate.conflicts.Conflict;
+import org.emoflon.ibex.tgg.runtime.strategies.integrate.conflicts.ConflictContainer;
 
 public class ConflictContainerProcessor {
 

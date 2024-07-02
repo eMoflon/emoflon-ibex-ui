@@ -1,0 +1,214 @@
+grammar org.emoflon.ibex.tgg.tggl.TGGL with org.emoflon.ibex.common.slimgt.SlimGT
+
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+import "http://www.emoflon.org/ibex/common/slimgt/SlimGT" as slimGT
+
+generate tGGL "http://www.emoflon.org/ibex/tgg/tggl/TGGL"
+
+@Override
+EditorFile:
+	imports += Import*
+	(schema = Schema)?
+  	libraries += AttributeConditionDefinitionLibrary*
+  	(rules += TGGRule |
+  	patterns += SlimRule)*
+;
+
+Using:
+	'using' importedNamespace = QualifiedNameWithWildcard
+;
+
+QualifiedNameWithWildcard:
+	QualifiedName '.*'
+;
+
+/* ---------- */
+/*   SCHEMA   */
+/* ---------- */
+
+Schema:
+	'schema' name = QualifiedName
+	'{'	
+		('source' '{'
+			sourceTypes += [ecore::EObject|ID]*
+		'}')? 
+		
+		('target' '{'
+			targetTypes += [ecore::EObject|ID]*
+		'}')? 
+	
+		('correspondence' '{'
+			correspondenceTypes += CorrespondenceType*
+		'}')?	
+	'}' 
+;
+
+AttributeConditionDefinition:
+	name = ID '(' params += SlimParameter (',' params += SlimParameter)* ')' 
+	'{'
+		'sync' 
+		'{'
+			allowedSyncBindings += Binding (',' allowedSyncBindings += Binding)*
+		'}'
+		('gen'
+		'{'
+			allowedGenBindings += Binding (',' allowedGenBindings += Binding )*
+		'}'
+		)?
+	'}'
+;
+
+Binding:
+	'[' value += ('B'|'F')+ ']'
+;
+
+AttributeConditionDefinitionLibrary:
+	'library' name = ID
+	'{'
+		(attributeCondDefs += AttributeConditionDefinition)*
+	'}'
+;
+
+CorrespondenceType:
+	name = ID ('extends' super=[CorrespondenceType])? ('{'
+		(hasSource?= 'src->' source = [ecore::EClass | QualifiedName])?  
+		(hasTarget?= 'trg->' target = [ecore::EClass | QualifiedName])?
+	'}')?
+;
+
+AttributeCondition:
+	name = [AttributeConditionDefinition | QualifiedName] 
+	'(' values += (LocalVariable | ExpressionOperand | DerivableNodeAttributeExpression ) 
+		(',' values += (LocalVariable | ExpressionOperand | DerivableNodeAttributeExpression))* ')'
+;
+
+DerivableNodeAttributeExpression returns slimGT::ArithmeticExpression: {DerivableNodeAttributeExpression}
+	derived?=('derived') nodeExpression=NodeExpression '.' feature = [ecore::EAttribute]	
+;
+
+@Override
+NodeExpression: 
+	{NodeExpression} node = [SlimRuleNode|ID]
+;
+
+@Override
+ExpressionOperand:
+	{ExpressionOperand} operand = (NodeAttributeExpression | ArithmeticLiteral | EnumExpression | Constant)
+;
+
+LocalVariable:
+	'$' name = ID
+;
+
+TGGLRuleRefinement:
+	TGGLRuleRefinementPlain | TGGLRuleRefinementAliased
+;
+
+TGGLRuleRefinementPlain returns TGGLRuleRefinement : {TGGLRuleRefinementPlain}
+	superRule=[TGGRule|ID]
+;
+
+TGGLRuleRefinementAliased returns TGGLRuleRefinement : {TGGLRuleRefinementAliased}
+	superRule=[TGGRule|ID] 'as' name=ID
+;
+
+
+TGGRuleRefinementNode: 
+	node=[SlimRuleNode|QualifiedName]
+;
+
+TGGLRuleRefinementCorrespondenceNode: 
+	node=[TGGCorrespondenceNode|QualifiedName]
+;
+
+/* ------------- */
+/*   TGG RULES   */
+/* ------------- */
+
+@Override
+SlimRuleNodeContext: {SlimRuleNodeContext}
+	(refining ?= '@refines=' refinement+=TGGRuleRefinementNode (',' refinement+=TGGRuleRefinementNode)*)?
+	'[=]' (local?='local')? context = SlimRuleNode
+;
+
+@Override
+SlimRuleNodeCreation: {SlimRuleNodeCreation}
+	(refining ?= '@refines+' refinement+=TGGRuleRefinementNode (',' refinement+=TGGRuleRefinementNode)* )?
+	'[+]' creation = SlimRuleNode
+;
+
+@Override
+SlimRuleNode: {SlimRuleNode}
+	name = ID ':' type=[ecore::EClass | QualifiedName] ('{'
+		(contextEdges += SlimRuleEdgeContext |
+		createdEdges += SlimRuleEdgeCreation |
+		assignments += SlimRuleAttributeAssignment)*
+	'}')?
+;
+
+TGGRule:
+	(configured?='@' configuration = SlimRuleAnnotation)?
+	(abstract ?= 'abstract')? 
+	'rule' name = ID 
+	('refines' refinements += TGGLRuleRefinement (',' refinements += TGGLRuleRefinement)*)? 
+	'{'
+		('source' '{'
+			sourceRule = TGGDomainRule 
+		'}')? 	
+		
+		('target' '{'
+			targetRule = TGGDomainRule 
+		'}')? 
+		
+		('correspondence' '{'
+			corrRule = TGGCorrRule
+		'}')? 
+	
+		('attributeConditions' '{'
+			(attrConditions += AttributeCondition)*
+		'}')? 
+	'}'
+;
+
+TGGCorrRule: {TGGCorrRule}
+	(contextCorrespondenceNodes += TGGCorrespondenceNodeContext |
+	createdCorrespondenceNodes += TGGCorrespondenceNodeCreation)*
+;
+
+@Override
+SlimRule: {SlimRule}
+	(configured?='@' configuration = SlimRuleAnnotation)?
+	(abstract ?= 'abstract')? 
+	'pattern' 
+	name = ID 
+	(refining ?= 'refines' refinements+=GTLRuleRefinement (',' refinements+=GTLRuleRefinement)*)? 
+	'{'
+			(contextNodes += SlimRuleNodeContext 		|
+			conditions += SlimRuleCondition |
+			invocations += SlimRuleInvocation)*
+	'}' 
+;
+
+TGGDomainRule: {TGGDomainRule}
+	(contextNodes += SlimRuleNodeContext |
+	createdNodes += SlimRuleNodeCreation |
+	conditions += SlimRuleCondition |
+	invocations += SlimRuleInvocation)*
+;
+
+TGGCorrespondenceNodeContext:
+	(refining ?= '@refines=' refinement+=TGGLRuleRefinementCorrespondenceNode (',' refinement+=TGGLRuleRefinementCorrespondenceNode)*)?
+	'[=]' context = TGGCorrespondenceNode
+;
+
+TGGCorrespondenceNodeCreation:
+	(refining ?= '@refines+' refinement+=TGGLRuleRefinementCorrespondenceNode (',' refinement+=TGGLRuleRefinementCorrespondenceNode)*)?
+	'[+]' creation = TGGCorrespondenceNode
+;
+
+TGGCorrespondenceNode:
+	name = ID ':' type = [CorrespondenceType | QualifiedName] ('{'
+		'src->' source = [SlimRuleNode|ID]
+		'trg->' target = [SlimRuleNode|ID]
+	'}')?
+;

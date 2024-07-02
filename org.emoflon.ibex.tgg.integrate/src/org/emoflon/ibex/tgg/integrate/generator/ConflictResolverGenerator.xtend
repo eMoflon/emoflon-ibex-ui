@@ -7,11 +7,11 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.naming.QualifiedName
 import org.emoflon.ibex.tgg.integrate.api.ConflictContainerProcessor
-import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.ConflictContainer
-import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.util.ConflictResolver
+import org.emoflon.ibex.tgg.integrate.api.ConflictResolutionSpecification
+import org.emoflon.ibex.tgg.runtime.strategies.integrate.conflicts.ConflictContainer
+import org.emoflon.ibex.tgg.runtime.strategies.integrate.conflicts.resolution.util.ConflictResolver
 
 import static extension org.eclipse.xtext.EcoreUtil2.*
-import org.emoflon.ibex.tgg.integrate.api.ConflictResolutionSpecification
 
 class ConflictResolverGenerator {
 

@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict;
-import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.util.ConflictElements;
-import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.util.ConflictEltFilter;
+import org.emoflon.ibex.tgg.runtime.strategies.integrate.conflicts.Conflict;
+import org.emoflon.ibex.tgg.runtime.strategies.integrate.conflicts.resolution.util.ConflictElements;
+import org.emoflon.ibex.tgg.runtime.strategies.integrate.conflicts.resolution.util.ConflictEltFilter;
 
 public class ConflictPipelineExecuter implements PipelineExecuter {
 
