@@ -7,10 +7,8 @@ Bundle-SymbolicName: org.emoflon.ibex.gt.editor.ui.tests; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.workbench;resolution:=optional,
- org.eclipse.xtext.junit4,
  org.eclipse.xtext.testing,
  org.eclipse.xtext.ui.testing,
- org.eclipse.xtext.xbase.junit,
  org.eclipse.xtext.xbase.testing,
  org.emoflon.ibex.gt.editor.ui,
  org.junit;bundle-version="4.12.0",
