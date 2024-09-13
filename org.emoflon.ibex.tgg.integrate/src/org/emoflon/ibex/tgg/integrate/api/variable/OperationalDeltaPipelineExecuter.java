@@ -4,10 +4,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.emoflon.ibex.tgg.integrate.internal.delta.OperationalDeltaEvaluator;
-import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict;
-
-import language.BindingType;
-import language.DomainType;
+import org.emoflon.ibex.tgg.runtime.strategies.integrate.conflicts.Conflict;
+import org.emoflon.ibex.tgg.tggmodel.IBeXTGGModel.BindingType;
+import org.emoflon.ibex.tgg.tggmodel.IBeXTGGModel.DomainType;
 
 public class OperationalDeltaPipelineExecuter implements PipelineExecuter {
 
@@ -25,13 +24,13 @@ public class OperationalDeltaPipelineExecuter implements PipelineExecuter {
 
 	@Override
 	public PipelineExecuter src() {
-		domainTypes.add(DomainType.SRC);
+		domainTypes.add(DomainType.SOURCE);
 		return this;
 	}
 
 	@Override
 	public PipelineExecuter trg() {
-		domainTypes.add(DomainType.TRG);
+		domainTypes.add(DomainType.TARGET);
 		return this;
 	}
 

@@ -1,0 +1,34 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.emoflon.ibex.tgg.tggl
+Bundle-ManifestVersion: 2
+Bundle-Name: org.emoflon.ibex.tgg.tggl
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: org.emoflon.ibex.tgg.tggl; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.xtext,
+ org.eclipse.xtext.xbase,
+ org.eclipse.equinox.common;bundle-version="3.5.0",
+ org.emoflon.ibex.common.slimgt;bundle-version="1.0.0",
+ org.eclipse.emf.ecore,
+ org.eclipse.xtext.xbase.lib;bundle-version="2.14.0",
+ org.eclipse.xtext.util,
+ org.eclipse.emf.common,
+ org.antlr.runtime;bundle-version="[3.2.0,3.2.1)",
+ org.eclipse.core.resources,
+ org.eclipse.jdt.core;bundle-version="3.30.0",
+ org.emoflon.ibex.common;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Export-Package: org.emoflon.ibex.tgg.tggl,
+ org.emoflon.ibex.tgg.tggl.generator,
+ org.emoflon.ibex.tgg.tggl.parser.antlr,
+ org.emoflon.ibex.tgg.tggl.parser.antlr.internal,
+ org.emoflon.ibex.tgg.tggl.scoping,
+ org.emoflon.ibex.tgg.tggl.serializer,
+ org.emoflon.ibex.tgg.tggl.services,
+ org.emoflon.ibex.tgg.tggl.tGGL,
+ org.emoflon.ibex.tgg.tggl.tGGL.impl,
+ org.emoflon.ibex.tgg.tggl.tGGL.util,
+ org.emoflon.ibex.tgg.tggl.util,
+ org.emoflon.ibex.tgg.tggl.validation
+Import-Package: org.apache.log4j

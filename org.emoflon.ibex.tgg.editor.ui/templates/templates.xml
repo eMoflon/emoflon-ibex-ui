@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<templates>
-<!-- 
-<template id="t1" autoinsert="false" context="org.moflon.tgg.mosl.TGG.Import" deleted="false" description="Format for importing ecore files in the workspace" enabled="true" name="platform resource import">#import "platform:/resource/${projectName}/model/${projectName}.ecore"</template>
--->
-</templates>
