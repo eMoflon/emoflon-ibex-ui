@@ -14,5 +14,18 @@
             class="org.emoflon.ibex.tgg.editor.ide.visualisation.IbexTGGVisualiser">
       </diagram_text_provider>
    </extension>
+   <extension
+         id="nature"
+         name="TGG Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="org.emoflon.ibex.tgg.editor.ide.admin.TGGNature">
+         </run>
+      </runtime>
+      <builder
+            id="org.emoflon.ibex.tgg.editor.ide.admin">
+      </builder>
+   </extension>
 
 </plugin>
