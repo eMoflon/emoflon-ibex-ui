@@ -32,7 +32,6 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.INewWizard;
-import org.emoflon.ibex.gt.editor.ui.builder.GTNature;
 import org.emoflon.ibex.tgg.editor.builder.TGGBuildUtil;
 import org.moflon.core.plugins.manifest.ManifestFileUpdater;
 import org.moflon.core.utilities.LogUtils;
