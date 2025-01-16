@@ -12,10 +12,13 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.TreeIterator;
@@ -29,12 +32,15 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.INewWizard;
+import org.emoflon.ibex.gt.editor.ui.builder.GTNature;
 import org.emoflon.ibex.tgg.editor.builder.TGGBuildUtil;
+import org.moflon.core.plugins.manifest.ManifestFileUpdater;
 import org.moflon.core.utilities.LogUtils;
 import org.moflon.core.utilities.MoflonUtil;
 import org.moflon.core.utilities.WorkspaceHelper;
 import org.emoflon.ibex.tgg.editor.defaults.AttrCondDefLibraryProvider;
 import org.emoflon.ibex.tgg.editor.defaults.DefaultFilesHelper;
+import org.emoflon.ibex.tgg.editor.ide.admin.TGGNature;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -166,6 +172,52 @@ public class NewIntegrationWizard extends AbstractMoflonWizard implements INewWi
 		return result;
 	}
 
+	private void addNature(IProject project) {
+		try {
+			new ManifestFileUpdater().processManifest(project, manifest -> {
+				return ManifestFileUpdater.setBasicProperties(manifest, project.getName());
+			});
+			addNatureIfNotExists(project, TGGNature.IBEX_TGG_NATURE_ID);
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	protected void addNatureIfNotExists(final IProject project, final String nature) throws CoreException {
+		IProjectDescription description = project.getDescription();
+		String[] natures = description.getNatureIds();
+		String[] newNatures;
+		int idx = -1;
+		for (int i = 0; i < natures.length; i++) {
+			if (natures[i].equals(nature)) {
+				idx = i;
+				break;
+			}
+		}
+
+		if (idx >= 0) {
+			natures[idx] = natures[0];
+			natures[0] = nature;
+			newNatures = new String[natures.length];
+			System.arraycopy(natures, 0, newNatures, 0, natures.length);
+		} else {
+			newNatures = new String[natures.length + 1];
+			System.arraycopy(natures, 0, newNatures, 1, natures.length);
+			newNatures[0] = nature;
+		}
+
+		// validate the natures
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IStatus status = workspace.validateNatureSet(newNatures);
+
+		// only apply new nature, if the status is ok
+		if (status.getCode() == IStatus.OK) {
+			description.setNatureIds(newNatures);
+			project.setDescription(description, null);
+		}
+	}
+	
 	@Override
 	protected void doFinish(final IProgressMonitor monitor) throws CoreException {
 		try {
@@ -174,6 +226,7 @@ public class NewIntegrationWizard extends AbstractMoflonWizard implements INewWi
 			String projectName = projectInfo.getProjectName();
 			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 			createProject(subMon.split(3), project);
+			addNature(project);
 			getMetamodelURIs(subMon.split(3), srcSelection.getSelectedMetaModels(), true);
 			getMetamodelURIs(subMon.split(3), trgSelection.getSelectedMetaModels(), false);
 			generateDefaultFiles(subMon.split(3), project);
@@ -181,5 +234,6 @@ public class NewIntegrationWizard extends AbstractMoflonWizard implements INewWi
 			LogUtils.error(logger, e);
 		}
 	}
+
 
 }
