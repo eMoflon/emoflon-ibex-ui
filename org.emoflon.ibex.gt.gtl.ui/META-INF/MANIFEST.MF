@@ -1,0 +1,34 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.emoflon.ibex.gt.gtl.ui
+Bundle-ManifestVersion: 2
+Bundle-Name: org.emoflon.ibex.gt.gtl.ui
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: org.emoflon.ibex.gt.gtl.ui; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.emoflon.ibex.common.slimgt;bundle-version="1.0.0",
+ org.emoflon.ibex.common.slimgt.ui;bundle-version="1.0.0",
+ org.emoflon.ibex.gt.gtl,
+ org.emoflon.ibex.gt.gtl.ide,
+ org.eclipse.xtext.ui,
+ org.eclipse.xtext.ui.shared,
+ org.eclipse.xtext.ui.codetemplates.ui,
+ org.eclipse.ui.editors;bundle-version="3.5.0",
+ org.eclipse.ui.ide;bundle-version="3.5.0",
+ org.eclipse.ui,
+ org.eclipse.compare,
+ org.eclipse.xtext.builder,
+ org.moflon.core.ui,
+ org.eclipse.jdt.core,
+ org.moflon.core.plugins,
+ org.eclipse.jdt.launching,
+ com.google.inject,
+ org.moflon.core.utilities
+Import-Package: org.apache.log4j,
+ org.emoflon.ibex.common.slimgt.ide.highlighting
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Export-Package: org.emoflon.ibex.gt.gtl.ui.builder,
+ org.emoflon.ibex.gt.gtl.ui.contentassist,
+ org.emoflon.ibex.gt.gtl.ui.internal,
+ org.emoflon.ibex.gt.gtl.ui.quickfix
+Bundle-Activator: org.emoflon.ibex.gt.gtl.ui.internal.GtlActivator

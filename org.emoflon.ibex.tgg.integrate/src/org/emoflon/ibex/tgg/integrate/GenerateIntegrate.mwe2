@@ -33,7 +33,7 @@ Workflow {
 		language = StandardLanguage {
 			name = "org.emoflon.ibex.tgg.integrate.Integrate"
 			fileExtensions = "integ"
-			referencedResource = "platform:/resource/org.emoflon.ibex.tgg.editor/model/generated/TGG.genmodel"
+			referencedResource = "platform:/resource/org.emoflon.ibex.tgg.tggl/model/generated/TGGL.genmodel"
 
 			serializer = {
 				generateStub = false

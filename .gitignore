@@ -1,3 +1,5 @@
 **/xtend-gen/*
 !**/xtend-gen/*.keep
 **/bin/
+**/src-gen/*
+**/plugin.xml_gen

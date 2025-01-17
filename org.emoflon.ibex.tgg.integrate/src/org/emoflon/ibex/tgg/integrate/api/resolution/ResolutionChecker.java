@@ -1,7 +1,7 @@
 package org.emoflon.ibex.tgg.integrate.api.resolution;
 
 import org.emoflon.ibex.tgg.integrate.internal.ConflictResolutionStrategyRegistry;
-import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict;
+import org.emoflon.ibex.tgg.runtime.strategies.integrate.conflicts.Conflict;
 
 public class ResolutionChecker {
 

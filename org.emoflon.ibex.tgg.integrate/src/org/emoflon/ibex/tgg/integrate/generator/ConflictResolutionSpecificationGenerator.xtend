@@ -1,13 +1,13 @@
 package org.emoflon.ibex.tgg.integrate.generator
 
 import com.google.inject.Inject;
+import java.util.Optional
+import org.apache.commons.lang3.StringUtils
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.naming.QualifiedName
-import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict
-import org.apache.commons.lang3.StringUtils
-import java.util.Optional
-import org.emoflon.ibex.tgg.integrate.api.variable.ConflictPipelineExecuter
 import org.emoflon.ibex.tgg.integrate.api.ConflictResolutionSpecification
+import org.emoflon.ibex.tgg.integrate.api.variable.ConflictPipelineExecuter
+import org.emoflon.ibex.tgg.runtime.strategies.integrate.conflicts.Conflict
 
 class ConflictResolutionSpecificationGenerator {
 

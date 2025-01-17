@@ -2,10 +2,9 @@ package org.emoflon.ibex.tgg.integrate.internal.delta.strategies;
 
 import java.util.Set;
 
-import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict;
-
-import language.BindingType;
-import language.DomainType;
+import org.emoflon.ibex.tgg.runtime.strategies.integrate.conflicts.Conflict;
+import org.emoflon.ibex.tgg.tggmodel.IBeXTGGModel.BindingType;
+import org.emoflon.ibex.tgg.tggmodel.IBeXTGGModel.DomainType;
 
 public abstract class ResolutionStrategyOperationalDeltaEvaluator {
 	

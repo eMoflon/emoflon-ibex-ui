@@ -1,0 +1,145 @@
+grammar org.emoflon.ibex.gt.gtl.GTL with org.emoflon.ibex.common.slimgt.SlimGT
+
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+import "http://www.emoflon.org/ibex/common/slimgt/SlimGT" as slimGT
+
+generate gTL "http://www.emoflon.org/ibex/gt/gtl/GTL"
+
+@Override
+EditorFile:
+	package = PackageDeclaration
+	(imports += Import)*
+	(importedPatterns += PatternImport)*
+	(rules += SlimRule)*
+;
+
+@Override
+Import:
+	'import' name = STRING
+;
+
+PackageDeclaration:
+	'package' name = QualifiedName
+;
+
+PatternImport : 
+	'from' file = StringLiteral 'import' (importingAll ?= '*' | pattern = [SlimRule|ID])
+;
+
+@Override
+SlimRule: {SlimRule}
+	(configured?='@' configuration = SlimRuleAnnotation)?
+	(abstract?='abstract')? 
+	type = GTLRuleType 
+	name = ID 
+	('(' parameters+=SlimParameter (',' parameters+=SlimParameter)* ')')? 
+	(refining ?= 'refines' refinement+=GTLRuleRefinement (',' refinement+=GTLRuleRefinement)*)? 
+	'{'
+			(contextNodes += SlimRuleNodeContext 		|
+			createdNodes += SlimRuleNodeCreation 		|
+			deletedNodes += GTLRuleNodeDeletion 		|
+			conditions += SlimRuleCondition |
+			watchDogs += GTLRuleWatchDog 				|
+			invocations += SlimRuleInvocation)*
+	'}' 
+	(stochastic ?='@rate' probability = ValueExpression)?
+	';'
+;
+
+@Override
+SlimParameter:
+  name=ID ':' (type = [ecore::EDataType])
+;
+
+enum GTLRuleType :
+	PATTERN = 'pattern' | RULE = 'rule'
+;
+
+@Override
+GTLRuleRefinement:
+	GTLRuleRefinementPlain | GTLRuleRefinementAliased
+;
+
+
+@Override
+GTLRuleRefinementPlain returns GTLRuleRefinement : {GTLRuleRefinementPlain}
+	superRule=[SlimRule|ID]
+;
+
+
+@Override
+GTLRuleRefinementAliased returns GTLRuleRefinement : {GTLRuleRefinementAliased}
+	superRule=[SlimRule|ID] 'as' name=ID
+;
+
+GTLRuleRefinementNode:
+	superRule=[ecore::EObject|ID] '.' refinementNode=[SlimRuleNode|ID]
+;
+
+@Override
+SlimRuleNodeContext:
+	(refining ?= '@refines='  refinement=GTLRuleRefinementNode)?
+	'[=]' (local?='local')? context = SlimRuleNode
+;
+
+@Override
+SlimRuleNodeCreation:
+	(refining ?= '@refines+'  refinement=GTLRuleRefinementNode)?
+	'[+]' creation = SlimRuleNode
+;
+
+GTLRuleNodeDeletion :
+	(refining ?= '@refines-'  refinement=GTLRuleRefinementNode)?
+	'[-]' deletion = SlimRuleNode
+;
+
+@Override
+SlimRuleNode:
+	name = ID ':' type=[ecore::EClass] ('{'
+		(contextEdges += SlimRuleEdgeContext |
+		createdEdges += SlimRuleEdgeCreation |
+		deletedEdges += GTLRuleEdgeDeletion |
+		edgeIterators += GTLEdgeIterator |
+		assignments += SlimRuleAttributeAssignment)*
+	'}')?
+;
+
+GTLRuleEdgeDeletion:
+	'[-]' deletion = SlimRuleSimpleEdge
+;
+
+GTLRuleWatchDog:
+	'watch' '(' nodeAttribute=NodeAttributeExpression ')'
+;
+
+@Override
+ExpressionOperand:
+	{ExpressionOperand} operand = (NodeAttributeExpression | GTLIteratorAttributeExpression | CountExpression | ArithmeticLiteral | EnumExpression | GTLParameterExpression | Constant)
+;
+
+GTLIteratorAttributeExpression:
+	'iterator.' feature = [ecore::EAttribute]
+;
+
+GTLParameterExpression:
+	'parameter.' parameter = [slimGT::SlimParameter|ID]
+;
+
+GTLEdgeIterator:
+	'forEach' '(' type = [ecore::EReference] '->' name = ID (casting ?= 'as' subType = [ecore::EClass])? ')' '{'
+		(iteratorAttributes+=GTLEdgeIteratorAttributeAssignment | 
+		references+=GTLEdgeIteratorReference)+
+	'}'
+;
+
+GTLEdgeIteratorAttributeAssignment:
+	attribute = (NodeAttributeExpression | GTLIteratorAttributeExpression) ':=' value=ValueExpression ';'
+;
+
+GTLEdgeIteratorReference:
+ 	operator = EdgeIteratorOperator source = [SlimRuleNode|ID] '-' type = [ecore::EReference] '->' target = [GTLEdgeIterator|ID]
+;
+
+enum EdgeIteratorOperator:
+	CREATE = '[+]' | DELETE = '[-]'
+;
