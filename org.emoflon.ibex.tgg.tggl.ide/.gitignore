@@ -1,6 +1,0 @@
-/bin/
-/xtend-gen/*
-/src-gen/*
-
-!/xtend-gen/.gitkeep
-!/src-gen/.gitkeep
