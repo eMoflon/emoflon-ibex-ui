@@ -5,8 +5,7 @@ Bundle-SymbolicName: org.emoflon.ibex.common.visualization;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.emoflon.ibex.common.visualization
-Export-Package: org.emoflon.ibex.common.visualization,
- org.emoflon.ibex.common.visualization.tgg
+Export-Package: org.emoflon.ibex.common.visualization
 Import-Package: org.apache.log4j
 Require-Bundle: org.moflon.core.ui,
  org.eclipse.ui.workbench,

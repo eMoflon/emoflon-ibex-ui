@@ -143,3 +143,23 @@ GTLEdgeIteratorReference:
 enum EdgeIteratorOperator:
 	CREATE = '[+]' | DELETE = '[-]'
 ;
+
+@Override
+terminal TRUE returns ecore::EBoolean:
+	'true'
+;
+
+@Override
+terminal FALSE returns ecore::EBoolean:
+	'false'
+;
+
+@Override
+terminal INT returns ecore::EInt:
+	'0'..'9' ('0'..'9')*
+;
+
+@Override
+terminal STRING returns ecore::EString:
+	'"' ( '""' | !('"') )* '"'
+;
