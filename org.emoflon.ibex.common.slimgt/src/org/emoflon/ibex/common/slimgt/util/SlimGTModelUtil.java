@@ -125,6 +125,24 @@ public final class SlimGTModelUtil {
 	}
 
 	/**
+	 * Returns a List of EClasses imported into the given file, may contain
+	 * duplicates.
+	 * 
+	 * @param file the SlimGT file
+	 */
+	public static Collection<EClass> getClassesNonDistinct(final EditorFile file) {
+		return file.getImports().stream().map(i -> {
+			try {
+				return Optional.of(SlimGTEMFUtil.loadMetamodel(i.getName()));
+			} catch (Exception e) {
+				return Optional.empty();
+			}
+		}).filter(model -> model.isPresent())
+				.flatMap(model -> getElements((EObject) model.get(), EClass.class).stream())
+				.collect(Collectors.toList());
+	}
+
+	/**
 	 * Returns all Enums imported into the given file.
 	 * 
 	 * @param file the GT file

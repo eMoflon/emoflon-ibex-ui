@@ -126,6 +126,26 @@ public class GTLValidator extends SlimGTValidator {
 		}
 	}
 
+	/**
+	 * Type names must be unique among all Rule, Pattern, Mapping and other Type
+	 * names.
+	 */
+	@Override
+	protected void checkMetamodelImports(Import imp) {
+		super.checkMetamodelImports(imp);
+
+		EditorFile ef = SlimGTModelUtil.getContainer(imp, EditorFile.class);
+		Set<String> uniqueTypes = SlimGTModelUtil.getClasses(ef).stream().map(c -> c.getName())
+				.collect(Collectors.toSet());
+		int count = SlimGTModelUtil.getClassesNonDistinct(ef).stream().filter(c -> uniqueTypes.contains(c.getName()))
+				.map(c -> 1).reduce((sum, current) -> sum + current).orElseGet(() -> 0);
+
+		if (count > uniqueTypes.size()) {
+			error("Class/Type names must be unique among all Rule, Pattern, Mapping and other Class/Type names. ",
+					SlimGTPackage.Literals.EDITOR_FILE__IMPORTS);
+		}
+	}
+
 	@Check
 	public void checkImportUriExists(PatternImport imp) {
 		if (imp.getFile() == null || imp.getFile().getValue() == null || imp.getFile().getValue().isBlank())
@@ -231,28 +251,6 @@ public class GTLValidator extends SlimGTValidator {
 	/**
 	 * Pattern names must be unique.
 	 */
-	@Check
-	public void checkNumbeOfImportedMetamodels(PatternImport pImport) {
-//		if (!pImport.isImportingAll() && (pImport.getPattern() == null || pImport.getPattern().getName() == null))
-//			return;
-
-		// TODO: Fixme -> Make an exception for the EcorePackage metamodel
-
-//		Set<EditorFile> importedGTLFiles = new HashSet<>();
-//		importedGTLFiles.addAll(loadAllEditorFilesInPackage(ef));
-
-	}
-
-	@Check
-	protected void checkOnlyOneMetamodelImport(Import imp) {
-//		EditorFile ef = SlimGTModelUtil.getContainer(imp, EditorFile.class);
-//		if(ef.getImports().size() > 1) {
-//			error("Pattern/rule '%s' must not be declared more than once.", SlimGTPackage.Literals.IMPORT__NAME);
-//		}
-		// TODO: Fixme -> Make an exception for the EcorePackage metamodel
-	}
-
-	// Rulew Checks
 
 	@Check
 	protected void checkRuleNameForbidden(SlimRule rule) {

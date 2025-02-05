@@ -53,7 +53,7 @@ public class SlimGTValidator extends AbstractSlimGTValidator {
 
 	/**
 	 * This prevents all exceptions being "swallowed" by the default validator
-	 * implementation. TODO: Remove this or make it a little nice for future stable
+	 * implementation. TODO: Remove this or make it a little nicer for future stable
 	 * release candidates.
 	 */
 	@Override
