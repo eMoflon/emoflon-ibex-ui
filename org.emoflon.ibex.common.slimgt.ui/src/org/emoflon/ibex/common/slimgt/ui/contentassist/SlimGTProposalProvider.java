@@ -24,9 +24,11 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.xtext.Assignment;
-import org.eclipse.xtext.RuleCall;
+import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNode;
+import org.emoflon.ibex.common.slimgt.slimGT.SlimRuleNodeCreation;
 import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtil;
 
 /**
@@ -112,6 +114,25 @@ public class SlimGTProposalProvider extends AbstractSlimGTProposalProvider {
 
 			acceptor.accept(new CompletionProposal(replacement, context.getOffset(), replacementLength, cursor));
 		}
+	}
+
+	@Override
+	public void completeKeyword(Keyword keyword, ContentAssistContext contentAssistContext,
+			ICompletionProposalAcceptor acceptor) {
+
+		// do not show keywords that were already typed in
+		if (keyword.getValue().equals(contentAssistContext.getPrefix()))
+			return;
+
+		// do not suggest creation edges in patterns
+		if (keyword.getValue().equals("[+]")) {
+			if (contentAssistContext.getCurrentModel() instanceof SlimRuleNode node) {
+				if (node.eContainer() instanceof SlimRuleNodeCreation)
+					return;
+			}
+		}
+
+		super.completeKeyword(keyword, contentAssistContext, acceptor);
 	}
 
 }

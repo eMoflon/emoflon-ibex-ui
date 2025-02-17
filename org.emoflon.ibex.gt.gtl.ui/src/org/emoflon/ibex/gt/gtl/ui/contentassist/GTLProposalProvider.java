@@ -11,11 +11,16 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.xtext.Assignment;
+import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
 import org.emoflon.ibex.common.slimgt.util.SlimGTModelUtil;
 import org.emoflon.ibex.common.slimgt.util.SlimGTWorkspaceUtil;
 import org.emoflon.ibex.gt.gtl.gTL.EditorFile;
+import org.emoflon.ibex.gt.gtl.gTL.GTLRuleType;
+import org.emoflon.ibex.gt.gtl.gTL.SlimRule;
+import org.emoflon.ibex.gt.gtl.gTL.SlimRuleNode;
+import org.emoflon.ibex.gt.gtl.gTL.impl.SlimRuleImpl;
 import org.emoflon.ibex.gt.gtl.util.GTLResourceManager;
 
 /**
@@ -127,6 +132,51 @@ public class GTLProposalProvider extends AbstractGTLProposalProvider {
 			acceptor.accept(new CompletionProposal(replacement, context.getOffset(), replacementLength, cursor));
 		}
 
+	}
+
+	@Override
+	public void completeKeyword(Keyword keyword, ContentAssistContext contentAssistContext,
+			ICompletionProposalAcceptor acceptor) {
+
+		// do not show keywords that were already typed in
+		if (keyword.getValue().equals(contentAssistContext.getPrefix()))
+			return;
+
+		// do not suggest creation nodes in patterns
+		if (keyword.getValue().equals("[+]")) {
+			if (contentAssistContext.getCurrentModel() instanceof SlimRule rule) {
+				if (rule != null && rule.getType() == GTLRuleType.PATTERN)
+					return;
+			}
+		}
+
+		// do not suggest deletion nodes in patterns
+		if (keyword.getValue().equals("[-]")) {
+			if (contentAssistContext.getCurrentModel() instanceof SlimRule rule) {
+				if (rule != null && rule.getType() == GTLRuleType.PATTERN)
+					return;
+			}
+		}
+
+		// do not suggest creation edges in patterns
+		if (keyword.getValue().equals("[+]")) {
+			if (contentAssistContext.getCurrentModel() instanceof SlimRuleNode node) {
+				SlimRule rule = SlimGTModelUtil.getContainer(node, SlimRuleImpl.class);
+				if (rule != null && rule.getType() == GTLRuleType.PATTERN)
+					return;
+			}
+		}
+
+		// do not suggest deletion edges in patterns
+		if (keyword.getValue().equals("[-]")) {
+			if (contentAssistContext.getCurrentModel() instanceof SlimRuleNode node) {
+				SlimRule rule = SlimGTModelUtil.getContainer(node, SlimRuleImpl.class);
+				if (rule != null && rule.getType() == GTLRuleType.PATTERN)
+					return;
+			}
+		}
+
+		super.completeKeyword(keyword, contentAssistContext, acceptor);
 	}
 
 }
