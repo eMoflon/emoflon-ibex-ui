@@ -7,17 +7,16 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.EList;
-import org.emoflon.ibex.tgg.compiler.patterns.PatternType;
 import org.emoflon.ibex.tgg.integrate.internal.delta.strategies.OperationalDeltaCommons;
-import org.emoflon.ibex.tgg.operational.matches.ITGGMatch;
-import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.DeletePreserveConflict;
-import org.emoflon.ibex.tgg.operational.strategies.integrate.util.EltFilter;
+import org.emoflon.ibex.tgg.patterns.PatternType;
+import org.emoflon.ibex.tgg.runtime.matches.ITGGMatch;
+import org.emoflon.ibex.tgg.runtime.strategies.integrate.conflicts.DeletePreserveConflict;
+import org.emoflon.ibex.tgg.runtime.strategies.integrate.util.EltFilter;
+import org.emoflon.ibex.tgg.tggmodel.IBeXTGGModel.BindingType;
+import org.emoflon.ibex.tgg.tggmodel.IBeXTGGModel.DomainType;
+import org.emoflon.ibex.tgg.tggmodel.IBeXTGGModel.TGGRule;
+import org.emoflon.ibex.tgg.tggmodel.IBeXTGGModel.TGGRuleElement;
 import org.emoflon.ibex.tgg.util.TGGModelUtils;
-
-import language.BindingType;
-import language.DomainType;
-import language.TGGRule;
-import language.TGGRuleElement;
 
 class DeletePreserveMergeAndPreserveOperationalDeltaEvaluator {
 
@@ -34,25 +33,25 @@ class DeletePreserveMergeAndPreserveOperationalDeltaEvaluator {
 
 	public int evaluate() {
 		int count = 0;
-		if (domainTypes.contains(DomainType.SRC)) {
+		if (domainTypes.contains(DomainType.SOURCE)) {
 			if (modifications.contains(BindingType.CREATE)) {
-				count += countElementsToBeCreated(PatternType.TRG, DomainType.SRC);
+				count += countElementsToBeCreated(PatternType.TARGET, DomainType.SOURCE);
 			}
 
 			if (modifications.contains(BindingType.DELETE)) {
-				List<TGGRule> rulesToBeExecuted = getRelevantRules(DomainType.TRG);
-				count += evaluateRules(rulesToBeExecuted, DomainType.SRC);
+				List<TGGRule> rulesToBeExecuted = getRelevantRules(DomainType.TARGET);
+				count += evaluateRules(rulesToBeExecuted, DomainType.SOURCE);
 			}
 		}
 
-		if (domainTypes.contains(DomainType.TRG)) {
+		if (domainTypes.contains(DomainType.TARGET)) {
 			if (modifications.contains(BindingType.CREATE)) {
-				count += countElementsToBeCreated(PatternType.SRC, DomainType.TRG);
+				count += countElementsToBeCreated(PatternType.SOURCE, DomainType.TARGET);
 			}
 
 			if (modifications.contains(BindingType.DELETE)) {
-				List<TGGRule> rulesToBeExecuted = getRelevantRules(DomainType.SRC);
-				count += evaluateRules(rulesToBeExecuted, DomainType.TRG);
+				List<TGGRule> rulesToBeExecuted = getRelevantRules(DomainType.SOURCE);
+				count += evaluateRules(rulesToBeExecuted, DomainType.TARGET);
 			}
 		}
 
@@ -63,7 +62,7 @@ class DeletePreserveMergeAndPreserveOperationalDeltaEvaluator {
 
 		Set<ITGGMatch> matches = conflict.getScopeMatches().stream()
 				.filter(match -> match.getType().equals(patternType)).collect(Collectors.toSet());
-		List<TGGRule> relevantRules = conflict.integrate().getTGG().getRules().stream()
+		List<TGGRule> relevantRules = conflict.integrate().getTGG().getRuleSet().getRules().stream()
 				.filter(rule -> OperationalDeltaCommons.ruleIsInAnyMatch(rule, matches)).collect(Collectors.toList());
 
 		return evaluateRules(relevantRules, domainType);
@@ -72,7 +71,7 @@ class DeletePreserveMergeAndPreserveOperationalDeltaEvaluator {
 	private List<TGGRule> getRelevantRules(DomainType domainType) {
 		Predicate<ITGGMatch> hasDeletedElementsOnDomain = hasDeletedElementsOnDomain(domainType);
 		
-		EList<TGGRule> rules = conflict.integrate().getTGG().getRules();
+		EList<TGGRule> rules = conflict.integrate().getTGG().getRuleSet().getRules();
 		List<ITGGMatch> matchesToBeResolved = conflict.getScopeMatches().stream()//
 				.filter(match -> match.getType().equals(PatternType.CONSISTENCY))
 				.filter(brokenMatch -> !conflict.getCausingMatches().contains(brokenMatch))//

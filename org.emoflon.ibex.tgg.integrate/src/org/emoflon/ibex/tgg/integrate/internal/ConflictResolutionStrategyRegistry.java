@@ -7,14 +7,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.Conflict;
-import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.CRS_DeleteCorrs;
-import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.CRS_MergeAndPreserve;
-import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.CRS_PreferSource;
-import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.CRS_PreferTarget;
-import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.CRS_RevokeAddition;
-import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.CRS_RevokeDeletion;
-import org.emoflon.ibex.tgg.operational.strategies.integrate.conflicts.resolution.ConflictResolutionStrategy;
+import org.emoflon.ibex.tgg.runtime.strategies.integrate.conflicts.Conflict;
+import org.emoflon.ibex.tgg.runtime.strategies.integrate.conflicts.resolution.CRS_DeleteCorrs;
+import org.emoflon.ibex.tgg.runtime.strategies.integrate.conflicts.resolution.CRS_MergeAndPreserve;
+import org.emoflon.ibex.tgg.runtime.strategies.integrate.conflicts.resolution.CRS_PreferSource;
+import org.emoflon.ibex.tgg.runtime.strategies.integrate.conflicts.resolution.CRS_PreferTarget;
+import org.emoflon.ibex.tgg.runtime.strategies.integrate.conflicts.resolution.CRS_RevokeAddition;
+import org.emoflon.ibex.tgg.runtime.strategies.integrate.conflicts.resolution.CRS_RevokeDeletion;
+import org.emoflon.ibex.tgg.runtime.strategies.integrate.conflicts.resolution.ConflictResolutionStrategy;
 
 public class ConflictResolutionStrategyRegistry {
 

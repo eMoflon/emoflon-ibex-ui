@@ -1,0 +1,328 @@
+grammar org.emoflon.ibex.common.slimgt.SlimGT with org.eclipse.xtext.common.Terminals
+
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+generate slimGT "http://www.emoflon.org/ibex/common/slimgt/SlimGT"
+
+EditorFile:
+	(imports += Import)* 
+;
+
+Import:
+	'import' name = STRING (packageAliases+=PackageReference)*
+;
+
+PackageReferencePlain returns PackageReference : {PackageReferencePlain}
+	importedPackage = [ecore::EPackage | QualifiedName]
+;
+
+PackageReferenceAlias returns PackageReference : {PackageReferenceAlias}
+	'using' importedPackage=[ecore::EPackage | QualifiedName] 'as' name=ID
+;
+
+PackageReference:
+	PackageReferencePlain | PackageReferenceAlias
+;
+
+SlimRuleAnnotation:
+	'config' '(' configurations += SlimRuleConfiguration (',' configurations += SlimRuleConfiguration)* ')'
+;
+
+enum SlimRuleConfiguration:
+	DISABLE_INJECTIVITY_CONSTRAINTS = 'disable-injectivity-constraints'
+;
+
+SlimRule: {SlimRule}
+	(contextNodes += SlimRuleNodeContext |
+	createdNodes += SlimRuleNodeCreation |
+	conditions += SlimRuleCondition |
+	invocations += SlimRuleInvocation
+	)*
+;
+
+GTLRuleRefinement:
+	GTLRuleRefinementPlain | GTLRuleRefinementAliased
+;
+
+GTLRuleRefinementPlain returns GTLRuleRefinement : {GTLRuleRefinementPlain}
+	superRule=[SlimRule|ID]
+;
+
+
+GTLRuleRefinementAliased returns GTLRuleRefinement : {GTLRuleRefinementAliased}
+	superRule=[SlimRule|ID] 'as' name=ID
+;
+
+SlimRuleNodeContext:
+	'[=]' (local?='local')? context = SlimRuleNode
+;
+
+SlimRuleNodeCreation: 
+	'[+]' creation = SlimRuleNode
+;
+
+SlimRuleNode:
+	name = ID ':' type=[ecore::EClass] ('{'
+		(contextEdges += SlimRuleEdgeContext |
+		createdEdges += SlimRuleEdgeCreation |
+		assignments += SlimRuleAttributeAssignment)*
+	'}')?
+;
+
+SlimRuleEdgeContext:
+	'[=]' context = SlimRuleEdge
+;
+
+SlimRuleEdgeCreation:
+	'[+]' creation = SlimRuleSimpleEdge
+;
+
+SlimRuleEdge:
+	SlimRuleSimpleEdge //| SlimRuleTransitiveEdge
+;
+
+SlimRuleSimpleEdge returns SlimRuleEdge: {SlimRuleSimpleEdge}
+	'-' type=[ecore::EReference|ValidID] '->' target=[SlimRuleNode|ID]
+;
+
+SlimRuleTransitiveEdge returns SlimRuleEdge: {SlimRuleTransitiveEdge}
+	'~' type=[ecore::EReference|ValidID] '~>' target=[SlimRuleNode|ID]
+;
+
+SlimRuleAttributeAssignment:
+	'.' type=[ecore::EAttribute] ':=' value=ValueExpression ';'
+;
+
+SlimRuleCondition:
+	'[#]' expression=BooleanExpression ';'
+;
+
+enum RelationalOperator:
+  GREATER='>' |
+  GREATER_OR_EQUAL='>=' |
+  EQUAL='==' |
+  UNEQUAL='!=' |
+  SMALLER_OR_EQUAL='<=' |
+  SMALLER='<'
+;
+
+SlimParameter:
+  name=ID ':' (type = [ecore::EDataType | QualifiedName])
+;
+
+SlimRuleNodeMapping:
+	source = [SlimRuleNode|ID] '=' target = [SlimRuleNode|ID]
+;
+
+SlimRuleNodeMappings:
+	{SlimRuleNodeMappings} '['(mappings+=SlimRuleNodeMapping (',' mappings+=SlimRuleNodeMapping)*)?']'
+;
+
+SlimRuleInvocation :
+	type=SlimRuleInvocationType '(' supportPattern=[SlimRule|ID] ')' mappings=SlimRuleNodeMappings
+;
+
+enum SlimRuleInvocationType :
+	POSITIVE = 'enforce' | NEGATIVE = 'forbid'
+;
+
+ValueExpression:
+	ArithmeticExpression
+;
+
+ArithmeticExpression:
+	SumArithmeticExpression
+;
+
+SumArithmeticExpression returns ArithmeticExpression:
+	ProductArithmeticExpression({SumArithmeticExpression.left = current} operator=SumOperator right=ProductArithmeticExpression)* 
+;
+
+ProductArithmeticExpression returns ArithmeticExpression:
+	ExpArithmeticExpression({ProductArithmeticExpression.left = current} operator=ProductOperator right=ExpArithmeticExpression)*
+;
+
+ExpArithmeticExpression returns ArithmeticExpression:
+	(UnaryArithmeticExpression | StochasticArithmeticExpression | MinMaxArithmeticExpression)
+	({ExpArithmeticExpression.left = current} operator=ExpOperator right=(UnaryArithmeticExpression | StochasticArithmeticExpression | MinMaxArithmeticExpression))*
+;
+
+StochasticArithmeticExpression returns ArithmeticExpression:
+	{StochasticArithmeticExpression} distribution = StochasticDistribution '(' mean = ArithmeticExpression (hasSd ?= "," sd = ArithmeticExpression)? ')'
+;
+
+MinMaxArithmeticExpression returns ArithmeticExpression:
+	{MinMaxArithmeticExpression} minMaxOperator = MinMaxOperator '(' left = ArithmeticExpression "," right = ArithmeticExpression ')'
+;
+
+UnaryArithmeticExpression returns ArithmeticExpression: {UnaryArithmeticExpression}
+	operator=UnaryOperator '(' operand=ArithmeticExpression ')' | BracketExpression
+;
+
+BracketExpression returns ArithmeticExpression: {BracketExpression}
+	'(' operand=ArithmeticExpression ')' | ExpressionOperand
+;
+
+ExpressionOperand:
+	{ExpressionOperand} operand = (NodeAttributeExpression | CountExpression | ArithmeticLiteral | EnumExpression | Constant)
+;
+
+NodeAttributeExpression:
+	NodeExpression ({NodeAttributeExpression.nodeExpression = current} '.' feature = [ecore::EAttribute])?
+;
+
+NodeExpression:
+	{NodeExpression} node = [SlimRuleNode|ID]
+;
+
+CountExpression:
+	'count' '(' supportPattern = [SlimRule|ID] ')' mappings=SlimRuleNodeMappings
+;
+
+EnumExpression:
+ 	'enums.' literal=[ecore::EEnumLiteral]
+;
+
+ArithmeticLiteral:
+	value = (DoubleLiteral | IntegerLiteral | StringLiteral | BooleanLiteral)
+;
+
+Constant:
+	value = ConstantLiteral
+;
+
+BooleanExpression:
+	BooleanImplication
+;
+
+BooleanImplication returns BooleanExpression:
+	BooleanDisjunction({BooleanImplication.left = current} '=>' right=BooleanDisjunction)*
+;
+
+BooleanDisjunction returns BooleanExpression:
+	BooleanConjunction({BooleanDisjunction.left = current} operator=DisjunctionOperator right=BooleanConjunction)*
+;
+
+BooleanConjunction returns BooleanExpression:
+	BooleanNegation({BooleanConjunction.left = current} operator=ConjunctionOperator right=BooleanNegation)*
+;
+
+BooleanNegation returns BooleanExpression:
+	{BooleanNegation} '!' operand=BooleanBracket | BooleanBracket
+;
+
+BooleanBracket returns BooleanExpression:
+	{BooleanBracket} '[' operand=BooleanExpression ']'  | RelationalExpression
+;
+
+RelationalExpression:
+	ValueExpression ({RelationalExpression.lhs = current} relation=RelationalOperator rhs=ValueExpression)?
+;
+
+enum DisjunctionOperator:
+  OR='|' |
+  XOR='^'
+;
+
+enum ConjunctionOperator:
+  AND='&'
+;
+
+enum ConstantLiteral:
+	PI 	= 	'pi' 	|
+	E 	= 	'e' 	|
+	NULL= 	'null'
+;
+
+enum ProductOperator:
+	MULT=	'*' 	|
+ 	DIV	=	'/'	 	|
+ 	MOD	=	'%'
+;
+
+enum ExpOperator:
+ 	POW = 	'pow'	|
+ 	LOG = 	'log'
+;
+
+enum SumOperator:
+	PLUS =	'+' 	|
+	MINUS=	'-' 	
+;
+
+enum StochasticDistribution:
+	NORMAL 		= 	"N" 	| 
+	UNIFORM 	= 	"U" 	| 
+	EXPONENTIAL = 	"Exp"
+;	
+
+enum MinMaxOperator:
+	MAX	=	'max' 	|
+	MIN	=	'min' 	
+;
+
+enum UnaryOperator:
+	NEG	=	'-'		|
+	ABS	=	'abs'	|
+	SQRT=	'sqrt' 	|
+	SIN	=	'sin'	|
+	COS	=	'cos'	|
+	TAN = 	'tan'
+;
+
+QualifiedName returns ecore::EString:
+	ID ('.' ID)*
+;
+
+DoubleLiteral:
+	value = Double
+;
+
+IntegerLiteral:
+	value = Integer
+;
+
+StringLiteral:
+	value = STRING
+;
+
+BooleanLiteral:
+	value = Boolean
+;
+
+Double returns ecore::EDouble:
+	('-')?INT '.' INT
+;
+
+Integer returns ecore::EInt:
+	(('-')? INT)
+;
+
+@Override
+terminal INT returns ecore::EInt:
+	'0'..'9' ('0'..'9')*
+;
+
+@Override
+terminal STRING returns ecore::EString:
+	'"' ( '""' | !('"') )* '"'
+;
+
+Boolean returns ecore::EBoolean:
+	TRUE | FALSE
+;
+
+terminal TRUE returns ecore::EBoolean:
+	'true'
+;
+
+terminal FALSE returns ecore::EBoolean:
+	'false'
+;
+
+ValidID:
+ID | Keywords;
+	
+Keywords:
+'import' | 'rule' | 'pattern' | 'source' | 'target' | 'using';
+

@@ -16,11 +16,11 @@ import org.eclipse.xtext.naming.DefaultDeclarativeQualifiedNameProvider;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import org.eclipse.xtext.scoping.impl.SimpleScope;
-import org.emoflon.ibex.tgg.editor.tgg.Schema;
-import org.emoflon.ibex.tgg.editor.tgg.TripleGraphGrammarFile;
 import org.emoflon.ibex.tgg.integrate.integrate.Import;
 import org.emoflon.ibex.tgg.integrate.integrate.Integrate;
 import org.emoflon.ibex.tgg.integrate.integrate.PipelineStageType;
+import org.emoflon.ibex.tgg.tggl.tGGL.EditorFile;
+import org.emoflon.ibex.tgg.tggl.tGGL.Schema;
 
 public class PipelineStageTypeScopeProvider {
 
@@ -42,7 +42,7 @@ public class PipelineStageTypeScopeProvider {
 	}
 
 	private Stream<URI> getURIStream(Schema schema) {
-		TripleGraphGrammarFile tggFile = EcoreUtil2.getContainerOfType(schema, TripleGraphGrammarFile.class);
+		EditorFile tggFile = EcoreUtil2.getContainerOfType(schema, EditorFile.class);
 		return tggFile.getImports().stream().map(imp -> URI.createURI(imp.getName()));
 	}
 	
