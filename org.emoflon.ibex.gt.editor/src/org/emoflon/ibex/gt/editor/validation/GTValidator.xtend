@@ -40,7 +40,6 @@ import org.emoflon.ibex.gt.editor.gT.MultOperator
 import org.emoflon.ibex.gt.editor.gT.AddExpression
 import org.emoflon.ibex.gt.editor.gT.ExpExpression
 import org.emoflon.ibex.gt.editor.utils.GTArithmeticsCalculatorUtil
-import org.emoflon.ibex.gt.editor.gT.EditorCountExpression
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeAssignment
 import org.emoflon.ibex.gt.editor.gT.EditorAttributeExpression
 import org.emoflon.ibex.gt.editor.gT.ArithmeticCalculationExpression
@@ -54,7 +53,6 @@ import org.emoflon.ibex.gt.editor.gT.MinMaxExpression
 import org.emoflon.ibex.gt.editor.gT.EditorRelation
 import org.eclipse.emf.ecore.impl.EEnumImpl
 import org.emoflon.ibex.gt.editor.utils.GTDisjointPatternFinder
-import org.emoflon.ibex.gt.editor.gT.EditorIteratorReference
 import org.emoflon.ibex.gt.editor.gT.EditorReferenceIterator
 
 /**
@@ -1255,7 +1253,7 @@ class GTValidator extends AbstractGTValidator {
 			val ace = expression as ArithmeticCalculationExpression
 			if (ace.expression instanceof AddExpression || ace.expression instanceof MultExpression ||
 				ace.expression instanceof ExpExpression || ace.expression instanceof MinMaxExpression ||
-				ace.expression instanceof OneParameterArithmetics || ace.expression instanceof EditorCountExpression) {
+				ace.expression instanceof OneParameterArithmetics) {
 				return true
 			} else {
 				return false
@@ -1614,21 +1612,6 @@ class GTValidator extends AbstractGTValidator {
 		return type == EcorePackage.Literals.EDOUBLE || type == EcorePackage.Literals.EFLOAT ||
 			type == EcorePackage.Literals.EINT || type == EcorePackage.Literals.ESHORT ||
 			type == EcorePackage.Literals.ELONG || type == EcorePackage.Literals.EBYTE
-	}
-
-	@Check
-	def checkRecursiveInvocation(EditorCountExpression expr) {
-		var container = expr.eContainer
-		while (container !== null && !(container instanceof EditorPattern)) {
-			container = container.eContainer
-		}
-		if (container === null)
-			return
-
-		val pattern = container as EditorPattern
-		if (expr.invokedPatten == pattern)
-			error(RECURSIVE_COUNT_INVOCATION_MESSAGE, GTPackage.Literals.EDITOR_COUNT_EXPRESSION__INVOKED_PATTEN,
-				RECURSIVE_COUNT_INVOCATION)
 	}
 
 	@Check

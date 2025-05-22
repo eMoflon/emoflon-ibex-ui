@@ -66,10 +66,6 @@ EditorExpression:
 
 EditorAttributeExpression:
   node=[EditorNode|ID] '.' attribute=[ecore::EAttribute];
-  
-EditorCountExpression:
-	'count' '(' invokedPatten = [EditorPattern|ID] ')'
-;
 
 EditorLiteralExpression:
   value=('true' | 'false' | Number) |
@@ -187,5 +183,6 @@ OneParameterArithmetics returns ArithmeticExpression: {OneParameterArithmetics}
 ArithmeticAttribute returns ArithmeticExpression:
 	EditorLiteralExpression |
 	EditorAttributeExpression |
-	EditorIteratorAttributeExpression |
-	EditorCountExpression;
+	EditorIteratorAttributeExpression
+
+	;

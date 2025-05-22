@@ -18,11 +18,6 @@ import java.util.AbstractMap.SimpleEntry
 import java.util.Map.Entry
 import org.moflon.core.utilities.EcoreUtils
 import org.eclipse.xtext.EcoreUtil2
-import java.util.HashMap
-import org.emoflon.ibex.gt.editor.gT.EditorCountExpression
-import java.util.Map
-import org.emoflon.ibex.gt.editor.gT.StochasticFunction
-import org.emoflon.ibex.gt.editor.gT.ArithmeticExpression
 
 /**
  * Utility methods to generate PlantUML code.
@@ -101,8 +96,6 @@ class GTPlantUMLGenerator {
 				«ENDFOR»
 				«ENDIF»
 			«ENDFOR»
-			
-			«visualizeCountInvocation(flattenedPattern, namespace)»
 
 		'''
 	}
@@ -161,50 +154,6 @@ class GTPlantUMLGenerator {
 			«ENDFOR»
 			}
 		'''
-	}
-	
-	def static String visualizeCountInvocation(EditorPattern pattern, String namespace) {
-			val countExpressions = new HashMap
-			val hasNamespace = !"".equals(namespace)
-			pattern.attributeConstraints.forEach[ac | {
-				GTVisualizationUtils.accumulateCountExpr(ac.lhs, countExpressions)
-				GTVisualizationUtils.accumulateCountExpr(ac.rhs, countExpressions)
-			}]
-			pattern.nodes.flatMap[node | node.attributes].forEach[attribute | {
-				GTVisualizationUtils.accumulateCountExpr(attribute.value, countExpressions)
-			}]
-			if(pattern.stochastic) {
-				if(pattern.probability instanceof StochasticFunction) {
-					val sf = pattern.probability as StochasticFunction
-					GTVisualizationUtils.accumulateCountExpr(sf.functionExpression, countExpressions)
-					if(sf.parameter !== null)
-						GTVisualizationUtils.accumulateCountExpr(sf.parameter, countExpressions)
-				} else {
-					val ae = pattern.probability as ArithmeticExpression
-					GTVisualizationUtils.accumulateCountExpr(ae, countExpressions)
-				}
-			}
-			val mappings = new HashMap<EditorCountExpression, Map<EditorNode, EditorNode>>
-			countExpressions.values.forEach[cExpr | {
-				val map = new HashMap<EditorNode, EditorNode>
-				mappings.put(cExpr, map)
-				val flattenedPattern = new GTFlattener(cExpr.invokedPatten).getFlattenedPattern
-				flattenedPattern.nodes.forEach[other | {
-					pattern.nodes.forEach[node | {
-						if(node.name.equals(other.name)) {
-							map.put(node, other)
-						}
-					}]
-				}]
-			}]
-			return '''
-			«FOR countExpr : countExpressions.values»
-				«visualizePattern(countExpr.invokedPatten,"",true)»
-				«FOR mapping : mappings.get(countExpr).entrySet»
-				"«IF hasNamespace»«namespace».«ENDIF»«pattern.name».«nodeName(mapping.key)»" #.[#335bb0].# "«IF hasNamespace»«namespace».«ENDIF»«countExpr.invokedPatten.name».«nodeName(mapping.value)»"
-				«ENDFOR»
-			«ENDFOR»
-			'''
 	}
 	
 	/**

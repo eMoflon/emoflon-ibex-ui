@@ -28,14 +28,12 @@ import org.emoflon.ibex.gt.editor.gT.impl.EditorGTFileImpl
 import java.util.LinkedList
 import org.emoflon.ibex.gt.editor.gT.StochasticFunction
 import org.emoflon.ibex.gt.editor.gT.ArithmeticExpression
-import org.emoflon.ibex.gt.editor.gT.EditorCountExpression
 import org.emoflon.ibex.gt.editor.gT.EditorReferenceIterator
 import org.emoflon.ibex.gt.editor.gT.EditorIteratorReference
 import org.emoflon.ibex.gt.editor.gT.EditorIteratorAttributeAssignment
 import org.emoflon.ibex.gt.editor.gT.impl.EditorNodeImpl
 import org.emoflon.ibex.gt.editor.gT.impl.EditorReferenceIteratorImpl
 import org.emoflon.ibex.gt.editor.gT.EditorIteratorAttributeExpression
-import java.util.Set
 import org.eclipse.emf.ecore.EPackage
 
 /**
@@ -183,14 +181,12 @@ class GTScopeProvider extends AbstractGTScopeProvider {
 
 	def isStochasticFunction(EObject context) {
 		return context instanceof StochasticFunction 
-		&& !(context instanceof EditorAttributeExpression)  
-		&& !(context instanceof EditorCountExpression);
+		&& !(context instanceof EditorAttributeExpression);
 	}
 	
 	def isArithmeticExpression(EObject context) {
 		return context instanceof ArithmeticExpression 
-		&& !(context instanceof EditorAttributeExpression) 
-		&& !(context instanceof EditorCountExpression);
+		&& !(context instanceof EditorAttributeExpression);
 	}
 
 	def isNodeOfAttributeExpression(EObject context, EReference reference) {
