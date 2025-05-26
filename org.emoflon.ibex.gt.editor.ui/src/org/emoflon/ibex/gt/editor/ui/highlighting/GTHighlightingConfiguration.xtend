@@ -20,14 +20,16 @@ class GTHighlightingConfiguration extends DefaultHighlightingConfiguration {
 	public static final String REFINED = STYLE_PREFIX + "refined"
 	public static final String ATR_CONSTR = STYLE_PREFIX + "attribute_constraint"
 
-	static final RGB BLACK = new RGB(0, 0, 0)
+//	static final RGB BLACK = new RGB(0, 0, 0)
 	static final RGB GREEN = new RGB(0, 128, 0)
 	static final RGB RED = new RGB(255, 0, 0)
 	static final RGB KEYWORD = new RGB(127, 0, 85)
 
 	override void configure(IHighlightingConfigurationAcceptor acceptor) {
 		super.configure(acceptor);
-		addStyle(acceptor, CONTEXT, "Context Nodes and References", BLACK, SWT.NORMAL)
+		// I disabled the black color on purpose to allow GT files to be easily readable on
+		// editors with a dark background color.
+//		addStyle(acceptor, CONTEXT, "Context Nodes and References", BLACK, SWT.NORMAL)
 		addStyle(acceptor, CREATE, "Created Nodes and References", GREEN, SWT.NORMAL)
 		addStyle(acceptor, DELETE, "Deleted Nodes and References", RED, SWT.NORMAL)
 		addStyle(acceptor, REFINED, "Refined Nodes", SWT.BOLD)
