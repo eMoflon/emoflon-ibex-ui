@@ -14,5 +14,5 @@ Require-Bundle: org.emoflon.ibex.tgg.editor.ui,
  org.eclipse.xtext.ui.testing,
  org.eclipse.ui.workbench;resolution:=optional,
  org.eclipse.xtext.xbase.ui.testing
-Bundle-RequiredExecutionEnvironment: JavaSE-21
+Bundle-RequiredExecutionEnvironment: JavaSE-25
 Export-Package: org.emoflon.ibex.tgg.editor.ui.tests;x-internal=true
